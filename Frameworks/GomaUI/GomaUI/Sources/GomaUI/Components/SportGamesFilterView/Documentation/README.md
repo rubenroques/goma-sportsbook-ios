@@ -60,7 +60,7 @@ SportGamesFilterView/
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // 1. Create sport filter options
 let sportFilters = [

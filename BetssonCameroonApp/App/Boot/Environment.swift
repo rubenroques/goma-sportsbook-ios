@@ -18,6 +18,9 @@ class Environment {
 
     lazy var servicesProvider: ServicesProvider.Client = {
 
+        // Configure EveryMatrix language from app localization
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = localized("current_language_code")
+
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
         switch TargetVariables.serviceProviderEnvironment {
         case .prod:

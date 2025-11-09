@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class PromotionSelectorBarView: UIView {
     
     // MARK: - Private Properties
@@ -279,9 +280,9 @@ final public class PromotionSelectorBarView: UIView {
         // Basic selector bar
         let basicItems = [
             PromotionItemData(id: "1", title: "Welcome", isSelected: true),
-            PromotionItemData(id: "2", title: "Sports", isSelected: false),
-            PromotionItemData(id: "3", title: "Casino", isSelected: false),
-            PromotionItemData(id: "4", title: "Bonuses", isSelected: false)
+            PromotionItemData(id: "2", title: LocalizationProvider.string("sports"), isSelected: false),
+            PromotionItemData(id: "3", title: LocalizationProvider.string("meta_casino_home_title"), isSelected: false),
+            PromotionItemData(id: "4", title: LocalizationProvider.string("bonuses"), isSelected: false)
         ]
         let basicBarData = PromotionSelectorBarData(id: "main", promotionItems: basicItems, selectedPromotionId: "1")
         let basicViewModel = MockPromotionSelectorBarViewModel(barData: basicBarData)
@@ -291,9 +292,9 @@ final public class PromotionSelectorBarView: UIView {
         // Extended selector bar (scrollable)
         let extendedItems = [
             PromotionItemData(id: "1", title: "Welcome", isSelected: true),
-            PromotionItemData(id: "2", title: "Sports", isSelected: false),
-            PromotionItemData(id: "3", title: "Casino", isSelected: false),
-            PromotionItemData(id: "4", title: "Bonuses", isSelected: false),
+            PromotionItemData(id: "2", title: LocalizationProvider.string("sports"), isSelected: false),
+            PromotionItemData(id: "3", title: LocalizationProvider.string("meta_casino_home_title"), isSelected: false),
+            PromotionItemData(id: "4", title: LocalizationProvider.string("bonuses"), isSelected: false),
             PromotionItemData(id: "5", title: "Live Casino", isSelected: false),
             PromotionItemData(id: "6", title: "Virtual Sports", isSelected: false)
         ]

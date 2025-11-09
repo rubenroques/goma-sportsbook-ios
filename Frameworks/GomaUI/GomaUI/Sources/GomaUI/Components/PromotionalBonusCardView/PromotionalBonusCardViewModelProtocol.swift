@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 // MARK: - Data Models
 public struct UserAvatar: Equatable, Hashable {
     public let id: String
@@ -36,7 +37,7 @@ public struct PromotionalBonusCardData: Equatable, Hashable {
         backgroundImageName: String? = nil,
         hasGradientView: Bool = true,
         claimButtonTitle: String = "Claim bonus",
-        termsButtonTitle: String = "Terms and Conditions",
+        termsButtonTitle: String = LocalizationProvider.string("terms_consent_popup_title"),
         bonusAmount: Double
     ) {
         self.id = id

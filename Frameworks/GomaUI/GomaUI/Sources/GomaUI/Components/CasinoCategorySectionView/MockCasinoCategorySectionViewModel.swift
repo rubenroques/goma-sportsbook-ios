@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 
+
 public class MockCasinoCategorySectionViewModel: CasinoCategorySectionViewModelProtocol {
     
     // MARK: - Properties
@@ -224,7 +225,7 @@ extension MockCasinoCategorySectionViewModel {
         
         let sectionData = CasinoCategorySectionData(
             id: "popular-games",
-            categoryTitle: "Popular Games",
+            categoryTitle: LocalizationProvider.string("popular_games"),
             categoryButtonText: "All 127",
             games: games
         )

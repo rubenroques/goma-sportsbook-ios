@@ -14,7 +14,6 @@ class LocationsManager {
     // MARK: - Dependencies
     private let connector: EveryMatrixSocketConnector
     private let operatorId: String
-    private let language: String
     private let sportId: String
     
     // MARK: - State Management
@@ -24,11 +23,10 @@ class LocationsManager {
     
     // MARK: - Initialization
     
-    init(connector: EveryMatrixSocketConnector, sportId: String, operatorId: String, language: String = "en") {
+    init(connector: EveryMatrixSocketConnector, sportId: String, operatorId: String) {
         self.connector = connector
         self.sportId = sportId
         self.operatorId = operatorId
-        self.language = language
     }
     
     // MARK: - Public Interface
@@ -41,7 +39,7 @@ class LocationsManager {
         store.clear()
         
         // Create the router for sport-specific locations subscription
-        let router = WAMPRouter.locationsPublisher(operatorId: operatorId, language: language, sportId: sportId)
+        let router = WAMPRouter.locationsPublisher(operatorId: operatorId, language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage, sportId: sportId)
         
         return connector.subscribe(router)
             .handleEvents(receiveOutput: { [weak self] content in

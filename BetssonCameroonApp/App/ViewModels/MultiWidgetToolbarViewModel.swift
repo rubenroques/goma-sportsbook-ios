@@ -18,7 +18,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     // Widget view models
     // This is required by the protocol and used by MultiWidgetToolbarView
     // to update the wallet balance
-    var walletViewModel: MockWalletWidgetViewModel? {
+    var walletViewModel: WalletWidgetViewModelProtocol? {
         didSet {
             // Apply pending balance update if any
             if let pendingBalance = pendingWalletBalance {
@@ -26,7 +26,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
                 pendingWalletBalance = nil
                 print("💰 MultiWidgetToolbarViewModel: Applied pending wallet balance: \(pendingBalance)")
             }
-            
+
             // Set up deposit callback connection
             if let walletVM = walletViewModel as? WalletWidgetViewModel {
                 walletVM.onDepositRequested = { [weak self] in
@@ -131,7 +131,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
                 type: .wallet,
                 details: [
                     WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance"),
-                    WidgetDetail(isButton: true, container: "depositContainer", label: "DEPOSIT", route: "/deposit")
+                    WidgetDetail(isButton: true, container: "depositContainer", label: localized("deposit").uppercased(), route: "/deposit")
                 ]
             ),
             
@@ -161,16 +161,16 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
                 type: .loginButton,
                 route: "/login",
                 container: "loginContainer",
-                label: "LOGIN"
+                label: localized("login").uppercased()
             ),
-            
+
             // Join Now Button
             Widget(
                 id: "joinButton",
                 type: .signUpButton,
                 route: "/register",
                 container: "registerContainer",
-                label: "JOIN NOW"
+                label: localized("join_now").uppercased()
             ),
             
             // Flexible space

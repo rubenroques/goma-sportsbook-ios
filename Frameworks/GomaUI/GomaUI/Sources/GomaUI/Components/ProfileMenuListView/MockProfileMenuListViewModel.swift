@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Mock implementation of ProfileMenuListViewModelProtocol for testing and previews
 public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
 
@@ -74,49 +75,49 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
             ActionRowItem(
                 id: "notifications",
                 icon: "bell",
-                title: "Notifications",
+                title: LocalizationProvider.string("notifications"),
                 type: .navigation,
                 action: .notifications
             ),
             ActionRowItem(
                 id: "transaction_history",
                 icon: "clock",
-                title: "Transaction History",
+                title: LocalizationProvider.string("history_transactions"),
                 type: .navigation,
                 action: .transactionHistory
             ),
             ActionRowItem(
                 id: "change_language",
                 icon: "globe",
-                title: "Change Language",
+                title: LocalizationProvider.string("change_language"),
                 type: .navigation,
                 action: .changeLanguage
             ),
             ActionRowItem(
                 id: "responsible_gaming",
                 icon: "shield.checkered",
-                title: "Responsible Gaming",
+                title: LocalizationProvider.string("responsible_gaming_title"),
                 type: .navigation,
                 action: .responsibleGaming
             ),
             ActionRowItem(
                 id: "help_center",
                 icon: "questionmark.circle",
-                title: "Help Center",
+                title: LocalizationProvider.string("support_helpcenter_button_text"),
                 type: .navigation,
                 action: .helpCenter
             ),
             ActionRowItem(
                 id: "change_password",
                 icon: "lock",
-                title: "Change Password",
+                title: LocalizationProvider.string("change_password"),
                 type: .navigation,
                 action: .changePassword
             ),
             ActionRowItem(
                 id: "logout",
                 icon: "rectangle.portrait.and.arrow.right",
-                title: "Logout",
+                title: LocalizationProvider.string("logout"),
                 type: .action,
                 action: .logout
             )

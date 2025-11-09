@@ -17,7 +17,7 @@ A pill-shaped label component designed specifically for displaying betting marke
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create market data
 let marketData = MarketNamePillData(

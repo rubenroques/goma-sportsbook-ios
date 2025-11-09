@@ -39,9 +39,9 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
         
         // Initialize with default/loading state
         self.walletData = WalletWidgetData(
-            id: "wallet_widget",
+            id: "wallet",
             balance: "-.--",
-            depositButtonTitle: "DEPOSIT"
+            depositButtonTitle: localized("deposit").uppercased()
         )
         
         // Create initial display state
@@ -53,12 +53,21 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     }
     
     // MARK: - WalletWidgetViewModelProtocol
-    
+
     func deposit() {
         print("💳 WalletWidgetViewModel: Deposit button tapped")
         onDepositRequested?()
     }
-    
+
+    func updateBalance(_ balance: String) {
+        walletData = WalletWidgetData(
+            id: walletData.id,
+            balance: balance,
+            depositButtonTitle: walletData.depositButtonTitle
+        )
+        print("💰 WalletWidgetViewModel: Balance manually updated to: \(balance)")
+    }
+
     // MARK: - Private Methods
     
     private func setupWalletBinding() {

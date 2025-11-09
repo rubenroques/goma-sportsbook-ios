@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Represents the different states of the code input view
 public enum CodeInputState: Equatable {
     case `default`
@@ -19,8 +20,8 @@ public struct CodeInputData: Equatable {
     public init(
         state: CodeInputState = .default,
         code: String = "",
-        placeholder: String = "Enter booking code",
-        buttonTitle: String = "Load Betslip",
+        placeholder: String = LocalizationProvider.string("enter_booking_code"),
+        buttonTitle: String = LocalizationProvider.string("load_betslip"),
         isButtonEnabled: Bool = true
     ) {
         self.state = state

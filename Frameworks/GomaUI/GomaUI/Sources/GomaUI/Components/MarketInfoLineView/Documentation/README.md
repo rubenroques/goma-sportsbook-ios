@@ -33,7 +33,7 @@ MarketInfoLineView (Horizontal StackView)
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create market info data
 let marketInfo = MarketInfoData(

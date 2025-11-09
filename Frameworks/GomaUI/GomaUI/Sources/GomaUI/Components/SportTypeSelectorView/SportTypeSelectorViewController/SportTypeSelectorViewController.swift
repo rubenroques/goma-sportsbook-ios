@@ -30,7 +30,7 @@ final public class SportTypeSelectorViewController: UIViewController {
     
     // MARK: - Setup
     private func setupNavigationBar() {
-        title = "Select Sport"
+        title = LocalizationProvider.string("select_sport")
         view.backgroundColor = StyleProvider.Color.backgroundSecondary
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(

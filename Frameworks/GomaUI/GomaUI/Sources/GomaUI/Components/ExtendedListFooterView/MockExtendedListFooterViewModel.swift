@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 // MARK: - Mock Extended List Footer View Model
 
 public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
@@ -40,13 +41,13 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
         socialMediaPlatforms: [SocialPlatform] = SocialPlatform.allCases,
         navigationLinks: [FooterLink] = [],
         responsibleGamblingText: ResponsibleGamblingText = ResponsibleGamblingText(
-            warning: "Gambling can be addictive.",
-            advice: "Please play responsibly."
+            warning: LocalizationProvider.string("gambling_can_be_addictive"),
+            advice: LocalizationProvider.string("please_play_responsibly")
         ),
-        copyrightText: String = "© Betsson 2025",
-        licenseHeaderText: String = "Licenses",
+        copyrightText: String = LocalizationProvider.string("copyright_betsson"),
+        licenseHeaderText: String = LocalizationProvider.string("licenses"),
         licenseBodyText: String = "",
-        partnershipHeaderText: String = "In collaboration with",
+        partnershipHeaderText: String = LocalizationProvider.string("in_collaboration_with"),
         socialMediaHeaderText: String = "Follow us",
         imageResolver: ExtendedListFooterImageResolver = DefaultExtendedListFooterImageResolver()
     ) {
@@ -67,14 +68,14 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
 
     private static func defaultNavigationLinks() -> [FooterLink] {
         return [
-            FooterLink(title: "Terms and Conditions", type: .termsAndConditions),
-            FooterLink(title: "Affiliates", type: .affiliates),
-            FooterLink(title: "Privacy Policy", type: .privacyPolicy),
-            FooterLink(title: "Cookie Policy", type: .cookiePolicy),
-            FooterLink(title: "Responsible Gambling", type: .responsibleGambling),
-            FooterLink(title: "Game Rules", type: .gameRules),
-            FooterLink(title: "Help Center", type: .helpCenter),
-            FooterLink(title: "Contact Us", type: .contactUs)
+            FooterLink(title: LocalizationProvider.string("terms_consent_popup_title"), type: .termsAndConditions),
+            FooterLink(title: LocalizationProvider.string("affiliates"), type: .affiliates),
+            FooterLink(title: LocalizationProvider.string("privacy_policy_footer_link"), type: .privacyPolicy),
+            FooterLink(title: LocalizationProvider.string("cookie_policy_footer_link"), type: .cookiePolicy),
+            FooterLink(title: LocalizationProvider.string("responsible_gambling_footer_link"), type: .responsibleGambling),
+            FooterLink(title: LocalizationProvider.string("game_rules"), type: .gameRules),
+            FooterLink(title: LocalizationProvider.string("support_helpcenter_button_text"), type: .helpCenter),
+            FooterLink(title: LocalizationProvider.string("contact_us"), type: .contactUs)
         ]
     }
 

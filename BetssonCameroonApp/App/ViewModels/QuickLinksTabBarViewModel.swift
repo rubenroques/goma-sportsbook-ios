@@ -61,11 +61,11 @@ final class QuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     // MARK: - Static Configuration
     private static var defaultGamingQuickLinks: [QuickLinkItem] {
         return [
-            QuickLinkItem(type: .aviator, title: "Aviator", icon: UIImage(named: "aviator_quick_link_icon")),
-            QuickLinkItem(type: .virtual, title: "Virtual", icon: UIImage(named: "virtual_quick_link_icon")),
-            QuickLinkItem(type: .slots, title: "Slots", icon: UIImage(named: "slots_quick_link_icon")),
-            QuickLinkItem(type: .crash, title: "Crash", icon: UIImage(named: "crash_quick_link_icon")),
-            QuickLinkItem(type: .promos, title: "Promos", icon: UIImage(named: "promos_quick_link_icon"))
+            QuickLinkItem(type: .aviator, title: localized("aviator"), icon: UIImage(named: "aviator_quick_link_icon")),
+            QuickLinkItem(type: .virtual, title: localized("virtual"), icon: UIImage(named: "virtual_quick_link_icon")),
+            QuickLinkItem(type: .slots, title: localized("slots"), icon: UIImage(named: "slots_quick_link_icon")),
+            QuickLinkItem(type: .crash, title: localized("crash"), icon: UIImage(named: "crash_quick_link_icon")),
+            QuickLinkItem(type: .promos, title: localized("promos"), icon: UIImage(named: "promos_quick_link_icon"))
         ]
     }
 }
@@ -79,13 +79,13 @@ extension QuickLinksTabBarViewModel {
     
     static func forCasinoScreens() -> QuickLinksTabBarViewModel {
         let casinoQuickLinks = [
-            QuickLinkItem(type: .sports, title: "Sports", icon: UIImage(named: "sports_quick_link_icon")),
-            QuickLinkItem(type: .live, title: "Live", icon: UIImage(named: "live_quick_link_icon")),
-            QuickLinkItem(type: .favourites, title: "Favourites", icon: UIImage(named: "favourites_quick_link_icon")),
-            QuickLinkItem(type: .lite, title: "Lite", icon: UIImage(named: "casino_quick_link_icon")),
-            QuickLinkItem(type: .promos, title: "Promos", icon: UIImage(named: "promos_quick_link_icon"))
+            QuickLinkItem(type: .sports, title: localized("sports"), icon: UIImage(named: "sports_quick_link_icon")),
+            QuickLinkItem(type: .live, title: localized("live"), icon: UIImage(named: "live_quick_link_icon")),
+            QuickLinkItem(type: .favourites, title: localized("favourites"), icon: UIImage(named: "favourites_quick_link_icon")),
+            QuickLinkItem(type: .lite, title: localized("lite"), icon: UIImage(named: "casino_quick_link_icon")),
+            QuickLinkItem(type: .promos, title: localized("promos"), icon: UIImage(named: "promos_quick_link_icon"))
         ]
-        
+
         return QuickLinksTabBarViewModel(quickLinks: casinoQuickLinks)
     }
     

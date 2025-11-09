@@ -2,6 +2,7 @@
 import Foundation
 import Combine
 
+
 /// Mock implementation of `WalletStatusViewModelProtocol` for testing
 final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
     
@@ -62,7 +63,7 @@ final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
         // Create button view models
         let depositButtonData = ButtonData(
             id: "deposit",
-            title: "Deposit",
+            title: LocalizationProvider.string("deposit_text"),
             style: .solidBackground,
             fontSize: 12,
             fontType: .bold,
@@ -72,7 +73,7 @@ final public class MockWalletStatusViewModel: WalletStatusViewModelProtocol {
         
         let withdrawButtonData = ButtonData(
             id: "withdraw",
-            title: "Withdraw",
+            title: LocalizationProvider.string("withdraw"),
             style: .bordered,
             fontSize: 12,
             fontType: .bold,

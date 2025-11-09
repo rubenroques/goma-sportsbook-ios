@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 public enum CornerRadiusStyle {
     case all
     case topOnly
@@ -165,7 +166,7 @@ public class TicketBetInfoView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .semibold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Total Odds"
+        label.text = LocalizationProvider.string("total_odds")
         label.textAlignment = .left
         return label
     }()
@@ -183,7 +184,7 @@ public class TicketBetInfoView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .semibold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Bet Amount"
+        label.text = LocalizationProvider.string("bet_amount")
         label.textAlignment = .center
         return label
     }()
@@ -202,7 +203,7 @@ public class TicketBetInfoView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .semibold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Possible Winnings"
+        label.text = LocalizationProvider.string("possible_winnings")
         label.textAlignment = .right
         return label
     }()

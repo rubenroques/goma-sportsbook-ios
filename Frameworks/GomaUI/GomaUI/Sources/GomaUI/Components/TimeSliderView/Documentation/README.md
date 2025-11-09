@@ -48,7 +48,7 @@ TimeSliderView/
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // 1. Create time options
 let timeOptions = [

@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class WalletStatusView: UIView {
     
     // MARK: - Private Properties
@@ -12,15 +13,15 @@ final public class WalletStatusView: UIView {
     // UI Components
     private lazy var containerStackView = Self.createContainerStackView()
     private lazy var totalBalanceLineView = WalletBalanceLineView(
-        title: "Total Balance", 
+        title: LocalizationProvider.string("total_balance"),
         icon: UIImage(named: "banknote_cash_icon", in: Bundle.module, compatibleWith: nil)
     )
     private lazy var firstSeparatorLine = Self.createSeparatorLine()
-    private lazy var currentBalanceLineView = WalletBalanceLineView(title: "Current Balance")
-    private lazy var bonusBalanceLineView = WalletBalanceLineView(title: "Bonus")
-    private lazy var cashbackBalanceLineView = WalletBalanceLineView(title: "Cashback balance")
+    private lazy var currentBalanceLineView = WalletBalanceLineView(title: LocalizationProvider.string("current_balance"))
+    private lazy var bonusBalanceLineView = WalletBalanceLineView(title: LocalizationProvider.string("bonus"))
+    private lazy var cashbackBalanceLineView = WalletBalanceLineView(title: LocalizationProvider.string("cashback_balance"))
     private lazy var secondSeparatorLine = Self.createSeparatorLine()
-    private lazy var withdrawableLineView = WalletBalanceLineView(title: "Withdrawable")
+    private lazy var withdrawableLineView = WalletBalanceLineView(title: LocalizationProvider.string("withdrawable"))
     private var depositButton: ButtonView
     private var withdrawButton: ButtonView
     

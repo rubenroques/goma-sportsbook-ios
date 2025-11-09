@@ -143,7 +143,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
         if let filters = filters {
             return WAMPRouter.customMatchesAggregatorPublisher(
                 operatorId: operatorId,
-                language: "en",
+                language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
                 sportId: sportId,
                 locationId: filters.location.serverRawValue,
                 tournamentId: filters.tournament.serverRawValue,
@@ -158,7 +158,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             // Fallback to simple live matches endpoint
             return WAMPRouter.liveMatchesPublisher(
                 operatorId: operatorId,
-                language: "en",
+                language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
                 sportId: sportId,
                 matchesCount: currentEventLimit               // Use mutable currentEventLimit
             )

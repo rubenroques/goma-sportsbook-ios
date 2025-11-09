@@ -225,6 +225,11 @@ class AppStateManager {
             let appFont = AppFont.AppFontType.fontTypeFrom(styleProviderFontType: type)
             return AppFont.with(type: appFont, size: size)
         })
+
+        // Setup GomaUI components Localization
+        GomaUI.LocalizationProvider.configure { key in
+            return localized(key)
+        }
     }
     
     private func loadServicesInParallel() {

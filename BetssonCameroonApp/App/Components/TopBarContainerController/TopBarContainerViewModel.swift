@@ -27,8 +27,17 @@ class TopBarContainerViewModel: ObservableObject {
     init(userSessionStore: UserSessionStore) {
         self.userSessionStore = userSessionStore
 
-        // Create child ViewModels
-        self.multiWidgetToolbarViewModel = MultiWidgetToolbarViewModel()
+        // Create MultiWidgetToolbarViewModel
+        let toolbarViewModel = MultiWidgetToolbarViewModel()
+
+        // Create WalletWidgetViewModel with localized strings
+        let walletViewModel = WalletWidgetViewModel(userSessionStore: userSessionStore)
+
+        // Inject WalletWidgetViewModel into toolbar (must happen before view creation)
+        toolbarViewModel.walletViewModel = walletViewModel
+
+        // Assign to instance properties
+        self.multiWidgetToolbarViewModel = toolbarViewModel
         self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
 
         setupReactiveWalletChain()

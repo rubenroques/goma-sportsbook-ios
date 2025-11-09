@@ -139,15 +139,15 @@ final public class NotificationListView: UIView {
         loadingIndicator.isHidden = true
         collectionView.isHidden = true
         emptyStateLabel.isHidden = false
-        emptyStateLabel.text = "No notifications"
+        emptyStateLabel.text = LocalizationProvider.string("no_notifications")
     }
-    
+
     private func showError(_ error: Error) {
         loadingIndicator.stopAnimating()
         loadingIndicator.isHidden = true
         collectionView.isHidden = true
         emptyStateLabel.isHidden = false
-        emptyStateLabel.text = "Failed to load notifications"
+        emptyStateLabel.text = LocalizationProvider.string("failed_to_load_notifications")
     }
     
     private func updateNotifications(_ newNotifications: [NotificationData]) {

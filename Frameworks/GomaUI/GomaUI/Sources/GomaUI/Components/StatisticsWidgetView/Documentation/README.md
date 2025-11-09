@@ -35,7 +35,7 @@ StatisticsWidgetView (UIView)
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 class MatchDetailViewController: UIViewController {
     

@@ -2999,6 +2999,8 @@
 
 "returnx" = "Gain : {value}€";
 
+"retry" = "Réessayer";
+
 "rf_fifth_description" = "Si vous souhaitez devenir affilié de Betsson.fr, ce n'est pas ici que ça se passe ! Pour en savoir plus sur notre programme d'affiliation et pour démarrer votre partenariat, nous vous invitons à contacter notre service client. Notre équipe se fera un plaisir de vous fournir toutes les informations nécessaires et de vous guider à travers le processus d'affiliation.";
 
 "rf_fifth_title" = "Règles relatives à l'affiliation";
@@ -3829,3 +3831,40 @@
 
 "zipcode_is_required" = "Le code postal doit être renseigné.";
 
+
+// GomaUI component strings - added for localization migration
+"failed_to_load_notifications" = "Échec du chargement des notifications";
+
+"live_uppercase" = "EN DIRECT";
+
+"max_win_boost_activated" = "Boost de gain maximum activé!";
+
+"selection" = "Sélection";
+
+"wagering_progress" = "Progrès des mises";
+
+"basketball" = "Basketball";
+
+"football" = "Football";
+
+"golf" = "Golf";
+
+"help" = "Aide";
+
+"tennis" = "Tennis";
+
+"accept_odds_change" = "Accepter les changements de cotes.";
+
+"recently_played" = "Joués récemment";
+
+"win_boost_available" = "Boost de victoire disponible";
+
+"leg" = "jambe";
+
+"legs" = "jambes";
+
+"all_qualifying_events_added" = "Tous les événements qualifiants ajoutés!";
+
+"load_count_more_games" = "Charger {count} jeux supplémentaires";
+
+"select_sport" = "Sélectionner un sport";

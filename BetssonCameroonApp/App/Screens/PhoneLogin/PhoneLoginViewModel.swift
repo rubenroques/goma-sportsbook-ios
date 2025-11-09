@@ -44,7 +44,10 @@ class PhoneLoginViewModel {
                                                                                                   isRequired: true,
                                                                                                   visualState: .idle,
                                                                                                   keyboardType: .phonePad,
-                                                                                                  textContentType: .telephoneNumber))
+                                                                                                  returnKeyType: .next,
+                                                                                                  textContentType: .telephoneNumber,
+                                                                                                  maxLength: 9,
+                                                                                                  allowedCharacters: .decimalDigits))
 
         passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
                                                                                                      placeholder: "Password",
@@ -52,10 +55,11 @@ class PhoneLoginViewModel {
                                                                                                      isRequired: true,
                                                                                                      visualState: .idle,
                                                                                                      keyboardType: .default,
+                                                                                                     returnKeyType: .go,
                                                                                                      textContentType: .password))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "login",
-                                                                     title: "Log In",
+                                                                     title: localized("login"),
                                                                      style: .solidBackground,
                                                                      isEnabled: true))
         
@@ -67,12 +71,12 @@ class PhoneLoginViewModel {
         Publishers.CombineLatest(phoneFieldViewModel.textPublisher, passwordFieldViewModel.textPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] phoneText, passwordText in
-                
+
                 self?.phoneNumber = phoneText
 
                 self?.password = passwordText
-                
-                if phoneText.isNotEmpty && passwordText.isNotEmpty {
+
+                if phoneText.count == 9 && passwordText.isNotEmpty {
                     self?.buttonViewModel.setEnabled(true)
                 }
                 else {

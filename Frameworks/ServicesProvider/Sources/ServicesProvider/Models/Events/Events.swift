@@ -87,11 +87,27 @@ public enum EventStatus: Hashable {
     case ended(String)
 
     public init(value: String) {
+        let resultStatus: EventStatus
         switch value {
-        case "not_started": self = .notStarted
-        case "ended": self = .ended(value)
-        default: self = .inProgress(value)
+        case "not_started":
+            resultStatus = .notStarted
+        case "ended":
+            resultStatus = .ended(value)
+        default:
+            resultStatus = .inProgress(value)
         }
+
+        // Debug log for status parsing
+        let statusName: String
+        switch resultStatus {
+        case .notStarted: statusName = "notStarted"
+        case .inProgress: statusName = "inProgress"
+        case .ended: statusName = "ended"
+        default: statusName = "inProgress"
+        }
+        print("[M-STATUS] EventStatus.init | value: \"\(value)\" → .\(statusName)")
+
+        self = resultStatus
     }
     
     public var isInProgress: Bool {

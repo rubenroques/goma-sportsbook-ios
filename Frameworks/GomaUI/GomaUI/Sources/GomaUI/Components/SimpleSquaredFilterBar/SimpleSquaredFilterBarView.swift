@@ -1,6 +1,7 @@
 import UIKit
 import SwiftUI
 
+
 public final class SimpleSquaredFilterBarView: UIView {
 
     // MARK: - Public Properties
@@ -177,10 +178,10 @@ public final class SimpleSquaredFilterBarView: UIView {
 
         let statusFilters = SimpleSquaredFilterBarData(
             items: [
-                ("active", "Active"),
-                ("pending", "Pending"),
-                ("completed", "Done"),
-                ("failed", "Failed")
+                ("active", LocalizationProvider.string("active")),
+                ("pending", LocalizationProvider.string("pending")),
+                ("completed", LocalizationProvider.string("done")),
+                ("failed", LocalizationProvider.string("failed"))
             ],
             selectedId: "active"
         )

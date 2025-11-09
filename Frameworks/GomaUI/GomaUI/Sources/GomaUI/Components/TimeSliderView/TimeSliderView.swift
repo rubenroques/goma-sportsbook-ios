@@ -193,6 +193,7 @@ public class TimeSliderView: UIView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("TimeSliderView") {
     PreviewUIViewController {
@@ -219,7 +220,7 @@ import SwiftUI
             TimeOption(title: "All", value: 0),
             TimeOption(title: "1h", value: 1),
             TimeOption(title: "8h", value: 2),
-            TimeOption(title: "Today", value: 3),
+            TimeOption(title: LocalizationProvider.string("today"), value: 3),
             TimeOption(title: "48h", value: 4)
         ]
         let standardViewModel = MockTimeSliderViewModel(title: "Filter by Time", timeOptions: standardTimeOptions, selectedValue: 0)
@@ -230,7 +231,7 @@ import SwiftUI
         let shortTimeOptions = [
             TimeOption(title: "Now", value: 0),
             TimeOption(title: "Soon", value: 1),
-            TimeOption(title: "Later", value: 2)
+            TimeOption(title: LocalizationProvider.string("later"), value: 2)
         ]
         let shortViewModel = MockTimeSliderViewModel(title: "Match Time", timeOptions: shortTimeOptions, selectedValue: 1)
         let shortSlider = TimeSliderView(viewModel: shortViewModel)

@@ -14,7 +14,6 @@ class PopularTournamentsManager {
     // MARK: - Dependencies
     private let connector: EveryMatrixSocketConnector
     private let operatorId: String
-    private let language: String
     private let sportId: String
     private let tournamentsCount: Int
     
@@ -28,12 +27,11 @@ class PopularTournamentsManager {
     
     // MARK: - Initialization
     
-    init(connector: EveryMatrixSocketConnector, operatorId: String, sportId: String, tournamentsCount: Int = 10, language: String = "en") {
+    init(connector: EveryMatrixSocketConnector, operatorId: String, sportId: String, tournamentsCount: Int = 10) {
         self.connector = connector
         self.sportId = sportId
         self.tournamentsCount = tournamentsCount
         self.operatorId = operatorId
-        self.language = language
     }
     
     // MARK: - Public Interface
@@ -49,7 +47,7 @@ class PopularTournamentsManager {
         // Create the WAMP router for popular tournaments
         let router = WAMPRouter.popularTournamentsPublisher(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             sportId: sportId,
             tournamentsCount: tournamentsCount
         )

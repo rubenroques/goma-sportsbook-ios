@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     // MARK: - Properties
@@ -35,7 +36,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         self.rebetButtonViewModel = rebetButtonViewModel
         
         let cashoutButtonViewModel = MockButtonIconViewModel(
-            title: "Cashout",
+            title: LocalizationProvider.string("cashout"),
             icon: "dollarsign.circle",
             layoutType: .iconLeft
         )
@@ -85,7 +86,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             tickets: [
                 TicketSelectionData(
                     id: "TICKET001",
-                    competitionName: "Competition",
+                    competitionName: LocalizationProvider.string("competition"),
                     homeTeamName: "Team 1",
                     awayTeamName: "Team 2",
                     homeScore: 0,
@@ -205,7 +206,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             tickets: [
                 TicketSelectionData(
                     id: "TICKET001",
-                    competitionName: "Competition",
+                    competitionName: LocalizationProvider.string("competition"),
                     homeTeamName: "Team 1",
                     awayTeamName: "Team 2",
                     homeScore: 0,
@@ -240,7 +241,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             tickets: [
                 TicketSelectionData(
                     id: "TICKET001",
-                    competitionName: "Competition",
+                    competitionName: LocalizationProvider.string("competition"),
                     homeTeamName: "Team 1",
                     awayTeamName: "Team 2",
                     homeScore: 0,
@@ -275,7 +276,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             tickets: [
                 TicketSelectionData(
                     id: "TICKET001",
-                    competitionName: "Competition",
+                    competitionName: LocalizationProvider.string("competition"),
                     homeTeamName: "Team 1",
                     awayTeamName: "Team 2",
                     homeScore: 0,

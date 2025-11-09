@@ -180,10 +180,8 @@ public final class EveryMatrixUnifiedConfiguration {
         ]
     }
     
-    /// Default language for APIs
-    public var defaultLanguage: String {
-        return "en"
-    }
+    /// Default language for APIs (configurable, defaults to "en")
+    public var defaultLanguage: String = "en"
     
     /// Default platform identifier
     public var defaultPlatform: String {

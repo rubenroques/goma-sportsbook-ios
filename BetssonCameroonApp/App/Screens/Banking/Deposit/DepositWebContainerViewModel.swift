@@ -37,11 +37,13 @@ final class DepositWebContainerViewModel: ObservableObject {
     /// Load deposit WebView URL from API
     /// - Parameters:
     ///   - currency: Currency code for the transaction
-    ///   - language: Language code for the WebView
     ///   - bonusCode: Optional bonus code to apply
-    func loadDeposit(currency: String, language: String, bonusCode: String? = nil) {
+    func loadDeposit(currency: String, bonusCode: String? = nil) {
         state = .loadingURL
-        
+
+        // Get current language from app localization
+        let language = localized("current_language_code").uppercased()
+
         let parameters = CashierParameters.forDeposit(
             language: language,
             currency: currency,

@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class PromotionItemView: UIView {
     // MARK: - Private Properties
     private let containerView = UIView()
@@ -152,7 +153,7 @@ final public class PromotionItemView: UIView {
         stackView.addArrangedSubview(selectedView)
         
         // Unselected state
-        let unselectedData = PromotionItemData(id: "2", title: "Sports", isSelected: false)
+        let unselectedData = PromotionItemData(id: "2", title: LocalizationProvider.string("sports"), isSelected: false)
         let unselectedViewModel = MockPromotionItemViewModel(promotionItemData: unselectedData)
         let unselectedView = PromotionItemView(viewModel: unselectedViewModel)
         stackView.addArrangedSubview(unselectedView)

@@ -558,7 +558,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         
         let endpoint = EveryMatrixPlayerAPI.getRecentlyPlayedGames(
             playerId: playerId,
-            language: language ?? "en",
+            language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             platform: platform ?? "iPhone",
             offset: pagination.offset,
             limit: pagination.limit
@@ -597,7 +597,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         
         let endpoint = EveryMatrixPlayerAPI.getMostPlayedGames(
             playerId: playerId,
-            language: language ?? "en",
+            language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             platform: platform ?? "iPhone",
             offset: pagination.offset,
             limit: pagination.limit

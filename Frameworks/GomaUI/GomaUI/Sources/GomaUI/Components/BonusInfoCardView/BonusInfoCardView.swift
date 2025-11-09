@@ -288,7 +288,7 @@ extension BonusInfoCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.text = "Bonus Amount"
+        label.text = LocalizationProvider.string("bonus_amount")
         label.numberOfLines = 1
         return label
     }
@@ -372,7 +372,7 @@ extension BonusInfoCardView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 14)
-        label.text = "Wagering Progress"
+        label.text = LocalizationProvider.string("wagering_progress")
         label.numberOfLines = 1
         return label
     }
@@ -398,7 +398,7 @@ extension BonusInfoCardView {
     private static func createTermsButton() -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Terms & Conditions", for: .normal)
+        button.setTitle(LocalizationProvider.string("terms_conditions"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
         button.layer.cornerRadius = 8
         button.clipsToBounds = true
@@ -472,11 +472,11 @@ extension BonusInfoCardView {
         // Build amount boxes
         self.bonusAmountBoxView.addSubview(self.bonusAmountTitleLabel)
         self.bonusAmountBoxView.addSubview(self.bonusAmountValueLabel)
-        self.bonusAmountTitleLabel.text = "Bonus Amount"
+        self.bonusAmountTitleLabel.text = LocalizationProvider.string("bonus_amount")
         
         self.remainingAmountBoxView.addSubview(self.remainingAmountTitleLabel)
         self.remainingAmountBoxView.addSubview(self.remainingAmountValueLabel)
-        self.remainingAmountTitleLabel.text = "Remaining"
+        self.remainingAmountTitleLabel.text = LocalizationProvider.string("remaining")
         
         self.amountBoxesStackView.addArrangedSubview(self.bonusAmountBoxView)
         self.amountBoxesStackView.addArrangedSubview(self.remainingAmountBoxView)
@@ -641,6 +641,7 @@ extension BonusInfoCardView {
 
 #if DEBUG
 import SwiftUI
+
 
 @available(iOS 17.0, *)
 #Preview("Complete Bonus - Combo") {

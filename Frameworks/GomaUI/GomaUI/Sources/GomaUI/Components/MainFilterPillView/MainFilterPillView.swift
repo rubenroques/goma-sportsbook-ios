@@ -32,7 +32,7 @@ final public class MainFilterPillView: UIView {
     private let filterLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Filter"
+        label.text = LocalizationProvider.string("filter")
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
         return label
@@ -186,6 +186,7 @@ final public class MainFilterPillView: UIView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
@@ -210,19 +211,19 @@ import SwiftUI
 
         // 3. ADD ALL COMPONENT INSTANCES
         // Not selected state
-        let mainFilterNotSelected = MainFilterItem(type: .mainFilter, title: "Filter")
+        let mainFilterNotSelected = MainFilterItem(type: .mainFilter, title: LocalizationProvider.string("filter"))
         let notSelectedViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterNotSelected, initialState: .notSelected)
         let notSelectedView = MainFilterPillView(viewModel: notSelectedViewModel)
         notSelectedView.translatesAutoresizingMaskIntoConstraints = false
 
         // Selected state with 3 filters
-        let mainFilterSelected = MainFilterItem(type: .mainFilter, title: "Filter")
+        let mainFilterSelected = MainFilterItem(type: .mainFilter, title: LocalizationProvider.string("filter"))
         let selectedViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterSelected, initialState: .selected(selections: "3"))
         let selectedView = MainFilterPillView(viewModel: selectedViewModel)
         selectedView.translatesAutoresizingMaskIntoConstraints = false
 
         // Selected state with 10+ filters
-        let mainFilterMultiple = MainFilterItem(type: .mainFilter, title: "Filter")
+        let mainFilterMultiple = MainFilterItem(type: .mainFilter, title: LocalizationProvider.string("filter"))
         let multipleViewModel = MockMainFilterPillViewModel(mainFilter: mainFilterMultiple, initialState: .selected(selections: "12"))
         let multipleView = MainFilterPillView(viewModel: multipleViewModel)
         multipleView.translatesAutoresizingMaskIntoConstraints = false

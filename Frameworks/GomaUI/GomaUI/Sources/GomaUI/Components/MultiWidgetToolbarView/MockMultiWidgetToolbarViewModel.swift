@@ -16,7 +16,7 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
     private var currentState: LayoutState
     
     // Widget view models
-    public var walletViewModel: MockWalletWidgetViewModel?
+    public var walletViewModel: WalletWidgetViewModelProtocol?
     
     // MARK: - Initialization
     

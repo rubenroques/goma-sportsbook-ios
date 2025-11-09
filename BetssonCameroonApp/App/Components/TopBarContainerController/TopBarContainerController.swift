@@ -196,14 +196,18 @@ class TopBarContainerController: UIViewController {
 
         // Wallet balance tap handling
         multiWidgetToolbarView.onBalanceTapped = { [weak self] widgetId in
+            print("💰 WALLET_TAP: TopBarContainerController received balance tap with widgetId: \(widgetId)")
             if widgetId == "wallet" {
-                print("💰 TopBarContainer: Wallet balance tapped")
+                print("💰 WALLET_TAP: widgetId matches 'wallet', showing overlay")
 
                 // Add haptic feedback
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
 
                 self?.showWalletStatusOverlay()
+                print("💰 WALLET_TAP: showWalletStatusOverlay() called")
+            } else {
+                print("💰 WALLET_TAP: widgetId '\(widgetId)' does NOT match 'wallet', ignoring")
             }
         }
 
@@ -213,6 +217,12 @@ class TopBarContainerController: UIViewController {
                 print("💳 TopBarContainer: Deposit button tapped")
                 self?.onDepositRequested?()
             }
+        }
+
+        // Connect ViewModel deposit callback chain
+        viewModel.multiWidgetToolbarViewModel.onDepositRequested = { [weak self] in
+            print("💳 TopBarContainer: ViewModel deposit requested")
+            self?.onDepositRequested?()
         }
 
         // Setup wallet navigation callbacks

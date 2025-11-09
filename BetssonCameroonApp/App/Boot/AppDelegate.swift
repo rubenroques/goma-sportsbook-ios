@@ -67,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
+        // IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false // Disable placeholder in toolbar
+        // IQKeyboardManager.shared.shouldHidePreviousNext = true // Hide Previous/Next navigation buttons
 
 //        let disabledClasses = [BetslipViewController.self, PreSubmissionBetslipViewController.self]
 //        IQKeyboardManager.shared.disabledToolbarClasses = disabledClasses

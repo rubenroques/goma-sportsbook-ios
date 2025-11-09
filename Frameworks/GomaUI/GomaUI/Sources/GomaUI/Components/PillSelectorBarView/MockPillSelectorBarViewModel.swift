@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `PillSelectorBarViewModelProtocol` for testing.
 final public class MockPillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
     
@@ -251,7 +252,7 @@ extension MockPillSelectorBarViewModel {
             ),
             PillData(
                 id: "live",
-                title: "Live",
+                title: LocalizationProvider.string("live"),
                 leftIconName: "dot.radiowaves.left.and.right",
                 showExpandIcon: false,
                 isSelected: false
@@ -274,21 +275,21 @@ extension MockPillSelectorBarViewModel {
         let pills = [
             PillData(
                 id: "today",
-                title: "Today",
+                title: LocalizationProvider.string("today"),
                 leftIconName: "calendar",
                 showExpandIcon: false,
                 isSelected: false
             ),
             PillData(
                 id: "tomorrow",
-                title: "Tomorrow",
+                title: LocalizationProvider.string("tomorrow"),
                 leftIconName: nil,
                 showExpandIcon: false,
                 isSelected: true
             ),
             PillData(
                 id: "week",
-                title: "This Week",
+                title: LocalizationProvider.string("this_week"),
                 leftIconName: nil,
                 showExpandIcon: false,
                 isSelected: false
@@ -318,14 +319,14 @@ extension MockPillSelectorBarViewModel {
         let pills = [
             PillData(
                 id: "live",
-                title: "Live",
+                title: LocalizationProvider.string("live"),
                 leftIconName: "dot.radiowaves.left.and.right",
                 showExpandIcon: false,
                 isSelected: true
             ),
             PillData(
                 id: "upcoming",
-                title: "Upcoming",
+                title: LocalizationProvider.string("upcoming"),
                 leftIconName: "clock",
                 showExpandIcon: false,
                 isSelected: false
@@ -361,14 +362,14 @@ extension MockPillSelectorBarViewModel {
         let pills = [
             PillData(
                 id: "all",
-                title: "All Sports",
+                title: LocalizationProvider.string("all_sports"),
                 leftIconName: nil,
                 showExpandIcon: false,
                 isSelected: true
             ),
             PillData(
                 id: "favorites",
-                title: "My Favorites",
+                title: LocalizationProvider.string("my_favorites"),
                 leftIconName: nil,
                 showExpandIcon: false,
                 isSelected: false

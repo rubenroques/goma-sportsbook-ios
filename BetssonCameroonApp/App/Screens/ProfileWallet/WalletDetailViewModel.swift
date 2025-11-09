@@ -186,7 +186,7 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
         
         // Update display state
         let walletData = WalletDetailData(
-            walletTitle: "Mobile Wallet",
+            walletTitle: "Wallet",
             phoneNumber: formatPhoneNumber(userProfile),
             totalBalance: totalBalance,
             currentBalance: currentBalance,

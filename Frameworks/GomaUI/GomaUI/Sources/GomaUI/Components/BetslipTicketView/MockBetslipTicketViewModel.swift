@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of BetslipTicketViewModelProtocol for testing and previews
 public final class MockBetslipTicketViewModel: BetslipTicketViewModelProtocol {
     
@@ -93,8 +94,8 @@ public extension MockBetslipTicketViewModel {
         MockBetslipTicketViewModel(
             leagueName: "League",
             startDate: "--:--",
-            homeTeam: "Home Team",
-            awayTeam: "Away Team",
+            homeTeam: LocalizationProvider.string("home_label_default"),
+            awayTeam: LocalizationProvider.string("away_label_default"),
             selectedTeam: "--",
             oddsValue: "-.--",
             oddsChangeState: .none

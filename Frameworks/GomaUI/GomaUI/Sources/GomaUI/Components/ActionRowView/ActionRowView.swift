@@ -308,7 +308,7 @@ extension ActionRowView {
         // Navigation with icon - bell + "Notifications" + chevron
         let notificationsItem = ActionRowItem(
             icon: "bell",
-            title: "Notifications",
+            title: LocalizationProvider.string("notifications"),
             type: .navigation,
             action: .notifications
         )
@@ -334,7 +334,7 @@ extension ActionRowView {
         // Custom trailing icon - "Share your Betslip" + share icon
         let shareItem = ActionRowItem(
             icon: "",
-            title: "Share your Betslip",
+            title: LocalizationProvider.string("share_your_betslip"),
             type: .action,
             action: .custom,
             trailingIcon: "square.and.arrow.up"

@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
+
 public class StatusInfoView: UIView {
     private let viewModel: StatusInfoViewModelProtocol
 
@@ -16,7 +17,7 @@ public class StatusInfoView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Title"
+        label.text = LocalizationProvider.string("title")
         label.font = StyleProvider.fontWith(type: .bold, size: 24)
         label.numberOfLines = 0
         label.textColor = StyleProvider.Color.textPrimary
@@ -25,7 +26,7 @@ public class StatusInfoView: UIView {
     private let messageLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Message"
+        label.text = LocalizationProvider.string("message")
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
         label.numberOfLines = 0
         label.textColor = StyleProvider.Color.textPrimary

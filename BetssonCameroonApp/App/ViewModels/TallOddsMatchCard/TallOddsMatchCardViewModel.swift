@@ -241,6 +241,21 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // Update live status based on event status
         if let status = eventLiveData.status {
             let isLive = status.isInProgress
+
+            // Debug log for WebSocket status update
+            let statusName: String
+            switch status {
+            case .notStarted: 
+                statusName = "notStarted"
+            case .inProgress:
+                statusName = "inProgress"
+            case .ended:
+                statusName = "ended"
+            case .unknown:
+                statusName = "unknown"
+            }
+            print("[M-STATUS] Match \(matchData.matchId) | WebSocket update | status: .\(statusName) → isLive: \(isLive)")
+
             if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
                 headerViewModel.updateIsLive(isLive)
             }
@@ -349,7 +364,21 @@ extension TallOddsMatchCardViewModel {
             matchTime: Self.formatMatchTime(from: match),
             isLive: match.status.isLive
         )
-        
+
+        // Debug log for initial match creation
+        let statusName: String
+        switch match.status {
+        case .notStarted:
+            statusName = "notStarted"
+        case .inProgress: 
+            statusName = "inProgress"
+        case .ended: 
+            statusName = "ended"
+        case .unknown:
+            statusName = "unknown"
+        }
+        print("[M-STATUS] Match \(match.id) | Factory create | status: .\(statusName) → isLive: \(match.status.isLive)")
+
         // 2. Create MarketInfoData
         let firstMarket = relevantMarkets.first
         let marketInfoData = MarketInfoData(

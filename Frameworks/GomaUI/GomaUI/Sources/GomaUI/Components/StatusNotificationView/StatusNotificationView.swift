@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 public final class StatusNotificationView: UIView {
     
     // MARK: - UI Components
@@ -108,7 +109,7 @@ public final class StatusNotificationView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Success") {
+#Preview(LocalizationProvider.string("success")) {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockStatusNotificationViewModel.successMock
@@ -129,7 +130,7 @@ public final class StatusNotificationView: UIView {
 }
 
 @available(iOS 17.0, *)
-#Preview("Error") {
+#Preview(LocalizationProvider.string("omega_error_fail")) {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockStatusNotificationViewModel.errorMock

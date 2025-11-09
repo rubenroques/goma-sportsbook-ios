@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
+
 /// A component for displaying and copying codes (booking codes, promo codes, referral codes, etc.)
 public final class CopyableCodeView: UIView {
 
@@ -187,7 +188,7 @@ public final class CopyableCodeView: UIView {
 #if DEBUG
 
 @available(iOS 17.0, *)
-#Preview("Booking Code") {
+#Preview(LocalizationProvider.string("booking_code")) {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockCopyableCodeViewModel.bookingCodeMock

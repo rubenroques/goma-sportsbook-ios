@@ -2023,7 +2023,7 @@
 
 "mix_match_compatible_selections_warning" = "Some of the selections are not compatible with each others. You can still submit the bet with the available ones.";
 
-"mix_match_invalid_selection" = "Sélection invalide";
+"mix_match_invalid_selection" = "Invalid selection";
 
 "mix_match_match_string" = "Match";
 
@@ -2999,6 +2999,8 @@
 
 "returnx" = "Return: {value}€";
 
+"retry" = "Retry";
+
 "rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \n";
 
 "rf_fifth_title" = "Affiliation Regulations";
@@ -3829,3 +3831,40 @@
 
 "zipcode_is_required" = "The zipcode is a required field. Please complete this field.";
 
+
+// GomaUI component strings - added for localization migration
+"failed_to_load_notifications" = "Failed to load notifications";
+
+"live_uppercase" = "LIVE";
+
+"max_win_boost_activated" = "Max win boost activated!";
+
+"selection" = "Selection";
+
+"wagering_progress" = "Wagering Progress";
+
+"basketball" = "Basketball";
+
+"football" = "Football";
+
+"golf" = "Golf";
+
+"help" = "Help";
+
+"tennis" = "Tennis";
+
+"accept_odds_change" = "Accept odds change.";
+
+"recently_played" = "Recently Played";
+
+"win_boost_available" = "Win Boost Available";
+
+"leg" = "leg";
+
+"legs" = "legs";
+
+"all_qualifying_events_added" = "All qualifying events added!";
+
+"load_count_more_games" = "Load {count} more games";
+
+"select_sport" = "Select Sport";

@@ -159,16 +159,43 @@ extension EveryMatrixModelMapper {
     static func eventStatus(fromInternalMatchStatus internalStatus: EveryMatrix.Match.MatchStatus) -> EventStatus? {
         // Map EveryMatrix match status to external EventStatus
         // This is a basic mapping - you may need to refine based on actual status values
-        switch internalStatus.name.lowercased() {
-        case "pending", "not started":
-            return .notStarted
-        case "live", "in progress", "started":
-            return .inProgress(internalStatus.name)
-        case "finished", "ended", "completed":
-            return .ended(internalStatus.name)
+
+        let result: EventStatus
+        switch internalStatus.id {
+        case "1":
+            // Pending - Event has not started yet
+            result = .notStarted
+        case "2":
+            // In Progress - Event is live
+            result = .inProgress(internalStatus.name)
+        case "3":
+            // Ended - Event has ended
+            result = .ended(internalStatus.name)
+        case "4":
+            // Interrupted - Event paused, will continue later (treat as in progress)
+            result = .inProgress(internalStatus.name)
+        case "5", "6":
+            // Canceled / Walkover - Event canceled before start (treat as ended/won't happen)
+            result = .ended(internalStatus.name)
+        case "7", "8":
+            // Abandoned / Retired - Event abandoned after start (treat as ended)
+            result = .ended(internalStatus.name)
         default:
-            return .inProgress(internalStatus.name)
+            // Unknown status - default to in progress for safety
+            result = .inProgress(internalStatus.name)
         }
+
+        // Debug log for status mapping - capture ALL status values
+        let resultName: String
+        switch result {
+        case .notStarted: resultName = "notStarted"
+        case .inProgress(_): resultName = "inProgress"
+        case .ended(_): resultName = "ended"
+        case .unknown: resultName = "unknown"
+        }
+        print("[M-STATUS] Mapper | id=\"\(internalStatus.id)\" name=\"\(internalStatus.name)\" → using ID → .\(resultName) ✅")
+
+        return result
     }
 }
 

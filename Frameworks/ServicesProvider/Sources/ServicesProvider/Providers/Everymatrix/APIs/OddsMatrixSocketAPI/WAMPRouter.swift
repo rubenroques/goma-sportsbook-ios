@@ -49,7 +49,7 @@ enum WAMPRouter {
     // MARK: - Subscription Publishers
     // Core Topics
     case sportsInitialDump(topic: String)
-    case sportsPublisher(operatorId: String)
+    case sportsPublisher(operatorId: String, language: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
     case oddsMatch(operatorId: String, language: String, matchId: String)
 
@@ -161,8 +161,8 @@ enum WAMPRouter {
             return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds"
         case .sportsStatus(let operatorId, let language, let sportId):
             return "/sports/\(operatorId)/\(language)/sport/\(sportId)"
-        case .sportsPublisher(let operatorId):
-            return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
+        case .sportsPublisher(let operatorId, let language):
+            return "/sports/\(operatorId)/\(language)/disciplines/BOTH/BOTH"
 
         case .bettingOfferPublisher(let operatorId, let language, let bettingOfferId):
             return "/sports/\(operatorId)/\(language)/bettingOffers/\(bettingOfferId)"
@@ -310,7 +310,7 @@ enum WAMPRouter {
                     "bettingTypeId": bettingTypeId]
 
         case .getBettingOfferReference(let outcomeId):
-            return ["lang": "en",
+            return ["lang": EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
                     "outcomeIds": [outcomeId]]
 
         case .getBettingOffer(let operatorId, let language, let bettingOfferId):

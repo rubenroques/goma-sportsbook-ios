@@ -355,7 +355,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         stakeAmount: Double?
     ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
 
-        let language = "en" // TODO: Make configurable from configuration
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
 
         // Convert BetSelection (domain) → BetSelectionInfo (EveryMatrix)
         let emSelections = selections.compactMap { selection -> EveryMatrix.BettingOptionsCalculateSelection in

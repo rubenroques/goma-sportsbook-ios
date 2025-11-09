@@ -22,7 +22,6 @@ class SingleOutcomeSubscriptionManager {
     // MARK: - Dependencies
     private let connector: EveryMatrixSocketConnector
     private let operatorId: String
-    private let language: String
 
     // MARK: - Configuration
     let eventId: String
@@ -38,13 +37,11 @@ class SingleOutcomeSubscriptionManager {
     init(connector: EveryMatrixSocketConnector,
          operatorId: String,
          eventId: String,
-         outcomeId: String,
-         language: String = "en") {
+         outcomeId: String) {
         self.connector = connector
         self.eventId = eventId
         self.outcomeId = outcomeId
         self.operatorId = operatorId
-        self.language = language
     }
 
     deinit {
@@ -65,6 +62,7 @@ class SingleOutcomeSubscriptionManager {
         store.clear()
 
         // Create the WAMP router for betting offer subscription
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         let router = WAMPRouter.bettingOfferPublisher(
             operatorId: operatorId,
             language: language,

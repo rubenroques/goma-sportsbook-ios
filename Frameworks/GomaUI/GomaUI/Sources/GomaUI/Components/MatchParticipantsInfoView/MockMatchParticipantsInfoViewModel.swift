@@ -1,5 +1,6 @@
 import Combine
 
+
 /// Mock implementation of `MatchParticipantsInfoViewModelProtocol` for testing and previews.
 final public class MockMatchParticipantsInfoViewModel: MatchParticipantsInfoViewModelProtocol {
     
@@ -256,7 +257,7 @@ extension MockMatchParticipantsInfoViewModel {
         let matchData = MatchParticipantsData(
             homeParticipantName: "Team A",
             awayParticipantName: "Team B",
-            matchState: .live(score: "0 - 0", matchTime: nil),
+            matchState: .live(score: LocalizationProvider.string("score_label_default"), matchTime: nil),
             servingIndicator: .none
         )
         

@@ -82,7 +82,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "x-operator-id": operatorId,
-                "x-language": "en"
+                "x-language": EveryMatrixUnifiedConfiguration.shared.defaultLanguage
             ]
             return headers
         case .getCashoutValueSSE:

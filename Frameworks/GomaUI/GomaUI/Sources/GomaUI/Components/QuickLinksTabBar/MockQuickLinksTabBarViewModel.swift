@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `QuickLinksTabBarViewModelProtocol` for testing and previews.
 final public class MockQuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     // MARK: - Properties
@@ -53,10 +54,10 @@ final public class MockQuickLinksTabBarViewModel: QuickLinksTabBarViewModelProto
     
     public static var accountQuickLinks: [QuickLinkItem] {
         return [
-            QuickLinkItem(type: .deposit, title: "Deposit", icon: UIImage(systemName: "arrow.down.circle")),
-            QuickLinkItem(type: .withdraw, title: "Withdraw", icon: UIImage(systemName: "arrow.up.circle")),
+            QuickLinkItem(type: .deposit, title: LocalizationProvider.string("deposit_text"), icon: UIImage(systemName: "arrow.down.circle")),
+            QuickLinkItem(type: .withdraw, title: LocalizationProvider.string("withdraw"), icon: UIImage(systemName: "arrow.up.circle")),
             QuickLinkItem(type: .help, title: "Help", icon: UIImage(systemName: "questionmark.circle")),
-            QuickLinkItem(type: .settings, title: "Settings", icon: UIImage(systemName: "gearshape"))
+            QuickLinkItem(type: .settings, title: LocalizationProvider.string("settings_cookies"), icon: UIImage(systemName: "gearshape"))
         ]
     }
 

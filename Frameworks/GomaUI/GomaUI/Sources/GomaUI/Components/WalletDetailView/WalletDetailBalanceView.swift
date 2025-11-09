@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class WalletDetailBalanceView: UIView {
     
     // MARK: Private properties
@@ -124,7 +125,7 @@ extension WalletDetailBalanceView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.numberOfLines = 1
-        label.text = "Total XAF Balance"
+        label.text = LocalizationProvider.string("total_xaf_balance")
         return label
     }
     

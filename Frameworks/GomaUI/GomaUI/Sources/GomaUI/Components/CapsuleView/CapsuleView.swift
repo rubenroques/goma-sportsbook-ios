@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 public final class CapsuleView: UIView {
     
     // MARK: - UI Components
@@ -218,7 +219,7 @@ public final class CapsuleView: UIView {
 
         // Convenience Init - Custom Purple
         let customView = CapsuleView(
-            text: "Custom",
+            text: LocalizationProvider.string("custom"),
             backgroundColor: .systemPurple,
             textColor: .white
         )

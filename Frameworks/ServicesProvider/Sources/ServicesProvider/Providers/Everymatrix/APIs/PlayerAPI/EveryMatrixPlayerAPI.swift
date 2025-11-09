@@ -149,11 +149,11 @@ extension EveryMatrixPlayerAPI: Endpoint {
             ]
         case .getAvailableBonus:
             return [
-                URLQueryItem(name: "language", value: "en")
+                URLQueryItem(name: "language", value: EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
             ]
         case .getGrantedBonus:
             return [
-                URLQueryItem(name: "language", value: "en")
+                URLQueryItem(name: "language", value: EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
             ]
         default:
             return nil

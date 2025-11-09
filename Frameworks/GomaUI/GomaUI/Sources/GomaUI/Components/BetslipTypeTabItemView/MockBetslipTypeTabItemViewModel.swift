@@ -1,5 +1,6 @@
 import UIKit
 
+
 public final class MockBetslipTypeTabItemViewModel: BetslipTypeTabItemViewModelProtocol {
     
     // MARK: - Properties
@@ -19,18 +20,18 @@ public final class MockBetslipTypeTabItemViewModel: BetslipTypeTabItemViewModelP
     
     // MARK: - Mock Factory Methods
     public static func sportsSelectedMock() -> MockBetslipTypeTabItemViewModel {
-        return MockBetslipTypeTabItemViewModel(title: "Sports", icon: "soccerball", isSelected: true)
+        return MockBetslipTypeTabItemViewModel(title: LocalizationProvider.string("sports"), icon: "soccerball", isSelected: true)
     }
     
     public static func sportsUnselectedMock() -> MockBetslipTypeTabItemViewModel {
-        return MockBetslipTypeTabItemViewModel(title: "Sports", icon: "soccerball", isSelected: false)
+        return MockBetslipTypeTabItemViewModel(title: LocalizationProvider.string("sports"), icon: "soccerball", isSelected: false)
     }
     
     public static func virtualsSelectedMock() -> MockBetslipTypeTabItemViewModel {
-        return MockBetslipTypeTabItemViewModel(title: "Virtuals", icon: "virtuals", isSelected: true)
+        return MockBetslipTypeTabItemViewModel(title: LocalizationProvider.string("virtuals"), icon: "virtuals", isSelected: true)
     }
     
     public static func virtualsUnselectedMock() -> MockBetslipTypeTabItemViewModel {
-        return MockBetslipTypeTabItemViewModel(title: "Virtuals", icon: "virtuals", isSelected: false)
+        return MockBetslipTypeTabItemViewModel(title: LocalizationProvider.string("virtuals"), icon: "virtuals", isSelected: false)
     }
 } 

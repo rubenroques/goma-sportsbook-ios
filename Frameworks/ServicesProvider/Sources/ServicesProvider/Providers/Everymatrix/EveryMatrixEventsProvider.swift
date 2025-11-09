@@ -473,8 +473,8 @@ class EveryMatrixEventsProvider: EventsProvider {
     /// Get popular tournaments via RPC call (one-time fetch)
     func getPopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<[Tournament], ServiceProviderError> {
         let sportId = sportType.numericId ?? "1"
-        let language = "en" // Could be made configurable
-        
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
+
         let router = WAMPRouter.getPopularTournaments(language: language, sportId: sportId, maxResults: tournamentsCount)
         
         let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = socketConnector.request(router)
@@ -488,8 +488,8 @@ class EveryMatrixEventsProvider: EventsProvider {
     /// Get all tournaments via RPC call (one-time fetch)
     func getTournaments(forSportType sportType: SportType) -> AnyPublisher<[Tournament], ServiceProviderError> {
         let sportId = sportType.numericId ?? "1"
-        let language = "en" // Could be made configurable
-        
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
+
         let router = WAMPRouter.getTournaments(language: language, sportId: sportId)
         
         let rpcResponsePublisher: AnyPublisher<EveryMatrix.RPCResponse, ServiceProviderError> = socketConnector.request(router)
@@ -595,7 +595,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
-        let language = "en"
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         let bettingTypeIds = [69, 466, 112, 76, 9]
         let includes = ["BETTING_OFFERS", "EVENT_INFO"]
         let eventTypes = ["MATCH"]
@@ -663,7 +663,7 @@ class EveryMatrixEventsProvider: EventsProvider {
 
     // Restored: Multi-search wrapper (uses WAMPRouter.multiSearch)
     func getMultiSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError> {
-        let language = "en"
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         let eventTypes = ["MATCH"]
         let include = ["BETTING_OFFERS", "EVENT_INFO"]
         let router = WAMPRouter.multiSearch(
@@ -794,7 +794,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     private func getEventWithMainMarkets(eventId: String, mainMarketsCount: Int = 1) -> AnyPublisher<Event, ServiceProviderError> {
-        let language = "en" // Could be made configurable
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
 
         let router = WAMPRouter.matchWithMainMarkets(
@@ -821,7 +821,7 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func getEventWithSingleOutcome(bettingOfferId: String) -> AnyPublisher<Event, ServiceProviderError> {
-        let language = "en"
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
         let operatorId = self.sessionCoordinator.getOperatorIdOrDefault()
 
         let router = WAMPRouter.getBettingOffer(

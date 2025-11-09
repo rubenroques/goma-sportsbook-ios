@@ -38,7 +38,7 @@ A ticket selection component for displaying match information with two distinct 
 ## Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create with mock data
 let viewModel = MockTicketSelectionViewModel.preLiveMock

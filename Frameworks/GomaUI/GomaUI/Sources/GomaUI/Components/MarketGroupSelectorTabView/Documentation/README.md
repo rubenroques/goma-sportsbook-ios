@@ -39,7 +39,7 @@ A reusable horizontal scrollable tab bar component for displaying and managing m
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create a view model
 let viewModel = MockMarketGroupSelectorTabViewModel.standardSportsMarkets

@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// A thin floating view that displays betslip status with two states: no tickets (circular button) and with tickets (compact horizontal detailed view)
 public final class BetslipFloatingThinView: UIView {
     
@@ -33,7 +34,7 @@ public final class BetslipFloatingThinView: UIView {
     private lazy var betslipLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Betslip" // TODO: localization
+        label.text = LocalizationProvider.string("betslip") // TODO: localization
         label.font = StyleProvider.fontWith(type: .bold, size: 10)
         label.textColor = StyleProvider.Color.highlightSecondaryContrast
         label.textAlignment = .center
@@ -139,7 +140,7 @@ public final class BetslipFloatingThinView: UIView {
     private lazy var openBetslipButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Open Betslip", for: .normal) // TODO: localization
+        button.setTitle(LocalizationProvider.string("open_betslip"), for: .normal) // TODO: localization
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 12)
         
@@ -410,11 +411,11 @@ public final class BetslipFloatingThinView: UIView {
 
             selectionCountLabel.text = "\(selectionCount)"
 
-            oddsLabel.text = "Odds:" // TODO: localization
+            oddsLabel.text = LocalizationProvider.string("odds") + ":"
             oddsValueLabel.text = "\(odds)"
 
             if let winBoost = winBoostPercentage {
-                winBoostLabel.text = "Win Boost:" // TODO: localization
+                winBoostLabel.text = LocalizationProvider.string("win_boost") + ":"
                 winBoostValueLabel.text = winBoost
                 winBoostCapsuleView.isHidden = false
             } else {
@@ -433,9 +434,12 @@ public final class BetslipFloatingThinView: UIView {
                 let remainingSelections = max(0, totalEligibleCount - selectionCount)
                 if remainingSelections > 0 {
                     let boostText = nextTierPercentage ?? "bonus"
-                    callToActionLabel.text = "Add \(remainingSelections) more qualifying selection to get a \(boostText) win boost" // TODO: localization
+                    let message = LocalizationProvider.string("add_matches_bonus")
+                        .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                        .replacingOccurrences(of: "{percentage}", with: boostText)
+                    callToActionLabel.text = message
                 } else {
-                    callToActionLabel.text = "Max win boost activated!" // TODO: localization
+                    callToActionLabel.text = LocalizationProvider.string("max_win_boost_activated")
                 }
             } else {
                 bottomSectionView.isHidden = true

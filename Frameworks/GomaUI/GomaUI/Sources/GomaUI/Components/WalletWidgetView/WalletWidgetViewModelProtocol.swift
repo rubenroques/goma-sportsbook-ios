@@ -11,8 +11,8 @@ public struct WalletWidgetData: Equatable, Hashable {
     public let id: String
     public let balance: String
     public let depositButtonTitle: String
-    
-    public init(id: String, balance: String, depositButtonTitle: String = "DEPOSIT") {
+
+    public init(id: String, balance: String, depositButtonTitle: String = LocalizationProvider.string("deposit").uppercased()) {
         self.id = id
         self.balance = balance
         self.depositButtonTitle = depositButtonTitle
@@ -32,4 +32,5 @@ public struct WalletWidgetDisplayState: Equatable {
 public protocol WalletWidgetViewModelProtocol {
     var displayStatePublisher: AnyPublisher<WalletWidgetDisplayState, Never> { get }
     func deposit()
+    func updateBalance(_ balance: String)
 } 

@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of `TicketSelectionViewModelProtocol` for testing.
 final public class MockTicketSelectionViewModel: TicketSelectionViewModelProtocol {
     
@@ -106,7 +107,7 @@ extension MockTicketSelectionViewModel {
             awayTeamName: "Atletico Madrid",
             homeScore: 2,
             awayScore: 1,
-            matchDate: "Live",
+            matchDate: LocalizationProvider.string("live"),
             isLive: true,
             sportIcon: "soccerball",
             countryFlag: "flag.fill",
@@ -125,7 +126,7 @@ extension MockTicketSelectionViewModel {
             awayTeamName: "Borussia Dortmund",
             homeScore: 1,
             awayScore: 1,
-            matchDate: "Live",
+            matchDate: LocalizationProvider.string("live"),
             isLive: true,
             sportIcon: "soccerball",
             countryFlag: "flag.fill"
@@ -141,7 +142,7 @@ extension MockTicketSelectionViewModel {
             awayTeamName: "AC Milan",
             homeScore: 3,
             awayScore: 2,
-            matchDate: "Live",
+            matchDate: LocalizationProvider.string("live"),
             isLive: true,
             sportIcon: "soccerball",
             countryFlag: "flag.fill"

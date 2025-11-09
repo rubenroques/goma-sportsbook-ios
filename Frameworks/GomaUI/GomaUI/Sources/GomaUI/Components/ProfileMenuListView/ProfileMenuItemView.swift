@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// Individual menu item view for profile menu
 public final class ProfileMenuItemView: UIView {
     
@@ -288,7 +289,7 @@ public struct ProfileMenuItem: Codable, Identifiable {
         let item = ProfileMenuItem(
             id: "notifications",
             icon: "bell",
-            title: "Notifications",
+            title: LocalizationProvider.string("notifications"),
             type: .navigation,
             action: .notifications
         )
@@ -318,7 +319,7 @@ public struct ProfileMenuItem: Codable, Identifiable {
         let item = ProfileMenuItem(
             id: "language",
             icon: "globe",
-            title: "Change Language",
+            title: LocalizationProvider.string("change_language"),
             type: .navigation,
             action: .changeLanguage
         )
@@ -348,7 +349,7 @@ public struct ProfileMenuItem: Codable, Identifiable {
         let item = ProfileMenuItem(
             id: "logout",
             icon: "rectangle.portrait.and.arrow.right",
-            title: "Logout",
+            title: LocalizationProvider.string("logout"),
             type: .action,
             action: .logout
         )

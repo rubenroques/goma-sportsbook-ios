@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 
+
 public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedViewModelProtocol {
     private let displayStateSubject: CurrentValueSubject<SuggestedBetsSectionState, Never>
     private let matchCardsSubject: CurrentValueSubject<[TallOddsMatchCardViewModelProtocol], Never>
@@ -13,7 +14,7 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
     public var selectedOutcomeIdsPublisher: AnyPublisher<Set<String>, Never> { selectedOutcomeIdsSubject.eraseToAnyPublisher() }
     public var selectedOutcomeIds: Set<String> { selectedOutcomeIdsSubject.value }
 
-    public init(title: String = "Explore more bets",
+    public init(title: String = LocalizationProvider.string("explore_more_bets"),
                 isExpanded: Bool = true,
                 isVisible: Bool = true,
                 initialPage: Int = 0,
@@ -77,7 +78,7 @@ public final class MockSuggestedBetsExpandedViewModel: SuggestedBetsExpandedView
             .bundesliegaMock(singleLineOutcomes: true)
         ]
         return MockSuggestedBetsExpandedViewModel(
-            title: "Explore more bets",
+            title: LocalizationProvider.string("explore_more_bets"),
             isExpanded: true,
             isVisible: true,
             initialPage: 0,

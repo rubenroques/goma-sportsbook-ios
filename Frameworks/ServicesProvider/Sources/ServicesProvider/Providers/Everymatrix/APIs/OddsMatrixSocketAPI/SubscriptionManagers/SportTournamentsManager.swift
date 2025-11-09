@@ -14,7 +14,6 @@ class SportTournamentsManager {
     // MARK: - Dependencies
     private let connector: EveryMatrixSocketConnector
     private let operatorId: String
-    private let language: String
     private let sportId: String
     private let tournamentsCount: Int
     
@@ -27,12 +26,11 @@ class SportTournamentsManager {
     private let tournamentsSubject = CurrentValueSubject<SubscribableContent<[Tournament]>, ServiceProviderError>(.disconnected)
     
     // MARK: - Initialization
-    init(connector: EveryMatrixSocketConnector, sportId: String, tournamentsCount: Int = 10, operatorId: String, language: String = "en") {
+    init(connector: EveryMatrixSocketConnector, sportId: String, tournamentsCount: Int = 10, operatorId: String) {
         self.connector = connector
         self.sportId = sportId
         self.tournamentsCount = tournamentsCount
         self.operatorId = operatorId
-        self.language = language
     }
     
     // MARK: - Public Interface
@@ -42,7 +40,7 @@ class SportTournamentsManager {
         
         let router = WAMPRouter.tournamentsPublisher(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             sportId: sportId
         )
         

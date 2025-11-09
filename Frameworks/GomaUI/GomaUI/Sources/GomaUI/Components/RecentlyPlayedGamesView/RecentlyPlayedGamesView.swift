@@ -101,7 +101,7 @@ final public class RecentlyPlayedGamesView: UIView {
         // Pill label setup
         pillLabel.font = StyleProvider.fontWith(type: .bold, size: 12)
         pillLabel.textColor = StyleProvider.Color.buttonTextPrimary
-        pillLabel.text = "Recently Played"
+        pillLabel.text = LocalizationProvider.string("recently_played")
         pillLabel.translatesAutoresizingMaskIntoConstraints = false
         pillView.addSubview(pillLabel)
         
@@ -171,7 +171,7 @@ final public class RecentlyPlayedGamesView: UIView {
     
     // MARK: - Rendering
     private func renderPlaceholderState() {
-        pillLabel.text = "Recently Played"
+        pillLabel.text = LocalizationProvider.string("recently_played")
         games = []
         collectionView.reloadData()
     }

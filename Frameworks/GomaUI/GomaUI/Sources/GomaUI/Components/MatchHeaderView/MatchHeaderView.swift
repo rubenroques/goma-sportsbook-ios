@@ -328,7 +328,7 @@ extension MatchHeaderView {
 
         // Create "LIVE" label
         let liveLabel = UILabel()
-        liveLabel.text = "LIVE"
+        liveLabel.text = LocalizationProvider.string("live_uppercase")
         liveLabel.font = StyleProvider.fontWith(type: .semibold, size: 10)
         liveLabel.textColor = .white
 

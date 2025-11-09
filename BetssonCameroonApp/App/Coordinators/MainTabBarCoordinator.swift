@@ -65,7 +65,11 @@ class MainTabBarCoordinator: Coordinator {
     
     func start() {
         // Create the main screen structure (equivalent to Router.showPostLoadingFlow)
-        let viewModel = MainTabBarViewModel(userSessionStore: environment.userSessionStore)
+        let adaptiveTabBarViewModel = AdaptiveTabBarViewModel.defaultConfiguration
+        let viewModel = MainTabBarViewModel(
+            userSessionStore: environment.userSessionStore,
+            adaptiveTabBarViewModel: adaptiveTabBarViewModel
+        )
         let mainTabBarViewController = MainTabBarViewController(viewModel: viewModel)
         
         

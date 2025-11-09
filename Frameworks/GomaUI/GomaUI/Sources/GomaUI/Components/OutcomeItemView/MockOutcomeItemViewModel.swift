@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `OutcomeItemViewModelProtocol` for testing.
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
@@ -251,7 +252,7 @@ extension MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "loading",
             bettingOfferId: nil,
-            title: "Loading",
+            title: LocalizationProvider.string("loading_payment_form"),
             value: "",
             displayState: .loading
         )
@@ -275,7 +276,7 @@ extension MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "unavailable",
             bettingOfferId: nil,
-            title: "Unavailable",
+            title: LocalizationProvider.string("unavailable"),
             value: "-",
             displayState: .unavailable
         )

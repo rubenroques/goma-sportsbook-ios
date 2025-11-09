@@ -1,5 +1,6 @@
 import Foundation
 
+
 public final class MockSimpleSquaredFilterBarViewModel {
 
     // MARK: - Static Factory Methods
@@ -20,10 +21,10 @@ public final class MockSimpleSquaredFilterBarViewModel {
     public static var statusFilters: SimpleSquaredFilterBarData {
         SimpleSquaredFilterBarData(
             items: [
-                ("active", "Active"),
-                ("pending", "Pending"),
-                ("completed", "Done"),
-                ("cancelled", "Cancelled")
+                ("active", LocalizationProvider.string("active")),
+                ("pending", LocalizationProvider.string("pending")),
+                ("completed", LocalizationProvider.string("done")),
+                ("cancelled", LocalizationProvider.string("void"))
             ],
             selectedId: "active"
         )
@@ -45,9 +46,9 @@ public final class MockSimpleSquaredFilterBarViewModel {
         SimpleSquaredFilterBarData(
             items: [
                 ("all", "All"),
-                ("payments", "Payments"),
+                ("payments", LocalizationProvider.string("payments")),
                 ("games", "Games"),
-                ("bonuses", "Bonuses")
+                ("bonuses", LocalizationProvider.string("bonuses"))
             ],
             selectedId: "all"
         )
@@ -56,8 +57,8 @@ public final class MockSimpleSquaredFilterBarViewModel {
     public static var gameTypeFilters: SimpleSquaredFilterBarData {
         SimpleSquaredFilterBarData(
             items: [
-                ("live", "Live"),
-                ("upcoming", "Upcoming"),
+                ("live", LocalizationProvider.string("live")),
+                ("upcoming", LocalizationProvider.string("upcoming")),
                 ("finished", "Finished")
             ],
             selectedId: "live"

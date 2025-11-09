@@ -2,12 +2,12 @@
 import UIKit
 import SwiftUI
 
+
 final public class WalletDetailHeaderView: UIView {
     
     // MARK: Private properties
     private lazy var containerView: UIView = Self.createContainerView()
-    private lazy var walletIconView: UIView = Self.createWalletIconView()
-    private lazy var mtnIconImageView: UIImageView = Self.createMtnIconImageView()
+
     private lazy var walletLabel: UILabel = Self.createWalletLabel()
     private lazy var phoneNumberLabel: UILabel = Self.createPhoneNumberLabel()
     
@@ -31,16 +31,13 @@ final public class WalletDetailHeaderView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         self.containerView.layer.cornerRadius = 8
-        self.walletIconView.layer.cornerRadius = 4
     }
     
     func setupWithTheme() {
         self.backgroundColor = UIColor.clear
         self.containerView.backgroundColor = StyleProvider.Color.allWhite
-        self.walletIconView.backgroundColor = StyleProvider.Color.highlightSecondary
         self.walletLabel.textColor = StyleProvider.Color.allDark
         self.phoneNumberLabel.textColor = StyleProvider.Color.allDark
-        self.mtnIconImageView.tintColor = StyleProvider.Color.allWhite
     }
     
     // MARK: Functions
@@ -79,7 +76,7 @@ extension WalletDetailHeaderView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.numberOfLines = 1
-        label.text = "Wallet"
+        label.text = LocalizationProvider.string("wallet")
         return label
     }
     
@@ -89,19 +86,17 @@ extension WalletDetailHeaderView {
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.numberOfLines = 1
         label.textAlignment = .right
-        label.text = "+234 737 456789"
+        label.text = ""
         return label
     }
     
     private func setupSubviews() {
         self.addSubview(self.containerView)
         
-        self.containerView.addSubview(self.walletIconView)
+        
         self.containerView.addSubview(self.walletLabel)
         self.containerView.addSubview(self.phoneNumberLabel)
-        
-        self.walletIconView.addSubview(self.mtnIconImageView)
-        
+                
         self.initConstraints()
     }
     
@@ -114,20 +109,10 @@ extension WalletDetailHeaderView {
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             self.containerView.heightAnchor.constraint(equalToConstant: 48),
             
-            // Wallet icon container
-            self.walletIconView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
-            self.walletIconView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
-            self.walletIconView.widthAnchor.constraint(equalToConstant: 32),
-            self.walletIconView.heightAnchor.constraint(equalToConstant: 32),
-            
-            // MTN icon
-            self.mtnIconImageView.centerXAnchor.constraint(equalTo: self.walletIconView.centerXAnchor),
-            self.mtnIconImageView.centerYAnchor.constraint(equalTo: self.walletIconView.centerYAnchor),
-            self.mtnIconImageView.widthAnchor.constraint(equalToConstant: 20),
-            self.mtnIconImageView.heightAnchor.constraint(equalToConstant: 20),
-            
             // Wallet label
-            self.walletLabel.leadingAnchor.constraint(equalTo: self.walletIconView.trailingAnchor, constant: 8),
+            self.walletLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 8),
+            self.walletLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+        
             self.walletLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
             self.walletLabel.trailingAnchor.constraint(lessThanOrEqualTo: self.phoneNumberLabel.leadingAnchor, constant: -16),
             
@@ -148,7 +133,7 @@ extension WalletDetailHeaderView {
         vc.view.backgroundColor = .backgroundTestColor
         
         let headerView = WalletDetailHeaderView()
-        headerView.configure(walletTitle: "Wallet", phoneNumber: "+234 737 456789")
+        headerView.configure(walletTitle: LocalizationProvider.string("wallet"), phoneNumber: "+234 737 456789")
         headerView.translatesAutoresizingMaskIntoConstraints = false
         
         vc.view.addSubview(headerView)

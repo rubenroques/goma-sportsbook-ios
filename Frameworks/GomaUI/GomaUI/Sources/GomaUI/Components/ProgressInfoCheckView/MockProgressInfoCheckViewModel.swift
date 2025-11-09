@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of ProgressInfoCheckViewModelProtocol for testing and previews
 public final class MockProgressInfoCheckViewModel: ProgressInfoCheckViewModelProtocol {
     
@@ -61,7 +62,7 @@ public extension MockProgressInfoCheckViewModel {
     static func winBoostMock() -> MockProgressInfoCheckViewModel {
         return MockProgressInfoCheckViewModel(
             state: .incomplete(completedSegments: 1, totalSegments: 3),
-            headerText: "You're almost there!",
+            headerText: LocalizationProvider.string("you_almost_there"),
             title: "Get a 3% Win Boost",
             subtitle: "by adding 2 more legs to your betslip (1.2 min odds).",
             icon: "star.fill"
@@ -72,7 +73,7 @@ public extension MockProgressInfoCheckViewModel {
     static func completeMock() -> MockProgressInfoCheckViewModel {
         return MockProgressInfoCheckViewModel(
             state: .complete,
-            headerText: "Congratulations!",
+            headerText: LocalizationProvider.string("congratulations"),
             title: "Win Boost Activated",
             subtitle: "You've earned a 3% Win Boost!",
             icon: "checkmark.circle.fill"
@@ -83,7 +84,7 @@ public extension MockProgressInfoCheckViewModel {
     static func disabledMock() -> MockProgressInfoCheckViewModel {
         return MockProgressInfoCheckViewModel(
             state: .incomplete(completedSegments: 0, totalSegments: 3),
-            headerText: "You're almost there!",
+            headerText: LocalizationProvider.string("you_almost_there"),
             title: "Get a 3% Win Boost",
             subtitle: "by adding 2 more legs to your betslip (1.2 min odds).",
             icon: "star.fill",

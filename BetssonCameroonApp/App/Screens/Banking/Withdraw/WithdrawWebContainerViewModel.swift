@@ -35,10 +35,12 @@ final class WithdrawWebContainerViewModel: ObservableObject {
     /// Load withdraw WebView URL from API
     /// - Parameters:
     ///   - currency: Currency code for the transaction
-    ///   - language: Language code for the WebView
-    func loadWithdraw(currency: String, language: String) {
+    func loadWithdraw(currency: String) {
         state = .loadingURL
-        
+
+        // Get current language from app localization
+        let language = localized("current_language_code").uppercased()
+
         let parameters = CashierParameters.forWithdraw(
             language: language,
             currency: currency

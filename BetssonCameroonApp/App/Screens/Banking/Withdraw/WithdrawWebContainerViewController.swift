@@ -70,7 +70,7 @@ final class WithdrawWebContainerViewController: UIViewController {
         bindViewModel()
         
         // Start loading withdraw
-        viewModel.loadWithdraw(currency: "XAF", language: "EN")
+        viewModel.loadWithdraw(currency: "XAF")
     }
     
     // MARK: - Private Setup
@@ -197,19 +197,19 @@ final class WithdrawWebContainerViewController: UIViewController {
     
     private func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Withdraw Error",
+            title: localized("withdraw_error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            self?.viewModel.loadWithdraw(currency: "XAF", language: "EN")
+
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
+            self?.viewModel.loadWithdraw(currency: "XAF")
         })
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel) { [weak self] _ in
             self?.onTransactionCancel?()
         })
-        
+
         present(alert, animated: true)
     }
 }
@@ -282,7 +282,7 @@ extension WithdrawWebContainerViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Withdraw"
+        label.text = localized("withdraw")
         label.font = AppFont.with(type: .semibold, size: 18)
         label.textColor = UIColor.App.textPrimary
         label.textAlignment = .center
@@ -292,7 +292,7 @@ extension WithdrawWebContainerViewController {
     private static func createCancelButton() -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Cancel", for: .normal)
+        button.setTitle(localized("cancel"), for: .normal)
         button.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button

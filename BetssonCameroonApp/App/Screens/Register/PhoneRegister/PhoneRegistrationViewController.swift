@@ -46,13 +46,21 @@ class PhoneRegistrationViewController: UIViewController {
     
     private let headerView: PromotionalHeaderView
     private let highlightedTextView: HighlightedTextView
-    
+
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        return scrollView
+    }()
+
     private let componentsBaseView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
     private let componentsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -126,63 +134,79 @@ class PhoneRegistrationViewController: UIViewController {
     }
 
     private func setupLayout() {
+        // Fixed navigation header (stays at top)
         view.addSubview(navigationView)
         navigationView.addSubview(navigationTitleLabel)
         navigationView.addSubview(closeButton)
-        
-        view.addSubview(logoImageView)
-        
+
+        // ScrollView for scrollable content
+        view.addSubview(scrollView)
+
+        // Add all scrollable content to scrollView
+        scrollView.addSubview(logoImageView)
+
         headerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headerView)
+        scrollView.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(highlightedTextView)
-        view.addSubview(componentsBaseView)
+        scrollView.addSubview(highlightedTextView)
+        scrollView.addSubview(componentsBaseView)
         componentsBaseView.addSubview(componentsStackView)
 
         createAccountButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(createAccountButton)
+        scrollView.addSubview(createAccountButton)
+
+        // Loading view stays on top of everything
         view.addSubview(loadingView)
 
         NSLayoutConstraint.activate([
+            // Navigation view - fixed at top
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             navigationView.heightAnchor.constraint(equalToConstant: 40),
-            
+
             navigationTitleLabel.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor, constant: 50),
             navigationTitleLabel.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor, constant: -50),
             navigationTitleLabel.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
-            
+
             closeButton.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor, constant: -16),
             closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
             closeButton.heightAnchor.constraint(equalToConstant: 40),
-            
-            logoImageView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            // ScrollView - below navigation, fills remaining space
+            scrollView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Content inside scrollView - using contentLayoutGuide for vertical scrolling
+            logoImageView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: scrollView.frameLayoutGuide.centerXAnchor),
             logoImageView.widthAnchor.constraint(equalToConstant: 100),
             logoImageView.heightAnchor.constraint(equalToConstant: 20),
-            
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+
+            headerView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 8),
+            headerView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -8),
             headerView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
-            
-            highlightedTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+            highlightedTextView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            highlightedTextView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
             highlightedTextView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
-            
+
             componentsBaseView.topAnchor.constraint(equalTo: highlightedTextView.bottomAnchor, constant: 20),
-            componentsBaseView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            componentsBaseView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
+            componentsBaseView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            componentsBaseView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+
             componentsStackView.topAnchor.constraint(equalTo: componentsBaseView.topAnchor),
             componentsStackView.leadingAnchor.constraint(equalTo: componentsBaseView.leadingAnchor),
             componentsStackView.trailingAnchor.constraint(equalTo: componentsBaseView.trailingAnchor),
 
-            createAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            createAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            createAccountButton.topAnchor.constraint(greaterThanOrEqualTo: componentsBaseView.bottomAnchor, constant: 30),
-            createAccountButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            
+            createAccountButton.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            createAccountButton.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+            createAccountButton.topAnchor.constraint(equalTo: componentsBaseView.bottomAnchor, constant: 30),
+            createAccountButton.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -20),
+
+            // Loading view - covers entire view
             loadingView.topAnchor.constraint(equalTo: view.topAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -271,11 +295,11 @@ class PhoneRegistrationViewController: UIViewController {
             let termsView = TermsAcceptanceView(viewModel: termsViewModel)
             self.termsView = termsView
             termsView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(termsView)
+            scrollView.addSubview(termsView)
 
             NSLayoutConstraint.activate([
-                termsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-                termsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+                termsView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+                termsView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
                 termsView.topAnchor.constraint(equalTo: componentsStackView.bottomAnchor, constant: 36),
                 termsView.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor)
             ])

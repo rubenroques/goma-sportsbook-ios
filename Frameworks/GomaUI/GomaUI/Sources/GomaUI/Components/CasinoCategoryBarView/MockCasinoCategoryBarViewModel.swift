@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 
+
 public class MockCasinoCategoryBarViewModel: CasinoCategoryBarViewModelProtocol {
     
     // MARK: - Properties
@@ -60,7 +61,7 @@ extension MockCasinoCategoryBarViewModel {
     public static var popularGames: MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "popular-games",
-            title: "Popular Games",
+            title: LocalizationProvider.string("popular_games"),
             buttonText: "All 127"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)

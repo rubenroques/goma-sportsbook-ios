@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Mock implementation of MatchBannerViewModelProtocol for testing and previews
 public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
 
@@ -198,7 +199,7 @@ extension MockMatchBannerViewModel {
         let dateTime = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Man City", odds: 1.55),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 5.00),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 5.00),
             MatchOutcome(id: "away", displayName: "Arsenal", odds: 5.00)
         ]
 
@@ -228,7 +229,7 @@ extension MockMatchBannerViewModel {
     public static var liveMatch: MockMatchBannerViewModel {
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Man City", odds: 1.55),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 5.00),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 5.00),
             MatchOutcome(id: "away", displayName: "Arsenal", odds: 5.00)
         ]
 
@@ -261,7 +262,7 @@ extension MockMatchBannerViewModel {
     public static var interactiveMatch: MockMatchBannerViewModel {
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Barcelona", odds: 2.10),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 3.40),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 3.40),
             MatchOutcome(id: "away", displayName: "Real Madrid", odds: 3.20)
         ]
 

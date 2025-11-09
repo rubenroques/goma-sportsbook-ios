@@ -40,8 +40,8 @@ PROVISIONING_PROFILE_MAPPING = {
 ## 
 # Firebase Distribution Configuration
 # These are project-specific (not sensitive), so they're defined here instead of .env
-FIREBASE_DISTRIBUTION_GROUPS = "" # "ios-internal"
-FIREBASE_DISTRIBUTION_TESTERS = "ruben@gomadevelopment.pt"  # Optional: comma-separated emails like "dev1@example.com,dev2@example.com"
+FIREBASE_DISTRIBUTION_GROUPS = "goma-internal-ios-team, goma-internal-qa" # "ios-internal"
+FIREBASE_DISTRIBUTION_TESTERS = "" # "ruben@gomadevelopment.pt"  # Optional: comma-separated emails like "dev1@example.com,dev2@example.com"
 ##
 ##
 ##

@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `SingleButtonBannerViewModelProtocol` for testing.
 final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelProtocol {
 
@@ -115,7 +116,7 @@ extension MockSingleButtonBannerViewModel {
     /// Mock with custom styling
     public static var customStyledMock: MockSingleButtonBannerViewModel {
         let buttonConfig = ButtonConfig(
-            title: "Get Started",
+            title: LocalizationProvider.string("get_started"),
             backgroundColor: UIColor.systemGreen,
             textColor: UIColor.black,
             cornerRadius: 20

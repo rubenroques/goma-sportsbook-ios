@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 public class MockMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewModelProtocol {
     
     // MARK: - Private Properties
@@ -178,7 +179,7 @@ extension MockMarketGroupSelectorTabViewModel {
         let marketGroups = [
             MarketGroupTabItemData(id: "1x2", title: "1x2", visualState: .selected),
             MarketGroupTabItemData(id: "double_chance", title: "Double Chance", visualState: .idle),
-            MarketGroupTabItemData(id: "disabled_market", title: "Unavailable", visualState: .idle),
+            MarketGroupTabItemData(id: "disabled_market", title: LocalizationProvider.string("unavailable"), visualState: .idle),
             MarketGroupTabItemData(id: "over_under", title: "Over/Under", visualState: .idle)
         ]
         
@@ -258,14 +259,14 @@ extension MockMarketGroupSelectorTabViewModel {
             ),
             MarketGroupTabItemData(
                 id: "popular",
-                title: "Popular",
+                title: LocalizationProvider.string("popular_string"),
                 visualState: .idle,
                 suffixIconTypeName: "popular",
                 badgeCount: 16
             ),
             MarketGroupTabItemData(
                 id: "sets",
-                title: "Sets",
+                title: LocalizationProvider.string("market_group_sets"),
                 visualState: .idle,
                 badgeCount: 16
             )

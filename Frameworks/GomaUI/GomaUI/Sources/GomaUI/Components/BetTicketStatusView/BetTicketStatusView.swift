@@ -95,7 +95,7 @@ public class BetTicketStatusView: UIView {
             
             iconImageView.isHidden = false
             
-            statusLabel.text = "Won"
+            statusLabel.text = LocalizationProvider.string("won")
             
         case .lost:
             containerStackView.backgroundColor = StyleProvider.Color.backgroundGradient2
@@ -109,7 +109,7 @@ public class BetTicketStatusView: UIView {
             
             iconImageView.isHidden = true
             
-            statusLabel.text = "Lost"
+            statusLabel.text = LocalizationProvider.string("lost")
             statusLabel.textColor = StyleProvider.Color.alertError
 
         case .draw:
@@ -124,13 +124,13 @@ public class BetTicketStatusView: UIView {
             
             iconImageView.isHidden = true
             
-            statusLabel.text = "Draw"
+            statusLabel.text = LocalizationProvider.string("draw")
         }
     }
 }
 
 // MARK: - SwiftUI Preview
-#if canImport(SwiftUI) && DEBUG
+#if DEBUG
 import SwiftUI
 
 @available(iOS 13.0, *)

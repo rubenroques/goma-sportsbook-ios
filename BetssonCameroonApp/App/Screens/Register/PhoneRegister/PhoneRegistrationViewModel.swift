@@ -118,6 +118,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                          isRequired: true,
                                                          visualState: .idle,
                                                          keyboardType: .phonePad,
+                                                         returnKeyType: .next,
                                                          textContentType: .telephoneNumber))
             case "Password":
                 let passwordConfig = config.fields.first(where: {
@@ -131,6 +132,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                          isRequired: true,
                                                          visualState: .idle,
                                                          keyboardType: .default,
+                                                         returnKeyType: .next,
                                                          textContentType: .password))
             case "FirstnameOnDocument":
                 firstNameFieldViewModel = MockBorderedTextFieldViewModel(
@@ -141,6 +143,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                         isRequired: true,
                         visualState: .idle,
                         keyboardType: .default,
+                        returnKeyType: .next,
                         textContentType: .givenName
                     )
                 )
@@ -153,6 +156,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                         isRequired: true,
                         visualState: .idle,
                         keyboardType: .default,
+                        returnKeyType: .next,
                         textContentType: .familyName
                     )
                 )
@@ -172,6 +176,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                         usesCustomInput: true,  // Use date picker instead of keyboard
                         visualState: .idle,
                         keyboardType: .numbersAndPunctuation,
+                        returnKeyType: .done,
                         textContentType: .none
                     )
                 )

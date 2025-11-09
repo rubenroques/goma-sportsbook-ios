@@ -145,8 +145,12 @@ final public class WalletWidgetView: UIView {
     }
 
     @objc private func balanceTapped() {
+        print("💰 WALLET_TAP: WalletWidgetView.balanceTapped() called")
         if let id = balanceContainer.accessibilityIdentifier {
+            print("💰 WALLET_TAP: Calling onBalanceTapped callback with id: \(id)")
             onBalanceTapped(id)
+        } else {
+            print("💰 WALLET_TAP: ERROR - No accessibilityIdentifier on balanceContainer!")
         }
     }
 }

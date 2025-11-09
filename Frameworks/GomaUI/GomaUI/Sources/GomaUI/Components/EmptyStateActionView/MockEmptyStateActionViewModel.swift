@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 /// Mock implementation of EmptyStateActionViewModelProtocol for testing and previews
 public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProtocol {
     
@@ -20,7 +21,7 @@ public final class MockEmptyStateActionViewModel: EmptyStateActionViewModelProto
     }
     
     // MARK: - Initialization
-    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: String? = nil, isEnabled: Bool = true) {
+    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = LocalizationProvider.string("log_in_to_bet"), image: String? = nil, isEnabled: Bool = true) {
         let initialData = EmptyStateActionData(state: state, title: title, actionButtonTitle: actionButtonTitle, image: image, isEnabled: isEnabled)
         self.dataSubject = CurrentValueSubject(initialData)
     }
@@ -60,7 +61,7 @@ public extension MockEmptyStateActionViewModel {
         MockEmptyStateActionViewModel(
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
-            actionButtonTitle: "Log in to bet",
+            actionButtonTitle: LocalizationProvider.string("log_in_to_bet"),
             image: "ticket"
         )
     }
@@ -80,7 +81,7 @@ public extension MockEmptyStateActionViewModel {
         MockEmptyStateActionViewModel(
             state: .loggedOut,
             title: "You need at least 1 selection\nin your betslip to place a bet",
-            actionButtonTitle: "Log in to bet",
+            actionButtonTitle: LocalizationProvider.string("log_in_to_bet"),
             image: "ticket",
             isEnabled: false
         )

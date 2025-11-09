@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of ButtonIconViewModelProtocol for testing and previews
 public final class MockButtonIconViewModel: ButtonIconViewModelProtocol {
     
@@ -105,7 +106,7 @@ public extension MockButtonIconViewModel {
     /// Creates a mock view model for clear betslip button
     static func clearBetslipMock() -> MockButtonIconViewModel {
         return MockButtonIconViewModel(
-            title: "Clear Betslip",
+            title: LocalizationProvider.string("clear_betslip"),
             icon: "trash",
             layoutType: .iconRight
         )

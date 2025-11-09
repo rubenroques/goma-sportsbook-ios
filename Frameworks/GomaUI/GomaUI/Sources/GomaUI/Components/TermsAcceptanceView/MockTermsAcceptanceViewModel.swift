@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 public final class MockTermsAcceptanceViewModel: TermsAcceptanceViewModelProtocol {
     
     private let dataSubject: CurrentValueSubject<TermsAcceptanceData, Never>
@@ -105,8 +106,8 @@ public extension MockTermsAcceptanceViewModel {
     static var defaultMock: MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy",
-            termsText: "Terms and Conditions",
-            privacyText: "Privacy Policy",
+            termsText: LocalizationProvider.string("terms_consent_popup_title"),
+            privacyText: LocalizationProvider.string("privacy_policy_footer_link"),
             isAccepted: false
         )
         
@@ -116,8 +117,8 @@ public extension MockTermsAcceptanceViewModel {
     static var acceptedMock: MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy",
-            termsText: "Terms and Conditions",
-            privacyText: "Privacy Policy",
+            termsText: LocalizationProvider.string("terms_consent_popup_title"),
+            privacyText: LocalizationProvider.string("privacy_policy_footer_link"),
             isAccepted: true
         )
         
@@ -128,7 +129,7 @@ public extension MockTermsAcceptanceViewModel {
         let data = TermsAcceptanceData(
             fullText: "I accept the Terms and Privacy Policy",
             termsText: "Terms",
-            privacyText: "Privacy Policy",
+            privacyText: LocalizationProvider.string("privacy_policy_footer_link"),
             isAccepted: false
         )
         

@@ -82,7 +82,7 @@ public final class BetslipTicketView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 10)
         label.textColor = StyleProvider.Color.textSecondary
-        label.text = "YOUR SELECTION"
+        label.text = LocalizationProvider.string("your_selection").uppercased()
         label.numberOfLines = 1
         return label
     }()
@@ -159,7 +159,7 @@ public final class BetslipTicketView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .semibold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Invalid selection"
+        label.text = LocalizationProvider.string("mix_match_invalid_selection")
         label.textAlignment = .center
         label.numberOfLines = 1
         label.isHidden = true

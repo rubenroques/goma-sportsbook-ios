@@ -310,6 +310,7 @@ extension SearchHeaderInfoView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("SearchHeaderInfoView States") {
     PreviewUIViewController {
@@ -325,19 +326,19 @@ import SwiftUI
         
         // Loading state
         let loadingViewModel = MockSearchHeaderInfoViewModel()
-        loadingViewModel.updateSearch(term: "Liverpool", category: "Sports", state: .loading, count: nil)
+        loadingViewModel.updateSearch(term: "Liverpool", category: LocalizationProvider.string("sports"), state: .loading, count: nil)
         let loadingView = SearchHeaderInfoView(viewModel: loadingViewModel)
         loadingView.configure()
         
         // Results state
         let resultsViewModel = MockSearchHeaderInfoViewModel()
-        resultsViewModel.updateSearch(term: "Liverpool", category: "Sports", state: .results, count: 3)
+        resultsViewModel.updateSearch(term: "Liverpool", category: LocalizationProvider.string("sports"), state: .results, count: 3)
         let resultsView = SearchHeaderInfoView(viewModel: resultsViewModel)
         resultsView.configure()
         
         // No results state
         let noResultsViewModel = MockSearchHeaderInfoViewModel()
-        noResultsViewModel.updateSearch(term: "Liverpool", category: "Sports", state: .noResults, count: nil)
+        noResultsViewModel.updateSearch(term: "Liverpool", category: LocalizationProvider.string("sports"), state: .noResults, count: nil)
         let noResultsView = SearchHeaderInfoView(viewModel: noResultsViewModel)
         noResultsView.configure()
         

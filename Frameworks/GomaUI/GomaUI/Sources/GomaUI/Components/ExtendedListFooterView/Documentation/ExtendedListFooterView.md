@@ -22,7 +22,7 @@ A comprehensive footer component for displaying partnership information, legal l
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // 1. Create or provide an image resolver
 let imageResolver = DefaultExtendedListFooterImageResolver()

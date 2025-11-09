@@ -166,7 +166,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
         }
         
         let endpoint = EveryMatrixCasinoAPI.getRecommendedGames(
-            language: language ?? "en",
+            language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             platform: platform ?? "iPhone"
         )
 

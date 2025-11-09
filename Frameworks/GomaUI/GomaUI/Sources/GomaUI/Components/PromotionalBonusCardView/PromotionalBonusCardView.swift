@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class PromotionalBonusCardView: UIView {
     // MARK: - Private Properties
     private let containerView: UIView = {
@@ -105,7 +106,7 @@ final public class PromotionalBonusCardView: UIView {
     private var termsButton: ButtonView = {
         let termsButtonData = ButtonData(
             id: "terms_conditions",
-            title: "Terms and Conditions",
+            title: LocalizationProvider.string("terms_consent_popup_title"),
             style: .transparent,
             isEnabled: true
         )

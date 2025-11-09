@@ -8,6 +8,7 @@
 import UIKit
 import SwiftUI
 
+
 final public class AdaptiveTabBarItemView: UIView {
     // MARK: - UI Elements
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
@@ -159,7 +160,7 @@ private extension AdaptiveTabBarItemView {
         // Inactive with icon - circle
         let inactiveWithIconData = TabItemDisplayData(
             identifier: .casinoSlots,
-            title: "Casino",
+            title: LocalizationProvider.string("meta_casino_home_title"),
             icon: UIImage(systemName: "circle"),
             isActive: false,
             switchToTabBar: nil
@@ -174,7 +175,7 @@ private extension AdaptiveTabBarItemView {
         // Active text-only
         let activeTextOnlyData = TabItemDisplayData(
             identifier: .myBets,
-            title: "My Bets",
+            title: LocalizationProvider.string("my_bets"),
             icon: nil,
             isActive: true,
             switchToTabBar: nil
@@ -186,7 +187,7 @@ private extension AdaptiveTabBarItemView {
         // Inactive text-only
         let inactiveTextOnlyData = TabItemDisplayData(
             identifier: .profile,
-            title: "Profile",
+            title: LocalizationProvider.string("profile"),
             icon: nil,
             isActive: false,
             switchToTabBar: nil

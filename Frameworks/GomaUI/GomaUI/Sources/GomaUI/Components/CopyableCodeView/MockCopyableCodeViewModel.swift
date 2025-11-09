@@ -1,5 +1,6 @@
 import Foundation
 
+
 /// Mock implementation of CopyableCodeViewModelProtocol for testing and previews
 public struct MockCopyableCodeViewModel: CopyableCodeViewModelProtocol {
     public let code: String
@@ -8,7 +9,7 @@ public struct MockCopyableCodeViewModel: CopyableCodeViewModelProtocol {
 
     public init(
         code: String,
-        label: String = "Copy Booking Code",
+        label: String = LocalizationProvider.string("copy_booking_code"),
         copiedMessage: String = "Copied to Clipboard"
     ) {
         self.code = code
@@ -29,7 +30,7 @@ public extension MockCopyableCodeViewModel {
     static var bookingCodeMock: MockCopyableCodeViewModel {
         MockCopyableCodeViewModel(
             code: "ABCD1E2",
-            label: "Copy Booking Code"
+            label: LocalizationProvider.string("copy_booking_code")
         )
     }
 
