@@ -292,6 +292,24 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             .eraseToAnyPublisher()
     }
 
+    func deleteUserLimit(limitId: String, skipCoolOff: Bool) -> AnyPublisher<Void, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let request = DeleteUserLimitRequest(skipCoolOff: skipCoolOff)
+        let endpoint = EveryMatrixPlayerAPI.deleteUserLimit(userId: currentUserId, limitId: limitId, request: request)
+        let publisher: AnyPublisher<EveryMatrix.EmptyResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .map { _ in () }
+            .catch { error -> AnyPublisher<Void, ServiceProviderError> in
+                if case .decodingError = error {
+                    return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                return Fail(error: error).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
     func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

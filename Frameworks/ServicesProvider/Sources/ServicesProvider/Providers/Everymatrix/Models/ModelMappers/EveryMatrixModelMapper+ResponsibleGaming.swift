@@ -25,6 +25,19 @@ extension EveryMatrixModelMapper {
         else {
             return nil
         }
+        let schedules = limit.schedules?.compactMap { schedule -> UserLimitSchedule? in
+            guard let id = schedule.id else { return nil }
+            return UserLimitSchedule(
+                id: id,
+                insertedAt: schedule.insertedAt,
+                playerLimitId: schedule.playerLimitId,
+                applyAt: schedule.applyAt,
+                updateStatus: schedule.updateStatus,
+                updateAmount: schedule.updateAmount,
+                isCoolOffCompleted: schedule.isCoolOffCompleted ?? false
+            )
+        }
+
         return UserLimit(
             id: id,
             playerId: playerId,
@@ -34,7 +47,8 @@ extension EveryMatrixModelMapper {
             period: period,
             type: type,
             products: limit.products ?? [],
-            walletTypes: limit.walletTypes ?? []
+            walletTypes: limit.walletTypes ?? [],
+            schedules: schedules
         )
     }
 }

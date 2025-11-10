@@ -21,6 +21,7 @@ public struct UserLimit: Codable {
     public let type: String
     public let products: [String]
     public let walletTypes: [String]
+    public let schedules: [UserLimitSchedule]?
 }
 
 public struct UserLimitRequest: Encodable {
@@ -110,4 +111,22 @@ public struct UpdateUserLimitRequest: Encodable {
         self.amount = amount
         self.skipCoolOff = skipCoolOff
     }
+}
+
+public struct DeleteUserLimitRequest: Encodable {
+    public let skipCoolOff: Bool
+
+    public init(skipCoolOff: Bool) {
+        self.skipCoolOff = skipCoolOff
+    }
+}
+
+public struct UserLimitSchedule: Codable, Equatable {
+    public let id: String
+    public let insertedAt: String?
+    public let playerLimitId: String?
+    public let applyAt: String?
+    public let updateStatus: String?
+    public let updateAmount: Double?
+    public let isCoolOffCompleted: Bool
 }

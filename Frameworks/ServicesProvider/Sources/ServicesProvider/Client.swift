@@ -1217,6 +1217,16 @@ extension Client {
         return privilegedAccessManager.updateUserLimit(limitId: limitId, request: request)
     }
 
+    public func deleteUserLimit(limitId: String, skipCoolOff: Bool) -> AnyPublisher<Void, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.deleteUserLimit(limitId: limitId, skipCoolOff: skipCoolOff)
+    }
+
     public func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
 
         guard

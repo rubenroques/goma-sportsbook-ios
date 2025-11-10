@@ -20,6 +20,7 @@ enum EveryMatrixPlayerAPI {
     case setTimeOut(userId: String, request: UserTimeoutRequest)
     case setSelfExclusion(userId: String, request: SelfExclusionRequest)
     case updateUserLimit(userId: String, limitId: String, request: UpdateUserLimitRequest)
+    case deleteUserLimit(userId: String, limitId: String, request: DeleteUserLimitRequest)
     case getUserLimits(userId: String, periodTypes: String?)
     //
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
@@ -77,6 +78,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .setSelfExclusion(let userId, _):
             return "/v1/player/\(userId)/limits/session"
         case .updateUserLimit(let userId, let limitId, _):
+            return "/v1/player/\(userId)/limits/monetary/\(limitId)"
+        case .deleteUserLimit(let userId, let limitId, _):
             return "/v1/player/\(userId)/limits/monetary/\(limitId)"
         case .getUserLimits(let userId, _):
             return "/v1/player/\(userId)/limits/monetary"
@@ -148,6 +151,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return nil
         case .updateUserLimit:
             return nil
+        case .deleteUserLimit(_, _, let request):
+            return [URLQueryItem(name: "skipCoolOff", value: request.skipCoolOff ? "true" : "false")]
         case .getUserLimits(_, let periodTypes):
             guard let periodTypes = periodTypes, !periodTypes.isEmpty else {
                 return nil
@@ -203,7 +208,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     var headers: HTTP.Headers? {
 
         switch self {
-        case .getUserProfile, .getUserBalance, .getWageringTransactions, .getBankingTransactions, .getResponsibleGamingLimits, .setUserLimit, .setTimeOut, .setSelfExclusion, .updateUserLimit, .getUserLimits:
+        case .getUserProfile, .getUserBalance, .getWageringTransactions, .getBankingTransactions, .getResponsibleGamingLimits, .setUserLimit, .setTimeOut, .setSelfExclusion, .updateUserLimit, .deleteUserLimit, .getUserLimits:
             let headers = [
                 "Content-Type": "application/json",
                 "User-Agent": "GOMA/native-app/iOS",
@@ -256,6 +261,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return .put
         case .updateUserLimit:
             return .put
+        case .deleteUserLimit:
+            return .delete
         case .getUserLimits:
             return .get
         
@@ -391,6 +398,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return true
         case .updateUserLimit:
             return true
+        case .deleteUserLimit:
+            return true
         case .getUserLimits:
             return true
         case .getBankingWebView:
@@ -423,6 +432,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "setSelfExclusion"
         case .updateUserLimit:
             return "updateUserLimit"
+        case .deleteUserLimit:
+            return "deleteUserLimit"
         case .getUserLimits:
             return "getUserLimits"
         default:

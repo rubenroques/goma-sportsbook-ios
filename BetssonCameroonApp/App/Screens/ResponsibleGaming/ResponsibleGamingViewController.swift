@@ -2,7 +2,7 @@
 //  ResponsibleGamingViewController.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on November 6, 2025.
+//  Created by André on 07/11/2025.
 //
 
 import UIKit
@@ -202,11 +202,11 @@ class ResponsibleGamingViewController: UIViewController {
     // MARK: - Setup Methods
     
     private func setupWithTheme() {
-        self.view.backgroundColor = StyleProvider.Color.backgroundSecondary
-        self.topSafeAreaView.backgroundColor = StyleProvider.Color.highlightPrimary
-        self.navigationView.backgroundColor = StyleProvider.Color.highlightPrimary
-        self.titleLabel.textColor = StyleProvider.Color.allWhite
-        self.backButton.tintColor = StyleProvider.Color.allWhite
+        self.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
+        self.navigationView.backgroundColor = .clear
+        self.titleLabel.textColor = StyleProvider.Color.textPrimary
+        self.backButton.tintColor = StyleProvider.Color.textPrimary
         self.containerView.backgroundColor = .clear
         self.innerContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary
     }

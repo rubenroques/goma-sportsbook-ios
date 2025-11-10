@@ -2,7 +2,7 @@
 //  ResponsibleGamingConfiguration.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on 07/11/2025.
+//  Created by André on 07/11/2025.
 //
 
 import Foundation
@@ -20,17 +20,17 @@ struct ResponsibleGamingConfiguration: Codable {
                 .init(label: "monthly", value: "monthly")
             ]),
             timeout: .init(periods: [
-                .init(label: "24_hours", value: "CoolOffFor24Hours", isDefault: true),
-                .init(label: "7_days", value: "CoolOffFor7Days"),
-                .init(label: "1_month", value: "CoolOffFor30Days"),
-                .init(label: "3_months", value: "CoolOffFor3Months")
+                .init(label: "hours_24", value: "CoolOffFor24Hours", isDefault: true),
+                .init(label: "days_7", value: "CoolOffFor7Days"),
+                .init(label: "month_1", value: "CoolOffFor30Days"),
+                .init(label: "months_3", value: "CoolOffFor3Months")
             ]),
             selfExclusion: .init(periods: [
-                .init(label: "3_months", value: "SelfExclusionFor3Months"),
-                .init(label: "6_months", value: "SelfExclusionFor6Months"),
-                .init(label: "12_months", value: "SelfExclusionFor1Year"),
-                .init(label: "18_months", value: "SelfExclusionCustom18Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 18),
-                .init(label: "24_months", value: "SelfExclusionCustom24Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 24),
+                .init(label: "months_3", value: "SelfExclusionFor3Months"),
+                .init(label: "months_6", value: "SelfExclusionFor6Months"),
+                .init(label: "months_12", value: "SelfExclusionFor1Year"),
+                .init(label: "months_18", value: "SelfExclusionCustom18Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 18),
+                .init(label: "months_24", value: "SelfExclusionCustom24Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 24),
                 .init(label: "indefinitely", value: "SelfExclusionPermanent")
             ])
         )

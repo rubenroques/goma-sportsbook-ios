@@ -58,7 +58,7 @@ extension EveryMatrix {
         let type: String?
         let products: [String]?
         let walletTypes: [String]?
-        let schedules: [String]?
+        let schedules: [LimitSchedule]?
         let effectiveDate: String?
         let expiryDate: String?
         
@@ -75,6 +75,26 @@ extension EveryMatrix {
             case schedules
             case effectiveDate
             case expiryDate
+        }
+    }
+
+    struct LimitSchedule: Decodable {
+        let id: String?
+        let insertedAt: String?
+        let playerLimitId: String?
+        let applyAt: String?
+        let updateStatus: String?
+        let updateAmount: Double?
+        let isCoolOffCompleted: Bool?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case insertedAt = "ins"
+            case playerLimitId
+            case applyAt
+            case updateStatus
+            case updateAmount
+            case isCoolOffCompleted
         }
     }
 
