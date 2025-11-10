@@ -80,9 +80,9 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
                 action: .notifications
             ),
             ActionRowItem(
-                id: "transaction_history",
+                id: "transactions_history",
                 icon: "clock",
-                title: LocalizationProvider.string("history_transactions"),
+                title: LocalizationProvider.string("transactions_history"),
                 type: .navigation,
                 action: .transactionHistory
             ),

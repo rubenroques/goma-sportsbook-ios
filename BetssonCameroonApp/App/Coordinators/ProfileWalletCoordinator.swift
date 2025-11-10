@@ -162,13 +162,13 @@ final class ProfileWalletCoordinator: Coordinator {
         guard let profileViewController = profileViewController else { return }
         
         let alert = UIAlertController(
-            title: "Logout",
-            message: "Are you sure you want to logout?",
+            title: localized("logout"),
+            message: localized("logout_confirmation_message"),
             preferredStyle: .alert
         )
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let logoutAction = UIAlertAction(title: "Logout", style: .destructive) { [weak self] _ in
+
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel)
+        let logoutAction = UIAlertAction(title: localized("logout"), style: .destructive) { [weak self] _ in
             self?.performLogout()
         }
         

@@ -470,6 +470,8 @@
 
 "birth_date_already_in_use" = "This birth date is already in use";
 
+"date_format_placeholder" = "yyyy-mm-dd";
+
 "birth_place" = "Place of Birth";
 
 "block" = "Block";
@@ -529,6 +531,12 @@
 "bonus_balance" = "Bonus Balance";
 
 "booking_code" = "Booking Code";
+
+"booking_code_loaded" = "Booking Code Loaded";
+
+"booking_code_loaded_message" = "Booking Code Loaded ({count} selections)";
+
+"booking_code_not_found_error" = "Booking Code can't be found. It either doesn't exist or expired.";
 
 "boosted_section_header" = "Cotes Boostées";
 
@@ -1220,6 +1228,8 @@
 
 "forgot_password" = "Forgot Password";
 
+"forgot_your_password" = "Forgot your Password?";
+
 "fourth_info_descrition_cashback" = "Bets where the Cashback balance has been used will display the following label:";
 
 "fourth_info_descrition_replay" = "Check for this tag on your bets to see if you used your replay balance on it.";
@@ -1768,7 +1778,7 @@
 
 "live_status_eit" = "Extra Inning - Top";
 
-"live_status_ended" = "TERMINÉ";
+"live_status_ended" = "ENDED";
 
 "live_status_golden_set" = "set d'or";
 
@@ -1888,6 +1898,8 @@
 "login_to_play" = "Login to Play";
 
 "logout" = "Logout";
+
+"logout_confirmation_message" = "Are you sure you want to logout?";
 
 "look_bet_made" = "Look at the bet I just made! Join me.";
 
@@ -2531,6 +2543,10 @@
 
 "password" = "Password";
 
+"password_min_4_chars" = "Password (4 characters)";
+
+"password_reset_code" = "Password reset code";
+
 "password_changed" = "Password Changed Successfully";
 
 "password_contains_username" = "Password contains username";
@@ -2631,6 +2647,8 @@
 
 "place_bet" = "Place Bet";
 
+"place_bet_with_amount" = "Place Bet {currency} {amount}";
+
 "place_bet_success_text" = "Your bet was succfully placed";
 
 "place_bet_success_title" = "Bet Succesfully placed";
@@ -2684,6 +2702,12 @@
 "postcode_invalid" = "This postcode is invalid.";
 
 "practice_play" = "Practice Play";
+
+"practice_mode" = "Practice Play";
+
+"play_now" = "Play";
+
+"exit" = "Exit";
 
 "pre_validated" = "Pre Validated";
 
@@ -2900,6 +2924,18 @@
 "register" = "Register";
 
 "register_error_title" = "Sign up error";
+
+"register_success_title" = "Registration Successful!";
+
+"register_success_message" = "Your account was registered and logged in!";
+
+"phone_number_length_error" = "Phone number must be between {min} and {max} digits";
+
+"first_name_length_error" = "First name must be between {min} and {max} characters";
+
+"minimum_age_error" = "You must be at least 21 years old to register";
+
+"date_must_be_after" = "Date must be after {date}";
 
 "reject" = "Reject";
 
@@ -3204,6 +3240,12 @@
 "share_all_selections_not_available_description" = "Your selection is not available. Try again";
 
 "share_all_selections_not_available_title" = "Selection not available";
+
+"share_betslip" = "Share Betslip";
+
+"share_booking_code" = "Share Booking Code";
+
+"share_booking_code_message" = "Check out my betslip! Booking Code: {code}";
 
 "share_event" = "Share Event";
 
@@ -3884,5 +3926,87 @@
 "all_qualifying_events_added" = "All qualifying events added!";
 
 "load_count_more_games" = "Load {count} more games";
+
+"players_chose_bonus" = "{count} players chose this bonus";
+
+"volatility" = "Volatility";
+
+"no_events" = "No Events";
+
+// MyBets & Bet Details - Phase 1: Critical UI
+"mybetdetail_nav_title" = "Bet Details";
+
+"mybets_loading_message" = "Loading bets...";
+
+"mybets_error_load_failed" = "Failed to load bets";
+
+"mybets_empty_state" = "No bets found";
+
+"mybets_replace_betslip_title" = "Replace Current Betslip";
+
+"mybets_replace_betslip_message" = "This will clear your current betslip and add the selections from this bet. Continue?";
+
+"mybets_button_rebet" = "Rebet";
+
+"mybets_button_cashout" = "Cashout";
+
+"mybets_status_cashout" = "Cash Out";
+
+"mybets_status_settled" = "Settled";
+
+// MyBets & Bet Details - Phase 2: Content Labels
+"mybetdetail_bet_placed_on" = "Bet Placed on {date}";
+
+"mybetdetail_label_ticket" = "Ticket";
+
+"mybetdetail_label_amount" = "Amount";
+
+"mybetdetail_label_potential_return" = "Potential Return";
+
+"mybetdetail_label_total_return" = "Total Return";
+
+"mybetdetail_label_partial_cashout" = "Partial Cashout";
+
+"mybetdetail_label_bet_result" = "Bet result";
+
+"mybetdetail_multiple_results_label" = "Multiple bet results";
+
+"mybetdetail_single_result_label" = "Bet result";
+
+// Bet State Display Names
+"bet_state_closed" = "Closed";
+
+"bet_state_attempted" = "Attempted";
+
+"bet_state_cashed_out" = "Cashed Out";
+
+"bet_state_undefined" = "Undefined";
+
+// Bet Result Display Names
+"bet_result_not_specified" = "Not Specified";
+
+// Date Formats
+"date_today_time" = "Today {time}";
+
+"date_tomorrow_time" = "Tomorrow {time}";
+
+// MyBets & Bet Details - Phase 3: Error Messages & Edge Cases
+"mybets_error_api_load" = "Failed to load bets: {error}";
+
+"mybets_error_api_load_more" = "Failed to load more bets: {error}";
+
+"mybetdetail_booking_code_error_title" = "Booking Code Error";
+
+"mybetdetail_booking_code_error_message" = "Failed to create booking code: {message}";
+
+"mybetdetail_share_no_selections" = "No selections are available to share for this bet.";
+
+"mybets_choose_cashout_amount" = "Choose a cash out amount";
+
+"mybets_cashout_amount" = "Cashout {amount}";
+
+"mybets_ticket_detail" = "Ticket: {ticket}";
+
+"mybetdetail_ticket_number" = "Ticket #{ticket}";
 
 "select_sport" = "Select Sport";

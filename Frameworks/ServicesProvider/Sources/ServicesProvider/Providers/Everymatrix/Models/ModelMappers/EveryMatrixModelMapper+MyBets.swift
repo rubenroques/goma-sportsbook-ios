@@ -2,7 +2,7 @@
 //  EveryMatrixModelMapper+MyBets.swift
 //  ServicesProvider
 //
-//  Created by Assistant on 29/08/2025.
+//  Created on 29/08/2025.
 //
 
 import Foundation
@@ -23,17 +23,20 @@ extension EveryMatrixModelMapper {
             print("[EveryMatrixModelMapper] ❌ Failed to map bet - missing required fields")
             return nil
         }
-        
+
         let formatter = ISO8601DateFormatter()
         let date = formatter.date(from: dateString) ?? Date()
-        
+
         let betState = Self.betState(fromStatus: status)
         let betResult = Self.betResult(fromStatus: everyMatrixBet.betSettlementStatus ?? status)
-        
-        let selections = everyMatrixBet.selections?.compactMap { 
-            Self.betSelection(fromEveryMatrixSelection: $0) 
+
+        let selections = everyMatrixBet.selections?.compactMap {
+            Self.betSelection(fromEveryMatrixSelection: $0)
         } ?? []
-        
+
+        // Extract currency from API response, fallback to EUR if not available
+        let currency = everyMatrixBet.currency
+
         return Bet(
             identifier: betId,
             type: everyMatrixBet.type ?? "SINGLE",
@@ -42,6 +45,7 @@ extension EveryMatrixModelMapper {
             globalState: betState,
             stake: amount,
             totalOdd: everyMatrixBet.totalPriceValue ?? 1.0,
+            currency: currency,
             selections: selections,
             potentialReturn: everyMatrixBet.maxWinning,
             totalReturn: everyMatrixBet.potentialNetReturns,

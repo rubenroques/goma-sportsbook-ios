@@ -52,13 +52,13 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "registerHeader",
                                                                                            icon: "key_icon",
-                                                                                           title: "Get in on the action!",
+                                                                                           title: localized("get_in_on_the_action"),
                                                                                            subtitle: nil))
-        
-        highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: "Sign up securely in just 2 minutes", highlights: []))
+
+        highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: localized("sign_up_securely_in_just_2_minutes"), highlights: []))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "register",
-                                                                     title: "Create Account",
+                                                                     title: localized("create_account"),
                                                                      style: .solidBackground,
                                                                      isEnabled: true))
         
@@ -89,7 +89,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     $0.name == "TermsAndConditions"
                 }) {
                     
-                    self?.extractedTermsHTMLData = RegisterConfigHelper.extractLinksAndCleanText(from: termsConfig.displayName)
+                    self?.extractedTermsHTMLData = RegisterConfigHelper.extractLinksAndCleanText(from: termsConfig.displayName ?? "")
                 }
                 
                 self?.handleRegistrationConfig(mappedRegistrationConfig.content)
@@ -112,7 +112,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 phonePrefixText = phoneConfig?.defaultValue ?? "+237"
                 phoneFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(id: "phone",
-                                                         placeholder: field.placeholder ?? "Mobile Phone Number",
+                                                         placeholder: field.displayName ?? localized("mobile_phone_number"),
                                                          prefix: phoneConfig?.defaultValue ?? "+237",
                                                          isSecure: false,
                                                          isRequired: true,
@@ -127,7 +127,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 
                 passwordFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(id: "password",
-                                                         placeholder: field.placeholder ?? "Password (4 characters)",
+                                                         placeholder: field.displayName ?? localized("password_min_4_chars"),
                                                          isSecure: true,
                                                          isRequired: true,
                                                          visualState: .idle,
@@ -138,7 +138,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 firstNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "firstName",
-                        placeholder: field.placeholder ?? "Enter your first name",
+                        placeholder: field.displayName ?? localized("first_name"),
                         isSecure: false,
                         isRequired: true,
                         visualState: .idle,
@@ -151,7 +151,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 lastNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "lastName",
-                        placeholder: field.placeholder ?? "Enter your last name",
+                        placeholder: field.displayName ?? localized("last_name"),
                         isSecure: false,
                         isRequired: true,
                         visualState: .idle,
@@ -170,7 +170,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 birthDateFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "birthDate",
-                        placeholder: field.placeholder ?? "yyyy-mm-dd",
+                        placeholder: field.displayName ?? localized("date_format_placeholder"),
                         isSecure: false,
                         isRequired: true,
                         usesCustomInput: true,  // Use date picker instead of keyboard
@@ -527,7 +527,9 @@ class RegisterConfigHelper {
                 let isValid = (phoneText.count >= phoneMinLengthRule) && (phoneText.count <= phoneMaxLengthRule)
                 
                 if !isValid {
-                    return (false, "Phone number must be between \(phoneMinLengthRule) and \(phoneMaxLengthRule) digits")
+                    return (false, localized("phone_number_length_error")
+                        .replacingOccurrences(of: "{min}", with: "\(phoneMinLengthRule)")
+                        .replacingOccurrences(of: "{max}", with: "\(phoneMaxLengthRule)"))
                 }
             }
             
@@ -546,7 +548,7 @@ class RegisterConfigHelper {
                 let isValid = passwordText.count >= passwordMinLengthRule
                 
                 if !isValid {
-                    return (false, "Password too small")
+                    return (false, localized("password_invalid_length"))
                 }
             }
             
@@ -555,7 +557,7 @@ class RegisterConfigHelper {
                 let isValid = passwordText.count <= passwordMaxLengthRule
                 
                 if !isValid {
-                    return (false, "Password greater than \(passwordMaxLengthRule) characters")
+                    return (false, localized("password_invalid_length"))
                 }
             }
             
@@ -622,7 +624,9 @@ class RegisterConfigHelper {
                 let isValid = (text.count >= minLength) && (text.count <= maxLength)
                 
                 if !isValid {
-                    return (false, "First name must be between \(minLength) and \(maxLength) characters")
+                    return (false, localized("first_name_length_error")
+                        .replacingOccurrences(of: "{min}", with: "\(minLength)")
+                        .replacingOccurrences(of: "{max}", with: "\(maxLength)"))
                 }
             }
         }
@@ -655,7 +659,7 @@ class RegisterConfigHelper {
                 let isValid = (text.count >= minLength) && (text.count <= maxLength)
                 
                 if !isValid {
-                    return (false, "Last name must be between \(minLength) and \(maxLength) characters")
+                    return (false, localized("last_name_invalid_length"))
                 }
             }
         }
@@ -674,7 +678,7 @@ class RegisterConfigHelper {
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             
             guard let parsedDate = dateFormatter.date(from: dateText) else {
-                return (false, "Invalid date format. Use yyyy-mm-dd")
+                return (false, localized("invalid_date_format"))
             }
             
             // Check min/max dates from config
@@ -685,11 +689,12 @@ class RegisterConfigHelper {
                 let maxDate = dateFormatter.date(from: maxDateString)
                 
                 if let minDate = minDate, parsedDate < minDate {
-                    return (false, "Date must be after \(minDateString)")
+                    return (false, localized("date_must_be_after")
+                        .replacingOccurrences(of: "{date}", with: minDateString))
                 }
                 
                 if let maxDate = maxDate, parsedDate > maxDate {
-                    return (false, "You must be at least 21 years old")
+                    return (false, localized("minimum_age_error"))
                 }
             }
             

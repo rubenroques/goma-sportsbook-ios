@@ -2,7 +2,7 @@
 //  ShareBookingCodeViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 15/10/2025.
+//  Created on 15/10/2025.
 //
 
 import Foundation
@@ -34,7 +34,7 @@ final class ShareBookingCodeViewModel: ShareBookingCodeViewModelProtocol {
 
         // Share button VM
         let shareVM = ButtonIconViewModel(
-            title: "Share Booking Code",
+            title: localized("share_booking_code"),
             icon: "share_icon",
             layoutType: .iconLeft,
             isEnabled: true,

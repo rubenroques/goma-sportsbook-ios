@@ -2,7 +2,7 @@
 //  EveryMatrix+PlaceBet.swift
 //  ServicesProvider
 //
-//  Created by Assistant on 30/09/2025.
+//  Created on 30/09/2025.
 //
 
 import Foundation

@@ -551,6 +551,15 @@ struct ComponentRegistry {
                 let viewModel = MockNavigationActionViewModel.openBetslipDetailsMock()
                 return NavigationActionView(viewModel: viewModel)
             }
+        ),
+        UIComponent(
+            title: "Simple Navigation Bar",
+            description: "Simple, reusable navigation bar with back button and optional title, using callback-based navigation",
+            viewController: SimpleNavigationBarViewController.self,
+            previewFactory: {
+                let viewModel = MockSimpleNavigationBarViewModel.withBackTextAndTitle
+                return SimpleNavigationBarView(viewModel: viewModel)
+            }
         )
     ]
     

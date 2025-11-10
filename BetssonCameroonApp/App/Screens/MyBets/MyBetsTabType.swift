@@ -8,9 +8,9 @@ enum MyBetsTabType: String, CaseIterable {
     var title: String {
         switch self {
         case .sports:
-            return "Sports"
+            return localized("sports")
         case .virtuals:
-            return "Virtuals"
+            return localized("virtuals")
         }
     }
     

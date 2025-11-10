@@ -20,7 +20,7 @@ class PhoneRegistrationViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Register"
+        label.text = localized("register")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -276,7 +276,7 @@ class PhoneRegistrationViewController: UIViewController {
             toolbar.isTranslucent = true
 
             let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(datePickerDone))
+            let doneButton = UIBarButtonItem(title: localized("done"), style: .done, target: self, action: #selector(datePickerDone))
             toolbar.items = [flexSpace, doneButton]
 
             // Set custom input view BEFORE field is added to view hierarchy
@@ -367,8 +367,8 @@ class PhoneRegistrationViewController: UIViewController {
     func showRegisterSuccessAlert() {
         
         let alert = UIAlertController(
-            title: "Register Success!",
-            message: "Your account was registered and logged in!",
+            title: localized("register_success_title"),
+            message: localized("register_success_message"),
             preferredStyle: .alert
         )
         
@@ -389,7 +389,7 @@ class PhoneRegistrationViewController: UIViewController {
     func showRegisterErrorAlert(errorMessage: String) {
         
         let alert = UIAlertController(
-            title: "Register Error",
+            title: localized("register_error_title"),
             message: errorMessage,
             preferredStyle: .alert
         )

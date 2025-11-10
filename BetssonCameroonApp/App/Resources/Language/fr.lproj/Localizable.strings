@@ -470,6 +470,8 @@
 
 "birth_date_already_in_use" = "Cette date de naissance est déjà utilisée";
 
+"date_format_placeholder" = "aaaa-mm-jj";
+
 "birth_place" = "Ville de naissance";
 
 "block" = "Bloquer";
@@ -529,6 +531,12 @@
 "bonus_balance" = "Solde bonus";
 
 "booking_code" = "Code de réservation";
+
+"booking_code_loaded" = "Code Chargé";
+
+"booking_code_loaded_message" = "Code Chargé ({count} sélections)";
+
+"booking_code_not_found_error" = "Code introuvable. Il n'existe pas ou a expiré.";
 
 "boosted_section_header" = "Cotes Boostées";
 
@@ -1220,6 +1228,8 @@
 
 "forgot_password" = "Mot de passe oublié";
 
+"forgot_your_password" = "Mot de passe oublié ?";
+
 "fourth_info_descrition_cashback" = "Les paris pour lesquels le solde Cashback a été utilisé affichent l'étiquette suivante :";
 
 "fourth_info_descrition_replay" = "Les paris pour lesquels le solde Cashback a été utilisé affichent l'étiquette suivante :";
@@ -1889,6 +1899,8 @@
 
 "logout" = "Se déconnecter";
 
+"logout_confirmation_message" = "Êtes-vous sûr de vouloir vous déconnecter ?";
+
 "look_bet_made" = "Regarde mon pari. Relève le défi.";
 
 "loss_limit" = "Limite de perte";
@@ -2531,6 +2543,10 @@
 
 "password" = "Mot de passe";
 
+"password_min_4_chars" = "Mot de passe (4 caractères)";
+
+"password_reset_code" = "Code de réinitialisation du mot de passe";
+
 "password_changed" = "Mot de passe modifié avec succès";
 
 "password_contains_username" = "Le mot de passe contient le nom d'utilisateur";
@@ -2631,6 +2647,8 @@
 
 "place_bet" = "Parier";
 
+"place_bet_with_amount" = "Parier {currency} {amount}";
+
 "place_bet_success_text" = "Votre pari a été placé avec succès";
 
 "place_bet_success_title" = "Pari placé";
@@ -2684,6 +2702,12 @@
 "postcode_invalid" = "Ce code postal n'est pas valide.";
 
 "practice_play" = "S'entrainer à jouer";
+
+"practice_mode" = "Jouer en Mode Pratique";
+
+"play_now" = "Jouer";
+
+"exit" = "Sortir";
 
 "pre_validated" = "Pré-validé";
 
@@ -2900,6 +2924,18 @@
 "register" = "S'inscrire";
 
 "register_error_title" = "Problème lors de l'inscription";
+
+"register_success_title" = "Inscription réussie!";
+
+"register_success_message" = "Votre compte a été créé et vous êtes connecté!";
+
+"phone_number_length_error" = "Le numéro de téléphone doit contenir entre {min} et {max} chiffres";
+
+"first_name_length_error" = "Le prénom doit contenir entre {min} et {max} caractères";
+
+"minimum_age_error" = "Vous devez avoir au moins 21 ans pour vous inscrire";
+
+"date_must_be_after" = "La date doit être postérieure au {date}";
 
 "reject" = "Rejeter";
 
@@ -3204,6 +3240,12 @@
 "share_all_selections_not_available_description" = "Votre sélection n'est pas disponible. Veuillez réessayer.";
 
 "share_all_selections_not_available_title" = "Sélection indisponible";
+
+"share_betslip" = "Partager Pari";
+
+"share_booking_code" = "Partager Code";
+
+"share_booking_code_message" = "Regardez mon pari ! Code : {code}";
 
 "share_event" = "Partager l'événement";
 
@@ -3884,5 +3926,85 @@
 "all_qualifying_events_added" = "Tous les événements qualifiants ajoutés!";
 
 "load_count_more_games" = "Charger {count} jeux supplémentaires";
+
+"players_chose_bonus" = "{count} joueurs ont choisi ce bonus";
+
+"volatility" = "Volatilité";
+
+"no_events" = "Aucun événement";
+
+// MyBets & Bet Details - Phase 1: Critical UI
+"mybetdetail_nav_title" = "Détails du pari";
+
+"mybets_loading_message" = "Chargement des paris...";
+
+"mybets_error_load_failed" = "Échec du chargement des paris";
+
+"mybets_empty_state" = "Aucun pari trouvé";
+
+"mybets_replace_betslip_title" = "Remplacer le bulletin actuel";
+
+"mybets_replace_betslip_message" = "Cela effacera votre bulletin actuel et ajoutera les sélections de ce pari. Continuer?";
+
+"mybets_button_rebet" = "Rejouer";
+
+"mybets_status_cashout" = "CashOut";
+
+"mybets_status_settled" = "Réglé";
+
+// MyBets & Bet Details - Phase 2: Content Labels
+"mybetdetail_bet_placed_on" = "Pari placé le {date}";
+
+"mybetdetail_label_ticket" = "Ticket";
+
+"mybetdetail_label_amount" = "Montant";
+
+"mybetdetail_label_potential_return" = "Retour potentiel";
+
+"mybetdetail_label_total_return" = "Retour total";
+
+"mybetdetail_label_partial_cashout" = "CashOut partiel";
+
+"mybetdetail_label_bet_result" = "Résultat du pari";
+
+"mybetdetail_multiple_results_label" = "Résultats de paris multiples";
+
+"mybetdetail_single_result_label" = "Résultat du pari";
+
+// Bet State Display Names
+"bet_state_closed" = "Fermé";
+
+"bet_state_attempted" = "Tenté";
+
+"bet_state_cashed_out" = "CashOut effectué";
+
+"bet_state_undefined" = "Indéfini";
+
+// Bet Result Display Names
+"bet_result_not_specified" = "Non spécifié";
+
+// Date Formats
+"date_today_time" = "Aujourd'hui {time}";
+
+"date_tomorrow_time" = "Demain {time}";
+
+// MyBets & Bet Details - Phase 3: Error Messages & Edge Cases
+"mybets_error_api_load" = "Échec du chargement des paris : {error}";
+
+"mybets_error_api_load_more" = "Échec du chargement de plus de paris : {error}";
+
+"mybetdetail_booking_code_error_title" = "Erreur de code de réservation";
+
+"mybetdetail_booking_code_error_message" = "Échec de la création du code de réservation : {message}";
+
+"mybetdetail_share_no_selections" = "Aucune sélection n'est disponible pour partager ce pari.";
+
+"mybets_choose_cashout_amount" = "Choisissez un montant de CashOut";
+
+"mybets_cashout_amount" = "CashOut {amount}";
+
+"mybets_ticket_detail" = "Ticket : {ticket}";
+
+"mybetdetail_ticket_number" = "Ticket #{ticket}";
 
 "select_sport" = "Sélectionner un sport";

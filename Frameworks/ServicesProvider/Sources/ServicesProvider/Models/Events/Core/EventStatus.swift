@@ -24,16 +24,6 @@ public enum EventStatus: Hashable {
             resultStatus = .inProgress(value)
         }
 
-        // Debug log for status parsing
-        let statusName: String
-        switch resultStatus {
-        case .notStarted: statusName = "notStarted"
-        case .inProgress: statusName = "inProgress"
-        case .ended: statusName = "ended"
-        default: statusName = "inProgress"
-        }
-        print("[M-STATUS] EventStatus.init | value: \"\(value)\" → .\(statusName)")
-
         self = resultStatus
     }
 

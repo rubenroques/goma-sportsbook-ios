@@ -246,14 +246,14 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
                 CasinoGamePlayModeButton(
                     id: "login",
                     type: .primary,
-                    title: "Login to Play",
+                    title: localized("login_to_play"),
                     state: .enabled,
                     style: .filled
                 ),
                 CasinoGamePlayModeButton(
                     id: "practice",
                     type: .secondary,
-                    title: "Practice Play",
+                    title: localized("practice_play"),
                     state: .enabled,
                     style: .outlined
                 )
@@ -264,14 +264,14 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
                 CasinoGamePlayModeButton(
                     id: "play",
                     type: .primary,
-                    title: "PLAY_NOW",
+                    title: localized("play_now"),
                     state: .enabled,
                     style: .filled
                 ),
                 CasinoGamePlayModeButton(
                     id: "practice",
                     type: .secondary,
-                    title: "PRACTICE_MODE",
+                    title: localized("practice_mode"),
                     state: .enabled,
                     style: .outlined
                 )

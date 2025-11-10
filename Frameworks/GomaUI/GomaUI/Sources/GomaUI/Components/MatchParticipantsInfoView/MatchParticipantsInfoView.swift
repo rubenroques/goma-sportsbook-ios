@@ -300,7 +300,7 @@ extension MatchParticipantsInfoView {
             verticalDateLabel.isHidden = true
             verticalTimeLabel.isHidden = true
             verticalMatchTimeLabel.isHidden = false
-            verticalMatchTimeLabel.text = "Ended"
+            verticalMatchTimeLabel.text = LocalizationProvider.string("live_status_ended")
         }
     }
     

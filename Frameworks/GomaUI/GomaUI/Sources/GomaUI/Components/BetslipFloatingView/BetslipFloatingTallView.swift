@@ -231,9 +231,10 @@ public final class BetslipFloatingTallView: UIView {
 
                 // Update description
                 let remainingSelections = max(0, totalEligibleCount - selectionCount)
-                if remainingSelections > 0 {
-                    let legWord = remainingSelections == 1 ? LocalizationProvider.string("leg") : LocalizationProvider.string("legs")
-                    descriptionLabel.text = "by adding \(remainingSelections) more \(legWord) to your betslip (1.2 min odds)."
+                if remainingSelections > 0, let nextPercentage = nextTierPercentage {
+                    descriptionLabel.text = LocalizationProvider.string("add_matches_bonus")
+                        .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                        .replacingOccurrences(of: "{percentage}", with: nextPercentage)
                 } else {
                     descriptionLabel.text = LocalizationProvider.string("all_qualifying_events_added")
                 }

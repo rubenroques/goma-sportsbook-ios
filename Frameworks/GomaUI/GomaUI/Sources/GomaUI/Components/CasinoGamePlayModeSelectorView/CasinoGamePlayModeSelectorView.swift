@@ -65,7 +65,7 @@ final public class CasinoGamePlayModeSelectorView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 12)
         label.textColor = .white // StyleProvider.Color.textPrimary
-        label.text = "Volatility:"
+        label.text = LocalizationProvider.string("volatility") + ":"
         return label
     }()
     
@@ -91,7 +91,7 @@ final public class CasinoGamePlayModeSelectorView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .medium, size: 12)
         label.textColor = .white // StyleProvider.Color.textPrimary
-        label.text = "Minimum Stake:"
+        label.text = LocalizationProvider.string("min_stake") + ":"
         return label
     }()
     

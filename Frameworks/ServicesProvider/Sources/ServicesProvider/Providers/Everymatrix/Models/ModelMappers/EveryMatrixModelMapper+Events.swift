@@ -185,16 +185,6 @@ extension EveryMatrixModelMapper {
             result = .inProgress(internalStatus.name)
         }
 
-        // Debug log for status mapping - capture ALL status values
-        let resultName: String
-        switch result {
-        case .notStarted: resultName = "notStarted"
-        case .inProgress(_): resultName = "inProgress"
-        case .ended(_): resultName = "ended"
-        case .unknown: resultName = "unknown"
-        }
-        print("[M-STATUS] Mapper | id=\"\(internalStatus.id)\" name=\"\(internalStatus.name)\" → using ID → .\(resultName) ✅")
-
         return result
     }
 }

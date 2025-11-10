@@ -13,9 +13,17 @@ final class TransactionHistoryViewController: UIViewController {
 
     // MARK: - UI Components
 
-    private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let viewModel = BetssonCameroonNavigationBarViewModel(
+            title: "Transaction History",
+            onBackTapped: { [weak self] in
+                self?.viewModel.didTapBack()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: viewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
+    }()
 
     private lazy var pillSelectorBarViewContainer: UIView = {
         let container = UIView()
@@ -124,7 +132,6 @@ final class TransactionHistoryViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupBindings()
-        setupActions()
 
         // Load initial data
         viewModel.loadInitialData()
@@ -172,14 +179,11 @@ final class TransactionHistoryViewController: UIViewController {
     }
 
     private func setupViewHierarchy() {
-        view.addSubview(customNavigationView)
+        view.addSubview(navigationBarView)
         view.addSubview(filtersStackView)
         view.addSubview(tableView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
-
-        customNavigationView.addSubview(titleLabel)
-        customNavigationView.addSubview(backButton)
 
 
         pillSelectorBarViewContainer.addSubview(pillSelectorBarView)
@@ -193,24 +197,13 @@ final class TransactionHistoryViewController: UIViewController {
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Custom Navigation View
-            customNavigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            customNavigationView.heightAnchor.constraint(equalToConstant: 56),
-
-            // Title Label
-            titleLabel.centerXAnchor.constraint(equalTo: customNavigationView.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-
-            // Back Button
-            backButton.leadingAnchor.constraint(equalTo: customNavigationView.leadingAnchor, constant: 16),
-            backButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            // Navigation Bar
+            navigationBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
             // Filters Stack View (contains pill selector and game type bar)
-            filtersStackView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 4),
+            filtersStackView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor, constant: 4),
             filtersStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 6),
             filtersStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -6),
 
@@ -241,7 +234,7 @@ final class TransactionHistoryViewController: UIViewController {
             loadingView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor),
 
             // Error View
-            errorView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            errorView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
             errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -257,10 +250,6 @@ final class TransactionHistoryViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func setupActions() {
-        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-    }
-
     // MARK: - Rendering
 
     private func render(displayState: TransactionHistoryDisplayState) {
@@ -273,7 +262,7 @@ final class TransactionHistoryViewController: UIViewController {
 
         // Update main content
         let hasError = displayState.error != nil
-        customNavigationView.isHidden = hasError
+        navigationBarView.isHidden = hasError
         filtersStackView.isHidden = hasError  // Keep filters visible during loading
         tableView.isHidden = hasError  // Keep tableView visible during loading (shows header)
 
@@ -302,10 +291,6 @@ final class TransactionHistoryViewController: UIViewController {
     }
 
     // MARK: - Actions
-
-    @objc private func didTapBack() {
-        viewModel.didTapBack()
-    }
 
     @objc private func handleRefresh() {
         viewModel.refreshData()
@@ -414,37 +399,6 @@ extension TransactionHistoryViewController: UITableViewDelegate {
 // MARK: - Factory Methods
 
 extension TransactionHistoryViewController {
-
-    private static func createCustomNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundTertiary
-
-        return view
-    }
-
-    private static func createTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Transaction History"
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .center
-        return label
-    }
-
-    private static func createBackButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-
-        // Use standard iOS back arrow icon
-        let backImage = UIImage(systemName: "chevron.left")
-        button.setImage(backImage, for: .normal)
-        button.tintColor = StyleProvider.Color.textPrimary
-
-        return button
-    }
-
 
     private static func createLoadingView() -> UIView {
         let view = UIView()

@@ -417,7 +417,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "App/SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_CFBundleDisplayName = "Betsson Cameroon";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -550,7 +550,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "App/SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = BetssonCM;
+				INFOPLIST_KEY_CFBundleDisplayName = "Betsson Cameroon";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetssonCM";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

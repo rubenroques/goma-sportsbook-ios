@@ -63,7 +63,6 @@ public final class SimpleNavigationBarView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "chevron.left")
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = StyleProvider.Color.iconPrimary
         return imageView
     }()
 
@@ -74,7 +73,6 @@ public final class SimpleNavigationBarView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
-        label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .left
         return label
     }()
@@ -86,7 +84,6 @@ public final class SimpleNavigationBarView: UIView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingTail
         return label
@@ -96,13 +93,13 @@ public final class SimpleNavigationBarView: UIView {
     private lazy var separatorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.separatorLine
         return view
     }()
 
     // MARK: - Properties
 
     private let viewModel: SimpleNavigationBarViewModelProtocol
+    private var customization: SimpleNavigationBarStyle?
 
     // MARK: - Constants
 
@@ -134,12 +131,23 @@ public final class SimpleNavigationBarView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Public Methods
+
+    /// Sets optional style customization for the navigation bar.
+    ///
+    /// If not set, defaults to StyleProvider colors. Call this method
+    /// before or after adding the view to the hierarchy.
+    ///
+    /// - Parameter style: Custom style or `nil` to use defaults
+    public func setCustomization(_ style: SimpleNavigationBarStyle?) {
+        self.customization = style
+        applyCurrentStyle()
+    }
+
     // MARK: - Setup
 
     private func setupViews() {
         self.translatesAutoresizingMaskIntoConstraints = false
-
-        backgroundColor = StyleProvider.Color.backgroundPrimary
 
         // Add subviews to hierarchy
         addSubview(backButtonContainer)
@@ -243,6 +251,23 @@ public final class SimpleNavigationBarView: UIView {
         // Configure back button visibility
         backButtonContainer.isHidden = !viewModel.showBackButton
         backIconImageView.isHidden = !viewModel.showBackButton
+
+        // Apply style (custom or default)
+        applyCurrentStyle()
+    }
+
+    /// Applies the current style customization (or default StyleProvider colors).
+    ///
+    /// This method is called both during initialization and when customization changes.
+    private func applyCurrentStyle() {
+        let style = customization ?? .defaultStyle()
+
+        // Apply colors
+        backgroundColor = style.backgroundColor
+        backLabel.textColor = style.textColor
+        titleLabel.textColor = style.textColor
+        backIconImageView.tintColor = style.iconColor
+        separatorView.backgroundColor = style.separatorColor
     }
 
     // MARK: - Actions

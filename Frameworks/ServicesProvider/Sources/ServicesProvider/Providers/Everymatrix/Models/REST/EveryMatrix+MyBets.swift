@@ -2,7 +2,7 @@
 //  EveryMatrix+MyBets.swift
 //  ServicesProvider
 //
-//  Created by Assistant on 28/08/2025.
+//  Created on 28/08/2025.
 //
 
 import Foundation
@@ -25,7 +25,7 @@ extension EveryMatrix {
         let amount: Double?
         let totalBetAmount: Double?
         let freeBetAmount: Double?
-        let currency: String?
+        let currency: String
         let maxWinning: Double?
         let possibleProfit: Double?
         let stakeBackOptions: String?

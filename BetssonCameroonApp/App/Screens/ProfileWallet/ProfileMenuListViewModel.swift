@@ -86,7 +86,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 action: .promotions
             ),
             ActionRowItem(
-                id: "promotions",
+                id: "bonus",
                 icon: "promotion_icon",
                 title: localized("bonuses"),
                 subtitle: nil,
@@ -110,9 +110,9 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
                 action: .notificationSettings
             ),
             ActionRowItem(
-                id: "transaction_history",
+                id: "transactions_history",
                 icon: "clock",
-                title: localized("transaction_history"),
+                title: localized("transactions_history"),
                 subtitle: nil,
                 type: .navigation,
                 action: .transactionHistory

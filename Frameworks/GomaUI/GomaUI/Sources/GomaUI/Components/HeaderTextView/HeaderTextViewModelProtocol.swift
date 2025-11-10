@@ -2,7 +2,7 @@
 //  HeaderTextViewModelProtocol.swift
 //  GomaUI
 //
-//  Created by Assistant on 2025-01-27.
+//  Created on 2025-01-27.
 //
 
 import Foundation

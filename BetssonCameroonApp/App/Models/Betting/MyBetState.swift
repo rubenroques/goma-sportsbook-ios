@@ -18,25 +18,25 @@ enum MyBetState: String, Codable, Equatable, Hashable, CaseIterable {
     var displayName: String {
         switch self {
         case .opened:
-            return "Open"
+            return localized("open")
         case .closed:
-            return "Closed"
+            return localized("bet_state_closed")
         case .settled:
-            return "Settled"
+            return localized("settled")
         case .cancelled:
-            return "Cancelled"
+            return localized("cancelled")
         case .attempted:
-            return "Attempted"
+            return localized("bet_state_attempted")
         case .won:
-            return "Won"
+            return localized("won")
         case .lost:
-            return "Lost"
+            return localized("lost")
         case .cashedOut:
-            return "Cashed Out"
+            return localized("bet_state_cashed_out")
         case .void:
-            return "Void"
+            return localized("void")
         case .undefined:
-            return "Undefined"
+            return localized("bet_state_undefined")
         }
     }
     

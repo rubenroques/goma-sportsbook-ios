@@ -181,7 +181,7 @@ public class BonusInfoCardView: UIView {
         }
         
         // Configure expiry
-        self.expiryLabel.text = "Expires: \(displayState.expiryText)"
+        self.expiryLabel.text = "\(LocalizationProvider.string("expires")): \(displayState.expiryText)"
     }
     
     private func updateStatusPillAppearance(for status: BonusStatus) {

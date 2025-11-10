@@ -2,7 +2,7 @@
 //  MyBetDetailViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 01/09/2025.
+//  Created on 01/09/2025.
 //
 
 import Foundation
@@ -107,7 +107,7 @@ final class MyBetDetailViewModel: ObservableObject {
                 let bettingOfferIds = Array(Set(successful.flatMap { $0.reference.bettingOfferIds }))
                 let originalSelectionsLength = self.bet.selections.count
                 guard !bettingOfferIds.isEmpty else {
-                    self.onShareBookingCodeFailed?("No selections are available to share for this bet.")
+                    self.onShareBookingCodeFailed?(localized("mybetdetail_share_no_selections"))
                     return
                 }
                 

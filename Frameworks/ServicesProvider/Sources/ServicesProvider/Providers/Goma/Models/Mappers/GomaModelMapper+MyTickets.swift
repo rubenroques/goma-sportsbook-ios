@@ -43,6 +43,7 @@ extension GomaModelMapper {
                    globalState: betState,
                    stake: myTicket.stake,
                    totalOdd: myTicket.odds,
+                   currency: "EUR",
                    selections: selections,
                    potentialReturn: myTicket.possibleWinnings,
                    date: betDate,

@@ -174,9 +174,9 @@ extension EveryMatrix {
                 var entityData = try encoder.encode(entity)
                 var json = try JSONSerialization.jsonObject(with: entityData) as? [String: Any] ?? [:]
 
-                // Apply changed properties
+                // Apply changed properties using JSON-safe values
                 for (key, value) in changes {
-                    json[key] = value.value
+                    json[key] = value.jsonSafeValue
                 }
 
                 // Encode back to data

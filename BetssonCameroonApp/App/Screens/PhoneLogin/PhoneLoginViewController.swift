@@ -21,7 +21,7 @@ class PhoneLoginViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Login"
+        label.text = localized("login")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -31,7 +31,7 @@ class PhoneLoginViewController: UIViewController {
     private let closeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Close", for: .normal)
+        button.setTitle(localized("close"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         return button
@@ -62,7 +62,7 @@ class PhoneLoginViewController: UIViewController {
     private let forgotPasswordButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Forgot your Password?", for: .normal)
+        button.setTitle(localized("forgot_your_password"), for: .normal)
         button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 14)
         button.contentHorizontalAlignment = .right
@@ -234,7 +234,7 @@ class PhoneLoginViewController: UIViewController {
     func showLoginErrorAlert(errorMessage: String) {
         
         let alert = UIAlertController(
-            title: "Login Error",
+            title: localized("login_error_title"),
             message: errorMessage,
             preferredStyle: .alert
         )

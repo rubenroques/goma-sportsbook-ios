@@ -35,7 +35,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
                                                                                            icon: "key_icon",
-                                                                                           title: "Password reset code",
+                                                                                           title: localized("password_reset_code"),
                                                                                            subtitle: nil))
         
         highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: "Enter your phone number to request reset code",
@@ -43,7 +43,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
         
         newPasswordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "new_password",
 
-                                                                                                        placeholder: "New Password",
+                                                                                                        placeholder: localized("new_password"),
 
                                                                                                         isSecure: true,
                                                                                                         isRequired: true,
@@ -55,7 +55,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
 
         confirmNewPasswordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "new_password",
 
-                                                                                                        placeholder: "Confirm New Password",
+                                                                                                        placeholder: localized("confirm_password"),
 
                                                                                                         isSecure: true,
                                                                                                         isRequired: true,
@@ -66,7 +66,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
                                                                                                                textContentType: .newPassword))
         
         buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "change_password",
-                                                                     title: "Change Password",
+                                                                     title: localized("change_password"),
                                                                      style: .solidBackground,
                                                                      isEnabled: true))
         
@@ -86,7 +86,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
                 
                 if newPassword.count < 4 && newPassword.isNotEmpty {
                     isNewPasswordValid = false
-                    self?.newPasswordFieldViewModel.setError("Password too small")
+                    self?.newPasswordFieldViewModel.setError(localized("password_invalid_length"))
                 }
                 else {
                     self?.newPasswordFieldViewModel.clearError()
@@ -99,7 +99,7 @@ class PhoneForgotPasswordViewModel: PhoneForgotPasswordViewModelProtocol {
                 
                 if confirmNewPassword != newPassword && confirmNewPassword.isNotEmpty {
                     isConfirmNewPasswordValid = false
-                    self?.confirmNewPasswordFieldViewModel.setError("Passwords do not match")
+                    self?.confirmNewPasswordFieldViewModel.setError(localized("password_not_match"))
                 }
                 else {
                     self?.confirmNewPasswordFieldViewModel.clearError()

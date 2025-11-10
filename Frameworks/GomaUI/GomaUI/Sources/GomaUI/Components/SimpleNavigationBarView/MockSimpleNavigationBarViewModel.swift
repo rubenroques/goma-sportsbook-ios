@@ -80,7 +80,7 @@ extension MockSimpleNavigationBarViewModel {
     /// **Visual**: `←           Transaction History`
     public static var withTitle: MockSimpleNavigationBarViewModel {
         MockSimpleNavigationBarViewModel(
-            title: LocalizationProvider.string("transaction_history")
+            title: LocalizationProvider.string("transactions_history")
         )
     }
 

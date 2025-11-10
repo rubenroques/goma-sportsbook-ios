@@ -31,14 +31,14 @@ class PhoneLoginViewModel {
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
                                                                                            icon: "profile_icon",
-                                                                                           title: "Welcome back to Betsson!",
+                                                                                           title: localized("welcome_back"),
                                                                                            subtitle: nil))
         
-        highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: "Log in to continue playing!",
+        highlightedTextViewModel = MockHighlightedTextViewModel(data: HighlightedTextData(fullText: localized("login_to_continue"),
                                                                                           highlights: []))
         
         phoneFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "phone",
-                                                                                                  placeholder: "Phone number",
+                                                                                                  placeholder: localized("phone_number"),
                                                                                                   prefix: "+237",
                                                                                                   isSecure: false,
                                                                                                   isRequired: true,
@@ -50,7 +50,7 @@ class PhoneLoginViewModel {
                                                                                                   allowedCharacters: .decimalDigits))
 
         passwordFieldViewModel = MockBorderedTextFieldViewModel(textFieldData: BorderedTextFieldData(id: "password",
-                                                                                                     placeholder: "Password",
+                                                                                                     placeholder: localized("password"),
                                                                                                      isSecure: true,
                                                                                                      isRequired: true,
                                                                                                      visualState: .idle,

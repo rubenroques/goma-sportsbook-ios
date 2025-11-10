@@ -28,7 +28,7 @@ class PhonePasswordCodeResetViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Forgot password"
+        label.text = localized("forgot_password")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center

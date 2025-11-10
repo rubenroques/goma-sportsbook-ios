@@ -70,7 +70,9 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
         
         // Update button title with current amount
         let formattedAmount = formatCurrency(Double(clampedValue), currency: currentData.currency)
-        _buttonViewModel.updateTitle("Cashout \(formattedAmount)")
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        _buttonViewModel.updateTitle(buttonTitle)
     }
     
     func handleCashoutTap() {
@@ -101,14 +103,15 @@ extension CashoutSliderViewModel {
     static func create(
         totalCashoutAmount: Double,
         currency: String,
-        title: String = "Choose a cash out amount"
+        title: String? = nil
     ) -> CashoutSliderViewModel {
+        let defaultTitle = title ?? localized("mybets_choose_cashout_amount")
         let minimumValue: Float = 0.1
         let maximumValue = Float(totalCashoutAmount)
         let currentValue = maximumValue // Start at maximum
-        
+
         return CashoutSliderViewModel(
-            title: title,
+            title: defaultTitle,
             minimumValue: minimumValue,
             maximumValue: maximumValue,
             currentValue: currentValue,
@@ -122,10 +125,11 @@ extension CashoutSliderViewModel {
         maximumAmount: Double,
         currentAmount: Double,
         currency: String,
-        title: String = "Choose a cash out amount"
+        title: String? = nil
     ) -> CashoutSliderViewModel {
+        let defaultTitle = title ?? localized("mybets_choose_cashout_amount")
         return CashoutSliderViewModel(
-            title: title,
+            title: defaultTitle,
             minimumValue: Float(minimumAmount),
             maximumValue: Float(maximumAmount),
             currentValue: Float(currentAmount),

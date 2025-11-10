@@ -235,7 +235,8 @@ final public class PromotionalBonusCardView: UIView {
         // Update text content
         headerLabel.text = cardData.headerText
         titleLabel.text = cardData.mainTitle
-        playersLabel.text = "\(cardData.playersCount) players chose this bonus"
+        playersLabel.text = LocalizationProvider.string("players_chose_bonus")
+            .replacingOccurrences(of: "{count}", with: "\(cardData.playersCount)")
         
         // Update background image
         if let backgroundImageName = cardData.backgroundImageName {

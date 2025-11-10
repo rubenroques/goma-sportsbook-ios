@@ -7,6 +7,7 @@ final public class WalletDetailView: UIView {
     
     // MARK: Private properties
     private lazy var containerView: UIView = Self.createContainerView()
+    private lazy var gradientView: GradientView = Self.createGradientView()
     private lazy var stackView: UIStackView = Self.createStackView()
     private lazy var headerView: WalletDetailHeaderView = Self.createHeaderView()
     private lazy var balanceView: WalletDetailBalanceView = Self.createBalanceView()
@@ -47,12 +48,11 @@ final public class WalletDetailView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.containerView.layer.cornerRadius = 8
+        self.gradientView.cornerRadius = 8
     }
     
     func setupWithTheme() {
         self.backgroundColor = UIColor.clear
-        self.containerView.backgroundColor = StyleProvider.Color.highlightPrimary
     }
     
     // Manual button styling removed - now handled by ButtonView's native color customization
@@ -90,9 +90,22 @@ extension WalletDetailView {
     private static func createContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
         return view
     }
-    
+
+    private static func createGradientView() -> GradientView {
+        let gradient = GradientView()
+        gradient.translatesAutoresizingMaskIntoConstraints = false
+        gradient.colors = [
+            (StyleProvider.Color.backgroundGradientDark, 0.0),
+            (StyleProvider.Color.backgroundGradientLight, 1.0)
+        ]
+        gradient.setHorizontalGradient()  // Left to right
+        gradient.cornerRadius = 8
+        return gradient
+    }
+
     private static func createStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -124,7 +137,11 @@ extension WalletDetailView {
     
     private func setupSubviews() {
         self.addSubview(self.containerView)
-        
+
+        // Add gradient as background layer
+        self.containerView.addSubview(self.gradientView)
+
+        // Add content on top of gradient
         self.containerView.addSubview(self.stackView)
         
         self.stackView.addArrangedSubview(self.headerView)
@@ -144,7 +161,13 @@ extension WalletDetailView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            
+
+            // Gradient (background layer - fills entire container)
+            self.gradientView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.gradientView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.gradientView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.gradientView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
             // Stack view
             self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
             self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),

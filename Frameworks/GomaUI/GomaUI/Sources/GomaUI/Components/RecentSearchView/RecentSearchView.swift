@@ -2,7 +2,7 @@
 //  RecentSearchView.swift
 //  GomaUI
 //
-//  Created by Assistant on 2024-12-19.
+//  Created on 2024-12-19.
 //
 
 import UIKit

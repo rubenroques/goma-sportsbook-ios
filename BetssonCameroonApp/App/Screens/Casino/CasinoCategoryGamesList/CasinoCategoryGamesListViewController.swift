@@ -16,29 +16,16 @@ class CasinoCategoryGamesListViewController: UIViewController {
     private let quickLinksTabBarView: QuickLinksTabBarView
     private let collectionView: UICollectionView
     
-    private let navigationView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let navigationTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .center
-        label.isHidden = true
-        return label
-    }()
-    
-    private let backButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        button.setTitle("Back", for: .normal)
-        button.tintColor = StyleProvider.Color.textPrimary
-        return button
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let navViewModel = BetssonCameroonNavigationBarViewModel(
+            title: viewModel.categoryTitle,
+            onBackTapped: { [weak self] in
+                self?.viewModel.navigateBack()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: navViewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
     }()
     
     private let loadingIndicatorView: UIView = {
@@ -103,10 +90,9 @@ class CasinoCategoryGamesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupViews()
         setupBindings()
-        setupActions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -120,23 +106,12 @@ class CasinoCategoryGamesListViewController: UIViewController {
     // MARK: - Setup
     private func setupViews() {
         view.backgroundColor = StyleProvider.Color.backgroundPrimary
-        
-        setupNavigationView()
+
+        view.addSubview(navigationBarView)
         setupQuickLinksTabBar()
         setupCollectionView()
         setupLoadingIndicator()
         setupConstraints()
-    }
-    
-    
-    private func setupNavigationView() {
-        view.addSubview(navigationView)
-        navigationView.addSubview(navigationTitleLabel)
-        navigationView.addSubview(backButton)
-    }
-    
-    private func setupActions() {
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
     private func setupQuickLinksTabBar() {
@@ -171,25 +146,14 @@ class CasinoCategoryGamesListViewController: UIViewController {
             quickLinksTabBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             quickLinksTabBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             quickLinksTabBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            // Navigation View (following PhoneVerification pattern)
-            navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
-            navigationView.heightAnchor.constraint(equalToConstant: 40),
-            
-            // Navigation Title (centered with padding for back button)
-            navigationTitleLabel.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor, constant: 50),
-            navigationTitleLabel.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor, constant: -50),
-            navigationTitleLabel.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
-            
-            // Back Button (left side)
-            backButton.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor, constant: 16),
-            backButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
-            backButton.heightAnchor.constraint(equalToConstant: 40),
-            
+
+            // Navigation Bar
+            navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navigationBarView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+
             // Collection View
-            collectionView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -210,14 +174,6 @@ class CasinoCategoryGamesListViewController: UIViewController {
             .sink { [weak self] loadingState in
                 let showFullScreenLoader = (loadingState == .initialLoading)
                 self?.loadingIndicatorView.isHidden = !showFullScreenLoader
-            }
-            .store(in: &cancellables)
-        
-        // Category title
-        viewModel.$categoryTitle
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] title in
-                self?.navigationTitleLabel.text = title
             }
             .store(in: &cancellables)
         
@@ -264,12 +220,8 @@ class CasinoCategoryGamesListViewController: UIViewController {
         
         present(alert, animated: true)
     }
-    
-    // MARK: - Actions
-    @objc private func backButtonTapped() {
-        viewModel.navigateBack()
-    }
 }
+
 
 // MARK: - Collection View Data Source
 extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {

@@ -62,6 +62,9 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     public var maxLength: Int?
     public var allowedCharacters: CharacterSet?
 
+    // MARK: - Callbacks
+    public var onReturnKeyTappedCallback: (() -> Void)?
+
     // MARK: - Initialization
     public init(textFieldData: BorderedTextFieldData) {
         self.textSubject = CurrentValueSubject(textFieldData.text)
@@ -100,8 +103,8 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     }
 
     public func onReturnKeyTapped() {
-        // Mock implementation - in production this would trigger navigation or submission
-        // ViewControllers can override this behavior by listening to the protocol
+        // Trigger the callback if set
+        onReturnKeyTappedCallback?()
     }
 
     // MARK: - Convenience Methods

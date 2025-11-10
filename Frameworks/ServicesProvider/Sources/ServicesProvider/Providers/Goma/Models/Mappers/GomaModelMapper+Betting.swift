@@ -97,6 +97,7 @@ extension GomaModelMapper {
                    globalState: betState,
                    stake: placeBetTicketResponse.stake,
                    totalOdd: placeBetTicketResponse.odds,
+                   currency: "EUR",
                    selections: selections,
                    potentialReturn: placeBetTicketResponse.possibleWinnings,
                    date: betDate,

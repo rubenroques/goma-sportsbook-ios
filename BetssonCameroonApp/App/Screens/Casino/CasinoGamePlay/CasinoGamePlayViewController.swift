@@ -175,7 +175,7 @@ class CasinoGamePlayViewController: UIViewController {
         exitContainer.addSubview(exitButton)
 
         // Exit label - add to container
-        exitLabel.text = "Exit"
+        exitLabel.text = localized("exit")
         exitLabel.textColor = Constants.textColor
         exitLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         exitLabel.textAlignment = .center
@@ -199,7 +199,7 @@ class CasinoGamePlayViewController: UIViewController {
         depositContainer.addSubview(depositButton)
 
         // Deposit label - add to container
-        depositLabel.text = "Deposit"
+        depositLabel.text = localized("deposit")
         depositLabel.textColor = Constants.textColor
         depositLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         depositLabel.textAlignment = .center

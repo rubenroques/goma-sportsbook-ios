@@ -145,16 +145,16 @@ extension ButtonIconViewModel {
     
     static func rebetButton(isEnabled: Bool = true) -> ButtonIconViewModel {
         return ButtonIconViewModel(
-            title: "Rebet",
+            title: localized("mybets_button_rebet"),
             icon: "arrow.clockwise",
             layoutType: .iconLeft,
             isEnabled: isEnabled
         )
     }
-    
+
     static func cashoutButton(isEnabled: Bool = true) -> ButtonIconViewModel {
         return ButtonIconViewModel(
-            title: "Cashout",
+            title: localized("mybets_button_cashout"),
             icon: "dollarsign.circle",
             layoutType: .iconLeft,
             isEnabled: isEnabled

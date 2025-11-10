@@ -2,7 +2,7 @@
 //  MyBetsViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 28/08/2025.
+//  Created on 28/08/2025.
 //
 
 import Foundation
@@ -198,7 +198,8 @@ final class MyBetsViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        let errorMessage = "Failed to load bets: \(error.localizedDescription)"
+                        let errorMessage = localized("mybets_error_api_load")
+                            .replacingOccurrences(of: "{error}", with: error.localizedDescription)
                         print("❌ MyBetsViewModel: \(errorMessage)")
                         self?.betsStateSubject.send(.error(errorMessage))
                     }
@@ -228,7 +229,8 @@ final class MyBetsViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        let errorMessage = "Failed to load more bets: \(error.localizedDescription)"
+                        let errorMessage = localized("mybets_error_api_load_more")
+                            .replacingOccurrences(of: "{error}", with: error.localizedDescription)
                         print("❌ MyBetsViewModel: \(errorMessage)")
                         // For load more errors, we just log them and keep current state
                     }
