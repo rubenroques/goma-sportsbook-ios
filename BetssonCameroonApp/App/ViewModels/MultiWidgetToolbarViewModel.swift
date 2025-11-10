@@ -22,7 +22,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
         didSet {
             // Apply pending balance update if any
             if let pendingBalance = pendingWalletBalance {
-                walletViewModel?.updateBalance(CurrencyFormater.formatWalletAmount(pendingBalance))
+                walletViewModel?.updateBalance(CurrencyHelper.formatAmount(pendingBalance))
                 pendingWalletBalance = nil
                 print("💰 MultiWidgetToolbarViewModel: Applied pending wallet balance: \(pendingBalance)")
             }
@@ -76,7 +76,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     func setWalletBalance(balance: Double) {
         if let walletViewModel = walletViewModel {
             // Update the wallet view model if it exists
-            walletViewModel.updateBalance(CurrencyFormater.formatWalletAmount(balance))
+            walletViewModel.updateBalance(CurrencyHelper.formatAmount(balance))
             print("💰 MultiWidgetToolbarViewModel: Wallet balance updated to: \(balance)")
             pendingWalletBalance = nil
         } else {

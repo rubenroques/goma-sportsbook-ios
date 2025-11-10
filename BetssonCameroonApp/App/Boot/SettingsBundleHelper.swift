@@ -1,9 +1,3 @@
-//
-//  SettingsBundleHelper.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude Code
-//
 
 import Foundation
 

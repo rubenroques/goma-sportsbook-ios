@@ -278,7 +278,7 @@ extension ProfileWalletViewController {
     private static func createProfileTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Profile"
+        label.text = localized("profile")
         label.font = AppFont.with(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -288,7 +288,7 @@ extension ProfileWalletViewController {
     private static func createCloseButton() -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Close", for: .normal)
+        button.setTitle(localized("close"), for: .normal)
         button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
@@ -333,7 +333,7 @@ extension ProfileWalletViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading profile..."
+        label.text = localized("loading_profile")
         label.textAlignment = .center
         label.font = AppFont.with(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textSecondary
@@ -360,7 +360,7 @@ extension ProfileWalletViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Failed to load profile"
+        label.text = localized("failed_to_load_profile")
         label.textAlignment = .center
         label.font = AppFont.with(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
@@ -368,7 +368,7 @@ extension ProfileWalletViewController {
         
         let retryButton = UIButton(type: .system)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.setTitle("Try Again", for: .normal)
+        retryButton.setTitle(localized("try_again"), for: .normal)
         retryButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         retryButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
         retryButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary

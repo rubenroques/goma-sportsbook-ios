@@ -71,7 +71,7 @@ internal final class ThemeSegmentView: UIView {
     
     private func configureContent() {
         iconImageView.image = UIImage(systemName: theme.iconName)
-        titleLabel.text = theme.rawValue
+        titleLabel.text = theme.displayName
     }
     
     func setSelected(_ selected: Bool) {

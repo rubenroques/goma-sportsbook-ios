@@ -160,7 +160,7 @@ final class ProfileWalletViewModel: ObservableObject {
                 case .finished:
                     break
                 case .failure(let error):
-                    self.showErrorAlert?("Can't proceed with change password at the moment. Please try again later")
+                    self.showErrorAlert?(localized("change_password_error"))
                 }
             }, receiveValue: { [weak self] response in
                 guard let self = self else { return }

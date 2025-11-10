@@ -544,22 +544,22 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         guard let amount = Double(stake), amount > 0 else {
             // If no amount or invalid amount, set potential winnings to 0
             let currency = betInfoSubmissionViewModel.currentData.currency
-            betInfoSubmissionViewModel.updatePotentialWinnings("\(currency) 0")
+            betInfoSubmissionViewModel.updatePotentialWinnings(CurrencyHelper.formatAmountWithCurrency(0, currency: currency))
             return
         }
-        
+
         // Calculate potential winnings: amount * total odds
         let potentialWinnings = amount * totalOdds
-        
+
         // Get the currency from the bet info submission view model
         let currency = betInfoSubmissionViewModel.currentData.currency
-        
+
         // Format the potential winnings with the correct currency
-        let formattedWinnings = String(format: "%@ %.2f", currency, potentialWinnings)
-        
+        let formattedWinnings = CurrencyHelper.formatAmountWithCurrency(potentialWinnings, currency: currency)
+
         // Update the potential winnings in the bet info submission view model
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
-        
+
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
     

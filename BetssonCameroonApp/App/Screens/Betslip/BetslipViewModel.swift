@@ -187,7 +187,7 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     }
     
     private func updateToLoggedInState(userWallet: UserWallet) {
-        let walletBalance = "\(userWallet.currency) \(userWallet.total)"
+        let walletBalance = CurrencyHelper.formatAmountWithCurrency(userWallet.total, currency: userWallet.currency)
         let loggedInState = BetslipHeaderState.loggedIn(balance: walletBalance)
         headerViewModel.updateState(loggedInState)
     }

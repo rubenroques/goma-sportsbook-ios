@@ -1,9 +1,3 @@
-//
-//  BonusCardViewController.swift
-//  GomaUIDemo
-//
-//  Created by Claude on 23/10/2025.
-//
 
 import UIKit
 import GomaUI
@@ -34,7 +28,7 @@ class BonusCardViewController: UIViewController {
     }
     
     private func setupWithTheme() {
-        self.view.backgroundColor = StyleProvider.Color.backgroundColor
+        self.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         self.contentView.backgroundColor = .clear
     }
     

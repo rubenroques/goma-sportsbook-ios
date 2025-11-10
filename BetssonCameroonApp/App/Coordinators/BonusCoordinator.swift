@@ -1,9 +1,3 @@
-//
-//  BonusCoordinator.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on October 27, 2025.
-//
 
 import UIKit
 import ServicesProvider

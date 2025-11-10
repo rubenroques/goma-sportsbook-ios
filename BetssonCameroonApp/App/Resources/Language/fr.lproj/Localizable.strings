@@ -526,6 +526,8 @@
 
 "bonuses" = "Bonuses";
 
+"bonus_balance" = "Solde bonus";
+
 "booking_code" = "Code de réservation";
 
 "boosted_section_header" = "Cotes Boostées";
@@ -631,6 +633,8 @@
 "change_language" = "Changer de langue";
 
 "change_password" = "Changer le mot de passe";
+
+"change_password_error" = "Impossible de changer le mot de passe pour le moment. Veuillez réessayer plus tard";
 
 "chat" = "";
 
@@ -1116,6 +1120,8 @@
 
 "failed_to_load_game" = "Echec du chargement du jeu";
 
+"failed_to_load_profile" = "Échec du chargement du profil";
+
 "failed_to_place_bet" = "Echec du pari";
 
 "faq" = "F.A.Q";
@@ -1498,6 +1504,10 @@
 
 "landing_page_not_available_description" = "Nous sommes désolés, mais la page de destination que vous recherchez n'est pas disponible pour le moment. Veuillez réessayer plus tard ou retourner à la page d'accueil.";
 
+"language_english" = "English";
+
+"language_french" = "Français";
+
 "last_name" = "Nom de naissance";
 
 "last_name_already_in_use" = "Ce nom de famille est déjà utilisé";
@@ -1830,6 +1840,8 @@
 
 "loading_cashier" = "Chargement";
 
+"loading_profile" = "Chargement du profil...";
+
 "loading_game_details" = "Chargement des détails de jeu";
 
 "loading_payment_form" = "Chargement";
@@ -2055,6 +2067,8 @@
 
 "mobilephone_is_required" = "Le numéro de téléphone doit être renseigné.";
 
+"mobile_wallet" = "Portefeuille mobile";
+
 "month" = "Mois";
 
 "monthly" = "Mensuel";
@@ -2256,6 +2270,8 @@
 "not_received" = "Non reçu";
 
 "notifications" = "Notifications";
+
+"notifications_settings" = "Paramètres de notification";
 
 "notify_bets_final_result" = "Résultat de mon pari";
 
@@ -3714,6 +3730,8 @@
 "view_competition_markets" = "Paris sur la compétition";
 
 "view_stats" = "Afficher les stats";
+
+"view_notifications" = "Voir les notifications";
 
 "virtual" = "Virtuel";
 

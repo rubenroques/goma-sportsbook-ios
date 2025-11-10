@@ -1,9 +1,3 @@
-//
-//  BetslipOddsBoostHeaderViewModel.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude Code on 16/10/2025.
-//
 
 import Foundation
 import Combine

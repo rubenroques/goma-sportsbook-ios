@@ -1,9 +1,3 @@
-//
-//  BonusViewController.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 23/10/2025.
-//
 
 import UIKit
 import Combine

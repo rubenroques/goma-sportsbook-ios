@@ -1,9 +1,3 @@
-//
-//  ServiceProviderModelMapper+OddsBoost.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on 16/10/2025.
-//
 
 import Foundation
 import ServicesProvider

@@ -1,9 +1,3 @@
-//
-//  AdaptiveTabBarViewModel.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude Code on 08/11/2025.
-//
 
 import Combine
 import UIKit

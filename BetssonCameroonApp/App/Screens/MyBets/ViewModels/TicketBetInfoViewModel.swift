@@ -241,16 +241,8 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     }
     
     private static func formatCurrency(_ amount: Double, currency: String) -> String {
-        // Use existing CurrencyFormater from the project
-        let formatter = CurrencyFormater.defaultFormat
-        formatter.currencyCode = currency
-        
-        if let formattedString = formatter.string(from: NSNumber(value: amount)) {
-            return formattedString
-        }
-        
-        // Fallback using existing CurrencyFormater.formatWalletAmount
-        return CurrencyFormater.formatWalletAmount(amount)
+        // Format amount with currency code using comma thousand separator
+        return CurrencyHelper.formatAmountWithCurrency(amount, currency: currency)
     }
     
     private static func formatPossibleWinnings(_ myBet: MyBet) -> String {

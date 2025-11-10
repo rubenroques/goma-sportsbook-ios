@@ -84,22 +84,22 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     
     private func updateWalletDisplay(wallet: UserWallet?) {
         let balanceString: String
-        
+
         if let wallet = wallet {
             // Format the balance with currency
-            balanceString = CurrencyFormater.formatWalletAmount(wallet.total)
+            balanceString = CurrencyHelper.formatAmount(wallet.total)
         } else {
             // No wallet data - show placeholder
             balanceString = "-.--"
         }
-        
+
         // Update wallet data
         walletData = WalletWidgetData(
             id: walletData.id,
             balance: balanceString,
             depositButtonTitle: walletData.depositButtonTitle
         )
-        
+
         print("💰 WalletWidgetViewModel: Balance updated to: \(balanceString)")
     }
     

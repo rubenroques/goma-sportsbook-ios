@@ -80,7 +80,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "promotions",
                 icon: "promotion_icon",
-                title: "Promotions",
+                title: localized("promotions"),
                 subtitle: nil,
                 type: .navigation,
                 action: .promotions
@@ -88,7 +88,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "promotions",
                 icon: "promotion_icon",
-                title: "Bonuses",
+                title: localized("bonuses"),
                 subtitle: nil,
                 type: .navigation,
                 action: .bonus
@@ -96,7 +96,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "notifications",
                 icon: "bell",
-                title: "View Notifications",
+                title: localized("view_notifications"),
                 subtitle: nil,
                 type: .navigation,
                 action: .notifications
@@ -104,7 +104,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "notification_settings",
                 icon: "bell.badge",
-                title: "Notifications Settings",
+                title: localized("notifications_settings"),
                 subtitle: nil,
                 type: .navigation,
                 action: .notificationSettings
@@ -112,7 +112,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "transaction_history",
                 icon: "clock",
-                title: "Transaction History",
+                title: localized("transaction_history"),
                 subtitle: nil,
                 type: .navigation,
                 action: .transactionHistory
@@ -120,7 +120,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "change_language",
                 icon: "globe",
-                title: "Change Language",
+                title: localized("change_language"),
                 subtitle: currentLanguage,
                 type: .navigation,
                 action: .changeLanguage
@@ -128,7 +128,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "responsible_gaming",
                 icon: "shield.checkered",
-                title: "Responsible Gaming",
+                title: localized("responsible_gaming_title"),
                 subtitle: nil,
                 type: .navigation,
                 action: .responsibleGaming
@@ -136,7 +136,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "help_center",
                 icon: "questionmark.circle",
-                title: "Help Center",
+                title: localized("help_center"),
                 subtitle: nil,
                 type: .navigation,
                 action: .helpCenter
@@ -144,7 +144,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "change_password",
                 icon: "lock",
-                title: "Change Password",
+                title: localized("change_password"),
                 subtitle: nil,
                 type: .navigation,
                 action: .changePassword
@@ -152,7 +152,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "logout",
                 icon: "rectangle.portrait.and.arrow.right",
-                title: "Logout",
+                title: localized("logout"),
                 subtitle: nil,
                 type: .action,
                 action: .logout
@@ -164,11 +164,11 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     static func displayNameForLanguageCode(_ code: String) -> String {
         switch code.lowercased() {
         case "en":
-            return "English"
+            return localized("language_english")
         case "fr":
-            return "Français"
+            return localized("language_french")
         default:
-            return "English" // Fallback to English
+            return localized("language_english") // Fallback to English
         }
     }
 }

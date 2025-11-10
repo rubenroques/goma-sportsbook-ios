@@ -1,9 +1,3 @@
-//
-//  LocalizationProvider.swift
-//  GomaUI
-//
-//  Created by Claude Code on 07/11/2025.
-//
 
 import Foundation
 
@@ -34,7 +28,14 @@ public final class LocalizationProvider {
 
     /// The localization function provided by the app
     private static var localizer: ((String) -> String) = { key in
-        return key  // Default: return key as-is (for standalone usage)
+        
+        switch key {
+        case "back": 
+            return "Back"
+        default:
+            return key  // Default: return key as-is (for standalone usage)
+        }
+        
     }
 
     // MARK: - Public API
