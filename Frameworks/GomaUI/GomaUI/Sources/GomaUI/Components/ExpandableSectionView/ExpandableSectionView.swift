@@ -51,17 +51,12 @@ public class ExpandableSectionView: UIView {
     }
     
     func setupWithTheme() {
-        self.backgroundColor = StyleProvider.Color.backgroundTertiary
+        self.backgroundColor = .clear
         self.containerView.backgroundColor = StyleProvider.Color.backgroundTertiary
         self.titleLabel.textColor = StyleProvider.Color.textPrimary
         self.toggleButtonBackground.backgroundColor = .clear
         self.toggleButton.tintColor = StyleProvider.Color.highlightPrimary
         
-        // Add subtle shadow
-        self.containerView.layer.shadowColor = UIColor.black.cgColor
-        self.containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        self.containerView.layer.shadowRadius = 4
-        self.containerView.layer.shadowOpacity = 0.1
     }
     
     // MARK: Functions
@@ -93,7 +88,7 @@ public class ExpandableSectionView: UIView {
         let buttonImage: UIImage?
         if isExpanded {
             // Expanded state - minus icon
-            if let customImage = UIImage(named: "collapsed_icon") {
+            if let customImage = UIImage(named: "collapse_icon") {
                 buttonImage = customImage.withRenderingMode(.alwaysTemplate)
             } else {
                 buttonImage = UIImage(systemName: "minus")?.withConfiguration(

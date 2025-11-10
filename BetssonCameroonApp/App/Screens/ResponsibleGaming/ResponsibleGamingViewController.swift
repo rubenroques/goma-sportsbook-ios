@@ -36,6 +36,125 @@ class ResponsibleGamingViewController: UIViewController {
         }
     }()
     
+    private lazy var depositLimitSection: ExpandableSectionView = {
+        let view = ExpandableSectionView(viewModel: viewModel.depositLimitSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var wageringLimitSection: ExpandableSectionView = {
+        let view = ExpandableSectionView(viewModel: viewModel.wageringLimitSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var wageringLimitOptionsView: SelectOptionsView = {
+        let view = SelectOptionsView(viewModel: viewModel.wageringLimitOptionsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let wageringCurrentLimitValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .bold, size: 12)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.text = "None"
+        return label
+    }()
+    
+    private lazy var wageringAmountTextField: BorderedTextFieldView = {
+        let view = BorderedTextFieldView(viewModel: viewModel.wageringAmountTextFieldViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var wageringLimitActionButton: ButtonView = {
+        let view = ButtonView(viewModel: viewModel.wageringLimitActionButtonViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var timeOutSection: ExpandableSectionView = {
+        let view = ExpandableSectionView(viewModel: viewModel.timeOutSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var timeOutOptionsView: SelectOptionsView = {
+        let view = SelectOptionsView(viewModel: viewModel.timeOutOptionsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var timeOutActionButton: ButtonView = {
+        let view = ButtonView(viewModel: viewModel.timeOutActionButtonViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var selfExclusionSection: ExpandableSectionView = {
+        let view = ExpandableSectionView(viewModel: viewModel.selfExclusionSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var selfExclusionOptionsView: SelectOptionsView = {
+        let view = SelectOptionsView(viewModel: viewModel.selfExclusionOptionsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var selfExclusionActionButton: ButtonView = {
+        let view = ButtonView(viewModel: viewModel.selfExclusionActionButtonViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var depositLimitOptionsView: SelectOptionsView = {
+        let view = SelectOptionsView(viewModel: viewModel.depositLimitOptionsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let depositCurrentLimitValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .bold, size: 12)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.text = "None"
+        return label
+    }()
+    
+    private lazy var depositAmountTextField: BorderedTextFieldView = {
+        let view = BorderedTextFieldView(viewModel: viewModel.depositAmountTextFieldViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var depositLimitActionButton: ButtonView = {
+        let view = ButtonView(viewModel: viewModel.depositLimitActionButtonViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var loadingOverlayView: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        container.isHidden = true
+        
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.startAnimating()
+        container.addSubview(indicator)
+        NSLayoutConstraint.activate([
+            indicator.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            indicator.centerYAnchor.constraint(equalTo: container.centerYAnchor)
+        ])
+        return container
+    }()
+    
     private var viewModel: ResponsibleGamingViewModel
     private var cancellables = Set<AnyCancellable>()
 
@@ -60,6 +179,13 @@ class ResponsibleGamingViewController: UIViewController {
         self.setupWithTheme()
         self.setupButtonActions()
         self.setupInformationExpandableSectionContent()
+        self.setupDepositLimitSectionContent()
+        self.setupWageringLimitSectionContent()
+        self.setupTimeOutSectionContent()
+        self.setupSelfExclusionSectionContent()
+        self.setupLoadingOverlay()
+        self.setupViewModelCallbacks()
+        self.bindViewModel()
     }
     
     override func viewDidLayoutSubviews() {
@@ -70,11 +196,11 @@ class ResponsibleGamingViewController: UIViewController {
     // MARK: - Setup Methods
     
     private func setupWithTheme() {
-        self.view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
-        self.navigationView.backgroundColor = .clear
-        self.titleLabel.textColor = StyleProvider.Color.textPrimary
-        self.backButton.tintColor = StyleProvider.Color.textPrimary
+        self.view.backgroundColor = StyleProvider.Color.backgroundSecondary
+        self.topSafeAreaView.backgroundColor = StyleProvider.Color.highlightPrimary
+        self.navigationView.backgroundColor = StyleProvider.Color.highlightPrimary
+        self.titleLabel.textColor = StyleProvider.Color.allWhite
+        self.backButton.tintColor = StyleProvider.Color.allWhite
         self.containerView.backgroundColor = .clear
         self.innerContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary
     }
@@ -87,13 +213,138 @@ class ResponsibleGamingViewController: UIViewController {
         // Add subtitle
         let subtitleLabel = UILabel()
         subtitleLabel.text = localized("rg_information_subtitle")
-        subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 14)
+        subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
         subtitleLabel.textColor = StyleProvider.Color.textPrimary
         informationSection.contentContainer.addArrangedSubview(subtitleLabel)
         
         informationTextSections.forEach { sectionView in
             informationSection.contentContainer.addArrangedSubview(sectionView)
         }
+    }
+    
+    private func setupDepositLimitSectionContent() {
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = localized("rg_deposit_limit_subtitle")
+        subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
+        subtitleLabel.textColor = StyleProvider.Color.textPrimary
+        subtitleLabel.numberOfLines = 0
+        depositLimitSection.contentContainer.addArrangedSubview(subtitleLabel)
+        
+        let currentLimitContainer = UIView()
+        currentLimitContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let currentLimitTitleLabel = UILabel()
+        currentLimitTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        currentLimitTitleLabel.text = localized("rg_deposit_limit_current_title")
+        currentLimitTitleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        currentLimitTitleLabel.textColor = StyleProvider.Color.textPrimary
+        
+        depositCurrentLimitValueLabel.text = viewModel.depositLimitCurrentValue
+        
+        currentLimitContainer.addSubview(currentLimitTitleLabel)
+        currentLimitContainer.addSubview(depositCurrentLimitValueLabel)
+        
+        NSLayoutConstraint.activate([
+            currentLimitTitleLabel.leadingAnchor.constraint(equalTo: currentLimitContainer.leadingAnchor),
+            currentLimitTitleLabel.topAnchor.constraint(equalTo: currentLimitContainer.topAnchor),
+            currentLimitTitleLabel.bottomAnchor.constraint(equalTo: currentLimitContainer.bottomAnchor),
+            
+            depositCurrentLimitValueLabel.leadingAnchor.constraint(equalTo: currentLimitTitleLabel.trailingAnchor, constant: 4),
+            depositCurrentLimitValueLabel.topAnchor.constraint(equalTo: currentLimitContainer.topAnchor),
+            depositCurrentLimitValueLabel.bottomAnchor.constraint(equalTo: currentLimitContainer.bottomAnchor),
+            depositCurrentLimitValueLabel.trailingAnchor.constraint(lessThanOrEqualTo: currentLimitContainer.trailingAnchor)
+        ])
+        
+        depositLimitSection.contentContainer.addArrangedSubview(currentLimitContainer)
+        
+        depositLimitSection.contentContainer.addArrangedSubview(depositLimitOptionsView)
+        depositLimitSection.contentContainer.addArrangedSubview(depositAmountTextField)
+        depositLimitSection.contentContainer.addArrangedSubview(depositLimitActionButton)
+    }
+    
+    private func setupWageringLimitSectionContent() {
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = localized("rg_wagering_limit_subtitle")
+        subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
+        subtitleLabel.textColor = StyleProvider.Color.textPrimary
+        subtitleLabel.numberOfLines = 0
+        wageringLimitSection.contentContainer.addArrangedSubview(subtitleLabel)
+        
+        let currentLimitContainer = UIView()
+        currentLimitContainer.translatesAutoresizingMaskIntoConstraints = false
+        
+        let currentLimitTitleLabel = UILabel()
+        currentLimitTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        currentLimitTitleLabel.text = localized("rg_wagering_limit_current_title")
+        currentLimitTitleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        currentLimitTitleLabel.textColor = StyleProvider.Color.textPrimary
+        
+        wageringCurrentLimitValueLabel.text = viewModel.wageringLimitCurrentValue
+        
+        currentLimitContainer.addSubview(currentLimitTitleLabel)
+        currentLimitContainer.addSubview(wageringCurrentLimitValueLabel)
+        
+        NSLayoutConstraint.activate([
+            currentLimitTitleLabel.leadingAnchor.constraint(equalTo: currentLimitContainer.leadingAnchor),
+            currentLimitTitleLabel.topAnchor.constraint(equalTo: currentLimitContainer.topAnchor),
+            currentLimitTitleLabel.bottomAnchor.constraint(equalTo: currentLimitContainer.bottomAnchor),
+            
+            wageringCurrentLimitValueLabel.leadingAnchor.constraint(equalTo: currentLimitTitleLabel.trailingAnchor, constant: 4),
+            wageringCurrentLimitValueLabel.topAnchor.constraint(equalTo: currentLimitContainer.topAnchor),
+            wageringCurrentLimitValueLabel.bottomAnchor.constraint(equalTo: currentLimitContainer.bottomAnchor),
+            wageringCurrentLimitValueLabel.trailingAnchor.constraint(lessThanOrEqualTo: currentLimitContainer.trailingAnchor)
+        ])
+        
+        wageringLimitSection.contentContainer.addArrangedSubview(currentLimitContainer)
+        wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitOptionsView)
+        wageringLimitSection.contentContainer.addArrangedSubview(wageringAmountTextField)
+        wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitActionButton)
+    }
+    
+    private func setupTimeOutSectionContent() {
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = localized("rg_time_out_subtitle")
+        subtitleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        subtitleLabel.textColor = StyleProvider.Color.textPrimary
+        subtitleLabel.numberOfLines = 0
+        timeOutSection.contentContainer.addArrangedSubview(subtitleLabel)
+        
+        timeOutSection.contentContainer.addArrangedSubview(timeOutOptionsView)
+        timeOutSection.contentContainer.addArrangedSubview(timeOutActionButton)
+    }
+    
+    private func setupSelfExclusionSectionContent() {
+        selfExclusionSection.contentContainer.addArrangedSubview(selfExclusionOptionsView)
+        selfExclusionSection.contentContainer.addArrangedSubview(selfExclusionActionButton)
+    }
+    
+    private func setupLoadingOverlay() {
+        view.addSubview(loadingOverlayView)
+        NSLayoutConstraint.activate([
+            loadingOverlayView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            loadingOverlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loadingOverlayView.topAnchor.constraint(equalTo: view.topAnchor),
+            loadingOverlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        view.bringSubviewToFront(loadingOverlayView)
+    }
+    
+    private func setupViewModelCallbacks() {
+        viewModel.onDepositLimitUpdated = { [weak self] updatedValue in
+            self?.depositCurrentLimitValueLabel.text = updatedValue
+        }
+        viewModel.onWageringLimitUpdated = { [weak self] updatedValue in
+            self?.wageringCurrentLimitValueLabel.text = updatedValue
+        }
+    }
+    
+    private func bindViewModel() {
+        viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.loadingOverlayView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Actions
@@ -175,8 +426,12 @@ extension ResponsibleGamingViewController {
         // Add inner container
         self.containerView.addSubview(self.innerContainerView)
         
-        // Add expandable section to inner container
+        // Add expandable sections to inner container
         self.innerContainerView.addSubview(self.informationSection)
+        self.innerContainerView.addSubview(self.depositLimitSection)
+        self.innerContainerView.addSubview(self.wageringLimitSection)
+        self.innerContainerView.addSubview(self.timeOutSection)
+        self.innerContainerView.addSubview(self.selfExclusionSection)
         
         self.initConstraints()
     }
@@ -230,7 +485,27 @@ extension ResponsibleGamingViewController {
             self.informationSection.topAnchor.constraint(equalTo: self.innerContainerView.topAnchor, constant: 8),
             self.informationSection.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
             self.informationSection.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
-            self.informationSection.bottomAnchor.constraint(equalTo: self.innerContainerView.bottomAnchor, constant: -8)
+            
+            // Deposit Limit Section
+            self.depositLimitSection.topAnchor.constraint(equalTo: self.informationSection.bottomAnchor, constant: 12),
+            self.depositLimitSection.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
+            self.depositLimitSection.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
+            
+            // Wagering Limit Section
+            self.wageringLimitSection.topAnchor.constraint(equalTo: self.depositLimitSection.bottomAnchor, constant: 12),
+            self.wageringLimitSection.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
+            self.wageringLimitSection.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
+            
+            // Time Out Section
+            self.timeOutSection.topAnchor.constraint(equalTo: self.wageringLimitSection.bottomAnchor, constant: 12),
+            self.timeOutSection.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
+            self.timeOutSection.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
+            
+            // Self Exclusion Section
+            self.selfExclusionSection.topAnchor.constraint(equalTo: self.timeOutSection.bottomAnchor, constant: 12),
+            self.selfExclusionSection.leadingAnchor.constraint(equalTo: self.innerContainerView.leadingAnchor, constant: 8),
+            self.selfExclusionSection.trailingAnchor.constraint(equalTo: self.innerContainerView.trailingAnchor, constant: -8),
+            self.selfExclusionSection.bottomAnchor.constraint(equalTo: self.innerContainerView.bottomAnchor, constant: -8)
         ])
     }
 }
