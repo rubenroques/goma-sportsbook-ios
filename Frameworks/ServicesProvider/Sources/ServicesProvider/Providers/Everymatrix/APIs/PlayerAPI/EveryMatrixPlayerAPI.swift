@@ -15,6 +15,12 @@ enum EveryMatrixPlayerAPI {
     case register(registrationId: String)
     case getUserProfile(userId: String)
     case getUserBalance(userId: String)
+    case getResponsibleGamingLimits(userId: String, periodTypes: String?, limitTypes: String?)
+    case setUserLimit(userId: String, request: UserLimitRequest)
+    case setTimeOut(userId: String, request: UserTimeoutRequest)
+    case setSelfExclusion(userId: String, request: SelfExclusionRequest)
+    case updateUserLimit(userId: String, limitId: String, request: UpdateUserLimitRequest)
+    case getUserLimits(userId: String, periodTypes: String?)
     //
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
     case getWageringTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
@@ -62,6 +68,18 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(userId)/details"
         case .getUserBalance(let userId):
             return "/v2/player/\(userId)/balance"
+        case .getResponsibleGamingLimits(let userId, _, _):
+            return "/v1/player/\(userId)/limits/monetary"
+        case .setUserLimit(let userId, _):
+            return "/v1/player/\(userId)/limits/monetary"
+        case .setTimeOut(let userId, _):
+            return "/v1/player/\(userId)/limits/session"
+        case .setSelfExclusion(let userId, _):
+            return "/v1/player/\(userId)/limits/session"
+        case .updateUserLimit(let userId, let limitId, _):
+            return "/v1/player/\(userId)/limits/monetary/\(limitId)"
+        case .getUserLimits(let userId, _):
+            return "/v1/player/\(userId)/limits/monetary"
         case .getBankingWebView(let userId, _):
             return "/v1/player/\(userId)/payment/GetPaymentSession"
         case .getWageringTransactions(let userId, _, _, _):
@@ -113,6 +131,28 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 queryItems.append(URLQueryItem(name: "page", value: String(pageNumber)))
             }
             return queryItems
+        case .getResponsibleGamingLimits(_, let periodTypes, let limitTypes):
+            var queryItems: [URLQueryItem] = []
+            if let periodTypes = periodTypes, !periodTypes.isEmpty {
+                queryItems.append(URLQueryItem(name: "periodTypes", value: periodTypes))
+            }
+            if let limitTypes = limitTypes, !limitTypes.isEmpty {
+                queryItems.append(URLQueryItem(name: "limitTypes", value: limitTypes))
+            }
+            return queryItems.isEmpty ? nil : queryItems
+        case .setUserLimit:
+            return nil
+        case .setTimeOut:
+            return nil
+        case .setSelfExclusion:
+            return nil
+        case .updateUserLimit:
+            return nil
+        case .getUserLimits(_, let periodTypes):
+            guard let periodTypes = periodTypes, !periodTypes.isEmpty else {
+                return nil
+            }
+            return [URLQueryItem(name: "periodTypes", value: periodTypes)]
         case .getRecentlyPlayedGames(_, let language, let platform, let offset, let limit):
             return [
                 URLQueryItem(name: "language", value: language),
@@ -163,7 +203,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
     var headers: HTTP.Headers? {
 
         switch self {
-        case .getUserProfile, .getUserBalance, .getWageringTransactions, .getBankingTransactions:
+        case .getUserProfile, .getUserBalance, .getWageringTransactions, .getBankingTransactions, .getResponsibleGamingLimits, .setUserLimit, .setTimeOut, .setSelfExclusion, .updateUserLimit, .getUserLimits:
             let headers = [
                 "Content-Type": "application/json",
                 "User-Agent": "GOMA/native-app/iOS",
@@ -205,6 +245,18 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getUserProfile:
             return .get
         case .getUserBalance:
+            return .get
+        case .getResponsibleGamingLimits:
+            return .get
+        case .setUserLimit:
+            return .post
+        case .setTimeOut:
+            return .put
+        case .setSelfExclusion:
+            return .put
+        case .updateUserLimit:
+            return .put
+        case .getUserLimits:
             return .get
         
         case .getBankingWebView:
@@ -295,7 +347,14 @@ extension EveryMatrixPlayerAPI: Endpoint {
             let selections = bettingOfferIds.map { BookingSelection(bettingOfferId: $0) }
             let request = BookingRequest(selections: selections, originalSelectionsLength: originalSelectionsLength)
             return try? JSONEncoder().encode(request)
-        
+        case .setUserLimit(_, let request):
+            return try? JSONEncoder().encode(request)
+        case .setTimeOut(_, let request):
+            return try? JSONEncoder().encode(request)
+        case .setSelfExclusion(_, let request):
+            return try? JSONEncoder().encode(request)
+        case .updateUserLimit(_, _, let request):
+            return try? JSONEncoder().encode(request)
         case .getSportsBonusWallets(let request):
             return try? JSONEncoder().encode(request)
 
@@ -322,6 +381,18 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return true
         case .getUserBalance:
             return true
+        case .getResponsibleGamingLimits:
+            return true
+        case .setUserLimit:
+            return true
+        case .setTimeOut:
+            return true
+        case .setSelfExclusion:
+            return true
+        case .updateUserLimit:
+            return true
+        case .getUserLimits:
+            return true
         case .getBankingWebView:
             return true
         case .getWageringTransactions, .getBankingTransactions:
@@ -341,7 +412,22 @@ extension EveryMatrixPlayerAPI: Endpoint {
     }
     
     var comment: String? {
-        return nil
+        switch self {
+        case .getResponsibleGamingLimits:
+            return "getResponsibleGamingLimits"
+        case .setUserLimit:
+            return "setUserLimit"
+        case .setTimeOut:
+            return "setTimeOut"
+        case .setSelfExclusion:
+            return "setSelfExclusion"
+        case .updateUserLimit:
+            return "updateUserLimit"
+        case .getUserLimits:
+            return "getUserLimits"
+        default:
+            return nil
+        }
     }
 
 }

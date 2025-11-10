@@ -193,6 +193,105 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
+    func getUserLimits(periodTypes: String? = nil, limitTypes: String? = nil) -> AnyPublisher<UserLimitsResponse, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let endpoint = EveryMatrixPlayerAPI.getUserLimits(userId: currentUserId, periodTypes: periodTypes)
+        let publisher: AnyPublisher<EveryMatrix.ResponsibleGamingLimitsResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .map { response in
+                EveryMatrixModelMapper.userLimitsResponse(from: response)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func setUserLimit(period: String, type: String, amount: Double, currency: String, products: [String], walletTypes: [String]) -> AnyPublisher<UserLimit, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let request = UserLimitRequest(
+            amount: amount,
+            currency: currency,
+            period: period,
+            type: type,
+            products: products,
+            walletTypes: walletTypes
+        )
+        let endpoint = EveryMatrixPlayerAPI.setUserLimit(userId: currentUserId, request: request)
+        let publisher: AnyPublisher<EveryMatrix.SetUserLimitResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .tryMap { response -> UserLimit in
+                guard let mapped = EveryMatrixModelMapper.userLimit(from: response.limit) else {
+                    throw ServiceProviderError.invalidResponse
+                }
+                return mapped
+            }
+            .mapError { error in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.invalidResponse
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func setTimeOut(request: UserTimeoutRequest) -> AnyPublisher<Void, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let endpoint = EveryMatrixPlayerAPI.setTimeOut(userId: currentUserId, request: request)
+        let publisher: AnyPublisher<EveryMatrix.EmptyResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .map { _ in () }
+            .catch { error -> AnyPublisher<Void, ServiceProviderError> in
+                if case .decodingError = error {
+                    return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                return Fail(error: error).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func setSelfExclusion(request: SelfExclusionRequest) -> AnyPublisher<Void, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let endpoint = EveryMatrixPlayerAPI.setSelfExclusion(userId: currentUserId, request: request)
+        let publisher: AnyPublisher<EveryMatrix.EmptyResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .map { _ in () }
+            .catch { error -> AnyPublisher<Void, ServiceProviderError> in
+                if case .decodingError = error {
+                    return Just(()).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+                }
+                return Fail(error: error).eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func updateUserLimit(limitId: String, request: UpdateUserLimitRequest) -> AnyPublisher<UserLimit, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        let endpoint = EveryMatrixPlayerAPI.updateUserLimit(userId: currentUserId, limitId: limitId, request: request)
+        let publisher: AnyPublisher<EveryMatrix.SetUserLimitResponse, ServiceProviderError> = self.restConnector.request(endpoint)
+        return publisher
+            .tryMap { response -> UserLimit in
+                guard let mapped = EveryMatrixModelMapper.userLimit(from: response.limit) else {
+                    throw ServiceProviderError.invalidResponse
+                }
+                return mapped
+            }
+            .mapError { error in
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
+                }
+                return ServiceProviderError.invalidResponse
+            }
+            .eraseToAnyPublisher()
+    }
+
     func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
