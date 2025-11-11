@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 public class MockBetDetailValuesSummaryViewModel: BetDetailValuesSummaryViewModelProtocol {
     
     // MARK: - Properties
@@ -33,7 +34,7 @@ public class MockBetDetailValuesSummaryViewModel: BetDetailValuesSummaryViewMode
             BetDetailRowData(label: "Payout", value: "XAF 161.75", style: .standard)
         ]
         
-        let footerRow = BetDetailRowData(label: "Bet result", value: "Lost", style: .standard)
+        let footerRow = BetDetailRowData(label: "Bet result", value: LocalizationProvider.string("lost"), style: .standard)
         
         let data = BetDetailValuesSummaryData(
             headerRow: headerRow,

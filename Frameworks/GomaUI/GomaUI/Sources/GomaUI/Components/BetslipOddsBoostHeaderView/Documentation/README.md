@@ -50,7 +50,7 @@ The component always renders when visible - there is no "hidden" state in the da
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 class BetslipViewController: UIViewController {
     private let viewModel = BetslipOddsBoostHeaderViewModel()

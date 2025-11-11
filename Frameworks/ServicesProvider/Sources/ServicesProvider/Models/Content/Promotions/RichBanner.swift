@@ -1,11 +1,114 @@
-//
-//  RichBanner.swift
-//
-//
-//  Created on: Today
-//
 
 import Foundation
+
+// MARK: - Rich Banner Pointers (IDs + Metadata only)
+
+public typealias RichBannerPointers = [RichBannerPointer]
+
+/// Rich banner pointer containing only IDs and metadata (no enriched Event/CasinoGame data)
+/// Used by providers that need to enrich data from external sources
+public enum RichBannerPointer: Identifiable, Equatable, Hashable {
+    case info(InfoBannerPointer)
+    case casinoGame(CasinoGameBannerPointer)
+    case sportEvent(SportEventBannerPointer)
+
+    public var id: String {
+        switch self {
+        case .info(let pointer): return pointer.id
+        case .casinoGame(let pointer): return pointer.id
+        case .sportEvent(let pointer): return pointer.id
+        }
+    }
+}
+
+/// Info banner pointer (complete data, no enrichment needed)
+public struct InfoBannerPointer: Identifiable, Equatable, Hashable {
+    public let id: String
+    public let title: String?
+    public let subtitle: String?
+    public let ctaText: String?
+    public let ctaUrl: String?
+    public let ctaTarget: String?
+    public let imageUrl: String?
+
+    public init(
+        id: String,
+        title: String?,
+        subtitle: String?,
+        ctaText: String?,
+        ctaUrl: String?,
+        ctaTarget: String?,
+        imageUrl: String?
+    ) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+        self.ctaText = ctaText
+        self.ctaUrl = ctaUrl
+        self.ctaTarget = ctaTarget
+        self.imageUrl = imageUrl
+    }
+}
+
+/// Casino game banner pointer (casinoGameId + metadata, needs enrichment)
+public struct CasinoGameBannerPointer: Identifiable, Equatable, Hashable {
+    public let id: String
+    public let casinoGameId: String
+    public let title: String?
+    public let subtitle: String?
+    public let ctaText: String?
+    public let ctaUrl: String?
+    public let ctaTarget: String?
+    public let imageUrl: String?
+
+    public init(
+        id: String,
+        casinoGameId: String,
+        title: String?,
+        subtitle: String?,
+        ctaText: String?,
+        ctaUrl: String?,
+        ctaTarget: String?,
+        imageUrl: String?
+    ) {
+        self.id = id
+        self.casinoGameId = casinoGameId
+        self.title = title
+        self.subtitle = subtitle
+        self.ctaText = ctaText
+        self.ctaUrl = ctaUrl
+        self.ctaTarget = ctaTarget
+        self.imageUrl = imageUrl
+    }
+}
+
+/// Sport event banner pointer (sportEventId + metadata, needs enrichment)
+public struct SportEventBannerPointer: Identifiable, Equatable, Hashable {
+    public let id: String
+    public let sportEventId: String
+    public let sportEventMarketId: String
+    public let imageUrl: String?
+    public let marketBettingTypeId: String?
+    public let marketEventPartId: String?
+
+    public init(
+        id: String,
+        sportEventId: String,
+        sportEventMarketId: String,
+        imageUrl: String?,
+        marketBettingTypeId: String?,
+        marketEventPartId: String?
+    ) {
+        self.id = id
+        self.sportEventId = sportEventId
+        self.sportEventMarketId = sportEventMarketId
+        self.imageUrl = imageUrl
+        self.marketBettingTypeId = marketBettingTypeId
+        self.marketEventPartId = marketEventPartId
+    }
+}
+
+// MARK: - Rich Banners (Enriched with full Event/CasinoGame data)
 
 public typealias RichBanners = [RichBanner]
 

@@ -109,6 +109,10 @@ iOSInjectionProject/
 
 #ignore ENV variables
 .env
+
+# App Store Connect API Key (sensitive - never commit)
+*.p8
+
 fastlane/logs
 culprits.txt
 .vscode

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Mock implementation of MatchBannerViewModelProtocol for testing and previews
 public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
 
@@ -30,6 +31,11 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
         return mockScoreViewModel
     }
 
+    // MARK: - Callbacks (protocol requirements)
+    public var onMatchTap: ((String) -> Void)?
+    public var onOutcomeSelected: ((String) -> Void)?
+    public var onOutcomeDeselected: ((String) -> Void)?
+
     // MARK: - Private Properties
     private let mockMarketOutcomesViewModel: MockMarketOutcomesLineViewModel
     private let mockScoreViewModel: MockScoreViewModel
@@ -57,6 +63,7 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
     public func userDidTapBanner() {
         print("🏟️ Mock: Banner tapped for match: \(matchData.homeTeam) vs \(matchData.awayTeam)")
         onBannerTappedCallback?()
+        onMatchTap?(matchData.id)
     }
 
     public func userDidTapOutcome(outcomeId: String, isSelected: Bool) {
@@ -169,11 +176,13 @@ public final class MockMatchBannerViewModel: MatchBannerViewModelProtocol {
     }
     
     public func onOutcomeSelected(outcomeId: String) {
-        print("Mock: onOutcomeSelected")
+        print("Mock: onOutcomeSelected - \(outcomeId)")
+        self.onOutcomeSelected?(outcomeId)
     }
-    
+
     public func onOutcomeDeselected(outcomeId: String) {
-        print("Mock: onOutcomeDeselected")
+        print("Mock: onOutcomeDeselected - \(outcomeId)")
+        self.onOutcomeDeselected?(outcomeId)
     }
 }
 
@@ -190,7 +199,7 @@ extension MockMatchBannerViewModel {
         let dateTime = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Man City", odds: 1.55),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 5.00),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 5.00),
             MatchOutcome(id: "away", displayName: "Arsenal", odds: 5.00)
         ]
 
@@ -220,7 +229,7 @@ extension MockMatchBannerViewModel {
     public static var liveMatch: MockMatchBannerViewModel {
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Man City", odds: 1.55),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 5.00),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 5.00),
             MatchOutcome(id: "away", displayName: "Arsenal", odds: 5.00)
         ]
 
@@ -253,7 +262,7 @@ extension MockMatchBannerViewModel {
     public static var interactiveMatch: MockMatchBannerViewModel {
         let outcomes = [
             MatchOutcome(id: "home", displayName: "Barcelona", odds: 2.10),
-            MatchOutcome(id: "draw", displayName: "Draw", odds: 3.40),
+            MatchOutcome(id: "draw", displayName: LocalizationProvider.string("draw"), odds: 3.40),
             MatchOutcome(id: "away", displayName: "Real Madrid", odds: 3.20)
         ]
 

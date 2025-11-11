@@ -20,10 +20,10 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     private let displayStateSubject = CurrentValueSubject<WalletDetailDisplayState, Never>(
         WalletDetailDisplayState(
             walletData: WalletDetailData(
-                walletTitle: "Mobile Wallet",
+                walletTitle: localized("mobile_wallet"),
                 phoneNumber: "+237 XXX XXX XXX",
                 totalBalance: "0.00 XAF",
-                currentBalance: "0.00 XAF", 
+                currentBalance: "0.00 XAF",
                 bonusBalance: "0.00 XAF",
                 cashbackBalance: "0.00 XAF",
                 withdrawableAmount: "0.00 XAF"
@@ -56,7 +56,7 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
         self.withdrawButtonViewModel = MockButtonViewModel(
             buttonData: ButtonData(
                 id: "withdraw",
-                title: "Withdraw",
+                title: localized("withdraw"),
                 style: .bordered,
                 borderColor: StyleProvider.Color.allWhite,
                 textColor: StyleProvider.Color.allWhite,
@@ -65,11 +65,11 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
                 isEnabled: true
             )
         )
-        
+
         self.depositButtonViewModel = MockButtonViewModel(
             buttonData: ButtonData(
                 id: "deposit",
-                title: "Deposit", 
+                title: localized("deposit"),
                 style: .solidBackground,
                 backgroundColor: StyleProvider.Color.allWhite,
                 textColor: StyleProvider.Color.highlightPrimary,
@@ -186,7 +186,7 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
         
         // Update display state
         let walletData = WalletDetailData(
-            walletTitle: "Mobile Wallet",
+            walletTitle: localized("wallet"),
             phoneNumber: formatPhoneNumber(userProfile),
             totalBalance: totalBalance,
             currentBalance: currentBalance,
@@ -202,7 +202,7 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     }
     
     private func formatCurrency(_ amount: Double) -> String {
-        return CurrencyFormater.formatWalletAmount(amount)
+        return CurrencyHelper.formatAmount(amount)
     }
     
     private func formatPhoneNumber(_ userProfile: UserProfile?) -> String {

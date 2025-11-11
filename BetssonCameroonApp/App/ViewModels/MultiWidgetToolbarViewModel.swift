@@ -18,15 +18,15 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     // Widget view models
     // This is required by the protocol and used by MultiWidgetToolbarView
     // to update the wallet balance
-    var walletViewModel: MockWalletWidgetViewModel? {
+    var walletViewModel: WalletWidgetViewModelProtocol? {
         didSet {
             // Apply pending balance update if any
             if let pendingBalance = pendingWalletBalance {
-                walletViewModel?.updateBalance(CurrencyFormater.formatWalletAmount(pendingBalance))
+                walletViewModel?.updateBalance(CurrencyHelper.formatAmount(pendingBalance))
                 pendingWalletBalance = nil
                 print("💰 MultiWidgetToolbarViewModel: Applied pending wallet balance: \(pendingBalance)")
             }
-            
+
             // Set up deposit callback connection
             if let walletVM = walletViewModel as? WalletWidgetViewModel {
                 walletVM.onDepositRequested = { [weak self] in
@@ -56,8 +56,8 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     }
     
     // MARK: - MultiWidgetToolbarViewModelProtocol
-    
-    func selectWidget(id: String) {
+
+    func selectWidget(id: WidgetTypeIdentifier) {
         print("🔧 MultiWidgetToolbarViewModel: Widget selected: \(id)")
         // Handle widget selection - this could trigger navigation or other actions
         // In a real implementation, this might use delegates or closures
@@ -76,7 +76,7 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     func setWalletBalance(balance: Double) {
         if let walletViewModel = walletViewModel {
             // Update the wallet view model if it exists
-            walletViewModel.updateBalance(CurrencyFormater.formatWalletAmount(balance))
+            walletViewModel.updateBalance(CurrencyHelper.formatAmount(balance))
             print("💰 MultiWidgetToolbarViewModel: Wallet balance updated to: \(balance)")
             pendingWalletBalance = nil
         } else {
@@ -119,63 +119,63 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
         let widgets: [Widget] = [
             // Logo
             Widget(
-                id: "logo",
+                id: .logo,
                 type: .image,
                 src: "default_brand_horizontal",
                 alt: "Betsson"
             ),
-            
+
             // Wallet
             Widget(
-                id: "wallet",
+                id: .wallet,
                 type: .wallet,
                 details: [
                     WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance"),
-                    WidgetDetail(isButton: true, container: "depositContainer", label: "DEPOSIT", route: "/deposit")
+                    WidgetDetail(isButton: true, container: "depositContainer", label: localized("deposit").uppercased(), route: "/deposit")
                 ]
             ),
-            
+
             // Avatar
             Widget(
-                id: "avatar",
+                id: .avatar,
                 type: .avatar,
                 route: "/user",
                 container: "avatarContainer"
             ),
-            
+
             // Support
             Widget(
-                id: "support",
+                id: .support,
                 type: .support
             ),
-            
+
             // Language Switcher
             Widget(
-                id: "language",
+                id: .languageSwitcher,
                 type: .languageSwitcher
             ),
-            
+
             // Login Button
             Widget(
-                id: "loginButton",
+                id: .loginButton,
                 type: .loginButton,
                 route: "/login",
                 container: "loginContainer",
-                label: "LOGIN"
+                label: localized("login").uppercased()
             ),
-            
+
             // Join Now Button
             Widget(
-                id: "joinButton",
+                id: .joinButton,
                 type: .signUpButton,
                 route: "/register",
                 container: "registerContainer",
-                label: "JOIN NOW"
+                label: localized("join_now").uppercased()
             ),
-            
+
             // Flexible space
             Widget(
-                id: "flexSpace",
+                id: .flexSpace,
                 type: .space
             )
         ]
@@ -185,15 +185,15 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
             LayoutState.loggedIn.rawValue: LayoutConfig(
                 lines: [
                     // Just one row for logged in - logo, space, wallet, avatar
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "wallet", "avatar"])
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .wallet, .avatar])
                 ]
             ),
             LayoutState.loggedOut.rawValue: LayoutConfig(
                 lines: [
                     // Top row - logo, flexible space, support, language
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "support", "language"]),
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .support, .languageSwitcher]),
                     // Bottom row - login and join now buttons (equal width)
-                    LineConfig(mode: .split, widgets: ["loginButton", "joinButton"])
+                    LineConfig(mode: .split, widgets: [.loginButton, .joinButton])
                 ]
             )
         ]

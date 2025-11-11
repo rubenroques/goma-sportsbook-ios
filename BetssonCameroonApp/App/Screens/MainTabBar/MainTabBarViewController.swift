@@ -982,7 +982,7 @@ extension MainTabBarViewController {
             
             // Betslip Floating View
             self.betslipFloatingView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.betslipFloatingView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
+            self.betslipFloatingView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -70),
             
         ])
 

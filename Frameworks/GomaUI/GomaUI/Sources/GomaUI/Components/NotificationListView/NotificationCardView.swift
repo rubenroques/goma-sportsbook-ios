@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// Internal notification card view used by NotificationListView
 final class NotificationCardView: UIView {
     
@@ -356,7 +357,7 @@ extension NotificationCardView {
             title: "Welcome Bonus Available",
             description: "Claim your €50 welcome bonus now! This offer is valid for the next 24 hours only.",
             state: .unread,
-            action: NotificationAction(id: "claim", title: "Claim Bonus", style: .secondary)
+            action: NotificationAction(id: "claim", title: LocalizationProvider.string("claim_bonus"), style: .secondary)
         )
         
         let cardView = NotificationCardView()

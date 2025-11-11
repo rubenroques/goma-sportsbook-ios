@@ -551,6 +551,15 @@ struct ComponentRegistry {
                 let viewModel = MockNavigationActionViewModel.openBetslipDetailsMock()
                 return NavigationActionView(viewModel: viewModel)
             }
+        ),
+        UIComponent(
+            title: "Simple Navigation Bar",
+            description: "Simple, reusable navigation bar with back button and optional title, using callback-based navigation",
+            viewController: SimpleNavigationBarViewController.self,
+            previewFactory: {
+                let viewModel = MockSimpleNavigationBarViewModel.withBackTextAndTitle
+                return SimpleNavigationBarView(viewModel: viewModel)
+            }
         )
     ]
     
@@ -1166,6 +1175,17 @@ struct ComponentRegistry {
                 let countdownView = ResendCodeCountdownView(viewModel: viewModel)
                 viewModel.startCountdown()
                 return countdownView
+            }
+        ),
+        UIComponent(
+            title: "Extended List Footer",
+            description: "Comprehensive footer component with 8 sections: partnership logos, navigation links, payment providers, social media, responsible gambling, copyright, and license information. Uses image resolver pattern with interactive link callbacks.",
+            viewController: ExtendedListFooterViewController.self,
+            previewFactory: {
+                let viewModel = MockExtendedListFooterViewModel.cameroonFooter
+                let footerView = ExtendedListFooterView(viewModel: viewModel)
+                footerView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                return footerView
             }
         ),
         UIComponent(

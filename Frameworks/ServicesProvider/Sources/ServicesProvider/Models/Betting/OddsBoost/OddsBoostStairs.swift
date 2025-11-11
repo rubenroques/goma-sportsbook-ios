@@ -1,9 +1,3 @@
-//
-//  OddsBoostStairs.swift
-//  ServicesProvider
-//
-//  Created by Claude on 15/10/2025.
-//
 
 import Foundation
 

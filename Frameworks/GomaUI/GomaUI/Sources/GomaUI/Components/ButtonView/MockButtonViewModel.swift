@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of `ButtonViewModelProtocol` for testing.
 final public class MockButtonViewModel: ButtonViewModelProtocol {
     
@@ -122,7 +123,7 @@ extension MockButtonViewModel {
     public static var transparentMock: MockButtonViewModel {
         let buttonData = ButtonData(
             id: "terms_conditions",
-            title: "Terms and Conditions",
+            title: LocalizationProvider.string("terms_consent_popup_title"),
             style: .transparent,
             isEnabled: true
         )
@@ -132,7 +133,7 @@ extension MockButtonViewModel {
     public static var transparentDisabledMock: MockButtonViewModel {
         let buttonData = ButtonData(
             id: "terms_conditions_disabled",
-            title: "Terms and Conditions",
+            title: LocalizationProvider.string("terms_consent_popup_title"),
             style: .transparent,
             isEnabled: false
         )
@@ -143,7 +144,7 @@ extension MockButtonViewModel {
     public static var submitMock: MockButtonViewModel {
         let buttonData = ButtonData(
             id: "submit",
-            title: "Submit",
+            title: LocalizationProvider.string("submit"),
             style: .solidBackground,
             isEnabled: true
         )
@@ -153,7 +154,7 @@ extension MockButtonViewModel {
     public static var cancelMock: MockButtonViewModel {
         let buttonData = ButtonData(
             id: "cancel",
-            title: "Cancel",
+            title: LocalizationProvider.string("cancel"),
             style: .bordered,
             isEnabled: true
         )

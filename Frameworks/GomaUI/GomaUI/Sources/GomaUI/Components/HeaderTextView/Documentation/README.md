@@ -20,7 +20,7 @@ A simple, reusable header text component that displays a centered title with cus
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create view model
 let viewModel = MockHeaderTextViewViewModel()

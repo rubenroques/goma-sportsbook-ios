@@ -34,7 +34,7 @@ TallOddsMatchCardView
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create match data
 let matchData = PreLiveMatchData(

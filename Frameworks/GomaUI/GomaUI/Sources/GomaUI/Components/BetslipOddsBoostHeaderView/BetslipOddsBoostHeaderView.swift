@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// A header view that displays odds boost promotion with progress tracking - designed for betslip header positioning
 public final class BetslipOddsBoostHeaderView: UIView {
 
@@ -32,7 +33,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "You're almost there!"
+        label.text = LocalizationProvider.string("you_almost_there")
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.highlightPrimary
         label.numberOfLines = 1
@@ -208,20 +209,22 @@ public final class BetslipOddsBoostHeaderView: UIView {
 
         // Update heading
         if let currentBoost = state.currentBoostPercentage {
-            headingLabel.text = "Max Win Boost Activated! (\(currentBoost))"
+            headingLabel.text = LocalizationProvider.string("max_win_boost_activated") + " (\(currentBoost))"
         } else if let nextPercentage = state.nextTierPercentage {
-            headingLabel.text = "Get a \(nextPercentage) Win Boost"
+            headingLabel.text = LocalizationProvider.string("get_win_boost")
+                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
         } else {
-            headingLabel.text = "Win Boost Available"
+            headingLabel.text = LocalizationProvider.string("win_boost_available")
         }
 
         // Update description
         let remainingSelections = max(0, state.totalEligibleCount - state.selectionCount)
-        if remainingSelections > 0 {
-            let legWord = remainingSelections == 1 ? "leg" : "legs"
-            descriptionLabel.text = "by adding \(remainingSelections) more \(legWord) to your betslip."
+        if remainingSelections > 0, let nextPercentage = state.nextTierPercentage {
+            descriptionLabel.text = LocalizationProvider.string("add_matches_bonus")
+                .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
         } else {
-            descriptionLabel.text = "All qualifying events added!"
+            descriptionLabel.text = LocalizationProvider.string("all_qualifying_events_added")
         }
 
         // Update progress segments
@@ -415,7 +418,7 @@ private final class BetslipOddsBoostHeaderInteractivePreviewController: UIViewCo
 
     private lazy var resetButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Reset", for: .normal)
+        button.setTitle(LocalizationProvider.string("reset"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.backgroundColor = StyleProvider.Color.backgroundBorder
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)

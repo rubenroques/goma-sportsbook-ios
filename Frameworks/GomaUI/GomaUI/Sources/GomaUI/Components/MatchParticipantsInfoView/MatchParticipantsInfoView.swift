@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class MatchParticipantsInfoView: UIView {
     
     // MARK: - UI Components
@@ -284,7 +285,7 @@ extension MatchParticipantsInfoView {
             verticalDateLabel.isHidden = true
             verticalTimeLabel.isHidden = true
             verticalMatchTimeLabel.isHidden = false
-            verticalMatchTimeLabel.text = matchTime ?? "Live"
+            verticalMatchTimeLabel.text = matchTime ?? LocalizationProvider.string("live")
             
         case .ended(let score):
             // Horizontal layout
@@ -299,7 +300,7 @@ extension MatchParticipantsInfoView {
             verticalDateLabel.isHidden = true
             verticalTimeLabel.isHidden = true
             verticalMatchTimeLabel.isHidden = false
-            verticalMatchTimeLabel.text = "Ended"
+            verticalMatchTimeLabel.text = LocalizationProvider.string("live_status_ended")
         }
     }
     

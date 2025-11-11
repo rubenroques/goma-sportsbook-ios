@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 public final class MockHighlightedTextViewModel: HighlightedTextViewModelProtocol {
     
     private let dataSubject: CurrentValueSubject<HighlightedTextData, Never>
@@ -48,9 +49,9 @@ public extension MockHighlightedTextViewModel {
     static func centeredMock() -> MockHighlightedTextViewModel {
         let fullText = "Your bonus expires in 24 hours"
         let highlight = HighlightData(
-            text: "24 hours",
+            text: LocalizationProvider.string("24_hours"),
             color: StyleProvider.Color.highlightSecondary,
-            ranges: HighlightedTextView.findRanges(of: "24 hours", in: fullText)
+            ranges: HighlightedTextView.findRanges(of: LocalizationProvider.string("24_hours"), in: fullText)
         )
         
         let data = HighlightedTextData(
@@ -113,16 +114,16 @@ public extension MockHighlightedTextViewModel {
             let fullText = "Please read our Terms and Conditions and Privacy Policy before continuing."
             
             let termsHighlight = HighlightData(
-                text: "Terms and Conditions",
+                text: LocalizationProvider.string("terms_consent_popup_title"),
                 color: StyleProvider.Color.highlightPrimary,
-                ranges: HighlightedTextView.findRanges(of: "Terms and Conditions", in: fullText),
+                ranges: HighlightedTextView.findRanges(of: LocalizationProvider.string("terms_consent_popup_title"), in: fullText),
                 type: .link
             )
             
             let privacyHighlight = HighlightData(
-                text: "Privacy Policy",
+                text: LocalizationProvider.string("privacy_policy_footer_link"),
                 color: StyleProvider.Color.highlightPrimary,
-                ranges: HighlightedTextView.findRanges(of: "Privacy Policy", in: fullText),
+                ranges: HighlightedTextView.findRanges(of: LocalizationProvider.string("privacy_policy_footer_link"), in: fullText),
                 type: .link
             )
             

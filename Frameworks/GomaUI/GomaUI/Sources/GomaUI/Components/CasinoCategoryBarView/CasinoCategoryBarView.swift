@@ -170,7 +170,7 @@ final public class CasinoCategoryBarView: UIView {
     // MARK: - Rendering
     private func renderPlaceholderState() {
         titleLabel.text = "Category Title"
-        buttonLabel.text = "All 0"
+        buttonLabel.text = "\(LocalizationProvider.string("all")) 0"
     }
     
     // MARK: - Actions

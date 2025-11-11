@@ -2,7 +2,7 @@
 //  ButtonViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 02/09/2025.
+//  Created on 02/09/2025.
 //
 
 import Foundation
@@ -105,7 +105,7 @@ extension ButtonViewModel {
     static func depositButton(isEnabled: Bool = true) -> ButtonViewModel {
         let buttonData = ButtonData(
             id: "deposit",
-            title: "Deposit",
+            title: localized("deposit"),
             style: .solidBackground,
             fontSize: 12,
             fontType: .bold,
@@ -117,7 +117,7 @@ extension ButtonViewModel {
     static func withdrawButton(isEnabled: Bool = true) -> ButtonViewModel {
         let buttonData = ButtonData(
             id: "withdraw",
-            title: "Withdraw",
+            title: localized("withdraw"),
             style: .bordered,
             fontSize: 12,
             fontType: .bold,

@@ -2,7 +2,7 @@
 //  WalletStatusViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 02/09/2025.
+//  Created on 02/09/2025.
 //
 
 import Foundation
@@ -118,12 +118,12 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
     private func updateWalletDisplay(wallet: UserWallet?) {
         if let wallet = wallet {
             // Update all balance displays with formatted amounts
-            setTotalBalance(amount: CurrencyFormater.formatWalletAmount(wallet.total))
-            setBonusBalance(amount: CurrencyFormater.formatWalletAmount(wallet.bonus ?? 0.0))
-            setCurrentBalance(amount: CurrencyFormater.formatWalletAmount(wallet.total))
-            setWithdrawableBalance(amount: CurrencyFormater.formatWalletAmount(wallet.totalWithdrawable ?? 0.0))
-            setCashbackBalance(amount: CurrencyFormater.formatWalletAmount(0.0))
-            
+            setTotalBalance(amount: CurrencyHelper.formatAmount(wallet.total))
+            setBonusBalance(amount: CurrencyHelper.formatAmount(wallet.bonus ?? 0.0))
+            setCurrentBalance(amount: CurrencyHelper.formatAmount(wallet.total))
+            setWithdrawableBalance(amount: CurrencyHelper.formatAmount(wallet.totalWithdrawable ?? 0.0))
+            setCashbackBalance(amount: CurrencyHelper.formatAmount(0.0))
+
             print("💰 WalletStatusViewModel: Wallet balances updated - total: \(wallet.total)")
         } else {
             // No wallet data - show placeholders
@@ -132,7 +132,7 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
             setCurrentBalance(amount: "-.--")
             setWithdrawableBalance(amount: "-.--")
             setCashbackBalance(amount: "-.--")
-            
+
             print("💰 WalletStatusViewModel: Wallet cleared - showing placeholders")
         }
     }

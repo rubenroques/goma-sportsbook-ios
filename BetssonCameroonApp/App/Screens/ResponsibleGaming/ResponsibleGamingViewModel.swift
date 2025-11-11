@@ -113,7 +113,7 @@ class ResponsibleGamingViewModel {
         self.userCurrency = Env.userSessionStore.userProfilePublisher.value?.currency ?? ""
         
         informationSectionViewModel = MockExpandableSectionViewModel(
-            title: localized("rg_information_title"),
+            title: localized("rg_information_header_title"),
             isExpanded: false
         )
         depositLimitSectionViewModel = MockExpandableSectionViewModel(
@@ -155,7 +155,7 @@ class ResponsibleGamingViewModel {
         
         depositLimitActionButtonViewModel = MockButtonViewModel(buttonData: ButtonData(
             id: "deposit_limit_action",
-            title: localized("set_deposit_limit"),
+            title: localized("deposit_limit_set"),
             style: .solidBackground,
             backgroundColor: StyleProvider.Color.highlightSecondary,
             isEnabled: false
@@ -180,7 +180,7 @@ class ResponsibleGamingViewModel {
         
         wageringLimitActionButtonViewModel = MockButtonViewModel(buttonData: ButtonData(
             id: "wagering_limit_action",
-            title: localized("set_wagering_limit"),
+            title: localized("wagering_limit_set"),
             style: .solidBackground,
             backgroundColor: StyleProvider.Color.highlightSecondary,
             isEnabled: false
@@ -631,13 +631,13 @@ class ResponsibleGamingViewModel {
     }
     
     private func updateDepositActionButtonTitle(hasExistingLimit: Bool) {
-        let titleKey = hasExistingLimit ? "update_deposit_limit" : "set_deposit_limit"
+        let titleKey = hasExistingLimit ? "update_deposit_limit" : "deposit_limit_set"
         
         depositLimitActionButtonViewModel.updateTitle(localized(titleKey))
     }
     
     private func updateWageringActionButtonTitle(hasExistingLimit: Bool) {
-        let titleKey = hasExistingLimit ? "update_wagering_limit" : "set_wagering_limit"
+        let titleKey = hasExistingLimit ? "update_wagering_limit" : "wagering_limit_set"
         
         wageringLimitActionButtonViewModel.updateTitle(localized(titleKey))
     }
@@ -816,7 +816,7 @@ class ResponsibleGamingViewModel {
     private func makeCardViewModel(from limit: UserLimit) -> UserLimitCardViewModelProtocol {
         let typeDisplay = displayText(for: limit.period)
         let valueDisplay = formattedValue(for: limit)
-        let actionTitle = localized("remove")
+        let actionTitle = localized("delete")
         
         return ResponsibleGamingUserLimitCardViewModel(
             limitId: limit.id,

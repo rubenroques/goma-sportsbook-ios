@@ -17,10 +17,18 @@ final class NotificationsViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
-    private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
-    private lazy var notificationsTitleLabel: UILabel = Self.createNotificationsTitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
+
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let viewModel = BetssonCameroonNavigationBarViewModel(
+            title: "Notifications",
+            onBackTapped: { [weak self] in
+                self?.viewModel.didTapClose()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: viewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
+    }()
     
     private var notificationListView: NotificationListView!
     
@@ -82,35 +90,21 @@ final class NotificationsViewController: UIViewController {
     }
     
     private func setupViewHierarchy() {
-        view.addSubview(customNavigationView)
+        view.addSubview(navigationBarView)
         view.addSubview(notificationListView)
         view.addSubview(loadingView)
         view.addSubview(errorView)
-        
-        customNavigationView.addSubview(notificationsTitleLabel)
-        customNavigationView.addSubview(backButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Custom Navigation View
-            customNavigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            customNavigationView.heightAnchor.constraint(equalToConstant: 56),
-            
-            // Notifications Title Label
-            notificationsTitleLabel.centerXAnchor.constraint(equalTo: customNavigationView.centerXAnchor),
-            notificationsTitleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            
-            // Back Button (Left side)
-            backButton.leadingAnchor.constraint(equalTo: customNavigationView.leadingAnchor, constant: 16),
-            backButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            
+            // Navigation Bar
+            navigationBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
             // NotificationListView (Main content)
-            notificationListView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            notificationListView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
             notificationListView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             notificationListView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             notificationListView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -142,8 +136,6 @@ final class NotificationsViewController: UIViewController {
     }
     
     private func setupActions() {
-        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-        
         viewModel.onNotificationActionTapped = { [weak self] notification, action in
             self?.handleNotificationAction(notification: notification, action: action)
         }
@@ -157,11 +149,11 @@ final class NotificationsViewController: UIViewController {
         
         // Show/hide error state
         errorView.isHidden = displayState.error == nil
-        
+
         // Show/hide main content
         let hasError = displayState.error != nil
         notificationListView.isHidden = displayState.isLoading || hasError
-        customNavigationView.isHidden = displayState.isLoading || hasError
+        navigationBarView.isHidden = displayState.isLoading || hasError
         
         // Update error message if present
         if let error = displayState.error {
@@ -191,11 +183,7 @@ final class NotificationsViewController: UIViewController {
     }
     
     // MARK: - Actions
-    
-    @objc private func didTapBack() {
-        viewModel.didTapClose()
-    }
-    
+
     @objc private func didTapRetry() {
         viewModel.refreshData()
     }
@@ -204,51 +192,7 @@ final class NotificationsViewController: UIViewController {
 // MARK: - Factory Methods
 
 extension NotificationsViewController {
-    
-    private static func createCustomNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-        
-        // Add bottom separator line
-        let separatorView = UIView()
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.backgroundColor = StyleProvider.Color.separatorLine
-        
-        view.addSubview(separatorView)
-        
-        NSLayoutConstraint.activate([
-            separatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            separatorView.heightAnchor.constraint(equalToConstant: 1)
-        ])
-        
-        return view
-    }
-    
-    private static func createNotificationsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Notifications"
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .center
-        return label
-    }
-    
-    private static func createBackButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Use standard iOS back arrow icon
-        let backImage = UIImage(systemName: "chevron.left")
-        button.setImage(backImage, for: .normal)
-        button.tintColor = StyleProvider.Color.highlightPrimary
-        
-        return button
-    }
-    
+
     private static func createLoadingView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

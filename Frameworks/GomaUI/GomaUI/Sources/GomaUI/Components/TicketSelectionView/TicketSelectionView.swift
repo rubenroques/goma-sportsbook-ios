@@ -2,6 +2,7 @@ import UIKit
 import SwiftUI
 import Combine
 
+
 public final class TicketSelectionView: UIView {
     
     // MARK: - UI Components
@@ -76,7 +77,7 @@ public final class TicketSelectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .semibold, size: 10)
         label.textColor = StyleProvider.Color.allWhite
-        label.text = "LIVE"
+        label.text = LocalizationProvider.string("live_uppercase")
         label.textAlignment = .center
         return label
     }()
@@ -157,7 +158,7 @@ public final class TicketSelectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textSecondary
-        label.text = "Market"
+        label.text = LocalizationProvider.string("market")
         label.numberOfLines = 1
         return label
     }()
@@ -166,7 +167,7 @@ public final class TicketSelectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textSecondary
-        label.text = "Selection"
+        label.text = LocalizationProvider.string("selection")
         label.textAlignment = .right
         label.numberOfLines = 1
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -178,7 +179,7 @@ public final class TicketSelectionView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textSecondary
-        label.text = "Odds"
+        label.text = LocalizationProvider.string("odds")
         label.numberOfLines = 1
         return label
     }()
@@ -452,7 +453,7 @@ public final class TicketSelectionView: UIView {
         // Update betting market information
         marketLabel.text = ticketData.marketName
         selectionLabel.text = ticketData.selectionName
-        oddsLabel.text = "Odds"
+        oddsLabel.text = LocalizationProvider.string("odds")
         oddsValueLabel.text = ticketData.oddsValue
     }
     

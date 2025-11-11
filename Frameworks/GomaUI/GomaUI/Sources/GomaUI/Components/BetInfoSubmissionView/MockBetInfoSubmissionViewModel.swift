@@ -50,7 +50,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         let defaultPotentialWinnings = "\(currency) \(potentialWinnings)"
         let defaultWinBonus = "\(currency) \(winBonus)"
         let defaultPayout = "\(currency) \(payout)"
-        let defaultPlaceBetAmount = "Place Bet \(currency) \(placeBetAmount)"
+        let defaultPlaceBetAmount = LocalizationProvider.string("place_bet_with_amount")
+            .replacingOccurrences(of: "{currency}", with: currency)
+            .replacingOccurrences(of: "{amount}", with: placeBetAmount)
         
         let initialData = BetInfoSubmissionData(
             odds: odds,
@@ -78,24 +80,30 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
                 text: "",
                 placeholder: "Amount",
                 visualState: .idle,
-                keyboardType: .decimalPad,
+                keyboardType: .numbersAndPunctuation,
+                returnKeyType: .go,
                 textContentType: .flightNumber
             ))
         
         self.placeBetButtonViewModel = MockButtonViewModel(
             buttonData: ButtonData(
                 id: "place_bet",
-                title: "Place Bet \(currency) 0",
+                title: LocalizationProvider.string("place_bet_with_amount")
+                    .replacingOccurrences(of: "{currency}", with: currency)
+                    .replacingOccurrences(of: "{amount}", with: "0"),
                 style: .solidBackground,
                 isEnabled: false
             ))
         
         // Wire up quick add button callbacks
         setupQuickAddButtonCallbacks()
-        
+
+        // Wire up return key callback
+        setupReturnKeyCallback()
+
         // Update child view models with initial state
         updateChildViewModels()
-        
+
         self.updatePlaceBetButtonState()
     }
     
@@ -224,11 +232,15 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         let newTotalAmountString = String(format: "%.0f", newTotalAmount)
         
         updateAmount(newTotalAmountString)
-        updatePlaceBetAmount("Place Bet \(currency) \(newTotalAmountString)")
-        
+        updatePlaceBetAmount(LocalizationProvider.string("place_bet_with_amount")
+            .replacingOccurrences(of: "{currency}", with: currency)
+            .replacingOccurrences(of: "{amount}", with: newTotalAmountString))
+
         // Update child view models
         amountTextFieldViewModel.updateText(newTotalAmountString)
-        placeBetButtonViewModel.updateTitle("Place Bet \(currency) \(newTotalAmountString)")
+        placeBetButtonViewModel.updateTitle(LocalizationProvider.string("place_bet_with_amount")
+            .replacingOccurrences(of: "{currency}", with: currency)
+            .replacingOccurrences(of: "{amount}", with: newTotalAmountString))
         placeBetButtonViewModel.setEnabled(true)
     }
     
@@ -236,7 +248,9 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         updateAmount(amount)
         updatePlaceBetButtonState()
         amountChanged?()
-        placeBetButtonViewModel.updateTitle("Place Bet \(currency) \(amount)")
+        placeBetButtonViewModel.updateTitle(LocalizationProvider.string("place_bet_with_amount")
+            .replacingOccurrences(of: "{currency}", with: currency)
+            .replacingOccurrences(of: "{amount}", with: amount))
     }
     
     // MARK: - Private Methods
@@ -245,13 +259,26 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         amount100ButtonViewModel.onButtonTapped = { [weak self] in
             self?.onQuickAddTapped(100)
         }
-        
+
         amount250ButtonViewModel.onButtonTapped = { [weak self] in
             self?.onQuickAddTapped(250)
         }
-        
+
         amount500ButtonViewModel.onButtonTapped = { [weak self] in
             self?.onQuickAddTapped(500)
+        }
+    }
+
+    private func setupReturnKeyCallback() {
+        // Wire the return key callback to trigger bet placement
+        if let mockViewModel = amountTextFieldViewModel as? MockBorderedTextFieldViewModel {
+            mockViewModel.onReturnKeyTappedCallback = { [weak self] in
+                // When Go button is pressed, trigger place bet if valid
+                guard let self = self else { return }
+                if !self.currentData.amount.isEmpty && self.hasValidTickets {
+                    self.onPlaceBetTapped?()
+                }
+            }
         }
     }
     

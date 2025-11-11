@@ -36,19 +36,59 @@ class SportsSearchCoordinator: Coordinator {
         self.environment = environment
     }
     
+    // MARK: - Footer Navigation (External Links)
+
+    /// Opens URL in external Safari browser
+    private func openExternalURL(_ url: URL) {
+        print("🚀 [SportsSearchCoordinator] Opening external URL: \(url)")
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ [SportsSearchCoordinator] Successfully opened URL")
+            } else {
+                print("❌ [SportsSearchCoordinator] Failed to open URL")
+            }
+        }
+    }
+
+    /// Opens email in user's default email client via mailto: URL
+    private func openEmailClient(email: String) {
+        guard let mailtoURL = URL(string: "mailto:\(email)") else {
+            print("❌ [SportsSearchCoordinator] Invalid email address: \(email)")
+            return
+        }
+
+        print("📧 [SportsSearchCoordinator] Opening email client for: \(email)")
+        UIApplication.shared.open(mailtoURL, options: [:]) { success in
+            if success {
+                print("✅ [SportsSearchCoordinator] Successfully opened email client")
+            } else {
+                print("❌ [SportsSearchCoordinator] Failed to open email client")
+            }
+        }
+    }
+
     // MARK: - Coordinator Protocol
-    
+
     func start() {
         // Create the view model with dependencies
         let viewModel = SportsSearchViewModel(userSessionStore: environment.userSessionStore)
-        
+
         // Create the view controller
         let viewController = SportsSearchViewController(viewModel: viewModel)
-        
+
+        // Setup footer navigation closures - Coordinator decides how to open URLs
+        viewController.onURLOpenRequested = { [weak self] url in
+            self?.openExternalURL(url)
+        }
+
+        viewController.onEmailRequested = { [weak self] email in
+            self?.openEmailClient(email: email)
+        }
+
         // Store references
         self.sportsSearchViewModel = viewModel
         self.sportsSearchViewController = viewController
-        
+
         print("🔍 SportsSearchCoordinator: Started sports search screen")
     }
     

@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Represents the different states of the code clipboard view
 public enum CodeClipboardState: Equatable {
     case `default`
@@ -17,7 +18,7 @@ public struct CodeClipboardData: Equatable {
     public init(
         state: CodeClipboardState = .default,
         code: String = "",
-        labelText: String = "Copy Booking Code",
+        labelText: String = LocalizationProvider.string("copy_booking_code"),
         isEnabled: Bool = true
     ) {
         self.state = state

@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 
+
 public class MockRecentlyPlayedGamesViewModel: RecentlyPlayedGamesViewModelProtocol {
     
     // MARK: - Properties
@@ -129,7 +130,7 @@ extension MockRecentlyPlayedGamesViewModel {
         let games = [
             RecentlyPlayedGameData(
                 id: "aviator-001",
-                name: "Aviator",
+                name: LocalizationProvider.string("aviator"),
                 provider: "Spribe",
                 imageURL: "casinoGameDemo",
                 gameURL: "https://casino.example.com/games/aviator"

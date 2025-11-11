@@ -39,8 +39,9 @@ class SportsManager {
         // Clear the entity store
         store.clear()
 
-        // Create the router for sports subscription
-        let router = WAMPRouter.sportsPublisher(operatorId: operatorId)
+        // Create the router for sports subscription with configured language
+        let language = EveryMatrixUnifiedConfiguration.shared.defaultLanguage
+        let router = WAMPRouter.sportsPublisher(operatorId: operatorId, language: language)
         // print("SportsManager: Created router for endpoint: \(router.procedure)")
 
         return connector.subscribe(router)

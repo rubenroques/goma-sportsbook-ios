@@ -260,7 +260,7 @@ final public class CasinoGameCardView: UIView {
         viewModel.minStakePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] minStake in
-                self?.minStakeLabel.text = "Min Stake:" + minStake
+                self?.minStakeLabel.text = LocalizationProvider.string("min_stake") + ":" + minStake
             }
             .store(in: &cancellables)
         
@@ -293,9 +293,9 @@ final public class CasinoGameCardView: UIView {
     }
     
     private func renderPlaceholderState() {
-        gameTitleLabel.text = "Loading..."
+        gameTitleLabel.text = LocalizationProvider.string("loading")
         providerLabel.text = "Provider"
-        minStakeLabel.text = "Min Stake"
+        minStakeLabel.text = LocalizationProvider.string("min_stake")
         gameImageView.image = nil
         updateStarRating(0.0)
         showImageFailureState() // Show placeholder state with "?"

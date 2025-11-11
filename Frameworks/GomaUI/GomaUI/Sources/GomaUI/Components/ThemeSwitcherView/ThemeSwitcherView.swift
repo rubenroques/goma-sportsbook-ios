@@ -10,6 +10,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// Super simple theme switcher component with 3 options
 public final class ThemeSwitcherView: UIView {
     
@@ -212,7 +213,7 @@ extension ThemeSwitcherView {
 #Preview("Theme Switcher - Both Modes") {
     VStack(spacing: 40) {
         VStack(spacing: 8) {
-            Text("Light Mode")
+            Text(LocalizationProvider.string("light_mode"))
                 .font(.caption)
                 .foregroundColor(.secondary)
             
@@ -227,7 +228,7 @@ extension ThemeSwitcherView {
         }
         
         VStack(spacing: 8) {
-            Text("Dark Mode")
+            Text(LocalizationProvider.string("dark_mode"))
                 .font(.caption)
                 .foregroundColor(.secondary)
             

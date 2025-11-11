@@ -13,12 +13,13 @@ let Env = Environment() // swiftlint:disable:this identifier_name
 
 class Environment {
 
-    let appSession: AppSession = AppSession()
-
     /// Centralized store for presentation configuration
     let presentationConfigurationStore: PresentationConfigurationStore = PresentationConfigurationStore()
 
     lazy var servicesProvider: ServicesProvider.Client = {
+
+        // Configure EveryMatrix language from app localization
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = localized("current_language_code")
 
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
         switch TargetVariables.serviceProviderEnvironment {
@@ -77,6 +78,14 @@ class Environment {
 
             return client
         }
+    }()
+
+    /// URL provider for accessing dynamic URLs
+    lazy var linksProvider: LinksProviderProtocol = {
+        return LinksProviderFactory.createURLProvider(
+            initialLinks: TargetVariables.links,
+            servicesProvider: self.servicesProvider
+        )
     }()
 
     let betslipManager: BetslipManager = BetslipManager()

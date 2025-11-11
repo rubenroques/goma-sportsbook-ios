@@ -120,6 +120,18 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
+    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return self.apiClient.casinoRichBanners()
+            .map(GomaModelMapper.richBannerPointers(fromInternalRichBanners:))
+            .eraseToAnyPublisher()
+    }
+
+    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return self.apiClient.sportRichBanners()
+            .map(GomaModelMapper.richBannerPointers(fromInternalRichBanners:))
+            .eraseToAnyPublisher()
+    }
+
     func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()

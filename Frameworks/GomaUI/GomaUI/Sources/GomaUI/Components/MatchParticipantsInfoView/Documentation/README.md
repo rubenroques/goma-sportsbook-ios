@@ -17,7 +17,7 @@ A flexible, reusable UI component for displaying match participant information i
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create match data
 let matchData = MatchParticipantsData(

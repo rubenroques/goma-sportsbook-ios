@@ -2,7 +2,7 @@
 //  MyBetDetailViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 01/09/2025.
+//  Created on 01/09/2025.
 //
 
 import Foundation
@@ -107,7 +107,7 @@ final class MyBetDetailViewModel: ObservableObject {
                 let bettingOfferIds = Array(Set(successful.flatMap { $0.reference.bettingOfferIds }))
                 let originalSelectionsLength = self.bet.selections.count
                 guard !bettingOfferIds.isEmpty else {
-                    self.onShareBookingCodeFailed?("No selections are available to share for this bet.")
+                    self.onShareBookingCodeFailed?(localized("mybetdetail_share_no_selections"))
                     return
                 }
                 
@@ -148,7 +148,7 @@ extension MyBetDetailViewModel {
     
     /// Returns a formatted stake amount
     var displayStake: String {
-        return "\(bet.currency) \(String(format: "%.2f", bet.stake))"
+        return CurrencyHelper.formatAmountWithCurrency(bet.stake, currency: bet.currency)
     }
     
     /// Returns a formatted total odds
@@ -159,7 +159,7 @@ extension MyBetDetailViewModel {
     /// Returns a formatted potential return
     var displayPotentialReturn: String {
         if let potentialReturn = bet.potentialReturn {
-            return "\(bet.currency) \(String(format: "%.2f", potentialReturn))"
+            return CurrencyHelper.formatAmountWithCurrency(potentialReturn, currency: bet.currency)
         }
         return "N/A"
     }
@@ -167,7 +167,7 @@ extension MyBetDetailViewModel {
     /// Returns a formatted actual return (for settled bets)
     var displayActualReturn: String {
         if let totalReturn = bet.totalReturn {
-            return "\(bet.currency) \(String(format: "%.2f", totalReturn))"
+            return CurrencyHelper.formatAmountWithCurrency(totalReturn, currency: bet.currency)
         }
         return "N/A"
     }
@@ -204,7 +204,8 @@ extension MyBetDetailViewModel {
     var displayProfitLoss: String? {
         guard let profitLoss = bet.profitLoss else { return nil }
         let prefix = profitLoss >= 0 ? "+" : ""
-        return "\(prefix)\(bet.currency) \(String(format: "%.2f", profitLoss))"
+        let formatted = CurrencyHelper.formatAmountWithCurrency(profitLoss, currency: bet.currency)
+        return "\(prefix)\(formatted)"
     }
     
     /// Returns a label for the bet selections section

@@ -71,7 +71,7 @@ final class ProfileWalletCoordinator: Coordinator {
         setupViewModelCallbacks(viewModel)
         
         // Create dedicated NavigationController with hidden navigation bar (following Router pattern)
-        let profileNavigationController = Router.navigationController(with: profileViewController)
+        let profileNavigationController = AppCoordinator.navigationController(with: profileViewController)
         
         // Configure modal presentation on the NavigationController
         profileNavigationController.modalPresentationStyle = .pageSheet
@@ -126,14 +126,13 @@ final class ProfileWalletCoordinator: Coordinator {
             // Handle logout with confirmation
             showLogoutConfirmation()
         case .notifications:
-            // Open iPhone Settings app directly to notification settings
-//            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-//                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-//            }
-
-            // Open Extreme push inbox screen
+            // Open XPush inbox screen to view notifications
             XPush.forceOpenInbox()
-
+        case .notificationSettings:
+            // Open iPhone Settings app directly to notification settings
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+            }
         case .transactionHistory:
             // Navigate to transaction history
             showTransactionHistory()
@@ -143,8 +142,7 @@ final class ProfileWalletCoordinator: Coordinator {
         case .responsibleGaming:
             self.showResponsibleGaming()
         case .helpCenter:
-            // TODO: Navigate to help center
-            showPlaceholderAlert(title: "Help Center", message: "Feature coming soon")
+            openSupportURL()
         case .changePassword:
 //            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
             self.showChangePasswordScreen(tokenId: actionResponse ?? "")
@@ -162,13 +160,13 @@ final class ProfileWalletCoordinator: Coordinator {
         guard let profileViewController = profileViewController else { return }
         
         let alert = UIAlertController(
-            title: "Logout",
-            message: "Are you sure you want to logout?",
+            title: localized("logout"),
+            message: localized("logout_confirmation_message"),
             preferredStyle: .alert
         )
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let logoutAction = UIAlertAction(title: "Logout", style: .destructive) { [weak self] _ in
+
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel)
+        let logoutAction = UIAlertAction(title: localized("logout"), style: .destructive) { [weak self] _ in
             self?.performLogout()
         }
         
@@ -179,7 +177,50 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showLanguageSelection() {
-        // TODO:
+        let title = "Set Your App Language"
+        let message = "Continue to Settings to choose your preferred language for Betsson."
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        let openAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            DispatchQueue.main.async {
+                guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+                      UIApplication.shared.canOpenURL(settingsURL) else {
+                    return
+                }
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alertController.addAction(openAction)
+        alertController.addAction(cancelAction)
+
+        // Present from profile navigation controller (modal context)
+        profileNavigationController?.present(alertController, animated: true)
+    }
+
+    private func openSupportURL() {
+        let supportURL = Env.linksProvider.links.getURL(for: .helpCenter)
+
+        guard !supportURL.isEmpty, let url = URL(string: supportURL) else {
+            print("❌ ProfileWalletCoordinator: Invalid support URL: '\(supportURL)'")
+            return
+        }
+
+        guard UIApplication.shared.canOpenURL(url) else {
+            print("❌ ProfileWalletCoordinator: Cannot open URL: \(supportURL)")
+            return
+        }
+
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ ProfileWalletCoordinator: Opened support URL: \(supportURL)")
+            } else {
+                print("❌ ProfileWalletCoordinator: Failed to open support URL")
+            }
+        }
     }
 
     private func showTransactionHistory() {

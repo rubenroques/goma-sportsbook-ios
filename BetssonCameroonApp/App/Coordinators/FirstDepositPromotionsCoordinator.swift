@@ -70,7 +70,7 @@ class FirstDepositPromotionsCoordinator: Coordinator {
         self.firstDepositViewController = firstDepositViewController
         
         // Present modally as the entry point
-        let authNavigationController = Router.navigationController(with: firstDepositViewController)
+        let authNavigationController = AppCoordinator.navigationController(with: firstDepositViewController)
         navigationController.present(authNavigationController, animated: true)
         
         print("🎁 FirstDepositPromotionsCoordinator: Presented first deposit promotions")

@@ -2,7 +2,7 @@
 //  WalletWidgetViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 02/09/2025.
+//  Created on 02/09/2025.
 //
 
 import Foundation
@@ -39,9 +39,9 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
         
         // Initialize with default/loading state
         self.walletData = WalletWidgetData(
-            id: "wallet_widget",
+            id: .wallet,
             balance: "-.--",
-            depositButtonTitle: "DEPOSIT"
+            depositButtonTitle: localized("deposit").uppercased()
         )
         
         // Create initial display state
@@ -53,12 +53,21 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     }
     
     // MARK: - WalletWidgetViewModelProtocol
-    
+
     func deposit() {
         print("💳 WalletWidgetViewModel: Deposit button tapped")
         onDepositRequested?()
     }
-    
+
+    func updateBalance(_ balance: String) {
+        walletData = WalletWidgetData(
+            id: walletData.id,
+            balance: balance,
+            depositButtonTitle: walletData.depositButtonTitle
+        )
+        print("💰 WalletWidgetViewModel: Balance manually updated to: \(balance)")
+    }
+
     // MARK: - Private Methods
     
     private func setupWalletBinding() {
@@ -75,22 +84,22 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
     
     private func updateWalletDisplay(wallet: UserWallet?) {
         let balanceString: String
-        
+
         if let wallet = wallet {
             // Format the balance with currency
-            balanceString = CurrencyFormater.formatWalletAmount(wallet.total)
+            balanceString = CurrencyHelper.formatAmount(wallet.total)
         } else {
             // No wallet data - show placeholder
             balanceString = "-.--"
         }
-        
+
         // Update wallet data
         walletData = WalletWidgetData(
             id: walletData.id,
             balance: balanceString,
             depositButtonTitle: walletData.depositButtonTitle
         )
-        
+
         print("💰 WalletWidgetViewModel: Balance updated to: \(balanceString)")
     }
     

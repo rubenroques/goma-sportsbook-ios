@@ -65,7 +65,11 @@ class MainTabBarCoordinator: Coordinator {
     
     func start() {
         // Create the main screen structure (equivalent to Router.showPostLoadingFlow)
-        let viewModel = MainTabBarViewModel(userSessionStore: environment.userSessionStore)
+        let adaptiveTabBarViewModel = AdaptiveTabBarViewModel.defaultConfiguration
+        let viewModel = MainTabBarViewModel(
+            userSessionStore: environment.userSessionStore,
+            adaptiveTabBarViewModel: adaptiveTabBarViewModel
+        )
         let mainTabBarViewController = MainTabBarViewController(viewModel: viewModel)
         
         
@@ -108,6 +112,10 @@ class MainTabBarCoordinator: Coordinator {
 
         container.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
+        }
+
+        container.onSupportRequested = { [weak self] in
+            self?.openSupportURL()
         }
 
         self.mainTabBarViewController = mainTabBarViewController
@@ -200,7 +208,11 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowCasinoTab = { [weak self] quickLinkType in
                 self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
-            
+
+            coordinator.onShowBannerURL = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             nextUpEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -246,7 +258,11 @@ class MainTabBarCoordinator: Coordinator {
             coordinator.onShowCasinoTab = { [weak self] quickLinkType in
                 self?.navigateToCasinoFromQuickLink(quickLinkType)
             }
-            
+
+            coordinator.onShowBannerURL = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             inPlayEventsCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -551,14 +567,112 @@ class MainTabBarCoordinator: Coordinator {
         
         viewController.present(alert, animated: true)
     }
-    
+
+    // MARK: - Banner URL Handling
+
+    private func openBannerURL(_ urlString: String, target: String?) {
+        // Check if it's an internal deep link
+        if let route = parseURLToRoute(urlString) {
+            handleRoute(route)
+            return
+        }
+
+        // Otherwise, treat as external URL
+        openExternalURL(urlString)
+    }
+
+    private func parseURLToRoute(_ urlString: String) -> Route? {
+        // Handle relative paths or app scheme URLs as internal deep links
+        guard let url = URL(string: urlString) else { return nil }
+
+        // Check for app-specific schemes
+        if url.scheme == "betssoncm" || url.scheme == "app" {
+            return parseDeepLinkPath(url.path)
+        }
+
+        // Check for relative paths (starting with /)
+        if urlString.hasPrefix("/") {
+            return parseDeepLinkPath(urlString)
+        }
+
+        // Not an internal deep link
+        return nil
+    }
+
+    private func parseDeepLinkPath(_ path: String) -> Route? {
+        let components = path.components(separatedBy: "/").filter { !$0.isEmpty }
+
+        guard !components.isEmpty else { return nil }
+
+        switch components[0].lowercased() {
+        case "deposit":
+            return .deposit
+        case "promotions":
+            return .promotions
+        case "bonus":
+            return .bonus
+        case "event", "match":
+            if components.count > 1 {
+                return .event(id: components[1])
+            }
+        case "competition":
+            if components.count > 1 {
+                return .competition(id: components[1])
+            }
+        default:
+            break
+        }
+
+        return nil
+    }
+
+    private func handleRoute(_ route: Route) {
+        switch route {
+        case .deposit:
+            presentDepositFlow()
+        case .promotions:
+            showPromotionsScreen()
+        case .bonus:
+            showPromotionsScreen()
+        case .event(let matchId):
+            navigateToMatchDetail(withId: matchId)
+        case .competition:
+            break
+        default:
+            break
+        }
+    }
+
+    private func navigateToMatchDetail(withId matchId: String) {
+        // Try to find the match in active coordinators
+        if let match = inPlayEventsCoordinator?.findMatch(withId: matchId) {
+            showMatchDetail(match: match)
+        } else if let match = nextUpEventsCoordinator?.findMatch(withId: matchId) {
+            showMatchDetail(match: match)
+        } else {
+            print("MainTabBarCoordinator: Match not found for deep link: \(matchId)")
+        }
+    }
+
+    private func openExternalURL(_ urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url) { success in
+                if !success {
+                    print("MainTabBarCoordinator: Failed to open URL: \(urlString)")
+                }
+            }
+        }
+    }
+
     // MARK: - Temporary Authentication Implementation
     // TODO: Remove this once parent coordinator implements authentication closures
     private func presentAuthenticationDirectly(isLogin: Bool) {
         if isLogin {
             var phoneLoginViewModel = PhoneLoginViewModel()
             let phoneLoginViewController = PhoneLoginViewController(viewModel: phoneLoginViewModel)
-            let authNavigationController = Router.navigationController(with: phoneLoginViewController)
+            let authNavigationController = AppCoordinator.navigationController(with: phoneLoginViewController)
             navigationController.present(authNavigationController, animated: true)
         } else {
             presentRegistrationWithFirstDepositFlow()
@@ -576,7 +690,7 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         let phoneRegistrationViewController = PhoneRegistrationViewController(viewModel: phoneRegistrationViewModel)
-        let authNavigationController = Router.navigationController(with: phoneRegistrationViewController)
+        let authNavigationController = AppCoordinator.navigationController(with: phoneRegistrationViewController)
         navigationController.present(authNavigationController, animated: true)
         
         print("🚀 RootTabBarCoordinator: Presented registration with first deposit integration")
@@ -1042,12 +1156,36 @@ class MainTabBarCoordinator: Coordinator {
             navigationController: navigationController,
             client: environment.servicesProvider
         )
-        
+
         setupBankingCoordinatorCallbacks(bankingCoordinator)
         addChildCoordinator(bankingCoordinator)
         bankingCoordinator.start()
     }
-    
+
+    // MARK: - Support Methods
+
+    private func openSupportURL() {
+        let supportURL = environment.linksProvider.links.getURL(for: .helpCenter)
+
+        guard !supportURL.isEmpty, let url = URL(string: supportURL) else {
+            print("❌ MainTabBarCoordinator: Invalid support URL: '\(supportURL)'")
+            return
+        }
+
+        guard UIApplication.shared.canOpenURL(url) else {
+            print("❌ MainTabBarCoordinator: Cannot open URL: \(supportURL)")
+            return
+        }
+
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ MainTabBarCoordinator: Opened support URL: \(supportURL)")
+            } else {
+                print("❌ MainTabBarCoordinator: Failed to open support URL")
+            }
+        }
+    }
+
     private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {
         coordinator.onTransactionComplete = { [weak self] in
             print("🏦 RootTabBarCoordinator: Banking transaction completed")

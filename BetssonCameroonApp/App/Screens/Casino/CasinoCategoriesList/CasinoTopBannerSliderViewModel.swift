@@ -19,7 +19,6 @@ final class CasinoTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     // Internal state
-    private var casinoBanners: [CasinoBannerData] = []
     private var currentPageIndex: Int = 0
 
     // MARK: - Callbacks
@@ -64,58 +63,74 @@ final class CasinoTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     }
 
     func bannerTapped(at index: Int) {
-        guard index < casinoBanners.count else { return }
-        let bannerData = casinoBanners[index]
-        let action = bannerData.primaryAction
-        onBannerAction(action)
+        let currentBanners = displayStateSubject.value.sliderData.banners
+        guard index < currentBanners.count else { return }
+
+        let bannerType = currentBanners[index]
+
+        // Handle tap based on banner type
+        switch bannerType {
+        case .info, .casino:
+            // Info and casino banners handle taps through their button callbacks
+            break
+        case .match:
+            // Match banners not expected in casino context
+            break
+        }
     }
 
     // MARK: - Private Methods
     private func loadCasinoBanners() {
-        servicesProvider.getCasinoCarouselPointers()
+        servicesProvider.getCasinoRichBanners()
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
+                    if case .failure(let error) = completion {
                         self?.handleAPIError(error)
                     }
                 },
-                receiveValue: { [weak self] casinoCarouselPointers in
-                    self?.processCasinoCarouselData(casinoCarouselPointers)
+                receiveValue: { [weak self] richBanners in
+                    self?.processRichBanners(richBanners)
                 }
             )
             .store(in: &cancellables)
     }
 
-    private func processCasinoCarouselData(_ pointers: [CasinoCarouselPointer]) {
-        // Convert API models to app models
-        casinoBanners = pointers.map { pointer in
-            ServiceProviderModelMapper.casinoBannerData(fromCasinoCarouselPointer: pointer)
+    private func processRichBanners(_ richBanners: RichBanners) {
+        // Use mapper to convert RichBanners to BannerType array
+        let bannerTypes = ServiceProviderModelMapper.bannerTypes(fromRichBanners: richBanners)
+
+        // Setup callbacks for all banner types
+        for bannerType in bannerTypes {
+            switch bannerType {
+            case .info(let viewModel):
+                if let infoVM = viewModel as? InfoBannerViewModel {
+                    infoVM.onButtonAction = { [weak self] action in
+                        // Convert InfoBannerAction to CasinoBannerAction
+                        switch action {
+                        case .openURL(let url, _):
+                            self?.onBannerAction(.openURL(url: url))
+                        case .none:
+                            self?.onBannerAction(.none)
+                        }
+                    }
+                }
+
+            case .casino(let viewModel):
+                if let casinoVM = viewModel as? CasinoBannerViewModel {
+                    casinoVM.onButtonAction = { [weak self] action in
+                        self?.onBannerAction(action)
+                    }
+                }
+
+            case .match:
+                // Match banners not expected in casino context
+                break
+            }
         }
-
-        // Filter visible banners
-        let visibleBanners = casinoBanners.filter { $0.isVisible }
-
-        // Convert to BannerType array and setup callbacks
-        let bannerTypes = ServiceProviderModelMapper.bannerTypes(fromCasinoBannerData: visibleBanners)
-        setupBannerCallbacks(bannerTypes)
 
         // Update slider data
         updateSliderDataWithBanners(bannerTypes)
-    }
-
-    private func setupBannerCallbacks(_ bannerTypes: [BannerType]) {
-        for bannerType in bannerTypes {
-            if case .singleButton(let viewModel) = bannerType,
-               let casinoBannerViewModel = viewModel as? CasinoBannerViewModel {
-                casinoBannerViewModel.onBannerAction = { [weak self] action in
-                    self?.onBannerAction(action)
-                }
-            }
-        }
     }
 
     private func updateSliderDataWithBanners(_ bannerTypes: [BannerType]) {

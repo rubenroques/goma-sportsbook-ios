@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// A header view for betslip that displays different content based on login state
 public final class BetslipHeaderView: UIView {
     
@@ -45,7 +46,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var betslipTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Betslip"
+        label.text = LocalizationProvider.string("betslip")
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
         label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
@@ -71,7 +72,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var joinNowButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Join Now", for: .normal)
+        button.setTitle(LocalizationProvider.string("join_now"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         button.addTarget(self, action: #selector(handleJoinNowTapped), for: .touchUpInside)
@@ -82,7 +83,7 @@ public final class BetslipHeaderView: UIView {
             .font: StyleProvider.fontWith(type: .medium, size: 14),
             .foregroundColor: StyleProvider.Color.highlightPrimaryContrast
         ]
-        let attributedTitle = NSAttributedString(string: "Join Now", attributes: attributes)
+        let attributedTitle = NSAttributedString(string: LocalizationProvider.string("join_now"), attributes: attributes)
         button.setAttributedTitle(attributedTitle, for: .normal)
         
         return button
@@ -91,7 +92,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var orLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "or"
+        label.text = LocalizationProvider.string("or")
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.textColor = StyleProvider.Color.highlightPrimaryContrast
         return label
@@ -100,7 +101,7 @@ public final class BetslipHeaderView: UIView {
     private lazy var logInButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Log In", for: .normal)
+        button.setTitle(LocalizationProvider.string("login"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightPrimaryContrast, for: .normal)
         button.addTarget(self, action: #selector(handleLogInTapped), for: .touchUpInside)
@@ -111,7 +112,7 @@ public final class BetslipHeaderView: UIView {
             .font: StyleProvider.fontWith(type: .medium, size: 14),
             .foregroundColor: StyleProvider.Color.highlightPrimaryContrast
         ]
-        let attributedTitle = NSAttributedString(string: "Log In", attributes: attributes)
+        let attributedTitle = NSAttributedString(string: LocalizationProvider.string("login"), attributes: attributes)
         button.setAttributedTitle(attributedTitle, for: .normal)
         
         return button
@@ -286,7 +287,7 @@ public final class BetslipHeaderView: UIView {
         balanceSectionView.isHidden = false
         
         // Update balance
-        balanceLabel.text = "Balance:"
+        balanceLabel.text = LocalizationProvider.string("balance") + ":"
         balanceValueLabel.text = balance
     }
     

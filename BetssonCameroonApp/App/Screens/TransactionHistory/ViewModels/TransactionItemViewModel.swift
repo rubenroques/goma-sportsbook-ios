@@ -18,21 +18,12 @@ class TransactionItemViewModel: TransactionItemViewModelProtocol {
     // MARK: - Protocol Properties
 
     public var balancePrefix: String {
-        return "Balance: "
+        return localized("balance") + ": "
     }
 
     public var balanceAmount: String {
         guard let data = data, let balance = data.balance else { return "" }
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        if let formattedNumber = formatter.string(from: NSNumber(value: balance)) {
-            return "\(data.currency) \(formattedNumber)"
-        }
-        return "\(data.currency) \(balance)"
+        return CurrencyHelper.formatAmountWithCurrency(balance, currency: data.currency)
     }
 
     // MARK: - Protocol Methods

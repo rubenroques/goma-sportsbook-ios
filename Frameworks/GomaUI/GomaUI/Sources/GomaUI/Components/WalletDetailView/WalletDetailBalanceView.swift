@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class WalletDetailBalanceView: UIView {
     
     // MARK: Private properties
@@ -124,7 +125,7 @@ extension WalletDetailBalanceView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.numberOfLines = 1
-        label.text = "Total XAF Balance"
+        label.text = LocalizationProvider.string("total_xaf_balance")
         return label
     }
     
@@ -155,19 +156,19 @@ extension WalletDetailBalanceView {
     }
     
     private static func createCurrentBalanceLine() -> WalletDetailBalanceLineView {
-        return WalletDetailBalanceLineView(title: "Current Balance", value: "1,000.24")
+        return WalletDetailBalanceLineView(title: LocalizationProvider.string("current_balance"), value: "1,000.24")
     }
-    
+
     private static func createBonusBalanceLine() -> WalletDetailBalanceLineView {
-        return WalletDetailBalanceLineView(title: "Bonus Balance", value: "1,000.24")
+        return WalletDetailBalanceLineView(title: LocalizationProvider.string("bonus_balance"), value: "1,000.24")
     }
-    
+
     private static func createCashbackBalanceLine() -> WalletDetailBalanceLineView {
-        return WalletDetailBalanceLineView(title: "Cashback Balance", value: "0.00")
+        return WalletDetailBalanceLineView(title: LocalizationProvider.string("cashback_balance"), value: "0.00")
     }
-    
+
     private static func createWithdrawableLine() -> WalletDetailBalanceLineView {
-        return WalletDetailBalanceLineView(title: "Withdrawable", value: "1,000.24")
+        return WalletDetailBalanceLineView(title: LocalizationProvider.string("withdrawable"), value: "1,000.24")
     }
     
     private func setupSubviews() {

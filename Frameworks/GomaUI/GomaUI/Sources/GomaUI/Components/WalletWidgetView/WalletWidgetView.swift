@@ -21,8 +21,8 @@ final public class WalletWidgetView: UIView {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Public Properties
-    public var onDepositTapped: ((String) -> Void) = { _ in }
-    public var onBalanceTapped: ((String) -> Void) = { _ in }
+    public var onDepositTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
+    public var onBalanceTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
 
     // MARK: - Initialization
     public init(viewModel: WalletWidgetViewModelProtocol) {
@@ -132,21 +132,27 @@ final public class WalletWidgetView: UIView {
     private func render(state: WalletWidgetDisplayState) {
         balanceLabel.text = state.walletData.balance
         depositButton.setTitle(state.walletData.depositButtonTitle, for: .normal)
-        depositButton.accessibilityIdentifier = state.walletData.id
-        balanceContainer.accessibilityIdentifier = state.walletData.id
+        depositButton.accessibilityIdentifier = state.walletData.id.rawValue
+        balanceContainer.accessibilityIdentifier = state.walletData.id.rawValue
     }
 
     // MARK: - Action Handlers
     @objc private func depositTapped() {
         viewModel.deposit()
-        if let id = depositButton.accessibilityIdentifier {
+        if let idString = depositButton.accessibilityIdentifier,
+           let id = WidgetTypeIdentifier(rawValue: idString) {
             onDepositTapped(id)
         }
     }
 
     @objc private func balanceTapped() {
-        if let id = balanceContainer.accessibilityIdentifier {
+        print("💰 WALLET_TAP: WalletWidgetView.balanceTapped() called")
+        if let idString = balanceContainer.accessibilityIdentifier,
+           let id = WidgetTypeIdentifier(rawValue: idString) {
+            print("💰 WALLET_TAP: Calling onBalanceTapped callback with id: \(id)")
             onBalanceTapped(id)
+        } else {
+            print("💰 WALLET_TAP: ERROR - No accessibilityIdentifier on balanceContainer!")
         }
     }
 }
@@ -177,7 +183,7 @@ final public class WalletWidgetView: UIView {
         // Default balance
         let defaultViewModel = MockWalletWidgetViewModel(
             walletData: WalletWidgetData(
-                id: "wallet_1",
+                id: .wallet,
                 balance: "2,000.00",
                 depositButtonTitle: "DEPOSIT"
             )
@@ -188,7 +194,7 @@ final public class WalletWidgetView: UIView {
         // High balance
         let highBalanceViewModel = MockWalletWidgetViewModel(
             walletData: WalletWidgetData(
-                id: "wallet_2",
+                id: .wallet,
                 balance: "50,250.75",
                 depositButtonTitle: "DEPOSIT"
             )
@@ -199,7 +205,7 @@ final public class WalletWidgetView: UIView {
         // Low balance
         let lowBalanceViewModel = MockWalletWidgetViewModel(
             walletData: WalletWidgetData(
-                id: "wallet_3",
+                id: .wallet,
                 balance: "0.00",
                 depositButtonTitle: "DEPOSIT"
             )

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000132">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: firebase_app_distribution_get_udids" time="1.376343">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: notification" time="2.184893">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

@@ -27,29 +27,22 @@ class CasinoGamePrePlayViewController: UIViewController {
         return view
     }()
     
-    private let navigationView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let navViewModel = BetssonCameroonNavigationBarViewModel(
+            title: nil,
+            onBackTapped: { [weak self] in
+                self?.viewModel.navigateBack()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: navViewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+
+        // Apply dark overlay customization for white text on dark background
+        navBar.setCustomization(.darkOverlay())
+
+        return navBar
     }()
-    
-    private let navigationTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = .white
-        label.textAlignment = .center
-        return label
-    }()
-    
-    private let backButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        button.tintColor = .white
-        return button
-    }()
-    
+
     private let favoritesButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -144,14 +137,11 @@ class CasinoGamePrePlayViewController: UIViewController {
     }
     
     private func setupNavigationView() {
-        view.addSubview(navigationView)
-        navigationView.addSubview(navigationTitleLabel)
-        navigationView.addSubview(backButton)
-        navigationView.addSubview(favoritesButton)
+        view.addSubview(navigationBarView)
+        // view.addSubview(favoritesButton)
     }
-    
+
     private func setupActions() {
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         favoritesButton.addTarget(self, action: #selector(favoritesButtonTapped), for: .touchUpInside)
     }
     
@@ -178,31 +168,19 @@ class CasinoGamePrePlayViewController: UIViewController {
             overlayView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             overlayView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            // Navigation View
-            navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            navigationView.heightAnchor.constraint(equalToConstant: 44),
-            
-            // Back Button (left side)
-            backButton.leadingAnchor.constraint(equalTo: navigationView.leadingAnchor, constant: 16),
-            backButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
-            backButton.widthAnchor.constraint(equalToConstant: 44),
-            backButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            // Favorites Button (right side)
-            favoritesButton.trailingAnchor.constraint(equalTo: navigationView.trailingAnchor, constant: -16),
-            favoritesButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
+            // Navigation Bar
+            navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            navigationBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+
+            // Favorites Button (right side, overlaid on navigation bar)
+            favoritesButton.trailingAnchor.constraint(equalTo: navigationBarView.trailingAnchor, constant: -16),
+            favoritesButton.centerYAnchor.constraint(equalTo: navigationBarView.centerYAnchor),
             favoritesButton.widthAnchor.constraint(equalToConstant: 44),
             favoritesButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            // Navigation Title (centered with padding for buttons)
-            navigationTitleLabel.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
-            navigationTitleLabel.trailingAnchor.constraint(equalTo: favoritesButton.leadingAnchor, constant: -8),
-            navigationTitleLabel.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
-            
+
             // Play Selector View
-            playSelectorView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
+            playSelectorView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
             playSelectorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playSelectorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -234,11 +212,10 @@ class CasinoGamePrePlayViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // Game data binding for navigation title and background
+        // Game data binding for background image
         viewModel.playSelectorViewModel.displayStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
-                self?.navigationTitleLabel.text = displayState.gameData.provider
                 self?.loadBackgroundImage(from: displayState.gameData.imageURL)
             }
             .store(in: &cancellables)
@@ -285,10 +262,7 @@ class CasinoGamePrePlayViewController: UIViewController {
     }
     
     // MARK: - Actions
-    @objc private func backButtonTapped() {
-        viewModel.navigateBack()
-    }
-    
+
     @objc private func favoritesButtonTapped() {
         isFavorite.toggle()
         favoritesButton.isSelected = isFavorite

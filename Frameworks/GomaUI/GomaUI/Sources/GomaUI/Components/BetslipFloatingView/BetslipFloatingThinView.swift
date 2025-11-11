@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// A thin floating view that displays betslip status with two states: no tickets (circular button) and with tickets (compact horizontal detailed view)
 public final class BetslipFloatingThinView: UIView {
     
@@ -33,7 +34,7 @@ public final class BetslipFloatingThinView: UIView {
     private lazy var betslipLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Betslip" // TODO: localization
+        label.text = LocalizationProvider.string("betslip") // TODO: localization
         label.font = StyleProvider.fontWith(type: .bold, size: 10)
         label.textColor = StyleProvider.Color.highlightSecondaryContrast
         label.textAlignment = .center
@@ -139,7 +140,7 @@ public final class BetslipFloatingThinView: UIView {
     private lazy var openBetslipButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Open Betslip", for: .normal) // TODO: localization
+        button.setTitle(LocalizationProvider.string("open_betslip"), for: .normal) // TODO: localization
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 12)
         
@@ -189,10 +190,18 @@ public final class BetslipFloatingThinView: UIView {
     
     // MARK: - Constraint Properties (for external access)
     private var circularButtonLeadingConstraint: NSLayoutConstraint?
+    
     private var detailedContainerLeadingConstraint: NSLayoutConstraint?
+    private var detailedContainerTraillingConstraint: NSLayoutConstraint?
+    
     private var circularButtonTopConstraint: NSLayoutConstraint?
     private var circularButtonBottomConstraint: NSLayoutConstraint?
+    
     private var topBarStackViewBottomConstraint: NSLayoutConstraint?
+    
+    static let circularButtonSize = CGFloat(56)
+    static let verticalPaddingCircularMode = CGFloat(16)
+    static let verticalPaddingDetailMode = CGFloat(10)
     
     // MARK: - Initialization
     public init(viewModel: BetslipFloatingViewModelProtocol) {
@@ -213,8 +222,11 @@ public final class BetslipFloatingThinView: UIView {
         // Create and apply width constraints when added to superview
         if let superview = superview {
             // Create leading constraints
-            circularButtonLeadingConstraint = leadingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -72) // 56 + 16 padding
-            detailedContainerLeadingConstraint = leadingAnchor.constraint(equalTo: superview.leadingAnchor)
+            let padding = Self.circularButtonSize + Self.verticalPaddingCircularMode
+            circularButtonLeadingConstraint = self.leadingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -padding)
+            
+            detailedContainerLeadingConstraint = self.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: Self.verticalPaddingDetailMode)
+            detailedContainerTraillingConstraint = self.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -Self.verticalPaddingDetailMode)
             
             // Create height constraints for circular button
             circularButtonTopConstraint = circularButton.topAnchor.constraint(equalTo: topAnchor)
@@ -266,8 +278,8 @@ public final class BetslipFloatingThinView: UIView {
         NSLayoutConstraint.activate([
             circularButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             
-            circularButton.widthAnchor.constraint(equalToConstant: 56),
-            circularButton.heightAnchor.constraint(equalToConstant: 56),
+            circularButton.widthAnchor.constraint(equalToConstant: Self.circularButtonSize),
+            circularButton.heightAnchor.constraint(equalToConstant: Self.circularButtonSize),
             
             betslipIconImageView.centerXAnchor.constraint(equalTo: circularButton.centerXAnchor),
             betslipIconImageView.centerYAnchor.constraint(equalTo: circularButton.centerYAnchor, constant: -8),
@@ -399,11 +411,11 @@ public final class BetslipFloatingThinView: UIView {
 
             selectionCountLabel.text = "\(selectionCount)"
 
-            oddsLabel.text = "Odds:" // TODO: localization
+            oddsLabel.text = LocalizationProvider.string("odds") + ":"
             oddsValueLabel.text = "\(odds)"
 
             if let winBoost = winBoostPercentage {
-                winBoostLabel.text = "Win Boost:" // TODO: localization
+                winBoostLabel.text = LocalizationProvider.string("win_boost") + ":"
                 winBoostValueLabel.text = winBoost
                 winBoostCapsuleView.isHidden = false
             } else {
@@ -422,9 +434,12 @@ public final class BetslipFloatingThinView: UIView {
                 let remainingSelections = max(0, totalEligibleCount - selectionCount)
                 if remainingSelections > 0 {
                     let boostText = nextTierPercentage ?? "bonus"
-                    callToActionLabel.text = "Add \(remainingSelections) more qualifying selection to get a \(boostText) win boost" // TODO: localization
+                    let message = LocalizationProvider.string("add_matches_bonus")
+                        .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                        .replacingOccurrences(of: "{percentage}", with: boostText)
+                    callToActionLabel.text = message
                 } else {
-                    callToActionLabel.text = "Max win boost activated!" // TODO: localization
+                    callToActionLabel.text = LocalizationProvider.string("max_win_boost_activated")
                 }
             } else {
                 bottomSectionView.isHidden = true
@@ -448,6 +463,8 @@ public final class BetslipFloatingThinView: UIView {
         switch state {
         case .noTickets:
             detailedContainerLeadingConstraint?.isActive = false
+            detailedContainerTraillingConstraint?.isActive = false
+            
             circularButtonLeadingConstraint?.isActive = true
             circularButtonTopConstraint?.isActive = true
             circularButtonBottomConstraint?.isActive = true
@@ -456,7 +473,9 @@ public final class BetslipFloatingThinView: UIView {
             circularButtonLeadingConstraint?.isActive = false
             circularButtonTopConstraint?.isActive = false
             circularButtonBottomConstraint?.isActive = false
+            
             detailedContainerLeadingConstraint?.isActive = true
+            detailedContainerTraillingConstraint?.isActive = true
         }
     }
     
@@ -485,8 +504,7 @@ public final class BetslipFloatingThinView: UIView {
 
         NSLayoutConstraint.activate([
             betslipView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
-            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            betslipView.heightAnchor.constraint(equalToConstant: 56)
+            betslipView.bottomAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
 
         return vc

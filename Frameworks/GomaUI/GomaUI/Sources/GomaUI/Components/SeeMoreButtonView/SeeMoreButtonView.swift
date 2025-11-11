@@ -156,7 +156,8 @@ final public class SeeMoreButtonView: UIView {
     
     private func updateTitleText(from buttonData: SeeMoreButtonData) {
         if let remainingCount = buttonData.remainingCount, remainingCount > 0 {
-            titleLabel.text = "Load \(remainingCount) more games"
+            titleLabel.text = LocalizationProvider.string("load_count_more_games")
+                .replacingOccurrences(of: "{count}", with: "\(remainingCount)")
         } else {
             titleLabel.text = buttonData.title
         }

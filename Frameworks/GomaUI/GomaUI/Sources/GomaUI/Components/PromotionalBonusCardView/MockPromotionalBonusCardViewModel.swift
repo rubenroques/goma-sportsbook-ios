@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of `PromotionalBonusCardViewModelProtocol` for testing.
 final public class MockPromotionalBonusCardViewModel: PromotionalBonusCardViewModelProtocol {
     
@@ -50,7 +51,7 @@ extension MockPromotionalBonusCardViewModel {
             playersCount: "12.6k",
             backgroundImageName: "promo_card_background",
             claimButtonTitle: "Claim bonus",
-            termsButtonTitle: "Terms and Conditions",
+            termsButtonTitle: LocalizationProvider.string("terms_consent_popup_title"),
             bonusAmount: 1000
         )
         
@@ -75,7 +76,7 @@ extension MockPromotionalBonusCardViewModel {
             backgroundImageName: "promo_card_background",
             hasGradientView: false,
             claimButtonTitle: "Claim bonus",
-            termsButtonTitle: "Terms and Conditions",
+            termsButtonTitle: LocalizationProvider.string("terms_consent_popup_title"),
             bonusAmount: 1000
         )
         

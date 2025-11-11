@@ -60,7 +60,7 @@ extension ActionButtonBlockView {
     private static func createActionButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("CTA", for: .normal)
+        button.setTitle(LocalizationProvider.string("promotions_welcome_bonus_section_2_item_1_cta_text"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
         return button
     }

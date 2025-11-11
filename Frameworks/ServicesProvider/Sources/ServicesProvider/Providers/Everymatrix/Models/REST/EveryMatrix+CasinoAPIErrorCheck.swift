@@ -1,9 +1,3 @@
-//
-//  EveryMatrix+CasinoAPIErrorCheck.swift
-//  ServicesProvider
-//
-//  Created by Claude on 22/10/2025.
-//
 
 import Foundation
 

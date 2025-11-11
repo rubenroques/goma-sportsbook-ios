@@ -513,7 +513,14 @@ class SportRadarManagedContentProvider: HomeContentProvider {
     func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-
+    
+    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
 
 

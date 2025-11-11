@@ -79,18 +79,18 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         self.environment = environment
         // Initialize child view models
         self.bookingCodeButtonViewModel = MockButtonIconViewModel(
-            title: "Booking Code",
+            title: localized("booking_code"),
             icon: "doc.text",
             layoutType: .iconLeft
         )
         
         self.clearBetslipButtonViewModel = MockButtonIconViewModel(
-            title: "Clear Betslip",
+            title: localized("clear_betslip"),
             icon: "trash_icon",
             layoutType: .iconLeft
         )
         
-        self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: "You need at least 1 selection\nin your betslip to place a bet", actionButtonTitle: "Log in to bet", image: "empty_betslip_icon")
+        self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: localized("more_selections_to_bet").replacingOccurrences(of: "{selectionNumber}", with: "1"), actionButtonTitle: localized("log_in_to_bet"), image: "empty_betslip_icon")
         
         // Initialize with default currency, will be updated when user profile is available
         let currency = environment.userSessionStore.userWalletPublisher.value?.currency ?? "XAF"
@@ -100,12 +100,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         
         self.loginButtonViewModel = MockButtonViewModel(buttonData:
-                                                            ButtonData(id: "login", title: "Login", style: .solidBackground)
+                                                            ButtonData(id: "login", title: localized("login"), style: .solidBackground)
         )
         
         // Initialize suggested bets view model
         self.suggestedBetsViewModel = MockSuggestedBetsExpandedViewModel(
-            title: "Explore more bets",
+            title: localized("explore_more_bets"),
             isExpanded: false,
             matchCardViewModels: []
         )
@@ -165,7 +165,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         let trimmed = code.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
             codeInputViewModel.setLoading(false)
-            codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+            codeInputViewModel.setError(localized("booking_code_not_found_error"))
             return
         }
 
@@ -177,7 +177,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     guard let self = self else { return }
                     self.codeInputViewModel.setLoading(false)
                     if case .failure(let error) = completion {
-                        self.codeInputViewModel.setError("Booking Code can't be found. It either doesn't exist or expired.")
+                        self.codeInputViewModel.setError(localized("booking_code_not_found_error"))
                         print("[BOOKING_CODE] Error loading events: \(error.localizedDescription)")
                     }
                 },
@@ -207,7 +207,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     }
 
                     self.codeInputViewModel.updateCode("")
-                    self.showToastMessage?("Booking Code Loaded (\(addedTicketsCount) selections)")
+                    self.showToastMessage?(localized("booking_code_loaded_message")
+                        .replacingOccurrences(of: "{count}", with: "\(addedTicketsCount)"))
                 }
             )
             .store(in: &cancellables)
@@ -544,22 +545,22 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         guard let amount = Double(stake), amount > 0 else {
             // If no amount or invalid amount, set potential winnings to 0
             let currency = betInfoSubmissionViewModel.currentData.currency
-            betInfoSubmissionViewModel.updatePotentialWinnings("\(currency) 0")
+            betInfoSubmissionViewModel.updatePotentialWinnings(CurrencyHelper.formatAmountWithCurrency(0, currency: currency))
             return
         }
-        
+
         // Calculate potential winnings: amount * total odds
         let potentialWinnings = amount * totalOdds
-        
+
         // Get the currency from the bet info submission view model
         let currency = betInfoSubmissionViewModel.currentData.currency
-        
+
         // Format the potential winnings with the correct currency
-        let formattedWinnings = String(format: "%@ %.2f", currency, potentialWinnings)
-        
+        let formattedWinnings = CurrencyHelper.formatAmountWithCurrency(potentialWinnings, currency: currency)
+
         // Update the potential winnings in the bet info submission view model
         betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
-        
+
         print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
     }
     

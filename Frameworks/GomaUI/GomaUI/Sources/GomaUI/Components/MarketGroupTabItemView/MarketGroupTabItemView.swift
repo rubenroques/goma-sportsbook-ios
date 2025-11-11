@@ -312,6 +312,7 @@ extension MarketGroupTabItemView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("1x2 Tab - Selected") {
     PreviewUIViewController {
@@ -421,8 +422,8 @@ import SwiftUI
         let tabs = [
             ("All", true, nil as String?, nil as Int?),
             ("BetBuilder", false, "betbuilder", 16),
-            ("Popular", false, "popular", 16),
-            ("Sets", false, nil, 16)
+            (LocalizationProvider.string("popular_string"), false, "popular", 16),
+            (LocalizationProvider.string("market_group_sets"), false, nil, 16)
         ]
 
         for (title, selected, iconTypeName, badgeCount) in tabs {

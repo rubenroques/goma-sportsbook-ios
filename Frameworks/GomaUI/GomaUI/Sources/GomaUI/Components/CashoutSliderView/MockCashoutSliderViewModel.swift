@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     
     // MARK: - Properties
@@ -11,7 +12,7 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     }
     
     public lazy var buttonViewModel: ButtonViewModelProtocol = {
-        let viewModel = MockButtonViewModel(buttonData: ButtonData(id: "cashout", title: "Cashout", style: .solidBackground, backgroundColor: StyleProvider.Color.buttonBackgroundSecondary, disabledBackgroundColor: StyleProvider.Color.buttonDisableSecondary))
+        let viewModel = MockButtonViewModel(buttonData: ButtonData(id: "cashout", title: LocalizationProvider.string("cashout"), style: .solidBackground, backgroundColor: StyleProvider.Color.buttonBackgroundSecondary, disabledBackgroundColor: StyleProvider.Color.buttonDisableSecondary))
         viewModel.onButtonTapped = { [weak self] in
             self?.handleCashoutTap()
         }
@@ -75,7 +76,7 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     public static func defaultMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
         let data = CashoutSliderData(
-            title: "Choose a cash out amount",
+            title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 200.0,
@@ -88,7 +89,7 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     public static func maximumMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
         let data = CashoutSliderData(
-            title: "Choose a cash out amount",
+            title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 200.0,
@@ -101,7 +102,7 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     public static func minimumMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
         let data = CashoutSliderData(
-            title: "Choose a cash out amount",
+            title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 0.1,
@@ -112,7 +113,7 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     }
     
     public static func customMock(
-        title: String = "Choose a cash out amount",
+        title: String = LocalizationProvider.string("choose_a_cash_out_amount"),
         minimumValue: Float = 0.1,
         maximumValue: Float = 200.0,
         currentValue: Float = 100.0,

@@ -23,7 +23,11 @@ class MyBetsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
+    // MARK: - DISABLED: Sports/Virtuals Tab Bar (Virtuals Not Supported at Launch)
+    // TODO: Re-enable when Virtuals support is implemented
+    // Uncomment lines below and update pillSelectorBarView.topAnchor constraint
+    /*
     private lazy var marketGroupSelectorTabView: MarketGroupSelectorTabView = {
         let view = MarketGroupSelectorTabView(
             viewModel: viewModel.myBetsTabBarViewModel,
@@ -33,6 +37,7 @@ class MyBetsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    */
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -70,7 +75,7 @@ class MyBetsViewController: UIViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading bets..."
+        label.text = localized("mybets_loading_message")
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
@@ -96,15 +101,15 @@ class MyBetsViewController: UIViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Failed to load bets"
+        label.text = localized("mybets_error_load_failed")
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .systemRed
         label.numberOfLines = 0
-        
+
         let retryButton = UIButton(type: .system)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.setTitle("Retry", for: .normal)
+        retryButton.setTitle(localized("retry"), for: .normal)
         retryButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         retryButton.addTarget(self, action: #selector(handleRetry), for: .touchUpInside)
         
@@ -131,11 +136,11 @@ class MyBetsViewController: UIViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "No bets found"
+        label.text = localized("mybets_empty_state")
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textColor = .secondaryLabel
-        
+
         view.addSubview(label)
         
         NSLayoutConstraint.activate([
@@ -199,26 +204,31 @@ class MyBetsViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(contentView)
-        
-        contentView.addSubview(marketGroupSelectorTabView)
+
+        // DISABLED: Sports/Virtuals tab bar (Virtuals not supported at launch)
+        // contentView.addSubview(marketGroupSelectorTabView)
         contentView.addSubview(pillSelectorBarView)
         contentView.addSubview(tableView)
         contentView.addSubview(loadingView)
         contentView.addSubview(errorView)
         contentView.addSubview(emptyView)
-        
+
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
+
+            // DISABLED: Sports/Virtuals tab bar constraints (re-enable when Virtuals supported)
+            /*
             marketGroupSelectorTabView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             marketGroupSelectorTabView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             marketGroupSelectorTabView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             marketGroupSelectorTabView.heightAnchor.constraint(equalToConstant: 42),
-            
-            pillSelectorBarView.topAnchor.constraint(equalTo: marketGroupSelectorTabView.bottomAnchor),
+            */
+
+            // PillSelectorBarView now snapped to top (was: marketGroupSelectorTabView.bottomAnchor)
+            pillSelectorBarView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             pillSelectorBarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             pillSelectorBarView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             pillSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
@@ -256,7 +266,9 @@ class MyBetsViewController: UIViewController {
                 self?.handleBetsStateChange(state)
             }
             .store(in: &cancellables)
-        
+
+        // DISABLED: Sports/Virtuals tab selection binding (Virtuals not supported at launch)
+        /*
         // Listen to tab changes
         viewModel.selectedTabTypePublisher
             .receive(on: DispatchQueue.main)
@@ -264,7 +276,8 @@ class MyBetsViewController: UIViewController {
                 print("🎯 MyBets: Selected tab changed to \(selectedTab.title)")
             }
             .store(in: &cancellables)
-        
+        */
+
         // Listen to status changes  
         viewModel.selectedStatusTypePublisher
             .receive(on: DispatchQueue.main)
@@ -355,18 +368,18 @@ class MyBetsViewController: UIViewController {
     // MARK: - Alert Methods
     private func showRebetConfirmationAlert(completion: @escaping (Bool) -> Void) {
         let alert = UIAlertController(
-            title: "Replace Current Betslip",
-            message: "This will clear your current betslip and add the selections from this bet. Continue?",
+            title: localized("mybets_replace_betslip_title"),
+            message: localized("mybets_replace_betslip_message"),
             preferredStyle: .alert
         )
-        
+
         // Cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in
             completion(false)
         }
-        
+
         // Continue action
-        let continueAction = UIAlertAction(title: "Continue", style: .default) { _ in
+        let continueAction = UIAlertAction(title: localized("continue"), style: .default) { _ in
             completion(true)
         }
         

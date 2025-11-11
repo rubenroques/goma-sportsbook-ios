@@ -1,9 +1,3 @@
-//
-//  BonusCoordinator.swift
-//  BetssonCameroonApp
-//
-//  Created by Claude on October 27, 2025.
-//
 
 import UIKit
 import ServicesProvider
@@ -78,7 +72,7 @@ final class BonusCoordinator: Coordinator {
         let bonusViewController = BonusViewController(viewModel: bonusViewModel)
         self.bonusViewController = bonusViewController
         
-        let bonusNavigationController = Router.navigationController(with: bonusViewController)
+        let bonusNavigationController = AppCoordinator.navigationController(with: bonusViewController)
         self.bonusNavigationController = bonusNavigationController
         
         // Setup ViewModel callbacks

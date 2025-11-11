@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 /// Mock implementation of ProfileMenuListViewModelProtocol for testing and previews
 public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
 
@@ -74,49 +75,49 @@ public final class MockProfileMenuListViewModel: ProfileMenuListViewModelProtoco
             ActionRowItem(
                 id: "notifications",
                 icon: "bell",
-                title: "Notifications",
+                title: LocalizationProvider.string("notifications"),
                 type: .navigation,
                 action: .notifications
             ),
             ActionRowItem(
-                id: "transaction_history",
+                id: "transactions_history",
                 icon: "clock",
-                title: "Transaction History",
+                title: LocalizationProvider.string("transactions_history"),
                 type: .navigation,
                 action: .transactionHistory
             ),
             ActionRowItem(
                 id: "change_language",
                 icon: "globe",
-                title: "Change Language",
+                title: LocalizationProvider.string("change_language"),
                 type: .navigation,
                 action: .changeLanguage
             ),
             ActionRowItem(
                 id: "responsible_gaming",
                 icon: "shield.checkered",
-                title: "Responsible Gaming",
+                title: LocalizationProvider.string("responsible_gaming_title"),
                 type: .navigation,
                 action: .responsibleGaming
             ),
             ActionRowItem(
                 id: "help_center",
                 icon: "questionmark.circle",
-                title: "Help Center",
+                title: LocalizationProvider.string("support_helpcenter_button_text"),
                 type: .navigation,
                 action: .helpCenter
             ),
             ActionRowItem(
                 id: "change_password",
                 icon: "lock",
-                title: "Change Password",
+                title: LocalizationProvider.string("change_password"),
                 type: .navigation,
                 action: .changePassword
             ),
             ActionRowItem(
                 id: "logout",
                 icon: "rectangle.portrait.and.arrow.right",
-                title: "Logout",
+                title: LocalizationProvider.string("logout"),
                 type: .action,
                 action: .logout
             )
@@ -186,25 +187,27 @@ extension MockProfileMenuListViewModel {
             // Additional interactive behaviors can be added here
             switch item.action {
             case .notifications:
-                print("🔔 Would open notifications screen")
+                print("Would open notifications screen")
             case .transactionHistory:
-                print("📋 Would open transaction history")
+                print("Would open transaction history")
             case .changeLanguage:
-                print("🌐 Language selection triggered")
+                print("Language selection triggered")
             case .responsibleGaming:
-                print("🛡️ Would open responsible gaming settings")
+                print("Would open responsible gaming settings")
             case .helpCenter:
-                print("❓ Would open help center")
+                print("Would open help center")
             case .changePassword:
-                print("🔒 Would open change password screen")
+                print("Would open change password screen")
             case .logout:
-                print("🚪 Would show logout confirmation")
+                print("Would show logout confirmation")
             case .promotions:
                 print("🚪 Would open promotions screen")
             case .bonus:
                 print("🚪 Would open bonus screen")
             case .custom:
-                print("⚡ Custom action triggered")
+                print("Custom action triggered")
+            case .notificationSettings:
+                print("Notification Settings")
             }
         }
     }

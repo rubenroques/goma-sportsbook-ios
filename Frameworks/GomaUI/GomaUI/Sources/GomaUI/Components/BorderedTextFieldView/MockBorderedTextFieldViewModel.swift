@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `BorderedTextFieldViewModelProtocol` for testing.
 final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelProtocol {
 
@@ -9,6 +10,7 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     private let placeholderSubject: CurrentValueSubject<String, Never>
     private let isSecureSubject: CurrentValueSubject<Bool, Never>
     private let keyboardTypeSubject: CurrentValueSubject<UIKeyboardType, Never>
+    private let returnKeyTypeSubject: CurrentValueSubject<UIReturnKeyType, Never>
     private let textContentTypeSubject: CurrentValueSubject<UITextContentType?, Never>
 
     // Unified visual state subject
@@ -34,6 +36,10 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
         return keyboardTypeSubject.eraseToAnyPublisher()
     }
 
+    public var returnKeyTypePublisher: AnyPublisher<UIReturnKeyType, Never> {
+        return returnKeyTypeSubject.eraseToAnyPublisher()
+    }
+
     public var textContentTypePublisher: AnyPublisher<UITextContentType?, Never> {
         return textContentTypeSubject.eraseToAnyPublisher()
     }
@@ -53,6 +59,11 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
     public var prefixText: String?
     public var isRequired: Bool
     public var usesCustomInput: Bool
+    public var maxLength: Int?
+    public var allowedCharacters: CharacterSet?
+
+    // MARK: - Callbacks
+    public var onReturnKeyTappedCallback: (() -> Void)?
 
     // MARK: - Initialization
     public init(textFieldData: BorderedTextFieldData) {
@@ -60,6 +71,7 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
         self.placeholderSubject = CurrentValueSubject(textFieldData.placeholder)
         self.isSecureSubject = CurrentValueSubject(textFieldData.isSecure)
         self.keyboardTypeSubject = CurrentValueSubject(textFieldData.keyboardType)
+        self.returnKeyTypeSubject = CurrentValueSubject(textFieldData.returnKeyType)
         self.textContentTypeSubject = CurrentValueSubject(textFieldData.textContentType)
         self.visualStateSubject = CurrentValueSubject(textFieldData.visualState)
 
@@ -69,6 +81,8 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
         self.prefixText = textFieldData.prefix
         self.isRequired = textFieldData.isRequired
         self.usesCustomInput = textFieldData.usesCustomInput
+        self.maxLength = textFieldData.maxLength
+        self.allowedCharacters = textFieldData.allowedCharacters
     }
 
     // MARK: - BorderedTextFieldViewModelProtocol
@@ -86,6 +100,11 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
 
         public func updatePlaceholder(_ placeholder: String) {
         placeholderSubject.send(placeholder)
+    }
+
+    public func onReturnKeyTapped() {
+        // Trigger the callback if set
+        onReturnKeyTappedCallback?()
     }
 
     // MARK: - Convenience Methods
@@ -135,7 +154,7 @@ extension MockBorderedTextFieldViewModel {
             textFieldData: BorderedTextFieldData(
                 id: "phone",
                 text: "+237 712345678",
-                placeholder: "Phone number",
+                placeholder: LocalizationProvider.string("phone_number"),
                 visualState: .idle,
                 keyboardType: .phonePad,
                 textContentType: .telephoneNumber
@@ -148,7 +167,7 @@ extension MockBorderedTextFieldViewModel {
             textFieldData: BorderedTextFieldData(
                 id: "password",
                 text: "",
-                placeholder: "Password",
+                placeholder: LocalizationProvider.string("password"),
                 isSecure: true,
                 visualState: .idle,
                 textContentType: .password
@@ -161,7 +180,7 @@ extension MockBorderedTextFieldViewModel {
             textFieldData: BorderedTextFieldData(
                 id: "email",
                 text: "",
-                placeholder: "Email",
+                placeholder: LocalizationProvider.string("email"),
                 visualState: .idle,
                 keyboardType: .emailAddress,
                 textContentType: .emailAddress
@@ -186,7 +205,7 @@ extension MockBorderedTextFieldViewModel {
             textFieldData: BorderedTextFieldData(
                 id: "error",
                 text: "invalid@email",
-                placeholder: "Email",
+                placeholder: LocalizationProvider.string("email"),
                 visualState: .error("Please enter a valid email address"),
                 keyboardType: .emailAddress,
                 textContentType: .emailAddress
@@ -210,7 +229,7 @@ extension MockBorderedTextFieldViewModel {
             textFieldData: BorderedTextFieldData(
                 id: "focused",
                 text: "",
-                placeholder: "Email",
+                placeholder: LocalizationProvider.string("email"),
                 visualState: .focused,
                 keyboardType: .emailAddress,
                 textContentType: .emailAddress

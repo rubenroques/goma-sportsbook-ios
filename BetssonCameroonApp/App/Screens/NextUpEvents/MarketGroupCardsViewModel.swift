@@ -48,11 +48,39 @@ class MarketGroupCardsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     var matchCardContext: MatchCardContext
-    
+
+    // MARK: - Footer ViewModel
+    private(set) var footerViewModel: ExtendedListFooterViewModel?
+
+    // MARK: - MVVM-C Navigation Closures
+    var onURLOpenRequested: ((URL) -> Void)?
+    var onEmailComposeRequested: ((String) -> Void)?
+
     init(marketTypeId: String, matchCardContext: MatchCardContext = .lists) {
         print("[MarketGroupCardsViewModel] 🟢 init for marketType: \(marketTypeId)")
         self.marketTypeId = marketTypeId
         self.matchCardContext = matchCardContext
+
+        // Setup footer ViewModel
+        self.setupFooterViewModel()
+    }
+
+    // MARK: - Footer Setup
+
+    private func setupFooterViewModel() {
+        let resolver = AppExtendedListFooterImageResolver()
+        let footerVM = ExtendedListFooterViewModel(imageResolver: resolver)
+
+        // Wire up footer callbacks to this ViewModel's navigation closures
+        footerVM.onURLOpenRequested = { [weak self] url in
+            self?.onURLOpenRequested?(url)
+        }
+
+        footerVM.onEmailRequested = { [weak self] email in
+            self?.onEmailComposeRequested?(email)
+        }
+
+        self.footerViewModel = footerVM
     }
 
     deinit {

@@ -23,10 +23,11 @@ final class DepositWebContainerViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
+
     private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var cancelButton: UIButton = Self.createCancelButton()
+    private lazy var logoImageView: UIImageView = Self.createLogoImageView()
     
     // MARK: - Callbacks
     
@@ -69,7 +70,7 @@ final class DepositWebContainerViewController: UIViewController {
         bindViewModel()
         
         // Start loading deposit
-        viewModel.loadDeposit(currency: "XAF", language: "EN")
+        viewModel.loadDeposit(currency: "XAF")
     }
     
     // MARK: - Private Setup
@@ -82,7 +83,10 @@ final class DepositWebContainerViewController: UIViewController {
         customNavigationView.addSubview(titleLabel)
         customNavigationView.addSubview(cancelButton)
         customNavigationView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
+        // Add logo
+        view.addSubview(logoImageView)
+
         // Add WebView
         view.addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
@@ -104,23 +108,29 @@ final class DepositWebContainerViewController: UIViewController {
             customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             customNavigationView.heightAnchor.constraint(equalToConstant: 56),
-            
+
             // Title Label
             titleLabel.centerXAnchor.constraint(equalTo: customNavigationView.centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            
+
             // Cancel Button
             cancelButton.trailingAnchor.constraint(equalTo: customNavigationView.trailingAnchor, constant: -16),
             cancelButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
             cancelButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             cancelButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            
+
+            // Logo constraints
+            logoImageView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 100),
+            logoImageView.heightAnchor.constraint(equalToConstant: 20),
+
             // WebView constraints
-            webView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            webView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+
             // Loading view constraints
             loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -187,19 +197,19 @@ final class DepositWebContainerViewController: UIViewController {
     
     private func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Deposit Error",
+            title: localized("deposit_error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
-            self?.viewModel.loadDeposit(currency: "XAF", language: "EN")
+
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
+            self?.viewModel.loadDeposit(currency: "XAF")
         })
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel) { [weak self] _ in
             self?.onTransactionCancel?()
         })
-        
+
         present(alert, animated: true)
     }
 }
@@ -272,7 +282,7 @@ extension DepositWebContainerViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Deposit"
+        label.text = localized("deposit")
         label.font = AppFont.with(type: .semibold, size: 18)
         label.textColor = UIColor.App.textPrimary
         label.textAlignment = .center
@@ -282,9 +292,17 @@ extension DepositWebContainerViewController {
     private static func createCancelButton() -> UIButton {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Cancel", for: .normal)
+        button.setTitle(localized("cancel"), for: .normal)
         button.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
+    }
+
+    private static func createLogoImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "betsson_logo_orange")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 }

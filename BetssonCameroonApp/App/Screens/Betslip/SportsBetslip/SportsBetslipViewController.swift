@@ -86,14 +86,15 @@ class SportsBetslipViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.register(BetslipTicketTableViewCell.self, forCellReuseIdentifier: "BetslipTicketCell")
         tableView.register(OddsVariationTableViewCell.self, forCellReuseIdentifier: "OddsVariationCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "DefaultCell")
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
-        
+
         tableView.contentInset.bottom = 32
         tableView.verticalScrollIndicatorInsets.bottom = 32
-        
+
         return tableView
     }()
     
@@ -535,10 +536,12 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
         
         // Regular ticket cell
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BetslipTicketCell", for: indexPath) as? BetslipTicketTableViewCell else {
-            return UITableViewCell()
+            return tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
         }
-        
-        let ticket = viewModel.currentTickets[indexPath.row]
+
+        guard let ticket = viewModel.currentTickets[safe: indexPath.row] else {
+            return tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
+        }
         
         // Determine if ticket should be enabled and disabled message
         let isEnabled: Bool

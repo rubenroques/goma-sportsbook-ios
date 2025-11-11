@@ -17,7 +17,7 @@ public final class MockOddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol 
     }
     
     // MARK: - Initialization
-    public init(state: OddsAcceptanceState, labelText: String = "Accept odds change.", linkText: String = "Learn More", isEnabled: Bool = true) {
+    public init(state: OddsAcceptanceState, labelText: String = LocalizationProvider.string("accept_odds_change"), linkText: String = LocalizationProvider.string("learn_more"), isEnabled: Bool = true) {
         let initialData = OddsAcceptanceData(state: state, labelText: labelText, linkText: linkText, isEnabled: isEnabled)
         self.dataSubject = CurrentValueSubject(initialData)
     }

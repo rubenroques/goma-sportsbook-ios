@@ -32,9 +32,9 @@ enum BankingTransactionStatus: Hashable {
     var displayName: String {
         switch self {
         case .cancelled:
-            return "Cancelled"
+            return localized("cancelled")
         case .pending:
-            return "Pending"
+            return localized("pending")
         case .success:
             return ""  // Success doesn't show a status label
         }

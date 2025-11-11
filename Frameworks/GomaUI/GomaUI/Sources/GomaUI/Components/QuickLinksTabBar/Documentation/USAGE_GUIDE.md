@@ -9,7 +9,7 @@ First, you need a class that conforms to the `QuickLinksTabBarViewModelProtocol`
 ```swift
 import Combine
 import UIKit
-import GomaUI
+
 
 class MyQuickLinksViewModel: QuickLinksTabBarViewModelProtocol {
     

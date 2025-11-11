@@ -19,8 +19,7 @@ class MatchDetailsManager {
     // MARK: - Dependencies
     private let connector: EveryMatrixSocketConnector
     private let operatorId: String
-    private let language: String
-    
+
     // MARK: - State Management
     private let store = EveryMatrix.EntityStore()
     private var marketGroupStores = [String: EveryMatrix.EntityStore]()
@@ -44,12 +43,10 @@ class MatchDetailsManager {
     
     init(connector: EveryMatrixSocketConnector,
          operatorId: String,
-         matchId: String,
-         language: String = "en") {
+         matchId: String) {
         self.connector = connector
         self.matchId = matchId
         self.operatorId = operatorId
-        self.language = language
     }
     
     deinit {
@@ -66,7 +63,7 @@ class MatchDetailsManager {
         // Subscribe to match aggregator for live data, scores, match status
         let router = WAMPRouter.matchDetailsAggregatorPublisher(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             matchId: matchId
         )
         
@@ -96,7 +93,7 @@ class MatchDetailsManager {
         
         let router = WAMPRouter.matchMarketGroupsPublisher(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             matchId: matchId
         )
         
@@ -131,7 +128,7 @@ class MatchDetailsManager {
         
         let router = WAMPRouter.matchMarketGroupDetailsPublisher(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             matchId: matchId,
             marketGroupName: marketGroupKey
         )
@@ -162,7 +159,7 @@ class MatchDetailsManager {
         // Use oddsMatch for all markets subscription
         let router = WAMPRouter.oddsMatch(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             matchId: matchId
         )
         

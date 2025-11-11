@@ -20,7 +20,8 @@ class InPlayEventsCoordinator: Coordinator {
     var onShowSportsSelector: (() -> Void) = { }
     var onShowFilters: (() -> Void) = { }
     var onShowCasinoTab: ((QuickLinkType) -> Void) = { _ in }
-    
+    var onShowBannerURL: ((String, String?) -> Void) = { _, _ in }
+
     // MARK: - Properties
     private let environment: Environment
     private var inPlayEventsViewModel: InPlayEventsViewModel?
@@ -55,6 +56,37 @@ class InPlayEventsCoordinator: Coordinator {
         onShowCasinoTab(quickLinkType)
     }
 
+    // MARK: - Footer Navigation (External Links)
+
+    /// Opens URL in external Safari browser
+    private func openExternalURL(_ url: URL) {
+        print("🚀 [InPlayEventsCoordinator] Opening external URL: \(url)")
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ [InPlayEventsCoordinator] Successfully opened URL")
+            } else {
+                print("❌ [InPlayEventsCoordinator] Failed to open URL")
+            }
+        }
+    }
+
+    /// Opens email in user's default email client via mailto: URL
+    private func openEmailClient(email: String) {
+        guard let mailtoURL = URL(string: "mailto:\(email)") else {
+            print("❌ [InPlayEventsCoordinator] Invalid email address: \(email)")
+            return
+        }
+
+        print("📧 [InPlayEventsCoordinator] Opening email client for: \(email)")
+        UIApplication.shared.open(mailtoURL, options: [:]) { success in
+            if success {
+                print("✅ [InPlayEventsCoordinator] Successfully opened email client")
+            } else {
+                print("❌ [InPlayEventsCoordinator] Failed to open email client")
+            }
+        }
+    }
+
     // MARK: - Coordinator Protocol
     func start() {
         
@@ -81,11 +113,24 @@ class InPlayEventsCoordinator: Coordinator {
         viewModel.onCasinoQuickLinkSelected = { [weak self] quickLinkType in
             self?.showCasinoTab(for: quickLinkType)
         }
-        
+
+        viewModel.onBannerURLRequested = { [weak self] url, target in
+            self?.onShowBannerURL(url, target)
+        }
+
         // Create view controller
         let viewController = InPlayEventsViewController(viewModel: viewModel)
         self.inPlayEventsViewController = viewController
-        
+
+        // Setup footer navigation closures - Coordinator decides how to open URLs
+        viewController.onURLOpenRequested = { [weak self] url in
+            self?.openExternalURL(url)
+        }
+
+        viewController.onEmailRequested = { [weak self] email in
+            self?.openEmailClient(email: email)
+        }
+
         // MainTabBarCoordinator will handle embedding
     }
     

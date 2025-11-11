@@ -1,10 +1,13 @@
 /// Enum representing different types of banners that can be displayed in TopBannerSliderView
 public enum BannerType {
-    /// Single button banner with message and optional button
-    case singleButton(SingleButtonBannerViewModelProtocol)
+    /// Info/promotional banner with message and optional button
+    case info(any SingleButtonBannerViewModelProtocol)
+
+    /// Casino game banner with message and optional button
+    case casino(any SingleButtonBannerViewModelProtocol)
 
     /// Match banner with team information and betting outcomes
-    case matchBanner(MatchBannerViewModelProtocol)
+    case match(MatchBannerViewModelProtocol)
 }
 
 // MARK: - Convenience Properties
@@ -13,9 +16,11 @@ extension BannerType {
     /// Unique identifier for the banner based on its type and content
     public var id: String {
         switch self {
-        case .singleButton(let viewModel):
-            return "single_\(viewModel.currentDisplayState.bannerData.type)"
-        case .matchBanner(let viewModel):
+        case .info(let viewModel):
+            return "info_\(viewModel.currentDisplayState.bannerData.type)"
+        case .casino(let viewModel):
+            return "casino_\(viewModel.currentDisplayState.bannerData.type)"
+        case .match(let viewModel):
             return "match_\(viewModel.currentMatchData.id)"
         }
     }
@@ -23,9 +28,9 @@ extension BannerType {
     /// Cell identifier for collection view registration
     public var cellIdentifier: String {
         switch self {
-        case .singleButton:
+        case .info, .casino:
             return "SingleButtonBannerCell"
-        case .matchBanner:
+        case .match:
             return "MatchBannerCell"
         }
     }
@@ -33,9 +38,9 @@ extension BannerType {
     /// Whether this banner should be visible
     public var isVisible: Bool {
         switch self {
-        case .singleButton(let viewModel):
+        case .info(let viewModel), .casino(let viewModel):
             return viewModel.currentDisplayState.bannerData.isVisible
-        case .matchBanner(let viewModel):
+        case .match(let viewModel):
             return !viewModel.currentMatchData.id.isEmpty
         }
     }

@@ -29,7 +29,7 @@ The `OutcomeItemView` is the foundational component that displays a single betti
 ### Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create outcome data
 let outcomeData = OutcomeItemData(
@@ -127,7 +127,7 @@ The `MarketOutcomesLineView` displays a single line of betting outcomes (2-colum
 ### Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create market outcome data
 let homeOutcome = MarketOutcomeData(
@@ -308,7 +308,7 @@ The `MarketOutcomesMultiLineView` displays multiple market outcome lines in a ve
 ### Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create market group data
 let marketGroup = MarketGroupData(

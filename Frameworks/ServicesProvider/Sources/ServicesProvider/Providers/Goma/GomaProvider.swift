@@ -1406,6 +1406,10 @@ extension GomaProvider: BettingProvider {
             .eraseToAnyPublisher()
     }
 
+    func getCashedOutBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
         
         if betTicketSelections.isEmpty {

@@ -24,6 +24,7 @@ public struct Bet: Codable, Equatable, Hashable {
     public var globalState: BetState
     public var stake: Double
     public var totalOdd: Double
+    public var currency: String
     public var selections: [BetSelection]
     public var potentialReturn: Double?
     public var totalReturn: Double?
@@ -60,6 +61,7 @@ public struct Bet: Codable, Equatable, Hashable {
         globalState: BetState,
         stake: Double,
         totalOdd: Double,
+        currency: String,
         selections: [BetSelection],
         potentialReturn: Double? = nil,
         totalReturn: Double? = nil,
@@ -82,6 +84,7 @@ public struct Bet: Codable, Equatable, Hashable {
         self.globalState = globalState
         self.stake = stake
         self.totalOdd = totalOdd
+        self.currency = currency
         self.selections = selections
         self.potentialReturn = potentialReturn
         self.totalReturn = totalReturn

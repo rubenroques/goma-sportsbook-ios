@@ -21,7 +21,7 @@ class PhoneLoginViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Login"
+        label.text = localized("login")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -31,7 +31,7 @@ class PhoneLoginViewController: UIViewController {
     private let closeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Close", for: .normal)
+        button.setTitle(localized("close"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         return button
@@ -50,11 +50,19 @@ class PhoneLoginViewController: UIViewController {
     private let highlightedTextView: HighlightedTextView
     private let phoneField: BorderedTextFieldView
     private let passwordField: BorderedTextFieldView
-    
+
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.alwaysBounceVertical = true
+        return scrollView
+    }()
+
     private let forgotPasswordButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Forgot your Password?", for: .normal)
+        button.setTitle(localized("forgot_your_password"), for: .normal)
         button.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 14)
         button.contentHorizontalAlignment = .right
@@ -80,12 +88,6 @@ class PhoneLoginViewController: UIViewController {
         return view
     }()
     
-    // Constraints
-    private var loginButtonBottomConstraint: NSLayoutConstraint = {
-        let constraint = NSLayoutConstraint()
-        return constraint
-    }()
-
     private var viewModel: PhoneLoginViewModel
     
     private var cancellables = Set<AnyCancellable>()
@@ -113,24 +115,26 @@ class PhoneLoginViewController: UIViewController {
         setupBindings()
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
         forgotPasswordButton.addTarget(self, action: #selector(didTapForgotPassword), for: .primaryActionTriggered)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+
         setupDebugHelpers()
     }
 
     private func setupLayout() {
+        // Fixed navigation header (stays at top)
         view.addSubview(navigationView)
         navigationView.addSubview(navigationTitleLabel)
         navigationView.addSubview(closeButton)
 
-        view.addSubview(logoImageView)
+        // ScrollView for scrollable content
+        view.addSubview(scrollView)
+
+        // Add all scrollable content to scrollView
+        scrollView.addSubview(logoImageView)
 
         headerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headerView)
+        scrollView.addSubview(headerView)
         highlightedTextView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(highlightedTextView)
+        scrollView.addSubview(highlightedTextView)
 
         let stackView = UIStackView(arrangedSubviews: [
             phoneField,
@@ -141,15 +145,16 @@ class PhoneLoginViewController: UIViewController {
         stackView.spacing = 16
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stackView)
+        scrollView.addSubview(stackView)
 
         loginButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(loginButton)
+        scrollView.addSubview(loginButton)
+
+        // Loading view stays on top of everything
         view.addSubview(loadingView)
 
-        loginButtonBottomConstraint = loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
-
         NSLayoutConstraint.activate([
+            // Navigation view - fixed at top
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -163,28 +168,36 @@ class PhoneLoginViewController: UIViewController {
             closeButton.centerYAnchor.constraint(equalTo: navigationView.centerYAnchor),
             closeButton.heightAnchor.constraint(equalToConstant: 40),
 
-            logoImageView.topAnchor.constraint(equalTo: navigationView.bottomAnchor, constant: 18),
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            // ScrollView - below navigation, fills remaining space
+            scrollView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Content inside scrollView - using contentLayoutGuide for vertical scrolling
+            logoImageView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 18),
+            logoImageView.centerXAnchor.constraint(equalTo: scrollView.frameLayoutGuide.centerXAnchor),
             logoImageView.widthAnchor.constraint(equalToConstant: 100),
             logoImageView.heightAnchor.constraint(equalToConstant: 20),
-            
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+
+            headerView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 8),
+            headerView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -8),
             headerView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 18),
 
-            highlightedTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            highlightedTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            highlightedTextView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            highlightedTextView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
             highlightedTextView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
 
             stackView.topAnchor.constraint(equalTo: highlightedTextView.bottomAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
 
-            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            loginButton.topAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 30),
-            loginButtonBottomConstraint,
-            
+            loginButton.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+            loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 30),
+            loginButton.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -20),
+
+            // Loading view - covers entire view
             loadingView.topAnchor.constraint(equalTo: view.topAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -221,7 +234,7 @@ class PhoneLoginViewController: UIViewController {
     func showLoginErrorAlert(errorMessage: String) {
         
         let alert = UIAlertController(
-            title: "Login Error",
+            title: localized("login_error_title"),
             message: errorMessage,
             preferredStyle: .alert
         )
@@ -242,36 +255,10 @@ class PhoneLoginViewController: UIViewController {
 
     @objc private func didTapForgotPassword() {
         let phonePasswordRecoverViewModel = PhonePasswordCodeResetViewModel()
-        
+
         let phonePasswordRecoverViewController = PhonePasswordCodeResetViewController(viewModel: phonePasswordRecoverViewModel)
-        
+
         self.navigationController?.pushViewController(phonePasswordRecoverViewController, animated: true)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-              let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
-
-        let keyboardHeight = keyboardFrame.height
-        loginButtonBottomConstraint.constant = -keyboardHeight + 20
-
-        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve << 16), animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-    }
-
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-              let curve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
-
-        loginButtonBottomConstraint.constant = -20
-
-        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve << 16), animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
     }
     
     // MARK: - Debug Helpers
@@ -303,21 +290,21 @@ class PhoneLoginViewController: UIViewController {
                 if phone.isEmpty {
                     // First tap: Fill with the provided credentials
                     phoneToSet = "699198921"
-                    passwordToSet = "4050"
+                    passwordToSet = "1234"
                 }
                 else if phone == "666999005" {
                     // Second tap: Alternative test account
-                    phoneToSet = "+237123456789"
+                    phoneToSet = "123456789"
                     passwordToSet = "test123"
                 }
-                else if phone == "+237123456789" {
+                else if phone == "123456789" {
                     // Third tap: Another test account
                     phoneToSet = "+237987654321"
                     passwordToSet = "debug123"
                 }
                 else {
                     // Reset to first credentials
-                    phoneToSet = "+237666999005"
+                    phoneToSet = "666999005"
                     passwordToSet = "4050"
                 }
                 

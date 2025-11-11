@@ -38,7 +38,7 @@ CasinoCategoryBarView/
 
 ### Basic Usage
 ```swift
-import GomaUI
+
 
 // With viewModel
 let viewModel = MockCasinoCategoryBarViewModel.newGames

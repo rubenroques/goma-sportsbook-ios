@@ -2,7 +2,7 @@
 //  CasinoSearchViewController.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 22/09/2025.
+//  Created on 22/09/2025.
 //
 
 import UIKit

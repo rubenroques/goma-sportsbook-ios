@@ -14,7 +14,7 @@ public class LeaguesFilterView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Leagues"
+        label.text = LocalizationProvider.string("leagues")
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
         return label
@@ -189,6 +189,7 @@ public class LeaguesFilterView: UIView {
 
 #if DEBUG
 import SwiftUI
+
 
 @available(iOS 17.0, *)
 struct LeaguesFilterView_Preview: PreviewProvider {

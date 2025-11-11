@@ -1,8 +1,12 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `SingleButtonBannerViewModelProtocol` for testing.
 final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelProtocol {
+
+    // MARK: - Associated Type
+    public typealias ActionType = Void
 
     // MARK: - Properties
     private let displayStateSubject: CurrentValueSubject<SingleButtonBannerDisplayState, Never>
@@ -14,6 +18,8 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
     public var displayStatePublisher: AnyPublisher<SingleButtonBannerDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
+
+    public var onButtonAction: ((Void) -> Void)?
 
     // Internal state
     private var bannerData: SingleButtonBannerData
@@ -30,14 +36,12 @@ final public class MockSingleButtonBannerViewModel: SingleButtonBannerViewModelP
             isButtonEnabled: isButtonEnabled
         )
         self.displayStateSubject = CurrentValueSubject(initialState)
-
-        print("[BANNER_DEBUG] 🟢 ViewModel.init - bannerData.type: '\(bannerData.type)', button: '\(bannerData.buttonConfig?.title ?? "nil")'")
     }
 
     // MARK: - SingleButtonBannerViewModelProtocol
     public func buttonTapped() {
         print("Banner button tapped for type: \(bannerData.type)")
-        // Mock action - could trigger navigation, etc.
+        onButtonAction?(())
     }
 
     // MARK: - Helper Methods
@@ -112,7 +116,7 @@ extension MockSingleButtonBannerViewModel {
     /// Mock with custom styling
     public static var customStyledMock: MockSingleButtonBannerViewModel {
         let buttonConfig = ButtonConfig(
-            title: "Get Started",
+            title: LocalizationProvider.string("get_started"),
             backgroundColor: UIColor.systemGreen,
             textColor: UIColor.black,
             cornerRadius: 20

@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of NotificationListViewModelProtocol for testing and preview purposes
 final public class MockNotificationListViewModel: NotificationListViewModelProtocol {
     
@@ -243,7 +244,7 @@ extension MockNotificationListViewModel {
                 title: "Welcome to Betsson!",
                 description: "Thanks for joining us. Get started with your first bet and claim your welcome bonus!",
                 state: .unread,
-                action: NotificationAction(id: "claim_bonus", title: "Claim Bonus", style: .secondary)
+                action: NotificationAction(id: "claim_bonus", title: LocalizationProvider.string("claim_bonus"), style: .secondary)
             ),
             NotificationData(
                 id: "payment_1",

@@ -2,7 +2,7 @@
 //  ShareBookingCodeViewController.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 15/10/2025.
+//  Created on 15/10/2025.
 //
 
 import UIKit
@@ -36,7 +36,7 @@ final class ShareBookingCodeViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .bold, size: 18)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Share Betslip"
+        label.text = localized("share_betslip")
         label.numberOfLines = 1
         return label
     }()
@@ -147,7 +147,8 @@ final class ShareBookingCodeViewController: UIViewController {
     }
 
     private func presentShareSheet(code: String) {
-        let shareText = "Check out my betslip! Booking Code: \(code)"
+        let shareText = localized("share_booking_code_message")
+            .replacingOccurrences(of: "{code}", with: code)
         let activityViewController = UIActivityViewController(
             activityItems: [shareText],
             applicationActivities: nil

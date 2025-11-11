@@ -20,7 +20,7 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Forgot Password"
+        label.text = localized("forgot_password")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -89,9 +89,9 @@ class PhonePasswordCodeVerificationViewController: UIViewController {
         
         switch viewModel.resetPasswordType {
         case .forgot:
-            self.navigationTitleLabel.text = "Forgot Password"
+            self.navigationTitleLabel.text = localized("forgot_password")
         case .change:
-            self.navigationTitleLabel.text = "Change Password"
+            self.navigationTitleLabel.text = localized("change_password")
         }
         
         super.init(nibName: nil, bundle: nil)

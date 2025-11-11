@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 /// Mock implementation of `CustomSliderViewModelProtocol` for testing.
 final public class MockCustomSliderViewModel: CustomSliderViewModelProtocol {
 
@@ -105,7 +106,7 @@ extension MockCustomSliderViewModel {
         let configuration = SliderConfiguration(
             minimumValue: 0.0,
             maximumValue: 1.0,
-            numberOfSteps: 5, // For "All", "1h", "8h", "Today", "48h"
+            numberOfSteps: 5, // For "All", "1h", "8h", LocalizationProvider.string("today"), "48h"
             trackHeight: 4.0,
             trackCornerRadius: 2.0,
             thumbSize: 24.0,

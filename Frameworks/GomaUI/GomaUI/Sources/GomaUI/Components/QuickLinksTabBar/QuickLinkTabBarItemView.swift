@@ -115,6 +115,7 @@ private extension QuickLinkTabBarItemView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("Quick Link Item") {
     PreviewUIViewController {
@@ -123,7 +124,7 @@ import SwiftUI
         
         let item = QuickLinkItem(
             type: .aviator,
-            title: "Aviator",
+            title: LocalizationProvider.string("aviator"),
             icon: UIImage(systemName: "airplane")
         )
         

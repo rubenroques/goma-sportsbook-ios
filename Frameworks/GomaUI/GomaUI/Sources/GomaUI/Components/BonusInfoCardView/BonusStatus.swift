@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 /// Represents the status of a bonus
 public enum BonusStatus {
     case active
@@ -16,9 +17,9 @@ public enum BonusStatus {
     var displayText: String {
         switch self {
         case .active:
-            return "Active"
+            return LocalizationProvider.string("active")
         case .released:
-            return "Released"
+            return LocalizationProvider.string("released")
         }
     }
 }

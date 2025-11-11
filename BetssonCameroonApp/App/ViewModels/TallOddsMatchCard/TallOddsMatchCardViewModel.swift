@@ -241,6 +241,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         // Update live status based on event status
         if let status = eventLiveData.status {
             let isLive = status.isInProgress
+
             if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
                 headerViewModel.updateIsLive(isLive)
             }
@@ -349,7 +350,7 @@ extension TallOddsMatchCardViewModel {
             matchTime: Self.formatMatchTime(from: match),
             isLive: match.status.isLive
         )
-        
+
         // 2. Create MarketInfoData
         let firstMarket = relevantMarkets.first
         let marketInfoData = MarketInfoData(

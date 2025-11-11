@@ -15,19 +15,19 @@ enum MyBetResult: String, Codable, Equatable, Hashable, CaseIterable {
     var displayName: String {
         switch self {
         case .won:
-            return "Won"
+            return localized("won")
         case .lost:
-            return "Lost"
+            return localized("lost")
         case .drawn:
-            return "Draw"
+            return localized("draw")
         case .open:
-            return "Open"
+            return localized("open")
         case .void:
-            return "Void"
+            return localized("void")
         case .pending:
-            return "Pending"
+            return localized("pending")
         case .notSpecified:
-            return "Not Specified"
+            return localized("bet_result_not_specified")
         }
     }
     

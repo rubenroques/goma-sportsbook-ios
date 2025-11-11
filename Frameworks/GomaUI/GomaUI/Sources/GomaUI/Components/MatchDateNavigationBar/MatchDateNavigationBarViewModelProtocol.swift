@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 
+
 // MARK: - Match Status
 public enum MatchStatus: Equatable {
     case preMatch(date: Date)
@@ -18,7 +19,7 @@ public struct MatchDateNavigationBarData: Equatable {
     public init(
         id: String = UUID().uuidString,
         matchStatus: MatchStatus,
-        backButtonText: String = "Back",
+        backButtonText: String = LocalizationProvider.string("back"),
         isBackButtonHidden: Bool = false,
         dateFormat: String = "HH:mm EEE dd/MM"
     ) {

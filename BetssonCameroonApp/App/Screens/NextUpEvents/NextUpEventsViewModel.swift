@@ -61,7 +61,7 @@ class NextUpEventsViewModel {
 
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
-    let topBannerSliderViewModel: SportTopBannerSliderViewModel
+    let topBannerSliderViewModel: TopBannerSliderViewModel
     let pillSelectorBarViewModel: PillSelectorBarViewModel
     let marketGroupSelectorViewModel: MarketGroupSelectorTabViewModel
     var generalFiltersBarViewModel: GeneralFilterBarViewModelProtocol
@@ -84,6 +84,9 @@ class NextUpEventsViewModel {
 
     // Sport banner navigation closure
     var onMatchTap: ((String) -> Void)?
+
+    // Banner URL navigation closure
+    var onBannerURLRequested: ((String, String?) -> Void)?
 
     // MARK: - Private Properties
     var sport: Sport
@@ -124,7 +127,7 @@ class NextUpEventsViewModel {
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
 
         // Create TopBannerSlider ViewModel for sports banners
-        self.topBannerSliderViewModel = SportTopBannerSliderViewModel(servicesProvider: servicesProvider)
+        self.topBannerSliderViewModel = TopBannerSliderViewModel(servicesProvider: servicesProvider)
 
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
@@ -192,10 +195,34 @@ class NextUpEventsViewModel {
         topBannerSliderViewModel.onMatchTap = { [weak self] eventId in
             self?.onMatchTap?(eventId)
         }
-        
-        
+
+        // Setup Info Banner action callback
+        topBannerSliderViewModel.onInfoBannerAction = { [weak self] action in
+            switch action {
+            case .openURL(let url, let target):
+                self?.onBannerURLRequested?(url, target)
+            case .none:
+                break
+            }
+        }
+
+        // Setup Casino Banner action callback
+        topBannerSliderViewModel.onCasinoBannerAction = { [weak self] action in
+            switch action {
+            case .openURL(let url):
+                self?.onBannerURLRequested?(url, nil)
+            case .launchGame:
+                // Casino game launch is handled separately - could forward to casino coordinator
+                break
+            case .none:
+                break
+            }
+        }
+
+
         // Listen to market group selection changes from selector ViewModel
         marketGroupSelectorViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] selectionEvent in
                 self?.selectedMarketGroupId = selectionEvent.selectedId
             }
@@ -203,6 +230,7 @@ class NextUpEventsViewModel {
 
         // Listen to market groups updates from selector ViewModel
         marketGroupSelectorViewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 self?.updateMarketGroupViewModels(marketGroups: marketGroups)
             }

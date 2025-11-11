@@ -121,19 +121,20 @@ class MockDepositBonusViewModel: DepositBonusViewModelProtocol {
     }
     
     private func updateBonusInfo(amountText: String) {
-        
+
         let bonusAmount = self.promotionalBonusCardData.bonusAmount
-        var bonusAmountText = "XAF \(bonusAmount)"
+        var bonusAmountText = CurrencyHelper.formatAmountWithCurrency(bonusAmount, currency: "XAF")
         if amountText.isEmpty {
             bonusInfoViewModel.updateAmount(bonusAmountText)
         }
         else {
             let amountInt = Int(amountText) ?? 0
             let bonusAmount = Int(bonusAmount)
-            bonusAmountText = "XAF \(amountInt + bonusAmount)"
+            let totalAmount = Double(amountInt + bonusAmount)
+            bonusAmountText = CurrencyHelper.formatAmountWithCurrency(totalAmount, currency: "XAF")
             bonusInfoViewModel.updateAmount(bonusAmountText)
         }
-        
+
         bonusDepositData.selectedAmount = Double(amountText) ?? 0
     }
     

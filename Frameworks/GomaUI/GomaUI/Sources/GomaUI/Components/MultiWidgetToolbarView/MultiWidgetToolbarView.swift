@@ -24,9 +24,9 @@ final public class MultiWidgetToolbarView: UIView {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Public Properties
-    public var onWidgetSelected: ((String) -> Void) = { _ in }
-    public var onBalanceTapped: ((String) -> Void) = { _ in }
-    public var onDepositTapped: ((String) -> Void) = { _ in }
+    public var onWidgetSelected: ((WidgetTypeIdentifier) -> Void) = { _ in }
+    public var onBalanceTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
+    public var onDepositTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
 
     // MARK: - Initialization
     public init(viewModel: MultiWidgetToolbarViewModelProtocol) {
@@ -157,20 +157,29 @@ final public class MultiWidgetToolbarView: UIView {
     }
 
     private func createWalletWidget(_ widget: Widget) -> UIView {
-        let walletData = WalletWidgetData(
-            id: widget.id,
-            balance: "-.--",
-            depositButtonTitle: "DEPOSIT"
-        )
-        let viewModel = MockWalletWidgetViewModel(walletData: walletData)
-        
-        self.viewModel.walletViewModel = viewModel
-        
-        let walletView = WalletWidgetView(viewModel: viewModel)
+        // Use injected ViewModel if available, otherwise create mock for preview
+        let walletViewModel: WalletWidgetViewModelProtocol
+
+        if let injectedViewModel = self.viewModel.walletViewModel {
+            // Production: Use injected ViewModel (already has localized strings)
+            walletViewModel = injectedViewModel
+        } else {
+            // Fallback: Create mock for GomaUI previews/demos
+            let walletData = WalletWidgetData(
+                id: widget.id,
+                balance: "-.--",
+                depositButtonTitle: LocalizationProvider.string("deposit").uppercased()
+            )
+            walletViewModel = MockWalletWidgetViewModel(walletData: walletData)
+            self.viewModel.walletViewModel = walletViewModel
+        }
+
+        let walletView = WalletWidgetView(viewModel: walletViewModel)
         walletView.onDepositTapped = { [weak self] widgetID in
             self?.onDepositTapped(widgetID)
         }
         walletView.onBalanceTapped = { [weak self] widgetID in
+            print("💰 WALLET_TAP: MultiWidgetToolbarView forwarding balance tap with widgetID: \(widgetID)")
             self?.onBalanceTapped(widgetID)
         }
         return walletView
@@ -199,9 +208,9 @@ final public class MultiWidgetToolbarView: UIView {
             view.heightAnchor.constraint(equalToConstant: 32),
             view.widthAnchor.constraint(equalToConstant: 32)
         ])
-        
+
         // Add tap gesture
-        view.accessibilityIdentifier = widget.id
+        view.accessibilityIdentifier = widget.id.rawValue
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(tapGesture)
@@ -234,6 +243,12 @@ final public class MultiWidgetToolbarView: UIView {
             view.widthAnchor.constraint(equalToConstant: 32)
         ])
 
+        // Add tap gesture (was missing - this is the bug fix!)
+        view.accessibilityIdentifier = widget.id.rawValue
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(tapGesture)
+
         return view
 
     }
@@ -260,7 +275,7 @@ final public class MultiWidgetToolbarView: UIView {
             view.widthAnchor.constraint(equalToConstant: 32)
         ])
 
-        view.accessibilityIdentifier = widget.id
+        view.accessibilityIdentifier = widget.id.rawValue
         view.isAccessibilityElement = true
         view.accessibilityLabel = widget.label ?? "Language"
         view.isUserInteractionEnabled = true
@@ -287,10 +302,10 @@ final public class MultiWidgetToolbarView: UIView {
             titleColor: StyleProvider.Color.buttonTextPrimary,
             borderColor: nil
         )
-        
-        registerButton.accessibilityIdentifier = widget.id
+
+        registerButton.accessibilityIdentifier = widget.id.rawValue
         registerButton.addTarget(self, action: #selector(widgetTapped), for: .primaryActionTriggered)
-        
+
         return registerButton
     }
 
@@ -301,10 +316,10 @@ final public class MultiWidgetToolbarView: UIView {
             titleColor: StyleProvider.Color.buttonTextSecondary,
             borderColor: StyleProvider.Color.buttonTextSecondary
         )
-        
-        loginButton.accessibilityIdentifier = widget.id
+
+        loginButton.accessibilityIdentifier = widget.id.rawValue
         loginButton.addTarget(self, action: #selector(widgetTapped), for: .primaryActionTriggered)
-        
+
         return loginButton
     }
 
@@ -318,6 +333,8 @@ final public class MultiWidgetToolbarView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 20)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.minimumScaleFactor = 0.7
         button.backgroundColor = backgroundColor
         button.setTitleColor(titleColor, for: .normal)
         button.layer.cornerRadius = 6
@@ -344,13 +361,20 @@ final public class MultiWidgetToolbarView: UIView {
 
     // MARK: - Action Handlers
     @objc private func widgetTapped(_ sender: UIButton) {
-        guard let widgetID = sender.accessibilityIdentifier else { return }
+        guard let widgetIDString = sender.accessibilityIdentifier,
+              let widgetID = WidgetTypeIdentifier(rawValue: widgetIDString) else {
+            return
+        }
         viewModel.selectWidget(id: widgetID)
         onWidgetSelected(widgetID)
     }
 
     @objc private func viewTapped(_ sender: UITapGestureRecognizer) {
-        guard let view = sender.view, let widgetID = view.accessibilityIdentifier else { return }
+        guard let view = sender.view,
+              let widgetIDString = view.accessibilityIdentifier,
+              let widgetID = WidgetTypeIdentifier(rawValue: widgetIDString) else {
+            return
+        }
         viewModel.selectWidget(id: widgetID)
         onWidgetSelected(widgetID)
     }

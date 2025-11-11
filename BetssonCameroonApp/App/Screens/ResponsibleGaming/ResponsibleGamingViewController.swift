@@ -293,7 +293,7 @@ class ResponsibleGamingViewController: UIViewController {
     
     private func setupTimeOutSectionContent() {
         let subtitleLabel = UILabel()
-        subtitleLabel.text = localized("rg_time_out_subtitle")
+        subtitleLabel.text = localized("timeout_description")
         subtitleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
         subtitleLabel.textColor = StyleProvider.Color.textPrimary
         subtitleLabel.numberOfLines = 0

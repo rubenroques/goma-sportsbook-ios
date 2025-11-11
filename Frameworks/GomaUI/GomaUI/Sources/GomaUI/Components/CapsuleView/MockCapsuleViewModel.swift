@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 public final class MockCapsuleViewModel: CapsuleViewModelProtocol {
     
     private let dataSubject: CurrentValueSubject<CapsuleData, Never>
@@ -65,7 +66,7 @@ extension MockCapsuleViewModel {
     
     public static var statusPending: MockCapsuleViewModel {
         let data = CapsuleData(
-            text: "Pending",
+            text: LocalizationProvider.string("pending"),
             backgroundColor: UIColor.systemOrange,
             textColor: StyleProvider.Color.buttonTextPrimary,
             font: StyleProvider.fontWith(type: .medium, size: 11),
@@ -89,7 +90,7 @@ extension MockCapsuleViewModel {
     
     public static var statusError: MockCapsuleViewModel {
         let data = CapsuleData(
-            text: "Failed",
+            text: LocalizationProvider.string("failed"),
             backgroundColor: UIColor.systemRed,
             textColor: StyleProvider.Color.buttonTextPrimary,
             font: StyleProvider.fontWith(type: .medium, size: 11),

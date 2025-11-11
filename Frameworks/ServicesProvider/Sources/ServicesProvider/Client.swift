@@ -1496,6 +1496,16 @@ extension Client {
         return bettingProvider.getWonBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
     }
 
+    public func getCashedOutBetsHistory(pageIndex: Int, startDate: String? = nil, endDate: String? = nil) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.getCashedOutBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
+    }
+
     public func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider

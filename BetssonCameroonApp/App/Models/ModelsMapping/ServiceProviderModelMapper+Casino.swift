@@ -37,7 +37,7 @@ extension ServiceProviderModelMapper {
         return CasinoCategorySectionData(
             id: casinoCategory.id,
             categoryTitle: casinoCategory.name,
-            categoryButtonText: "All \(casinoCategory.gamesTotal)",
+            categoryButtonText: "\(localized("all")) \(casinoCategory.gamesTotal)",
             games: games
         )
     }

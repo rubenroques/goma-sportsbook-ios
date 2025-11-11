@@ -93,9 +93,9 @@ extension MockTopBannerSliderViewModel {
     /// Default mock with multiple single button banners
     public static var defaultMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
-            .singleButton(MockSingleButtonBannerViewModel.customStyledMock),
-            .singleButton(MockSingleButtonBannerViewModel.noButtonMock)
+            .info(MockSingleButtonBannerViewModel.defaultMock),
+            .info(MockSingleButtonBannerViewModel.customStyledMock),
+            .info(MockSingleButtonBannerViewModel.noButtonMock)
         ]
 
         let sliderData = TopBannerSliderData(
@@ -110,7 +110,7 @@ extension MockTopBannerSliderViewModel {
     /// Mock with single banner (no page indicators)
     public static var singleBannerMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(MockSingleButtonBannerViewModel.defaultMock)
+            .info(MockSingleButtonBannerViewModel.defaultMock)
         ]
 
         let sliderData = TopBannerSliderData(
@@ -125,8 +125,8 @@ extension MockTopBannerSliderViewModel {
     /// Mock with multiple banners and no page indicators
     public static var noIndicatorsMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
-            .singleButton(MockSingleButtonBannerViewModel.customStyledMock)
+            .info(MockSingleButtonBannerViewModel.defaultMock),
+            .info(MockSingleButtonBannerViewModel.customStyledMock)
         ]
 
         let sliderData = TopBannerSliderData(
@@ -141,8 +141,8 @@ extension MockTopBannerSliderViewModel {
     /// Mock with disabled user interaction
     public static var disabledInteractionMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(MockSingleButtonBannerViewModel.disabledMock),
-            .singleButton(MockSingleButtonBannerViewModel.noButtonMock)
+            .info(MockSingleButtonBannerViewModel.disabledMock),
+            .info(MockSingleButtonBannerViewModel.noButtonMock)
         ]
 
         let sliderData = TopBannerSliderData(
@@ -161,10 +161,10 @@ extension MockTopBannerSliderViewModel {
     /// Mock with mixed banner types (single button and match banners)
     public static var mixedBannersMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .singleButton(MockSingleButtonBannerViewModel.defaultMock),
-            .matchBanner(MockMatchBannerViewModel.preliveMatch),
-            .singleButton(MockSingleButtonBannerViewModel.customStyledMock),
-            .matchBanner(MockMatchBannerViewModel.liveMatch)
+            .info(MockSingleButtonBannerViewModel.defaultMock),
+            .match(MockMatchBannerViewModel.preliveMatch),
+            .info(MockSingleButtonBannerViewModel.customStyledMock),
+            .match(MockMatchBannerViewModel.liveMatch)
         ]
 
         let sliderData = TopBannerSliderData(
@@ -179,9 +179,9 @@ extension MockTopBannerSliderViewModel {
     /// Mock with only match banners
     public static var matchOnlyMock: MockTopBannerSliderViewModel {
         let banners: [BannerType] = [
-            .matchBanner(MockMatchBannerViewModel.preliveMatch),
-            .matchBanner(MockMatchBannerViewModel.liveMatch),
-            .matchBanner(MockMatchBannerViewModel.interactiveMatch)
+            .match(MockMatchBannerViewModel.preliveMatch),
+            .match(MockMatchBannerViewModel.liveMatch),
+            .match(MockMatchBannerViewModel.interactiveMatch)
         ]
 
         let sliderData = TopBannerSliderData(

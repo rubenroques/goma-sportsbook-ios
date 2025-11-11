@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 final public class PillSelectorBarView: UIView {
     
     // MARK: - Private Properties
@@ -510,7 +511,7 @@ extension PillData {
 
         // Dark Theme Button
         let darkButton = UIButton(type: .system)
-        darkButton.setTitle("Dark", for: .normal)
+        darkButton.setTitle(LocalizationProvider.string("theme_short_dark"), for: .normal)
         darkButton.backgroundColor = .systemGray5
         darkButton.layer.cornerRadius = 8
         darkButton.addAction(UIAction { _ in

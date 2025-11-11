@@ -20,6 +20,21 @@ public enum WidgetType: String, Codable {
     case space
 }
 
+/// Identifies specific widget instances in the toolbar
+public enum WidgetTypeIdentifier: String, Codable, Equatable, Hashable {
+    case logo
+    case wallet
+    case avatar
+    case support
+    case languageSwitcher = "language"
+    case loginButton
+    case joinButton
+    case flexSpace
+    case search
+    case notifications
+    case registerButton
+}
+
 /// Details for widgets that contain multiple interactive elements
 public struct WidgetDetail: Codable, Equatable, Hashable {
     public let isButton: Bool
@@ -39,7 +54,7 @@ public struct WidgetDetail: Codable, Equatable, Hashable {
 
 /// Represents a widget that can be displayed in the toolbar
 public struct Widget: Codable, Equatable, Hashable {
-    public let id: String
+    public let id: WidgetTypeIdentifier
     public let type: WidgetType
     public let src: String?
     public let alt: String?
@@ -48,9 +63,9 @@ public struct Widget: Codable, Equatable, Hashable {
     public let label: String?
     public let icon: String?
     public let details: [WidgetDetail]?
-    
+
     public init(
-        id: String,
+        id: WidgetTypeIdentifier,
         type: WidgetType,
         src: String? = nil,
         alt: String? = nil,
@@ -83,9 +98,9 @@ public enum LayoutMode: String, Codable, Equatable, Hashable {
 /// Configuration for a single row/line in the toolbar
 public struct LineConfig: Codable, Equatable, Hashable {
     public let mode: LayoutMode
-    public let widgets: [String] // Widget IDs
-    
-    public init(mode: LayoutMode, widgets: [String]) {
+    public let widgets: [WidgetTypeIdentifier]
+
+    public init(mode: LayoutMode, widgets: [WidgetTypeIdentifier]) {
         self.mode = mode
         self.widgets = widgets
     }
@@ -136,15 +151,15 @@ public struct MultiWidgetToolbarDisplayState: Equatable {
 public protocol MultiWidgetToolbarViewModelProtocol {
     /// Publisher for the current display state of the toolbar
     var displayStatePublisher: AnyPublisher<MultiWidgetToolbarDisplayState, Never> { get }
-    
-    var walletViewModel: MockWalletWidgetViewModel? { get set }
-    
+
+    var walletViewModel: WalletWidgetViewModelProtocol? { get set }
+
     /// Handles widget selection
-    func selectWidget(id: String)
-    
+    func selectWidget(id: WidgetTypeIdentifier)
+
     /// Changes the layout state (e.g., logged in vs logged out)
     func setLayoutState(_ state: LayoutState)
-    
+
     func setWalletBalance(balance: Double)
 }
 

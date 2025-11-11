@@ -2,7 +2,7 @@
 //  MyBetsViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 28/08/2025.
+//  Created on 28/08/2025.
 //
 
 import Foundation
@@ -60,31 +60,33 @@ final class MyBetsViewModel {
     
     lazy var myBetsTabBarViewModel: MyBetsTabBarViewModel = {
         let tabViewModel = MyBetsTabBarViewModel(selectedTabType: selectedTabType)
-        
+
         // Handle tab selection
         tabViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 if let tabType = MyBetsTabType(rawValue: event.selectedId) {
                     self?.selectTab(tabType)
                 }
             }
             .store(in: &cancellables)
-        
+
         return tabViewModel
     }()
     
     lazy var myBetsStatusBarViewModel: MyBetsStatusBarViewModel = {
         let statusViewModel = MyBetsStatusBarViewModel(selectedStatusType: selectedStatusType)
-        
+
         // Handle pill selection
         statusViewModel.selectionEventPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 if let statusType = MyBetStatusType(rawValue: event.selectedId) {
                     self?.selectStatus(statusType)
                 }
             }
             .store(in: &cancellables)
-        
+
         return statusViewModel
     }()
     
@@ -131,6 +133,7 @@ final class MyBetsViewModel {
         selectedTabTypePublisher
             .dropFirst()  // Skip the initial value
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] tabType in
                 print("📡 MyBetsViewModel: Tab publisher fired with: \(tabType.title)")
                 self?.onTabOrStatusChanged()
@@ -141,6 +144,7 @@ final class MyBetsViewModel {
         selectedStatusTypePublisher
             .dropFirst()  // Skip the initial value
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] statusType in
                 print("📡 MyBetsViewModel: Status publisher fired with: \(statusType.title)")
                 self?.onTabOrStatusChanged()
@@ -194,7 +198,8 @@ final class MyBetsViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        let errorMessage = "Failed to load bets: \(error.localizedDescription)"
+                        let errorMessage = localized("mybets_error_api_load")
+                            .replacingOccurrences(of: "{error}", with: error.localizedDescription)
                         print("❌ MyBetsViewModel: \(errorMessage)")
                         self?.betsStateSubject.send(.error(errorMessage))
                     }
@@ -224,7 +229,8 @@ final class MyBetsViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        let errorMessage = "Failed to load more bets: \(error.localizedDescription)"
+                        let errorMessage = localized("mybets_error_api_load_more")
+                            .replacingOccurrences(of: "{error}", with: error.localizedDescription)
                         print("❌ MyBetsViewModel: \(errorMessage)")
                         // For load more errors, we just log them and keep current state
                     }
@@ -266,9 +272,7 @@ final class MyBetsViewModel {
         case .won:
             serviceProviderPublisher = servicesProvider.getWonBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
         case .cashOut:
-            // For now, get open bets and filter for cashout-eligible ones
-            // TODO: Implement proper cashout filtering when API supports it
-            serviceProviderPublisher = servicesProvider.getOpenBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
+            serviceProviderPublisher = servicesProvider.getCashedOutBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
         }
         
         return serviceProviderPublisher

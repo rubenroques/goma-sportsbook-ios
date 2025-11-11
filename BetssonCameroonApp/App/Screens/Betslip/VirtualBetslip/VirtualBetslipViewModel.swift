@@ -38,13 +38,13 @@ public final class VirtualBetslipViewModel: VirtualBetslipViewModelProtocol {
         
         // Initialize child view models
         self.bookingCodeButtonViewModel = MockButtonIconViewModel(
-            title: "Booking Code",
+            title: localized("booking_code"),
             icon: "doc.text",
             layoutType: .iconLeft
         )
         
         self.clearBetslipButtonViewModel = MockButtonIconViewModel(
-            title: "Clear Betslip",
+            title: localized("clear_betslip"),
             icon: "trash",
             layoutType: .iconLeft
         )

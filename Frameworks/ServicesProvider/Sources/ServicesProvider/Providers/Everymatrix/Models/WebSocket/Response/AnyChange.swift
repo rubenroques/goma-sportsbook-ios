@@ -90,5 +90,28 @@ extension EveryMatrix {
                 return "AnyChange(\(description))"
             }
         }
+
+        /// Returns a JSON-safe representation of the value for use with NSJSONSerialization
+        /// Converts Swift-only types (like Void/empty tuple) to Foundation types
+        var jsonSafeValue: Any {
+            switch value {
+            case let int as Int:
+                return int
+            case let double as Double:
+                return double
+            case let string as String:
+                return string
+            case let bool as Bool:
+                return bool
+            case let array as [Any]:
+                return array
+            case let dict as [String: Any]:
+                return dict
+            case is Void:
+                return NSNull()  // Convert () to NSNull for JSON serialization
+            default:
+                return NSNull()  // Fallback for unknown types
+            }
+        }
     }
 }

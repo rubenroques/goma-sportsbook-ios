@@ -43,7 +43,7 @@ RecentlyPlayedGamesView/
 
 ### Basic Usage
 ```swift
-import GomaUI
+
 
 // With viewModel
 let viewModel = MockRecentlyPlayedGamesViewModel.defaultRecentlyPlayed
@@ -210,7 +210,7 @@ For use within UICollectionView layouts, use the provided wrapper cell:
 ### RecentlyPlayedGamesCollectionViewCell
 
 ```swift
-import GomaUI
+
 
 // Register the cell
 collectionView.register(RecentlyPlayedGamesCollectionViewCell.self, forCellWithReuseIdentifier: "RecentlyPlayedCell")

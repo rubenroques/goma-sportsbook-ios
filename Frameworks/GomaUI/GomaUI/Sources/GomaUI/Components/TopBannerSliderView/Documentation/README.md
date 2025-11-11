@@ -16,7 +16,7 @@ A horizontal collection view container that displays multiple TopBannerProtocol-
 ## Usage Example
 
 ```swift
-import GomaUI
+
 
 // Create banner view factories
 let bannerFactories = [
@@ -260,7 +260,7 @@ For use within UICollectionView layouts, use the provided wrapper cell:
 ### TopBannerSliderCollectionViewCell
 
 ```swift
-import GomaUI
+
 
 // Register the cell
 collectionView.register(TopBannerSliderCollectionViewCell.self, forCellWithReuseIdentifier: "TopBannerCell")

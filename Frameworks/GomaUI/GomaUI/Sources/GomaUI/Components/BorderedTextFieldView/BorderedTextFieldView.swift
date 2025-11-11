@@ -182,6 +182,7 @@ final public class BorderedTextFieldView: UIView {
     }
 
     private func setupTextFieldDelegate() {
+        textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         textField.addTarget(self, action: #selector(textFieldDidBeginEditing), for: .editingDidBegin)
         textField.addTarget(self, action: #selector(textFieldDidEndEditing), for: .editingDidEnd)
@@ -229,6 +230,14 @@ final public class BorderedTextFieldView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] keyboardType in
                 self?.textField.keyboardType = keyboardType
+            }
+            .store(in: &cancellables)
+
+        // Return key type binding
+        viewModel.returnKeyTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] returnKeyType in
+                self?.textField.returnKeyType = returnKeyType
             }
             .store(in: &cancellables)
 
@@ -541,6 +550,40 @@ final public class BorderedTextFieldView: UIView {
     public func setCustomInputView(_ inputView: UIView?, accessoryView: UIView? = nil) {
         textField.inputView = inputView
         textField.inputAccessoryView = accessoryView
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension BorderedTextFieldView: UITextFieldDelegate {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+        // Check maxLength restriction
+        if let maxLength = viewModel.maxLength {
+            if updatedText.count > maxLength {
+                return false
+            }
+        }
+
+        // Check allowedCharacters restriction
+        if let allowedCharacters = viewModel.allowedCharacters {
+            let characterSet = CharacterSet(charactersIn: string)
+            if !allowedCharacters.isSuperset(of: characterSet) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Dismiss the keyboard
+        textField.resignFirstResponder()
+        // Notify the view model that return key was tapped
+        viewModel.onReturnKeyTapped()
+        return true
     }
 }
 

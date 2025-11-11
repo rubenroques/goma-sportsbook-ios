@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+
 public enum ShareChannelType: String, CaseIterable, Identifiable {
     case twitter
     case whatsApp
@@ -30,7 +31,7 @@ public enum ShareChannelType: String, CaseIterable, Identifiable {
         case .sms:
             return "SMS"
         case .email:
-            return "Email"
+            return LocalizationProvider.string("email")
         }
     }
 

@@ -2,7 +2,7 @@
 //  ServiceProviderModelMapper+MyBets.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 28/08/2025.
+//  Created on 28/08/2025.
 //
 
 import Foundation
@@ -29,10 +29,10 @@ extension ServiceProviderModelMapper {
         
         // Map selections
         let mappedSelections = servicesProviderBet.selections.map { myBetSelection($0) }
-        
-        // Default currency to EUR if not available (as per existing app logic)
-        let currency = "EUR" // ServicesProvider Bet doesn't have currency field, hardcoding as per current implementation
-        
+
+        // Use currency from ServicesProvider.Bet (now includes currency field from API)
+        let currency = servicesProviderBet.currency
+
         return MyBet(
             identifier: servicesProviderBet.identifier,
             type: servicesProviderBet.type,

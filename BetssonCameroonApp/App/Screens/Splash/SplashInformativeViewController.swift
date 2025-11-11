@@ -24,10 +24,10 @@ class SplashInformativeViewController: UIViewController {
     private var currentMessageIndex: Int = 0
     
     private let loadingMessages = [
-        "Loading sports...",
-        "Loading competitions...",
-        "Loading featured matches...",
-        "Preparing your experience..."
+        localized("splash_loading_sports"),
+        localized("splash_loading_competitions"),
+        localized("splash_loading_featured_matches"),
+        localized("splash_preparing_your_experience")
     ]
     
     init() {

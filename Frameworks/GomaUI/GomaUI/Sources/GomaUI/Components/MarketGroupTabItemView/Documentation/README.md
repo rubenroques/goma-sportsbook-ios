@@ -36,7 +36,7 @@ A reusable tab item component for displaying individual market group options in 
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create a view model
 let viewModel = MockMarketGroupTabItemViewModel.oneXTwoTab

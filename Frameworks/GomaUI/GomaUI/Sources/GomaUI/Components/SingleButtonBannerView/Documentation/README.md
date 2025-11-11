@@ -15,7 +15,7 @@ A customizable banner component with a full-width background image, message text
 ## Usage Example
 
 ```swift
-import GomaUI
+
 
 // Create button configuration
 let buttonConfig = ButtonConfig(

@@ -1,0 +1,543 @@
+require 'dotenv'
+
+# Load environment variables
+Dotenv.load('.env')
+
+ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
+
+# Fastfile for BetssonCameroonApp
+default_platform(:ios)
+
+# Simple mapping between Xcode schemes and internal IDs
+SCHEME_MAPPING = {
+  "BetssonCM Staging" => "BETSSONCM_STG",
+  "BetssonCM Prod" => "BETSSONCM_PROD"
+}
+
+# Bundle ID mappings
+BUNDLE_ID_MAPPING = {
+  "BETSSONCM_STG" => {
+    "main_app" => "com.gomagaming.betssoncm.stg"
+  },
+  "BETSSONCM_PROD" => {
+    "main_app" => "com.gomagaming.betssoncm.prod"
+  }
+}
+
+# Provisioning profile mappings
+PROVISIONING_PROFILE_MAPPING = {
+  "BETSSONCM_STG" => {
+    "com.gomagaming.betssoncm.stg" => "match AdHoc com.gomagaming.betssoncm.stg"
+  },
+  "BETSSONCM_PROD" => {
+    "com.gomagaming.betssoncm.prod" => "match AdHoc com.gomagaming.betssoncm.prod"
+  }
+}
+
+################
+##
+##    LOCAL VARIABLES
+## 
+# Firebase Distribution Configuration
+# These are project-specific (not sensitive), so they're defined here instead of .env
+FIREBASE_DISTRIBUTION_GROUPS = "goma-internal-ios-team, goma-internal-qa" # "ios-internal"
+FIREBASE_DISTRIBUTION_TESTERS = "" # "ruben@gomadevelopment.pt"  # Optional: comma-separated emails like "dev1@example.com,dev2@example.com"
+##
+##
+##
+################
+
+# Debug: Print working directory at the start of every lane
+before_each do |lane, options|
+  UI.message "PathDebug > #{lane}:#{Dir.pwd}"
+end
+
+after_all do |lane|
+  notification(subtitle: "Fastlane", message: "#{lane} completed successfully! 🎉")
+end
+
+error do |lane, exception|
+  notification(subtitle: "Fastlane", message: "#{lane} failed with error: #{exception}")
+end
+
+platform :ios do
+
+  # Helper: Setup App Store Connect API Key for authentication
+  # This replaces Apple ID/password and eliminates 2FA prompts
+  lane :setup_api_key do
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_FILEPATH"],
+      in_house: false
+    )
+  end
+
+  desc "Print environment variables and arguments"
+  lane :test do |options|
+    UI.message "🔍 Printing Fastlane-Relevant Environment Variables:"
+    UI.message "--------------------------------"
+
+    # Only print variables relevant to this Fastlane configuration
+    relevant_keys = [
+      "MATCH_GIT_URL",
+      "MATCH_PASSWORD",
+      "APP_STORE_CONNECT_API_KEY_ID",
+      "APP_STORE_CONNECT_API_ISSUER_ID",
+      "APP_STORE_CONNECT_API_KEY_FILEPATH",
+      "FIREBASE_CLI_TOKEN",
+      "FIREBASE_PROJECT_NUMBER",
+      "GOMA_TEAM_ID",
+      "BETSSONCM_STG_FIREBASE_APP_ID",
+      "BETSSONCM_PROD_FIREBASE_APP_ID"
+    ]
+
+    UI.message "\n📝 Fastfile Constants:"
+    UI.message "--------------------------------"
+    UI.message "FIREBASE_DISTRIBUTION_GROUPS = #{FIREBASE_DISTRIBUTION_GROUPS}"
+    UI.message "FIREBASE_DISTRIBUTION_TESTERS = #{FIREBASE_DISTRIBUTION_TESTERS}"
+    UI.message ""
+
+    relevant_keys.sort.each do |key|
+      value = ENV[key]
+      if value && !value.strip.empty?
+        UI.message "#{key} = #{value}"
+      else
+        UI.message "#{key} = [NOT SET]"
+      end
+    end
+
+    UI.message "\n📝 Printing Lane Options/Arguments:"
+    UI.message "--------------------------------"
+    if options && !options.empty?
+      options.each do |key, value|
+        UI.message "#{key} = #{value}"
+      end
+    else
+      UI.message "No arguments passed to the lane"
+    end
+  end
+
+  desc "Update build number"
+  lane :version_bump do
+    # Get current build number using versioning plugin
+    current_build = get_build_number_from_xcodeproj(
+      xcodeproj: "BetssonCameroonApp.xcodeproj",
+      target: "BetssonCameroonApp"
+    )
+
+    puts "Current build number (CURRENT_PROJECT_VERSION): #{current_build}"
+
+    # Prompt for new build number using UI.input
+    new_build = UI.input("Enter new build number (CURRENT_PROJECT_VERSION), press enter to keep current, or '+' to increment:")
+
+    # Handle the input
+    new_build = if new_build.to_s.strip.empty?
+      current_build  # Keep current if empty
+    elsif new_build.strip == "+"
+      (current_build.to_i + 1).to_s  # Increment if +
+    else
+      new_build  # Use provided number
+    end
+
+    # Update build number using versioning plugin
+    increment_build_number_in_xcodeproj(
+      build_number: new_build,
+      xcodeproj: "BetssonCameroonApp.xcodeproj",
+      target: "BetssonCameroonApp"
+    )
+
+    puts "Build number updated to: #{new_build}"
+  end
+
+  desc "Update marketing version"
+  lane :marketing_version_bump do
+    # Get current version using versioning plugin
+    current_version = get_version_number_from_xcodeproj(
+      xcodeproj: "BetssonCameroonApp.xcodeproj",
+      target: "BetssonCameroonApp"
+    )
+
+    puts "Current version (MARKETING_VERSION): #{current_version}"
+
+    # Prompt for new version using UI.input
+    new_version = UI.input("Enter new version number (MARKETING_VERSION) or press enter to keep current:")
+
+    # Use current version if input is empty
+    new_version = new_version.to_s.strip.empty? ? current_version : new_version
+
+    # Update version using versioning plugin
+    increment_version_number_in_xcodeproj(
+      version_number: new_version,
+      xcodeproj: "BetssonCameroonApp.xcodeproj",
+      target: "BetssonCameroonApp"
+    )
+
+    puts "Version updated to: #{new_version}"
+  end
+
+  desc "Setup certificates and provisioning profiles (internal use only)"
+  private_lane :certificates do |options|
+    # Note: This lane ONLY handles match (fetching/updating provisioning profiles)
+    # Device registration is handled separately by register_new_devices lane
+
+    app_scheme = options[:app_scheme]
+
+    # Get internal ID from scheme mapping if a scheme is provided
+    internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : app_scheme
+
+    # Validate scheme
+    unless ["BETSSONCM_STG", "BETSSONCM_PROD"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM Prod'")
+    end
+
+    # Set Match parameters - API Key authentication via lane context
+    match_params = {
+      type: "adhoc",
+      force_for_new_devices: true,  # Always force to pick up newly registered devices
+      readonly: false,
+      force: false,
+      verbose: true,
+      git_url: ENV["MATCH_GIT_URL"],
+      team_id: ENV["GOMA_TEAM_ID"],
+      app_identifier: BUNDLE_ID_MAPPING[internal_id].values
+    }
+
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "🔐 Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
+    # Fetch certificates and profiles
+    match(match_params)
+  end
+
+  desc "Internal: Build and distribute to Firebase"
+  private_lane :build_and_distribute_to_firebase do |options|
+    UI.message "🚀 Starting distribution process for Betsson Cameroon..."
+
+    app_scheme = options[:app_scheme]
+
+    # Prompt for release notes if not provided
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      release_notes = UI.input("📝 Enter release notes for Firebase distribution:")
+      if release_notes.strip.empty?
+        release_notes = "Build #{get_build_number(xcodeproj: 'BetssonCameroonApp.xcodeproj')}"
+      end
+    end
+
+    UI.message "📱 Building for scheme: #{app_scheme}"
+    UI.message "📝 Release notes: #{release_notes}"
+
+    # Get internal ID from scheme mapping
+    internal_id = SCHEME_MAPPING[app_scheme]
+    unless internal_id
+      UI.user_error!("Invalid scheme: #{app_scheme}. Must be one of: #{SCHEME_MAPPING.keys.join(', ')}")
+    end
+
+    UI.message "🔍 Using internal ID: #{internal_id}"
+
+    # Validate environment variables
+    unless ENV["#{internal_id}_FIREBASE_APP_ID"]
+      UI.user_error!("Missing Firebase App ID for scheme: #{app_scheme}")
+    end
+
+    firebase_cli_token = ENV["FIREBASE_CLI_TOKEN"]
+    unless firebase_cli_token
+      UI.user_error!("Missing FIREBASE_CLI_TOKEN in .env file")
+    end
+
+    # Debug: Verify token is present (mask actual value for security)
+    UI.message "🔍 Firebase CLI token present: #{firebase_cli_token ? 'YES' : 'NO'}"
+    UI.message "🔍 Firebase CLI token length: #{firebase_cli_token ? firebase_cli_token.length : 0} characters"
+    UI.message "🔍 Firebase App ID: #{ENV["#{internal_id}_FIREBASE_APP_ID"]}"
+
+    # Use distribution groups/testers from constants (defined at top of Fastfile)
+    firebase_groups = FIREBASE_DISTRIBUTION_GROUPS
+    firebase_testers = FIREBASE_DISTRIBUTION_TESTERS
+
+    # Require at least one distribution method
+    unless (firebase_groups && !firebase_groups.strip.empty?) || (firebase_testers && !firebase_testers.strip.empty?)
+      UI.user_error!("Must specify either FIREBASE_DISTRIBUTION_GROUPS or FIREBASE_DISTRIBUTION_TESTERS in Fastfile constants")
+    end
+
+    # Setup App Store Connect API Key for authentication
+    setup_api_key
+
+    # Update certificates
+    UI.message "🔐 Updating certificates..."
+    certificates(app_scheme: app_scheme, verbose: true)
+
+    # Print Xcode version
+    UI.message "🛠 Xcode Version:"
+    sh("xcodebuild -version")
+
+    UI.message "🏗 Starting build process..."
+
+    # Build app with detailed output
+    build_ios_app(
+      scheme: app_scheme,
+      workspace: "../Sportsbook.xcworkspace",
+      clean: false,
+      silent: false,
+      suppress_xcode_output: false,
+      skip_profile_detection: true,
+      export_method: "ad-hoc",
+      export_options: {
+        compileBitcode: false,
+        uploadBitcode: false,
+        uploadSymbols: true,
+        manageAppVersionAndBuildNumber: false,
+        provisioningProfiles: PROVISIONING_PROFILE_MAPPING[internal_id]
+      },
+      xcargs: "-verbose",
+      buildlog_path: "fastlane/logs",
+      output_directory: "fastlane/builds",
+      analyze_build_time: true,
+      include_symbols: true,
+      include_bitcode: false,
+      export_xcargs: "-verbose",
+      xcodebuild_formatter: nil
+    )
+
+    UI.message "📦 Build completed. Uploading to Firebase..."
+
+    # Build firebase_app_distribution parameters
+    firebase_params = {
+      app: ENV["#{internal_id}_FIREBASE_APP_ID"],
+      firebase_cli_token: firebase_cli_token,
+      release_notes: release_notes,
+      debug: true
+    }
+
+    # Add groups if specified
+    firebase_params[:groups] = firebase_groups if firebase_groups && !firebase_groups.strip.empty?
+
+    # Add testers if specified
+    firebase_params[:testers] = firebase_testers if firebase_testers && !firebase_testers.strip.empty?
+
+    # Upload to Firebase
+    firebase_app_distribution(firebase_params)
+
+    UI.success "✅ Distribution completed successfully!"
+  end
+
+  desc "Distribute to Staging (increments build, registers devices, distributes)"
+  lane :distribute_staging do |options|
+    # Step 1: Increment build number (prompts user)
+    version_bump unless options[:skip_version_bump]
+
+    # Step 2: Register devices and distribute
+    keep_version_distribute_staging(
+      release_notes: options[:release_notes]
+    )
+  end
+
+  desc "Distribute to Production (increments build, registers devices, distributes)"
+  lane :distribute_production do |options|
+    # Step 1: Increment build number (prompts user)
+    version_bump unless options[:skip_version_bump]
+
+    # Step 2: Register devices and distribute
+    keep_version_distribute_production(
+      release_notes: options[:release_notes]
+    )
+  end
+
+  desc "Distribute to both Staging and Production (increments build once)"
+  lane :distribute_all do |options|
+    # Step 1: Increment build number once
+    version_bump
+
+    # Step 2: Distribute to both environments
+    keep_version_distribute_staging(
+      release_notes: options[:release_notes]
+    )
+
+    keep_version_distribute_production(
+      release_notes: options[:release_notes]
+    )
+  end
+
+  desc "Fetch device UDIDs from Firebase App Distribution"
+  lane :fetch_firebase_devices do |options|
+    UI.message "📱 Fetching device UDIDs from Firebase App Distribution..."
+
+    # Get Firebase project number (required for new API)
+    firebase_project_number = ENV["FIREBASE_PROJECT_NUMBER"]
+    unless firebase_project_number
+      UI.user_error!("Missing FIREBASE_PROJECT_NUMBER in .env file. Find it in Firebase Console > Project Settings")
+    end
+
+    # Get Firebase CLI token
+    firebase_cli_token = ENV["FIREBASE_CLI_TOKEN"]
+    unless firebase_cli_token
+      UI.user_error!("Missing FIREBASE_CLI_TOKEN in .env file")
+    end
+
+    # Output file for UDIDs
+    output_file = options[:output_file] || "./fastlane/firebase_devices.txt"
+
+    UI.message "🔍 Fetching from Firebase Project: #{firebase_project_number}"
+    UI.message "📝 Output file: #{output_file}"
+
+    # Fetch UDIDs from Firebase
+    firebase_app_distribution_get_udids(
+      project_number: firebase_project_number,
+      output_file: output_file,
+      firebase_cli_token: firebase_cli_token
+    )
+
+    UI.success "✅ Device UDIDs exported to #{output_file}"
+
+    # Count devices
+    if File.exist?(output_file)
+      device_count = File.readlines(output_file).reject { |line| line.strip.empty? || line.start_with?("Device") }.count
+      UI.success "📊 Total devices fetched: #{device_count}"
+    end
+
+    output_file
+  end
+
+  desc "Register new devices from local devices.csv and update provisioning profiles"
+  lane :register_new_devices do |options|
+    # Setup App Store Connect API Key for authentication
+    setup_api_key
+
+    app_scheme = options[:app_scheme]
+
+    # Validate scheme
+    internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : nil
+    unless ["BETSSONCM_STG", "BETSSONCM_PROD"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM Prod'")
+    end
+
+    UI.message "🚀 Starting device registration workflow for #{app_scheme}..."
+
+    # Step 1: Check local devices.csv file
+    # Note: Fastlane runs from BetssonCameroonApp/ directory
+    devices_file = "./devices.csv"
+
+    unless File.exist?(devices_file)
+      UI.error "❌ No devices.csv file found at #{devices_file}"
+      UI.message "ℹ️  Create a devices.csv file with tab-separated values"
+      UI.message "ℹ️  Format: Header row REQUIRED: Device ID<tab>Device Name<tab>Device Platform"
+      UI.message "ℹ️  Then data rows: 00008030-001234567890001E<tab>iPhone 15 Pro<tab>ios"
+      UI.message "ℹ️  Or use 'fastlane fetch_firebase_devices' to download all devices from Firebase as reference"
+      next
+    end
+
+    # Count devices in file
+    device_count = File.readlines(devices_file).reject { |line| line.strip.empty? || line.start_with?("#") }.count
+    if device_count == 0
+      UI.error "❌ No devices found in #{devices_file}"
+      next
+    end
+
+    UI.message "📱 Found #{device_count} device(s) in #{devices_file}"
+
+    # Step 2: Register devices with Apple Developer
+    UI.message "📝 Step 1/2: Registering devices with Apple Developer..."
+
+    begin
+      register_devices(
+        devices_file: File.expand_path(devices_file),
+        team_id: ENV["GOMA_TEAM_ID"]
+        # Note: API Key authentication is automatic via lane context (no username needed)
+      )
+      UI.success "✅ Devices registered with Apple Developer"
+    rescue => ex
+      UI.message "ℹ️  Device registration completed (some devices may already be registered)"
+      UI.message "Details: #{ex.message}"
+    end
+
+    # Step 3: Update provisioning profiles with new devices
+    UI.message "🔐 Step 2/2: Updating provisioning profiles with new devices..."
+
+    match_params = {
+      type: "adhoc",
+      force_for_new_devices: true,  # Force regeneration with new devices
+      readonly: false,
+      force: false,
+      verbose: true,
+      git_url: ENV["MATCH_GIT_URL"],
+      team_id: ENV["GOMA_TEAM_ID"],
+      app_identifier: BUNDLE_ID_MAPPING[internal_id].values
+      # Note: API Key authentication is automatic via lane context
+    }
+
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "🔐 Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
+    match(match_params)
+
+    UI.success "🎉 Device registration completed successfully!"
+    UI.success "✅ Provisioning profiles updated with new devices"
+    UI.message "🔄 You can now build and distribute with: fastlane #{app_scheme == 'BetssonCM Staging' ? 'staging' : 'production'}"
+  end
+
+  desc "Keep version and distribute to Staging (SAME build, registers devices, distributes)"
+  lane :keep_version_distribute_staging do |options|
+    # Step 1: Register devices from devices.csv
+    register_new_devices(app_scheme: "BetssonCM Staging")
+
+    # Step 2: Build and distribute with updated profile
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      current_build = get_build_number_from_xcodeproj(
+        xcodeproj: "BetssonCameroonApp.xcodeproj",
+        target: "BetssonCameroonApp"
+      )
+      release_notes = "Build #{current_build} - Updated device list"
+    end
+
+    build_and_distribute_to_firebase(
+      app_scheme: "BetssonCM Staging",
+      release_notes: release_notes
+    )
+
+    UI.success "🎉 Distribution completed (same build number)!"
+  end
+
+  desc "Keep version and distribute to Production (SAME build, registers devices, distributes)"
+  lane :keep_version_distribute_production do |options|
+    # Step 1: Register devices from devices.csv
+    register_new_devices(app_scheme: "BetssonCM Prod")
+
+    # Step 2: Build and distribute with updated profile
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      current_build = get_build_number_from_xcodeproj(
+        xcodeproj: "BetssonCameroonApp.xcodeproj",
+        target: "BetssonCameroonApp"
+      )
+      release_notes = "Build #{current_build} - Updated device list"
+    end
+
+    build_and_distribute_to_firebase(
+      app_scheme: "BetssonCM Prod",
+      release_notes: release_notes
+    )
+
+    UI.success "🎉 Distribution completed (same build number)!"
+  end
+
+  desc "Keep version and distribute to both Staging and Production (SAME build)"
+  lane :keep_version_distribute_all do |options|
+    keep_version_distribute_staging(
+      release_notes: options[:release_notes]
+    )
+
+    keep_version_distribute_production(
+      release_notes: options[:release_notes]
+    )
+  end
+
+end

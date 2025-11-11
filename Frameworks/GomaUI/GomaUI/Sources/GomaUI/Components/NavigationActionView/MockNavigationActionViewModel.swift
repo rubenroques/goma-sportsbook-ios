@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of NavigationActionViewModelProtocol for testing and previews
 public final class MockNavigationActionViewModel: NavigationActionViewModelProtocol {
     
@@ -62,7 +63,7 @@ public extension MockNavigationActionViewModel {
     /// Creates a mock view model for "Open Betslip Details"
     static func openBetslipDetailsMock() -> MockNavigationActionViewModel {
         return MockNavigationActionViewModel(
-            title: "Open Betslip Details",
+            title: LocalizationProvider.string("open_betslip_details"),
             icon: "chevron.right",
             isEnabled: true
         )

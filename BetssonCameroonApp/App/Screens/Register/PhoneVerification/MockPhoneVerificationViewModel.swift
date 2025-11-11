@@ -22,7 +22,7 @@ class MockPhoneVerificationViewModel: PhoneVerificationViewModelProtocol {
        
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "header",
                                                                                            icon: "phone_verify_icon",
-                                                                                           title: "Verifying it’s really you",
+                                                                                           title: localized("verify_you"),
                                                                                            subtitle: nil))
         
         let fullText = "Please enter the verification code we have sent to +237 7 12345678"
@@ -38,7 +38,7 @@ class MockPhoneVerificationViewModel: PhoneVerificationViewModelProtocol {
         
         resendCodeCountdownViewModel = MockResendCodeCountdownViewModel(startSeconds: 60)
         
-        buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "veirfy", title: "Verify", style: .solidBackground, isEnabled: false))
+        buttonViewModel = MockButtonViewModel(buttonData: ButtonData(id: "veirfy", title: localized("verify"), style: .solidBackground, isEnabled: false))
         
         setupPublishers()
 

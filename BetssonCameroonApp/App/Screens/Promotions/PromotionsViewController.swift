@@ -14,10 +14,19 @@ class PromotionsViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
-    private lazy var navigationView: UIView = Self.createNavigationView()
-    private lazy var backContainerView: UIView = Self.createBackContainerView()
-    private lazy var backIconImageView: UIImageView = Self.createBackIconImageView()
-    private lazy var backLabel: UILabel = Self.createBackLabel()
+
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let navViewModel = BetssonCameroonNavigationBarViewModel(
+            title: nil,  // No title for promotions screen
+            onBackTapped: { [weak self] in
+                self?.viewModel.onNavigateBack()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: navViewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
+    }()
+
     private lazy var promotionalHeaderView: PromotionalHeaderView = {
         let view = PromotionalHeaderView(viewModel: viewModel.promotionalHeaderViewModel!)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -71,9 +80,6 @@ class PromotionsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackButton))
-        self.backContainerView.addGestureRecognizer(tapGesture)
-
         self.bind(toViewModel: self.viewModel)
         
     }
@@ -97,12 +103,6 @@ class PromotionsViewController: UIViewController {
         self.topSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
         self.bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
 
-        self.navigationView.backgroundColor = StyleProvider.Color.backgroundPrimary
-
-        self.backContainerView.backgroundColor = .clear
-        self.backLabel.textColor = StyleProvider.Color.textPrimary
-        self.backIconImageView.tintColor = StyleProvider.Color.iconPrimary
-        
         self.promotionalHeaderView.backgroundColor = .clear
         self.promotionSelectorBarView.backgroundColor = .clear
         self.scrollView.backgroundColor = .clear
@@ -167,11 +167,6 @@ class PromotionsViewController: UIViewController {
         viewModel.openPromotionDetail(promotion: promotion)
     }
     
-    // MARK: Actions
-    @objc private func didTapBackButton() {
-        // Delegate back navigation to coordinator
-        viewModel.onNavigateBack()
-    }
 }
 
 // MARK: - Data Management
@@ -236,37 +231,6 @@ extension PromotionsViewController {
         return view
     }
 
-    private static func createNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createBackContainerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = true
-        return view
-    }
-
-    private static func createBackIconImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "arrow_back_icon")?.withRenderingMode(.alwaysTemplate)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }
-
-    private static func createBackLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 12)
-        label.textAlignment = .left
-        label.text = localized("Back")
-        return label
-    }
-    
-    
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -338,11 +302,8 @@ extension PromotionsViewController {
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
-        self.view.addSubview(self.navigationView)
-        self.navigationView.addSubview(self.backContainerView)
-        self.backContainerView.addSubview(self.backIconImageView)
-        self.backContainerView.addSubview(self.backLabel)
-        
+        self.view.addSubview(self.navigationBarView)
+
         self.view.addSubview(self.promotionSelectorBarView)
         self.view.addSubview(self.scrollView)
         self.scrollView.addSubview(self.containerView)
@@ -379,30 +340,14 @@ extension PromotionsViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+            // Navigation Bar
+            self.navigationBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationBarView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
 
-            // Back container view
-            self.backContainerView.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
-            self.backContainerView.topAnchor.constraint(equalTo: self.navigationView.topAnchor),
-            self.backContainerView.bottomAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-
-            // Back icon inside container
-            self.backIconImageView.leadingAnchor.constraint(equalTo: self.backContainerView.leadingAnchor),
-            self.backIconImageView.centerYAnchor.constraint(equalTo: self.backContainerView.centerYAnchor),
-            self.backIconImageView.widthAnchor.constraint(equalToConstant: 20),
-            self.backIconImageView.heightAnchor.constraint(equalToConstant: 20),
-
-            // Back label inside container
-            self.backLabel.leadingAnchor.constraint(equalTo: self.backIconImageView.trailingAnchor, constant: 6),
-            self.backLabel.centerYAnchor.constraint(equalTo: self.backContainerView.centerYAnchor),
-            self.backLabel.trailingAnchor.constraint(equalTo: self.backContainerView.trailingAnchor),
-            
             self.promotionSelectorBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.promotionSelectorBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.promotionSelectorBarView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.promotionSelectorBarView.topAnchor.constraint(equalTo: self.navigationBarView.bottomAnchor),
             self.promotionSelectorBarView.heightAnchor.constraint(equalToConstant: 60),
             
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
@@ -450,7 +395,7 @@ extension PromotionsViewController {
 
             self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
             self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
-            self.navigationView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.navigationBarView.bottomAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
             self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 

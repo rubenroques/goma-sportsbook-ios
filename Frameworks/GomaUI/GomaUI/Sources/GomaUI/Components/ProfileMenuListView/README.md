@@ -40,7 +40,7 @@ ProfileMenuListView is a comprehensive profile menu solution that supports multi
 ### Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create with default configuration
 let viewModel = MockProfileMenuListViewModel.defaultMock

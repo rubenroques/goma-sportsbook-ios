@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of CodeClipboardViewModelProtocol for testing and previews
 public final class MockCodeClipboardViewModel: CodeClipboardViewModelProtocol {
     
@@ -20,7 +21,7 @@ public final class MockCodeClipboardViewModel: CodeClipboardViewModelProtocol {
     public init(
         state: CodeClipboardState = .default,
         code: String = "ABCD1E2",
-        labelText: String = "Copy Booking Code",
+        labelText: String = LocalizationProvider.string("copy_booking_code"),
         isEnabled: Bool = true
     ) {
         let initialData = CodeClipboardData(

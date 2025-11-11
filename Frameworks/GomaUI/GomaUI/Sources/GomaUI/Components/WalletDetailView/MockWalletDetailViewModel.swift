@@ -3,6 +3,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of `WalletDetailViewModelProtocol` for testing and previews.
 final public class MockWalletDetailViewModel: WalletDetailViewModelProtocol {
     
@@ -63,7 +64,7 @@ final public class MockWalletDetailViewModel: WalletDetailViewModelProtocol {
         // Create button view models
         let withdrawButtonData = ButtonData(
             id: "withdraw_wallet",
-            title: "Withdraw",
+            title: LocalizationProvider.string("withdraw"),
             style: .bordered,
             isEnabled: true
         )
@@ -71,7 +72,7 @@ final public class MockWalletDetailViewModel: WalletDetailViewModelProtocol {
         
         let depositButtonData = ButtonData(
             id: "deposit_wallet",
-            title: "Deposit",
+            title: LocalizationProvider.string("deposit_text"),
             style: .solidBackground,
             isEnabled: true
         )

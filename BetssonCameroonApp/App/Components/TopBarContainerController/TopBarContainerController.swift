@@ -67,6 +67,7 @@ class TopBarContainerController: UIViewController {
     var onProfileRequested: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
+    var onSupportRequested: (() -> Void)?
 
     // MARK: - Initialization
     init(contentViewController: UIViewController,
@@ -170,6 +171,7 @@ class TopBarContainerController: UIViewController {
     private func embedContentViewController() {
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 
+        
         addChild(contentViewController)
         contentContainerView.addSubview(contentViewController.view)
 
@@ -195,23 +197,33 @@ class TopBarContainerController: UIViewController {
 
         // Wallet balance tap handling
         multiWidgetToolbarView.onBalanceTapped = { [weak self] widgetId in
-            if widgetId == "wallet" {
-                print("💰 TopBarContainer: Wallet balance tapped")
+            print("💰 WALLET_TAP: TopBarContainerController received balance tap with widgetId: \(widgetId)")
+            if widgetId == .wallet {
+                print("💰 WALLET_TAP: widgetId matches .wallet, showing overlay")
 
                 // Add haptic feedback
                 let impactFeedback = UIImpactFeedbackGenerator(style: .light)
                 impactFeedback.impactOccurred()
 
                 self?.showWalletStatusOverlay()
+                print("💰 WALLET_TAP: showWalletStatusOverlay() called")
+            } else {
+                print("💰 WALLET_TAP: widgetId '\(widgetId)' does NOT match .wallet, ignoring")
             }
         }
 
         // Deposit button tap handling
         multiWidgetToolbarView.onDepositTapped = { [weak self] widgetId in
-            if widgetId == "wallet" {
+            if widgetId == .wallet {
                 print("💳 TopBarContainer: Deposit button tapped")
                 self?.onDepositRequested?()
             }
+        }
+
+        // Connect ViewModel deposit callback chain
+        viewModel.multiWidgetToolbarViewModel.onDepositRequested = { [weak self] in
+            print("💳 TopBarContainer: ViewModel deposit requested")
+            self?.onDepositRequested?()
         }
 
         // Setup wallet navigation callbacks
@@ -225,20 +237,23 @@ class TopBarContainerController: UIViewController {
     }
 
     // MARK: - Widget Selection Handling
-    private func handleWidgetSelection(_ widgetId: String) {
+    private func handleWidgetSelection(_ widgetId: WidgetTypeIdentifier) {
         switch widgetId {
-        case "loginButton":
+        case .loginButton:
             print("🔐 TopBarContainer: Login requested")
             onLoginRequested?()
-        case "joinButton":
-            print("🔐 TopBarContainer: Registration requested")
+        case .joinButton:
+            print("📝 TopBarContainer: Registration requested")
             onRegistrationRequested?()
-        case "avatar":
+        case .avatar:
             print("👤 TopBarContainer: Profile requested")
             onProfileRequested?()
-        case "language":
+        case .languageSwitcher:
             print("🌐 TopBarContainer: Language settings requested")
             presentLanguageSettingsConfirmation()
+        case .support:
+            print("❓ TopBarContainer: Support requested")
+            onSupportRequested?()
         default:
             print("🔧 TopBarContainer: Widget selected: \(widgetId)")
         }

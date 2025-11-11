@@ -78,20 +78,12 @@ public struct SportType: Codable, Equatable, Hashable {
     
     /// Helper initializer for creating SportType from ID and name (for EveryMatrix mapping)
     public init(id: String, name: String) {
-        // Try to map to known sport first using SportTypeInfo
-        if let sportTypeInfo = SportTypeInfo(id: id) {
-            self.name = sportTypeInfo.name
-            self.numericId = id
-            self.alphaId = id
-            self.iconId = id
-        } else {
-            // Fallback to provided name if ID is not recognized
-            self.name = name
-            self.numericId = id
-            self.alphaId = id
-            self.iconId = id
-        }
-        
+
+        self.name = name
+        self.numericId = id
+        self.alphaId = id
+        self.iconId = id
+    
         self.showEventCategory = false
         self.numberEvents = 0
         self.numberOutrightEvents = 0

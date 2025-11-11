@@ -68,7 +68,7 @@ public final class CodeClipboardView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.highlightPrimary
-        label.text = "Copied to Clipboard"
+        label.text = LocalizationProvider.string("copied_to_clipboard")
         label.numberOfLines = 1
         label.textAlignment = .center
         label.isHidden = true

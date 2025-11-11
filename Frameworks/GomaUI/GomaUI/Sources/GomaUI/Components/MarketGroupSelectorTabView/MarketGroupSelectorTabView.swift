@@ -350,6 +350,7 @@ extension MarketGroupSelectorTabView {
 #if DEBUG
 import SwiftUI
 
+
 @available(iOS 17.0, *)
 #Preview("Standard Sports Markets") {
     PreviewUIViewController {
@@ -379,7 +380,7 @@ import SwiftUI
         let tabs = [
             MarketGroupTabItemData(
                 id: "live",
-                title: "Live",
+                title: LocalizationProvider.string("live"),
                 visualState: .selected,
                 prefixIconTypeName: "flame",
                 suffixIconTypeName: nil,
@@ -387,7 +388,7 @@ import SwiftUI
             ),
             MarketGroupTabItemData(
                 id: "popular",
-                title: "Popular",
+                title: LocalizationProvider.string("popular_string"),
                 visualState: .idle,
                 prefixIconTypeName: "star",
                 suffixIconTypeName: "arrow.up.arrow.down",

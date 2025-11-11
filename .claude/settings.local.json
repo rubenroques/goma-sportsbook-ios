@@ -50,7 +50,9 @@
       "mcp__chrome-devtools__evaluate_script",
       "WebSearch",
       "WebFetch(domain:medium.com)",
-      "Bash(git fetch --all)"
+      "Bash(git fetch --all)",
+      "Bash(git -c color.ui=always diff --stat Frameworks/GomaUI/)",
+      "WebFetch(domain:docs.xtremepush.com)"
     ],
     "deny": []
   },

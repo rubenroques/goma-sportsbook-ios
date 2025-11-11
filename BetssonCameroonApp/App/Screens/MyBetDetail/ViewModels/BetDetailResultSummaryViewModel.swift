@@ -2,7 +2,7 @@
 //  BetDetailResultSummaryViewModel.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 04/09/2025.
+//  Created on 04/09/2025.
 //
 
 import Foundation

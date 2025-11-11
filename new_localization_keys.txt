@@ -1,0 +1,5148 @@
+// New localization keys to add to Localizable.strings
+// Add these to both en.lproj and fr.lproj (with translations)
+
+// No exact match found
+"betslipticket_xmark" = "xmark";
+
+// No exact match found
+"betslipticket_your_selection" = "YOUR SELECTION";
+
+// No exact match found
+"betslipticket_invalid_selection" = "Invalid selection";
+
+// No exact match found
+"betslipticket_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betslipticket_dataleaguename_disabledmessage" = "\(data.leagueName) • \(disabledMessage)";
+
+// No exact match found
+"betslipticket_dataleaguename_datastartdate" = "\(data.leagueName) • \(data.startDate)";
+
+// No exact match found
+"betslipticket_close_tapped" = "Close tapped!";
+
+// No exact match found
+"betslipticket_typical" = "Typical";
+
+// No exact match found
+"betslipticket_increased_odds" = "Increased Odds";
+
+// No exact match found
+"betslipticket_decreased_odds" = "Decreased Odds";
+
+// No exact match found
+"betslipticket_disabled" = "Disabled";
+
+// No exact match found
+"mockbetslipticketmodel_league" = "League";
+
+// No exact match found
+"mockbetslipticketmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockbetslipticketmodel_17_june_1100" = "17 June, 11:00";
+
+// No exact match found
+"mockbetslipticketmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockbetslipticketmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockbetslipticketmodel_17_june_1100" = "17 June, 11:00";
+
+// No exact match found
+"mockbetslipticketmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockbetslipticketmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockbetslipticketmodel_17_june_1100" = "17 June, 11:00";
+
+// No exact match found
+"mockbetslipticketmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockbetslipticketmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockbetslipticketmodel_17_june_1100" = "17 June, 11:00";
+
+// No exact match found
+"mockbetslipticketmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockbetslipticketmodel_forbidden_selection" = "Forbidden selection";
+
+// No exact match found
+"titleblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mocktitleblockmodel_welcome_bonus" = "Welcome Bonus";
+
+// No exact match found
+"mocktitleblockmodel_centered_title" = "Centered Title";
+
+// No exact match found
+"mocktitleblockmodel_left_aligned_title" = "Left Aligned Title";
+
+// No exact match found
+"mocktitleblockmodel_amazing_welcome_bonus_promotio" = "Amazing Welcome Bonus Promotion";
+
+// No exact match found
+"mockbetinfosubmissionmodel_currency_potentialwinnings" = "\(currency) \(potentialWinnings)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_currency_winbonus" = "\(currency) \(winBonus)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_currency_payout" = "\(currency) \(payout)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_place_bet_currency_placebetamo" = "Place Bet \(currency) \(placeBetAmount)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_amount" = "Amount";
+
+// No exact match found
+"mockbetinfosubmissionmodel_place_bet_currency_0" = "Place Bet \(currency) 0";
+
+// No exact match found
+"mockbetinfosubmissionmodel_place_bet_currency_newtotalamo" = "Place Bet \(currency) \(newTotalAmountString)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_place_bet_currency_newtotalamo" = "Place Bet \(currency) \(newTotalAmountString)";
+
+// No exact match found
+"mockbetinfosubmissionmodel_place_bet_currency_amount" = "Place Bet \(currency) \(amount)";
+
+// No exact match found
+"betinfosubmissionmodelprotocol_xaf_0" = "XAF 0";
+
+// No exact match found
+"betinfosubmissionmodelprotocol_place_bet_xaf_0" = "Place Bet XAF 0";
+
+// No exact match found
+"betinfosubmission_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betinfosubmission_default" = "Default";
+
+// No exact match found
+"betinfosubmission_sample_data" = "Sample Data";
+
+// No exact match found
+"betinfosubmission_disabled" = "Disabled";
+
+// No exact match found
+"matchheader_globe" = "globe";
+
+// No exact match found
+"matchheader_live" = "LIVE";
+
+// No exact match found
+"matchheader_matchheaderview_examples" = "MatchHeaderView - Examples";
+
+// No exact match found
+"matchheader_standard_premier_league" = "Standard Premier League";
+
+// No exact match found
+"matchheader_la_liga_favorited" = "La Liga (Favorited)";
+
+// No exact match found
+"matchheader_serie_a_basketball" = "Serie A Basketball";
+
+// No exact match found
+"matchheader_long_competition_name" = "Long Competition Name";
+
+// No exact match found
+"mockmatchheadermodel_league" = "League";
+
+// No exact match found
+"mockmatchheadermodel_16_april_1800" = "16 April, 18:00";
+
+// No exact match found
+"mockmatchheadermodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockmatchheadermodel_16_april_1800" = "16 April, 18:00";
+
+// No exact match found
+"mockmatchheadermodel_la_liga" = "La Liga";
+
+// No exact match found
+"mockmatchheadermodel_1st_half_44_min" = "1st Half, 44 Min";
+
+// No exact match found
+"mockmatchheadermodel_la_liga_favorite_toggled_isfav" = "La Liga favorite toggled: \(isFavorite)";
+
+// No exact match found
+"mockmatchheadermodel_serie_a_basketball" = "Serie A Basketball";
+
+// No exact match found
+"mockmatchheadermodel_20_april_1930" = "20 April, 19:30";
+
+// No exact match found
+"mockmatchheadermodel_22_april_0230" = "22 April, 02:30";
+
+// No exact match found
+"mockmatchheadermodel_champions_league" = "Champions League";
+
+// No exact match found
+"mockmatchheadermodel_25_april_2100" = "25 April, 21:00";
+
+// No exact match found
+"mockmatchheadermodel_atp_tennis" = "ATP Tennis";
+
+// No exact match found
+"mockmatchheadermodel_28_april_1500" = "28 April, 15:00";
+
+// No exact match found
+"mockmatchheadermodel_uefa_europa_conference_league_" = "UEFA Europa Conference League Championship";
+
+// No exact match found
+"mockmatchheadermodel_30_april_1715" = "30 April, 17:15";
+
+// No exact match found
+"mockmatchheadermodel_local_championship" = "Local Championship";
+
+// No exact match found
+"mockmatchheadermodel_2_may_1400" = "2 May, 14:00";
+
+// No exact match found
+"mockmatchheadermodel_international_league" = "International League";
+
+// No exact match found
+"mockmatchheadermodel_15_may_2000" = "15 May, 20:00";
+
+// No exact match found
+"mockmatchheadermodel_20_may_1430" = "20 May, 14:30";
+
+// No exact match found
+"mockmatchheadermodel_corporate_league" = "Corporate League";
+
+// No exact match found
+"mockmatchheadermodel_25_may_1800" = "25 May, 18:00";
+
+// No exact match found
+"mockmatchheadermodel_text_only_championship" = "Text Only Championship";
+
+// No exact match found
+"mockmatchheadermodel_30_may_2145" = "30 May, 21:45";
+
+// No exact match found
+"mockstatisticswidgetmodel_failed_to_load_statistics_data" = "Failed to load statistics data";
+
+// No exact match found
+"mockstatisticswidgetmodel_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"mockstatisticswidgetmodel_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"mockstatisticswidgetmodel_margin_8px_0_0_0_fontsize_14px" = "margin: 8px 0 0 0; font-size: 14px; color: #84858c;";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_draw" = "form-result draw";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_loss" = "form-result loss";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_loss" = "form-result loss";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_draw" = "form-result draw";
+
+// No exact match found
+"mockstatisticswidgetmodel_formresult_win" = "form-result win";
+
+// No exact match found
+"mockstatisticswidgetmodel_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"mockstatisticswidgetmodel_margin_8px_0_0_0_fontsize_14px" = "margin: 8px 0 0 0; font-size: 14px; color: #84858c;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_70" = "width: 70%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_40" = "width: 40%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_58" = "width: 58%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_65" = "width: 65%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_86" = "width: 86%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_home" = "stat-value home";
+
+// No exact match found
+"mockstatisticswidgetmodel_width_45" = "width: 45%;";
+
+// No exact match found
+"mockstatisticswidgetmodel_statvalue_away" = "stat-value away";
+
+// No exact match found
+"mockstatisticswidgetmodel_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"mockstatisticswidgetmodel_margin_8px_0_0_0_fontsize_14px" = "margin: 8px 0 0 0; font-size: 14px; color: #84858c;";
+
+// No exact match found
+"mockstatisticswidgetmodel_matchscore_resultwin" = "match-score result-win";
+
+// No exact match found
+"mockstatisticswidgetmodel_matchscore_resultloss" = "match-score result-loss";
+
+// No exact match found
+"mockstatisticswidgetmodel_matchscore_resultdraw" = "match-score result-draw";
+
+// No exact match found
+"mockstatisticswidgetmodel_matchscore_resultwin" = "match-score result-win";
+
+// No exact match found
+"mockstatisticswidgetmodel_matchscore_resultloss" = "match-score result-loss";
+
+// No exact match found
+"mockstatisticswidgetmodel_network_connection_failed" = "Network connection failed";
+
+// No exact match found
+"statisticswidget_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"statisticswidget_webview_loading_failed_errorlo" = "WebView loading failed: \(error.localizedDescription)";
+
+// No exact match found
+"statisticswidget_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"statisticswidget_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"statisticswidget_widthdevicewidth_initialscale1" = "width=device-width, initial-scale=1.0";
+
+// No exact match found
+"statisticswidget_football_match_statistics" = "Football Match Statistics";
+
+// No exact match found
+"statisticswidget_tennis_match_statistics" = "Tennis Match Statistics";
+
+// No exact match found
+"statisticswidget_loading_state" = "Loading State";
+
+// No exact match found
+"statisticswidget_error_state" = "Error State";
+
+// No exact match found
+"statisticswidget_empty_state" = "Empty State";
+
+// No exact match found
+"statisticswidgetmodelprotocol_head_to_head" = "Head to Head";
+
+// No exact match found
+"statisticswidgetmodelprotocol_form" = "Form";
+
+// No exact match found
+"statisticswidgetmodelprotocol_team_stats" = "Team Stats";
+
+// No exact match found
+"statisticswidgetmodelprotocol_last_matches" = "Last Matches";
+
+// No exact match found
+"mockmatchheadercompactmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockmatchheadercompactmodel_glasgow_rangers" = "Glasgow Rangers";
+
+// No exact match found
+"mockmatchheadercompactmodel_football" = "Football";
+
+// No exact match found
+"mockmatchheadercompactmodel_international" = "International";
+
+// No exact match found
+"mockmatchheadercompactmodel_uefa_europa_league" = "UEFA Europa League";
+
+// No exact match found
+"mockmatchheadercompactmodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockmatchheadercompactmodel_barcelona" = "Barcelona";
+
+// No exact match found
+"mockmatchheadercompactmodel_football" = "Football";
+
+// No exact match found
+"mockmatchheadercompactmodel_domestic" = "Domestic";
+
+// No exact match found
+"mockmatchheadercompactmodel_la_liga" = "La Liga";
+
+// No exact match found
+"mockmatchheadercompactmodel_borussia_mönchengladbach" = "Borussia Mönchengladbach";
+
+// No exact match found
+"mockmatchheadercompactmodel_wolverhampton_wanderers" = "Wolverhampton Wanderers";
+
+// No exact match found
+"mockmatchheadercompactmodel_football" = "Football";
+
+// No exact match found
+"mockmatchheadercompactmodel_international_friendlies" = "International Friendlies";
+
+// No exact match found
+"mockmatchheadercompactmodel_uefa_champions_league_qualific" = "UEFA Champions League Qualification";
+
+// No exact match found
+"mockmatchheadercompactmodel_fc_bayern_münchen_fußballverei" = "FC Bayern München Fußball-Verein e.V.";
+
+// No exact match found
+"mockmatchheadercompactmodel_real_club_deportivo_de_la_coru" = "Real Club Deportivo de La Coruña";
+
+// No exact match found
+"mockmatchheadercompactmodel_football" = "Football";
+
+// No exact match found
+"mockmatchheadercompactmodel_international_championship_tou" = "International Championship Tournament";
+
+// No exact match found
+"mockmatchheadercompactmodel_uefa_champions_league_qualific" = "UEFA Champions League Qualification Playoffs";
+
+// No exact match found
+"matchheadercompactmodelprotocol_view_statistics" = "View Statistics";
+
+// No exact match found
+"matchheadercompactmodelprotocol_close_statistics" = "Close Statistics";
+
+// No exact match found
+"matchheadercompact_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"matchheadercompact_match_header_default" = "Match Header - Default";
+
+// No exact match found
+"matchheadercompact_match_header_long_content" = "Match Header - Long Content";
+
+// No exact match found
+"matchheadercompact_match_header_expanded_statisti" = "Match Header - Expanded Statistics";
+
+// No exact match found
+"matchheadercompact_manchester_united" = "Manchester United";
+
+// No exact match found
+"matchheadercompact_glasgow_rangers" = "Glasgow Rangers";
+
+// No exact match found
+"matchheadercompact_football" = "Football";
+
+// No exact match found
+"matchheadercompact_international" = "International";
+
+// No exact match found
+"matchheadercompact_uefa_europa_league" = "UEFA Europa League";
+
+// No exact match found
+"mockoutcomeitemmodel_current_currentdataisselected" = ")) - current: \(currentData.isSelected)";
+
+// No exact match found
+"mockoutcomeitemmodel_locked" = "Locked";
+
+// No exact match found
+"outcomeitem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"outcomeitem_home_outcome_selected" = "Home Outcome - Selected";
+
+// No exact match found
+"outcomeitem_draw_outcome_unselected" = "Draw Outcome - Unselected";
+
+// No exact match found
+"outcomeitem_over_outcome_odds_up" = "Over Outcome - Odds Up";
+
+// No exact match found
+"outcomeitem_under_outcome_odds_down" = "Under Outcome - Odds Down";
+
+// No exact match found
+"outcomeitem_disabled_outcome" = "Disabled Outcome";
+
+// No exact match found
+"outcomeitem_single_line_layout" = "Single Line Layout";
+
+// No exact match found
+"outcomeitem_multiline_layout" = "Multi-Line Layout";
+
+// No exact match found
+"mockbuttonmodel_button_tapped_currentdataid" = "Button tapped: \(currentData.id)";
+
+// No exact match found
+"mockbuttonmodel_confirm_payment" = "Confirm Payment";
+
+// No exact match found
+"mockbuttonmodel_confirm_payment" = "Confirm Payment";
+
+// No exact match found
+"mockbuttonmodel_claim_bonus" = "Claim bonus";
+
+// No exact match found
+"mockbuttonmodel_resend_ussd_push" = "Resend USSD Push";
+
+// No exact match found
+"mockbuttonmodel_resend_ussd_push" = "Resend USSD Push";
+
+// No exact match found
+"mockbuttonmodel_learn_more" = "Learn More";
+
+// No exact match found
+"mockbuttonmodel_custom_solid_button" = "Custom Solid Button";
+
+// No exact match found
+"mockbuttonmodel_custom_border_button" = "Custom Border Button";
+
+// No exact match found
+"mockbuttonmodel_custom_transparent" = "Custom Transparent";
+
+// No exact match found
+"mockbuttonmodel_red_theme" = "Red Theme";
+
+// No exact match found
+"mockbuttonmodel_blue_theme" = "Blue Theme";
+
+// No exact match found
+"mockbuttonmodel_green_theme" = "Green Theme";
+
+// No exact match found
+"mockbuttonmodel_orange_border" = "Orange Border";
+
+// No exact match found
+"mockbuttonmodel_large_button" = "Large Button";
+
+// No exact match found
+"mockbuttonmodel_small_button" = "Small Button";
+
+// No exact match found
+"mockbuttonmodel_light_font_button" = "Light Font Button";
+
+// No exact match found
+"mockbuttonmodel_heavy_font" = "HEAVY FONT";
+
+// No exact match found
+"mockbuttonmodel_custom_style" = "Custom Style";
+
+// No exact match found
+"button_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"button_buttonview" = "ButtonView";
+
+// No exact match found
+"button_buttonview" = "ButtonView";
+
+// No exact match found
+"button_custom_color_examples" = "Custom Color Examples";
+
+// No exact match found
+"button_color_themes_comparison" = "Color Themes Comparison";
+
+// No exact match found
+"button_font_customization_examples" = "Font Customization Examples";
+
+// No exact match found
+"button_font_weight_comparison" = "Font Weight Comparison";
+
+// No exact match found
+"button_font_weight_showcase" = "Font Weight Showcase";
+
+// No exact match found
+"timeslider_filter_by_time" = "Filter by Time";
+
+// No exact match found
+"timeslider_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"timeslider_timesliderview" = "TimeSliderView";
+
+// No exact match found
+"timeslider_timesliderview" = "TimeSliderView";
+
+// No exact match found
+"timeslider_filter_by_time" = "Filter by Time";
+
+// No exact match found
+"timeslider_soon" = "Soon";
+
+// No exact match found
+"timeslider_match_time" = "Match Time";
+
+// No exact match found
+"mockcashoutslidermodel_cashout_tapped" = "Cashout tapped!";
+
+// No exact match found
+"cashoutslider_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"cashoutslider_default_state" = "Default State";
+
+// No exact match found
+"cashoutslider_maximum_value" = "Maximum Value";
+
+// No exact match found
+"cashoutslider_minimum_value" = "Minimum Value";
+
+// No exact match found
+"oddsacceptancemodelprotocol_accept_odds_change" = "Accept odds change.";
+
+// No exact match found
+"oddsacceptancemodelprotocol_learn_more" = "Learn More";
+
+// No exact match found
+"oddsacceptance_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"oddsacceptance_labeltext_linktext" = "\(labelText) \(linkText)";
+
+// No exact match found
+"oddsacceptance_oddsacceptanceview" = "OddsAcceptanceView";
+
+// No exact match found
+"oddsacceptance_oddsacceptanceview" = "OddsAcceptanceView";
+
+// No exact match found
+"mockoddsacceptancemodel_accept_odds_change" = "Accept odds change.";
+
+// No exact match found
+"mockoddsacceptancemodel_learn_more" = "Learn More";
+
+// No exact match found
+"mockoddsacceptancemodel_learn_more_link_tapped" = "Learn More link tapped";
+
+// No exact match found
+"mockactionbuttonblockmodel_action_button_tapped_with_acti" = "Action button tapped with action: \(actionName)";
+
+// No exact match found
+"actionbuttonblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"actionbuttonblock_all_states" = "All States";
+
+// No exact match found
+"statusinfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"statusinfo_all_states" = "All States";
+
+// No exact match found
+"statusinfo_statusinfoview" = "StatusInfoView";
+
+// No exact match found
+"mainfilterpill_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mainfilterpill_all_states" = "All States";
+
+// No exact match found
+"mainfilterpill_mainfilterpillview" = "MainFilterPillView";
+
+// No exact match found
+"buttonicon_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"buttonicon_all_states" = "All States";
+
+// No exact match found
+"buttonicon_buttoniconview" = "ButtonIconView";
+
+// No exact match found
+"mockbuttoniconmodel_button" = "Button";
+
+// No exact match found
+"mockbuttoniconmodel_disabled_button" = "Disabled Button";
+
+// No exact match found
+"progressinfocheck_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"progressinfocheck_progressinfocheckview" = "ProgressInfoCheckView";
+
+// No exact match found
+"progressinfocheck_progressinfocheckview" = "ProgressInfoCheckView";
+
+// No exact match found
+"mockmultiwidgettoolbarmodel_widget_selected_id" = "Widget selected: \(id)";
+
+// No exact match found
+"mockmultiwidgettoolbarmodel_login" = "LOGIN";
+
+// No exact match found
+"mockmultiwidgettoolbarmodel_join_now" = "JOIN NOW";
+
+// No exact match found
+"multiwidgettoolbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"multiwidgettoolbar_deposit" = "DEPOSIT";
+
+// No exact match found
+"multiwidgettoolbar_en" = "EN";
+
+// No exact match found
+"multiwidgettoolbar_logged_in" = "Logged In";
+
+// No exact match found
+"multiwidgettoolbar_logged_out" = "Logged Out";
+
+// No exact match found
+"profilemenuitem_navigation_item" = "Navigation Item";
+
+// No exact match found
+"profilemenuitem_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"profilemenuitem_selection_item" = "Selection Item";
+
+// No exact match found
+"profilemenuitem_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"profilemenuitem_action_item" = "Action Item";
+
+// No exact match found
+"profilemenuitem_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"mockprofilemenulistmodel_english" = "English";
+
+// No exact match found
+"mockprofilemenulistmodel_mock_selected_menu_item_itemti" = "📱 Mock: Selected menu item: \(item.title) (Action: \(item.action))";
+
+// No exact match found
+"mockprofilemenulistmodel_english" = "English";
+
+// No exact match found
+"mockprofilemenulistmodel_french" = "French";
+
+// No exact match found
+"mockprofilemenulistmodel_spanish" = "Spanish";
+
+// No exact match found
+"mockprofilemenulistmodel_german" = "German";
+
+// No exact match found
+"mockprofilemenulistmodel_mock_logout_action_triggered" = "🚪 Mock: Logout action triggered";
+
+// No exact match found
+"mockprofilemenulistmodel_mock_navigation_action_for_ite" = "⚡ Mock: Navigation action for \(item.action)";
+
+// No exact match found
+"mockprofilemenulistmodel_mock_language_updated_to_langu" = "🌐 Mock: Language updated to \(language)";
+
+// No exact match found
+"mockprofilemenulistmodel_default_mock_selected_itemtitl" = "🎯 Default Mock: Selected \(item.title)";
+
+// No exact match found
+"mockprofilemenulistmodel_json_mock_selected_itemtitle" = "🎯 JSON Mock: Selected \(item.title)";
+
+// No exact match found
+"mockprofilemenulistmodel_french_mock_selected_itemtitle" = "🎯 French Mock: Selected \(item.title)";
+
+// No exact match found
+"mockprofilemenulistmodel_french" = "French";
+
+// No exact match found
+"mockprofilemenulistmodel_interactive_mock_selected_item" = "🎯 Interactive Mock: Selected \(item.title)";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_notifications_scree" = "Would open notifications screen";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_transaction_history" = "Would open transaction history";
+
+// No exact match found
+"mockprofilemenulistmodel_language_selection_triggered" = "Language selection triggered";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_responsible_gaming_" = "Would open responsible gaming settings";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_help_center" = "Would open help center";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_change_password_scr" = "Would open change password screen";
+
+// No exact match found
+"mockprofilemenulistmodel_would_show_logout_confirmation" = "Would show logout confirmation";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_promotions_screen" = "🚪 Would open promotions screen";
+
+// No exact match found
+"mockprofilemenulistmodel_would_open_bonus_screen" = "🚪 Would open bonus screen";
+
+// No exact match found
+"mockprofilemenulistmodel_custom_action_triggered" = "Custom action triggered";
+
+// No exact match found
+"mockprofilemenulistmodel_notification_settings" = "Notification Settings";
+
+// No exact match found
+"profilemenulist_english" = "English";
+
+// No exact match found
+"profilemenulist_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented - use init(viewModel:) instead";
+
+// No exact match found
+"profilemenulist_profile_menu_list" = "Profile Menu List";
+
+// No exact match found
+"sporttypeselector_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sporttypeselector_default" = "Default";
+
+// No exact match found
+"sporttypeselector_many_sports" = "Many Sports";
+
+// No exact match found
+"mocksporttypeselectormodel_mocksporttypeselectorviewmodel" = "MockSportTypeSelectorViewModel: Sport selected - \(sport.name)";
+
+// No exact match found
+"mocksporttypeselectormodel_football" = "Football";
+
+// No exact match found
+"mocksporttypeselectormodel_basketball" = "Basketball";
+
+// No exact match found
+"mocksporttypeselectormodel_tennis" = "Tennis";
+
+// No exact match found
+"mocksporttypeselectormodel_baseball" = "Baseball";
+
+// No exact match found
+"mocksporttypeselectormodel_football" = "Football";
+
+// No exact match found
+"mocksporttypeselectormodel_basketball" = "Basketball";
+
+// No exact match found
+"mocksporttypeselectormodel_tennis" = "Tennis";
+
+// No exact match found
+"mocksporttypeselectormodel_baseball" = "Baseball";
+
+// No exact match found
+"mocksporttypeselectormodel_hockey" = "Hockey";
+
+// No exact match found
+"mocksporttypeselectormodel_golf" = "Golf";
+
+// No exact match found
+"mocksporttypeselectormodel_volleyball" = "Volleyball";
+
+// No exact match found
+"mocksporttypeselectormodel_soccer" = "Soccer";
+
+// No exact match found
+"mocksporttypeselectormodel_boxing" = "Boxing";
+
+// No exact match found
+"mocksporttypeselectormodel_swimming" = "Swimming";
+
+// No exact match found
+"mocksporttypeselectormodel_athletics" = "Athletics";
+
+// No exact match found
+"mocksporttypeselectormodel_cycling" = "Cycling";
+
+// No exact match found
+"mocksporttypeselectormodel_football" = "Football";
+
+// No exact match found
+"mocksporttypeselectormodel_basketball" = "Basketball";
+
+// No exact match found
+"generalfilterbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"generalfilterbar_sportselectorcell" = "SportSelectorCell";
+
+// No exact match found
+"generalfilterbar_filteroptioncell" = "FilterOptionCell";
+
+// No exact match found
+"generalfilterbar_sportselectorcell" = "SportSelectorCell";
+
+// No exact match found
+"generalfilterbar_filteroptioncell" = "FilterOptionCell";
+
+// No exact match found
+"generalfilterbar_general_filter_bar" = "General Filter Bar";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_match_header_tapped_for_match_" = "Match header tapped for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_favorite_toggled_for_match_mat" = "Favorite toggled for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_outcome_selected_outcomeid_for" = "Outcome selected: \(outcomeId) for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_outcome_deselected_outcomeid_f" = "Outcome deselected: \(outcomeId) for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_market_info_tapped_for_match_m" = "Market info tapped for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_card_tapped_for_match_matchdat" = "Card tapped for match: \(matchData.matchId)";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_1x2_tr" = "1X2 TR";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_liverpool_fc" = "Liverpool F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_arsenal_fc" = "Arsenal F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_1x2_tr" = "1X2 TR";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_liverpool_fc" = "Liverpool F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_arsenal_fc" = "Arsenal F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_match_winner" = "Match Winner";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_la_liga" = "La Liga";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_tomorrow_2030" = "Tomorrow, 20:30";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_fc_barcelona" = "FC Barcelona";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_match_winner" = "Match Winner";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_la_liga" = "La Liga";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_tomorrow_2030" = "Tomorrow, 20:30";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_fc_barcelona" = "FC Barcelona";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_both_teams_score" = "Both Teams Score";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_bundesliga" = "Bundesliga";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_18_april_1530" = "18 April, 15:30";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_bayern_munich" = "Bayern Munich";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_borussia_dortmund" = "Borussia Dortmund";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_both_teams_score" = "Both Teams Score";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_bundesliga" = "Bundesliga";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_18_april_1530" = "18 April, 15:30";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_bayern_munich" = "Bayern Munich";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_borussia_dortmund" = "Borussia Dortmund";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_2nd_half_67_min" = "2nd Half, 67 Min";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_chelsea_fc" = "Chelsea F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_tottenham_hotspur" = "Tottenham Hotspur";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_2nd_half_67_min" = "2nd Half, 67 Min";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_chelsea_fc" = "Chelsea F.C.";
+
+// No exact match found
+"mocktalloddsmatchcardmodel_tottenham_hotspur" = "Tottenham Hotspur";
+
+// No exact match found
+"talloddsmatchcard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"talloddsmatchcard_premier_league_match" = "Premier League Match";
+
+// No exact match found
+"talloddsmatchcard_compact_match" = "Compact Match";
+
+// No exact match found
+"talloddsmatchcard_live_match_with_score" = "Live Match with Score";
+
+// No exact match found
+"imagesection_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"imagesection_failed_to_load_image_error" = "Failed to load image: \(error)";
+
+// No exact match found
+"betsliptypetabitem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betsliptypetabitem_sports_selected" = "Sports Selected";
+
+// No exact match found
+"betsliptypetabitem_sports_unselected" = "Sports Unselected";
+
+// No exact match found
+"betsliptypetabitem_virtuals_selected" = "Virtuals Selected";
+
+// No exact match found
+"betsliptypetabitem_virtuals_unselected" = "Virtuals Unselected";
+
+// No exact match found
+"mockcasinocategorybarmodel_button_tapped_for_category_cat" = "Button tapped for category: \(categoryId)";
+
+// No exact match found
+"mockcasinocategorybarmodel_new_games" = "New Games";
+
+// No exact match found
+"mockcasinocategorybarmodel_all_41" = "All 41";
+
+// No exact match found
+"mockcasinocategorybarmodel_all_127" = "All 127";
+
+// No exact match found
+"mockcasinocategorybarmodel_slot_games" = "Slot Games";
+
+// No exact match found
+"mockcasinocategorybarmodel_all_89" = "All 89";
+
+// No exact match found
+"mockcasinocategorybarmodel_live_games" = "Live Games";
+
+// No exact match found
+"mockcasinocategorybarmodel_all_23" = "All 23";
+
+// No exact match found
+"mockcasinocategorybarmodel_jackpot_games" = "Jackpot Games";
+
+// No exact match found
+"mockcasinocategorybarmodel_all_12" = "All 12";
+
+// No exact match found
+"casinocategorybar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinocategorybar_category_title" = "Category Title";
+
+// No exact match found
+"casinocategorybar_all_0" = "All 0";
+
+// No exact match found
+"casinocategorybar_casino_category_bar_placeholde" = "Casino Category Bar - Placeholder";
+
+// No exact match found
+"casinocategorybarmodelprotocol_new_games" = "New Games";
+
+// No exact match found
+"casinocategorybarmodelprotocol_all_41" = "All 41";
+
+// No exact match found
+"mocktransactionverificationmodel_ussd_push_coming_through" = "USSD Push coming through...";
+
+// No exact match found
+"mocktransactionverificationmodel_we_are_sending_a_ussd_push_int" = "We are sending a USSD Push interaction to +237 612345678";
+
+// No exact match found
+"mocktransactionverificationmodel_237_612345678" = "+237 612345678";
+
+// No exact match found
+"mocktransactionverificationmodel_received_it_yet" = "Received it yet?";
+
+// No exact match found
+"mocktransactionverificationmodel_follow_the_prompt_to_proceed" = "Follow the prompt to proceed";
+
+// No exact match found
+"mocktransactionverificationmodel_ussd_push_coming_through" = "USSD Push coming through...";
+
+// No exact match found
+"transactionverification_default" = "Default";
+
+// No exact match found
+"transactionverification_simple" = "Simple";
+
+// No exact match found
+"betslipoddsboostheader_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betslipoddsboostheader_max_win_boost_activated_curren" = "Max Win Boost Activated! (\(currentBoost))";
+
+// No exact match found
+"betslipoddsboostheader_get_a_nextpercentage_win_boost" = "Get a \(nextPercentage) Win Boost";
+
+// No exact match found
+"betslipoddsboostheader_win_boost_available" = "Win Boost Available";
+
+// No exact match found
+"betslipoddsboostheader_leg" = "leg";
+
+// No exact match found
+"betslipoddsboostheader_legs" = "legs";
+
+// No exact match found
+"betslipoddsboostheader_by_adding_remainingselections_" = "by adding \(remainingSelections) more \(legWord) to your betslip.";
+
+// No exact match found
+"betslipoddsboostheader_all_qualifying_events_added" = "All qualifying events added!";
+
+// No exact match found
+"betslipoddsboostheader_header_progress_13" = "Header - Progress 1/3";
+
+// No exact match found
+"betslipoddsboostheader_header_progress_23" = "Header - Progress 2/3";
+
+// No exact match found
+"betslipoddsboostheader_header_max_boost_reached" = "Header - Max Boost Reached";
+
+// No exact match found
+"betslipoddsboostheader_interactive_animation" = "Interactive Animation";
+
+// No exact match found
+"betslipoddsboostheader_add_selection" = "+ Add Selection";
+
+// No exact match found
+"betslipoddsboostheader_remove_selection" = "- Remove Selection";
+
+// No exact match found
+"betslipoddsboostheader_add_total" = "+ Add Total";
+
+// No exact match found
+"betslipoddsboostheader_remove_total" = "- Remove Total";
+
+// No exact match found
+"betslipoddsboostheader_totaleligible_3" = "\((totalEligible * 3))%";
+
+// No exact match found
+"betslipoddsboostheader_remainingtonext_3" = "\((remainingToNext * 3))%";
+
+// No exact match found
+"betslipoddsboostheader_currentselectionstotaleligible" = "\(currentSelections)/\(totalEligible)";
+
+// No exact match found
+"betslipoddsboostheader_max_boost" = "✓ Max Boost!";
+
+// No exact match found
+"betslipoddsboostheader_in_progress" = "In Progress";
+
+// No exact match found
+"betslipoddsboostheader_selections_progressnstatus_sta" = "Selections: \(progress)\nStatus: \(status)";
+
+// No exact match found
+"betticketstatus_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betticketstatus_won_state" = "Won State";
+
+// No exact match found
+"betticketstatus_lost_state" = "Lost State";
+
+// No exact match found
+"betticketstatus_draw_state" = "Draw State";
+
+// No exact match found
+"mockbonusinfocardmodel_casino_welcome_bonus" = "Casino Welcome Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_sun_0101_1859" = "Sun 01/01 - 18:59";
+
+// No exact match found
+"mockbonusinfocardmodel_casino_welcome_bonus" = "Casino Welcome Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_weekly_cashback_bonus" = "Weekly Cashback Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_fri_1231_2359" = "Fri 12/31 - 23:59";
+
+// No exact match found
+"mockbonusinfocardmodel_birthday_bonus" = "Birthday Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_mon_0515_1200" = "Mon 05/15 - 12:00";
+
+// No exact match found
+"mockbonusinfocardmodel_first_deposit_bonus" = "First Deposit Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_released_on_1020" = "Released on 10/20";
+
+// No exact match found
+"mockbonusinfocardmodel_loyalty_reward" = "Loyalty Reward";
+
+// No exact match found
+"mockbonusinfocardmodel_today_1800" = "Today - 18:00";
+
+// No exact match found
+"mockbonusinfocardmodel_vip_exclusive_bonus" = "VIP Exclusive Bonus";
+
+// No exact match found
+"mockbonusinfocardmodel_tomorrow_2359" = "Tomorrow - 23:59";
+
+// No exact match found
+"bonusinfocardmodelprotocol_formatcurrencycarddataremainin" = "+ \(formatCurrency(cardData.remainingToWagerAmount, currency: cardData.currency)) remaining to wager";
+
+// No exact match found
+"bonusinfocard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"bonusinfocard_expires_displaystateexpirytext" = "Expires: \(displayState.expiryText)";
+
+// No exact match found
+"bonusinfocard_wagering_progress" = "Wagering Progress";
+
+// No exact match found
+"bonusinfocard_complete_bonus_combo" = "Complete Bonus - Combo";
+
+// No exact match found
+"bonusinfocard_simple_bonus" = "Simple Bonus";
+
+// No exact match found
+"bonusinfocard_without_header" = "Without Header";
+
+// No exact match found
+"bonusinfocard_minimal_no_optional_elements" = "Minimal (No Optional Elements)";
+
+// No exact match found
+"bonusinfocard_released_status" = "Released Status";
+
+// No exact match found
+"bonusinfocard_almost_complete" = "Almost Complete";
+
+// No exact match found
+"mockcasinogamesearchedmodel_demo_game" = "Demo Game";
+
+// No exact match found
+"mockcasinogamesearchedmodel_demo_provider" = "Demo Provider";
+
+// No exact match found
+"casinogamesearched_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinogamesearched_gonzos_quest" = "Gonzo’s Quest";
+
+// No exact match found
+"casinogamesearched_netent" = "Netent";
+
+// No exact match found
+"casinogamesearched_casinogamesearchedview_states" = "CasinoGameSearchedView - States";
+
+// No exact match found
+"mockpillselectorbarmodel_mockpillselectorbarviewmodel_p" = "MockPillSelectorBarViewModel: Pill selected: \(id)";
+
+// No exact match found
+"mockpillselectorbarmodel_soccer" = "Soccer";
+
+// No exact match found
+"mockpillselectorbarmodel_tennis" = "Tennis";
+
+// No exact match found
+"mockpillselectorbarmodel_moneyline" = "Moneyline";
+
+// No exact match found
+"mockpillselectorbarmodel_spread" = "Spread";
+
+// No exact match found
+"mockpillselectorbarmodel_totals" = "Totals";
+
+// No exact match found
+"mockpillselectorbarmodel_this_month" = "This Month";
+
+// No exact match found
+"mockpillselectorbarmodel_trending" = "Trending";
+
+// No exact match found
+"mockpillselectorbarmodel_ending_soon" = "Ending Soon";
+
+// No exact match found
+"mockpillselectorbarmodel_moneyline" = "Moneyline";
+
+// No exact match found
+"mockpillselectorbarmodel_spread" = "Spread";
+
+// No exact match found
+"mockpillselectorbarmodel_totals" = "Totals";
+
+// No exact match found
+"mockpillselectorbarmodel_football" = "Football";
+
+// No exact match found
+"mockpillselectorbarmodel_all_popular_leagues" = "All Popular Leagues";
+
+// No exact match found
+"pillselectorbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"pillselectorbar_pill_selected_eventselectedid" = "Pill selected: \(event.selectedId)";
+
+// No exact match found
+"pillselectorbar_sports_categories" = "Sports Categories";
+
+// No exact match found
+"pillselectorbar_market_filters" = "Market Filters";
+
+// No exact match found
+"pillselectorbar_time_periods" = "Time Periods";
+
+// No exact match found
+"pillselectorbar_readonly_states" = "Read-Only States";
+
+// No exact match found
+"pillselectorbar_football_popular_leagues" = "Football Popular Leagues";
+
+// No exact match found
+"pillselectorbar_custom_pill_styles" = "Custom Pill Styles";
+
+// No exact match found
+"pillselectorbar_default" = "Default";
+
+// No exact match found
+"pillselectorbar_colorful" = "Colorful";
+
+// No exact match found
+"searchheaderinfo_initframe_has_not_been_impleme" = "init(frame:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"searchheaderinfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"searchheaderinfo_search_state_viewmodel" = "SEARCH STATE: \(viewModel)";
+
+// No exact match found
+"searchheaderinfo_searching_for" = "Searching for \"";
+
+// No exact match found
+"searchheaderinfo_in_viewmodelcategory" = "\" in \(viewModel.category)...";
+
+// No exact match found
+"searchheaderinfo_showing_results_for" = "Showing Results for \"";
+
+// No exact match found
+"searchheaderinfo_in_viewmodelcategory" = "\" in \(viewModel.category) ";
+
+// No exact match found
+"searchheaderinfo_showing_results_for" = "Showing Results for \"";
+
+// No exact match found
+"searchheaderinfo_in_viewmodelcategory" = "\" in \(viewModel.category)";
+
+// No exact match found
+"searchheaderinfo_no_results_for" = "No Results for \"";
+
+// No exact match found
+"searchheaderinfo_in_viewmodelcategory" = "\" in \(viewModel.category)";
+
+// No exact match found
+"searchheaderinfo_searching_for" = "Searching for \"";
+
+// No exact match found
+"searchheaderinfo_in_selfviewmodelcategoryellips" = "\" in \(self.viewModel.category)\(ellipsis)";
+
+// No exact match found
+"searchheaderinfo_searchheaderinfoview_states" = "SearchHeaderInfoView States";
+
+// No exact match found
+"searchheaderinfo_liverpool" = "Liverpool";
+
+// No exact match found
+"searchheaderinfo_liverpool" = "Liverpool";
+
+// No exact match found
+"searchheaderinfo_liverpool" = "Liverpool";
+
+// No exact match found
+"betslipfloatingthin_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betslipfloatingthin_selectioncount" = "\(selectionCount)";
+
+// No exact match found
+"betslipfloatingthin_odds" = "Odds:";
+
+// No exact match found
+"betslipfloatingthin_odds" = "\(odds)";
+
+// No exact match found
+"betslipfloatingthin_win_boost" = "Win Boost:";
+
+// No exact match found
+"betslipfloatingthin_bonus" = "bonus";
+
+// No exact match found
+"betslipfloatingthin_add_remainingselections_more_q" = "Add \(remainingSelections) more qualifying selection to get a \(boostText) win boost";
+
+// No exact match found
+"betslipfloatingthin_max_win_boost_activated" = "Max win boost activated!";
+
+// No exact match found
+"betslipfloatingthin_no_tickets" = "No Tickets";
+
+// No exact match found
+"betslipfloatingthin_with_tickets" = "With Tickets";
+
+// No exact match found
+"betslipfloatingthin_with_tickets_no_boost" = "With Tickets (No Boost)";
+
+// No exact match found
+"betslipfloatingthin_interactive_states" = "Interactive States";
+
+// No exact match found
+"betslipfloatingthin_no_tickets" = "No Tickets";
+
+// No exact match found
+"betslipfloatingthin_with_tickets" = "With Tickets";
+
+// No exact match found
+"betslipfloatingthin_max_boost" = "Max Boost";
+
+// No exact match found
+"betslipfloatingthin_enabled" = "Enabled";
+
+// No exact match found
+"betslipfloatingthin_simulate_tap_check_console" = "Simulate Tap (Check Console)";
+
+// No exact match found
+"betslipfloatingthin_betslip_tapped_current_state_s" = "🎯 Betslip tapped! Current state: \(self?.mockViewModel.currentData.state ?? .noTickets)";
+
+// No exact match found
+"betslipfloatingthin_state_no_ticketsncircular_butt" = "State: No Tickets\nCircular button visible";
+
+// No exact match found
+"betslipfloatingthin_state_with_ticketsnselections_" = "State: With Tickets\nSelections: \(count) | Odds: \(odds)";
+
+// No exact match found
+"betslipfloatingthin_enabled" = "Enabled ✓";
+
+// No exact match found
+"betslipfloatingthin_disabled" = "Disabled";
+
+// No exact match found
+"betslipfloatingthin_statedescriptionnnstatus_enabl" = "\(stateDescription)\n\nStatus: \(enabledStatus)";
+
+// No exact match found
+"betslipfloatingthin_tapped" = "👆 Tapped!";
+
+// No exact match found
+"betslipfloatingtall_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betslipfloatingtall_get_a_nextpercentage_win_boost" = "Get a \(nextPercentage) Win Boost";
+
+// No exact match found
+"betslipfloatingtall_max_win_boost_activated" = "Max Win Boost Activated!";
+
+// No exact match found
+"betslipfloatingtall_leg" = "leg";
+
+// No exact match found
+"betslipfloatingtall_legs" = "legs";
+
+// No exact match found
+"betslipfloatingtall_by_adding_remainingselections_" = "by adding \(remainingSelections) more \(legWord) to your betslip (1.2 min odds).";
+
+// No exact match found
+"betslipfloatingtall_all_qualifying_events_added" = "All qualifying events added!";
+
+// No exact match found
+"betslipfloatingtall_tall_with_boost_progress" = "Tall - With Boost Progress";
+
+// No exact match found
+"betslipfloatingtall_tall_almost_complete" = "Tall - Almost Complete";
+
+// No exact match found
+"betslipfloatingtall_tall_max_boost_reached" = "Tall - Max Boost Reached";
+
+// No exact match found
+"betslipfloatingtall_tall_no_boost_hidden" = "Tall - No Boost (Hidden)";
+
+// No exact match found
+"depositbonusinfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"depositbonusinfo_depositbonusinfoview" = "DepositBonusInfoView";
+
+// No exact match found
+"depositbonusinfo_depositbonusinfoview" = "DepositBonusInfoView";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_pill_interaction_displaystates" = "Pill interaction: \(displayStateSubject.value.pillData.text)";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_handicap" = "Handicap";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_both_teams_to_score" = "Both Teams to Score";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_custom_market" = "Custom Market";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_no_line" = "No Line";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_very_long_market_name" = "Very Long Market Name";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_overunder_25" = "Over/Under 2.5";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_asian_handicap" = "Asian Handicap";
+
+// No exact match found
+"mockmarketnamepilllabelmodel_btts" = "BTTS";
+
+// No exact match found
+"marketnamepilllabel_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketnamepilllabel_marketnamepilllabelview" = "MarketNamePillLabelView";
+
+// No exact match found
+"marketnamepilllabel_marketnamepilllabelview" = "MarketNamePillLabelView";
+
+// No exact match found
+"mockmarketinfolinemodel_1x2_tr" = "1X2 TR";
+
+// No exact match found
+"mockmarketinfolinemodel_both_teams_to_score" = "Both Teams To Score";
+
+// No exact match found
+"mockmarketinfolinemodel_overunder_goals" = "Over/Under Goals";
+
+// No exact match found
+"mockmarketinfolinemodel_match_winner" = "Match Winner";
+
+// No exact match found
+"mockmarketinfolinemodel_very_long_market_name_that_sho" = "Very Long Market Name That Should Be Truncated To Test Layout";
+
+// No exact match found
+"marketinfoline_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketinfoline_marketinfolineview" = "MarketInfoLineView";
+
+// No exact match found
+"marketinfoline_marketinfolineview" = "MarketInfoLineView";
+
+// No exact match found
+"amountpill_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"amountpill_pilldataamount" = "+ \(pillData.amount)";
+
+// No exact match found
+"amountpill_all_states" = "All States";
+
+// No exact match found
+"amountpill_amountpillview" = "AmountPillView";
+
+// No exact match found
+"descriptionblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mockdescriptionblockmodel_welcome_to_our_amazing_promoti" = "Welcome to our amazing promotion! Get ready to experience the best betting platform with exclusive bonuses and rewards.";
+
+// No exact match found
+"mockdescriptionblockmodel_limited_time_offer_available_n" = "Limited time offer available now.";
+
+// No exact match found
+"mockdescriptionblockmodel_join_thousands_of_satisfied_cu" = "Join thousands of satisfied customers who have already discovered the thrill of our premium betting experience. This exclusive promotion offers you the perfect opportunity to maximize your winnings while enjoying our world-class platform. Don't miss out on this incredible offer that combines the best odds, fastest payouts, and most exciting games all in one place.";
+
+// No exact match found
+"mockresendcodecountdownmodel_resend_code_in_0059" = "Resend Code in 00:59";
+
+// No exact match found
+"mockresendcodecountdownmodel_resend_code_in_02d02d" = "Resend Code in %02d:%02d";
+
+// No exact match found
+"resendcodecountdown_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"resendcodecountdown_all_states" = "All States";
+
+// No exact match found
+"customnavigation_betsson_style" = "Betsson Style";
+
+// No exact match found
+"customnavigation_blue_style" = "Blue Style";
+
+// No exact match found
+"mockseemorebuttonmodel_seemorebutton_tapped_buttondat" = "SeeMoreButton tapped: \(buttonData.id)";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_load_more_games" = "Load More Games";
+
+// No exact match found
+"mockseemorebuttonmodel_interactive_mock_button_tapped" = "Interactive mock: Button tapped!";
+
+// No exact match found
+"mockseemorebuttonmodel_retry_loading" = "Retry Loading";
+
+// No exact match found
+"seemorebutton_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"seemorebutton_load_remainingcount_more_games" = "Load \(remainingCount) more games";
+
+// No exact match found
+"seemorebutton_loading_more_games" = "Loading more games";
+
+// No exact match found
+"seemorebutton_please_wait_while_more_games_a" = "Please wait while more games are loaded";
+
+// No exact match found
+"seemorebutton_tap_to_load_more_games" = "Tap to load more games";
+
+// No exact match found
+"seemorebutton_load_more_button_unavailable" = "Load more button unavailable";
+
+// No exact match found
+"seemorebutton_load_more" = "Load More";
+
+// No exact match found
+"seemorebutton_all_states" = "All States";
+
+// No exact match found
+"seemorebutton_seemorebuttonview" = "SeeMoreButtonView";
+
+// No exact match found
+"seemorebuttoncollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mockpromotioncardmodel_action" = "Action";
+
+// No exact match found
+"mockpromotioncardmodel_mock_promotioncardviewmodel_ct" = "Mock PromotionCardViewModel: CTA button tapped for promotion '\(currentState.title)'";
+
+// No exact match found
+"mockpromotioncardmodel_mock_promotioncardviewmodel_re" = "Mock PromotionCardViewModel: Read more button tapped for promotion '\(currentState.title)'";
+
+// No exact match found
+"mockpromotioncardmodel_mock_promotioncardviewmodel_ca" = "Mock PromotionCardViewModel: Card tapped for promotion '\(currentState.title)'";
+
+// No exact match found
+"mockpromotioncardmodel_action" = "Action";
+
+// No exact match found
+"promotioncard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotioncard_single_card" = "Single Card";
+
+// No exact match found
+"promotioncard_casino_card" = "Casino Card";
+
+// No exact match found
+"promotioncard_no_cta_card" = "No CTA Card";
+
+// No exact match found
+"ticketbetinfo_chevronright" = "chevron.right";
+
+// No exact match found
+"ticketbetinfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"ticketbetinfo_partial_cashout" = "Partial Cashout";
+
+// No exact match found
+"ticketbetinfo_cash_out_amount" = "Cash out amount";
+
+// No exact match found
+"ticketbetinfo_with_cashout_amount" = "With Cashout Amount";
+
+// No exact match found
+"ticketbetinfo_with_cashout_slider" = "With Cashout Slider";
+
+// No exact match found
+"ticketbetinfo_with_both_components" = "With Both Components";
+
+// No exact match found
+"ticketbetinfo_default_empty" = "Default Empty";
+
+// No exact match found
+"ticketbetinfo_top_corners_only" = "Top Corners Only";
+
+// No exact match found
+"ticketbetinfo_bottom_corners_only" = "Bottom Corners Only";
+
+// No exact match found
+"ticketbetinfo_lost_bet" = "Lost bet";
+
+// No exact match found
+"mockticketbetinfomodel_rebet" = "Rebet";
+
+// No exact match found
+"mockticketbetinfomodel_navigation_tapped" = "Navigation tapped!";
+
+// No exact match found
+"mockticketbetinfomodel_rebet_tapped" = "Rebet tapped!";
+
+// No exact match found
+"mockticketbetinfomodel_cashout_tapped" = "Cashout tapped!";
+
+// No exact match found
+"mockticketbetinfomodel_bet001" = "BET001";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_pending" = "Single Bet - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_team_1" = "Team 1";
+
+// No exact match found
+"mockticketbetinfomodel_team_2" = "Team 2";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_bet002" = "BET002";
+
+// No exact match found
+"mockticketbetinfomodel_multiple_bets_pending" = "Multiple Bets - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockticketbetinfomodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockticketbetinfomodel_liverpool" = "Liverpool";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_ticket002" = "TICKET002";
+
+// No exact match found
+"mockticketbetinfomodel_la_liga" = "La Liga";
+
+// No exact match found
+"mockticketbetinfomodel_barcelona" = "Barcelona";
+
+// No exact match found
+"mockticketbetinfomodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockticketbetinfomodel_tomorrow_2000" = "Tomorrow 20:00";
+
+// No exact match found
+"mockticketbetinfomodel_bet003" = "BET003";
+
+// No exact match found
+"mockticketbetinfomodel_long_names_test_pending" = "Long Names Test - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_very_long_competition_name_tha" = "Very Long Competition Name That Might Overflow";
+
+// No exact match found
+"mockticketbetinfomodel_very_long_team_name_that_might" = "Very Long Team Name That Might Cause Issues";
+
+// No exact match found
+"mockticketbetinfomodel_another_very_long_team_name_fo" = "Another Very Long Team Name For Testing";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_bet002" = "BET002";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_pending" = "Single Bet - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_team_1" = "Team 1";
+
+// No exact match found
+"mockticketbetinfomodel_team_2" = "Team 2";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_bet003" = "BET003";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_pending" = "Single Bet - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_team_1" = "Team 1";
+
+// No exact match found
+"mockticketbetinfomodel_team_2" = "Team 2";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_bet004" = "BET004";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_pending" = "Single Bet - Pending";
+
+// No exact match found
+"mockticketbetinfomodel_ticket001" = "TICKET001";
+
+// No exact match found
+"mockticketbetinfomodel_team_1" = "Team 1";
+
+// No exact match found
+"mockticketbetinfomodel_team_2" = "Team 2";
+
+// No exact match found
+"mockticketbetinfomodel_today_1530" = "Today 15:30";
+
+// No exact match found
+"mockticketbetinfomodel_bet_won_001" = "BET_WON_001";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_won" = "Single Bet - Won";
+
+// No exact match found
+"mockticketbetinfomodel_ticket_won_001" = "TICKET_WON_001";
+
+// No exact match found
+"mockticketbetinfomodel_brasileirão_série_a" = "Brasileirão Série A";
+
+// No exact match found
+"mockticketbetinfomodel_ceara_sc_ce" = "Ceara SC CE";
+
+// No exact match found
+"mockticketbetinfomodel_cr_vasco_da_gama_rj" = "CR Vasco da Gama RJ";
+
+// No exact match found
+"mockticketbetinfomodel_bet_lost_001" = "BET_LOST_001";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_lost" = "Single Bet - Lost";
+
+// No exact match found
+"mockticketbetinfomodel_ticket_lost_001" = "TICKET_LOST_001";
+
+// No exact match found
+"mockticketbetinfomodel_brasileirão_série_a" = "Brasileirão Série A";
+
+// No exact match found
+"mockticketbetinfomodel_ceara_sc_ce" = "Ceara SC CE";
+
+// No exact match found
+"mockticketbetinfomodel_cr_vasco_da_gama_rj" = "CR Vasco da Gama RJ";
+
+// No exact match found
+"mockticketbetinfomodel_bet_draw_001" = "BET_DRAW_001";
+
+// No exact match found
+"mockticketbetinfomodel_single_bet_draw" = "Single Bet - Draw";
+
+// No exact match found
+"mockticketbetinfomodel_ticket_draw_001" = "TICKET_DRAW_001";
+
+// No exact match found
+"mockticketbetinfomodel_brasileirão_série_a" = "Brasileirão Série A";
+
+// No exact match found
+"mockticketbetinfomodel_ceara_sc_ce" = "Ceara SC CE";
+
+// No exact match found
+"mockticketbetinfomodel_cr_vasco_da_gama_rj" = "CR Vasco da Gama RJ";
+
+// No exact match found
+"languageselector_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented - use init(viewModel:) instead";
+
+// No exact match found
+"languageselector_languageselectorview" = "LanguageSelectorView";
+
+// No exact match found
+"languageselector_languageselectorview" = "LanguageSelectorView";
+
+// No exact match found
+"mocklanguageselectormodel_mock_language_selected_languag" = "🌐 Mock: Language selected: \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_mock_interface_will_be_display" = "🇺🇸 Mock: Interface will be displayed in English";
+
+// No exact match found
+"mocklanguageselectormodel_mock_linterface_sera_affichée_" = "🇫🇷 Mock: L'interface sera affichée en français";
+
+// No exact match found
+"mocklanguageselectormodel_mock_la_interfaz_se_mostrará_e" = "🇪🇸 Mock: La interfaz se mostrará en español";
+
+// No exact match found
+"mocklanguageselectormodel_mock_die_benutzeroberfläche_wi" = "🇩🇪 Mock: Die Benutzeroberfläche wird auf Deutsch angezeigt";
+
+// No exact match found
+"mocklanguageselectormodel_mock_linterfaccia_sarà_visuali" = "🇮🇹 Mock: L'interfaccia sarà visualizzata in italiano";
+
+// No exact match found
+"mocklanguageselectormodel_mock_a_interface_será_exibida_" = "🇵🇹 Mock: A interface será exibida em português";
+
+// No exact match found
+"mocklanguageselectormodel_mock_interface_language_change" = "🌍 Mock: Interface language changed to \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_mock_loading_languages" = "📚 Mock: Loading languages...";
+
+// No exact match found
+"mocklanguageselectormodel_mock_loaded_selflanguagescount" = "✅ Mock: Loaded \(self.languages.count) languages";
+
+// No exact match found
+"mocklanguageselectormodel_mock_updated_language_list_wit" = "📝 Mock: Updated language list with \(languages.count) languages";
+
+// No exact match found
+"mocklanguageselectormodel_mock_set_initial_selection_to_" = "🎯 Mock: Set initial selection to \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_default_mock_selected_language" = "🎯 Default Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_two_languages_mock_selected_la" = "🎯 Two Languages Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_many_languages_mock_selected_l" = "🎯 Many Languages Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_french_selected_mock_selected_" = "🎯 French Selected Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_interactive_mock_selected_lang" = "🎯 Interactive Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_mock_app_language_is_being_cha" = "🔄 Mock: App language is being changed...";
+
+// No exact match found
+"mocklanguageselectormodel_mock_ui_will_refresh_with_new_" = "📱 Mock: UI will refresh with new language";
+
+// No exact match found
+"mocklanguageselectormodel_mock_language_preference_saved" = "💾 Mock: Language preference saved";
+
+// No exact match found
+"mocklanguageselectormodel_empty_mock_selected_languagedi" = "🎯 Empty Mock: Selected \(language.displayName)";
+
+// No exact match found
+"mocklanguageselectormodel_single_language_mock_selected_" = "🎯 Single Language Mock: Selected \(language.displayName)";
+
+// No exact match found
+"languagemodel_english" = "English";
+
+// No exact match found
+"languagemodel_english" = "English";
+
+// No exact match found
+"languagemodel_français" = "Français";
+
+// No exact match found
+"languagemodel_french" = "French";
+
+// No exact match found
+"languagemodel_español" = "Español";
+
+// No exact match found
+"languagemodel_spanish" = "Spanish";
+
+// No exact match found
+"languagemodel_deutsch" = "Deutsch";
+
+// No exact match found
+"languagemodel_german" = "German";
+
+// No exact match found
+"languagemodel_italiano" = "Italiano";
+
+// No exact match found
+"languagemodel_italian" = "Italian";
+
+// No exact match found
+"languagemodel_português" = "Português";
+
+// No exact match found
+"languagemodel_portuguese" = "Portuguese";
+
+// No exact match found
+"languageitem_not_selected" = "not selected";
+
+// No exact match found
+"languageitem_languagedisplayname_language_o" = "\(language.displayName) language option, \(selectionState)";
+
+// No exact match found
+"languageitem_tap_to_select_this_language" = "Tap to select this language";
+
+// No exact match found
+"languageitem_language_item_selected" = "Language Item - Selected";
+
+// No exact match found
+"languageitem_selected_languagedisplayname" = "Selected: \(language.displayName)";
+
+// No exact match found
+"languageitem_language_item_unselected" = "Language Item - Unselected";
+
+// No exact match found
+"languageitem_selected_languagedisplayname" = "Selected: \(language.displayName)";
+
+// No exact match found
+"extendedlistfootermodels_inter_miami" = "Inter Miami";
+
+// No exact match found
+"extendedlistfootermodels_boca_juniors" = "Boca Juniors";
+
+// No exact match found
+"extendedlistfootermodels_racing_club" = "Racing Club";
+
+// No exact match found
+"extendedlistfootermodels_atlético_nacional" = "Atlético Nacional";
+
+// No exact match found
+"extendedlistfootermodels_mtn_mobile_money" = "MTN Mobile Money";
+
+// No exact match found
+"extendedlistfootermodels_orange_money" = "Orange Money";
+
+// No exact match found
+"extendedlistfootermodels_facebook" = "Facebook";
+
+// No exact match found
+"extendedlistfootermodels_instagram" = "Instagram";
+
+// No exact match found
+"extendedlistfootermodels_youtube" = "YouTube";
+
+// No exact match found
+"extendedlistfooter_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"extendedlistfooter_full_cameroon_footer" = "Full Cameroon Footer";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_terms_and_condi" = "✅ Preview: Tapped Terms and Conditions";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_affiliates" = "✅ Preview: Tapped Affiliates";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_privacy_policy" = "✅ Preview: Tapped Privacy Policy";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_cookie_policy" = "✅ Preview: Tapped Cookie Policy";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_responsible_gam" = "✅ Preview: Tapped Responsible Gambling";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_game_rules" = "✅ Preview: Tapped Game Rules";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_help_center" = "✅ Preview: Tapped Help Center";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_contact_us" = "✅ Preview: Tapped Contact Us";
+
+// No exact match found
+"extendedlistfooter_preview_tapped_social_media_pl" = "✅ Preview: Tapped Social Media - \(platform.displayName)";
+
+// No exact match found
+"extendedlistfooter_minimal_footer" = "Minimal Footer";
+
+// No exact match found
+"extendedlistfooter_no_links_footer" = "No Links Footer";
+
+// No exact match found
+"extendedlistfooter_three_partners_dynamic_grid" = "Three Partners (Dynamic Grid)";
+
+// No exact match found
+"extendedlistfooter_single_partner" = "Single Partner";
+
+// No exact match found
+"extendedlistfooter_five_partners_3_rows" = "Five Partners (3 Rows)";
+
+// No exact match found
+"mockextendedlistfootermodel_follow_us" = "Follow us";
+
+// No exact match found
+"mockextendedlistfootermodel_the_operator_of_this_website_i" = "The operator of this website is Ngantat Sarl, a licensed company with registration number RCCM N° RC/DLN/2024/B/137 and with registered address at Makepe Douala Cour Supreme, Bâtiment Domino, Unit 33, Douala, Cameroon.";
+
+// No exact match found
+"mockextendedlistfootermodel_terms" = "Terms";
+
+// No exact match found
+"mockextendedlistfootermodel_privacy" = "Privacy";
+
+// No exact match found
+"mockextendedlistfootermodel_help" = "Help";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_no_markets_available" = "No markets available";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_market_suspended" = "Market Suspended";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_popular_markets" = "Popular Markets";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_total_goals" = "Total Goals";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_no_total_goals_markets_availab" = "No Total Goals markets available for this match";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_markets_temporarily_unavailabl" = "Markets temporarily unavailable";
+
+// No exact match found
+"mockmarketoutcomesmultilinemodel_loading_markets" = "Loading markets";
+
+// No exact match found
+"marketoutcomesmultiline_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketoutcomesmultiline_no_markets_available" = "No markets available";
+
+// No exact match found
+"marketoutcomesmultiline_all_states_comparison" = "All States Comparison";
+
+// No exact match found
+"marketoutcomesmultiline_failed_to_load_markets" = "Failed to load markets";
+
+// No exact match found
+"marketoutcomesmultiline_content_state" = "Content State";
+
+// No exact match found
+"marketoutcomesmultiline_loading_state" = "Loading State";
+
+// No exact match found
+"marketoutcomesmultiline_error_state" = "Error State";
+
+// No exact match found
+"marketoutcomesmultiline_empty_state" = "Empty State";
+
+// No exact match found
+"marketoutcomesmultiline_overunder_market_group" = "Over/Under Market Group";
+
+// No exact match found
+"marketoutcomesmultiline_market_group_empty" = "Market Group Empty";
+
+// No exact match found
+"marketoutcomesmultiline_homedrawaway_market_group" = "Home/Draw/Away Market Group";
+
+// No exact match found
+"marketoutcomesmultiline_market_group_with_suspended_li" = "Market Group with Suspended Line";
+
+// No exact match found
+"marketoutcomesmultiline_mixed_layout_market_group" = "Mixed Layout Market Group";
+
+// No exact match found
+"marketoutcomesmultiline_market_group_with_odds_changes" = "Market Group with Odds Changes";
+
+// No exact match found
+"mockemptystateactionmodel_you_need_at_least_1_selectionn" = "You need at least 1 selection\nin your betslip to place a bet";
+
+// No exact match found
+"mockemptystateactionmodel_you_need_at_least_1_selectionn" = "You need at least 1 selection\nin your betslip to place a bet";
+
+// No exact match found
+"mockemptystateactionmodel_start_betting" = "Start betting";
+
+// No exact match found
+"mockemptystateactionmodel_you_need_at_least_1_selectionn" = "You need at least 1 selection\nin your betslip to place a bet";
+
+// No exact match found
+"emptystateaction_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"emptystateaction_all_states" = "All States";
+
+// No exact match found
+"emptystateaction_emptystateactionview" = "EmptyStateActionView";
+
+// No exact match found
+"mockcashoutsubmissioninfomodel_cashout_submission_info_button" = "Cashout submission info button tapped!";
+
+// No exact match found
+"mockcashoutsubmissioninfomodel_retry" = "Retry";
+
+// No exact match found
+"mockcashoutsubmissioninfomodel_cashout_successful" = "Cashout Successful";
+
+// No exact match found
+"mockcashoutsubmissioninfomodel_cashout_failed" = "Cashout Failed";
+
+// No exact match found
+"cashoutsubmissioninfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"cashoutsubmissioninfo_success_state" = "Success State";
+
+// No exact match found
+"cashoutsubmissioninfo_error_state" = "Error State";
+
+// No exact match found
+"betdetailresultsummary_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betdetailresultsummary_bet_result_summary_lost_state" = "Bet Result Summary - Lost State";
+
+// No exact match found
+"betdetailresultsummary_bet_result_summary_won_state" = "Bet Result Summary - Won State";
+
+// No exact match found
+"betdetailresultsummary_bet_result_summary_draw_state" = "Bet Result Summary - Draw State";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_ceara_sc_ce_x_cr_vasco_da_gama" = "Ceara SC CE x CR Vasco da Gama RJ";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_double_chance_ceara_sc_ce" = "Double chance - Ceara SC CE";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_ceara_sc_ce_x_cr_vasco_da_gama" = "Ceara SC CE x CR Vasco da Gama RJ";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_double_chance_ceara_sc_ce" = "Double chance - Ceara SC CE";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_ceara_sc_ce_x_cr_vasco_da_gama" = "Ceara SC CE x CR Vasco da Gama RJ";
+
+// No exact match found
+"mockbetdetailresultsummarymodel_double_chance_ceara_sc_ce" = "Double chance - Ceara SC CE";
+
+// No exact match found
+"promotionalbonuscardmodelprotocol_claim_bonus" = "Claim bonus";
+
+// No exact match found
+"mockpromotionalbonuscardmodel_claim_bonus_tapped_for_current" = "Claim bonus tapped for: \(currentData.id)";
+
+// No exact match found
+"mockpromotionalbonuscardmodel_terms_tapped_for_currentdataid" = "Terms tapped for: \(currentData.id)";
+
+// No exact match found
+"mockpromotionalbonuscardmodel_the_betsson_double" = "The Betsson Double";
+
+// No exact match found
+"mockpromotionalbonuscardmodel_the_betsson_double" = "The Betsson Double";
+
+// No exact match found
+"mockpromotionalbonuscardmodel_claim_bonus" = "Claim bonus";
+
+// No exact match found
+"promotionalbonuscard_claim_bonus" = "Claim bonus";
+
+// No exact match found
+"promotionalbonuscard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotionalbonuscard_carddataplayerscount_players_c" = "\(cardData.playersCount) players chose this bonus";
+
+// No exact match found
+"promotionalbonuscard_promotional_bonus_card" = "Promotional Bonus Card";
+
+// No exact match found
+"mockrecentsearchmodel_liverpool" = "Liverpool";
+
+// No exact match found
+"recentsearch_initframe_has_not_been_impleme" = "init(frame:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"recentsearch_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"recentsearch_recentsearchview" = "RecentSearchView";
+
+// No exact match found
+"recentsearch_liverpool" = "Liverpool";
+
+// No exact match found
+"recentsearch_manchester_united" = "Manchester United";
+
+// No exact match found
+"recentsearch_premier_league" = "Premier League";
+
+// No exact match found
+"mockstepinstructionmodel_on_the_mobile_money_menu_selec" = "On the mobile money menu, select x, then select the x option.";
+
+// No exact match found
+"mockstepinstructionmodel_after_you_receive_a_transactio" = "After you receive a transaction confirmation SMS from your provider, click on the Confirm Payment button below.";
+
+// No exact match found
+"mockstepinstructionmodel_confirm_payment" = "Confirm Payment";
+
+// No exact match found
+"mockstepinstructionmodel_you_will_receive_a_confirmatio" = "You will receive a confirmation SMS on your registered number.";
+
+// No exact match found
+"mockstepinstructionmodel_confirmation_sms" = "confirmation SMS";
+
+// No exact match found
+"mockstepinstructionmodel_registered_number" = "registered number";
+
+// No exact match found
+"stepinstruction_datastepnumber" = "\(data.stepNumber)";
+
+// No exact match found
+"stepinstruction_all_states" = "All States";
+
+// No exact match found
+"stepinstruction_stepinstructionview" = "StepInstructionView";
+
+// No exact match found
+"borderedtextfield_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"borderedtextfield_placeholder" = "\(placeholder) *";
+
+// No exact match found
+"borderedtextfield_borderedtextfieldview" = "BorderedTextFieldView";
+
+// No exact match found
+"borderedtextfield_borderedtextfieldview" = "BorderedTextFieldView";
+
+// No exact match found
+"mockborderedtextfieldmodel_237_712345678" = "+237 712345678";
+
+// No exact match found
+"mockborderedtextfieldmodel_full_name" = "Full Name";
+
+// No exact match found
+"mockborderedtextfieldmodel_please_enter_a_valid_email_add" = "Please enter a valid email address";
+
+// No exact match found
+"mockborderedtextfieldmodel_read_only_value" = "Read only value";
+
+// No exact match found
+"mockborderedtextfieldmodel_disabled_field" = "Disabled Field";
+
+// No exact match found
+"sportgamesfilter_games" = "Games";
+
+// No exact match found
+"sportgamesfilter_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sportgamesfilter_sportgamesfilterview" = "SportGamesFilterView";
+
+// No exact match found
+"sportgamesfilter_sportgamesfilterview" = "SportGamesFilterView";
+
+// No exact match found
+"sportgamesfilter_games" = "Games";
+
+// No exact match found
+"mocknavigationactionmodel_navigation_action" = "Navigation Action";
+
+// No exact match found
+"mocknavigationactionmodel_navigation_action_tapped_curre" = "Navigation action tapped: \(currentData.title)";
+
+// No exact match found
+"mocknavigationactionmodel_disabled_action" = "Disabled Action";
+
+// No exact match found
+"navigationaction_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"navigationaction_navigationactionview" = "NavigationActionView";
+
+// No exact match found
+"navigationaction_navigationactionview" = "NavigationActionView";
+
+// No exact match found
+"progresssegment_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"score_no_scores" = "No scores";
+
+// No exact match found
+"score_scoreview_all_states_variation" = "ScoreView - All States & Variations";
+
+// No exact match found
+"score_visual_states" = "Visual States";
+
+// No exact match found
+"score_loading_state" = "Loading State";
+
+// No exact match found
+"score_empty_state" = "Empty State";
+
+// No exact match found
+"score_idle_state" = "Idle State";
+
+// No exact match found
+"score_sportspecific_score_examples" = "Sport-Specific Score Examples";
+
+// No exact match found
+"score_tennis_match_mixed_styles" = "Tennis Match - Mixed Styles";
+
+// No exact match found
+"score_tennis_match_advantage_scoring" = "Tennis Match - Advantage Scoring";
+
+// No exact match found
+"score_basketball_match_quarters_tota" = "Basketball Match - Quarters & Total";
+
+// No exact match found
+"score_football_match_single_score" = "Football Match - Single Score";
+
+// No exact match found
+"score_volleyball_match_set_scores" = "Volleyball Match - Set Scores";
+
+// No exact match found
+"score_hockey_match_periods_total" = "Hockey Match - Periods & Total";
+
+// No exact match found
+"score_american_football_quarters_tot" = "American Football - Quarters & Total";
+
+// No exact match found
+"score_special_cases_edge_scenarios" = "Special Cases & Edge Scenarios";
+
+// No exact match found
+"score_tied_match_equal_scores" = "Tied Match - Equal Scores";
+
+// No exact match found
+"score_maximum_cells_long_tennis_matc" = "Maximum Cells - Long Tennis Match";
+
+// No exact match found
+"score_mixed_styles_different_visual_" = "Mixed Styles - Different Visual Treatments";
+
+// No exact match found
+"score_individual_style_demonstration" = "Individual Style Demonstrations";
+
+// No exact match found
+"score_simple_style_only_winner_highl" = "Simple Style Only - Winner Highlighting";
+
+// No exact match found
+"score_border_style_only_outlined_app" = "Border Style Only - Outlined Appearance";
+
+// No exact match found
+"score_background_style_only_filled_a" = "Background Style Only - Filled Appearance";
+
+// No exact match found
+"score_edge_cases_stress_tests" = "Edge Cases & Stress Tests";
+
+// No exact match found
+"score_large_numbers_layout_stress_te" = "Large Numbers - Layout Stress Test";
+
+// No exact match found
+"score_special_tennis_notation_ad_deu" = "Special Tennis Notation - AD, DEU, A";
+
+// No exact match found
+"score_single_cell_minimal_display" = "Single Cell - Minimal Display";
+
+// No exact match found
+"score_two_cells_previous_vs_current" = "Two Cells - Previous vs Current";
+
+// No exact match found
+"score_scoreview_simple_test" = "ScoreView - Simple Test";
+
+// No exact match found
+"scorecell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"scorecell_scorecellview_states" = "ScoreCellView States";
+
+// No exact match found
+"scorecell_simple_style_with_winner_highl" = "Simple Style (with winner highlighting)";
+
+// No exact match found
+"scorecell_border_style_no_highlighting" = "Border Style (no highlighting)";
+
+// No exact match found
+"scorecell_background_style_no_highlighti" = "Background Style (no highlighting)";
+
+// No exact match found
+"scorecell_sportspecific_score_examples" = "Sport-Specific Score Examples";
+
+// No exact match found
+"scorecell_edge_cases_special_values" = "Edge Cases & Special Values";
+
+// No exact match found
+"mockcodeinputmodel_ba2672" = "BA2672";
+
+// No exact match found
+"mockcodeinputmodel_booking_code_cant_be_found_it_" = "Booking Code can't be found. It either doesn't exist or expired.";
+
+// No exact match found
+"mockcodeinputmodel_ba2672" = "BA2672";
+
+// No exact match found
+"mockcodeinputmodel_ba2672" = "BA2672";
+
+// No exact match found
+"codeinput_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"codeinput_codeinputview" = "CodeInputView";
+
+// No exact match found
+"codeinput_codeinputview" = "CodeInputView";
+
+// No exact match found
+"highlightedtext_highlightedtextview" = "HighlightedTextView";
+
+// No exact match found
+"highlightedtext_highlightedtextview" = "HighlightedTextView";
+
+// No exact match found
+"mockhighlightedtextmodel_we_are_sending_a_ussd_push_int" = "We are sending a USSD Push interaction to +237 612345678";
+
+// No exact match found
+"mockhighlightedtextmodel_237_612345678" = "+237 612345678";
+
+// No exact match found
+"mockhighlightedtextmodel_your_bonus_expires_in_24_hours" = "Your bonus expires in 24 hours";
+
+// No exact match found
+"mockhighlightedtextmodel_transfer_50000_to_john_smith_a" = "Transfer $500.00 to John Smith at +237 612345678";
+
+// No exact match found
+"mockhighlightedtextmodel_john_smith" = "John Smith";
+
+// No exact match found
+"mockhighlightedtextmodel_john_smith" = "John Smith";
+
+// No exact match found
+"mockhighlightedtextmodel_237_612345678" = "+237 612345678";
+
+// No exact match found
+"mockhighlightedtextmodel_237_612345678" = "+237 612345678";
+
+// No exact match found
+"mockhighlightedtextmodel_please_read_our_terms_and_cond" = "Please read our Terms and Conditions and Privacy Policy before continuing.";
+
+// No exact match found
+"imageblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mocksimplesquaredfilterbarmodel_medium" = "Medium";
+
+// No exact match found
+"mocksimplesquaredfilterbarmodel_high" = "High";
+
+// No exact match found
+"mocksimplesquaredfilterbarmodel_urgent" = "Urgent";
+
+// No exact match found
+"mocksimplesquaredfilterbarmodel_games" = "Games";
+
+// No exact match found
+"mocksimplesquaredfilterbarmodel_finished" = "Finished";
+
+// No exact match found
+"simplesquaredfilterbar_simple_squared_filter_bar_time" = "Simple Squared Filter Bar - Time Filters";
+
+// No exact match found
+"simplesquaredfilterbar_selected_filter_filterid" = "Selected filter: \(filterId)";
+
+// No exact match found
+"simplesquaredfilterbar_simple_squared_filter_bar_stat" = "Simple Squared Filter Bar - Status Filters";
+
+// No exact match found
+"simplesquaredfilterbar_selected_status_filterid" = "Selected status: \(filterId)";
+
+// No exact match found
+"simplesquaredfilterbar_simple_squared_filter_bar_mult" = "Simple Squared Filter Bar - Multiple States";
+
+// No exact match found
+"simplesquaredfilterbar_medium" = "Medium";
+
+// No exact match found
+"simplesquaredfilterbar_high" = "High";
+
+// No exact match found
+"simplesquaredfilterbar_urgent" = "Urgent";
+
+// No exact match found
+"simplesquaredfilterbarbutton_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"bulletitemblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"bulletitemblock_selfviewmodeltitle" = "• \(self.viewModel.title)";
+
+// No exact match found
+"bulletitemblock_selfviewmodeltitle" = "• \(self.viewModel.title)";
+
+// No exact match found
+"bulletitemblock_title" = "• Title";
+
+// No exact match found
+"mockbulletitemblockmodel_welcome_bonus_up_to_100" = "Welcome bonus up to €100";
+
+// No exact match found
+"mockbulletitemblockmodel_free_spins" = "Free spins";
+
+// No exact match found
+"mockbulletitemblockmodel_get_50_free_spins_on_your_firs" = "Get 50 free spins on your first deposit plus a 100% match bonus up to €200";
+
+// No exact match found
+"pindigitentry_pin_complete_status_ispincompl" = "Pin complete status: \(isPinComplete)";
+
+// No exact match found
+"pindigitentry_pindigitentryview" = "PinDigitEntryView";
+
+// No exact match found
+"pindigitentry_pindigitentryview" = "PinDigitEntryView";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_button_tapped_bu" = "MockViewModel: Button tapped - \(buttonId)";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_triggering_login" = "MockViewModel: Triggering login flow";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_starting_practic" = "MockViewModel: Starting practice mode";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_starting_real_mo" = "MockViewModel: Starting real money play";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_opening_deposit_" = "MockViewModel: Opening deposit screen";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_unknown_button_a" = "MockViewModel: Unknown button action";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mockviewmodel_refreshing_game_" = "MockViewModel: Refreshing game data";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_surging_7s" = "Surging 7s";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_pragmatic_play" = "Pragmatic Play";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_medium" = "Medium";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_xaf_1" = "XAF 1";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_engross_yourself_into_the_worl" = "Engross yourself into the world of Surging 7s with a variety of fruity symbols accompanied by numerous exciting features. The Link Bonus adds additional action where Prizepots and random credits are awarded!";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_login_to_play" = "LOGIN_TO_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_practice_play" = "PRACTICE_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_mega_fortune" = "Mega Fortune";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_netent" = "NetEnt";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_high" = "High";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_xaf_5" = "XAF 5";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_experience_the_luxury_lifestyl" = "Experience the luxury lifestyle with Mega Fortune! This progressive jackpot slot features luxury symbols and the chance to win life-changing amounts.";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_play_now" = "PLAY_NOW";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_practice_mode" = "PRACTICE_MODE";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_book_of_dead" = "Book of Dead";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_playn_go" = "Play'n GO";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_high" = "High";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_xaf_10" = "XAF 10";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_join_rich_wilde_on_his_adventu" = "Join Rich Wilde on his adventure in ancient Egypt. Book of Dead offers exciting bonus features and the potential for big wins.";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_deposit_to_play" = "DEPOSIT_TO_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_practice_play" = "PRACTICE_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_starburst" = "Starburst";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_netent" = "NetEnt";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_xaf_1" = "XAF 1";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_the_cosmic_classic_that_never_" = "The cosmic classic that never gets old! Starburst features expanding wilds and re-spins for exciting gameplay.";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_login_to_play" = "LOGIN_TO_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_practice_play" = "PRACTICE_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_under_maintenance" = "Under Maintenance";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_provider" = "Provider";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_this_game_is_currently_under_m" = "This game is currently under maintenance. Please try again later.";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_game_unavailable" = "GAME_UNAVAILABLE";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_surging_7s" = "Surging 7s";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_pragmatic_play" = "Pragmatic Play";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_medium" = "Medium";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_xaf_1" = "XAF 1";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_interactive_demo_tap_buttons_t" = "Interactive demo - tap buttons to see state changes!";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_login_to_play" = "LOGIN_TO_PLAY";
+
+// No exact match found
+"mockcasinogameplaymodeselectormodel_practice_play" = "PRACTICE_PLAY";
+
+// No exact match found
+"casinogameplaymodeselector_volatility" = "Volatility:";
+
+// No exact match found
+"casinogameplaymodeselector_minimum_stake" = "Minimum Stake:";
+
+// No exact match found
+"casinogameplaymodeselector_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinogameplaymodeselector_default_state" = "Default State";
+
+// No exact match found
+"casinogameplaymodeselector_loading_state" = "Loading State";
+
+// No exact match found
+"casinogameplaymodeselector_logged_in_user" = "Logged In User";
+
+// No exact match found
+"termsacceptance_terms_tapped" = "Terms tapped!";
+
+// No exact match found
+"termsacceptance_privacy_tapped" = "Privacy tapped!";
+
+// No exact match found
+"termsacceptance_cookies_tapped" = "Cookies tapped!";
+
+// No exact match found
+"termsacceptance_all_states" = "All States";
+
+// No exact match found
+"termsacceptance_termsacceptanceview" = "TermsAcceptanceView";
+
+// No exact match found
+"mocktermsacceptancemodel_by_creating_an_account_i_agree" = "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy";
+
+// No exact match found
+"mocktermsacceptancemodel_by_creating_an_account_i_agree" = "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy";
+
+// No exact match found
+"mocktermsacceptancemodel_i_accept_the_terms_and_privacy" = "I accept the Terms and Privacy Policy";
+
+// No exact match found
+"mocktermsacceptancemodel_terms" = "Terms";
+
+// No exact match found
+"copyablecode_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"copyablecode_promo_code" = "Promo Code";
+
+// No exact match found
+"copyablecode_long_code" = "Long Code";
+
+// No exact match found
+"mockcopyablecodemodel_copied_to_clipboard" = "Copied to Clipboard";
+
+// No exact match found
+"mockcopyablecodemodel_mock_copied_code_code_to_clipb" = "📋 Mock: Copied code '\(code)' to clipboard";
+
+// No exact match found
+"mockcopyablecodemodel_abcd1e2" = "ABCD1E2";
+
+// No exact match found
+"mockcopyablecodemodel_summer2025" = "SUMMER2025";
+
+// No exact match found
+"mockcopyablecodemodel_copy_promo_code" = "Copy Promo Code";
+
+// No exact match found
+"mockcopyablecodemodel_abcd1e2f3g4h5j6k7" = "ABCD1E2F3G4H5J6K7";
+
+// No exact match found
+"mockcopyablecodemodel_copy_transaction_id" = "Copy Transaction ID";
+
+// No exact match found
+"mockcopyablecodemodel_refxyz789" = "REF-XYZ789";
+
+// No exact match found
+"mockcopyablecodemodel_copy_referral_code" = "Copy Referral Code";
+
+// No exact match found
+"amountpills_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"amountpills_all_states" = "All States";
+
+// No exact match found
+"amountpills_few_pills_no_selection" = "Few pills - No selection";
+
+// No exact match found
+"amountpills_few_pills_with_selection_500" = "Few pills - With selection (500)";
+
+// No exact match found
+"amountpills_many_pills_no_selection_scroll" = "Many pills - No selection (scrollable)";
+
+// No exact match found
+"amountpills_many_pills_last_selected_10000" = "Many pills - Last selected (10000)";
+
+// No exact match found
+"mockcapsulemodel_live" = "LIVE";
+
+// No exact match found
+"mockcapsulemodel_football" = "Football";
+
+// No exact match found
+"mockcapsulemodel_completed" = "Completed";
+
+// No exact match found
+"mockcapsulemodel_hot" = "🔥 HOT";
+
+// No exact match found
+"mockcapsulemodel_1st_half_41mins" = "1st Half, 41mins";
+
+// No exact match found
+"mockcapsulemodel_half_time" = "Half Time";
+
+// No exact match found
+"capsule_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"capsule_all_states" = "All States";
+
+// No exact match found
+"mockmarketgrouptabitemmodel_double_chance" = "Double Chance";
+
+// No exact match found
+"mockmarketgrouptabitemmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketgrouptabitemmodel_another_market" = "Another market";
+
+// No exact match found
+"mockmarketgrouptabitemmodel_disabled" = "Disabled";
+
+// No exact match found
+"mockmarketgrouptabitemmodel_betbuilder" = "BetBuilder";
+
+// No exact match found
+"marketgrouptabitem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketgrouptabitem_count" = "\(count)";
+
+// No exact match found
+"marketgrouptabitem_1x2_tab_selected" = "1x2 Tab - Selected";
+
+// No exact match found
+"marketgrouptabitem_double_chance_tab_idle" = "Double Chance Tab - Idle";
+
+// No exact match found
+"marketgrouptabitem_betbuilder_tab_with_icon_and_b" = "BetBuilder Tab with Icon and Badge";
+
+// No exact match found
+"marketgrouptabitem_popular_tab_with_icon_and_badg" = "Popular Tab with Icon and Badge";
+
+// No exact match found
+"marketgrouptabitem_sets_tab_with_badge_only" = "Sets Tab with Badge Only";
+
+// No exact match found
+"marketgrouptabitem_multiple_tabs_layout" = "Multiple Tabs Layout";
+
+// No exact match found
+"marketgrouptabitem_betbuilder" = "BetBuilder";
+
+// No exact match found
+"marketgrouptabitem_custom_background_colors_blue_" = "Custom Background Colors - Blue Tab";
+
+// No exact match found
+"marketgrouptabitem_different_idleselected_backgro" = "Different Idle/Selected Background Colors";
+
+// No exact match found
+"marketgrouptabitem_selected" = "Selected";
+
+// No exact match found
+"marketgrouptabitem_idle" = "Idle";
+
+// No exact match found
+"marketgrouptabitem_prefix_only_icon" = "Prefix Only Icon";
+
+// No exact match found
+"marketgrouptabitem_suffix_only_icon" = "Suffix Only Icon";
+
+// No exact match found
+"marketgrouptabitem_both_prefix_and_suffix_icons" = "Both Prefix and Suffix Icons";
+
+// No exact match found
+"marketgrouptabitem_icon_combinations_layout" = "Icon Combinations Layout";
+
+// No exact match found
+"marketgrouptabitem_prefix_only" = "Prefix Only";
+
+// No exact match found
+"marketgrouptabitem_suffix_only" = "Suffix Only";
+
+// No exact match found
+"marketgrouptabitem_both_icons" = "Both Icons";
+
+// No exact match found
+"promotionselectorbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotionselectorbar_promotion_selected_selectionev" = "Promotion selected: \(selectionEvent.selectedId)";
+
+// No exact match found
+"promotionselectorbar_component_states" = "Component States";
+
+// No exact match found
+"promotionselectorbar_welcome" = "Welcome";
+
+// No exact match found
+"promotionselectorbar_welcome" = "Welcome";
+
+// No exact match found
+"promotionselectorbar_live_casino" = "Live Casino";
+
+// No exact match found
+"promotionselectorbar_virtual_sports" = "Virtual Sports";
+
+// No exact match found
+"search_searchview" = "SearchView";
+
+// No exact match found
+"mocksearchmodel_search_in_sportsbook" = "Search in Sportsbook";
+
+// No exact match found
+"mockstatusnotificationmodel_deposit_successful" = "Deposit Successful 🤑";
+
+// No exact match found
+"mockstatusnotificationmodel_transaction_failed" = "Transaction Failed 😞";
+
+// No exact match found
+"mockstatusnotificationmodel_low_balance_warning" = "Low Balance Warning ⚠️";
+
+// No exact match found
+"statusnotification_warning" = "Warning";
+
+// No exact match found
+"statusnotification_all_states" = "All States";
+
+// No exact match found
+"promotionalheader_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotionalheader_promotionalheaderview" = "PromotionalHeaderView";
+
+// No exact match found
+"promotionalheader_promotionalheaderview" = "PromotionalHeaderView";
+
+// No exact match found
+"recentlyplayedgames_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"recentlyplayedgames_recently_played" = "Recently Played";
+
+// No exact match found
+"recentlyplayedgames_gamecell" = "GameCell";
+
+// No exact match found
+"recentlyplayedgames_recently_played" = "Recently Played";
+
+// No exact match found
+"recentlyplayedgames_gamecell" = "GameCell";
+
+// No exact match found
+"recentlyplayedgames_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"recentlyplayedgames_recently_played_games_placehol" = "Recently Played Games - Placeholder";
+
+// No exact match found
+"recentlyplayedgamesmodelprotocol_gonzos_quest" = "Gonzo's Quest";
+
+// No exact match found
+"recentlyplayedgamesmodelprotocol_netent" = "Netent";
+
+// No exact match found
+"recentlyplayedgamescollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"recentlyplayedgamescell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"recentlyplayedgamescell_game_title" = "Game Title";
+
+// No exact match found
+"recentlyplayedgamescell_provider" = "Provider";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_game_selected_gameid" = "Game selected: \(gameId)";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_opening_game_gamename_by_gamep" = "Opening game: \(game.name) by \(game.provider)";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_refreshing_recently_played_gam" = "Refreshing recently played games...";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_gonzos_quest" = "Gonzo's Quest";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_starburst" = "Starburst";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_book_of_dead" = "Book of Dead";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_big_bass_bonanza" = "Big Bass Bonanza";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_sweet_bonanza" = "Sweet Bonanza";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_recently_played" = "Recently Played";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_recently_played" = "Recently Played";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_crazy_time" = "Crazy Time";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_recently_played" = "Recently Played";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_the_great_adventure_of_the_gol" = "The Great Adventure of the Golden Treasure";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_super_mega_ultra_big_win_jackp" = "Super Mega Ultra Big Win Jackpot Deluxe";
+
+// No exact match found
+"mockrecentlyplayedgamesmodel_recently_played" = "Recently Played";
+
+// No exact match found
+"gradientheader_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mockgradientheadermodel_welcome_bonus" = "Welcome Bonus";
+
+// No exact match found
+"mockgradientheadermodel_special_promotion" = "Special Promotion";
+
+// No exact match found
+"mockgradientheadermodel_premium_offer" = "Premium Offer";
+
+// No exact match found
+"mockgradientheadermodel_amazing_welcome_bonus_promotio" = "Amazing Welcome Bonus Promotion";
+
+// No exact match found
+"pillitem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"pillitem_all_states" = "All States";
+
+// No exact match found
+"pillitem_pillitemview" = "PillItemView";
+
+// No exact match found
+"walletstatus_cashback_balance" = "Cashback balance";
+
+// No exact match found
+"walletstatus_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"walletstatus_default_wallet_status" = "Default Wallet Status";
+
+// No exact match found
+"walletstatus_all_balance_states" = "All Balance States";
+
+// No exact match found
+"walletstatus_default_balance" = "Default Balance";
+
+// No exact match found
+"walletstatus_empty_balance" = "Empty Balance";
+
+// No exact match found
+"walletstatus_high_balance" = "High Balance";
+
+// No exact match found
+"walletstatus_dialog_overlay" = "Dialog Overlay";
+
+// No exact match found
+"walletstatus_background_content" = "Background Content";
+
+// No exact match found
+"walletbalanceline_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"walletbalanceline_all_balance_line_states" = "All Balance Line States";
+
+// No exact match found
+"walletbalanceline_with_icon" = "With Icon";
+
+// No exact match found
+"walletbalanceline_without_icon" = "Without Icon";
+
+// No exact match found
+"matchbannercell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mockmatchbannermodel_mock_banner_tapped_for_match_m" = "🏟️ Mock: Banner tapped for match: \(matchData.homeTeam) vs \(matchData.awayTeam)";
+
+// No exact match found
+"mockmatchbannermodel_mock_outcome_tapped_id_outcome" = "⚽ Mock: Outcome tapped - ID: \(outcomeId), Selected: \(isSelected)";
+
+// No exact match found
+"mockmatchbannermodel_mock_outcome_long_pressed_id_o" = "⚽ Mock: Outcome long pressed - ID: \(outcomeId)";
+
+// No exact match found
+"mockmatchbannermodel_mock_showing_details_for_outco" = "📊 Mock: Showing details for \(outcome.displayName) - Odds: \(outcome.odds)";
+
+// No exact match found
+"mockmatchbannermodel_mock_loading_match_data" = "📡 Mock: Loading match data...";
+
+// No exact match found
+"mockmatchbannermodel_mock_match_data_loaded" = "✅ Mock: Match data loaded";
+
+// No exact match found
+"mockmatchbannermodel_mock_refreshing_match_data" = "🔄 Mock: Refreshing match data...";
+
+// No exact match found
+"mockmatchbannermodel_mock_match_data_refreshed_with" = "✅ Mock: Match data refreshed with updated odds";
+
+// No exact match found
+"mockmatchbannermodel_mock_onoutcomeselected_outcome" = "Mock: onOutcomeSelected - \(outcomeId)";
+
+// No exact match found
+"mockmatchbannermodel_mock_onoutcomedeselected_outco" = "Mock: onOutcomeDeselected - \(outcomeId)";
+
+// No exact match found
+"mockmatchbannermodel_man_city" = "Man City";
+
+// No exact match found
+"mockmatchbannermodel_arsenal" = "Arsenal";
+
+// No exact match found
+"mockmatchbannermodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockmatchbannermodel_prelive_mock_banner_tapped_ope" = "🎯 Prelive Mock: Banner tapped - opening match details";
+
+// No exact match found
+"mockmatchbannermodel_prelive_mock_outcome_outcomeid" = "🎯 Prelive Mock: Outcome \(outcomeId) \(isSelected ? ";
+
+// No exact match found
+"mockmatchbannermodel_man_city" = "Man City";
+
+// No exact match found
+"mockmatchbannermodel_arsenal" = "Arsenal";
+
+// No exact match found
+"mockmatchbannermodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockmatchbannermodel_live_mock_banner_tapped_openin" = "🎯 Live Mock: Banner tapped - opening live match view";
+
+// No exact match found
+"mockmatchbannermodel_live_mock_live_betting_outcome" = "🎯 Live Mock: Live betting - Outcome \(outcomeId) \(isSelected ? ";
+
+// No exact match found
+"mockmatchbannermodel_barcelona" = "Barcelona";
+
+// No exact match found
+"mockmatchbannermodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockmatchbannermodel_la_liga" = "La Liga";
+
+// No exact match found
+"mockmatchbannermodel_interactive_mock_el_clásico_ba" = "🎯 Interactive Mock: El Clásico banner tapped!";
+
+// No exact match found
+"mockmatchbannermodel_mock_opening_live_match_experi" = "📱 Mock: Opening live match experience...";
+
+// No exact match found
+"mockmatchbannermodel_mock_live_statistics_commentar" = "🔥 Mock: Live statistics, commentary, and betting available";
+
+// No exact match found
+"mockmatchbannermodel_interactive_mock_el_clásico_be" = "🎯 Interactive Mock: El Clásico betting - \(outcomeId)";
+
+// No exact match found
+"mockmatchbannermodel_mock_isselected" = "💰 Mock: \(isSelected ? ";
+
+// No exact match found
+"mockmatchbannermodel_mock_live_odds_updating_in_rea" = "🎲 Mock: Live odds updating in real-time";
+
+// No exact match found
+"matchbannermodel_mmm_dd_yyyy_hmm_a" = "MMM dd, yyyy - h:mm a";
+
+// No exact match found
+"matchbannermodel_live" = "LIVE";
+
+// No exact match found
+"matchbannermodel_timetext_leaguename" = "\(timeText) • \(leagueName)";
+
+// No exact match found
+"matchbannermodel_formatteddatetime_leaguename" = "\(formattedDateTime) • \(leagueName)";
+
+// No exact match found
+"matchbanner_matchbannerview" = "MatchBannerView";
+
+// No exact match found
+"matchbanner_homescore" = "\(homeScore)";
+
+// No exact match found
+"matchbanner_awayscore" = "\(awayScore)";
+
+// No exact match found
+"matchbanner_prelive_match" = "Prelive Match";
+
+// No exact match found
+"matchbanner_live_match" = "Live Match";
+
+// No exact match found
+"matchbanner_interactive_match" = "Interactive Match";
+
+// No exact match found
+"matchbanner_empty_state" = "Empty State";
+
+// No exact match found
+"betdetailvaluessummary_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betdetailvaluessummary_bet_values_summary_full_detail" = "Bet Values Summary - Full Details";
+
+// No exact match found
+"betdetailvaluessummary_bet_values_summary_single_row" = "Bet Values Summary - Single Row";
+
+// No exact match found
+"mockbetdetailvaluessummarymodel_bet_placed_on_sun_0101_1859" = "Bet Placed on Sun 01/01 - 18:59";
+
+// No exact match found
+"mockbetdetailvaluessummarymodel_bet_result" = "Bet result";
+
+// No exact match found
+"countryleaguesfilter_popular_countries" = "Popular Countries";
+
+// No exact match found
+"countryleaguesfilter_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"countryleaguesfilter_england" = "England";
+
+// No exact match found
+"countryleaguesfilter_premier_league" = "Premier League";
+
+// No exact match found
+"countryleaguesfilter_championship" = "Championship";
+
+// No exact match found
+"countryleaguesfilter_league_one" = "League One";
+
+// No exact match found
+"countryleaguesfilter_league_two" = "League Two";
+
+// No exact match found
+"countryleaguesfilter_fa_cup" = "FA Cup";
+
+// No exact match found
+"countryleaguesfilter_efl_cup" = "EFL Cup";
+
+// No exact match found
+"countryleaguesfilter_france" = "France";
+
+// No exact match found
+"countryleaguesfilter_ligue_1" = "Ligue 1";
+
+// No exact match found
+"countryleaguesfilter_ligue_2" = "Ligue 2";
+
+// No exact match found
+"countryleaguesfilter_coupe_de_france" = "Coupe de France";
+
+// No exact match found
+"countryleaguesfilter_germany" = "Germany";
+
+// No exact match found
+"countryleaguesfilter_bundesliga" = "Bundesliga";
+
+// No exact match found
+"countryleaguesfilter_2_bundesliga" = "2. Bundesliga";
+
+// No exact match found
+"countryleaguesfilter_dfbpokal" = "DFB-Pokal";
+
+// No exact match found
+"countryleaguesfilter_italy" = "Italy";
+
+// No exact match found
+"countryleaguesfilter_serie_a" = "Serie A";
+
+// No exact match found
+"countryleaguesfilter_serie_b" = "Serie B";
+
+// No exact match found
+"countryleaguesfilter_coppa_italia" = "Coppa Italia";
+
+// No exact match found
+"countryleaguesfilter_spain" = "Spain";
+
+// No exact match found
+"countryleaguesfilter_la_liga" = "La Liga";
+
+// No exact match found
+"countryleaguesfilter_la_liga_2" = "La Liga 2";
+
+// No exact match found
+"countryleaguesfilter_copa_del_rey" = "Copa del Rey";
+
+// No exact match found
+"countryleaguesfilter_international" = "International";
+
+// No exact match found
+"countryleaguesfilter_champions_league" = "Champions League";
+
+// No exact match found
+"countryleaguesfilter_europa_league" = "Europa League";
+
+// No exact match found
+"countryleaguesfilter_conference_league" = "Conference League";
+
+// No exact match found
+"countryleaguesfilter_world_cup_qualifiers" = "World Cup Qualifiers";
+
+// No exact match found
+"countryleaguesfilter_nations_league" = "Nations League";
+
+// No exact match found
+"countryleaguesfilter_popular_countries" = "Popular Countries";
+
+// No exact match found
+"mockinforowmodel_your_deposit" = "Your Deposit";
+
+// No exact match found
+"mockinforowmodel_xaf_1000" = "XAF 1000";
+
+// No exact match found
+"mockinforowmodel_account_balance" = "Account Balance";
+
+// No exact match found
+"mockinforowmodel_xaf_25000" = "XAF 25,000";
+
+// No exact match found
+"mockinforowmodel_bonus_balance" = "Bonus Balance";
+
+// No exact match found
+"mockinforowmodel_xaf_500" = "XAF 500";
+
+// No exact match found
+"inforow_all_states" = "All States";
+
+// No exact match found
+"inforow_inforowview" = "InfoRowView";
+
+// No exact match found
+"sportselectorcell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"adaptivetabbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"adaptivetabbar_blur_background" = "Blur Background";
+
+// No exact match found
+"adaptivetabbar_solid_background" = "Solid Background";
+
+// No exact match found
+"adaptivetabbar_transparent_background" = "Transparent Background";
+
+// No exact match found
+"adaptivetabbar_reversible_slide" = "Reversible Slide";
+
+// No exact match found
+"adaptivetabbar_vertical_cube_animation" = "Vertical Cube Animation";
+
+// No exact match found
+"adaptivetabbar_no_animation" = "No Animation";
+
+// No exact match found
+"mockadaptivetabbarmodel_error_tab_bar_with_id_intabbar" = "Error: Tab bar with ID \(inTabBarID) not found.";
+
+// No exact match found
+"mockadaptivetabbarmodel_error_target_tab_bar_switchtot" = "Error: Target tab bar \(switchToTabBarID) for switch not found.";
+
+// No exact match found
+"adaptivetabbaritem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"adaptivetabbaritem_all_states" = "All States";
+
+// No exact match found
+"cashoutamount_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"cashoutamount_datacurrency_dataamount" = "\(data.currency) \(data.amount)";
+
+// No exact match found
+"cashoutamount_default_state" = "Default State";
+
+// No exact match found
+"cashoutamount_different_amount" = "Different Amount";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_claim_bonus_tapped_for_card_ca" = "Claim bonus tapped for card: \(cardId)";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_terms_tapped_for_card_cardid" = "Terms tapped for card: \(cardId)";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_the_betsson_double" = "The Betsson Double";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_welcome_bonus" = "Welcome Bonus";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_weekend_special" = "Weekend Special";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_vip_exclusive" = "VIP Exclusive";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_quick_start" = "Quick Start";
+
+// No exact match found
+"mockpromotionalbonuscardsscrollmodel_daily_special" = "Daily Special";
+
+// No exact match found
+"promotionalbonuscardsscroll_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotionalbonuscardsscroll_promotionalbonuscardsscrollvie" = "PromotionalBonusCardsScrollView";
+
+// No exact match found
+"promotionalbonuscardsscroll_promotionalbonuscardsscrollvie" = "PromotionalBonusCardsScrollView";
+
+// No exact match found
+"videoblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"quickaddbutton_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"quickaddbutton_dataamount" = "+\(data.amount)";
+
+// No exact match found
+"quickaddbutton_quickaddbuttonview" = "QuickAddButtonView";
+
+// No exact match found
+"quickaddbutton_quickaddbuttonview" = "QuickAddButtonView";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_football" = "Football";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_basketball" = "Basketball";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_tennis" = "Tennis";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_baseball" = "Baseball";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_hockey" = "Hockey";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_golf" = "Golf";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_volleyball" = "Volleyball";
+
+// No exact match found
+"mocksporttypeselectoritemmodel_soccer" = "Soccer";
+
+// No exact match found
+"sporttypeselectoritem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sporttypeselectoritem_sporttypeselectoritemview" = "SportTypeSelectorItemView";
+
+// No exact match found
+"sporttypeselectoritem_sporttypeselectoritemview" = "SportTypeSelectorItemView";
+
+// No exact match found
+"filteroptioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sharechannelsgrid_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented - use init(viewModel:) instead";
+
+// No exact match found
+"sharechannelsgrid_all_channels" = "All Channels";
+
+// No exact match found
+"sharechannelsgrid_selected_channeltitle" = "Selected: \(channel.title)";
+
+// No exact match found
+"sharechannelsgrid_social_only" = "Social Only";
+
+// No exact match found
+"sharechannelsgrid_selected_channeltitle" = "Selected: \(channel.title)";
+
+// No exact match found
+"sharechannelsgrid_limited_channels" = "Limited Channels";
+
+// No exact match found
+"sharechannelsgrid_selected_channeltitle" = "Selected: \(channel.title)";
+
+// No exact match found
+"sharechannelsgrid_with_disabled" = "With Disabled";
+
+// No exact match found
+"sharechannelsgrid_selected_channeltitle" = "Selected: \(channel.title)";
+
+// No exact match found
+"sharechannelsgrid_messaging_only" = "Messaging Only";
+
+// No exact match found
+"sharechannelsgrid_selected_channeltitle" = "Selected: \(channel.title)";
+
+// No exact match found
+"sharechanneltype_twitter" = "Twitter";
+
+// No exact match found
+"sharechanneltype_whatsapp" = "WhatsApp";
+
+// No exact match found
+"sharechanneltype_facebook" = "Facebook";
+
+// No exact match found
+"sharechanneltype_telegram" = "Telegram";
+
+// No exact match found
+"sharechanneltype_messenger" = "Messenger";
+
+// No exact match found
+"sharechanneltype_viber" = "Viber";
+
+// No exact match found
+"sharechannelbutton_twitter" = "Twitter";
+
+// No exact match found
+"sharechannelbutton_twitter_tapped" = "Twitter tapped";
+
+// No exact match found
+"sharechannelbutton_whatsapp" = "WhatsApp";
+
+// No exact match found
+"sharechannelbutton_whatsapp_tapped" = "WhatsApp tapped";
+
+// No exact match found
+"sharechannelbutton_disabled" = "Disabled";
+
+// No exact match found
+"sharechannelbutton_facebook_tapped" = "Facebook tapped";
+
+// No exact match found
+"sharechannelbutton_all_channels" = "All Channels";
+
+// No exact match found
+"sharechannelbutton_channeltitle_tapped" = "\(channel.title) tapped";
+
+// No exact match found
+"transactionitemtablecell_transactionitemtableviewcell" = "TransactionItemTableViewCell";
+
+// No exact match found
+"transactionitemdata_prefixcurrency_formattednumber" = "\(prefix)\(currency) \(formattedNumber)";
+
+// No exact match found
+"transactionitemdata_prefixcurrency_absamount" = "\(prefix)\(currency) \(absAmount)";
+
+// No exact match found
+"transactionitemdata_e_ddmm_hhmm" = "E dd/MM - HH:mm";
+
+// No exact match found
+"transactionitemdata_balance_currency_formattednumb" = "Balance: \(currency) \(formattedNumber)";
+
+// No exact match found
+"transactionitemdata_balance_currency_balance" = "Balance: \(currency) \(balance)";
+
+// No exact match found
+"mocktransactionitemmodel_balance" = "Balance: ";
+
+// No exact match found
+"mocktransactionitemmodel_datacurrency_formattednumber" = "\(data.currency) \(formattedNumber)";
+
+// No exact match found
+"mocktransactionitemmodel_datacurrency_balance" = "\(data.currency) \(balance)";
+
+// No exact match found
+"mocktransactionitemmodel_real_madrid_vs_barcelona" = "Real Madrid vs Barcelona";
+
+// No exact match found
+"mocktransactionitemmodel_manchester_city_manchester_cit" = "Manchester City Manchester City Manchester City vs Arsenal";
+
+// No exact match found
+"mocktransactionitemmodel_win_tax_deduction" = "Win Tax Deduction";
+
+// No exact match found
+"mocktransactionitemmodel_pending_withdrawal" = "Pending Withdrawal";
+
+// No exact match found
+"transactionitem_doconclipboard" = "doc.on.clipboard";
+
+// No exact match found
+"transactionitem_transaction_item_deposit" = "Transaction Item - Deposit";
+
+// No exact match found
+"transactionitem_transaction_item_bet_won" = "Transaction Item - Bet Won";
+
+// No exact match found
+"transactionitem_transaction_item_bet_placed" = "Transaction Item - Bet Placed";
+
+// No exact match found
+"transactionitem_corner_radius_test_three_cards" = "Corner Radius Test - Three Cards";
+
+// No exact match found
+"transactionstatus_placed" = "Placed";
+
+// No exact match found
+"matchdatenavigationbarmodelprotocol_hhmm_eee_ddmm" = "HH:mm EEE dd/MM";
+
+// No exact match found
+"matchdatenavigationbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"matchdatenavigationbar_" = ", ";
+
+// No exact match found
+"matchdatenavigationbar_period_time" = "\(period), \(time)";
+
+// No exact match found
+"matchdatenavigationbar_prematch" = "Pre-Match";
+
+// No exact match found
+"matchdatenavigationbar_live_match" = "Live Match";
+
+// No exact match found
+"matchdatenavigationbar_no_back_button" = "No Back Button";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_1st_half" = "1st Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_2nd_half" = "2nd Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_half_time" = "Half Time";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_extra_time" = "Extra Time";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_2nd_half" = "2nd Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_eeee_mmm_d_at_hmm_a" = "EEEE, MMM d 'at' h:mm a";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_1st_half" = "1st Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_1st_half" = "1st Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_half_time" = "Half Time";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_half_time" = "Half Time";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_2nd_half" = "2nd Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_2nd_half" = "2nd Half";
+
+// No exact match found
+"mockmatchdatenavigationbarmodel_full_time" = "Full Time";
+
+// No exact match found
+"mockbetslipheadermodel_xaf_25000" = "XAF 25,000";
+
+// No exact match found
+"betslipheader_log_in" = "Log In";
+
+// No exact match found
+"betslipheader_log_in" = "Log In";
+
+// No exact match found
+"betslipheader_xmark" = "xmark";
+
+// No exact match found
+"betslipheader_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betslipheader_balance" = "Balance:";
+
+// No exact match found
+"betslipheader_not_logged_in" = "Not Logged In";
+
+// No exact match found
+"betslipheader_logged_in" = "Logged In";
+
+// No exact match found
+"videosection_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"themeswitcher_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented - use init(viewModel:) instead";
+
+// No exact match found
+"themeswitcher_theme_switcher" = "Theme Switcher";
+
+// No exact match found
+"themeswitcher_theme_switcher_dark" = "Theme Switcher - Dark";
+
+// No exact match found
+"themeswitcher_theme_switcher_both_modes" = "Theme Switcher - Both Modes";
+
+// No exact match found
+"themeswitcher_system_mode_interactive" = "System Mode (Interactive)";
+
+// No exact match found
+"mockthemeswitchermodel_mock_theme_selected_themerawva" = "🎨 Mock: Theme selected: \(theme.rawValue)";
+
+// No exact match found
+"mockthemeswitchermodel_mock_switching_to_light_theme" = "☀️ Mock: Switching to light theme";
+
+// No exact match found
+"mockthemeswitchermodel_mock_following_system_theme" = "💡 Mock: Following system theme";
+
+// No exact match found
+"mockthemeswitchermodel_mock_switching_to_dark_theme" = "🌙 Mock: Switching to dark theme";
+
+// No exact match found
+"mockthemeswitchermodel_default_mock_selected_themeraw" = "🎯 Default Mock: Selected \(theme.rawValue)";
+
+// No exact match found
+"mockthemeswitchermodel_light_mock_selected_themerawva" = "🎯 Light Mock: Selected \(theme.rawValue)";
+
+// No exact match found
+"mockthemeswitchermodel_dark_mock_selected_themerawval" = "🎯 Dark Mock: Selected \(theme.rawValue)";
+
+// No exact match found
+"mockthemeswitchermodel_interactive_mock_selected_them" = "🎯 Interactive Mock: Selected \(theme.rawValue)";
+
+// No exact match found
+"mockthemeswitchermodel_interface_will_be_bright_and_c" = "🌅 Interface will be bright and clean";
+
+// No exact match found
+"mockthemeswitchermodel_interface_will_follow_system_s" = "🔄 Interface will follow system settings";
+
+// No exact match found
+"mockthemeswitchermodel_interface_will_be_dark_and_eas" = "🌃 Interface will be dark and easy on the eyes";
+
+// No exact match found
+"themesegment_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mocksinglebuttonbannermodel_banner_button_tapped_for_type_" = "Banner button tapped for type: \(bannerData.type)";
+
+// No exact match found
+"mocksinglebuttonbannermodel_button" = "Button";
+
+// No exact match found
+"mocksinglebuttonbannermodel_coming_soon" = "Coming Soon";
+
+// No exact match found
+"mocksinglebuttonbannermodel_this_banner_is_hidden" = "This banner is hidden";
+
+// No exact match found
+"singlebuttonbannercell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"singlebuttonbanner_singlebuttonbannerview" = "SingleButtonBannerView";
+
+// No exact match found
+"singlebuttonbanner_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"singlebuttonbanner_banner_debug_viewsetbuttontitl" = "[BANNER_DEBUG] 🔴 View.setButtonTitle - from '\(currentTitle)' to '\(buttonConfig.title)'";
+
+// No exact match found
+"singlebuttonbanner_singlebuttonbannerview" = "SingleButtonBannerView";
+
+// No exact match found
+"singlebuttonbanner_singlebuttonbannerview" = "SingleButtonBannerView";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_barcelona" = "Barcelona";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_jul_24" = "Jul 24";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_liverpool" = "Liverpool";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_dec_15" = "Dec 15";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_bayern_munich" = "Bayern Munich";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_dortmund" = "Dortmund";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_2_1" = "2 - 1";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_arsenal" = "Arsenal";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_chelsea" = "Chelsea";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_3_2" = "3 - 2";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_novak_djokovic" = "Novak Djokovic";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_rafael_nadal" = "Rafael Nadal";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_1_1" = "1 - 1";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_3rd_set" = "3rd Set";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_lakers" = "Lakers";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_warriors" = "Warriors";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_103_95" = "103 - 95";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_q4_845" = "Q4 8:45";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_brazil" = "Brazil";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_italy" = "Italy";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_1_1" = "1 - 1";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_3rd_set" = "3rd Set";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_fc_barcelona" = "FC Barcelona";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_el_clasico" = "El Clasico";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_borussia_mönchengladbach" = "Borussia Mönchengladbach";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_eintracht_frankfurt_am_main" = "Eintracht Frankfurt am Main";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_1_0" = "1 - 0";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_team_a" = "Team A";
+
+// No exact match found
+"mockmatchparticipantsinfomodel_team_b" = "Team B";
+
+// No exact match found
+"matchparticipantsinfo_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"matchparticipantsinfo_ended" = "Ended";
+
+// No exact match found
+"matchparticipantsinfo_matchparticipantsinfoview" = "MatchParticipantsInfoView";
+
+// No exact match found
+"matchparticipantsinfo_matchparticipantsinfoview" = "MatchParticipantsInfoView";
+
+// No exact match found
+"listblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"stackblock_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"ticketselection_live" = "LIVE";
+
+// No exact match found
+"ticketselection_selection" = "Selection";
+
+// No exact match found
+"ticketselection_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"ticketselection_ticketdatahomescore" = "\(ticketData.homeScore)";
+
+// No exact match found
+"ticketselection_ticketdataawayscore" = "\(ticketData.awayScore)";
+
+// No exact match found
+"ticketselection_prelive_state" = "PreLive State";
+
+// No exact match found
+"ticketselection_live_state" = "Live State";
+
+// No exact match found
+"ticketselection_live_draw" = "Live Draw";
+
+// No exact match found
+"ticketselection_long_team_names" = "Long Team Names";
+
+// No exact match found
+"ticketselection_no_icons" = "No Icons";
+
+// No exact match found
+"mockticketselectionmodel_ticket_tapped_currentdataid" = "Ticket tapped: \(currentData.id)";
+
+// No exact match found
+"mockticketselectionmodel_premier_league" = "Premier League";
+
+// No exact match found
+"mockticketselectionmodel_manchester_united" = "Manchester United";
+
+// No exact match found
+"mockticketselectionmodel_liverpool" = "Liverpool";
+
+// No exact match found
+"mockticketselectionmodel_today_2000" = "Today, 20:00";
+
+// No exact match found
+"mockticketselectionmodel_uefa_champions_league" = "UEFA Champions League";
+
+// No exact match found
+"mockticketselectionmodel_real_madrid" = "Real Madrid";
+
+// No exact match found
+"mockticketselectionmodel_bayern_munich" = "Bayern Munich";
+
+// No exact match found
+"mockticketselectionmodel_tomorrow_2100" = "Tomorrow, 21:00";
+
+// No exact match found
+"mockticketselectionmodel_la_liga" = "La Liga";
+
+// No exact match found
+"mockticketselectionmodel_barcelona" = "Barcelona";
+
+// No exact match found
+"mockticketselectionmodel_atletico_madrid" = "Atletico Madrid";
+
+// No exact match found
+"mockticketselectionmodel_bundesliga" = "Bundesliga";
+
+// No exact match found
+"mockticketselectionmodel_bayern_munich" = "Bayern Munich";
+
+// No exact match found
+"mockticketselectionmodel_borussia_dortmund" = "Borussia Dortmund";
+
+// No exact match found
+"mockticketselectionmodel_serie_a" = "Serie A";
+
+// No exact match found
+"mockticketselectionmodel_juventus" = "Juventus";
+
+// No exact match found
+"mockticketselectionmodel_ac_milan" = "AC Milan";
+
+// No exact match found
+"mockticketselectionmodel_very_long_competition_name_tha" = "Very Long Competition Name That Might Overflow";
+
+// No exact match found
+"mockticketselectionmodel_very_long_home_team_name_that_" = "Very Long Home Team Name That Might Cause Layout Issues";
+
+// No exact match found
+"mockticketselectionmodel_very_long_away_team_name_that_" = "Very Long Away Team Name That Might Cause Layout Issues";
+
+// No exact match found
+"mockticketselectionmodel_today_2000" = "Today, 20:00";
+
+// No exact match found
+"mockticketselectionmodel_chelsea" = "Chelsea";
+
+// No exact match found
+"mockticketselectionmodel_today_2000" = "Today, 20:00";
+
+// No exact match found
+"mockfloatingoverlaymodel_welcome_to_vip_lounge" = "Welcome to VIP Lounge ⭐";
+
+// No exact match found
+"floatingoverlay_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"floatingoverlay_floatingoverlayview" = "FloatingOverlayView";
+
+// No exact match found
+"floatingoverlay_floatingoverlayview" = "FloatingOverlayView";
+
+// No exact match found
+"floatingoverlaymodelprotocol_youre_in_sportsbook" = "You're in Sportsbook 🔥";
+
+// No exact match found
+"floatingoverlaymodelprotocol_youre_in_casino" = "You're in Casino 🎲";
+
+// No exact match found
+"mockbetdetailrowmodel_bet_placed_on_sun_0101_1859" = "Bet Placed on Sun 01/01 - 18:59";
+
+// No exact match found
+"betdetailrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betdetailrow_bet_detail_row_standard" = "Bet Detail Row - Standard";
+
+// No exact match found
+"betdetailrow_bet_detail_row_top_corners" = "Bet Detail Row - Top Corners";
+
+// No exact match found
+"betdetailrow_bet_detail_row_bottom_corners" = "Bet Detail Row - Bottom Corners";
+
+// No exact match found
+"betdetailrow_bet_detail_row_header_style" = "Bet Detail Row - Header Style";
+
+// No exact match found
+"gradient_gradientview" = "GradientView";
+
+// No exact match found
+"gradient_gradientview_examples" = "GradientView Examples";
+
+// No exact match found
+"gradient_gradient_directions" = "GRADIENT DIRECTIONS";
+
+// No exact match found
+"gradient_corner_radius_variations" = "CORNER RADIUS VARIATIONS";
+
+// No exact match found
+"gradient_styleprovider_colors" = "STYLEPROVIDER COLORS";
+
+// No exact match found
+"gradient_animation" = "ANIMATION";
+
+// No exact match found
+"gradient_horizontal_left_right" = "Horizontal (left → right)";
+
+// No exact match found
+"gradient_inverted_horizontal_right_left" = "Inverted Horizontal (right → left)";
+
+// No exact match found
+"gradient_vertical_top_bottom" = "Vertical (top → bottom)";
+
+// No exact match found
+"gradient_inverted_vertical_bottom_top" = "Inverted Vertical (bottom → top)";
+
+// No exact match found
+"gradient_diagonal_bottomleft_topright" = "Diagonal (bottom-left → top-right)";
+
+// No exact match found
+"gradient_inverted_diagonal_topleft_bott" = "Inverted Diagonal (top-left → bottom-right)";
+
+// No exact match found
+"gradient_radial_center_edges" = "Radial (center → edges)";
+
+// No exact match found
+"gradient_cornerradius_0" = "cornerRadius = 0";
+
+// No exact match found
+"gradient_cornerradius_12" = "cornerRadius = 12";
+
+// No exact match found
+"gradient_cornerradius_24" = "cornerRadius = 24";
+
+// No exact match found
+"gradient_brand_gradient_topbargradient1" = "Brand gradient (topBarGradient1/2/3)";
+
+// No exact match found
+"gradient_animated_gradient_with_3_color" = "Animated gradient with 3 colors";
+
+// No exact match found
+"actionrow_all_states" = "All States";
+
+// No exact match found
+"actionrow_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"actionrow_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"actionrow_tapped_itemtitle" = "Tapped: \(item.title)";
+
+// No exact match found
+"betsliptypeselector_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betsliptypeselector_sports_selected" = "Sports Selected";
+
+// No exact match found
+"betsliptypeselector_virtuals_selected" = "Virtuals Selected";
+
+// No exact match found
+"mockcodeclipboardmodel_abcd1e2" = "ABCD1E2";
+
+// No exact match found
+"mockcodeclipboardmodel_copy_tapped_for_code_currentda" = "Copy tapped for code: \(currentData.code)";
+
+// No exact match found
+"mockcodeclipboardmodel_abcd1e2" = "ABCD1E2";
+
+// No exact match found
+"mockcodeclipboardmodel_xyz789" = "XYZ789";
+
+// No exact match found
+"mockcodeclipboardmodel_abcd1e2" = "ABCD1E2";
+
+// No exact match found
+"codeclipboard_copied_to_clipboard" = "Copied to Clipboard";
+
+// No exact match found
+"codeclipboard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"codeclipboard_codeclipboardview" = "CodeClipboardView";
+
+// No exact match found
+"codeclipboard_codeclipboardview" = "CodeClipboardView";
+
+// No exact match found
+"leagueoptionrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"leagueoptionrow_no_events" = "No Events";
+
+// No exact match found
+"leaguesfilter_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_double_chance" = "Double Chance";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_another_market" = "Another market";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_double_chance" = "Double Chance";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_double_chance" = "Double Chance";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_overunder" = "Over/Under";
+
+// No exact match found
+"mockmarketgroupselectortabmodel_betbuilder" = "BetBuilder";
+
+// No exact match found
+"marketgroupselectortab_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketgroupselectortab_no_market_groups_available" = "No market groups available";
+
+// No exact match found
+"marketgroupselectortab_market_group_selected_eventsel" = "Market group selected: \(event.selectedId)";
+
+// No exact match found
+"marketgroupselectortab_standard_sports_markets" = "Standard Sports Markets";
+
+// No exact match found
+"marketgroupselectortab_icon_tinting_test_with_icons" = "Icon Tinting Test - With Icons";
+
+// No exact match found
+"marketgroupselectortab_games" = "Games";
+
+// No exact match found
+"marketgroupselectortab_stretch_layout_test_centered_c" = "Stretch Layout Test - Centered Content";
+
+// No exact match found
+"marketgroupselectortab_overunder" = "Over/Under";
+
+// No exact match found
+"marketgroupselectortab_mixed_state_markets" = "Mixed State Markets";
+
+// No exact match found
+"marketgroupselectortab_limited_markets" = "Limited Markets";
+
+// No exact match found
+"marketgroupselectortab_loading_state" = "Loading State";
+
+// No exact match found
+"marketgroupselectortab_empty_state" = "Empty State";
+
+// No exact match found
+"marketgroupselectortab_disabled_markets" = "Disabled Markets";
+
+// No exact match found
+"marketgroupselectortab_market_category_tabs_light" = "Market Category Tabs - Light";
+
+// No exact match found
+"marketgroupselectortab_limited_markets_stretch_mode" = "Limited Markets - Stretch Mode";
+
+// No exact match found
+"marketgroupselectortab_item_colors_blue_bar_gray_item" = "Item Colors - Blue Bar, Gray Items";
+
+// No exact match found
+"marketgroupselectortab_item_colors_different_selected" = "Item Colors - Different Selected State";
+
+// No exact match found
+"marketgroupselectortab_custom_background_system_blue" = "Custom Background - System Blue";
+
+// No exact match found
+"marketgroupselectortab_custom_items_system_green" = "Custom Items - System Green";
+
+// No exact match found
+"marketgroupselectortab_custom_background_system_green" = "Custom Background - System Green";
+
+// No exact match found
+"customslider_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"customslider_customsliderview" = "CustomSliderView";
+
+// No exact match found
+"customslider_customsliderview" = "CustomSliderView";
+
+// No exact match found
+"mockwalletwidgetmodel_deposit_button_tapped" = "Deposit button tapped";
+
+// No exact match found
+"walletwidget_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"walletwidget_walletwidgetview" = "WalletWidgetView";
+
+// No exact match found
+"walletwidget_walletwidgetview" = "WalletWidgetView";
+
+// No exact match found
+"walletwidgetmodelprotocol_deposit" = "DEPOSIT";
+
+// No exact match found
+"promotionitem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"promotionitem_selftitlelabeltext" = "\(self?.titleLabel.text ?? ";
+
+// No exact match found
+"promotionitem_0" = "), \($0)";
+
+// No exact match found
+"promotionitem_component_states" = "Component States";
+
+// No exact match found
+"promotionitem_welcome" = "Welcome";
+
+// No exact match found
+"promotionitem_casino_games" = "Casino Games";
+
+// No exact match found
+"mockmarketoutcomeslinemodel_market_suspended" = "Market Suspended";
+
+// No exact match found
+"mockmarketoutcomeslinemodel_see_all_markets" = "See All Markets";
+
+// No exact match found
+"marketoutcomesline_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"marketoutcomesline_marketoutcomeslineview" = "MarketOutcomesLineView";
+
+// No exact match found
+"marketoutcomesline_marketoutcomeslineview" = "MarketOutcomesLineView";
+
+// No exact match found
+"notificationcardcollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"notificationcard_today_formatterstringfrom_date" = "Today, \(formatter.string(from: date))";
+
+// No exact match found
+"notificationcard_yesterday_formatterstringfrom_" = "Yesterday, \(formatter.string(from: date))";
+
+// No exact match found
+"notificationcard_unread_notification" = "Unread Notification";
+
+// No exact match found
+"notificationcard_complete_onboarding" = "Complete Onboarding";
+
+// No exact match found
+"notificationcard_youre_almost_there_firstname_c" = "You're almost there, Firstname. Complete your personal and account information, and start betting!";
+
+// No exact match found
+"notificationcard_action_tapped" = "Action tapped!";
+
+// No exact match found
+"notificationcard_unread_with_action_button" = "Unread with Action Button";
+
+// No exact match found
+"notificationcard_welcome_bonus_available" = "Welcome Bonus Available";
+
+// No exact match found
+"notificationcard_claim_your_50_welcome_bonus_no" = "Claim your €50 welcome bonus now! This offer is valid for the next 24 hours only.";
+
+// No exact match found
+"notificationcard_claim_bonus_tapped" = "Claim bonus tapped!";
+
+// No exact match found
+"notificationcard_read_notification" = "Read Notification";
+
+// No exact match found
+"notificationcard_account_verification_complete" = "Account Verification Complete";
+
+// No exact match found
+"notificationcard_your_account_has_been_successf" = "Your account has been successfully verified. You can now enjoy all features of our platform.";
+
+// No exact match found
+"notificationcard_action_tapped" = "Action tapped!";
+
+// No exact match found
+"notificationcard_read_with_primary_action" = "Read with Primary Action";
+
+// No exact match found
+"notificationcard_payment_confirmation_required" = "Payment Confirmation Required";
+
+// No exact match found
+"notificationcard_please_confirm_your_payment_me" = "Please confirm your payment method to complete your recent deposit transaction.";
+
+// No exact match found
+"notificationcard_confirm_payment" = "Confirm Payment";
+
+// No exact match found
+"notificationcard_confirm_payment_tapped" = "Confirm payment tapped!";
+
+// No exact match found
+"notificationcard_long_content" = "Long Content";
+
+// No exact match found
+"notificationcard_special_promotion_double_your_" = "Special Promotion: Double Your Winnings This Weekend";
+
+// No exact match found
+"notificationcard_dont_miss_out_on_our_exclusive" = "Don't miss out on our exclusive weekend promotion! Double your winnings on all football matches this Saturday and Sunday. This offer is valid for both single bets and accumulators. Terms and conditions apply. Minimum bet amount is €10. Maximum bonus is €500 per customer.";
+
+// No exact match found
+"notificationcard_learn_more" = "Learn More";
+
+// No exact match found
+"notificationcard_learn_more_tapped" = "Learn more tapped!";
+
+// No exact match found
+"notificationcard_today_timestamp" = "Today Timestamp";
+
+// No exact match found
+"notificationcard_bet_placed_successfully" = "Bet Placed Successfully";
+
+// No exact match found
+"notificationcard_your_bet_on_manchester_united_" = "Your bet on Manchester United vs Liverpool has been placed successfully. Good luck!";
+
+// No exact match found
+"notificationcard_action_tapped" = "Action tapped!";
+
+// No exact match found
+"notificationcard_all_states_side_by_side" = "All States Side by Side";
+
+// No exact match found
+"notificationcard_unread" = "Unread";
+
+// No exact match found
+"notificationcard_this_is_an_unread_notification" = "This is an unread notification";
+
+// No exact match found
+"notificationcard_unread_with_action" = "Unread with Action";
+
+// No exact match found
+"notificationcard_this_notification_has_an_actio" = "This notification has an action button";
+
+// No exact match found
+"notificationcard_do_something" = "Do Something";
+
+// No exact match found
+"notificationcard_read" = "Read";
+
+// No exact match found
+"notificationcard_this_is_a_read_notification" = "This is a read notification";
+
+// No exact match found
+"notificationcard_read_with_secondary_action" = "Read with Secondary Action";
+
+// No exact match found
+"notificationcard_this_has_a_secondary_style_act" = "This has a secondary style action";
+
+// No exact match found
+"notificationcard_learn_more" = "Learn More";
+
+// No exact match found
+"notificationcard_action_tapped_for_notification" = "Action tapped for: \(notification.title)";
+
+// No exact match found
+"notificationlist_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"notificationlist_no_notifications" = "No notifications";
+
+// No exact match found
+"notificationlist_failed_to_load_notifications" = "Failed to load notifications";
+
+// No exact match found
+"notificationlist_default_state" = "Default State";
+
+// No exact match found
+"notificationlist_empty_state" = "Empty State";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Refresh completed";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Marked notification '\(originalNotification.title)' as read";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Marked all notifications as read";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Performing action for notification: \(notification.title)";
+
+// No exact match found
+"mocknotificationlistmodel_action_actiontitle_actionstyle" = "Action: \(action.title) (\(action.style))";
+
+// No exact match found
+"mocknotificationlistmodel_do_something" = "do something";
+
+// No exact match found
+"mocknotificationlistmodel_claim_bonus" = "claim bonus";
+
+// No exact match found
+"mocknotificationlistmodel_confirm_payment" = "confirm payment";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Deleted notification with ID: \(notificationId)";
+
+// No exact match found
+"mocknotificationlistmodel_mocknotificationlistviewmodel_" = "MockNotificationListViewModel: Cleared all notifications";
+
+// No exact match found
+"mocknotificationlistmodel_complete_onboarding" = "Complete Onboarding";
+
+// No exact match found
+"mocknotificationlistmodel_youre_almost_there_firstname_c" = "You're almost there, Firstname. Complete your personal and account information, and start betting!";
+
+// No exact match found
+"mocknotificationlistmodel_complete_onboarding" = "Complete Onboarding";
+
+// No exact match found
+"mocknotificationlistmodel_youre_almost_there_firstname_c" = "You're almost there, Firstname. Complete your personal and account information, and start betting!";
+
+// No exact match found
+"mocknotificationlistmodel_do_something" = "Do something";
+
+// No exact match found
+"mocknotificationlistmodel_complete_onboarding" = "Complete Onboarding";
+
+// No exact match found
+"mocknotificationlistmodel_youre_almost_there_firstname_c" = "You're almost there, Firstname. Complete your personal and account information, and start betting!";
+
+// No exact match found
+"mocknotificationlistmodel_complete_onboarding" = "Complete Onboarding";
+
+// No exact match found
+"mocknotificationlistmodel_youre_almost_there_firstname_c" = "You're almost there, Firstname. Complete your personal and account information, and start betting!";
+
+// No exact match found
+"mocknotificationlistmodel_do_something" = "Do Something";
+
+// No exact match found
+"mocknotificationlistmodel_welcome_to_betsson" = "Welcome to Betsson!";
+
+// No exact match found
+"mocknotificationlistmodel_thanks_for_joining_us_get_star" = "Thanks for joining us. Get started with your first bet and claim your welcome bonus!";
+
+// No exact match found
+"mocknotificationlistmodel_payment_confirmation_required" = "Payment Confirmation Required";
+
+// No exact match found
+"mocknotificationlistmodel_please_confirm_your_payment_me" = "Please confirm your payment method to complete your deposit.";
+
+// No exact match found
+"mocknotificationlistmodel_confirm_payment" = "Confirm Payment";
+
+// No exact match found
+"mocknotificationlistmodel_limited_time_offer" = "Limited Time Offer";
+
+// No exact match found
+"mocknotificationlistmodel_double_your_winnings_on_footba" = "Double your winnings on football matches today only! Don't miss out on this exclusive promotion.";
+
+// No exact match found
+"mocknotificationlistmodel_account_verification_complete" = "Account Verification Complete";
+
+// No exact match found
+"mocknotificationlistmodel_your_account_has_been_successf" = "Your account has been successfully verified. You can now enjoy all features of our platform.";
+
+// No exact match found
+"mocknotificationlistmodel_urgent_action_required" = "Urgent: Action Required";
+
+// No exact match found
+"mocknotificationlistmodel_your_account_requires_immediat" = "Your account requires immediate attention. Please verify your identity to continue using our services.";
+
+// No exact match found
+"mocknotificationlistmodel_verify_now" = "Verify Now";
+
+// No exact match found
+"mocknotificationlistmodel_bonus_credit_added" = "Bonus Credit Added";
+
+// No exact match found
+"mocknotificationlistmodel_congratulations_50_bonus_credi" = "Congratulations! €50 bonus credit has been added to your account.";
+
+// No exact match found
+"mocknotificationlistmodel_view_details" = "View Details";
+
+// No exact match found
+"mocknotificationlistmodel_weekly_summary" = "Weekly Summary";
+
+// No exact match found
+"mocknotificationlistmodel_heres_your_betting_summary_for" = "Here's your betting summary for the past week. You made 5 successful bets!";
+
+// No exact match found
+"mocknotificationlistmodel_new_feature_available" = "New Feature Available";
+
+// No exact match found
+"mocknotificationlistmodel_check_out_our_new_live_streami" = "Check out our new live streaming feature for major sports events.";
+
+// No exact match found
+"mocknotificationlistmodel_special_offer" = "Special Offer";
+
+// No exact match found
+"mocknotificationlistmodel_match_update" = "Match Update";
+
+// No exact match found
+"mocknotificationlistmodel_payment_processed" = "Payment Processed";
+
+// No exact match found
+"mocknotificationlistmodel_new_feature" = "New Feature";
+
+// No exact match found
+"mocknotificationlistmodel_take_advantage_of_this_limited" = "Take advantage of this limited time offer.";
+
+// No exact match found
+"mocknotificationlistmodel_your_favorite_team_is_playing_" = "Your favorite team is playing now!";
+
+// No exact match found
+"mocknotificationlistmodel_your_withdrawal_has_been_proce" = "Your withdrawal has been processed successfully.";
+
+// No exact match found
+"mocknotificationlistmodel_discover_exciting_new_features" = "Discover exciting new features in the app.";
+
+// No exact match found
+"quicklinktabbaritem_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"quicklinktabbaritem_quick_link_item" = "Quick Link Item";
+
+// No exact match found
+"quicklinkstabbar_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"quicklinkstabbar_gaming_quick_links" = "Gaming Quick Links";
+
+// No exact match found
+"quicklinkstabbar_sports_quick_links" = "Sports Quick Links";
+
+// No exact match found
+"quicklinkstabbar_account_quick_links" = "Account Quick Links";
+
+// No exact match found
+"mockquicklinkstabbarmodel_quick_link_tapped_typerawvalue" = "Quick link tapped: \(type.rawValue)";
+
+// No exact match found
+"mockquicklinkstabbarmodel_football" = "Football";
+
+// No exact match found
+"mockquicklinkstabbarmodel_help" = "Help";
+
+// No exact match found
+"mockcasinogamecardmodel_gaming_corps" = "Gaming Corps";
+
+// No exact match found
+"mockcasinogamecardmodel_xaf_100" = "XAF 100";
+
+// No exact match found
+"mockcasinogamecardmodel_spribe" = "Spribe";
+
+// No exact match found
+"mockcasinogamecardmodel_xaf_9000" = "XAF 9000";
+
+// No exact match found
+"mockcasinogamecardmodel_hacksaw_gaming_hacksaw_gaming_" = "Hacksaw Gaming Hacksaw Gaming Hacksaw Gaming";
+
+// No exact match found
+"mockcasinogamecardmodel_xaf_1" = "XAF 1";
+
+// No exact match found
+"mockcasinogamecardmodel_test_provider" = "Test Provider";
+
+// No exact match found
+"mockcasinogamecardmodel_xaf_2" = "XAF 2";
+
+// No exact match found
+"casinogamecardcollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinogamecard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinogamecard_min_stake" = "Min Stake:";
+
+// No exact match found
+"casinogamecard_loading" = "Loading...";
+
+// No exact match found
+"casinogamecard_provider" = "Provider";
+
+// No exact match found
+"casinogamecard_min_stake" = "Min Stake";
+
+// No exact match found
+"casinogamecard_casino_game_card_placeholder" = "Casino Game Card - Placeholder";
+
+// No exact match found
+"suggestedbetsexpanded_suggestedbetsmatchcardcell" = "SuggestedBetsMatchCardCell";
+
+// No exact match found
+"suggestedbetsexpanded_suggested_bets_expanded" = "Suggested Bets Expanded";
+
+// No exact match found
+"casinocategorysection_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"casinocategorysection_gamecardcell" = "GameCardCell";
+
+// No exact match found
+"casinocategorysection_gamecardcell" = "GameCardCell";
+
+// No exact match found
+"casinocategorysection_casino_category_section_placeh" = "Casino Category Section - Placeholder";
+
+// No exact match found
+"mockcasinocategorysectionmodel_game_selected_in_section_categ" = "Game selected in section '\(categoryTitle)': \(gameId)";
+
+// No exact match found
+"mockcasinocategorysectionmodel_opening_game_selectedgamename_" = "Opening game: \(selectedGame.name) by \(selectedGame.provider)";
+
+// No exact match found
+"mockcasinocategorysectionmodel_category_button_tapped_for_cat" = "Category button tapped for: \(categoryTitle)";
+
+// No exact match found
+"mockcasinocategorysectionmodel_refreshing_games_for_category_" = "Refreshing games for category: \(categoryTitle)";
+
+// No exact match found
+"mockcasinocategorysectionmodel_analytics_game_gameid_selected" = "Analytics: Game '\(gameId)' selected from category '\(categoryId)'";
+
+// No exact match found
+"mockcasinocategorysectionmodel_analytics_category_button_tapp" = "Analytics: Category button tapped for '\(categoryId)'";
+
+// No exact match found
+"mockcasinocategorysectionmodel_red_tiger_gaming" = "Red Tiger Gaming";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_50" = "XAF 50";
+
+// No exact match found
+"mockcasinocategorysectionmodel_pragmatic_play" = "Pragmatic Play";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_100" = "XAF 100";
+
+// No exact match found
+"mockcasinocategorysectionmodel_thunderkick" = "Thunderkick";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_25" = "XAF 25";
+
+// No exact match found
+"mockcasinocategorysectionmodel_novomatic" = "Novomatic";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_200" = "XAF 200";
+
+// No exact match found
+"mockcasinocategorysectionmodel_new_games" = "New Games";
+
+// No exact match found
+"mockcasinocategorysectionmodel_all_41" = "All 41";
+
+// No exact match found
+"mockcasinocategorysectionmodel_netent" = "NetEnt";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_10" = "XAF 10";
+
+// No exact match found
+"mockcasinocategorysectionmodel_playn_go" = "Play'n GO";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_20" = "XAF 20";
+
+// No exact match found
+"mockcasinocategorysectionmodel_netent" = "NetEnt";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_50" = "XAF 50";
+
+// No exact match found
+"mockcasinocategorysectionmodel_all_127" = "All 127";
+
+// No exact match found
+"mockcasinocategorysectionmodel_microgaming" = "Microgaming";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_25" = "XAF 25";
+
+// No exact match found
+"mockcasinocategorysectionmodel_netent" = "NetEnt";
+
+// No exact match found
+"mockcasinocategorysectionmodel_xaf_40" = "XAF 40";
+
+// No exact match found
+"mockcasinocategorysectionmodel_slot_games" = "Slot Games";
+
+// No exact match found
+"mockcasinocategorysectionmodel_all_89" = "All 89";
+
+// No exact match found
+"mockcasinocategorysectionmodel_empty_category" = "Empty Category";
+
+// No exact match found
+"mockcasinocategorysectionmodel_all_0" = "All 0";
+
+// No exact match found
+"casinocategorysectionmodelprotocol_new_games" = "New Games";
+
+// No exact match found
+"casinocategorysectionmodelprotocol_all_41" = "All 41";
+
+// No exact match found
+"casinocategorysectioncollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"topbannerslidercollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"bannertype_singlebuttonbannercell" = "SingleButtonBannerCell";
+
+// No exact match found
+"bannertype_matchbannercell" = "MatchBannerCell";
+
+// No exact match found
+"mocktopbannerslidermodel_scrolled_to_page_pageindex" = "Scrolled to page: \(pageIndex)";
+
+// No exact match found
+"mocktopbannerslidermodel_banner_tapped_at_index_index" = "Banner tapped at index: \(index)";
+
+// No exact match found
+"topbannerslider_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"topbannerslider_singlebuttonbannercell" = "SingleButtonBannerCell";
+
+// No exact match found
+"topbannerslider_matchbannercell" = "MatchBannerCell";
+
+// No exact match found
+"topbannerslider_topbannersliderrender_banners_" = "   🔄 TopBannerSlider.render - banners changed, reloading collection view";
+
+// No exact match found
+"topbannerslider_topbannersliderrender_only_pag" = "   📍 TopBannerSlider.render - only page index changed, no reload needed";
+
+// No exact match found
+"topbannerslider_singlebuttonbannercell" = "SingleButtonBannerCell";
+
+// No exact match found
+"topbannerslider_singlebuttonbannercell" = "SingleButtonBannerCell";
+
+// No exact match found
+"topbannerslider_matchbannercell" = "MatchBannerCell";
+
+// No exact match found
+"topbannerslider_banner_slider" = "Banner Slider";
+
+// No exact match found
+"topbannerslider_single_banner" = "Single Banner";
+
+// No exact match found
+"walletdetailheader_234_737_456789" = "+234 737 456789";
+
+// No exact match found
+"walletdetailheader_wallet_detail_header" = "Wallet Detail Header";
+
+// No exact match found
+"walletdetailheader_234_737_456789" = "+234 737 456789";
+
+// No exact match found
+"walletdetailbalance_wallet_detail_balance_view" = "Wallet Detail Balance View";
+
+// No exact match found
+"walletdetail_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"walletdetail_1_default_state_normal_case" = "1. Default State - Normal Case";
+
+// No exact match found
+"walletdetail_2_empty_wallet_edge_case" = "2. Empty Wallet - Edge Case";
+
+// No exact match found
+"walletdetail_empty_wallet_scenario" = "Empty Wallet Scenario";
+
+// No exact match found
+"walletdetail_3_high_balance_stress_test" = "3. High Balance - Stress Test";
+
+// No exact match found
+"walletdetail_large_amounts_15000050_xaf" = "Large amounts: 150,000.50 XAF";
+
+// No exact match found
+"walletdetail_4_bonus_only_no_withdrawable" = "4. Bonus Only - No Withdrawable";
+
+// No exact match found
+"walletdetail_bonus_funds_cannot_be_withdraw" = "⚠️ Bonus funds cannot be withdrawn";
+
+// No exact match found
+"walletdetail_5_all_states_grid" = "5. All States Grid";
+
+// No exact match found
+"walletdetail_default" = "Default";
+
+// No exact match found
+"walletdetail_cashback_focus" = "Cashback Focus";
+
+// No exact match found
+"walletdetail_empty" = "Empty";
+
+// No exact match found
+"walletdetail_high_balance" = "High Balance";
+
+// No exact match found
+"walletdetail_bonus_only" = "Bonus Only";
+
+// No exact match found
+"mockwalletdetailmodel_withdraw_action_triggered" = "🏦 Withdraw action triggered";
+
+// No exact match found
+"mockwalletdetailmodel_deposit_action_triggered" = "💰 Deposit action triggered";
+
+// No exact match found
+"mockwalletdetailmodel_refreshing_wallet_data" = "🔄 Refreshing wallet data...";
+
+// No exact match found
+"walletdetailbalanceline_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"walletdetailbalanceline_white_balance_lines_on_orange" = "White Balance Lines on Orange";
+
+// No exact match found
+"sortfilter_sort_by" = "Sort By";
+
+// No exact match found
+"sortfilter_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sortfilter_sort_by" = "Sort By";
+
+// No exact match found
+"mockbetsummaryrowmodel_title" = "TITLE";
+
+// No exact match found
+"mockbetsummaryrowmodel_value" = "VALUE";
+
+// No exact match found
+"mockbetsummaryrowmodel_potential_winnings" = "POTENTIAL WINNINGS";
+
+// No exact match found
+"mockbetsummaryrowmodel_xaf_0" = "XAF 0";
+
+// No exact match found
+"mockbetsummaryrowmodel_x_win_bonus" = "X% WIN BONUS";
+
+// No exact match found
+"mockbetsummaryrowmodel_xaf_0" = "XAF 0";
+
+// No exact match found
+"mockbetsummaryrowmodel_payout" = "PAYOUT";
+
+// No exact match found
+"mockbetsummaryrowmodel_xaf_0" = "XAF 0";
+
+// No exact match found
+"mockbetsummaryrowmodel_title" = "TITLE";
+
+// No exact match found
+"mockbetsummaryrowmodel_value" = "VALUE";
+
+// No exact match found
+"betsummaryrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"betsummaryrow_betsummaryrowview" = "BetSummaryRowView";
+
+// No exact match found
+"betsummaryrow_betsummaryrowview" = "BetSummaryRowView";
+
+// No exact match found
+"headertext_initframe_has_not_been_impleme" = "init(frame:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"headertext_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented. Use init(viewModel:) instead.";
+
+// No exact match found
+"headertext_all_states" = "All States";
+
+// No exact match found
+"headertext_headertextview" = "HeaderTextView";
+
+// No exact match found
+"headertext_suggested_events" = "Suggested Events";
+
+// No exact match found
+"mocktoastermodel_booking_code_loaded" = "Booking Code Loaded";
+
+// No exact match found
+"toaster_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"toaster_default_toaster" = "Default Toaster";
+
+// No exact match found
+"mockbonuscardmodel_mock_bonuscardviewmodel_cta_bu" = "Mock BonusCardViewModel: CTA button tapped for bonus '\(currentState.title)'";
+
+// No exact match found
+"mockbonuscardmodel_mock_bonuscardviewmodel_terms_" = "Mock BonusCardViewModel: Terms tapped for bonus '\(currentState.title)'";
+
+// No exact match found
+"mockbonuscardmodel_mock_bonuscardviewmodel_card_t" = "Mock BonusCardViewModel: Card tapped for bonus '\(currentState.title)'";
+
+// No exact match found
+"mockbonuscardmodel_wagering_requirements_apply" = "Wagering requirements apply";
+
+// No exact match found
+"bonuscard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"bonuscard_default_bonus" = "Default Bonus";
+
+// No exact match found
+"bonuscard_no_urls" = "No URLs";
+
+// No exact match found
+"bonuscard_casino_bonus" = "Casino Bonus";
+
+// No exact match found
+"bonuscard_no_tag" = "No Tag";
+
+// No exact match found
+"sortoptionrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sortoptionrow_no_events" = "No Events";
+
+// No exact match found
+"leagueoptionselectionrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"leagueoptionselectionrow_no_events" = "No Events";
+
+// No exact match found
+"countryleagueoptionrow_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"countryleagueoptionrow_no_events" = "No Events";
+
+// No exact match found
+"sportcard_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sporttypeselectorcontroller_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+
+// No exact match found
+"sporttypeselectorcontroller_select_sport" = "Select Sport";
+
+// No exact match found
+"sporttypeselectorcollectioncell_initcoder_has_not_been_impleme" = "init(coder:) has not been implemented";
+

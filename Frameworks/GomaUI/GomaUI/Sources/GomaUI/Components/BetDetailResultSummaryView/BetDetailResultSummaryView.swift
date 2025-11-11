@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 public class BetDetailResultSummaryView: UIView {
     
     // MARK: - Properties
@@ -70,7 +71,7 @@ public class BetDetailResultSummaryView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
-        label.text = "Result"
+        label.text = LocalizationProvider.string("result")
         return label
     }()
     
@@ -183,22 +184,22 @@ public class BetDetailResultSummaryView: UIView {
         case .won:
             resultPillView.backgroundColor = StyleProvider.Color.alertSuccess
             resultPillLabel.textColor = StyleProvider.Color.allWhite
-            resultPillLabel.text = "Won"
+            resultPillLabel.text = LocalizationProvider.string("won")
             
         case .lost:
             resultPillView.backgroundColor = StyleProvider.Color.backgroundGradient2
             resultPillLabel.textColor = StyleProvider.Color.alertError
-            resultPillLabel.text = "Lost"
+            resultPillLabel.text = LocalizationProvider.string("lost")
             
         case .draw:
             resultPillView.backgroundColor = StyleProvider.Color.alertWarning
             resultPillLabel.textColor = StyleProvider.Color.allWhite
-            resultPillLabel.text = "Draw"
+            resultPillLabel.text = LocalizationProvider.string("draw")
             
         case .open:
             resultPillView.backgroundColor = StyleProvider.Color.backgroundSecondary
             resultPillLabel.textColor = StyleProvider.Color.textSecondary
-            resultPillLabel.text = "Pending"
+            resultPillLabel.text = LocalizationProvider.string("pending")
         }
     }
 }

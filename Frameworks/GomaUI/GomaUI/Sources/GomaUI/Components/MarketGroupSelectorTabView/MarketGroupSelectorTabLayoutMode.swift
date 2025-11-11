@@ -2,7 +2,7 @@
 //  MarketGroupSelectorTabLayoutMode.swift
 //  GomaUI
 //
-//  Created by Assistant on 03/09/2025.
+//  Created on 03/09/2025.
 //
 
 import Foundation

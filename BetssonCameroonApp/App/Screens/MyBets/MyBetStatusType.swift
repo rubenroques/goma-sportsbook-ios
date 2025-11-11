@@ -10,13 +10,13 @@ enum MyBetStatusType: String, CaseIterable {
     var title: String {
         switch self {
         case .open:
-            return "Open"
+            return localized("open")
         case .cashOut:
-            return "Cash Out"
+            return localized("mybets_status_cashout")
         case .won:
-            return "Won"
+            return localized("won")
         case .settled:
-            return "Settled"
+            return localized("mybets_status_settled")
         }
     }
     

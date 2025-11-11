@@ -2,7 +2,7 @@
 //  MyBetDetailViewController.swift
 //  BetssonCameroonApp
 //
-//  Created by Assistant on 01/09/2025.
+//  Created on 01/09/2025.
 //
 
 import UIKit
@@ -17,10 +17,19 @@ final class MyBetDetailViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
-    
-    private lazy var customNavigationView: UIView = Self.createCustomNavigationView()
-    private lazy var betDetailsTitleLabel: UILabel = Self.createBetDetailsTitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
+
+    private lazy var navigationBarView: SimpleNavigationBarView = {
+        let viewModel = BetssonCameroonNavigationBarViewModel(
+            title: localized("mybetdetail_nav_title"),
+            onBackTapped: { [weak self] in
+                self?.viewModel.handleBackTap()
+            }
+        )
+        let navBar = SimpleNavigationBarView(viewModel: viewModel)
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        return navBar
+    }()
+
     private lazy var shareButton: UIButton = Self.createShareButton()
 
     // Content scroll view and stack view
@@ -116,24 +125,23 @@ final class MyBetDetailViewController: UIViewController {
     }
     
     private func setupViewHierarchy() {
-        // Add custom navigation view
-        view.addSubview(customNavigationView)
+        // Add navigation bar
+        view.addSubview(navigationBarView)
         view.addSubview(contentScrollView)
-        
+
+        // Add share button on top of navigation bar (right side)
+        view.addSubview(shareButton)
+
         // Content hierarchy inside scroll view
         contentScrollView.addSubview(mainStackView)
-        
+
         // Add GomaUI components to main stack view
         mainStackView.addArrangedSubview(betDetailValuesSummaryView)
         mainStackView.addArrangedSubview(selectionsLabel)
         mainStackView.addArrangedSubview(selectionsStackView)
-        
+
         // Populate selections stack view with result summary views
         setupSelectionsStackView()
-        
-        customNavigationView.addSubview(betDetailsTitleLabel)
-        customNavigationView.addSubview(backButton)
-        customNavigationView.addSubview(shareButton)
     }
     
     private func setupSelectionsStackView() {
@@ -150,29 +158,19 @@ final class MyBetDetailViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Custom Navigation View (at top)
-            customNavigationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            customNavigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            customNavigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            customNavigationView.heightAnchor.constraint(equalToConstant: 56),
-            
-            // Bet Details Title Label
-            betDetailsTitleLabel.centerXAnchor.constraint(equalTo: customNavigationView.centerXAnchor),
-            betDetailsTitleLabel.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            
-            // Back Button (Left side)
-            backButton.leadingAnchor.constraint(equalTo: customNavigationView.leadingAnchor),
-            backButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
-            backButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            backButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            
-            shareButton.trailingAnchor.constraint(equalTo: customNavigationView.trailingAnchor, constant: -16),
-            shareButton.centerYAnchor.constraint(equalTo: customNavigationView.centerYAnchor),
+            // Navigation Bar (at top)
+            navigationBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            // Share Button (right side of navigation bar)
+            shareButton.trailingAnchor.constraint(equalTo: navigationBarView.trailingAnchor, constant: -16),
+            shareButton.centerYAnchor.constraint(equalTo: navigationBarView.centerYAnchor),
             shareButton.widthAnchor.constraint(equalToConstant: 24),
             shareButton.heightAnchor.constraint(equalToConstant: 24),
-            
+
             // Content Scroll View (below navigation)
-            contentScrollView.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            contentScrollView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
             contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             contentScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -198,9 +196,11 @@ final class MyBetDetailViewController: UIViewController {
 
         // Booking code failure alert
         viewModel.onShareBookingCodeFailed = { [weak self] message in
+            let errorMessage = localized("mybetdetail_booking_code_error_message")
+                .replacingOccurrences(of: "{message}", with: message)
             let alert = UIAlertController(
-                title: "Booking Code Error",
-                message: "Failed to create booking code: \(message)",
+                title: localized("mybetdetail_booking_code_error_title"),
+                message: errorMessage,
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
@@ -209,22 +209,16 @@ final class MyBetDetailViewController: UIViewController {
     }
     
     private func setupActions() {
-        backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
-        
         shareButton.addTarget(self, action: #selector(didTapShare), for: .primaryActionTriggered)
     }
-    
-    
+
+
     // MARK: - Rendering
-    
+
     // No state management needed - content is immediately visible
-    
+
     // MARK: - Actions
-    
-    @objc private func didTapBack() {
-        viewModel.handleBackTap()
-    }
-    
+
     @objc private func didTapShare() {
         viewModel.handleShareTap()
     }
@@ -236,51 +230,7 @@ final class MyBetDetailViewController: UIViewController {
 // MARK: - Factory Methods
 
 extension MyBetDetailViewController {
-    
-    private static func createCustomNavigationView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundPrimary
-        
-        // Add bottom separator line
-        let separatorView = UIView()
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.backgroundColor = StyleProvider.Color.separatorLine
-        
-        view.addSubview(separatorView)
-        
-        NSLayoutConstraint.activate([
-            separatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            separatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            separatorView.heightAnchor.constraint(equalToConstant: 1)
-        ])
-        
-        return view
-    }
-    
-    private static func createBetDetailsTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Bet Details"
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.textAlignment = .center
-        return label
-    }
-    
-    private static func createBackButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Use standard iOS back arrow icon
-        let backImage = UIImage(systemName: "chevron.left")
-        button.setImage(backImage, for: .normal)
-        button.tintColor = StyleProvider.Color.highlightPrimary
-        
-        return button
-    }
-    
+
     private static func createShareButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -289,6 +239,4 @@ extension MyBetDetailViewController {
         button.tintColor = StyleProvider.Color.iconPrimary
         return button
     }
-    
-    // Removed loading and error view factories - not needed since data is immediately available
 }

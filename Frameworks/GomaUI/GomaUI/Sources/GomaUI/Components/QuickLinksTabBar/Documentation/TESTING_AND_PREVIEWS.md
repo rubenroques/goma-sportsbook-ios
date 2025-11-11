@@ -21,7 +21,7 @@ You should focus on testing your custom ViewModel class (the one conforming to `
 ```swift
 import XCTest
 import Combine
-@testable import GomaUI // Or your app module
+@testable  // Or your app module
 
 class MyQuickLinksViewModelTests: XCTestCase {
     var viewModel: MyQuickLinksViewModel!

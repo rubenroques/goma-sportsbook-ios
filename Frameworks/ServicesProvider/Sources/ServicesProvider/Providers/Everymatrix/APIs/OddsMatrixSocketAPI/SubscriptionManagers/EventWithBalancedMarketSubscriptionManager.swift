@@ -25,7 +25,6 @@ class EventWithBalancedMarketSubscriptionManager {
     private let bettingTypeId: String
     private let eventPartId: String
     private let operatorId: String
-    private let language: String
 
     // MARK: - State Management
     private let store = EveryMatrix.EntityStore()
@@ -39,15 +38,13 @@ class EventWithBalancedMarketSubscriptionManager {
         eventId: String,
         bettingTypeId: String,
         eventPartId: String,
-        operatorId: String,
-        language: String = "en"
+        operatorId: String
     ) {
         self.connector = connector
         self.eventId = eventId
         self.bettingTypeId = bettingTypeId
         self.eventPartId = eventPartId
         self.operatorId = operatorId
-        self.language = language
     }
 
     deinit {
@@ -69,7 +66,7 @@ class EventWithBalancedMarketSubscriptionManager {
         // Topic: /sports/{op}/{lang}/{eventId}/match-odds/{bettingType}-{eventPartId}
         let router = WAMPRouter.matchBalancedMarketOdds(
             operatorId: operatorId,
-            language: language,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             matchId: eventId,
             bettingType: bettingTypeId,
             eventPartId: eventPartId

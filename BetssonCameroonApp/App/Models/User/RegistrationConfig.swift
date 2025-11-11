@@ -22,7 +22,7 @@ struct RegistrationConfigContent: Codable {
 
 struct RegistrationField: Codable {
     let name: String
-    let displayName: String
+    let displayName: String?
     let entityName: String?
     let defaultValue: String?
     let data: String?

@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 // MARK: - Data Models
 
 /// Represents the state of the empty state action view
@@ -18,7 +19,7 @@ public struct EmptyStateActionData: Equatable {
     public let image: String?
     public let isEnabled: Bool
     
-    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = "Log in to bet", image: String? = nil, isEnabled: Bool = true) {
+    public init(state: EmptyStateActionState, title: String, actionButtonTitle: String = LocalizationProvider.string("log_in_to_bet"), image: String? = nil, isEnabled: Bool = true) {
         self.state = state
         self.title = title
         self.actionButtonTitle = actionButtonTitle

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+
 public class MockTransactionItemViewModel: TransactionItemViewModelProtocol {
 
     // MARK: - Properties
@@ -78,7 +79,7 @@ public class MockTransactionItemViewModel: TransactionItemViewModelProtocol {
 
     private static var depositMockData: TransactionItemData {
         return TransactionItemData(
-            category: "Deposit",
+            category: LocalizationProvider.string("deposit_text"),
             status: nil,
             amount: 50.00,
             currency: "XAF",
@@ -90,7 +91,7 @@ public class MockTransactionItemViewModel: TransactionItemViewModelProtocol {
 
     private static var withdrawalMockData: TransactionItemData {
         return TransactionItemData(
-            category: "Withdrawal",
+            category: LocalizationProvider.string("withdrawal"),
             status: nil,
             amount: -25.00,
             currency: "XAF",

@@ -34,7 +34,7 @@ Shows only the competition name, hiding all icons for space-constrained layouts.
 ## Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create with mock data (uses default system icons)
 let viewModel = MockMatchHeaderViewModel.premierLeagueHeader
@@ -248,7 +248,7 @@ StyleProvider.setFontProvider { type, size in
 
 ```swift
 import XCTest
-@testable import GomaUI
+@testable 
 
 class MatchHeaderViewTests: XCTestCase {
     func testFavoriteToggle() {

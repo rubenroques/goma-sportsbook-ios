@@ -58,7 +58,7 @@ CasinoCategorySectionView/
 
 ### Basic Usage
 ```swift
-import GomaUI
+
 
 // With viewModel
 let viewModel = MockCasinoCategorySectionViewModel.newGamesSection
@@ -303,7 +303,7 @@ For use within UICollectionView layouts, use the provided wrapper cell:
 ### CasinoCategorySectionCollectionViewCell
 
 ```swift
-import GomaUI
+
 
 // Register the cell
 collectionView.register(CasinoCategorySectionCollectionViewCell.self, forCellWithReuseIdentifier: "CategorySectionCell")

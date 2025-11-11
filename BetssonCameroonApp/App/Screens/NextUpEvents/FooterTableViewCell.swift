@@ -1,28 +1,26 @@
 import UIKit
 import GomaUI
+import SafariServices
+import MessageUI
 
 final class FooterTableViewCell: UITableViewCell {
 
     // MARK: - Cell Identifier
     static let identifier = "FooterTableViewCell"
 
+    // MARK: - Properties
+
+    weak var parentViewController: UIViewController?
+
     // MARK: - UI Components
 
-    private let containerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = StyleProvider.Color.backgroundSecondary
-        return view
-    }()
-
-    private let footerLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Footer"
-        label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .regular, size: 14)
-        label.textColor = StyleProvider.Color.textSecondary
-        return label
+    private lazy var footerView: ExtendedListFooterView = {
+        let resolver = AppExtendedListFooterImageResolver()
+        let viewModel = MockExtendedListFooterViewModel(imageResolver: resolver)
+        viewModel.onLinkTap = { [weak self] linkType in
+            self?.handleLinkTap(linkType)
+        }
+        return ExtendedListFooterView(viewModel: viewModel)
     }()
 
     // MARK: - Initialization
@@ -43,26 +41,96 @@ final class FooterTableViewCell: UITableViewCell {
         contentView.backgroundColor = .clear
         backgroundColor = .clear
 
-        contentView.addSubview(containerView)
-        containerView.addSubview(footerLabel)
+        contentView.addSubview(footerView)
 
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 80),
-
-            footerLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            footerLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            footerLabel.leadingAnchor.constraint(greaterThanOrEqualTo: containerView.leadingAnchor, constant: 16),
-            footerLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -16)
+            footerView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            footerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            footerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            footerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+    }
+
+    // MARK: - Link Handling
+
+    private func handleLinkTap(_ linkType: FooterLinkType) {
+        switch linkType {
+        case .termsAndConditions:
+            openURL("https://www.betsson.com/en/terms-and-conditions")
+
+        case .affiliates:
+            openURL("https://www.betssongroupaffiliates.com/")
+
+        case .privacyPolicy:
+            openURL("https://www.betsson.com/en/privacy-policy")
+
+        case .cookiePolicy:
+            openURL("https://www.betsson.com/en/cookie-policy")
+
+        case .responsibleGambling:
+            openURL("https://www.betsson.com/en/responsible-gaming/information")
+
+        case .gameRules:
+            openURL("https://www.betsson.com/en/game-rules")
+
+        case .helpCenter:
+            openURL("https://support.betsson.com/")
+
+        case .contactUs:
+            openMailCompose(to: "support-en@betsson.com")
+
+        case .socialMedia(let platform):
+            let urls: [SocialPlatform: String] = [
+                .x: "https://twitter.com/betsson",
+                .facebook: "https://facebook.com/betsson",
+                .instagram: "https://instagram.com/betsson",
+                .youtube: "https://youtube.com/betsson"
+            ]
+            if let urlString = urls[platform] {
+                openURL(urlString)
+            }
+        }
+    }
+
+    private func openURL(_ urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        if let parentVC = parentViewController {
+            let safariVC = SFSafariViewController(url: url)
+            parentVC.present(safariVC, animated: true)
+        } else {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    private func openMailCompose(to email: String) {
+        guard MFMailComposeViewController.canSendMail() else {
+            // Fallback to mailto: URL if mail compose is not available
+            if let url = URL(string: "mailto:\(email)") {
+                UIApplication.shared.open(url)
+            }
+            return
+        }
+
+        let mailVC = MFMailComposeViewController()
+        mailVC.setToRecipients([email])
+        mailVC.mailComposeDelegate = self
+
+        parentViewController?.present(mailVC, animated: true)
     }
 
     // MARK: - Cell Lifecycle
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        parentViewController = nil
+    }
+}
+
+// MARK: - MFMailComposeViewControllerDelegate
+
+extension FooterTableViewCell: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
     }
 }

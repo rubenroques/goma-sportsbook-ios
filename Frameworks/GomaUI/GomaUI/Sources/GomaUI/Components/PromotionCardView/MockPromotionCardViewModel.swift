@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 public class MockPromotionCardViewModel: PromotionCardViewModelProtocol {
     
     // MARK: - Properties
@@ -44,7 +45,7 @@ public class MockPromotionCardViewModel: PromotionCardViewModelProtocol {
         // Initialize Read More button ViewModel
         let readMoreButtonData = ButtonData(
             id: "promotion_read_more_\(cardData.id)",
-            title: "Read more",
+            title: LocalizationProvider.string("read_more"),
             style: .solidBackground,
             backgroundColor: .clear,
             disabledBackgroundColor: .clear,

@@ -8,7 +8,7 @@
       "action": "notifications"
     },
     {
-      "id": "transaction_history",
+      "id": "transactions_history",
       "icon": "clock",
       "title": "Transaction History",
       "type": "navigation",

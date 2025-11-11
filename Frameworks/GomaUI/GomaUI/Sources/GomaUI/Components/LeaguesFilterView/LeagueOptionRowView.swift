@@ -113,7 +113,7 @@ public class LeagueOptionRowView: UIView {
         iconImageView.image = UIImage(named: option.icon ?? "")
         iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.iconSecondary
         titleLabel.text = option.title
-        countLabel.text = option.count > 0 ? String(option.count) : "No Events"
+        countLabel.text = option.count > 0 ? String(option.count) : LocalizationProvider.string("all_events_unavailable")
     }
     
 }

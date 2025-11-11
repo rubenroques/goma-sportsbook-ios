@@ -20,7 +20,10 @@ public struct BorderedTextFieldData: Equatable, Hashable {
     public let usesCustomInput: Bool
     public let visualState: BorderedTextFieldVisualState
     public let keyboardType: UIKeyboardType
+    public let returnKeyType: UIReturnKeyType
     public let textContentType: UITextContentType?
+    public let maxLength: Int?
+    public let allowedCharacters: CharacterSet?
 
     public init(
         id: String,
@@ -32,7 +35,10 @@ public struct BorderedTextFieldData: Equatable, Hashable {
         usesCustomInput: Bool = false,
         visualState: BorderedTextFieldVisualState = .idle,
         keyboardType: UIKeyboardType = .default,
-        textContentType: UITextContentType? = nil
+        returnKeyType: UIReturnKeyType = .default,
+        textContentType: UITextContentType? = nil,
+        maxLength: Int? = nil,
+        allowedCharacters: CharacterSet? = nil
     ) {
         self.id = id
         self.text = text
@@ -43,7 +49,10 @@ public struct BorderedTextFieldData: Equatable, Hashable {
         self.usesCustomInput = usesCustomInput
         self.visualState = visualState
         self.keyboardType = keyboardType
+        self.returnKeyType = returnKeyType
         self.textContentType = textContentType
+        self.maxLength = maxLength
+        self.allowedCharacters = allowedCharacters
     }
 }
 
@@ -71,6 +80,7 @@ public protocol BorderedTextFieldViewModelProtocol {
     var placeholderPublisher: AnyPublisher<String, Never> { get }
     var isSecurePublisher: AnyPublisher<Bool, Never> { get }
     var keyboardTypePublisher: AnyPublisher<UIKeyboardType, Never> { get }
+    var returnKeyTypePublisher: AnyPublisher<UIReturnKeyType, Never> { get }
     var textContentTypePublisher: AnyPublisher<UITextContentType?, Never> { get }
 
     // Unified visual state publisher and current state access
@@ -85,6 +95,7 @@ public protocol BorderedTextFieldViewModelProtocol {
     func setVisualState(_ state: BorderedTextFieldVisualState)
     func togglePasswordVisibility()
     func updatePlaceholder(_ placeholder: String)
+    func onReturnKeyTapped()
 
     // Convenience methods for common state transitions
     func setFocused(_ focused: Bool)
@@ -96,4 +107,6 @@ public protocol BorderedTextFieldViewModelProtocol {
     var prefixText: String? { get }
     var isRequired: Bool { get }
     var usesCustomInput: Bool { get }
+    var maxLength: Int? { get }
+    var allowedCharacters: CharacterSet? { get }
 }

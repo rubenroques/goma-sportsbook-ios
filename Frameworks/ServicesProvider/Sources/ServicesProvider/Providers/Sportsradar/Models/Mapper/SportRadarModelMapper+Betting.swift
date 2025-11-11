@@ -36,6 +36,7 @@ extension SportRadarModelMapper {
                        globalState: firstConvertedBet?.globalState ?? .undefined,
                        stake: firstBet?.totalStake ?? 0.0,
                        totalOdd: firstBet?.totalOdd ?? 0.0,
+                       currency: "",
                        selections: betSelections,
                        potentialReturn: potentialReturn == 0.0 ? totalReturn : potentialReturn,
                        date: firstBet?.attemptedDate ?? Date(),

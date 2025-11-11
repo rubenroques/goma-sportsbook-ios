@@ -28,7 +28,7 @@ The LanguageSelectorView consists of two main components:
 ### Basic Usage
 
 ```swift
-import GomaUI
+
 
 // Create with default languages
 let viewModel = MockLanguageSelectorViewModel.defaultMock

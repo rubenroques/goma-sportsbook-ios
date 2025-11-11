@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+
 public enum TransactionStatus: Hashable {
     case won
     case placed
@@ -17,9 +18,9 @@ public enum TransactionStatus: Hashable {
         case .tax:
             return "Tax"
         case .pending:
-            return "Pending"
+            return LocalizationProvider.string("pending")
         case .cancelled:
-            return "Cancelled"
+            return LocalizationProvider.string("void")
         }
     }
 

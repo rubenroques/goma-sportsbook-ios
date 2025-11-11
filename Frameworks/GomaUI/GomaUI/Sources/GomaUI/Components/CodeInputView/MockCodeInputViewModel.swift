@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import UIKit
 
+
 /// Mock implementation of CodeInputViewModelProtocol for testing and previews
 public final class MockCodeInputViewModel: CodeInputViewModelProtocol {
     
@@ -26,8 +27,8 @@ public final class MockCodeInputViewModel: CodeInputViewModelProtocol {
     public init(
         state: CodeInputState = .default,
         code: String = "",
-        placeholder: String = "Enter booking code",
-        buttonTitle: String = "Load Betslip",
+        placeholder: String = LocalizationProvider.string("enter_booking_code"),
+        buttonTitle: String = LocalizationProvider.string("load_betslip"),
         isButtonEnabled: Bool = true
     ) {
         let initialData = CodeInputData(

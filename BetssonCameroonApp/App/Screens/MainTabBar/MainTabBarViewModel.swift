@@ -44,7 +44,7 @@ class MainTabBarViewModel: ObservableObject {
     }
 
     init(userSessionStore: UserSessionStore,
-         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol = MockAdaptiveTabBarViewModel.defaultMock,
+         adaptiveTabBarViewModel: AdaptiveTabBarViewModelProtocol,
          floatingOverlayViewModel: FloatingOverlayViewModelProtocol = MockFloatingOverlayViewModel(),
          betslipFloatingViewModel: BetslipFloatingViewModelProtocol = BetslipFloatingViewModel())
     {
@@ -109,10 +109,14 @@ class MainTabBarViewModel: ObservableObject {
                     switch displayState.activeTabBarID {
                     case .home:
                         // Switched to Sportsbook
-                        self?.floatingOverlayViewModel.show(mode: .sportsbook, duration: 3.0)
+                        let message = "\(localized("you_are_in")) \(localized("sportsbook")) 🔥"
+                        let icon = UIImage(systemName: "soccerball") ?? UIImage()
+                        self?.floatingOverlayViewModel.show(mode: .custom(icon: icon, message: message), duration: 3.0)
                     case .casino:
                         // Switched to Casino
-                        self?.floatingOverlayViewModel.show(mode: .casino, duration: 3.0)
+                        let message = "\(localized("you_are_in")) \(localized("casino")) 🎲"
+                        let icon = UIImage(systemName: "dice") ?? UIImage()
+                        self?.floatingOverlayViewModel.show(mode: .custom(icon: icon, message: message), duration: 3.0)
                     }
                 }
                 self?.lastActiveTabBarID = displayState.activeTabBarID

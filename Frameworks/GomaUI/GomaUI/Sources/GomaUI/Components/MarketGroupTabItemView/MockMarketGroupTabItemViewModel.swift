@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+
 public class MockMarketGroupTabItemViewModel: MarketGroupTabItemViewModelProtocol {
     
     // MARK: - Private Properties
@@ -256,7 +257,7 @@ extension MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "popular",
-                title: "Popular",
+                title: LocalizationProvider.string("popular_string"),
                 visualState: .idle,
                 suffixIconTypeName: "popular",
                 badgeCount: 12
@@ -268,7 +269,7 @@ extension MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "sets",
-                title: "Sets",
+                title: LocalizationProvider.string("market_group_sets"),
                 visualState: .idle,
                 badgeCount: 16
             )
@@ -280,7 +281,7 @@ extension MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "prefix_only",
-                title: "Live",
+                title: LocalizationProvider.string("live"),
                 visualState: .selected,
                 prefixIconTypeName: "flame"
             )
@@ -291,7 +292,7 @@ extension MockMarketGroupTabItemViewModel {
         return MockMarketGroupTabItemViewModel(
             tabItemData: MarketGroupTabItemData(
                 id: "suffix_only",
-                title: "Popular",
+                title: LocalizationProvider.string("popular_string"),
                 visualState: .idle,
                 suffixIconTypeName: "gamecontroller"
             )

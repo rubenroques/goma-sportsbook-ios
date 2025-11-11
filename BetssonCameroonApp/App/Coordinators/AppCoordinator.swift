@@ -91,7 +91,7 @@ class AppCoordinator: Coordinator {
     }
     
     private func handleStateChange(_ state: AppState) {
-        print("🔄 AppCoordinator: State changed to \(state)")
+        print("AppCoordinator: State changed to \(state)")
         switch state {
         case .initializing:
             // Do nothing, waiting for state manager to initialize
@@ -322,8 +322,19 @@ class AppCoordinator: Coordinator {
     private func showCasinoSearch() {
         self.mainTabBarCoordinator?.showCasinoSearchScreen()
     }
-    
+
     private func showDeposit() {
         self.mainTabBarCoordinator?.presentDepositFlow()
+    }
+}
+
+extension AppCoordinator {
+    static func navigationController(with viewController: UIViewController) -> UINavigationController {
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
+        return navigationController
     }
 }

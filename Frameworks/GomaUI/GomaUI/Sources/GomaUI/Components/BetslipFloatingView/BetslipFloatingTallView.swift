@@ -3,6 +3,7 @@ import UIKit
 import Combine
 import SwiftUI
 
+
 /// A tall floating view that displays odds boost promotion with progress tracking - matches Figma design exactly
 public final class BetslipFloatingTallView: UIView {
 
@@ -37,7 +38,7 @@ public final class BetslipFloatingTallView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "You're almost there!" // TODO: localization
+        label.text = LocalizationProvider.string("you_almost_there") // TODO: localization
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.highlightPrimary
         label.numberOfLines = 1
@@ -222,18 +223,20 @@ public final class BetslipFloatingTallView: UIView {
             if hasOddsBoost {
                 // Update heading
                 if let nextPercentage = nextTierPercentage {
-                    headingLabel.text = "Get a \(nextPercentage) Win Boost"
+                    headingLabel.text = LocalizationProvider.string("get_win_boost")
+                        .replacingOccurrences(of: "{percentage}", with: nextPercentage)
                 } else {
-                    headingLabel.text = "Max Win Boost Activated!"
+                    headingLabel.text = LocalizationProvider.string("max_win_boost_activated")
                 }
 
                 // Update description
                 let remainingSelections = max(0, totalEligibleCount - selectionCount)
-                if remainingSelections > 0 {
-                    let legWord = remainingSelections == 1 ? "leg" : "legs"
-                    descriptionLabel.text = "by adding \(remainingSelections) more \(legWord) to your betslip (1.2 min odds)."
+                if remainingSelections > 0, let nextPercentage = nextTierPercentage {
+                    descriptionLabel.text = LocalizationProvider.string("add_matches_bonus")
+                        .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                        .replacingOccurrences(of: "{percentage}", with: nextPercentage)
                 } else {
-                    descriptionLabel.text = "All qualifying events added!"
+                    descriptionLabel.text = LocalizationProvider.string("all_qualifying_events_added")
                 }
 
                 // Update progress segments

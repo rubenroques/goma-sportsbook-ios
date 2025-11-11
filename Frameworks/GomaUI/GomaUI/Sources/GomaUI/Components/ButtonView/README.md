@@ -40,7 +40,7 @@ ButtonView is a production-ready UIKit component that follows GomaUI's MVVM arch
 ### Basic Implementation
 
 ```swift
-import GomaUI
+
 
 // Create a view model (production or mock)
 let viewModel = MockButtonViewModel.solidBackgroundMock

@@ -9,7 +9,7 @@ final class AppToasterViewModel: ToasterViewModelProtocol {
     var currentData: ToasterData { dataSubject.value }
     
     init(initialData: ToasterData = ToasterData(
-        title: "Booking Code Loaded",
+        title: localized("booking_code_loaded"),
         icon: "check_icon",
         backgroundColor: StyleProvider.Color.backgroundSecondary,
         titleColor: StyleProvider.Color.textPrimary,

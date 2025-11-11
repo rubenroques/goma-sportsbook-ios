@@ -166,7 +166,7 @@ class EveryMatrixCasinoProvider: CasinoProvider {
         }
         
         let endpoint = EveryMatrixCasinoAPI.getRecommendedGames(
-            language: language ?? "en",
+            language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
             platform: platform ?? "iPhone"
         )
 
@@ -190,56 +190,67 @@ class EveryMatrixCasinoProvider: CasinoProvider {
     }
     
     func buildGameLaunchUrl(for game: CasinoGame, mode: CasinoGameMode, language: String?) -> String? {
-
         print("[GAME-LAUNCH] ═══════════════════════════════════════")
         print("[GAME-LAUNCH] Building URL for game: \(game.name)")
         print("[GAME-LAUNCH] Mode: \(mode)")
 
+        // Start with the launchUrl from API response
+        guard var urlComponents = URLComponents(string: game.launchUrl) else {
+            print("[GAME-LAUNCH] ❌ ERROR: Invalid launchUrl from API: \(game.launchUrl)")
+            return nil
+        }
 
-        // If sessionId not provided, fetch from connector
-        let sessionId = self.connector.sessionToken
+        // Prepare query parameters as [URLQueryItem] for proper encoding
+        var queryItems: [URLQueryItem] = []
 
-        let gameLaunchBaseURL = EveryMatrixUnifiedConfiguration.shared.gameLaunchBaseURL
-
-        var urlString = "\(gameLaunchBaseURL)/Loader/Start/\(EveryMatrixUnifiedConfiguration.shared.operatorId)/\(game.slug)"
-
-        var queryParams: [String] = []
-
+        // 1. Language parameter
         let finalLanguage = language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage
-        queryParams.append("language=\(finalLanguage)")
+        queryItems.append(URLQueryItem(name: "language", value: finalLanguage))
+
+        // 2. Mode-specific parameters
+        let sessionId = self.connector.sessionToken
 
         switch mode {
         case .funGuest:
+            // Guest mode - no session parameters needed
             print("[GAME-LAUNCH] Mode: funGuest - NO session params")
-            // Guest mode - no session parameters
-            break
 
         case .funLoggedIn:
+            // Fun mode for logged-in users
             print("[GAME-LAUNCH] Mode: funLoggedIn - adding funMode + _sid")
             guard let sessionIdValue = sessionId else {
                 print("[GAME-LAUNCH] ❌ ERROR: funLoggedIn mode but NO sessionId!")
                 return nil
             }
-            queryParams.append("funMode=True")
-            queryParams.append("_sid=\(sessionIdValue)")
+            queryItems.append(URLQueryItem(name: "funMode", value: "True"))
+            queryItems.append(URLQueryItem(name: "_sid", value: sessionIdValue))
 
         case .realMoney:
+            // Real money mode
             print("[GAME-LAUNCH] Mode: realMoney - adding _sid")
             guard let sessionIdValue = sessionId else {
                 print("[GAME-LAUNCH] ❌ ERROR: realMoney mode but NO sessionId!")
                 return nil
             }
-            queryParams.append("_sid=\(sessionIdValue)")
+            queryItems.append(URLQueryItem(name: "_sid", value: sessionIdValue))
         }
 
-        if !queryParams.isEmpty {
-            urlString += "?" + queryParams.joined(separator: "&")
+        // 3. Merge query items with existing parameters from API
+        var allQueryItems = urlComponents.queryItems ?? []
+        allQueryItems.append(contentsOf: queryItems)
+        urlComponents.queryItems = allQueryItems
+
+        // 4. Build final URL
+        guard let finalUrl = urlComponents.url?.absoluteString else {
+            print("[GAME-LAUNCH] ❌ ERROR: Failed to construct URL from components")
+            return nil
         }
 
-        print("[GAME-LAUNCH] Final URL: \(urlString)")
+        print("[GAME-LAUNCH] Base launchUrl: \(game.launchUrl)")
+        print("[GAME-LAUNCH] Final URL: \(finalUrl)")
         print("[GAME-LAUNCH] ═══════════════════════════════════════")
 
-        return urlString
+        return finalUrl
     }
     
     func getDefaultCategoryId() -> String {
