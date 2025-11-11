@@ -262,7 +262,7 @@ class ResponsibleGamingViewController: UIViewController {
         depositLimitSection.contentContainer.addArrangedSubview(depositLimitOptionsView)
         
         depositLimitAmountTitleLabel.text = localized("deposit_limit_amount")
-        depositLimitAmountValueLabel.text = viewModel.depositSelectedLimitAmountText
+        depositLimitAmountValueLabel.text = "\(localized("current")): \(viewModel.depositSelectedLimitAmountText)"
         depositLimitSection.contentContainer.addArrangedSubview(depositLimitAmountView)
         
         depositLimitSection.contentContainer.addArrangedSubview(depositAmountTextField)
@@ -284,7 +284,7 @@ class ResponsibleGamingViewController: UIViewController {
         wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitOptionsView)
         
         wageringLimitAmountTitleLabel.text = localized("wagering_limit_amount")
-        wageringLimitAmountValueLabel.text = viewModel.wageringSelectedLimitAmountText
+        wageringLimitAmountValueLabel.text = "\(localized("current")): \(viewModel.wageringSelectedLimitAmountText)"
         wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitAmountView)
         
         wageringLimitSection.contentContainer.addArrangedSubview(wageringAmountTextField)
@@ -326,13 +326,13 @@ class ResponsibleGamingViewController: UIViewController {
             self?.depositCurrentLimitValueLabel.text = updatedValue
         }
         viewModel.onDepositLimitAmountUpdated = { [weak self] amount in
-            self?.depositLimitAmountValueLabel.text = amount
+            self?.depositLimitAmountValueLabel.text = "\(localized("current")): \(amount)"
         }
         viewModel.onWageringLimitUpdated = { [weak self] updatedValue in
             self?.wageringCurrentLimitValueLabel.text = updatedValue
         }
         viewModel.onWageringLimitAmountUpdated = { [weak self] amount in
-            self?.wageringLimitAmountValueLabel.text = amount
+            self?.wageringLimitAmountValueLabel.text = "\(localized("current")): \(amount)"
         }
         viewModel.onLimitError = { [weak self] limitType, errorDescription in
             let message = localized("\(limitType.lowercased())_limit_error_message")
