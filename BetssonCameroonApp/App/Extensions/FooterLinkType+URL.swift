@@ -18,25 +18,25 @@ extension FooterLinkType {
 
         switch self {
         case .termsAndConditions:
-            urlString = "https://www.betsson.com/en/terms-and-conditions"
+            urlString = localized("footer_tc_link")
 
         case .affiliates:
-            urlString = "https://www.betssongroupaffiliates.com/"
+            urlString = localized("footer_affiliates_link")
 
         case .privacyPolicy:
-            urlString = "https://www.betsson.com/en/privacy-policy"
+            urlString = localized("footer_privacy_policy_link")
 
         case .cookiePolicy:
-            urlString = "https://www.betsson.com/en/cookie-policy"
+            urlString = localized("footer_cookie_policy_link")
 
         case .responsibleGambling:
-            urlString = "https://www.betsson.com/en/responsible-gaming/information"
+            urlString = localized("footer_responsible_gambling_link")
 
         case .gameRules:
-            urlString = "https://www.betsson.com/en/game-rules"
+            urlString = localized("footer_game_rules_link")
 
         case .helpCenter:
-            urlString = "https://support.betsson.com/"
+            urlString = localized("footer_help_center_link")
 
         case .socialMedia(let platform):
             urlString = platform.socialMediaURL
@@ -52,7 +52,7 @@ extension FooterLinkType {
     /// Returns the email address for this link type, if applicable
     var email: String? {
         if case .contactUs = self {
-            return "support-en@betsson.com"
+            return localized("footer_betsson_mail")
         }
         return nil
     }
@@ -66,13 +66,13 @@ extension SocialPlatform {
     var socialMediaURL: String {
         switch self {
         case .x:
-            return "https://twitter.com/betsson"
+            return localized("footer_twitter_link")
         case .facebook:
-            return "https://facebook.com/betsson"
+            return localized("footer_facebook_link")
         case .instagram:
-            return "https://instagram.com/betsson"
+            return localized("footer_instagram_link")
         case .youtube:
-            return "https://youtube.com/betsson"
+            return localized("footer_youtube_link")
         }
     }
 }

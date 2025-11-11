@@ -322,7 +322,7 @@ class AppCoordinator: Coordinator {
     private func showCasinoSearch() {
         self.mainTabBarCoordinator?.showCasinoSearchScreen()
     }
-    
+
     private func showDeposit() {
         self.mainTabBarCoordinator?.presentDepositFlow()
     }

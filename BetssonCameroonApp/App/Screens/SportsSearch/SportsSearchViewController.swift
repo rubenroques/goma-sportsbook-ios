@@ -10,11 +10,15 @@ import Combine
 import GomaUI
 
 class SportsSearchViewController: UIViewController {
-    
+
     // MARK: - Properties
     private let viewModel: SportsSearchViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     private var marketGroupControllers: [String: MarketGroupCardsViewController] = [:]
+
+    // MARK: - MVVM-C Navigation Closures
+    var onURLOpenRequested: ((URL) -> Void)?
+    var onEmailRequested: ((String) -> Void)?
     
     // MARK: - UI Components
     private lazy var containerView: UIView = Self.createContainerView()
@@ -425,6 +429,16 @@ private extension SportsSearchViewController {
         for marketGroup in marketGroups {
             if marketGroupControllers[marketGroup.id] == nil {
                 guard let vm = viewModel.getMarketGroupCardsViewModel(for: marketGroup.id) else { continue }
+
+                // Wire up footer ViewModel callbacks (MVVM-C pattern)
+                vm.onURLOpenRequested = { [weak self] url in
+                    self?.openURL(url)
+                }
+
+                vm.onEmailComposeRequested = { [weak self] email in
+                    self?.openEmailCompose(email: email)
+                }
+
                 let controller = MarketGroupCardsViewController(viewModel: vm)
                 controller.scrollDelegate = self
                 marketGroupControllers[marketGroup.id] = controller
@@ -565,6 +579,18 @@ extension SportsSearchViewController: UICollectionViewDataSource, UICollectionVi
             return header
         }
         return UICollectionReusableView()
+    }
+
+    // MARK: - Footer Navigation Delegation (MVVM-C Pattern)
+
+    /// Delegates URL opening to coordinator - ViewController doesn't decide how to open
+    private func openURL(_ url: URL) {
+        onURLOpenRequested?(url)
+    }
+
+    /// Delegates email opening to coordinator - ViewController doesn't decide how to open
+    private func openEmailCompose(email: String) {
+        onEmailRequested?(email)
     }
 }
 

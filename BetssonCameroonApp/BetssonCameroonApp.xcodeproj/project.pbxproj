@@ -427,7 +427,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -560,7 +560,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -635,7 +635,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -675,7 +675,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.9;
+				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
