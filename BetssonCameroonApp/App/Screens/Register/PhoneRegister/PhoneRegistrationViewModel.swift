@@ -119,7 +119,9 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                          visualState: .idle,
                                                          keyboardType: .phonePad,
                                                          returnKeyType: .next,
-                                                         textContentType: .telephoneNumber))
+                                                         textContentType: .telephoneNumber,
+                                                         maxLength: phoneConfig?.validate.maxLength,
+                                                         allowedCharacters: .decimalDigits))
             case "Password":
                 let passwordConfig = config.fields.first(where: {
                     $0.name == "Password"
