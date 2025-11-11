@@ -30,8 +30,8 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
     }
     
     // MARK: - MultiWidgetToolbarViewModelProtocol
-    
-    public func selectWidget(id: String) {
+
+    public func selectWidget(id: WidgetTypeIdentifier) {
         // In a real implementation, this might trigger side effects
         print("Widget selected: \(id)")
 
@@ -86,64 +86,64 @@ extension MockMultiWidgetToolbarViewModel {
         let widgets: [Widget] = [
             // Logo
             Widget(
-                id: "logo",
+                id: .logo,
                 type: .image,
                 src: "https://www.example.com/images/logo.png",
                 alt: "Betsson"
             ),
-            
+
             // Wallet
             Widget(
-                id: "wallet",
+                id: .wallet,
                 type: .wallet,
                 details: [
                     WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance", icon: "https://www.example.com/images/plus.png"),
                     WidgetDetail(isButton: true, container: "depositContainer", label: "Deposit", route: "/deposit")
                 ]
             ),
-            
+
             // Avatar
             Widget(
-                id: "avatar",
+                id: .avatar,
                 type: .avatar,
                 route: "/user",
                 container: "avatarContainer",
                 icon: "https://www.example.com/images/avatar.png"
             ),
-            
+
             // Support
             Widget(
-                id: "support",
+                id: .support,
                 type: .support
             ),
-            
+
             // Language Switcher
             Widget(
-                id: "language",
+                id: .languageSwitcher,
                 type: .languageSwitcher
             ),
-            
+
             // Login Button
             Widget(
-                id: "loginButton",
+                id: .loginButton,
                 type: .loginButton,
                 route: "/login",
                 container: "loginContainer",
                 label: "LOGIN"
             ),
-            
+
             // Join Now Button (renamed from registerButton)
             Widget(
-                id: "joinButton",
+                id: .joinButton,
                 type: .signUpButton,
                 route: "/register",
                 container: "registerContainer",
                 label: "JOIN NOW"
             ),
-            
+
             // Flexible space
             Widget(
-                id: "flexSpace",
+                id: .flexSpace,
                 type: .space
             )
         ]
@@ -153,15 +153,15 @@ extension MockMultiWidgetToolbarViewModel {
             LayoutState.loggedIn.rawValue: LayoutConfig(
                 lines: [
                     // Just one row for logged in - logo, space, wallet, avatar
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "wallet", "avatar"])
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .wallet, .avatar])
                 ]
             ),
             LayoutState.loggedOut.rawValue: LayoutConfig(
                 lines: [
                     // Top row - logo, flexible space, support, language
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "support", "language"]),
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .support, .languageSwitcher]),
                     // Bottom row - login and join now buttons (equal width)
-                    LineConfig(mode: .split, widgets: ["loginButton", "joinButton"])
+                    LineConfig(mode: .split, widgets: [.loginButton, .joinButton])
                 ]
             )
         ]
@@ -179,40 +179,40 @@ extension MockMultiWidgetToolbarViewModel {
     public static var complexMock: MockMultiWidgetToolbarViewModel {
         // Define more widgets for a complex version
         var widgets = defaultMock.config.widgets
-        
+
         // Add additional widgets
         let additionalWidgets: [Widget] = [
             // Search
             Widget(
-                id: "search",
+                id: .search,
                 type: .button,
                 label: "Search",
                 icon: "https://www.example.com/images/search.png"
             ),
-            
+
             // Notifications
             Widget(
-                id: "notifications",
+                id: .notifications,
                 type: .button,
                 route: "/notifications",
                 label: "Notifications",
                 icon: "https://www.example.com/images/bell.png"
             )
         ]
-        
+
         widgets.append(contentsOf: additionalWidgets)
-        
+
         // Define complex layouts
         let layouts: [String: LayoutConfig] = [
             LayoutState.loggedIn.rawValue: LayoutConfig(
                 lines: [
-                    LineConfig(mode: .flex, widgets: ["logo", "search", "flexSpace", "notifications", "wallet", "avatar"])
+                    LineConfig(mode: .flex, widgets: [.logo, .search, .flexSpace, .notifications, .wallet, .avatar])
                 ]
             ),
             LayoutState.loggedOut.rawValue: LayoutConfig(
                 lines: [
-                    LineConfig(mode: .flex, widgets: ["logo", "search", "flexSpace", "support", "language"]),
-                    LineConfig(mode: .split, widgets: ["loginButton", "registerButton"])
+                    LineConfig(mode: .flex, widgets: [.logo, .search, .flexSpace, .support, .languageSwitcher]),
+                    LineConfig(mode: .split, widgets: [.loginButton, .registerButton])
                 ]
             )
         ]

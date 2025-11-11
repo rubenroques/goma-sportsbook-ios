@@ -114,6 +114,10 @@ class MainTabBarCoordinator: Coordinator {
             self?.presentWithdrawFlow()
         }
 
+        container.onSupportRequested = { [weak self] in
+            self?.openSupportURL()
+        }
+
         self.mainTabBarViewController = mainTabBarViewController
         navigationController.setViewControllers([container], animated: false)
         
@@ -1152,12 +1156,36 @@ class MainTabBarCoordinator: Coordinator {
             navigationController: navigationController,
             client: environment.servicesProvider
         )
-        
+
         setupBankingCoordinatorCallbacks(bankingCoordinator)
         addChildCoordinator(bankingCoordinator)
         bankingCoordinator.start()
     }
-    
+
+    // MARK: - Support Methods
+
+    private func openSupportURL() {
+        let supportURL = environment.linksProvider.links.getURL(for: .helpCenter)
+
+        guard !supportURL.isEmpty, let url = URL(string: supportURL) else {
+            print("❌ MainTabBarCoordinator: Invalid support URL: '\(supportURL)'")
+            return
+        }
+
+        guard UIApplication.shared.canOpenURL(url) else {
+            print("❌ MainTabBarCoordinator: Cannot open URL: \(supportURL)")
+            return
+        }
+
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ MainTabBarCoordinator: Opened support URL: \(supportURL)")
+            } else {
+                print("❌ MainTabBarCoordinator: Failed to open support URL")
+            }
+        }
+    }
+
     private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {
         coordinator.onTransactionComplete = { [weak self] in
             print("🏦 RootTabBarCoordinator: Banking transaction completed")

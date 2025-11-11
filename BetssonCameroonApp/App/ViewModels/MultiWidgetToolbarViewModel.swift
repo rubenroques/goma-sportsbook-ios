@@ -56,8 +56,8 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     }
     
     // MARK: - MultiWidgetToolbarViewModelProtocol
-    
-    func selectWidget(id: String) {
+
+    func selectWidget(id: WidgetTypeIdentifier) {
         print("🔧 MultiWidgetToolbarViewModel: Widget selected: \(id)")
         // Handle widget selection - this could trigger navigation or other actions
         // In a real implementation, this might use delegates or closures
@@ -119,45 +119,45 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
         let widgets: [Widget] = [
             // Logo
             Widget(
-                id: "logo",
+                id: .logo,
                 type: .image,
                 src: "default_brand_horizontal",
                 alt: "Betsson"
             ),
-            
+
             // Wallet
             Widget(
-                id: "wallet",
+                id: .wallet,
                 type: .wallet,
                 details: [
                     WidgetDetail(isButton: true, container: "balanceContainer", route: "/balance"),
                     WidgetDetail(isButton: true, container: "depositContainer", label: localized("deposit").uppercased(), route: "/deposit")
                 ]
             ),
-            
+
             // Avatar
             Widget(
-                id: "avatar",
+                id: .avatar,
                 type: .avatar,
                 route: "/user",
                 container: "avatarContainer"
             ),
-            
+
             // Support
             Widget(
-                id: "support",
+                id: .support,
                 type: .support
             ),
-            
+
             // Language Switcher
             Widget(
-                id: "language",
+                id: .languageSwitcher,
                 type: .languageSwitcher
             ),
-            
+
             // Login Button
             Widget(
-                id: "loginButton",
+                id: .loginButton,
                 type: .loginButton,
                 route: "/login",
                 container: "loginContainer",
@@ -166,16 +166,16 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
 
             // Join Now Button
             Widget(
-                id: "joinButton",
+                id: .joinButton,
                 type: .signUpButton,
                 route: "/register",
                 container: "registerContainer",
                 label: localized("join_now").uppercased()
             ),
-            
+
             // Flexible space
             Widget(
-                id: "flexSpace",
+                id: .flexSpace,
                 type: .space
             )
         ]
@@ -185,15 +185,15 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
             LayoutState.loggedIn.rawValue: LayoutConfig(
                 lines: [
                     // Just one row for logged in - logo, space, wallet, avatar
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "wallet", "avatar"])
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .wallet, .avatar])
                 ]
             ),
             LayoutState.loggedOut.rawValue: LayoutConfig(
                 lines: [
                     // Top row - logo, flexible space, support, language
-                    LineConfig(mode: .flex, widgets: ["logo", "flexSpace", "support", "language"]),
+                    LineConfig(mode: .flex, widgets: [.logo, .flexSpace, .support, .languageSwitcher]),
                     // Bottom row - login and join now buttons (equal width)
-                    LineConfig(mode: .split, widgets: ["loginButton", "joinButton"])
+                    LineConfig(mode: .split, widgets: [.loginButton, .joinButton])
                 ]
             )
         ]

@@ -53,43 +53,43 @@ extension MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "new-games",
             title: "New Games",
-            buttonText: "All 41"
+            buttonText: "\(LocalizationProvider.string("all")) 41"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)
     }
-    
+
     public static var popularGames: MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "popular-games",
             title: LocalizationProvider.string("popular_games"),
-            buttonText: "All 127"
+            buttonText: "\(LocalizationProvider.string("all")) 127"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)
     }
-    
+
     public static var slotGames: MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "slot-games",
             title: "Slot Games",
-            buttonText: "All 89"
+            buttonText: "\(LocalizationProvider.string("all")) 89"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)
     }
-    
+
     public static var liveGames: MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "live-games",
             title: "Live Games",
-            buttonText: "All 23"
+            buttonText: "\(LocalizationProvider.string("all")) 23"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)
     }
-    
+
     public static var jackpotGames: MockCasinoCategoryBarViewModel {
         let categoryData = CasinoCategoryBarData(
             id: "jackpot-games",
             title: "Jackpot Games",
-            buttonText: "All 12"
+            buttonText: "\(LocalizationProvider.string("all")) 12"
         )
         return MockCasinoCategoryBarViewModel(categoryData: categoryData)
     }

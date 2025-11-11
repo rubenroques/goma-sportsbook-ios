@@ -80,6 +80,14 @@ class Environment {
         }
     }()
 
+    /// URL provider for accessing dynamic URLs
+    lazy var linksProvider: LinksProviderProtocol = {
+        return LinksProviderFactory.createURLProvider(
+            initialLinks: TargetVariables.links,
+            servicesProvider: self.servicesProvider
+        )
+    }()
+
     let betslipManager: BetslipManager = BetslipManager()
 
     let userSessionStore: UserSessionStore = UserSessionStore()

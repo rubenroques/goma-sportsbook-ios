@@ -83,7 +83,57 @@ struct TargetVariables: SportsbookTarget {
     static var cmsClientBusinessUnit: CMSClientBusinessUnit {
         return .betssonCameroon
     }
-    
+
+    static var links: URLEndpoint.Links {
+        return URLEndpoint.Links(
+            api: URLEndpoint.APIs(
+                gomaGaming: "",
+                sportsbook: "",
+                firebase: "",
+                casino: "",
+                promotions: "",
+                affiliateSystem: "",
+                secundaryMarketSpecsUrl: ""
+            ),
+            support: URLEndpoint.Support(
+                helpCenter: "https://support.betsson.com/",
+                zendesk: "",
+                customerSupport: "https://support.betsson.com/"
+            ),
+            responsibleGaming: URLEndpoint.ResponsibleGaming(
+                gamblingAddictionHelpline: "",
+                gamblingBlockingSoftware: "",
+                gamblingBehaviorSelfAssessment: "",
+                gamblingBehaviorSelfAssessmentQuiz: "",
+                timeManagementApp: "",
+                gamblingAddictionSupport: "",
+                gamblingAuthority: "",
+                gamblingAuthorityTerms: "",
+                parentalControl: "",
+                addictionTreatmentCenter: "",
+                selfExclusionService: "",
+                gamblingHabitsApp: ""
+            ),
+            socialMedia: URLEndpoint.SocialMedia(
+                facebook: "",
+                twitter: "",
+                youtube: "",
+                instagram: ""
+            ),
+            legalAndInfo: URLEndpoint.LegalAndInfo(
+                responsibleGambling: "",
+                privacyPolicy: "",
+                cookiePolicy: "",
+                sportsBettingRules: "",
+                termsAndConditions: "",
+                bonusRules: "",
+                partners: "",
+                about: "",
+                appStoreUrl: ""
+            )
+        )
+    }
+
 }
 
 /*

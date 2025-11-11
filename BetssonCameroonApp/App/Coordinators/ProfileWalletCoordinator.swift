@@ -143,8 +143,7 @@ final class ProfileWalletCoordinator: Coordinator {
             // TODO: Navigate to responsible gaming
             showPlaceholderAlert(title: "Responsible Gaming", message: "Feature coming soon")
         case .helpCenter:
-            // TODO: Navigate to help center
-            showPlaceholderAlert(title: "Help Center", message: "Feature coming soon")
+            openSupportURL()
         case .changePassword:
 //            showPlaceholderAlert(title: "Change Password", message: "Feature coming soon")
             self.showChangePasswordScreen(tokenId: actionResponse ?? "")
@@ -201,6 +200,28 @@ final class ProfileWalletCoordinator: Coordinator {
 
         // Present from profile navigation controller (modal context)
         profileNavigationController?.present(alertController, animated: true)
+    }
+
+    private func openSupportURL() {
+        let supportURL = Env.linksProvider.links.getURL(for: .helpCenter)
+
+        guard !supportURL.isEmpty, let url = URL(string: supportURL) else {
+            print("❌ ProfileWalletCoordinator: Invalid support URL: '\(supportURL)'")
+            return
+        }
+
+        guard UIApplication.shared.canOpenURL(url) else {
+            print("❌ ProfileWalletCoordinator: Cannot open URL: \(supportURL)")
+            return
+        }
+
+        UIApplication.shared.open(url, options: [:]) { success in
+            if success {
+                print("✅ ProfileWalletCoordinator: Opened support URL: \(supportURL)")
+            } else {
+                print("❌ ProfileWalletCoordinator: Failed to open support URL")
+            }
+        }
     }
 
     private func showTransactionHistory() {

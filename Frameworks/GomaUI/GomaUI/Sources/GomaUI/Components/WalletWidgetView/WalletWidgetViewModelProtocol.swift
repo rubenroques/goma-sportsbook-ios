@@ -8,11 +8,11 @@ import UIKit
 
 // MARK: - Data Models
 public struct WalletWidgetData: Equatable, Hashable {
-    public let id: String
+    public let id: WidgetTypeIdentifier
     public let balance: String
     public let depositButtonTitle: String
 
-    public init(id: String, balance: String, depositButtonTitle: String = LocalizationProvider.string("deposit").uppercased()) {
+    public init(id: WidgetTypeIdentifier, balance: String, depositButtonTitle: String = LocalizationProvider.string("deposit").uppercased()) {
         self.id = id
         self.balance = balance
         self.depositButtonTitle = depositButtonTitle

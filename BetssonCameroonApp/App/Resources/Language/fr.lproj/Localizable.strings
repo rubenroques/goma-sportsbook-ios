@@ -3948,6 +3948,8 @@
 
 "mybets_button_rebet" = "Rejouer";
 
+"mybets_button_cashout" = "CashOut";
+
 "mybets_status_cashout" = "CashOut";
 
 "mybets_status_settled" = "Réglé";

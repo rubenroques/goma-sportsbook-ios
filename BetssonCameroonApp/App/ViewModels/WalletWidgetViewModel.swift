@@ -39,7 +39,7 @@ final class WalletWidgetViewModel: WalletWidgetViewModelProtocol {
         
         // Initialize with default/loading state
         self.walletData = WalletWidgetData(
-            id: "wallet",
+            id: .wallet,
             balance: "-.--",
             depositButtonTitle: localized("deposit").uppercased()
         )

@@ -55,7 +55,7 @@ extension MockWalletWidgetViewModel {
     public static var defaultMock: MockWalletWidgetViewModel {
         return MockWalletWidgetViewModel(
             walletData: WalletWidgetData(
-                id: "wallet_widget",
+                id: .wallet,
                 balance: "2,000.00",
                 depositButtonTitle: "DEPOSIT"
             )

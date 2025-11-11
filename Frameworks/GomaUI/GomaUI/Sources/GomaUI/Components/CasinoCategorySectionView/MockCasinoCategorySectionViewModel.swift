@@ -185,7 +185,7 @@ extension MockCasinoCategorySectionViewModel {
         let sectionData = CasinoCategorySectionData(
             id: "new-games",
             categoryTitle: "New Games",
-            categoryButtonText: "All 41",
+            categoryButtonText: "\(LocalizationProvider.string("all")) 41",
             games: games
         )
         
@@ -226,7 +226,7 @@ extension MockCasinoCategorySectionViewModel {
         let sectionData = CasinoCategorySectionData(
             id: "popular-games",
             categoryTitle: LocalizationProvider.string("popular_games"),
-            categoryButtonText: "All 127",
+            categoryButtonText: "\(LocalizationProvider.string("all")) 127",
             games: games
         )
         
@@ -258,7 +258,7 @@ extension MockCasinoCategorySectionViewModel {
         let sectionData = CasinoCategorySectionData(
             id: "slot-games",
             categoryTitle: "Slot Games",
-            categoryButtonText: "All 89",
+            categoryButtonText: "\(LocalizationProvider.string("all")) 89",
             games: games
         )
         
@@ -269,10 +269,10 @@ extension MockCasinoCategorySectionViewModel {
         let sectionData = CasinoCategorySectionData(
             id: "empty-section",
             categoryTitle: "Empty Category",
-            categoryButtonText: "All 0",
+            categoryButtonText: "\(LocalizationProvider.string("all")) 0",
             games: []
         )
-        
+
         return MockCasinoCategorySectionViewModel(sectionData: sectionData)
     }
     
