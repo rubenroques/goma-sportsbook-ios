@@ -53,8 +53,8 @@ final class CashoutAmountViewModel: CashoutAmountViewModelProtocol {
 extension CashoutAmountViewModel {
     
     static func create(partialCashoutValue: Double, currency: String) -> CashoutAmountViewModel {
-        let formattedAmount = formatCurrency(partialCashoutValue, currency: currency)
-        
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(partialCashoutValue, currency: currency)
+
         return CashoutAmountViewModel(
             title: "Partial Cashout",
             currency: currency,
@@ -63,8 +63,8 @@ extension CashoutAmountViewModel {
     }
     
     static func create(title: String, amount: Double, currency: String) -> CashoutAmountViewModel {
-        let formattedAmount = formatCurrency(amount, currency: currency)
-        
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(amount, currency: currency)
+
         return CashoutAmountViewModel(
             title: title,
             currency: currency,
@@ -72,36 +72,4 @@ extension CashoutAmountViewModel {
         )
     }
     
-    // MARK: - Private Helper Methods
-    
-    private static func formatCurrency(_ amount: Double, currency: String) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = currency
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
-        if let formattedString = formatter.string(from: NSNumber(value: amount)) {
-            return formattedString
-        }
-        
-        // Fallback formatting
-        let currencySymbol = getCurrencySymbol(for: currency)
-        return "\(currencySymbol) \(String(format: "%.2f", amount))"
-    }
-    
-    private static func getCurrencySymbol(for currency: String) -> String {
-        switch currency.uppercased() {
-        case "EUR":
-            return "€"
-        case "USD":
-            return "$"
-        case "GBP":
-            return "£"
-        case "XAF":
-            return "XAF"
-        default:
-            return currency
-        }
-    }
 }

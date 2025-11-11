@@ -4010,3 +4010,90 @@
 "mybetdetail_ticket_number" = "Ticket #{ticket}";
 
 "select_sport" = "Sélectionner un sport";
+
+// Splash Screen - Loading Messages
+"splash_loading_sports" = "Chargement des sports...";
+
+"splash_loading_competitions" = "Chargement des compétitions...";
+
+"splash_loading_featured_matches" = "Chargement des matchs en vedette...";
+
+"splash_preparing_your_experience" = "Préparation de votre expérience...";
+
+// Transaction History Screen
+"transaction_history" = "Historique des Transactions";
+
+"games" = "Jeux";
+
+// Time Filters
+"time_filter_1d" = "1J";
+
+"time_filter_1w" = "1S";
+
+"time_filter_1m" = "1M";
+
+"time_filter_3m" = "3M";
+
+// Loading/Error States
+"loading_transactions" = "Chargement des transactions...";
+
+"failed_load_transactions" = "Échec du chargement des transactions";
+
+// Banking Transaction Types
+"system_deposit" = "Dépôt Système";
+
+"system_withdrawal" = "Retrait Système";
+
+// Wagering Transaction Types
+"win" = "Gain";
+
+"placed" = "Placé";
+
+"batch_amounts_debit" = "Débit de Montants Groupés";
+
+"batch_amounts_credit" = "Crédit de Montants Groupés";
+
+// Casino Feature Localization
+"casino_api_error_prefix" = "[Erreur API]";
+
+"casino_authentication_required" = "Authentification requise";
+
+"casino_category_name" = "Casino";
+
+"casino_failed_build_url" = "Échec de construction de l'URL de lancement";
+
+"casino_game_error_title" = "Erreur de Jeu";
+
+"casino_invalid_game_url" = "URL de jeu invalide";
+
+"casino_load_more_games" = "Charger Plus de Jeux";
+
+"casino_loading" = "Chargement...";
+
+"casino_loading_game_details" = "Chargement des détails du jeu...";
+
+"casino_no_game_data" = "Aucune donnée de jeu disponible";
+
+"casino_not_available" = "N/D";
+
+"casino_search_placeholder" = "Rechercher dans le Casino";
+
+"casino_search_title" = "Rechercher Casino";
+
+"casino_service_unavailable" = "Service casino non disponible";
+
+"casino_suggested_games_error" = "Impossible de récupérer les résultats pour les jeux suggérés";
+
+"casino_suggested_games_title" = "Jeux Suggérés";
+
+"casino_timer_default" = "00:00";
+
+"casino_unable_to_load_games" = "Impossible de charger les jeux de casino. Veuillez réessayer.";
+
+"casino_volatility_high" = "Élevé";
+
+"casino_volatility_low" = "Faible";
+
+"casino_volatility_medium" = "Moyen";
+
+"casino_you_might_be_interested" = "Vous pourriez être intéressé par :";

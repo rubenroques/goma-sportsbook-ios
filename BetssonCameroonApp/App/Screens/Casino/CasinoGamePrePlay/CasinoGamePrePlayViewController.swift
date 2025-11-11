@@ -138,7 +138,7 @@ class CasinoGamePrePlayViewController: UIViewController {
     
     private func setupNavigationView() {
         view.addSubview(navigationBarView)
-        view.addSubview(favoritesButton)
+        // view.addSubview(favoritesButton)
     }
 
     private func setupActions() {

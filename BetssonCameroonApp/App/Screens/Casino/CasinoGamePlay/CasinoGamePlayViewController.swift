@@ -52,10 +52,15 @@ class CasinoGamePlayViewController: UIViewController {
     // MARK: - Properties
     private let viewModel: CasinoGamePlayViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+
+    // JavaScript Bridge for EveryMatrix postMessage communication
+    private let javaScriptBridge = CasinoJavaScriptBridge()
+    private var isGameReady: Bool = false
+
     // Timer properties
     private var sessionTimer: Timer?
     private var sessionStartTime: Date?
+    private var gameReadyTimeoutTimer: Timer?
     
     // MARK: - Constants
     private enum Constants {
@@ -84,11 +89,15 @@ class CasinoGamePlayViewController: UIViewController {
     
     deinit {
         stopSessionTimer()
+        gameReadyTimeoutTimer?.invalidate()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // Set JavaScript bridge delegate
+        javaScriptBridge.delegate = self
+
         setupViews()
         setupBindings()
         setupWebViewConfiguration()
@@ -97,7 +106,14 @@ class CasinoGamePlayViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startSessionTimer()
+
+        // Don't start timer immediately - wait for gameReady message from EveryMatrix
+        // Set up a fallback timeout in case gameReady never arrives (e.g., network error)
+        gameReadyTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+            guard let self = self, !self.isGameReady else { return }
+            print("[Casino] Timeout: gameReady message not received after 30s, starting timer as fallback")
+            self.startSessionTimer()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -130,15 +146,31 @@ class CasinoGamePlayViewController: UIViewController {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsInlineMediaPlayback = true
         webConfiguration.mediaTypesRequiringUserActionForPlayback = []
-        
+
+        // Configure JavaScript bridge for EveryMatrix postMessage communication
+        let userContentController = WKUserContentController()
+
+        // Inject JavaScript to listen for EveryMatrix iframe messages
+        let script = WKUserScript(
+            source: CasinoJavaScriptBridge.injectionScript,
+            injectionTime: .atDocumentStart,  // Inject early to catch all messages
+            forMainFrameOnly: false            // Critical: casino games are in iframes!
+        )
+        userContentController.addUserScript(script)
+
+        // Register message handler
+        userContentController.add(javaScriptBridge, name: "casinoGame")
+
+        webConfiguration.userContentController = userContentController
+
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.navigationDelegate = self
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.allowsBackForwardNavigationGestures = true
-        
+
         view.addSubview(webView)
-        
+
         // Connect webView to viewModel
         viewModel.webView = webView
     }
@@ -215,9 +247,9 @@ class CasinoGamePlayViewController: UIViewController {
         timerContainer.layer.cornerRadius = Constants.timerHeight / 2
         timerContainer.translatesAutoresizingMaskIntoConstraints = false
         bottomBarView.addSubview(timerContainer)
-        
-        // Timer label
-        timerLabel.text = "01:00"
+
+        // Timer label - start at 00:00
+        timerLabel.text = "00:00"
         timerLabel.textColor = Constants.textColor
         timerLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         timerLabel.textAlignment = .center
@@ -337,6 +369,19 @@ class CasinoGamePlayViewController: UIViewController {
     
     // MARK: - Timer Management
     private func startSessionTimer() {
+        // Safety check: Only start timer if game is ready or if called from fallback timeout
+        if !isGameReady {
+            print("[Casino] Attempted to start timer before game ready - allowing from fallback")
+            isGameReady = true  // Set flag to prevent duplicate starts
+        }
+
+        // Don't restart if already running
+        guard sessionTimer == nil else {
+            print("[Casino] Timer already running, ignoring duplicate start")
+            return
+        }
+
+        print("[Casino] Starting session timer")
         sessionStartTime = Date()
         sessionTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.updateTimerDisplay()
@@ -390,20 +435,85 @@ class CasinoGamePlayViewController: UIViewController {
 
 // MARK: - WKNavigationDelegate
 extension CasinoGamePlayViewController: WKNavigationDelegate {
-    
+
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         viewModel.webViewDidStartProvisionalNavigation()
     }
-    
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         viewModel.webViewDidFinishNavigation()
     }
-    
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         viewModel.webViewDidFailNavigation(with: error)
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         viewModel.webViewDidFailNavigation(with: error)
+    }
+}
+
+// MARK: - CasinoJavaScriptBridgeDelegate
+extension CasinoGamePlayViewController: CasinoJavaScriptBridgeDelegate {
+
+    func didReceiveGameReady(message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            // Prevent duplicate timer starts from multiple gameReady messages
+            guard !self.isGameReady else {
+                print("[Casino] Ignoring duplicate gameReady message")
+                return
+            }
+
+            print("[Casino] Game is ready - starting session timer")
+
+            // Invalidate timeout timer since we received gameReady
+            self.gameReadyTimeoutTimer?.invalidate()
+            self.gameReadyTimeoutTimer = nil
+
+            // Mark game as ready
+            self.isGameReady = true
+
+            // Start the session timer now that game is playable
+            self.startSessionTimer()
+        }
+    }
+
+    func didReceiveGameLoadProgress(progress: Int) {
+        print("[Casino] Game load progress: \(progress)%")
+    }
+
+    func didReceiveNavigateDeposit(message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            print("[Casino] Game requested deposit navigation")
+            self.depositButtonTapped()
+        }
+    }
+
+    func didReceiveNavigateLobby(message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            print("[Casino] Game requested lobby/exit navigation")
+            self.exitButtonTapped()
+        }
+    }
+
+    func didReceiveGameError(errorCode: Int, message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            print("[Casino] Game error received - Code: \(errorCode)")
+
+            // Stop timer on critical errors (1xx range typically indicates fatal errors)
+            if errorCode >= 100 && errorCode < 200 {
+                print("[Casino] Critical error detected, stopping timer")
+                self.stopSessionTimer()
+            }
+
+            // Show error to user
+            self.showError("Game error occurred. Please try again.")
+        }
     }
 }

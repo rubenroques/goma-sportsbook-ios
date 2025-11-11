@@ -4010,3 +4010,90 @@
 "mybetdetail_ticket_number" = "Ticket #{ticket}";
 
 "select_sport" = "Select Sport";
+
+// Splash Screen - Loading Messages
+"splash_loading_sports" = "Loading sports...";
+
+"splash_loading_competitions" = "Loading competitions...";
+
+"splash_loading_featured_matches" = "Loading featured matches...";
+
+"splash_preparing_your_experience" = "Preparing your experience...";
+
+// Transaction History Screen
+"transaction_history" = "Transaction History";
+
+"games" = "Games";
+
+// Time Filters
+"time_filter_1d" = "1D";
+
+"time_filter_1w" = "1W";
+
+"time_filter_1m" = "1M";
+
+"time_filter_3m" = "3M";
+
+// Loading/Error States
+"loading_transactions" = "Loading transactions...";
+
+"failed_load_transactions" = "Failed to load transactions";
+
+// Banking Transaction Types
+"system_deposit" = "System Deposit";
+
+"system_withdrawal" = "System Withdrawal";
+
+// Wagering Transaction Types
+"win" = "Win";
+
+"placed" = "Placed";
+
+"batch_amounts_debit" = "Batch Amounts Debit";
+
+"batch_amounts_credit" = "Batch Amounts Credit";
+
+// Casino Feature Localization
+"casino_api_error_prefix" = "[API error]";
+
+"casino_authentication_required" = "Authentication required";
+
+"casino_category_name" = "Casino";
+
+"casino_failed_build_url" = "Failed to build game launch URL";
+
+"casino_game_error_title" = "Game Error";
+
+"casino_invalid_game_url" = "Invalid game URL";
+
+"casino_load_more_games" = "Load More Games";
+
+"casino_loading" = "Loading...";
+
+"casino_loading_game_details" = "Loading game details...";
+
+"casino_no_game_data" = "No game data available";
+
+"casino_not_available" = "N/A";
+
+"casino_search_placeholder" = "Search in Casino";
+
+"casino_search_title" = "Search Casino";
+
+"casino_service_unavailable" = "Casino service not available";
+
+"casino_suggested_games_error" = "Couldn't pull results for suggested games";
+
+"casino_suggested_games_title" = "Suggested Games";
+
+"casino_timer_default" = "00:00";
+
+"casino_unable_to_load_games" = "Unable to load casino games. Please try again.";
+
+"casino_volatility_high" = "High";
+
+"casino_volatility_low" = "Low";
+
+"casino_volatility_medium" = "Medium";
+
+"casino_you_might_be_interested" = "You might be interested in:";

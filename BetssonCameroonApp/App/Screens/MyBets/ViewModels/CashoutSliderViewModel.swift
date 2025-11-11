@@ -69,7 +69,7 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
         dataSubject.send(newData)
         
         // Update button title with current amount
-        let formattedAmount = formatCurrency(Double(clampedValue), currency: currentData.currency)
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(clampedValue), currency: currentData.currency)
         let buttonTitle = localized("mybets_cashout_amount")
             .replacingOccurrences(of: "{amount}", with: formattedAmount)
         _buttonViewModel.updateTitle(buttonTitle)
@@ -138,36 +138,4 @@ extension CashoutSliderViewModel {
         )
     }
     
-    // MARK: - Private Helper Methods
-    
-    private func formatCurrency(_ amount: Double, currency: String) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = currency
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-        
-        if let formattedString = formatter.string(from: NSNumber(value: amount)) {
-            return formattedString
-        }
-        
-        // Fallback formatting
-        let currencySymbol = getCurrencySymbol(for: currency)
-        return "\(currencySymbol) \(String(format: "%.2f", amount))"
-    }
-    
-    private func getCurrencySymbol(for currency: String) -> String {
-        switch currency.uppercased() {
-        case "EUR":
-            return "€"
-        case "USD":
-            return "$"
-        case "GBP":
-            return "£"
-        case "XAF":
-            return "XAF"
-        default:
-            return currency
-        }
-    }
 }

@@ -288,6 +288,9 @@ class ModernViewController: UIViewController {
 - **Testing**: Comprehensive mock implementations for all protocols
 - **Documentation**: Each GomaUI component includes dedicated documentation
 
+#### **Development Journal**:
+Development session journals are located in `Documentation/DevelopmentJournal/`. These files document coding sessions, decisions, and implementation details that can be referenced when needed.
+
 ## Debugging & Development Workflow
 
 ### Systematic Investigation Process

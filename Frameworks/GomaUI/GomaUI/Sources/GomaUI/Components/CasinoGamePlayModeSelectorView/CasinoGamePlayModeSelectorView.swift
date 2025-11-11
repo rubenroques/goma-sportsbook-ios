@@ -390,9 +390,9 @@ final public class CasinoGamePlayModeSelectorView: UIView {
             
         case (.outlined, _):
             button.backgroundColor = UIColor.clear
-            button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
+            button.setTitleColor(StyleProvider.Color.allWhite, for: .normal)
             button.layer.borderWidth = 1
-            button.layer.borderColor = StyleProvider.Color.highlightPrimary.cgColor
+            button.layer.borderColor = StyleProvider.Color.allWhite.cgColor
             
         case (.text, _):
             button.backgroundColor = UIColor.clear

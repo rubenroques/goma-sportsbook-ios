@@ -86,9 +86,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         let limit = 20
         let placedBefore = endDate ?? defaultPlacedBeforeDate()
-        
+
         let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "WON")
-        
+
         return restConnector.request(endpoint)
             .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
                 return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
@@ -98,7 +98,23 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             }
             .eraseToAnyPublisher()
     }
-    
+
+    func getCashedOutBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
+        let limit = 20
+        let placedBefore = endDate ?? defaultPlacedBeforeDate()
+
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getSettledBets(limit: limit, placedBefore: placedBefore, betStatus: "CASHED_OUT")
+
+        return restConnector.request(endpoint)
+            .map { (bets: [EveryMatrix.Bet]) -> BettingHistory in
+                return EveryMatrixModelMapper.bettingHistory(fromBets: bets)
+            }
+            .mapError { error in
+                ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
+
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

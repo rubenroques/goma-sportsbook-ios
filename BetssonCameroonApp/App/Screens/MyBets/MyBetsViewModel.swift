@@ -272,9 +272,7 @@ final class MyBetsViewModel {
         case .won:
             serviceProviderPublisher = servicesProvider.getWonBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
         case .cashOut:
-            // For now, get open bets and filter for cashout-eligible ones
-            // TODO: Implement proper cashout filtering when API supports it
-            serviceProviderPublisher = servicesProvider.getOpenBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
+            serviceProviderPublisher = servicesProvider.getCashedOutBetsHistory(pageIndex: pageIndex, startDate: startDate, endDate: endDate)
         }
         
         return serviceProviderPublisher

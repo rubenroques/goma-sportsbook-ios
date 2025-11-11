@@ -15,7 +15,7 @@ final class TransactionHistoryViewController: UIViewController {
 
     private lazy var navigationBarView: SimpleNavigationBarView = {
         let viewModel = BetssonCameroonNavigationBarViewModel(
-            title: "Transaction History",
+            title: localized("transaction_history"),
             onBackTapped: { [weak self] in
                 self?.viewModel.didTapBack()
             }
@@ -68,11 +68,11 @@ final class TransactionHistoryViewController: UIViewController {
     private lazy var timeFilterBar: SimpleSquaredFilterBarView = {
         let timeFilters = SimpleSquaredFilterBarData(
             items: [
-                ("all", "All"),
-                ("1d", "1D"),
-                ("1w", "1W"),
-                ("1m", "1M"),
-                ("3m", "3M")
+                ("all", localized("all")),
+                ("1d", localized("time_filter_1d")),
+                ("1w", localized("time_filter_1w")),
+                ("1m", localized("time_filter_1m")),
+                ("3m", localized("time_filter_3m"))
             ],
             selectedId: "all"
         )
@@ -413,7 +413,7 @@ extension TransactionHistoryViewController {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading transactions..."
+        label.text = localized("loading_transactions")
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textSecondary
@@ -440,7 +440,7 @@ extension TransactionHistoryViewController {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Failed to load transactions"
+        label.text = localized("failed_load_transactions")
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
@@ -448,7 +448,7 @@ extension TransactionHistoryViewController {
 
         let retryButton = UIButton(type: .system)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.setTitle("Try Again", for: .normal)
+        retryButton.setTitle(localized("try_again"), for: .normal)
         retryButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         retryButton.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
         retryButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary

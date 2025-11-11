@@ -54,13 +54,13 @@ enum BankingTransactionType: Hashable {
     var displayName: String {
         switch self {
         case .deposit:
-            return "Deposit"
+            return localized("deposit")
         case .withdrawal:
-            return "Withdrawal"
+            return localized("withdraw")
         case .systemDeposit:
-            return "System Deposit"
+            return localized("system_deposit")
         case .systemWithdrawal:
-            return "System Withdrawal"
+            return localized("system_withdrawal")
         }
     }
 

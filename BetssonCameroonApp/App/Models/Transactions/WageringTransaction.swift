@@ -64,15 +64,15 @@ enum WageringTransactionType: Hashable {
     var displayName: String {
         switch self {
         case .bet:
-            return "Bet"
+            return localized("bet")
         case .win:
-            return "Win"
+            return localized("win")
         case .cancel:
-            return "Cancel"
+            return localized("cancel")
         case .batchAmountsDebit:
-            return "Batch Amounts Debit"
+            return localized("batch_amounts_debit")
         case .batchAmountsCredit:
-            return "Batch Amounts Credit"
+            return localized("batch_amounts_credit")
         }
     }
 

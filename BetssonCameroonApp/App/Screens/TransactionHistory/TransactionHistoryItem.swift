@@ -61,11 +61,11 @@ enum TransactionCategory: String, CaseIterable {
     var displayName: String {
         switch self {
         case .all:
-            return "All"
+            return localized("all")
         case .payments:
-            return "Payments"
+            return localized("payments")
         case .games:
-            return "Games"
+            return localized("games")
         }
     }
 }

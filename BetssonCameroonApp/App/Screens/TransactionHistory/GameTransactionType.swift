@@ -17,11 +17,11 @@ enum GameTransactionType: String, CaseIterable {
     var displayName: String {
         switch self {
         case .all:
-            return "All"
+            return localized("all")
         case .sportsbook:
-            return "Sportsbook"
+            return localized("sportsbook")
         case .casino:
-            return "Casino"
+            return localized("casino")
         }
     }
 
