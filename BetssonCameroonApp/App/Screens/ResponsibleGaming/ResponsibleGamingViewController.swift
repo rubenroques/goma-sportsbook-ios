@@ -43,13 +43,50 @@ class ResponsibleGamingViewController: UIViewController {
     }()
     
     private lazy var depositLimitCardsStackView: UIStackView = Self.createLimitCardsStackView()
+
+    private lazy var depositLimitOptionsView: SelectOptionsView = {
+        let view = SelectOptionsView(viewModel: viewModel.depositLimitOptionsViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
+    private let depositCurrentLimitValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .regular, size: 12)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.numberOfLines = 0
+        label.text = ""
+        return label
+    }()
+    
+    private lazy var depositLimitAmountTitleLabel: UILabel = Self.createLimitAmountTitleLabel()
+    private lazy var depositLimitAmountValueLabel: UILabel = Self.createLimitAmountValueLabel()
+    private lazy var depositLimitAmountView: UIView = Self.createLimitAmountContainer(
+        titleLabel: depositLimitAmountTitleLabel,
+        valueLabel: depositLimitAmountValueLabel
+    )
+    
+    private lazy var depositAmountTextField: BorderedTextFieldView = {
+        let view = BorderedTextFieldView(viewModel: viewModel.depositAmountTextFieldViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var depositLimitActionButton: ButtonView = {
+        let view = ButtonView(viewModel: viewModel.depositLimitActionButtonViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+        
     private lazy var wageringLimitSection: ExpandableSectionView = {
         let view = ExpandableSectionView(viewModel: viewModel.wageringLimitSectionViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    private lazy var wageringLimitCardsStackView: UIStackView = Self.createLimitCardsStackView()
+
     private lazy var wageringLimitOptionsView: SelectOptionsView = {
         let view = SelectOptionsView(viewModel: viewModel.wageringLimitOptionsViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -66,6 +103,13 @@ class ResponsibleGamingViewController: UIViewController {
         return label
     }()
     
+    private lazy var wageringLimitAmountTitleLabel: UILabel = Self.createLimitAmountTitleLabel()
+    private lazy var wageringLimitAmountValueLabel: UILabel = Self.createLimitAmountValueLabel()
+    private lazy var wageringLimitAmountView: UIView = Self.createLimitAmountContainer(
+        titleLabel: wageringLimitAmountTitleLabel,
+        valueLabel: wageringLimitAmountValueLabel
+    )
+    
     private lazy var wageringAmountTextField: BorderedTextFieldView = {
         let view = BorderedTextFieldView(viewModel: viewModel.wageringAmountTextFieldViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -77,8 +121,6 @@ class ResponsibleGamingViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    private lazy var wageringLimitCardsStackView: UIStackView = Self.createLimitCardsStackView()
     
     private lazy var timeOutSection: ExpandableSectionView = {
         let view = ExpandableSectionView(viewModel: viewModel.timeOutSectionViewModel)
@@ -112,34 +154,6 @@ class ResponsibleGamingViewController: UIViewController {
     
     private lazy var selfExclusionActionButton: ButtonView = {
         let view = ButtonView(viewModel: viewModel.selfExclusionActionButtonViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var depositLimitOptionsView: SelectOptionsView = {
-        let view = SelectOptionsView(viewModel: viewModel.depositLimitOptionsViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let depositCurrentLimitValueLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .regular, size: 12)
-        label.textColor = StyleProvider.Color.textPrimary
-        label.numberOfLines = 0
-        label.text = ""
-        return label
-    }()
-    
-    private lazy var depositAmountTextField: BorderedTextFieldView = {
-        let view = BorderedTextFieldView(viewModel: viewModel.depositAmountTextFieldViewModel)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var depositLimitActionButton: ButtonView = {
-        let view = ButtonView(viewModel: viewModel.depositLimitActionButtonViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -209,6 +223,10 @@ class ResponsibleGamingViewController: UIViewController {
         self.backButton.tintColor = StyleProvider.Color.textPrimary
         self.containerView.backgroundColor = .clear
         self.innerContainerView.backgroundColor = StyleProvider.Color.backgroundPrimary
+        self.depositLimitAmountTitleLabel.textColor = StyleProvider.Color.textPrimary
+        self.depositLimitAmountValueLabel.textColor = StyleProvider.Color.textSecondary
+        self.wageringLimitAmountTitleLabel.textColor = StyleProvider.Color.textPrimary
+        self.wageringLimitAmountValueLabel.textColor = StyleProvider.Color.textSecondary
     }
     
     private func setupButtonActions() {
@@ -230,7 +248,7 @@ class ResponsibleGamingViewController: UIViewController {
     
     private func setupDepositLimitSectionContent() {
         let subtitleLabel = UILabel()
-        subtitleLabel.text = localized("rg_deposit_limit_subtitle")
+        subtitleLabel.text = localized("choose_new_deposit_limit")
         subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
         subtitleLabel.textColor = StyleProvider.Color.textPrimary
         subtitleLabel.numberOfLines = 0
@@ -242,13 +260,18 @@ class ResponsibleGamingViewController: UIViewController {
         depositLimitSection.contentContainer.addArrangedSubview(depositLimitCardsStackView)
         
         depositLimitSection.contentContainer.addArrangedSubview(depositLimitOptionsView)
+        
+        depositLimitAmountTitleLabel.text = localized("deposit_limit_amount")
+        depositLimitAmountValueLabel.text = viewModel.depositSelectedLimitAmountText
+        depositLimitSection.contentContainer.addArrangedSubview(depositLimitAmountView)
+        
         depositLimitSection.contentContainer.addArrangedSubview(depositAmountTextField)
         depositLimitSection.contentContainer.addArrangedSubview(depositLimitActionButton)
     }
     
     private func setupWageringLimitSectionContent() {
         let subtitleLabel = UILabel()
-        subtitleLabel.text = localized("rg_wagering_limit_subtitle")
+        subtitleLabel.text = localized("choose_new_wagering_limit")
         subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
         subtitleLabel.textColor = StyleProvider.Color.textPrimary
         subtitleLabel.numberOfLines = 0
@@ -259,6 +282,11 @@ class ResponsibleGamingViewController: UIViewController {
         wageringLimitCardsStackView.isHidden = true
         wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitCardsStackView)
         wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitOptionsView)
+        
+        wageringLimitAmountTitleLabel.text = localized("wagering_limit_amount")
+        wageringLimitAmountValueLabel.text = viewModel.wageringSelectedLimitAmountText
+        wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitAmountView)
+        
         wageringLimitSection.contentContainer.addArrangedSubview(wageringAmountTextField)
         wageringLimitSection.contentContainer.addArrangedSubview(wageringLimitActionButton)
     }
@@ -297,49 +325,39 @@ class ResponsibleGamingViewController: UIViewController {
         viewModel.onDepositLimitUpdated = { [weak self] updatedValue in
             self?.depositCurrentLimitValueLabel.text = updatedValue
         }
+        viewModel.onDepositLimitAmountUpdated = { [weak self] amount in
+            self?.depositLimitAmountValueLabel.text = amount
+        }
         viewModel.onWageringLimitUpdated = { [weak self] updatedValue in
             self?.wageringCurrentLimitValueLabel.text = updatedValue
         }
-        viewModel.onLimitSuccess = { [weak self] limitType in
-            self?.presentAlert(
-                title: localized("responsible_gaming_success_title"),
-                message: localized("responsible_gaming_success_message_\(limitType.lowercased())")
-            )
+        viewModel.onWageringLimitAmountUpdated = { [weak self] amount in
+            self?.wageringLimitAmountValueLabel.text = amount
         }
         viewModel.onLimitError = { [weak self] limitType, errorDescription in
-            let message = String(format: localized("responsible_gaming_error_message_format"), localized("responsible_gaming_limit_type_\(limitType.lowercased())"), errorDescription)
+            let message = localized("\(limitType.lowercased())_limit_error_message")
+            
             self?.presentAlert(
-                title: localized("responsible_gaming_error_title"),
+                title: localized("\(limitType.lowercased())_limit_error_title"),
                 message: message
-            )
-        }
-        viewModel.onTimeoutSuccess = { [weak self] periodLabel in
-            self?.presentExclusionAlert(
-                title: localized("responsible_gaming_timeout_success_title"),
-                periodLocalizationKey: periodLabel,
-                messageFormatKey: "responsible_gaming_timeout_success_message_format"
             )
         }
         viewModel.onTimeoutError = { [weak self] errorDescription in
-            let message = String(format: localized("responsible_gaming_timeout_error_message_format"), errorDescription)
+            let message = localized("timeout_error_message")
             self?.presentAlert(
-                title: localized("responsible_gaming_timeout_error_title"),
+                title: localized("timeout_error_title"),
                 message: message
-            )
-        }
-        viewModel.onSelfExclusionSuccess = { [weak self] periodLabel in
-            self?.presentExclusionAlert(
-                title: localized("responsible_gaming_self_exclusion_success_title"),
-                periodLocalizationKey: periodLabel,
-                messageFormatKey: "responsible_gaming_self_exclusion_success_message_format"
             )
         }
         viewModel.onSelfExclusionError = { [weak self] errorDescription in
-            let message = String(format: localized("responsible_gaming_self_exclusion_error_message_format"), errorDescription)
+            let message = localized("self_exclusion_error_message")
             self?.presentAlert(
-                title: localized("responsible_gaming_self_exclusion_error_title"),
+                title: localized("self_exclusion_error_title"),
                 message: message
             )
+        }
+        viewModel.onSelfExclusionConfirmationRequested = { [weak self] in
+            self?.presentSelfExclusionConfirmation()
         }
         viewModel.onDepositLimitCardsChanged = { [weak self] cardViewModels in
             guard let self else { return }
@@ -364,13 +382,30 @@ class ResponsibleGamingViewController: UIViewController {
     }
     
     // MARK: - Actions
-    
     @objc private func backButtonTapped() {
         viewModel.navigateBack()
     }
 }
 
 private extension ResponsibleGamingViewController {
+    func presentSelfExclusionConfirmation() {
+        let alertController = UIAlertController(
+            title: localized("confirm_self_exclusion"),
+            message: localized("self_exclusion_warning_message"),
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil)
+        let confirmAction = UIAlertAction(title: localized("confirm"), style: .destructive) { [weak self] _ in
+            self?.viewModel.confirmSelfExclusion()
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(confirmAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
     func presentAlert(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: localized("ok"), style: .default, handler: nil)
@@ -408,6 +443,22 @@ private extension ResponsibleGamingViewController {
         stackView.arrangedSubviews.forEach { view in
             stackView.removeArrangedSubview(view)
             view.removeFromSuperview()
+        }
+        
+        if !viewModels.isEmpty {
+            let titleLabel = UILabel()
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+            titleLabel.font = StyleProvider.fontWith(type: .bold, size: 12)
+            titleLabel.textColor = StyleProvider.Color.textPrimary
+            titleLabel.numberOfLines = 1
+            
+            if stackView == depositLimitCardsStackView {
+                titleLabel.text = localized("active_deposit_limits")
+            } else {
+                titleLabel.text = localized("active_wagering_limits")
+            }
+            
+            stackView.addArrangedSubview(titleLabel)
         }
         
         viewModels.forEach { cardViewModel in
@@ -475,6 +526,47 @@ extension ResponsibleGamingViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.masksToBounds = true
+        return view
+    }
+    
+    private static func createLimitAmountTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .medium, size: 16)
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return label
+    }
+    
+    private static func createLimitAmountValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .medium, size: 12)
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }
+    
+    private static func createLimitAmountContainer(titleLabel: UILabel, valueLabel: UILabel) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+        view.addSubview(valueLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            valueLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8),
+            valueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            valueLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            valueLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
         return view
     }
     

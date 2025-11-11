@@ -10,6 +10,17 @@ import Combine
 import ServicesProvider
 import GomaUI
 
+private enum LimitSuccessAction {
+    case set
+    case update
+    case delete
+}
+
+private enum LimitCategory {
+    case deposit
+    case wagering
+}
+
 class ResponsibleGamingViewModel {
     
     // MARK: - Properties
@@ -49,18 +60,26 @@ class ResponsibleGamingViewModel {
     // MARK: - Update Callbacks
     var onDepositLimitUpdated: ((String) -> Void)?
     var onWageringLimitUpdated: ((String) -> Void)?
-    var onLimitSuccess: ((String) -> Void)?
+    var onLimitSuccess: ((ResponsibleGamingLimitSuccessInfo) -> Void)?
     var onLimitError: ((String, String) -> Void)?
-    var onTimeoutSuccess: ((String) -> Void)?
+    var onTimeoutSuccess: ((ResponsibleGamingLimitSuccessInfo) -> Void)?
     var onTimeoutError: ((String) -> Void)?
-    var onSelfExclusionSuccess: ((String) -> Void)?
+    var onSelfExclusionSuccess: ((ResponsibleGamingLimitSuccessInfo) -> Void)?
     var onSelfExclusionError: ((String) -> Void)?
+    var onSelfExclusionConfirmationRequested: (() -> Void)?
+    var onDepositLimitAmountUpdated: ((String) -> Void)?
+    var onWageringLimitAmountUpdated: ((String) -> Void)?
     var onDepositLimitCardsChanged: (([UserLimitCardViewModelProtocol]) -> Void)?
     var onWageringLimitCardsChanged: (([UserLimitCardViewModelProtocol]) -> Void)?
     
     private var fetchedLimits: [UserLimit] = []
     private(set) var depositLimitCardViewModels: [UserLimitCardViewModelProtocol] = []
     private(set) var wageringLimitCardViewModels: [UserLimitCardViewModelProtocol] = []
+    private(set) var depositSelectedLimitAmount: String = ""
+    private(set) var wageringSelectedLimitAmount: String = ""
+    
+    var depositSelectedLimitAmountText: String { depositSelectedLimitAmount }
+    var wageringSelectedLimitAmountText: String { wageringSelectedLimitAmount }
     
     // MARK: - Navigation Callbacks
     var onNavigateBack: (() -> Void) = { }
@@ -74,6 +93,13 @@ class ResponsibleGamingViewModel {
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 2
         formatter.minimumFractionDigits = 0
+        return formatter
+    }()
+    
+    private lazy var timeoutDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        formatter.locale = Locale.current
         return formatter
     }()
     
@@ -129,7 +155,7 @@ class ResponsibleGamingViewModel {
         
         depositLimitActionButtonViewModel = MockButtonViewModel(buttonData: ButtonData(
             id: "deposit_limit_action",
-            title: localized("set_limit"),
+            title: localized("set_deposit_limit"),
             style: .solidBackground,
             backgroundColor: StyleProvider.Color.highlightSecondary,
             isEnabled: false
@@ -175,14 +201,14 @@ class ResponsibleGamingViewModel {
         ))
         
         selfExclusionOptionsViewModel = ResponsibleGamingOptionsViewModel(
-            title: nil,
+            title: localized("choose_time_period"),
             periods: configuration.selfExclusion.periods,
             selectedPeriodValue: configuration.selfExclusion.periods.defaultValue
         )
         
         selfExclusionActionButtonViewModel = MockButtonViewModel(buttonData: ButtonData(
             id: "self_exclusion_action",
-            title: localized("apply"),
+            title: localized("self_exclude_for_period"),
             style: .solidBackground,
             backgroundColor: StyleProvider.Color.highlightSecondary,
             isEnabled: true
@@ -230,6 +256,26 @@ class ResponsibleGamingViewModel {
                 self?.wageringLimitActionButtonViewModel.setEnabled(!trimmed.isEmpty)
             }
             .store(in: &cancellables)
+        
+        if let depositOptionsViewModel {
+            depositOptionsViewModel.selectedOptionPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    self?.updateDepositSelectedLimitAmount()
+                }
+                .store(in: &cancellables)
+        }
+        
+        if let wageringOptionsViewModel {
+            wageringOptionsViewModel.selectedOptionPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] _ in
+                    self?.updateWageringSelectedLimitAmount()
+                }
+                .store(in: &cancellables)
+        }
+        
+        updateSelectedLimitAmounts()
     }
     
     func setupButtonCallbacks() {
@@ -243,8 +289,12 @@ class ResponsibleGamingViewModel {
             self?.setTimeOut()
         }
         selfExclusionActionButtonViewModel.onButtonTapped = { [weak self] in
-            self?.setSelfExclusion()
+            self?.onSelfExclusionConfirmationRequested?()
         }
+    }
+    
+    func confirmSelfExclusion() {
+        setSelfExclusion()
     }
     
     // MARK: - Endpoint Functions
@@ -267,11 +317,14 @@ class ResponsibleGamingViewModel {
     
     func setDepositLimit() {
         guard !isLoading.value else { return }
+        
         guard let period = depositOptionsViewModel?.selectedPeriodApiValue() ?? depositOptionsViewModel?.selectedPeriod()?.value,
               !period.isEmpty else { return }
+        
         guard let amountValue = Double(depositAmountValue), amountValue > 0 else { return }
         
         let existingLimit = existingLimit(forTypes: ["Deposit"], matchingPeriod: period)
+        let limitAction: LimitSuccessAction = existingLimit == nil ? .set : .update
         let currency = existingLimit?.currency ?? (userCurrency.isEmpty ? "XAF" : userCurrency)
         
         isLoading.send(true)
@@ -301,7 +354,8 @@ class ResponsibleGamingViewModel {
             } receiveValue: { [weak self] limit in
                 guard let self = self else { return }
                 self.depositOptionsViewModel?.selectPeriod(matching: limit.period)
-                self.onLimitSuccess?("Deposit")
+                let successInfo = self.makeLimitSuccessInfo(limit: limit, action: limitAction)
+                self.onLimitSuccess?(successInfo)
                 self.fetchResponsibleGamingLimits()
             }
             .store(in: &cancellables)
@@ -309,11 +363,14 @@ class ResponsibleGamingViewModel {
     
     func setWageringLimit() {
         guard !isLoading.value else { return }
+        
         guard let period = wageringOptionsViewModel?.selectedPeriodApiValue() ?? wageringOptionsViewModel?.selectedPeriod()?.value,
               !period.isEmpty else { return }
+        
         guard let amountValue = Double(wageringAmountValue), amountValue > 0 else { return }
         
-        let existingLimit = existingLimit(forTypes: ["Wagering", "Loss"], matchingPeriod: period)
+        let existingLimit = existingLimit(forTypes: ["Wagering"], matchingPeriod: period)
+        let limitAction: LimitSuccessAction = existingLimit == nil ? .set : .update
         let currency = existingLimit?.currency ?? (userCurrency.isEmpty ? "XAF" : userCurrency)
         
         isLoading.send(true)
@@ -343,7 +400,8 @@ class ResponsibleGamingViewModel {
             } receiveValue: { [weak self] limit in
                 guard let self = self else { return }
                 self.wageringOptionsViewModel?.selectPeriod(matching: limit.period)
-                self.onLimitSuccess?("Wagering")
+                let successInfo = self.makeLimitSuccessInfo(limit: limit, action: limitAction)
+                self.onLimitSuccess?(successInfo)
                 self.fetchResponsibleGamingLimits()
             }
             .store(in: &cancellables)
@@ -351,10 +409,14 @@ class ResponsibleGamingViewModel {
     
     func setTimeOut() {
         guard !isLoading.value else { return }
+        
         guard let periodValue = timeOutOptionsInternal?.selectedPeriodApiValue() ?? timeOutOptionsInternal?.selectedPeriod()?.value,
               !periodValue.isEmpty else { return }
+        
         let selectedPeriodLabel = timeOutOptionsInternal?.selectedPeriod()?.label ?? periodValue
+        
         isLoading.send(true)
+        
         let request = UserTimeoutRequest(
             coolOff: UserTimeoutRequest.CoolOffPayload(
                 period: periodValue,
@@ -375,7 +437,9 @@ class ResponsibleGamingViewModel {
                 self?.isLoading.send(false)
             } receiveValue: { [weak self] in
                 guard let self = self else { return }
-                self.onTimeoutSuccess?(selectedPeriodLabel)
+                let successInfo = self.makeTimeoutSuccessInfo(periodLabel: selectedPeriodLabel)
+                self.onTimeoutSuccess?(successInfo)
+                self.isLoading.send(false)
                 print("[ResponsibleGaming] Timeout set with period: \(periodValue)")
             }
             .store(in: &cancellables)
@@ -383,9 +447,12 @@ class ResponsibleGamingViewModel {
     
     func setSelfExclusion() {
         guard !isLoading.value else { return }
+        
         guard let periodValue = selfExclusionOptionsInternal?.selectedPeriodApiValue() ?? selfExclusionOptionsInternal?.selectedPeriod()?.value,
               !periodValue.isEmpty else { return }
+        
         let selectedPeriodLabel = selfExclusionOptionsInternal?.selectedPeriod()?.label ?? periodValue
+        
         isLoading.send(true)
 
         var expiryDate: String?
@@ -414,7 +481,8 @@ class ResponsibleGamingViewModel {
                 self?.isLoading.send(false)
             } receiveValue: { [weak self] in
                 guard let self = self else { return }
-                self.onSelfExclusionSuccess?(selectedPeriodLabel)
+                let successInfo = self.makeSelfExclusionSuccessInfo(periodLabel: selectedPeriodLabel)
+                self.onSelfExclusionSuccess?(successInfo)
                 print("[ResponsibleGaming] Self exclusion set with period: \(periodValue)")
             }
             .store(in: &cancellables)
@@ -422,6 +490,8 @@ class ResponsibleGamingViewModel {
     
     func removeLimit(withId limitId: String) {
         guard !isLoading.value else { return }
+        
+        let limitToRemove = fetchedLimits.first(where: { $0.id == limitId })
         
         isLoading.send(true)
         
@@ -434,7 +504,8 @@ class ResponsibleGamingViewModel {
                 }
             } receiveValue: { [weak self] in
                 guard let self = self else { return }
-                self.onLimitSuccess?("Delete")
+                let successInfo = self.makeLimitRemovalSuccessInfo(limit: limitToRemove)
+                self.onLimitSuccess?(successInfo)
                 self.fetchResponsibleGamingLimits()
             }
             .store(in: &cancellables)
@@ -445,6 +516,7 @@ class ResponsibleGamingViewModel {
         let calendar = Calendar.current
         let now = Date()
         var dateComponents = DateComponents()
+        
         switch periodType.lowercased() {
         case "months":
             dateComponents.month = value
@@ -455,9 +527,11 @@ class ResponsibleGamingViewModel {
         default:
             return nil
         }
+        
         guard let expirationDate = calendar.date(byAdding: dateComponents, to: now) else {
             return nil
         }
+        
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]
         return formatter.string(from: expirationDate)
@@ -467,9 +541,11 @@ class ResponsibleGamingViewModel {
         if let depositLimit = limits.first(where: { $0.type.caseInsensitiveCompare("Deposit") == .orderedSame }) {
             depositOptionsViewModel?.selectPeriod(matching: depositLimit.period)
         }
+        
         if let wageringLimit = limits.first(where: { $0.type.caseInsensitiveCompare("Wagering") == .orderedSame || $0.type.caseInsensitiveCompare("Loss") == .orderedSame }) {
             wageringOptionsViewModel?.selectPeriod(matching: wageringLimit.period)
         }
+        
         refreshLimitSummaries()
     }
 
@@ -490,6 +566,7 @@ class ResponsibleGamingViewModel {
         } else {
             fetchedLimits.append(limit)
         }
+        
         refreshLimitSummaries()
     }
 
@@ -497,6 +574,7 @@ class ResponsibleGamingViewModel {
         let depositLimits = fetchedLimits.filter { $0.type.caseInsensitiveCompare("Deposit") == .orderedSame }
         depositLimitCardViewModels = depositLimits.map { makeCardViewModel(from: $0) }
         onDepositLimitCardsChanged?(depositLimitCardViewModels)
+        
         let depositSummary = limitSummary(forCount: depositLimitCardViewModels.count)
         depositLimitCurrentValue = depositSummary
         onDepositLimitUpdated?(depositSummary)
@@ -504,27 +582,234 @@ class ResponsibleGamingViewModel {
         let wageringLimits = fetchedLimits.filter { $0.type.caseInsensitiveCompare("Wagering") == .orderedSame || $0.type.caseInsensitiveCompare("Loss") == .orderedSame }
         wageringLimitCardViewModels = wageringLimits.map { makeCardViewModel(from: $0) }
         onWageringLimitCardsChanged?(wageringLimitCardViewModels)
+        
         let wageringSummary = limitSummary(forCount: wageringLimitCardViewModels.count)
         wageringLimitCurrentValue = wageringSummary
         onWageringLimitUpdated?(wageringSummary)
+        
+        updateSelectedLimitAmounts()
     }
 
     private func limitSummary(forCount count: Int) -> String {
         return "\(localized("current_limits")): \(count) \(localized("active"))"
     }
 
+    private func updateSelectedLimitAmounts() {
+        updateDepositSelectedLimitAmount()
+        updateWageringSelectedLimitAmount()
+    }
+    
+    private func updateDepositSelectedLimitAmount() {
+        let info = limitInfo(forTypes: ["Deposit"], optionsViewModel: depositOptionsViewModel)
+        
+        depositSelectedLimitAmount = info.amount
+        onDepositLimitAmountUpdated?(info.amount)
+        updateDepositActionButtonTitle(hasExistingLimit: info.hasLimit)
+    }
+    
+    private func updateWageringSelectedLimitAmount() {
+        let info = limitInfo(forTypes: ["Wagering", "Loss"], optionsViewModel: wageringOptionsViewModel)
+        
+        wageringSelectedLimitAmount = info.amount
+        onWageringLimitAmountUpdated?(info.amount)
+        updateWageringActionButtonTitle(hasExistingLimit: info.hasLimit)
+    }
+    
+    private func limitInfo(forTypes types: [String], optionsViewModel: ResponsibleGamingOptionsViewModel?) -> (amount: String, hasLimit: Bool) {
+        guard let optionsViewModel else { return ("", false) }
+        
+        let identifiers = optionsViewModel.selectedPeriodIdentifiers()
+        
+        guard let limit = fetchedLimits.first(where: { limit in
+            types.contains(where: { limit.type.caseInsensitiveCompare($0) == .orderedSame }) &&
+            identifiers.contains(where: { limit.period.caseInsensitiveCompare($0) == .orderedSame })
+        }) else {
+            return ("", false)
+        }
+        
+        return (formattedValue(for: limit), true)
+    }
+    
+    private func updateDepositActionButtonTitle(hasExistingLimit: Bool) {
+        let titleKey = hasExistingLimit ? "update_deposit_limit" : "set_deposit_limit"
+        
+        depositLimitActionButtonViewModel.updateTitle(localized(titleKey))
+    }
+    
+    private func updateWageringActionButtonTitle(hasExistingLimit: Bool) {
+        let titleKey = hasExistingLimit ? "update_wagering_limit" : "set_wagering_limit"
+        
+        wageringLimitActionButtonViewModel.updateTitle(localized(titleKey))
+    }
+
     private func displayText(for period: String) -> String {
         let key = period.lowercased()
         let localizedValue = localized(key)
+        
         return localizedValue == key ? period : localizedValue
     }
 
     private func formattedValue(for limit: UserLimit) -> String {
         let amountString = valueFormatter.string(from: NSNumber(value: limit.amount)) ?? String(limit.amount)
+        
         if limit.currency.isEmpty {
             return amountString
         }
+        
         return "\(amountString) \(limit.currency)"
+    }
+    
+    // MARK: Success Presentation
+    private func makeLimitSuccessInfo(limit: UserLimit, action: LimitSuccessAction) -> ResponsibleGamingLimitSuccessInfo {
+        let category = limitCategory(for: limit.type)
+        let message = successMessage(for: category, action: action)
+        let periodTitle = localizedValue(for: "period", fallback: "Period")
+        let periodValue = displayText(for: limit.period)
+        let amountTitle = localizedValue(for: "amount", fallback: "Amount")
+        let amountValue = formattedValue(for: limit)
+        let statusTitle = localizedValue(for: "status", fallback: "Status")
+        let statusValue = statusDisplay(for: limit)
+        
+        return ResponsibleGamingLimitSuccessInfo(
+            successMessage: message,
+            periodTitle: periodTitle,
+            periodValue: periodValue,
+            amountTitle: amountTitle,
+            amountValue: amountValue,
+            statusTitle: statusTitle,
+            statusValue: statusValue,
+            highlightStatus: true,
+            shouldLogoutOnDismiss: false
+        )
+    }
+    
+    private func makeLimitRemovalSuccessInfo(limit: UserLimit?) -> ResponsibleGamingLimitSuccessInfo {
+        let category = limitCategory(for: limit?.type)
+        let message = successMessage(for: category, action: .delete)
+        let periodTitle = localizedValue(for: "period", fallback: "Period")
+        let periodValue = limit.map { displayText(for: $0.period) } ?? ""
+        let statusTitle = localizedValue(for: "status", fallback: "Status")
+        let statusValue = localizedValue(for: "removed", fallback: "Removed")
+        
+        return ResponsibleGamingLimitSuccessInfo(
+            successMessage: message,
+            periodTitle: periodTitle,
+            periodValue: periodValue,
+            amountTitle: nil,
+            amountValue: nil,
+            statusTitle: statusTitle,
+            statusValue: statusValue,
+            highlightStatus: false,
+            shouldLogoutOnDismiss: false
+        )
+    }
+    
+    private func makeTimeoutSuccessInfo(periodLabel: String) -> ResponsibleGamingLimitSuccessInfo {
+        let message = localizedValue(for: "timeout_set_successfully", fallback: "Timeout set successfully")
+        let periodTitle = localizedValue(for: "choose_time_period", fallback: "Choose Time Period")
+        let localizedPeriod = localized(periodLabel)
+        let periodValue = localizedPeriod == periodLabel ? periodLabel : localizedPeriod
+        let startTitle = localizedValue(for: "timeout_started", fallback: "Timeout started")
+        let startValue = timeoutDateFormatter.string(from: Date())
+        let statusTitle = localizedValue(for: "status", fallback: "Status")
+        let statusValue = localizedValue(for: "active", fallback: "Active")
+        
+        return ResponsibleGamingLimitSuccessInfo(
+            successMessage: message,
+            periodTitle: periodTitle,
+            periodValue: periodValue,
+            amountTitle: startTitle,
+            amountValue: startValue,
+            statusTitle: statusTitle,
+            statusValue: statusValue,
+            highlightStatus: true,
+            shouldLogoutOnDismiss: true
+        )
+    }
+    
+    private func makeSelfExclusionSuccessInfo(periodLabel: String) -> ResponsibleGamingLimitSuccessInfo {
+        let message = localizedValue(for: "self_exclusion_set_successfully", fallback: "Self-exclusion set successfully")
+        let periodTitle = localizedValue(for: "exclusion_period", fallback: "Exclusion Period")
+        let localizedPeriod = localized(periodLabel)
+        let periodValue = localizedPeriod == periodLabel ? periodLabel : localizedPeriod
+        let startTitle = localizedValue(for: "started_date", fallback: "Started Date")
+        let startValue = timeoutDateFormatter.string(from: Date())
+        let statusTitle = localizedValue(for: "status", fallback: "Status")
+        let statusValue = localizedValue(for: "active", fallback: "Active")
+        
+        return ResponsibleGamingLimitSuccessInfo(
+            successMessage: message,
+            periodTitle: periodTitle,
+            periodValue: periodValue,
+            amountTitle: startTitle,
+            amountValue: startValue,
+            statusTitle: statusTitle,
+            statusValue: statusValue,
+            highlightStatus: true,
+            shouldLogoutOnDismiss: true
+        )
+    }
+    
+    private func statusDisplay(for limit: UserLimit) -> String {
+        if let status = limit.schedules?.last(where: { !($0.updateStatus ?? "").isEmpty })?.updateStatus {
+            let key = "responsible_gaming_limit_status_\(status.lowercased())"
+            let localizedStatus = localized(key)
+            return localizedStatus == key ? status.capitalized : localizedStatus
+        }
+        
+        let activeStatus = localized("active")
+        
+        return activeStatus == "active" ? "Active" : activeStatus
+    }
+    
+    private func successMessage(for category: LimitCategory?, action: LimitSuccessAction) -> String {
+        guard let category else {
+            let localizedSuccess = localized("success")
+            return localizedSuccess
+        }
+        
+        let key = successMessageKey(for: category, action: action)
+        let localizedValue = localized(key)
+        
+        return localizedValue
+    }
+    
+    private func localizedValue(for key: String, fallback: String) -> String {
+        let value = localized(key)
+        
+        return value == key ? fallback : value
+    }
+    
+    private func successMessageKey(for category: LimitCategory, action: LimitSuccessAction) -> String {
+        switch (category, action) {
+        case (.deposit, .set):
+            return "deposit_limit_set"
+        case (.deposit, .update):
+            return "deposit_limit_updated"
+        case (.deposit, .delete):
+            return "deposit_limit_deleted"
+        case (.wagering, .set):
+            return "wagering_limit_set"
+        case (.wagering, .update):
+            return "wagering_limit_updated"
+        case (.wagering, .delete):
+            return "wagering_limit_deleted"
+        }
+    }
+    
+    private func limitCategory(for type: String?) -> LimitCategory? {
+        guard let type = type?.trimmingCharacters(in: .whitespacesAndNewlines), !type.isEmpty else {
+            return nil
+        }
+        
+        switch type.lowercased() {
+        case "deposit":
+            return .deposit
+        case "wagering", "loss":
+            return .wagering
+        default:
+            return nil
+        }
     }
     
     // MARK: View model creation
@@ -532,6 +817,7 @@ class ResponsibleGamingViewModel {
         let typeDisplay = displayText(for: limit.period)
         let valueDisplay = formattedValue(for: limit)
         let actionTitle = localized("remove")
+        
         return ResponsibleGamingUserLimitCardViewModel(
             limitId: limit.id,
             typeText: typeDisplay,
@@ -600,6 +886,23 @@ private final class ResponsibleGamingOptionsViewModel: SelectOptionsViewModelPro
         let lowercased = value.lowercased()
         guard let period = periods.first(where: { $0.value.lowercased() == lowercased || $0.label.lowercased() == lowercased || periodMatchesApiValue($0, lowercased: lowercased) }) else { return }
         selectOption(withId: period.value)
+    }
+    
+    func selectedPeriodIdentifiers() -> [String] {
+        guard let period = selectedPeriod() else { return [] }
+        var identifiers: [String] = []
+        if let apiValue = period.apiValue, !apiValue.isEmpty {
+            identifiers.append(apiValue)
+        }
+        identifiers.append(period.value)
+        identifiers.append(period.label)
+        return identifiers
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+    
+    var selectedOptionPublisher: AnyPublisher<String?, Never> {
+        selectedOptionId.eraseToAnyPublisher()
     }
     
     private func matchingPeriod(for value: String) -> ResponsibleGamingPeriod? {

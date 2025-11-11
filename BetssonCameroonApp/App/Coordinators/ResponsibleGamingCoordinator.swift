@@ -2,7 +2,7 @@
 //  ResponsibleGamingCoordinator.swift
 //  BetssonCameroonApp
 //
-//  Created by Claude on November 6, 2025.
+//  Created by André on 06/11/2025.
 //
 
 import UIKit
@@ -29,6 +29,7 @@ final class ResponsibleGamingCoordinator: Coordinator {
     
     /// Called when responsible gaming screen is dismissed
     var onDismiss: (() -> Void)?
+    var onRootDismiss: (() -> Void)?
     
     // MARK: - Initialization
     
@@ -46,10 +47,15 @@ final class ResponsibleGamingCoordinator: Coordinator {
         showResponsibleGamingScreen()
     }
     
-    func finish() {
+    func finish(withRootDismiss: Bool = false) {
         responsibleGamingViewController = nil
         responsibleGamingViewModel = nil
-        onDismiss?()
+        if withRootDismiss {
+            onRootDismiss?()
+        }
+        else {
+            onDismiss?()
+        }
         childCoordinators.removeAll()
     }
     
@@ -66,12 +72,18 @@ final class ResponsibleGamingCoordinator: Coordinator {
         let responsibleGamingViewController = ResponsibleGamingViewController(viewModel: responsibleGamingViewModel)
         self.responsibleGamingViewController = responsibleGamingViewController
         
-//        let responsibleGamingNavigationController = Router.navigationController(with: responsibleGamingViewController)
-//        self.responsibleGamingNavigationController = responsibleGamingNavigationController
-        
         // Setup ViewModel callbacks
         responsibleGamingViewModel.onNavigateBack = { [weak self] in
             self?.handleBackNavigation()
+        }
+        responsibleGamingViewModel.onLimitSuccess = { [weak self] info in
+            self?.presentLimitSuccess(info: info)
+        }
+        responsibleGamingViewModel.onTimeoutSuccess = { [weak self] info in
+            self?.presentLimitSuccess(info: info)
+        }
+        responsibleGamingViewModel.onSelfExclusionSuccess = { [weak self] info in
+            self?.presentLimitSuccess(info: info)
         }
         
         // Present the responsible gaming screen
@@ -82,9 +94,50 @@ final class ResponsibleGamingCoordinator: Coordinator {
     
     // MARK: - Action Handlers
     
-    private func handleBackNavigation() {
+    private func handleBackNavigation(withRootDismiss: Bool = false) {
         navigationController.popViewController(animated: true)
-        finish()
+        finish(withRootDismiss: withRootDismiss)
+    }
+    
+    private func presentLimitSuccess(info: ResponsibleGamingLimitSuccessInfo) {
+        DispatchQueue.main.async { [weak self] in
+            guard
+                let self,
+                let hostViewController = self.responsibleGamingViewController
+            else { return }
+            
+            let successViewModel = LimitsSuccessViewModel(
+                successMessage: info.successMessage,
+                periodTitle: info.periodTitle,
+                periodValue: info.periodValue,
+                amountTitle: info.amountTitle,
+                amountValue: info.amountValue,
+                statusTitle: info.statusTitle,
+                statusValue: info.statusValue,
+                highlightStatus: info.highlightStatus
+            )
+            let successViewController = LimitsSuccessViewController(viewModel: successViewModel)
+            successViewController.onContinueRequested = { [weak self, weak successViewController] in
+                guard let self, let successViewController else { return }
+                successViewController.dismiss(animated: true) {
+                    self.handlePostSuccessActions(info: info)
+                }
+            }
+            
+            if let presented = hostViewController.presentedViewController {
+                presented.dismiss(animated: false) {
+                    hostViewController.present(successViewController, animated: true)
+                }
+            } else {
+                hostViewController.present(successViewController, animated: true)
+            }
+        }
+    }
+    
+    private func handlePostSuccessActions(info: ResponsibleGamingLimitSuccessInfo) {
+        guard info.shouldLogoutOnDismiss else { return }
+        Env.userSessionStore.logout()
+        handleBackNavigation(withRootDismiss: true)
     }
 }
 

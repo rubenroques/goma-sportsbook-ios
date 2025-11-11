@@ -349,6 +349,11 @@ final class ProfileWalletCoordinator: Coordinator {
             self?.removeChildCoordinator(responsibleGamingCoordinator)
         }
         
+        responsibleGamingCoordinator.onRootDismiss = { [weak self] in
+            self?.removeChildCoordinator(responsibleGamingCoordinator)
+            self?.dismissProfileWallet()
+        }
+        
         addChildCoordinator(responsibleGamingCoordinator)
         responsibleGamingCoordinator.start()
         
