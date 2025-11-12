@@ -18,12 +18,14 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Public Properties
-    
+
     var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> {
         headerDataSubject.eraseToAnyPublisher()
     }
-    
+
     var onStatisticsTapped: (() -> Void)?
+    var onCountryTapped: ((String) -> Void)?
+    var onLeagueTapped: ((String) -> Void)?
     
     // MARK: - Initialization
     
@@ -41,7 +43,7 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     }
     
     // MARK: - MatchHeaderCompactViewModelProtocol
-    
+
     func handleStatisticsTap() {
         // Toggle the collapsed state
         let currentData = headerDataSubject.value
@@ -49,17 +51,33 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
             homeTeamName: currentData.homeTeamName,
             awayTeamName: currentData.awayTeamName,
             sport: currentData.sport,
-            competition: currentData.competition,
+            country: currentData.country,
             league: currentData.league,
+            countryId: currentData.countryId,
+            leagueId: currentData.leagueId,
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
             statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
         headerDataSubject.send(updatedData)
-        
+
         // Also call the callback
         onStatisticsTapped?()
+    }
+
+    func handleCountryTap() {
+        let currentData = headerDataSubject.value
+        if let countryId = currentData.countryId {
+            onCountryTapped?(countryId)
+        }
+    }
+
+    func handleLeagueTap() {
+        let currentData = headerDataSubject.value
+        if let leagueId = currentData.leagueId {
+            onLeagueTapped?(leagueId)
+        }
     }
     
     // MARK: - Private Methods
@@ -76,17 +94,23 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     private static func createHeaderData(from match: Match) -> MatchHeaderCompactData {
         // Extract sport name with fallback
         let sportName = match.sport.name ?? match.sportName ?? "Unknown Sport"
-        
-        // Extract competition/league information
-        let competitionName = match.competitionName
-        let leagueName = match.venue?.name ?? competitionName
-        
+
+        // Extract country information from venue
+        let countryName = match.venue?.name ?? "Unknown"
+        let countryId = match.venue?.id
+
+        // Extract league information from competition
+        let leagueName = match.competitionName
+        let leagueId = match.competitionId
+
         return MatchHeaderCompactData(
             homeTeamName: match.homeParticipant.name,
             awayTeamName: match.awayParticipant.name,
             sport: sportName,
-            competition: competitionName,
+            country: countryName,
             league: leagueName,
+            countryId: countryId,
+            leagueId: leagueId,
             hasStatistics: false,
             isStatisticsCollapsed: true,
             statisticsCollapsedTitle: localized("view_statistics"),
@@ -102,38 +126,42 @@ extension MatchHeaderCompactViewModel {
     /// This would be called when live data updates are received
     public func updateMatchInfo(homeTeamName: String? = nil, awayTeamName: String? = nil) {
         let currentData = headerDataSubject.value
-        
+
         let updatedData = MatchHeaderCompactData(
             homeTeamName: homeTeamName ?? currentData.homeTeamName,
             awayTeamName: awayTeamName ?? currentData.awayTeamName,
             sport: currentData.sport,
-            competition: currentData.competition,
+            country: currentData.country,
             league: currentData.league,
+            countryId: currentData.countryId,
+            leagueId: currentData.leagueId,
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
             statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
-        
+
         headerDataSubject.send(updatedData)
     }
     
     /// Updates the statistics availability
     public func updateStatisticsAvailability(_ hasStatistics: Bool) {
         let currentData = headerDataSubject.value
-        
+
         let updatedData = MatchHeaderCompactData(
             homeTeamName: currentData.homeTeamName,
             awayTeamName: currentData.awayTeamName,
             sport: currentData.sport,
-            competition: currentData.competition,
+            country: currentData.country,
             league: currentData.league,
+            countryId: currentData.countryId,
+            leagueId: currentData.leagueId,
             hasStatistics: hasStatistics,
             isStatisticsCollapsed: currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
             statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
-        
+
         headerDataSubject.send(updatedData)
     }
 }

@@ -38,11 +38,14 @@ class MatchDetailsTextualViewModel: ObservableObject {
     // Store match reference for real event ID
     private var currentMatch: Match?
     private var currentMatchId: String?
-    
+
     // Track loading completion states
     private var isEventDetailsLoaded = false
     private var isMarketGroupsLoaded = false
     private var marketGroupsSubscription: AnyCancellable?
+
+    // BLINK_DEBUG: Track event updates
+    private var eventUpdateCounter = 0
     
     // MARK: - Child ViewModels (Vertical Pattern)
     // MultiWidget and Wallet ViewModels are now managed by TopBarContainerController
@@ -141,16 +144,21 @@ class MatchDetailsTextualViewModel: ObservableObject {
                     guard
                         let match = ServiceProviderModelMapper.match(fromEvent: event)
                     else { return }
-                    
+
+                    self?.eventUpdateCounter += 1
+                    let matchIdChanged = self?.currentMatch?.id != match.id
+
+                    print("BLINK_DEBUG [MatchDetailsVM] 🎯 Event Update #\(self?.eventUpdateCounter ?? 0) | Match ID changed: \(matchIdChanged)")
                     print("📡 Received event data: \(match.id)")
                     print("   Match: \(match.homeParticipant.name) vs \(match.awayParticipant.name)")
                     print("   Status: \(match.status)")
                     print("   Markets: \(match.markets.count)")
-                    
+
                     // Update current match and update market group selector with real data
                     self?.currentMatch = match
-                    
+
                     // Update existing view model instead of recreating it
+                    print("BLINK_DEBUG [MatchDetailsVM] 🚨 Calling updateMatch() on MarketGroupSelectorVM")
                     self?.marketGroupSelectorTabViewModel.updateMatch(match)
                     
                     // Mark event details as loaded
@@ -169,7 +177,15 @@ class MatchDetailsTextualViewModel: ObservableObject {
         let currentVisibility = statisticsVisibilitySubject.value
         statisticsVisibilitySubject.send(!currentVisibility)
     }
-    
+
+    private func handleCountryTapped(countryId: String) {
+        // TODO: Navigate to country matches screen
+    }
+
+    private func handleLeagueTapped(leagueId: String) {
+        // TODO: Navigate to league matches screen
+    }
+
     func refresh() {
         errorSubject.send(nil)
         eventDetailsSubscription?.cancel()
@@ -220,6 +236,15 @@ class MatchDetailsTextualViewModel: ObservableObject {
         // Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
         matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
             self?.toggleStatistics()
+        }
+
+        // Wire up breadcrumb tap callbacks for navigation
+        matchHeaderCompactViewModel.onCountryTapped = { [weak self] countryId in
+            self?.handleCountryTapped(countryId: countryId)
+        }
+
+        matchHeaderCompactViewModel.onLeagueTapped = { [weak self] leagueId in
+            self?.handleLeagueTapped(leagueId: leagueId)
         }
 
         // Production BetslipFloatingViewModel handles its own bindings automatically

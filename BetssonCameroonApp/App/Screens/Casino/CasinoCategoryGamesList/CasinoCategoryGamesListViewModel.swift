@@ -191,11 +191,11 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     private func mapServiceProviderErrorToDisplayMessage(_ error: ServiceProviderError) -> String {
         switch error {
         case .casinoProviderNotFound:
-            return "Casino service not available"
+            return localized("casino_service_unavailable")
         case .unauthorized:
-            return "Authentication required"
+            return localized("casino_authentication_required")
         default:
-            return "Unable to load casino games. Please try again."
+            return localized("casino_unable_to_load_games")
         }
     }
     

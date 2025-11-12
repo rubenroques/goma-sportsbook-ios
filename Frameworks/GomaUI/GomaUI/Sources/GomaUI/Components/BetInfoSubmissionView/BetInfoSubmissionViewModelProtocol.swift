@@ -82,10 +82,13 @@ public protocol BetInfoSubmissionViewModelProtocol {
     
     /// Callback closure for place bet button tap
     var onPlaceBetTapped: (() -> Void)? { get set }
-    
+
+    /// Callback closure for amount text field return key tap
+    var onAmountReturnKeyTapped: (() -> Void)? { get set }
+
     /// Handle amount text field change
     func onAmountChanged(_ amount: String)
-    
+
     /// Callbacks
     var amountChanged: (() -> Void)? { get set }
 }

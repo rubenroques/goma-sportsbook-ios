@@ -6,19 +6,23 @@ public struct MatchHeaderCompactData: Equatable {
     public let homeTeamName: String
     public let awayTeamName: String
     public let sport: String
-    public let competition: String
+    public let country: String
     public let league: String
+    public let countryId: String?
+    public let leagueId: String?
     public let hasStatistics: Bool
     public let isStatisticsCollapsed: Bool
     public let statisticsCollapsedTitle: String
     public let statisticsExpandedTitle: String
-    
+
     public init(
         homeTeamName: String,
         awayTeamName: String,
         sport: String,
-        competition: String,
+        country: String,
         league: String,
+        countryId: String? = nil,
+        leagueId: String? = nil,
         hasStatistics: Bool = true,
         isStatisticsCollapsed: Bool = true,
         statisticsCollapsedTitle: String = "View Statistics",
@@ -27,8 +31,10 @@ public struct MatchHeaderCompactData: Equatable {
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
         self.sport = sport
-        self.competition = competition
+        self.country = country
         self.league = league
+        self.countryId = countryId
+        self.leagueId = leagueId
         self.hasStatistics = hasStatistics
         self.isStatisticsCollapsed = isStatisticsCollapsed
         self.statisticsCollapsedTitle = statisticsCollapsedTitle
@@ -40,10 +46,14 @@ public struct MatchHeaderCompactData: Equatable {
 public protocol MatchHeaderCompactViewModelProtocol: AnyObject {
     // Data
     var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> { get }
-    
+
     // Actions
     var onStatisticsTapped: (() -> Void)? { get set }
-    
+    var onCountryTapped: ((String) -> Void)? { get set }
+    var onLeagueTapped: ((String) -> Void)? { get set }
+
     // Methods
     func handleStatisticsTap()
+    func handleCountryTap()
+    func handleLeagueTap()
 }

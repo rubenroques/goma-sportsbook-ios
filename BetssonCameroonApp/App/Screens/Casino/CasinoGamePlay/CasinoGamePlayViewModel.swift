@@ -95,7 +95,7 @@ class CasinoGamePlayViewModel: ObservableObject {
             if let url = URL(string: gameData.url) {
                 self.gameURL = url
             } else {
-                self.errorMessage = "Invalid game URL"
+                self.errorMessage = localized("casino_invalid_game_url")
             }
             
             self.isLoading = false
@@ -105,7 +105,7 @@ class CasinoGamePlayViewModel: ObservableObject {
     /// Load game data with proper session injection
     private func loadGameDataWithMode(mode: CasinoGamePlayMode) {
         guard let casinoGame = casinoGame else {
-            errorMessage = "No game data available"
+            errorMessage = localized("casino_no_game_data")
             return
         }
 
@@ -142,7 +142,7 @@ class CasinoGamePlayViewModel: ObservableObject {
             print("[🎰 VIEWMODEL] ✅ Final URL set")
         }
         else {
-            errorMessage = "Failed to build game launch URL"
+            errorMessage = localized("casino_failed_build_url")
             print("[🎰 VIEWMODEL] ❌ buildCasinoGameLaunchUrl returned nil")
         }
 

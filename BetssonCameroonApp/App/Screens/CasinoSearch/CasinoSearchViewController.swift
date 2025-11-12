@@ -83,7 +83,7 @@ final class CasinoSearchViewController: UIViewController {
     
     // MARK: - Setup Methods
     private func setupNavigationBar() {
-        title = "Search Casino"
+        title = localized("casino_search_title")
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     
@@ -280,7 +280,7 @@ final class CasinoSearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 let hasError = (message != nil)
-                self?.suggestedErrorLabel.text = hasError ? "[API error] \(message!)" : ""
+                self?.suggestedErrorLabel.text = hasError ? "\(localized("casino_api_error_prefix")) \(message!)" : ""
                 self?.suggestedErrorView.isHidden = !hasError
             }
             .store(in: &cancellables)
@@ -408,7 +408,7 @@ private extension CasinoSearchViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .regular, size: 12)
-        label.text = "[API error] Couldn’t pull results for suggested games"
+        label.text = "\(localized("casino_api_error_prefix")) \(localized("casino_suggested_games_error"))"
         label.numberOfLines = 0
         return label
     }
@@ -447,7 +447,7 @@ private extension CasinoSearchViewController {
     static func createMostPlayedHeaderLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "You might be interested in:"
+        label.text = localized("casino_you_might_be_interested")
         label.font = AppFont.with(type: .semibold, size: 14)
         label.isHidden = true
         return label
@@ -468,7 +468,7 @@ private extension CasinoSearchViewController {
     }
     
     static func createSuggestedHeaderView() -> HeaderTextView {
-        let headerViewModel = MockHeaderTextViewModel(title: "Suggested Games")
+        let headerViewModel = MockHeaderTextViewModel(title: localized("casino_suggested_games_title"))
         let headerView = HeaderTextView(viewModel: headerViewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         headerView.configure()

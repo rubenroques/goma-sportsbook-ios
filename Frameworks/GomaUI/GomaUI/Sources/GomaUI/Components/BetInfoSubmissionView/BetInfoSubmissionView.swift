@@ -7,7 +7,7 @@ import SwiftUI
 public final class BetInfoSubmissionView: UIView {
     
     // MARK: - Properties
-    public let viewModel: BetInfoSubmissionViewModelProtocol
+    public var viewModel: BetInfoSubmissionViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - UI Components
@@ -107,6 +107,7 @@ public final class BetInfoSubmissionView: UIView {
         setupSubviews()
         setupConstraints()
         setupBindings()
+        setupReturnKeyBehavior()
     }
     
     required init?(coder: NSCoder) {
@@ -183,10 +184,17 @@ public final class BetInfoSubmissionView: UIView {
             }
             .store(in: &cancellables)
     }
-    
+
+    private func setupReturnKeyBehavior() {
+        // Configure return key to dismiss keyboard
+        viewModel.onAmountReturnKeyTapped = { [weak self] in
+            _ = self?.amountTextField.resignFirstResponder()
+        }
+    }
+
     // MARK: - Rendering
     private func render(data: BetInfoSubmissionData) {
-        
+
     }
 }
 

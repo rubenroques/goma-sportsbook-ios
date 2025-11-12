@@ -23,6 +23,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     
     // Callback closures
     public var onPlaceBetTapped: (() -> Void)?
+    public var onAmountReturnKeyTapped: (() -> Void)?
     public var amountChanged: (() -> Void)?
     
     public var dataPublisher: AnyPublisher<BetInfoSubmissionData, Never> {
@@ -98,7 +99,7 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
         // Wire up quick add button callbacks
         setupQuickAddButtonCallbacks()
 
-        // Wire up return key callback
+        // Wire up text field return key to parent callback
         setupReturnKeyCallback()
 
         // Update child view models with initial state
@@ -270,14 +271,10 @@ public final class MockBetInfoSubmissionViewModel: BetInfoSubmissionViewModelPro
     }
 
     private func setupReturnKeyCallback() {
-        // Wire the return key callback to trigger bet placement
+        // Wire the text field's return key callback to trigger the parent callback
         if let mockViewModel = amountTextFieldViewModel as? MockBorderedTextFieldViewModel {
             mockViewModel.onReturnKeyTappedCallback = { [weak self] in
-                // When Go button is pressed, trigger place bet if valid
-                guard let self = self else { return }
-                if !self.currentData.amount.isEmpty && self.hasValidTickets {
-                    self.onPlaceBetTapped?()
-                }
+                self?.onAmountReturnKeyTapped?()
             }
         }
     }

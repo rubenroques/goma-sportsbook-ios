@@ -18,6 +18,7 @@ public final class MatchHeaderCompactView: UIView {
     // MARK: - Properties
     private let viewModel: MatchHeaderCompactViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+    private var currentData: MatchHeaderCompactData?
     
     // MARK: - Initialization
     public init(viewModel: MatchHeaderCompactViewModelProtocol) {
@@ -83,6 +84,11 @@ public final class MatchHeaderCompactView: UIView {
         breadcrumbLabel.textColor = StyleProvider.Color.gameHeaderTextSecondary
         breadcrumbLabel.numberOfLines = 0
         breadcrumbLabel.lineBreakMode = .byTruncatingTail
+        breadcrumbLabel.isUserInteractionEnabled = true
+
+        // Add tap gesture for breadcrumb interactions
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(breadcrumbTapped(_:)))
+        breadcrumbLabel.addGestureRecognizer(tapGesture)
         
         // Statistics button setup
         containerView.addSubview(statisticsButton)
@@ -173,32 +179,34 @@ public final class MatchHeaderCompactView: UIView {
     }
     
     private func updateUI(with data: MatchHeaderCompactData) {
+        self.currentData = data
+
         homeTeamLabel.text = data.homeTeamName
         awayTeamLabel.text = data.awayTeamName
-        
+
         // Create attributed string for breadcrumb with underlines
-        let breadcrumbText = "\(data.sport) / \(data.competition) / \(data.league)"
+        let breadcrumbText = "\(data.sport) / \(data.country) / \(data.league)"
         let attributedString = NSMutableAttributedString(string: breadcrumbText)
-        
+
         // Set base attributes
         let baseAttributes: [NSAttributedString.Key: Any] = [
             .font: StyleProvider.fontWith(type: .semibold, size: 12),
             .foregroundColor: StyleProvider.Color.textSecondary
         ]
         attributedString.addAttributes(baseAttributes, range: NSRange(location: 0, length: breadcrumbText.count))
-        
-        // Add underline to competition
-        if let competitionRange = breadcrumbText.range(of: data.competition) {
-            let nsRange = NSRange(competitionRange, in: breadcrumbText)
+
+        // Add underline to country
+        if let countryRange = breadcrumbText.range(of: data.country) {
+            let nsRange = NSRange(countryRange, in: breadcrumbText)
             attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: nsRange)
         }
-        
+
         // Add underline to league
         if let leagueRange = breadcrumbText.range(of: data.league) {
             let nsRange = NSRange(leagueRange, in: breadcrumbText)
             attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: nsRange)
         }
-        
+
         breadcrumbLabel.attributedText = attributedString
         
         // Show/hide statistics button
@@ -245,6 +253,51 @@ public final class MatchHeaderCompactView: UIView {
     @objc private func statisticsButtonTapped() {
         viewModel.handleStatisticsTap()
     }
+
+    @objc private func breadcrumbTapped(_ gesture: UITapGestureRecognizer) {
+        guard let attributedText = breadcrumbLabel.attributedText,
+              let data = currentData else { return }
+
+        let location = gesture.location(in: breadcrumbLabel)
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: breadcrumbLabel.bounds.size)
+
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = breadcrumbLabel.numberOfLines
+        textContainer.lineBreakMode = breadcrumbLabel.lineBreakMode
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        let characterIndex = layoutManager.characterIndex(
+            for: location,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+
+        guard characterIndex < textStorage.length else { return }
+
+        let fullText = attributedText.string
+
+        // Check if tapped on country
+        if let countryRange = fullText.range(of: data.country) {
+            let nsCountryRange = NSRange(countryRange, in: fullText)
+            if NSLocationInRange(characterIndex, nsCountryRange) {
+                viewModel.handleCountryTap()
+                return
+            }
+        }
+
+        // Check if tapped on league
+        if let leagueRange = fullText.range(of: data.league) {
+            let nsLeagueRange = NSRange(leagueRange, in: fullText)
+            if NSLocationInRange(characterIndex, nsLeagueRange) {
+                viewModel.handleLeagueTap()
+                return
+            }
+        }
+    }
 }
 
 // MARK: - SwiftUI Previews
@@ -290,28 +343,30 @@ public final class MatchHeaderCompactView: UIView {
 #Preview("Match Header - Expanded Statistics") {
     PreviewUIViewController {
         let vc = UIViewController()
-        
+
         let mockData = MatchHeaderCompactData(
             homeTeamName: "Manchester United",
             awayTeamName: "Glasgow Rangers",
             sport: "Football",
-            competition: "International",
+            country: "England",
             league: "UEFA Europa League",
+            countryId: "country-england",
+            leagueId: "league-uefa-europa",
             hasStatistics: true,
             isStatisticsCollapsed: false
         )
-        
+
         let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
         let headerView = MatchHeaderCompactView(viewModel: viewModel)
         headerView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(headerView)
-        
+
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
             headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
         ])
-        
+
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         return vc
     }

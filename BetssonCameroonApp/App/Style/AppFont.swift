@@ -21,19 +21,19 @@ struct AppFont {
 
         private var sizeName: String {
             switch self {
-            case .thin: return "Light" // Roboto-Thin
-            case .light: return "Light" // Roboto-Light
-            case .regular: return "Light" // Roboto-Regular
-            case .medium: return "Regular" // Roboto-Medium
-            case .semibold: return "Medium" // Roboto not supported semi bold
-            case .bold: return "Bold" // Roboto-Bold
-            case .heavy: return "Bold" // Roboto-Black
+            case .thin: return "Light"
+            case .light: return "Light"
+            case .regular: return "Regular"
+            case .medium: return "Medium"
+            case .semibold: return "SemiBold"
+            case .bold: return "Bold"
+            case .heavy: return "ExtraBold"
             case .italic: return "Italic"
             }
         }
 
         private var familyName: String {
-            return "Ubuntu" // "Roboto"
+            return "OpenSans"
         }
 
         fileprivate var fullFontName: String {

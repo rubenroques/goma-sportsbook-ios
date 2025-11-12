@@ -12,9 +12,13 @@ import GomaUI
 class MarketsTabSimpleViewController: UIViewController {
     
     // MARK: - Properties
-    
+
     private let viewModel: MarketsTabSimpleViewModel
     private var cancellables = Set<AnyCancellable>()
+
+    // BLINK_DEBUG: Track previous data for comparison
+    private var previousMarketGroups: [MarketGroupWithIcons] = []
+    private var reloadCounter = 0
     
     // MARK: - Computed Properties
     
@@ -132,8 +136,21 @@ class MarketsTabSimpleViewController: UIViewController {
         // Bind market groups data
         viewModel.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] newMarketGroups in
                 guard let self = self else { return }
+
+                self.reloadCounter += 1
+                let dataChanged = self.previousMarketGroups != newMarketGroups
+
+                print("BLINK_DEBUG [MarketsTabVC] 📊 Reload #\(self.reloadCounter) for '\(self.marketGroupTitle)' | Data changed: \(dataChanged) | Groups count: \(newMarketGroups.count)")
+
+                if dataChanged {
+                    print("BLINK_DEBUG [MarketsTabVC] ✏️  Data CHANGED - Markets: \(newMarketGroups.map { $0.groupName }.joined(separator: ", "))")
+                } else {
+                    print("BLINK_DEBUG [MarketsTabVC] ⚠️  Data UNCHANGED but reload triggered!")
+                }
+
+                self.previousMarketGroups = newMarketGroups
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)

@@ -188,19 +188,19 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     private static func createLoadingState(gameId: String) -> CasinoGamePlayModeSelectorDisplayState {
         let placeholderGameData = CasinoGamePlayModeSelectorGameData(
             id: gameId,
-            name: "Loading...",
+            name: localized("casino_loading"),
             imageURL: nil,
-            provider: "Loading...",
-            volatility: "N/A",
-            minStake: "N/A",
-            description: "Loading game details..."
+            provider: localized("casino_loading"),
+            volatility: localized("casino_not_available"),
+            minStake: localized("casino_not_available"),
+            description: localized("casino_loading_game_details")
         )
-        
+
         let loadingButtons = [
             CasinoGamePlayModeButton(
                 id: "loading",
                 type: .primary,
-                title: "Loading...",
+                title: localized("casino_loading"),
                 state: .loading,
                 style: .filled
             )
@@ -287,13 +287,13 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
         // Map game rating to volatility level
         switch rating {
         case 0..<3.0:
-            return "Low"
+            return localized("casino_volatility_low")
         case 3.0..<4.0:
-            return "Medium"
+            return localized("casino_volatility_medium")
         case 4.0...5.0:
-            return "High"
+            return localized("casino_volatility_high")
         default:
-            return "Medium"
+            return localized("casino_volatility_medium")
         }
     }
     
