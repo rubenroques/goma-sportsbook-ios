@@ -19,16 +19,6 @@ class SplashInformativeViewController: UIViewController {
     private lazy var brandImageView: UIImageView = Self.createBrandImageView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private lazy var loadingMessageLabel: UILabel = Self.createLoadingMessageLabel()
-        
-    private var messageTimer: Timer?
-    private var currentMessageIndex: Int = 0
-    
-    private let loadingMessages = [
-        localized("splash_loading_sports"),
-        localized("splash_loading_competitions"),
-        localized("splash_loading_featured_matches"),
-        localized("splash_preparing_your_experience")
-    ]
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -47,16 +37,11 @@ class SplashInformativeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureGradient()
-        startMessageAnimation()
+        loadingMessageLabel.text = localized("splash_loading")
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        stopMessageAnimation()
     }
     
 }
@@ -105,40 +90,9 @@ private extension SplashInformativeViewController {
             (color: UIColor.App.backgroundGradientDark, location: 0.0),
             (color: UIColor.App.backgroundGradientLight, location: 1.0)
         ]
-        
+
         gradientView.startPoint = CGPoint(x: 0.5, y: 1.0) // Bottom
         gradientView.endPoint = CGPoint(x: 0.5, y: 0.0)   // Top
-    }
-    
-    func startMessageAnimation() {
-        // Show first message immediately
-        updateLoadingMessage()
-        
-        // Start timer to rotate messages
-        messageTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            self?.updateLoadingMessage()
-        }
-    }
-    
-    func stopMessageAnimation() {
-        messageTimer?.invalidate()
-        messageTimer = nil
-    }
-    
-    func updateLoadingMessage() {
-        guard !loadingMessages.isEmpty else { return }
-        
-        UIView.animate(withDuration: 0.2, animations: {
-            self.loadingMessageLabel.alpha = 0.0
-        }) { _ in
-            self.loadingMessageLabel.text = self.loadingMessages[self.currentMessageIndex]
-            
-            UIView.animate(withDuration: 0.12) {
-                self.loadingMessageLabel.alpha = 1.0
-            }
-            
-            self.currentMessageIndex = (self.currentMessageIndex + 1) % self.loadingMessages.count
-        }
     }
     
 }
@@ -172,7 +126,6 @@ private extension SplashInformativeViewController {
         label.font = AppFont.with(type: .regular, size: 14)
         label.textColor = UIColor.App.textPrimary
         label.numberOfLines = 0
-        label.alpha = 0.0
         return label
     }
     

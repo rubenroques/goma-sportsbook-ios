@@ -241,6 +241,7 @@ extension PromotionCardView {
 }
 
 // MARK: - SwiftUI Previews
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("Single Card") {
     PreviewUIViewController {
@@ -284,13 +285,14 @@ extension PromotionCardView {
         let cardView = PromotionCardView(viewModel: MockPromotionCardViewModel.noCTAMock)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(cardView)
-        
+
         NSLayoutConstraint.activate([
             cardView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
             cardView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
             cardView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
         ])
-        
+
         return vc
     }
 }
+#endif

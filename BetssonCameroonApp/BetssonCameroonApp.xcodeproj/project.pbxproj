@@ -68,15 +68,11 @@
 		};
 		CE74A1652E2E8D9500DDE78D /* Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = Tests;
 			sourceTree = "<group>";
 		};
 		CE74A16F2E2E8D9500DDE78D /* UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = UITests;
 			sourceTree = "<group>";
 		};
@@ -263,7 +259,7 @@
 			packageReferences = (
 				CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				CE6014662E2FE5E400C6A9DD /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
-				CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability.swift" */,
+				CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */,
 				CE60146C2E2FE63A00C6A9DD /* XCRemoteSwiftPackageReference "ios-sdk" */,
 				CEC736C52E6839670084368A /* XCRemoteSwiftPackageReference "Xtremepush-iOS-SDK" */,
 			);
@@ -414,7 +410,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2095;
+				CURRENT_PROJECT_VERSION = 2098;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -547,7 +543,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2095;
+				CURRENT_PROJECT_VERSION = 2098;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -622,7 +618,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2095;
+				CURRENT_PROJECT_VERSION = 2098;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -662,7 +658,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2095;
+				CURRENT_PROJECT_VERSION = 2098;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -951,7 +947,7 @@
 				minimumVersion = 6.0.0;
 			};
 		};
-		CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+		CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
 			requirement = {
@@ -1010,7 +1006,7 @@
 		};
 		CE60146A2E2FE61100C6A9DD /* Reachability */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability.swift" */;
+			package = CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */;
 			productName = Reachability;
 		};
 		CE60146D2E2FE63A00C6A9DD /* PhraseSDK */ = {

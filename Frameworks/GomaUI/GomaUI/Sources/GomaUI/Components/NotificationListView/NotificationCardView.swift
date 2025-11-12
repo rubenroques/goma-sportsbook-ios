@@ -315,6 +315,7 @@ extension NotificationCardView {
 }
 
 // MARK: - SwiftUI Preview Support
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("Unread Notification") {
     PreviewUIViewController {
@@ -572,3 +573,4 @@ extension NotificationCardView {
         return vc
     }
 }
+#endif

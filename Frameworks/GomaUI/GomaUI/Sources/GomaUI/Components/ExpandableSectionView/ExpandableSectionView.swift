@@ -296,6 +296,7 @@ extension ExpandableSectionView {
 }
 
 // MARK: - SwiftUI Preview
+#if DEBUG
 import SwiftUI
 
 @available(iOS 17.0, *)
@@ -441,8 +442,8 @@ import SwiftUI
             stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
             stackView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
         ])
-        
+
         return vc
     }
 }
-
+#endif

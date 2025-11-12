@@ -137,6 +137,7 @@ class ScoreCellView: UIView {
 }
 
 // MARK: - SwiftUI Previews
+#if DEBUG
 import SwiftUI
 
 @available(iOS 17.0, *)
@@ -272,3 +273,4 @@ import SwiftUI
         return vc
     }
 }
+#endif

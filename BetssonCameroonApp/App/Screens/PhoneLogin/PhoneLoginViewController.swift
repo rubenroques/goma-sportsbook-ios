@@ -289,23 +289,18 @@ class PhoneLoginViewController: UIViewController {
             .sink { phone in
                 if phone.isEmpty {
                     // First tap: Fill with the provided credentials
-                    phoneToSet = "699198921"
+                    phoneToSet = "699198923"
                     passwordToSet = "1234"
                 }
-                else if phone == "666999005" {
+                else if phone == "699198921" {
                     // Second tap: Alternative test account
-                    phoneToSet = "123456789"
-                    passwordToSet = "test123"
-                }
-                else if phone == "123456789" {
-                    // Third tap: Another test account
-                    phoneToSet = "+237987654321"
-                    passwordToSet = "debug123"
+                    phoneToSet = "658285413"
+                    passwordToSet = "1234"
                 }
                 else {
                     // Reset to first credentials
-                    phoneToSet = "666999005"
-                    passwordToSet = "4050"
+                    phoneToSet = "699198921"
+                    passwordToSet = "1234"
                 }
                 
                 // Update the text fields through their view models

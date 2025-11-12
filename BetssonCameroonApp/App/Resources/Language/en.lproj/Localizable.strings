@@ -4030,6 +4030,8 @@
 "select_sport" = "Select Sport";
 
 // Splash Screen - Loading Messages
+"splash_loading" = "Loading...";
+
 "splash_loading_sports" = "Loading sports...";
 
 "splash_loading_competitions" = "Loading competitions...";

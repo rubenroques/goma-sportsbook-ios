@@ -215,6 +215,7 @@ extension ScoreView {
 }
 
 // MARK: - SwiftUI Previews
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("ScoreView - All States & Variations") {
     PreviewUIViewController {
@@ -466,4 +467,5 @@ extension ScoreView {
 
         return vc
     }
-} 
+}
+#endif

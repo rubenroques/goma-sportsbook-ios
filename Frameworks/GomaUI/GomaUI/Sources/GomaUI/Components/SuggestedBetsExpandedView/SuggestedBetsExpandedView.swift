@@ -413,6 +413,7 @@ final class SuggestedBetsMatchCardCell: UICollectionViewCell {
 }
 
 // MARK: - SwiftUI Preview
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("Suggested Bets Expanded") {
     PreviewUIViewController {
@@ -430,5 +431,4 @@ final class SuggestedBetsMatchCardCell: UICollectionViewCell {
         return vc
     }
 }
-
-
+#endif

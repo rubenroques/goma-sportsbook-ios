@@ -243,6 +243,7 @@ private extension SearchView {
 }
 
 // MARK: - SwiftUI Preview
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("SearchView") {
     PreviewUIViewController {
@@ -259,5 +260,4 @@ private extension SearchView {
         return vc
     }
 }
-
-
+#endif

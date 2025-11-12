@@ -145,6 +145,7 @@ private extension UserLimitCardView {
 }
 
 // MARK: - Preview
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("User Limit Card") {
     PreviewUIViewController {
@@ -164,8 +165,8 @@ private extension UserLimitCardView {
             cardView.trailingAnchor.constraint(equalTo: container.view.trailingAnchor, constant: -20),
             cardView.topAnchor.constraint(equalTo: container.view.safeAreaLayoutGuide.topAnchor, constant: 40)
         ])
-        
+
         return container
     }
 }
-
+#endif

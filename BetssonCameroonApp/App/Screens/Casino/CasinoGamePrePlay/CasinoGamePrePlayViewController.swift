@@ -49,6 +49,7 @@ class CasinoGamePrePlayViewController: UIViewController {
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         button.setImage(UIImage(systemName: "heart.fill"), for: .selected)
         button.tintColor = .white
+        button.isHidden = true
         return button
     }()
     
@@ -138,7 +139,7 @@ class CasinoGamePrePlayViewController: UIViewController {
     
     private func setupNavigationView() {
         view.addSubview(navigationBarView)
-        // view.addSubview(favoritesButton)
+        view.addSubview(favoritesButton)
     }
 
     private func setupActions() {

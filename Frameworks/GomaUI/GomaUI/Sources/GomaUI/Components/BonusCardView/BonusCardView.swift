@@ -230,6 +230,7 @@ extension BonusCardView {
 }
 
 // MARK: - SwiftUI Previews
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("Default Bonus") {
     PreviewUIViewController {
@@ -302,3 +303,4 @@ extension BonusCardView {
     }
 }
 
+#endif

@@ -26,18 +26,15 @@ extension EveryMatrixModelMapper {
 
     static func bankingTransaction(from internalModel: EveryMatrix.BankingTransaction) -> BankingTransaction? {
         // Map transaction type (matches web implementation: bankingTransactionTypes)
+        // Note: Types 13 (systemDeposit) and 14 (systemWithdrawal) are filtered out
         let type: BankingTransactionType
         switch internalModel.type {
         case 0:
             type = .deposit
         case 1:
             type = .withdrawal
-        case 13:
-            type = .systemDeposit
-        case 14:
-            type = .systemWithdrawal
         default:
-            return nil // Unknown transaction type
+            return nil // Unknown or system transaction type (13, 14)
         }
 
         // Parse dates

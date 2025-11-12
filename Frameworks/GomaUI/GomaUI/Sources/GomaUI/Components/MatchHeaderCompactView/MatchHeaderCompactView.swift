@@ -301,6 +301,7 @@ public final class MatchHeaderCompactView: UIView {
 }
 
 // MARK: - SwiftUI Previews
+#if DEBUG
 @available(iOS 17.0, *)
 #Preview("Match Header - Default") {
     PreviewUIViewController {
@@ -371,3 +372,4 @@ public final class MatchHeaderCompactView: UIView {
         return vc
     }
 }
+#endif
