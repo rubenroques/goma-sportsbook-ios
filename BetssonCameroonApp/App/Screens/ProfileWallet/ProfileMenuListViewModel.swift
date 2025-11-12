@@ -127,7 +127,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "responsible_gaming",
-                icon: "shield.checkered",
+                icon: "responsible_gaming_icon",
                 title: localized("responsible_gaming_title"),
                 subtitle: nil,
                 type: .navigation,

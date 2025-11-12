@@ -37,7 +37,7 @@ final class SingleButtonBannerViewCell: UICollectionViewCell {
 
     // MARK: - Configuration
     /// Configure the cell with a view model (synchronous)
-    func configure(with viewModel: SingleButtonBannerViewModelProtocol) {
+    func configure(with viewModel: any SingleButtonBannerViewModelProtocol) {
         print("[BANNER_DEBUG] 🟣 Cell.configure - with viewModel")
         bannerView.configure(with: viewModel)
     }

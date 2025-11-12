@@ -11,7 +11,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     private let contentContainer = UIView()
 
     private var cancellables = Set<AnyCancellable>()
-    private var viewModel: SingleButtonBannerViewModelProtocol
+    private var viewModel: any SingleButtonBannerViewModelProtocol
 
     // MARK: - Public Properties
     public var onButtonTapped: (() -> Void) = { }
@@ -24,7 +24,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     public var isVisible: Bool = true
 
     // MARK: - Initialization
-    public init(viewModel: SingleButtonBannerViewModelProtocol) {
+    public init(viewModel: any SingleButtonBannerViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
@@ -162,7 +162,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     }
 
     // MARK: - Public Methods
-    public func configure(with viewModel: SingleButtonBannerViewModelProtocol) {
+    public func configure(with viewModel: any SingleButtonBannerViewModelProtocol) {
         print("[BANNER_DEBUG] 🔵 View.configure - start")
 
         // Add simplified call stack trace to find caller

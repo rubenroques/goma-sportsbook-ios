@@ -386,16 +386,18 @@ extension SportRadarModelMapper {
     }
 
     static func responsibleGamingLimitsResponse(fromResponsibleGamingLimitsResponse internalResponsibleGamingLimitsResponse: SportRadarModels.ResponsibleGamingLimitsResponse) -> ResponsibleGamingLimitsResponse {
-
-        let responsibleGamingLimits = internalResponsibleGamingLimitsResponse.limits.map({ responsibleGamingLimit -> ResponsibleGamingLimit in
-
-            let responsibleGamingLimit = Self.responsibleGamingLimit(fromResponsibleGamingLimit: responsibleGamingLimit)
-
-            return responsibleGamingLimit
-
-        })
-
-        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: responsibleGamingLimits)
+        let mappedLimits = internalResponsibleGamingLimitsResponse.limits.map { internalResponsibleGamingLimit -> ResponsibleGamingLimit in
+            ResponsibleGamingLimit(
+                id: internalResponsibleGamingLimit.id,
+                partyId: internalResponsibleGamingLimit.partyId,
+                limitType: internalResponsibleGamingLimit.limitType,
+                periodType: internalResponsibleGamingLimit.periodType,
+                effectiveDate: internalResponsibleGamingLimit.effectiveDate,
+                expiryDate: internalResponsibleGamingLimit.expiryDate,
+                limit: internalResponsibleGamingLimit.limit
+            )
+        }
+        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: mappedLimits)
     }
 
     static func responsibleGamingLimit(fromResponsibleGamingLimit internalResponsibleGamingLimit: SportRadarModels.ResponsibleGamingLimit) -> ResponsibleGamingLimit {

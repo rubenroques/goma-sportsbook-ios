@@ -1167,6 +1167,66 @@ extension Client {
         return privilegedAccessManager.getResponsibleGamingLimits(periodTypes: periodTypes, limitTypes: limitTypes)
     }
 
+    public func getUserLimits(periodTypes: String? = nil) -> AnyPublisher<UserLimitsResponse, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getUserLimits(periodTypes: periodTypes)
+    }
+
+    public func setUserLimit(period: String, type: String, amount: Double, currency: String, products: [String], walletTypes: [String]) -> AnyPublisher<UserLimit, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.setUserLimit(period: period, type: type, amount: amount, currency: currency, products: products, walletTypes: walletTypes)
+    }
+
+    public func setTimeOut(request: UserTimeoutRequest) -> AnyPublisher<Void, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.setTimeOut(request: request)
+    }
+
+    public func setSelfExclusion(request: SelfExclusionRequest) -> AnyPublisher<Void, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.setSelfExclusion(request: request)
+    }
+
+    public func updateUserLimit(limitId: String, request: UpdateUserLimitRequest) -> AnyPublisher<UserLimit, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.updateUserLimit(limitId: limitId, request: request)
+    }
+
+    public func deleteUserLimit(limitId: String, skipCoolOff: Bool) -> AnyPublisher<Void, ServiceProviderError> {
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager as? EveryMatrixPAMProvider
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.deleteUserLimit(limitId: limitId, skipCoolOff: skipCoolOff)
+    }
+
     public func lockPlayer(isPermanent: Bool? = nil, lockPeriodUnit: String? = nil, lockPeriod: String? = nil) -> AnyPublisher<BasicResponse, ServiceProviderError> {
 
         guard

@@ -1,10 +1,10 @@
 /// Enum representing different types of banners that can be displayed in TopBannerSliderView
 public enum BannerType {
     /// Info/promotional banner with message and optional button
-    case info(SingleButtonBannerViewModelProtocol)
+    case info(any SingleButtonBannerViewModelProtocol)
 
     /// Casino game banner with message and optional button
-    case casino(SingleButtonBannerViewModelProtocol)
+    case casino(any SingleButtonBannerViewModelProtocol)
 
     /// Match banner with team information and betting outcomes
     case match(MatchBannerViewModelProtocol)
