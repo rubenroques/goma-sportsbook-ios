@@ -978,6 +978,26 @@ class EveryMatrixEventsProvider: EventsProvider {
     func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+    
+    func getUserFavorites() -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        guard let currentUserId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+        
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getFavorites(userId: currentUserId)
+        
+        return restConnector.request(endpoint)
+            .map { (userFavoritesResponse: EveryMatrix.UserFavoritesResponse) -> UserFavoritesResponse in
+                
+                let mappedUserFavoritesResponse = EveryMatrixModelMapper.userFavoritesResponse(fromUserFavoritesResponse: userFavoritesResponse)
+                return mappedUserFavoritesResponse
+            }
+            .mapError { error in
+                print("❌ EveryMatrixBettingProvider: Converting error to ServiceProviderError: \(error)")
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
+            }
+            .eraseToAnyPublisher()
+    }
 
     func getDatesFilter(timeRange: String) -> [Date] {
         fatalError("")

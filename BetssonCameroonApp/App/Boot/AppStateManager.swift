@@ -290,7 +290,7 @@ class AppStateManager {
             }
 
         // Connect modules for authenticated users (from Bootstrap:101-112)
-        Publishers.CombineLatest(environment.servicesProvider.bettingConnectionStatePublisher,
+        Publishers.CombineLatest(environment.servicesProvider.eventsConnectionStatePublisher,
                                  environment.userSessionStore.userProfilePublisher)
             .filter({ connectorState, userSession in
                 return connectorState == .connected && userSession != nil

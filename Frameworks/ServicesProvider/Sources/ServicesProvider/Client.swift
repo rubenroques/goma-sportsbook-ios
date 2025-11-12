@@ -896,6 +896,16 @@ extension Client {
         return eventsProvider.deleteFavoriteFromList(eventId: eventId)
     }
     
+    public func getUserFavorites() -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getUserFavorites()
+    }
+
     public func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
