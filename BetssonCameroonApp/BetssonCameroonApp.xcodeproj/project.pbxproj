@@ -49,8 +49,6 @@
 		CE394B982E2FD45200715418 /* Exceptions for "App" folder in "BetssonCameroonApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"SupportingFiles/Misc-Dev/BetssonCM-DEV-Info.plist",
-				"SupportingFiles/Misc-Dev/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
 				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
 				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",

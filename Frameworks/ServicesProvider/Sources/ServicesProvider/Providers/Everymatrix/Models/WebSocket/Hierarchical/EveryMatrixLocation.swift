@@ -14,5 +14,14 @@ extension EveryMatrix {
         let name: String
         let shortName: String?
         let code: String?
+        
+        init(id: String, typeId: String, name: String, shortName: String? = nil, code: String? = nil) {
+            self.id = id
+            self.typeId = typeId
+            self.name = name
+            self.shortName = shortName
+            self.code = code
+        }
+        
     }
 }

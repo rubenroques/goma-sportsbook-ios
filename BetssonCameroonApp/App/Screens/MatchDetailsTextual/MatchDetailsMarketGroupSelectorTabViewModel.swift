@@ -18,6 +18,11 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     private let tabDataSubject: CurrentValueSubject<MarketGroupSelectorTabData, Never>
     private let selectionEventSubject = PassthroughSubject<MarketGroupSelectionEvent, Never>()
     private var cancellables = Set<AnyCancellable>()
+
+    // BLINK_DEBUG: Track updates
+    private var updateMatchCounter = 0
+    private var marketGroupsUpdateCounter = 0
+    private var webSocketUpdateCounter = 0
     
     // MARK: - Dependencies
     private var match: Match
@@ -88,7 +93,17 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     }
     
     func updateMarketGroups(_ marketGroups: [MarketGroupTabItemData]) {
+        marketGroupsUpdateCounter += 1
         let currentData = tabDataSubject.value
+        let previousCount = currentData.marketGroups.count
+        let newCount = marketGroups.count
+
+        print("BLINK_DEBUG [MarketGroupSelectorVM] 📋 updateMarketGroups #\(marketGroupsUpdateCounter) | \(previousCount) → \(newCount) groups")
+
+        if newCount == 0 {
+            print("BLINK_DEBUG [MarketGroupSelectorVM] ⚠️  Setting EMPTY market groups!")
+        }
+
         let updatedData = MarketGroupSelectorTabData(
             id: currentData.id,
             marketGroups: marketGroups,
@@ -152,8 +167,17 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     /// Updates the match and reloads market groups data
     /// Clears current market groups and restarts subscription for the new match
     func updateMatch(_ newMatch: Match) {
+        updateMatchCounter += 1
+        let matchChanged = self.match.id != newMatch.id
+
+        print("BLINK_DEBUG [MarketGroupSelectorVM] 🔄 updateMatch #\(updateMatchCounter) | Match changed: \(matchChanged) | Old: \(self.match.id) → New: \(newMatch.id)")
+
+        if !matchChanged {
+            print("BLINK_DEBUG [MarketGroupSelectorVM] ⚠️  SAME MATCH but updateMatch called - will clear and reload anyway!")
+        }
+
         self.match = newMatch
-        
+
         // Clear current market groups since they belong to the old match
         // and update the tab data ID to reflect the new match
         let clearedData = MarketGroupSelectorTabData(
@@ -161,9 +185,12 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
             marketGroups: [], // Clear old market groups
             selectedMarketGroupId: nil // Clear selection
         )
+
+        print("BLINK_DEBUG [MarketGroupSelectorVM] 🗑️  Sending EMPTY market groups (clearing old data)")
         tabDataSubject.send(clearedData)
-        
+
         // Restart subscription with new match data
+        print("BLINK_DEBUG [MarketGroupSelectorVM] 🔃 Calling reloadMarketGroups()")
         reloadMarketGroups()
     }
     
@@ -194,30 +221,38 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     
     private func handleSubscribableMarketGroupsContent(_ content: SubscribableContent<[ServicesProvider.MarketGroup]>) {
         switch content {
-        case .connected(let subscription): 
-            print("✅ Connected to market groups: \(subscription.id)")
-            
+        case .connected(let subscription):
+            print("BLINK_DEBUG [MarketGroupSelectorVM] ✅ WebSocket CONNECTED: \(subscription.id)")
+
         case .contentUpdate(let serviceProviderMarketGroups):
+            webSocketUpdateCounter += 1
+            print("BLINK_DEBUG [MarketGroupSelectorVM] 🌐 WebSocket Update #\(webSocketUpdateCounter) | Raw groups: \(serviceProviderMarketGroups.count)")
+
             // Convert ServicesProvider.MarketGroup to App.MarketGroup using ServiceProviderModelMapper
             let appMarketGroups = ServiceProviderModelMapper.marketGroups(fromServiceProviderMarketGroups: serviceProviderMarketGroups)
+            print("BLINK_DEBUG [MarketGroupSelectorVM] 🔄 Mapped to \(appMarketGroups.count) app market groups")
             handleMarketGroupsResponse(appMarketGroups)
-            
+
         case .disconnected:
-            print("❌ Disconnected from market groups")
+            print("BLINK_DEBUG [MarketGroupSelectorVM] ❌ WebSocket DISCONNECTED")
             // Could show error state or fallback to default groups
             createFallbackMarketGroups()
         }
     }
     
     private func handleMarketGroupsResponse(_ marketGroups: [MarketGroup]) {
+        print("BLINK_DEBUG [MarketGroupSelectorVM] 🔍 handleMarketGroupsResponse | Input: \(marketGroups.count) groups")
+
         // Filter out market groups that have no available markets
         let filteredMarketGroups = marketGroups.filter { marketGroup in
             hasAvailableMarkets(marketGroup: marketGroup)
         }
-        
+
+        print("BLINK_DEBUG [MarketGroupSelectorVM] ✂️  After filtering: \(filteredMarketGroups.count) groups (removed \(marketGroups.count - filteredMarketGroups.count))")
+
         // If no market groups have markets, create fallback and return early
         if filteredMarketGroups.isEmpty {
-            print("⚠️ All market groups are empty, creating fallback")
+            print("BLINK_DEBUG [MarketGroupSelectorVM] ⚠️  ALL groups filtered out - creating fallback")
             createFallbackMarketGroups()
             return
         }

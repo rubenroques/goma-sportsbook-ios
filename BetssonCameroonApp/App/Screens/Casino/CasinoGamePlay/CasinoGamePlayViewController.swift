@@ -249,7 +249,7 @@ class CasinoGamePlayViewController: UIViewController {
         bottomBarView.addSubview(timerContainer)
 
         // Timer label - start at 00:00
-        timerLabel.text = "00:00"
+        timerLabel.text = localized("casino_timer_default")
         timerLabel.textColor = Constants.textColor
         timerLabel.font = UIFont.systemFont(ofSize: Constants.fontSize, weight: .regular)
         timerLabel.textAlignment = .center
@@ -419,7 +419,7 @@ class CasinoGamePlayViewController: UIViewController {
     // MARK: - Error Handling
     private func showError(_ message: String) {
         let alert = UIAlertController(
-            title: "Game Error",
+            title: localized("casino_game_error_title"),
             message: message,
             preferredStyle: .alert
         )

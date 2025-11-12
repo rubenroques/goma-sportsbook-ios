@@ -41,10 +41,10 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     init(servicesProvider: ServicesProvider.Client = Env.servicesProvider, config: CasinoSearchConfig = .default) {
         self.servicesProvider = servicesProvider
         self.config = config
-        self.searchComponentViewModel = MockSearchViewModel(placeholder: "Search in Casino")
+        self.searchComponentViewModel = MockSearchViewModel(placeholder: localized("casino_search_placeholder"))
         self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
         setupBindings()
-        
+
     }
     
     private func getRecommendedGames() {
@@ -62,7 +62,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                     case .errorMessage(let msg):
                         message = msg
                     default:
-                        message = "Couldn’t pull results for suggested games"
+                        message = localized("casino_suggested_games_error")
                     }
                     self.recommendedGamesErrorSubject.send(message)
                     self.isLoadingSubject.send(false)
@@ -141,7 +141,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                     case .errorMessage(let msg):
                         message = msg
                     default:
-                        message = "Couldn’t pull results for suggested games"
+                        message = localized("casino_suggested_games_error")
                     }
                     self.recommendedGamesErrorSubject.send(message)
                     self.isLoadingSubject.send(false)
@@ -243,7 +243,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                 self?.isLoadingSubject.send(false)
                 if case .failure(_) = completion {
                     self?.searchedGameViewModelsSubject.send([])
-                    self?.searchHeaderInfoViewModel.updateSearch(term: query, category: "Casino", state: .noResults, count: 0)
+                    self?.searchHeaderInfoViewModel.updateSearch(term: query, category: localized("casino_category_name"), state: .noResults, count: 0)
                     
                 }
             } receiveValue: { [weak self] response in
@@ -275,7 +275,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                 
                 let count = viewModels.count
                 let state: SearchState = count > 0 ? .results : .noResults
-                self?.searchHeaderInfoViewModel.updateSearch(term: query, category: "Casino", state: state, count: count)
+                self?.searchHeaderInfoViewModel.updateSearch(term: query, category: localized("casino_category_name"), state: state, count: count)
                 
             }
             .store(in: &cancellables)
@@ -301,7 +301,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         // Update the view model with new data
         searchHeaderInfoViewModel.updateSearch(
             term: searchText,
-            category: "Casino",
+            category: localized("casino_category_name"),
             state: state,
             count: count
         )

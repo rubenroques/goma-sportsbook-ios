@@ -40,8 +40,12 @@ class MarketsTabSimpleViewModel {
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
     private let errorSubject = CurrentValueSubject<String?, Never>(nil)
     private let marketGroupsSubject = CurrentValueSubject<[MarketGroupWithIcons], Never>([])
-    
+
     private var cancellables = Set<AnyCancellable>()
+
+    // BLINK_DEBUG: Track update frequency
+    private var updateCounter = 0
+    private var lastUpdateTime = Date()
     
     // Callbacks
     var onOutcomeSelected: ((MarketGroupWithIcons, String) -> Void)?
@@ -135,11 +139,25 @@ class MarketsTabSimpleViewModel {
             // Keep loading state active until we get content
             
         case .contentUpdate(let markets):
-            // print("📊 Received \(markets.count) markets for group: \(marketGroupId)")
-            
+            self.updateCounter += 1
+            let timeSinceLastUpdate = Date().timeIntervalSince(self.lastUpdateTime)
+            self.lastUpdateTime = Date()
+
+            print("BLINK_DEBUG [MarketsTabVM] 🔄 Update #\(self.updateCounter) for '\(self.marketGroupTitle)' | Time since last: \(String(format: "%.2f", timeSinceLastUpdate))s | Raw markets: \(markets.count)")
+
             // Group markets by type and convert to MarketGroupData
             let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)
             let marketGroups = groupMarketsByType(mappedMarkets)
+
+            let previousGroups = marketGroupsSubject.value
+            let dataChanged = previousGroups != marketGroups
+
+            print("BLINK_DEBUG [MarketsTabVM] 📤 Sending update | Data changed: \(dataChanged) | Market groups: \(marketGroups.count)")
+
+            if !dataChanged {
+                print("BLINK_DEBUG [MarketsTabVM] ⚠️  WebSocket update but data IDENTICAL - still sending to publisher")
+            }
+
             marketGroupsSubject.send(marketGroups)
             isLoadingSubject.send(false)
             

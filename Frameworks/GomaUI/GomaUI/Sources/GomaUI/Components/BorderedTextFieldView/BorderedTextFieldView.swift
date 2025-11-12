@@ -579,8 +579,6 @@ extension BorderedTextFieldView: UITextFieldDelegate {
     }
 
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Dismiss the keyboard
-        textField.resignFirstResponder()
         // Notify the view model that return key was tapped
         viewModel.onReturnKeyTapped()
         return true

@@ -10,8 +10,10 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
     public var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> {
         $headerData.eraseToAnyPublisher()
     }
-    
+
     public var onStatisticsTapped: (() -> Void)?
+    public var onCountryTapped: ((String) -> Void)?
+    public var onLeagueTapped: ((String) -> Void)?
     
     // MARK: - Initialization
     public init(headerData: MatchHeaderCompactData) {
@@ -26,16 +28,30 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
             homeTeamName: currentData.homeTeamName,
             awayTeamName: currentData.awayTeamName,
             sport: currentData.sport,
-            competition: currentData.competition,
+            country: currentData.country,
             league: currentData.league,
+            countryId: currentData.countryId,
+            leagueId: currentData.leagueId,
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
             statisticsExpandedTitle: currentData.statisticsExpandedTitle
         )
-        
+
         // Also call the callback
         onStatisticsTapped?()
+    }
+
+    public func handleCountryTap() {
+        if let countryId = headerData.countryId {
+            onCountryTapped?(countryId)
+        }
+    }
+
+    public func handleLeagueTap() {
+        if let leagueId = headerData.leagueId {
+            onLeagueTapped?(leagueId)
+        }
     }
 }
 
@@ -48,8 +64,10 @@ public extension MockMatchHeaderCompactViewModel {
                 homeTeamName: "Manchester United",
                 awayTeamName: "Glasgow Rangers",
                 sport: "Football",
-                competition: "International",
+                country: "England",
                 league: "UEFA Europa League",
+                countryId: "country-england",
+                leagueId: "league-uefa-europa",
                 hasStatistics: true
             )
         )
@@ -61,8 +79,10 @@ public extension MockMatchHeaderCompactViewModel {
                 homeTeamName: "Real Madrid",
                 awayTeamName: "Barcelona",
                 sport: "Football",
-                competition: "Domestic",
+                country: "Spain",
                 league: "La Liga",
+                countryId: "country-spain",
+                leagueId: "league-la-liga",
                 hasStatistics: false
             )
         )
@@ -74,8 +94,10 @@ public extension MockMatchHeaderCompactViewModel {
                 homeTeamName: "Borussia Mönchengladbach",
                 awayTeamName: "Wolverhampton Wanderers",
                 sport: "Football",
-                competition: "International Friendlies",
+                country: "Germany",
                 league: "UEFA Champions League Qualification",
+                countryId: "country-germany",
+                leagueId: "league-ucl-qual",
                 hasStatistics: true
             )
         )
@@ -87,8 +109,10 @@ public extension MockMatchHeaderCompactViewModel {
                 homeTeamName: "FC Bayern München Fußball-Verein e.V.",
                 awayTeamName: "Real Club Deportivo de La Coruña",
                 sport: "Football",
-                competition: "International Championship Tournament",
+                country: "Germany",
                 league: "UEFA Champions League Qualification Playoffs",
+                countryId: "country-germany",
+                leagueId: "league-ucl-playoffs",
                 hasStatistics: true
             )
         )

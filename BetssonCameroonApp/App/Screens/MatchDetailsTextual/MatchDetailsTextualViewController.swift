@@ -97,6 +97,10 @@ class MatchDetailsTextualViewController: UIViewController {
     private var isAnimating = false
     private var isFirstStatisticsUpdate = true
     private var marketGroupsSubscription: AnyCancellable?
+
+    // BLINK_DEBUG: Track market groups updates
+    private var marketGroupsUpdateCounter = 0
+    private var previousMarketGroupIds: [String] = []
     
     // MARK: - Initialization
     
@@ -444,10 +448,24 @@ class MatchDetailsTextualViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] marketGroups in
                 guard let self = self else { return }
-                
+
+                self.marketGroupsUpdateCounter += 1
+                let currentGroupIds = marketGroups.map { $0.id }
+                let groupsChanged = self.previousMarketGroupIds != currentGroupIds
+
+                print("BLINK_DEBUG [MatchDetailsVC] 🔔 Market Groups Update #\(self.marketGroupsUpdateCounter) | Groups changed: \(groupsChanged) | Count: \(marketGroups.count)")
+
+                if groupsChanged {
+                    print("BLINK_DEBUG [MatchDetailsVC] ✏️  Groups CHANGED: \(currentGroupIds.joined(separator: ", "))")
+                    print("BLINK_DEBUG [MatchDetailsVC] 🔄 Triggering recreateMarketControllers()")
+                    self.previousMarketGroupIds = currentGroupIds
+                } else {
+                    print("BLINK_DEBUG [MatchDetailsVC] ⚠️  Groups UNCHANGED but update triggered - recreating controllers anyway")
+                }
+
                 // Recreate market controllers when market groups data changes
                 self.recreateMarketControllers()
-                
+
                 // Set initial page if we have market groups and no current page
                 if let firstMarketGroupId = marketGroups.first?.id,
                    let firstController = self.marketControllers[firstMarketGroupId],
@@ -459,14 +477,16 @@ class MatchDetailsTextualViewController: UIViewController {
     
     // MARK: - Helper Methods
     private func recreateMarketControllers() {
-        print("[📱MTDTXT] recreateMarketControllers - start")
-        
+        print("BLINK_DEBUG [MatchDetailsVC] 🏗️  recreateMarketControllers START")
+
         // Clear existing controllers
+        let previousControllerCount = marketControllers.count
         marketControllers.removeAll()
-        
+
         // Create new controllers for current market groups
         let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
-        print("[📱MTDTXT] Recreating \(marketGroups.count) market controllers")
+        print("BLINK_DEBUG [MatchDetailsVC] 🗑️  Destroyed \(previousControllerCount) controllers")
+        print("BLINK_DEBUG [MatchDetailsVC] 🆕 Creating \(marketGroups.count) new controllers")
         
         for marketGroup in marketGroups {
             print("[📱MTDTXT] Recreating controller for group: \(marketGroup.id) - \(marketGroup.title)")
@@ -489,11 +509,9 @@ class MatchDetailsTextualViewController: UIViewController {
             
             let controller = MarketsTabSimpleViewController(viewModel: tabViewModel)
             marketControllers[marketGroup.id] = controller
-            
-            print("[📱MTDTXT] Recreated controller for group: \(marketGroup.id)")
         }
-        
-        print("[📱MTDTXT] recreateMarketControllers - completed with \(marketControllers.count) controllers")
+
+        print("BLINK_DEBUG [MatchDetailsVC] ✅ recreateMarketControllers COMPLETE - \(marketControllers.count) controllers created")
     }
     
     private func showError(_ message: String) {
