@@ -473,8 +473,6 @@ class IdentificationDocsViewController: UIViewController {
                 print("Applicant has been approved")
                 self.viewModel.checkDocumentationData()
 
-            case .actionCompleted:
-                print("Applicant action has been completed")
             }
         }
 

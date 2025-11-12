@@ -345,7 +345,7 @@ extension NeedSupportViewController {
         label.text = localized("need_support_page_description_4_part_2")
         label.font = AppFont.with(type: .regular, size: 14)
         label.numberOfLines = 0
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }
 
@@ -358,8 +358,7 @@ extension NeedSupportViewController {
         label.textAlignment = .center
         return label
     }
-
-
+    
     private static func createGameInterdictionImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false

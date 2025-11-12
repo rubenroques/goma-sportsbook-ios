@@ -220,7 +220,7 @@ extension WarningSignsViewController {
         label.text = localized("warning_signs_page_description_1")
         label.font = AppFont.with(type: .regular, size: 14)
         label.numberOfLines = 0
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }
 

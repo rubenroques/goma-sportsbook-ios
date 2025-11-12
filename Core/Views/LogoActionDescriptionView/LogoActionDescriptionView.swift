@@ -126,7 +126,7 @@ extension LogoActionDescriptionView {
         label.text = ""
         label.font = AppFont.with(type: .regular, size: 16)
         label.numberOfLines = 0
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }
     

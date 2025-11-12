@@ -266,8 +266,8 @@ extension StayInControlViewController {
         self.scrollContainerView.addSubview(self.highlightTextSectionView)
         
         self.scrollContainerView.addSubview(self.advicesImageView)
-        self.scrollContainerView.addSubview(self.gameModeratorsImageView)
         self.scrollContainerView.addSubview(self.actsImageView)
+        self.scrollContainerView.addSubview(self.gameModeratorsImageView)
 
         self.initConstraints()
     }
@@ -318,15 +318,16 @@ extension StayInControlViewController {
             self.advicesImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.advicesImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
             self.advicesImageView.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
+            
+            self.actsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.actsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.actsImageView.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 30),
 
             self.gameModeratorsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.gameModeratorsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 30),
-
-            self.actsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
-            self.actsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.actsImageView.topAnchor.constraint(equalTo: self.gameModeratorsImageView.bottomAnchor, constant: 30),
-            self.actsImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
+            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.actsImageView.bottomAnchor, constant: 30),
+            self.gameModeratorsImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
+            
         ])
         
         self.bannerImageViewFixedHeightConstraint =
