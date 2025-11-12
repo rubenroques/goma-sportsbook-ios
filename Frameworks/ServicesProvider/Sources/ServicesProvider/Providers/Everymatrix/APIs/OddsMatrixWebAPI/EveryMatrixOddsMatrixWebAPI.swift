@@ -16,6 +16,7 @@ enum EveryMatrixOddsMatrixWebAPI {
     
     // Favorites
     case getFavorites(userId: String)
+    case addFavorite(userId: String, eventId: String)
 }
 
 extension EveryMatrixOddsMatrixWebAPI: Endpoint {
@@ -41,12 +42,14 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             
         case .getFavorites(let userId):
             return "/user-data-service/v1/favorite/events/\(domainId)/\(userId)"
+        case .addFavorite:
+            return "/user-data-service/v1/favorite/events/"
         }
     }
     
     var query: [URLQueryItem]? {
         switch self {
-        case .placeBet, .getCashoutValueSSE, .executeCashoutV2, .getFavorites:
+        case .placeBet, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite:
             return nil
         case .getOpenBets(let limit, let placedBefore):
             return [
@@ -75,7 +78,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     var headers: HTTP.Headers? {
         let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
         switch self {
-        case .placeBet:
+        case .placeBet, .getFavorites, .addFavorite:
             let headers = [
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -106,14 +109,6 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
                 "X-OperatorId": operatorId
             ]
             return headers
-            
-        case .getFavorites:
-            let headers = [
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "x-operator-id": operatorId
-            ]
-            return headers
         }
     }
     
@@ -123,7 +118,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     var method: HTTP.Method {
         switch self {
-        case .placeBet, .executeCashoutV2:
+        case .placeBet, .executeCashoutV2, .addFavorite:
             return .post
         case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .getFavorites:
             return .get
@@ -136,6 +131,18 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             return try? JSONEncoder().encode(betData)
         case .executeCashoutV2(let request):
             return try? JSONEncoder().encode(request)
+        case .addFavorite(let userId, let eventId):
+            let body = """
+                       {
+                        "operatorId": "\(EveryMatrixUnifiedConfiguration.shared.operatorId)",
+                        "userId": "\(userId)",
+                        "favoriteEvents": "\([eventId])"
+                       }
+                       """
+            
+            let data = body.data(using: String.Encoding.utf8)!
+            
+            return data
         case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .getFavorites:
             return nil
         }
@@ -147,7 +154,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     var requireSessionKey: Bool {
         switch self {
-        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .executeCashoutV2, .getFavorites:
+        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite:
             return true
         }
     }
@@ -158,7 +165,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     func authHeaderKey(for type: AuthHeaderType) -> String? {
         switch self {
-        case .placeBet, .getFavorites:
+        case .placeBet, .getFavorites, .addFavorite:
             // Place bet uses different header format
             switch type {
             case .sessionId:
