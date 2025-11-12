@@ -17,7 +17,7 @@ extension ServiceProviderModelMapper {
     }
 
     static func bankingTransaction(from spTransaction: ServicesProvider.BankingTransaction) -> BankingTransaction? {
-        // Map transaction type
+        // Map transaction type - only deposit and withdrawal are supported by the app
         let type: BankingTransactionType
         switch spTransaction.type {
         case .deposit:
@@ -28,6 +28,8 @@ extension ServiceProviderModelMapper {
             type = .systemDeposit
         case .systemWithdrawal:
             type = .systemWithdrawal
+        case .transfer, .user2User, .vendor2User, .user2Vendor, .walletCredit, .walletDebit, .refund, .reversal, .vendor2Vendor, .user2Agent, .agent2User:
+            return nil // Unsupported transaction types
         }
 
         return BankingTransaction(

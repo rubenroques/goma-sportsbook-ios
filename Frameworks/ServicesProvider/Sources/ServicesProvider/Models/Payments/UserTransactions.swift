@@ -66,6 +66,17 @@ public struct BankingTransaction {
 public enum BankingTransactionType {
     case deposit
     case withdrawal
+    case transfer
+    case user2User
+    case vendor2User
+    case user2Vendor
+    case walletCredit
+    case walletDebit
+    case refund
+    case reversal
+    case vendor2Vendor
+    case user2Agent
+    case agent2User
     case systemDeposit
     case systemWithdrawal
 
@@ -75,6 +86,28 @@ public enum BankingTransactionType {
             return "Deposit"
         case .withdrawal:
             return "Withdrawal"
+        case .transfer:
+            return "Transfer"
+        case .user2User:
+            return "User to User"
+        case .vendor2User:
+            return "Vendor to User"
+        case .user2Vendor:
+            return "User to Vendor"
+        case .walletCredit:
+            return "Wallet Credit"
+        case .walletDebit:
+            return "Wallet Debit"
+        case .refund:
+            return "Refund"
+        case .reversal:
+            return "Reversal"
+        case .vendor2Vendor:
+            return "Vendor to Vendor"
+        case .user2Agent:
+            return "User to Agent"
+        case .agent2User:
+            return "Agent to User"
         case .systemDeposit:
             return "System Deposit"
         case .systemWithdrawal:

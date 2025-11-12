@@ -33,8 +33,30 @@ extension EveryMatrixModelMapper {
             type = .deposit
         case 1:
             type = .withdrawal
+        case 2:
+            type = .transfer
+        case 3:
+            type = .user2User
+        case 4:
+            type = .vendor2User
+        case 5:
+            type = .user2Vendor
+        case 6:
+            type = .walletCredit
+        case 7:
+            type = .walletDebit
+        case 8:
+            type = .refund
+        case 9:
+            type = .reversal
+        case 10:
+            type = .vendor2Vendor
+        case 11:
+            type = .user2Agent
+        case 12:
+            type = .agent2User
         default:
-            return nil // Unknown or system transaction type (13, 14)
+            return nil // Unknown or system transaction type (13, 14, and others)
         }
 
         // Parse dates
