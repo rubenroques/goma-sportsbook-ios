@@ -1,7 +1,7 @@
 import Foundation
-
 import UIKit
 import Combine
+import SharedModels
 
 public class LeaguesFilterView: UIView {
     // MARK: - Properties
@@ -123,7 +123,7 @@ public class LeaguesFilterView: UIView {
             row.configure(with: option)
             
             row.didTappedOption = { [weak self] tappedOption in
-                self?.viewModel.selectOption(withId: tappedOption.id)
+                self?.viewModel.selectFilter(LeagueFilterIdentifier(stringValue: tappedOption.id))
             }
             
             optionRows.append(row)
@@ -132,9 +132,9 @@ public class LeaguesFilterView: UIView {
     }
     
     private func setupBindings() {
-        viewModel.selectedOptionId
-            .sink { [weak self] optionId in
-                self?.updateSelection(forOptionId: optionId)
+        viewModel.selectedFilter
+            .sink { [weak self] filter in
+                self?.updateSelection(forOptionId: filter.rawValue)
             }
             .store(in: &cancellables)
         

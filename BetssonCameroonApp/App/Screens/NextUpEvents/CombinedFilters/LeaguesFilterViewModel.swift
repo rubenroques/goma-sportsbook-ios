@@ -2,8 +2,9 @@ import Foundation
 import UIKit
 import Combine
 import SharedModels
+import GomaUI
 
-public class MockLeaguesFilterViewModel: LeaguesFilterViewModelProtocol {
+public class LeaguesFilterViewModel: LeaguesFilterViewModelProtocol {
     public let leagueOptions: [LeagueOption]
 
     public var selectedFilter: CurrentValueSubject<LeagueFilterIdentifier, Never>

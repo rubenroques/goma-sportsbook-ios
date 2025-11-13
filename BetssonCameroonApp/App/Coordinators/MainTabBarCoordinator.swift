@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import ServicesProvider
 import GomaUI
+import SharedModels
 
 class MainTabBarCoordinator: Coordinator {
     
@@ -294,7 +295,37 @@ class MainTabBarCoordinator: Coordinator {
         matchDetailsViewModel.onNavigateBack = { [weak self] in
             self?.navigationController.popViewController(animated: true)
         }
-        
+
+        matchDetailsViewModel.onNavigateToNextUpWithCountry = { [weak self] countryId in
+            guard let self = self else { return }
+
+            let filters = AppliedEventsFilters(
+                sportId: self.currentFilters.sportId,
+                timeFilter: .all,
+                sortType: .popular,
+                leagueFilter: .allInCountry(countryId: countryId)
+            )
+
+            self.applyFilters(filters)
+            self.navigationController.popViewController(animated: true)
+            self.showNextUpEventsScreen(withContextChange: true)
+        }
+
+        matchDetailsViewModel.onNavigateToNextUpWithLeague = { [weak self] leagueId in
+            guard let self = self else { return }
+
+            let filters = AppliedEventsFilters(
+                sportId: self.currentFilters.sportId,
+                timeFilter: .all,
+                sortType: .popular,
+                leagueFilter: .singleLeague(id: leagueId)
+            )
+
+            self.applyFilters(filters)
+            self.navigationController.popViewController(animated: true)
+            self.showNextUpEventsScreen(withContextChange: true)
+        }
+
         // Create the clean MatchDetailsTextualViewController (no top bar code)
         let matchDetailsViewController = MatchDetailsTextualViewController(viewModel: matchDetailsViewModel)
 
@@ -790,7 +821,7 @@ class MainTabBarCoordinator: Coordinator {
     
     private func updateCurrentSport(_ sport: Sport) {
         // Update the sport in current filters
-        currentFilters.sportId = sport.id
+        currentFilters.sportId = FilterIdentifier(stringValue: sport.id)
         
         // Update sport in both coordinators if they exist and are active
         nextUpEventsCoordinator?.updateSport(sport)

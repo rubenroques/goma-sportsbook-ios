@@ -1,14 +1,13 @@
 import Foundation
-
-import Foundation
 import UIKit
 import Combine
+import SharedModels
 
 public protocol SportGamesFilterViewModelProtocol {
     var title: String { get }
     var sportFilters: [SportFilter] { get }
-    var selectedId: CurrentValueSubject<String, Never> { get set }
+    var selectedSport: CurrentValueSubject<FilterIdentifier, Never> { get set }
     var sportFilterState: CurrentValueSubject<SportGamesFilterStateType, Never> { get }
-    func selectOption(withId id: String)
+    func selectSport(_ sport: FilterIdentifier)
     func didTapCollapseButton()
 }

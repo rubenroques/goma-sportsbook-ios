@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SharedModels
 
 public struct AppliedEventsFilters: Codable, Equatable {
     
@@ -56,11 +57,11 @@ public struct AppliedEventsFilters: Codable, Equatable {
     }
     
     // MARK: - Properties
-    
-    var sportId: String
+
+    var sportId: FilterIdentifier
     var timeFilter: TimeFilter
     var sortType: SortType
-    var leagueId: String
+    var leagueFilter: LeagueFilterIdentifier
     
     // MARK: - Coding Keys for backward compatibility
     
@@ -75,14 +76,19 @@ public struct AppliedEventsFilters: Codable, Equatable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        sportId = try container.decode(String.self, forKey: .sportId)
-        leagueId = try container.decode(String.self, forKey: .leagueId)
-        
+
+        // Decode sportId as String and convert to FilterIdentifier
+        let sportIdString = try container.decode(String.self, forKey: .sportId)
+        sportId = FilterIdentifier(stringValue: sportIdString)
+
+        // Decode leagueId as String and convert to LeagueFilterIdentifier
+        let leagueIdString = try container.decode(String.self, forKey: .leagueId)
+        leagueFilter = LeagueFilterIdentifier(stringValue: leagueIdString)
+
         // Decode timeValue as Float and convert to enum
         let timeValue = try container.decode(Float.self, forKey: .timeValue)
         timeFilter = TimeFilter(rawValue: timeValue) ?? .all
-        
+
         // Decode sortTypeId as String and convert to enum
         let sortTypeId = try container.decode(String.self, forKey: .sortTypeId)
         sortType = SortType(rawValue: sortTypeId) ?? .popular
@@ -90,35 +96,38 @@ public struct AppliedEventsFilters: Codable, Equatable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        try container.encode(sportId, forKey: .sportId)
-        try container.encode(leagueId, forKey: .leagueId)
-        
+
+        // Encode FilterIdentifier as raw string value
+        try container.encode(sportId.rawValue, forKey: .sportId)
+
+        // Encode LeagueFilterIdentifier as raw string value
+        try container.encode(leagueFilter.rawValue, forKey: .leagueId)
+
         // Encode enum as raw value for backward compatibility
         try container.encode(timeFilter.rawValue, forKey: .timeValue)
         try container.encode(sortType.rawValue, forKey: .sortTypeId)
     }
     
     // MARK: - Initializer
-    
+
     public init(
-        sportId: String,
+        sportId: FilterIdentifier,
         timeFilter: TimeFilter,
         sortType: SortType,
-        leagueId: String
+        leagueFilter: LeagueFilterIdentifier
     ) {
         self.sportId = sportId
         self.timeFilter = timeFilter
         self.sortType = sortType
-        self.leagueId = leagueId
+        self.leagueFilter = leagueFilter
     }
     
     // MARK: - Default Values
-    
+
     public static let defaultFilters = AppliedEventsFilters(
-        sportId: "1",
+        sportId: .singleSport(id: "1"),
         timeFilter: .all,
         sortType: .popular,
-        leagueId: "all"
+        leagueFilter: .all
     )
 }

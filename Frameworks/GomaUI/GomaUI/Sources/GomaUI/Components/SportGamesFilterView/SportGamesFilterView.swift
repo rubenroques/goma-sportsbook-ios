@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Combine
+import SharedModels
 
 public class SportGamesFilterView: UIView {
     // MARK: - Properties
@@ -110,9 +111,9 @@ public class SportGamesFilterView: UIView {
             }
             .store(in: &cancellables)
         
-        viewModel.selectedId
-            .sink(receiveValue: { [weak self] selectedId in
-                self?.updateSelection(forOptionId: selectedId)
+        viewModel.selectedSport
+            .sink(receiveValue: { [weak self] selectedSport in
+                self?.updateSelection(forOptionId: selectedSport.rawValue)
             })
             .store(in: &cancellables)
     }
@@ -143,11 +144,11 @@ public class SportGamesFilterView: UIView {
             let cardViewModel = MockSportCardViewModel(sportFilter: sport)
             let card = SportCardView(viewModel: cardViewModel)
             card.configure()
-            card.isSelected = self.viewModel.selectedId.value == sport.id ? true : false
-            
+            card.isSelected = self.viewModel.selectedSport.value.rawValue == sport.id ? true : false
+
             let cardIndex = index
             card.onTap = { [weak self] selectedId in
-                self?.viewModel.selectOption(withId: selectedId)
+                self?.viewModel.selectSport(FilterIdentifier(stringValue: selectedId))
             }
             
             currentRow?.addArrangedSubview(card)
@@ -241,7 +242,7 @@ import SwiftUI
             SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
             SportFilter(id: "2", title: "Basketball", icon: "basketball.fill")
         ]
-        let twoSportsViewModel = MockSportGamesFilterViewModel(title: "Top Sports", sportFilters: twoSportsFilters, selectedId: "1")
+        let twoSportsViewModel = MockSportGamesFilterViewModel(title: "Top Sports", sportFilters: twoSportsFilters, selectedSport: .singleSport(id: "1"))
         let twoSportsView = SportGamesFilterView(viewModel: twoSportsViewModel)
         twoSportsView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -252,7 +253,7 @@ import SwiftUI
             SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
             SportFilter(id: "4", title: "Cricket", icon: "figure.cricket")
         ]
-        let fourSportsViewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: fourSportsFilters, selectedId: "2")
+        let fourSportsViewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: fourSportsFilters, selectedSport: .singleSport(id: "2"))
         let fourSportsView = SportGamesFilterView(viewModel: fourSportsViewModel)
         fourSportsView.translatesAutoresizingMaskIntoConstraints = false
 

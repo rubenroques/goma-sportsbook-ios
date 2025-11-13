@@ -9,6 +9,7 @@ import UIKit
 import GomaUI
 import Combine
 import ServicesProvider
+import SharedModels
 
 // MARK: - InPlayEventsViewModel
 class InPlayEventsViewModel {
@@ -131,10 +132,10 @@ class InPlayEventsViewModel {
         
         // Initialize filters with the sport
         self.appliedFilters = AppliedEventsFilters(
-            sportId: sport.id,
+            sportId: FilterIdentifier(stringValue: sport.id),
             timeFilter: .all,
             sortType: .popular,
-            leagueId: "all"
+            leagueFilter: .all
         )
 
         setupBindings()
@@ -167,7 +168,7 @@ class InPlayEventsViewModel {
         
         // Update internal sport and filters
         self.sport = sport
-        appliedFilters.sportId = sport.id
+        appliedFilters.sportId = FilterIdentifier(stringValue: sport.id)
         
         // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
@@ -210,7 +211,7 @@ class InPlayEventsViewModel {
         self.appliedFilters = filters
         
         // Update sport if it changed
-        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId }) {
+        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId.rawValue }) {
             self.sport = newSport
             pillSelectorBarViewModel.updateCurrentSport(newSport)
         }

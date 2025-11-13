@@ -1,8 +1,9 @@
 import Foundation
 import Combine
 import SharedModels
+import GomaUI
 
-public class MockSportGamesFilterViewModel: SportGamesFilterViewModelProtocol {
+public class SportGamesFilterViewModel: SportGamesFilterViewModelProtocol {
     public var title: String
     public var sportFilters: [SportFilter] = []
     public var selectedSport: CurrentValueSubject<FilterIdentifier, Never>

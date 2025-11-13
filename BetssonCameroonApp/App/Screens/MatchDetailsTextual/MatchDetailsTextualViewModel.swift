@@ -9,13 +9,16 @@ import Foundation
 import Combine
 import GomaUI
 import ServicesProvider
+import SharedModels
 
 class MatchDetailsTextualViewModel: ObservableObject {
     
     // MARK: - Navigation Closures for MainTabBarCoordinator
     var onNavigateBack: (() -> Void) = { }
     var onBetslipRequested: (() -> Void)?
-    
+    var onNavigateToNextUpWithCountry: ((String) -> Void)?
+    var onNavigateToNextUpWithLeague: ((String) -> Void)?
+
     // MARK: - Private Properties
     
     private let isLoadingSubject = CurrentValueSubject<Bool, Never>(false)
@@ -179,11 +182,11 @@ class MatchDetailsTextualViewModel: ObservableObject {
     }
 
     private func handleCountryTapped(countryId: String) {
-        // TODO: Navigate to country matches screen
+        onNavigateToNextUpWithCountry?(countryId)
     }
 
     private func handleLeagueTapped(leagueId: String) {
-        // TODO: Navigate to league matches screen
+        onNavigateToNextUpWithLeague?(leagueId)
     }
 
     func refresh() {

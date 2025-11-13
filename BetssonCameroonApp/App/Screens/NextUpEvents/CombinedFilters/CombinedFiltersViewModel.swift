@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import GomaUI
 import ServicesProvider
+import SharedModels
 
 public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
@@ -50,16 +51,16 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     
     func getAllLeagues(sportId: String? = nil) {
         self.isLoadingPublisher.send(true)
-        
+
         var currentSportId = appliedFilters.sportId
-        
+
         if let sportId {
-            currentSportId = sportId
+            currentSportId = FilterIdentifier(stringValue: sportId)
         }
-        
+
         guard
             let currentSport = Env.sportsStore.getActiveSports().first(where: {
-                $0.id == currentSportId
+                $0.id == currentSportId.rawValue
             })
         else {
             return

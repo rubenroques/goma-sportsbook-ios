@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import GomaUI
 import ServicesProvider
+import SharedModels
 
 public class CombinedFiltersViewController: UIViewController {
     
@@ -307,40 +308,40 @@ public class CombinedFiltersViewController: UIViewController {
         
         // Reset sports filter
         if let sportViewModel = viewModel.dynamicViewModels["sportsFilter"] as? SportGamesFilterViewModelProtocol {
-            sportViewModel.selectedId.send(defaultFilters.sportId)
+            sportViewModel.selectedSport.send(defaultFilters.sportId)
         }
-        
+
         // Reset time slider
         if let timeViewModel = viewModel.dynamicViewModels["timeFilter"] as? TimeSliderViewModelProtocol {
             let selectedIndex: Float
-            
+
             if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == defaultFilters.timeFilter.rawValue }) {
                 selectedIndex = Float(index)
             } else {
                 selectedIndex = 0.0
             }
-            
+
             timeViewModel.selectedTimeValue.send(selectedIndex)
         }
-        
+
         // Reset sort filter
         if let sortViewModel = viewModel.dynamicViewModels["sortByFilter"] as? SortFilterViewModelProtocol {
-            sortViewModel.selectedOptionId.send(defaultFilters.sortType.rawValue)
+            sortViewModel.selectedFilter.send(defaultFilters.leagueFilter)
         }
-        
+
         // Reset leagues filter
         if let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
-            leaguesViewModel.selectedOptionId.send(defaultFilters.leagueId)
+            leaguesViewModel.selectedFilter.send(defaultFilters.leagueFilter)
         }
-        
+
         // Reset popular countries filter
         if let popularCountriesViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
-            popularCountriesViewModel.selectedOptionId.send(defaultFilters.leagueId)
+            popularCountriesViewModel.selectedOptionId.send(defaultFilters.leagueFilter.rawValue)
         }
-        
+
         // Reset other countries filter
         if let otherCountriesViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
-            otherCountriesViewModel.selectedOptionId.send(defaultFilters.leagueId)
+            otherCountriesViewModel.selectedOptionId.send(defaultFilters.leagueFilter.rawValue)
         }
     }
     
@@ -563,17 +564,17 @@ extension CombinedFiltersViewController {
         if let sportView = dynamicFilterViews["sportsFilter"] as? SportGamesFilterView {
             sportView.onSportSelected = { [weak self] selectedId in
                 guard let self = self else { return }
-                
+
                 // Update temporary filters
-                self.temporaryFilters.sportId = selectedId
-                
+                self.temporaryFilters.sportId = FilterIdentifier(stringValue: selectedId)
+
                 // Reset league to "all" when sport changes
                 if self.temporaryFilters.sportId != self.viewModel.appliedFilters.sportId {
-                    self.temporaryFilters.leagueId = "all"
+                    self.temporaryFilters.leagueFilter = .all
                     // Update all league view models
                     self.resetLeagueSelections()
                 }
-                
+
                 // Fetch leagues for new sport
                 self.viewModel.getAllLeagues(sportId: selectedId)
                 self.updateButtonStates()
@@ -614,25 +615,25 @@ extension CombinedFiltersViewController {
         // Leagues Filter with cross-synchronization
         if let leaguesView = dynamicFilterViews["leaguesFilter"] as? SortFilterView {
             leaguesView.onSortFilterSelected = { [weak self] selectedId in
-                self?.temporaryFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "leaguesFilter")
                 self?.updateButtonStates()
             }
         }
-        
+
         // Popular Countries Filter
         if let popularCountriesView = dynamicFilterViews["popularCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             popularCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.temporaryFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "popularCountryLeaguesFilter")
                 self?.updateButtonStates()
             }
         }
-        
+
         // Other Countries Filter
         if let otherCountriesView = dynamicFilterViews["otherCountryLeaguesFilter"] as? CountryLeaguesFilterView {
             otherCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
-                self?.temporaryFilters.leagueId = selectedId
+                self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "otherCountryLeaguesFilter")
                 self?.updateButtonStates()
             }
@@ -640,21 +641,22 @@ extension CombinedFiltersViewController {
     }
 
     private func synchronizeLeagueSelection(_ selectedId: String, excludeWidget: String) {
-        
+        let filter = LeagueFilterIdentifier(stringValue: selectedId)
+
         // Synchronize with leagues filter
         if excludeWidget != "leaguesFilter",
            let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol,
-           leaguesViewModel.selectedOptionId.value != selectedId {
-            leaguesViewModel.selectedOptionId.send(selectedId)
+           leaguesViewModel.selectedFilter.value != filter {
+            leaguesViewModel.selectedFilter.send(filter)
         }
-        
+
         // Synchronize with popular countries
         if excludeWidget != "popularCountryLeaguesFilter",
            let popularViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol,
            popularViewModel.selectedOptionId.value != selectedId {
             popularViewModel.selectedOptionId.send(selectedId)
         }
-        
+
         // Synchronize with other countries
         if excludeWidget != "otherCountryLeaguesFilter",
            let otherViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol,
@@ -662,17 +664,17 @@ extension CombinedFiltersViewController {
             otherViewModel.selectedOptionId.send(selectedId)
         }
     }
-    
+
     private func resetLeagueSelections() {
         // Reset all league selections to "all"
         if let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
-            leaguesViewModel.selectedOptionId.send("all")
+            leaguesViewModel.selectedFilter.send(.all)
         }
-        
+
         if let popularViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             popularViewModel.selectedOptionId.send("all")
         }
-        
+
         if let otherViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             otherViewModel.selectedOptionId.send("all")
         }
@@ -714,11 +716,11 @@ extension CombinedFiltersViewModel {
     }
     
     private func createSportGamesViewModel(for widget: FilterWidget) -> SportGamesFilterViewModelProtocol {
-        
+
         let activeSports = Env.sportsStore.getActiveSports().sorted {
             (Int($0.id) ?? 0) < (Int($1.id) ?? 0)
         }
-        
+
         let sportFilters: [SportFilter] = activeSports.map { sport in
             SportFilter(
                 id: sport.id,
@@ -726,11 +728,11 @@ extension CombinedFiltersViewModel {
                 icon: "sport_type_icon_\(sport.id)"
             )
         }
-        
-        return MockSportGamesFilterViewModel(
+
+        return SportGamesFilterViewModel(
             title: widget.label,
             sportFilters: sportFilters,
-            selectedId: appliedFilters.sportId,
+            selectedSport: appliedFilters.sportId,
             sportFilterState: .collapsed
         )
     }
@@ -771,9 +773,9 @@ extension CombinedFiltersViewModel {
     
     private func createSortFilterViewModel(for widget: FilterWidget) -> SortFilterViewModelProtocol {
         var sortOptions: [SortOption] = []
-        var selectedId: String = "0"
+        var selectedFilter: LeagueFilterIdentifier = .all
         var sortFilterType: SortFilterType = .regular
-        
+
         if widget.id == "sortByFilter" {
             if let options = widget.details.options {
                 sortOptions = options.enumerated().map { index, option in
@@ -788,7 +790,7 @@ extension CombinedFiltersViewModel {
                     default:
                         iconName = "circle.fill"
                     }
-                    
+
                     return SortOption(
                         id: "\(index+1)",
                         icon: iconName,
@@ -797,34 +799,34 @@ extension CombinedFiltersViewModel {
                     )
                 }
             }
-            selectedId = appliedFilters.sortType.rawValue
+            selectedFilter = LeagueFilterIdentifier(stringValue: appliedFilters.sortType.rawValue)
         } else if widget.id == "leaguesFilter" {
             sortOptions = popularLeagues
             sortFilterType = .league
-            selectedId = appliedFilters.leagueId
+            selectedFilter = appliedFilters.leagueFilter
         }
-        
-        return MockSortFilterViewModel(
+
+        return SortFilterViewModel(
             title: widget.label,
             sortOptions: sortOptions,
-            selectedId: selectedId,
+            selectedFilter: selectedFilter,
             sortFilterType: sortFilterType
         )
     }
     
     private func createCountryLeaguesViewModel(for widget: FilterWidget) -> CountryLeaguesFilterViewModelProtocol {
         var countryLeagueOptions: [CountryLeagueOptions] = []
-        
+
         if widget.id == "popularCountryLeaguesFilter" {
             countryLeagueOptions = popularCountryLeagues
         } else if widget.id == "otherCountryLeaguesFilter" {
             countryLeagueOptions = otherCountryLeagues
         }
-        
-        return MockCountryLeaguesFilterViewModel(
+
+        return CountryLeaguesFilterViewModel(
             title: widget.label,
             countryLeagueOptions: countryLeagueOptions,
-            selectedId: appliedFilters.leagueId
+            selectedId: appliedFilters.leagueFilter.rawValue
         )
     }
     

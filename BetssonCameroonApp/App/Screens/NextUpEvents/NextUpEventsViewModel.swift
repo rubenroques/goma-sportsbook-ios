@@ -9,6 +9,7 @@ import UIKit
 import GomaUI
 import Combine
 import ServicesProvider
+import SharedModels
 
 // MARK: - NextUpEventsViewModel
 class NextUpEventsViewModel {
@@ -145,9 +146,9 @@ class NextUpEventsViewModel {
         
         // Update internal sport
         self.sport = sport
-        
+
         // Also update the sport in filters
-        appliedFilters.sportId = sport.id
+        appliedFilters.sportId = FilterIdentifier(stringValue: sport.id)
         
         // Update UI
         pillSelectorBarViewModel.updateCurrentSport(sport)
@@ -171,7 +172,7 @@ class NextUpEventsViewModel {
         self.appliedFilters = filters
         
         // Update sport if it changed
-        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId }) {
+        if let newSport = Env.sportsStore.getActiveSports().first(where: { $0.id == filters.sportId.rawValue }) {
             self.sport = newSport
             pillSelectorBarViewModel.updateCurrentSport(newSport)
         }
@@ -242,8 +243,8 @@ class NextUpEventsViewModel {
     }
 
     private func setupFilters() {
-        
-        let sportFilterOption = self.getSportOption(for: appliedFilters.sportId)
+
+        let sportFilterOption = self.getSportOption(for: appliedFilters.sportId.rawValue)
         
         // TODO: Add back sort and league options if needed
         // let sortOption = self.getSortOption(for: appliedFilters.sortTypeId)
@@ -418,13 +419,13 @@ class NextUpEventsViewModel {
     // Filters functions
     func buildFilterOptions(from selection: AppliedEventsFilters) -> [FilterOptionItem] {
         var options: [FilterOptionItem] = []
-        
-        let sportOption = getSportOption(for: selection.sportId)
-        
+
+        let sportOption = getSportOption(for: selection.sportId.rawValue)
+
         let sortOption = getSortOption(for: selection.sortType.rawValue)
-        
-        let leagueOption = getLeagueOption(for: selection.leagueId)
-        
+
+        let leagueOption = getLeagueOption(for: selection.leagueFilter.rawValue)
+
         options.append(sportOption)
         options.append(sortOption)
         options.append(leagueOption)

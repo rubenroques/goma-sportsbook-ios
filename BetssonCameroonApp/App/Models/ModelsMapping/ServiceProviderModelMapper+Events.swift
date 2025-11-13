@@ -71,7 +71,7 @@ extension ServiceProviderModelMapper {
         
         var venue: Location?
         if let venueCountry = event.venueCountry {
-            venue = Location(id: venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
+            venue = Location(id: venueCountry.id ?? venueCountry.iso2Code, name: venueCountry.name, isoCode: venueCountry.iso2Code)
         }
         
         let sport = Self.sport(fromServiceProviderSportType: event.sport)

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Combine
+import SharedModels
 
 public class SortFilterView: UIView {
     // MARK: - Properties
@@ -127,7 +128,7 @@ public class SortFilterView: UIView {
             row.configure()
             
             row.didTappedOption = { [weak self] tappedOption in
-                self?.viewModel.selectOption(withId: tappedOption.id)
+                self?.viewModel.selectFilter(LeagueFilterIdentifier(stringValue: tappedOption.id))
             }
             
             optionRows.append(row)
@@ -136,25 +137,25 @@ public class SortFilterView: UIView {
     }
     
     private func setupBindings() {
-        viewModel.selectedOptionId
-            .sink { [weak self] optionId in
-                self?.updateSelection(forOptionId: optionId)
+        viewModel.selectedFilter
+            .sink { [weak self] filter in
+                self?.updateSelection(forOptionId: filter.rawValue)
             }
             .store(in: &cancellables)
-        
+
         viewModel.isCollapsed
             .sink { [weak self] isCollapsed in
                 self?.isCollapsed = isCollapsed
-                
+
                 self?.updateCollapseState()
             }
             .store(in: &cancellables)
-        
+
         viewModel.shouldRefreshData
             .sink(receiveValue: { [weak self] in
                 self?.setupOptions()
-                if let selectedOption = self?.viewModel.selectedOptionId.value {
-                    self?.viewModel.selectOption(withId: selectedOption)
+                if let selectedFilter = self?.viewModel.selectedFilter.value {
+                    self?.viewModel.selectFilter(selectedFilter)
                 }
             })
             .store(in: &cancellables)

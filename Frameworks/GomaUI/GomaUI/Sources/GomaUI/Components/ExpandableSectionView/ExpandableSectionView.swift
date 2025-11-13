@@ -19,6 +19,8 @@ public class ExpandableSectionView: UIView {
     private lazy var toggleButtonBackground: UIView = Self.createToggleButtonBackground()
     private lazy var contentStackView: UIStackView = Self.createContentStackView()
     
+    private lazy var headerTapGesture: UITapGestureRecognizer = Self.createHeaderTapGesture()
+
     private let viewModel: ExpandableSectionViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
@@ -164,6 +166,10 @@ public class ExpandableSectionView: UIView {
     @objc private func toggleButtonTapped() {
         viewModel.toggleExpanded()
     }
+
+    @objc private func headerTapped() {
+        viewModel.toggleExpanded()
+    }
 }
 
 // MARK: - Subviews Initialization and Setup
@@ -178,7 +184,13 @@ extension ExpandableSectionView {
     private static func createHeaderContainerView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
         return view
+    }
+
+    private static func createHeaderTapGesture() -> UITapGestureRecognizer {
+        let gesture = UITapGestureRecognizer()
+        return gesture
     }
     
     private static func createTitleLabel() -> UILabel {
@@ -229,16 +241,19 @@ extension ExpandableSectionView {
     
     private func setupSubviews() {
         self.addSubview(self.containerView)
-        
+
         self.containerView.addSubview(self.headerContainerView)
         self.headerContainerView.addSubview(self.titleLabel)
         self.headerContainerView.addSubview(self.toggleButtonBackground)
         self.headerContainerView.addSubview(self.toggleButton)
-        
+
         self.containerView.addSubview(self.contentStackView)
-        
+
         self.toggleButton.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
-        
+
+        self.headerTapGesture.addTarget(self, action: #selector(headerTapped))
+        self.headerContainerView.addGestureRecognizer(self.headerTapGesture)
+
         self.initConstraints()
     }
     

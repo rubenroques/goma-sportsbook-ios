@@ -5,6 +5,7 @@
 
 import Foundation
 import ServicesProvider
+import SharedModels
 
 // MARK: - AppliedEventsFilters Extension
 extension AppliedEventsFilters {
@@ -37,28 +38,22 @@ extension AppliedEventsFilters {
             sortBy = .favorites
         }
         
-        // Convert leagueId to TournamentFilter and LocationFilter
-        let tournament: TournamentFilter
-        let location: LocationFilter
-        
-        // Check for special "{countryId}_all" format
-        if leagueId.hasSuffix("_all") {
-            // Extract country ID and set location filter
-            let countryId = String(leagueId.dropLast(4)) // Remove "_all"
+        // Convert leagueFilter to TournamentFilter and LocationFilter
+        let (location, tournament): (LocationFilter, TournamentFilter)
+        switch leagueFilter {
+        case .all:
+            location = .all
+            tournament = .all
+        case .allInCountry(let countryId):
             location = .specific(countryId)
             tournament = .all
-        } else if leagueId == "all" || leagueId == "0" || leagueId.isEmpty {
-            // No specific filters
+        case .singleLeague(let id):
             location = .all
-            tournament = .all
-        } else {
-            // Specific league selected, no country filter
-            location = .all
-            tournament = .specific(leagueId)
+            tournament = .specific(id)
         }
-        
+
         return MatchesFilterOptions(
-            sportId: sportId,
+            sportId: sportId.rawValue,
             timeRange: timeRange,
             sortBy: sortBy,
             location: location,
@@ -99,20 +94,24 @@ extension MatchesFilterOptions {
             sortType = .favorites
         }
         
-        // Convert TournamentFilter back to String
-        let leagueId: String
-        switch tournament {
-        case .all:
-            leagueId = "all"
-        case .specific(let id):
-            leagueId = id
+        // Convert LocationFilter + TournamentFilter to LeagueFilterIdentifier
+        let leagueFilter: LeagueFilterIdentifier
+        switch (location, tournament) {
+        case (.all, .all):
+            leagueFilter = .all
+        case (.specific(let countryId), .all):
+            leagueFilter = .allInCountry(countryId: countryId)
+        case (.all, .specific(let leagueId)):
+            leagueFilter = .singleLeague(id: leagueId)
+        case (.specific, .specific(let leagueId)):
+            leagueFilter = .singleLeague(id: leagueId)
         }
-        
+
         return AppliedEventsFilters(
-            sportId: sportId,
+            sportId: FilterIdentifier(stringValue: sportId),
             timeFilter: timeFilter,
             sortType: sortType,
-            leagueId: leagueId
+            leagueFilter: leagueFilter
         )
     }
 }

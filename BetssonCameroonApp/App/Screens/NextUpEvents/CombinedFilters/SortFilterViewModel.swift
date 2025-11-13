@@ -2,8 +2,9 @@ import Foundation
 import UIKit
 import Combine
 import SharedModels
+import GomaUI
 
-public class MockSortFilterViewModel: SortFilterViewModelProtocol {
+public class SortFilterViewModel: SortFilterViewModelProtocol {
     public let title: String
     public var sortOptions: [SortOption]
     public var sortFilterType: SortFilterType
@@ -28,9 +29,7 @@ public class MockSortFilterViewModel: SortFilterViewModelProtocol {
     }
 
     public func updateSortOptions(_ newSortOptions: [SortOption]) {
-        // Update the internal sortOptions array
         self.sortOptions = newSortOptions
-
         self.shouldRefreshData.send()
     }
 }

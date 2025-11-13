@@ -42,7 +42,11 @@ extension EveryMatrixModelMapper {
         // Convert EveryMatrix.Location to external Country
         var country: Country?
         if let venue = internalMatch.venue {
-            country = Country.country(withName: venue.name)
+            country = Country(
+                id: venue.id,
+                name: venue.name,
+                iso2Code: venue.code ?? ""
+            )
         }
 
         // Convert EveryMatrix.Market array to external Market array

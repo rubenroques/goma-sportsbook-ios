@@ -2,6 +2,7 @@ import Foundation
 
 public struct Country: Codable, Equatable, Hashable {
 
+    public var id: String?
     public var name: String
     public var capital: String?
     public var region: String
@@ -9,10 +10,10 @@ public struct Country: Codable, Equatable, Hashable {
     public var iso3Code: String
     public var numericCode: String
     public var phonePrefix: String
-    
     public var frenchName: String
 
-    public init(name: String, capital: String? = nil, region: String, iso2Code: String, iso3Code: String, numericCode: String, phonePrefix: String, frenchName: String) {
+    public init(id: String? = nil, name: String, capital: String? = nil, region: String = "", iso2Code: String, iso3Code: String = "", numericCode: String = "", phonePrefix: String = "", frenchName: String = "") {
+        self.id = id
         self.name = name
         self.capital = capital
         self.region = region
@@ -24,3 +25,4 @@ public struct Country: Codable, Equatable, Hashable {
     }
 
 }
+
