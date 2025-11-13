@@ -109,7 +109,8 @@ public class SortFilterView: UIView {
             stackViewBottomConstraint
         ])
         
-        collapseButton.addTarget(self, action: #selector(collapseButtonTapped), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(collapseButtonTapped))
+        self.headerView.addGestureRecognizer(tapGesture)
         
         self.titleLabel.text = viewModel.title
         

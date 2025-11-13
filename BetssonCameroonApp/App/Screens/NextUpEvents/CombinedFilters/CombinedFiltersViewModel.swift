@@ -58,11 +58,18 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             currentSportId = FilterIdentifier(stringValue: sportId)
         }
 
+        let activeSports = Env.sportsStore.getActiveSports()
+        print("[FILTERS_DEBUG] Looking for sport: \(currentSportId.rawValue)")
+        print("[FILTERS_DEBUG] Available sports: \(activeSports.map { "\($0.id):\($0.name)" }.joined(separator: ", "))")
+
         guard
             let currentSport = Env.sportsStore.getActiveSports().first(where: {
                 $0.id == currentSportId.rawValue
             })
         else {
+            print("[FILTERS_DEBUG] Sport not found for ID: \(currentSportId.rawValue) - hiding loading and setting empty data")
+            self.isLoadingPublisher.send(false)
+            self.setupAllLeagues(popularCompetitions: [], sportCompetitions: [])
             return
         }
         
@@ -72,7 +79,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
             .catch { error -> AnyPublisher<[Competition], Never> in
-                print("Sport tournaments failed: \(error)")
+                print("[FILTERS_DEBUG] Sport tournaments failed: \(error)")
                 return Just([]).eraseToAnyPublisher()
             }
 
@@ -81,7 +88,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
             .catch { error -> AnyPublisher<[Competition], Never> in
-                print("Popular tournaments failed: \(error)")
+                print("[FILTERS_DEBUG] Popular tournaments failed: \(error)")
                 return Just([]).eraseToAnyPublisher()
             }
 
@@ -91,9 +98,9 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
-                        print("All tournaments RPC calls completed")
+                        print("[FILTERS_DEBUG] All tournaments RPC calls completed")
                     case .failure(let error):
-                        print("Tournaments RPC calls failed: \(error)")
+                        print("[FILTERS_DEBUG] Tournaments RPC calls failed: \(error)")
                         // Make sure to hide loading spinner on error
                         self?.isLoadingPublisher.send(false)
                         // Setup empty data on error
@@ -101,7 +108,7 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                     }
                 },
                 receiveValue: { [weak self] sportCompetitions, popularCompetitions in
-                    
+                    print("[FILTERS_DEBUG] Received \(popularCompetitions.count) popular competitions, \(sportCompetitions.count) sport competitions")
                     self?.setupAllLeagues(popularCompetitions: popularCompetitions, sportCompetitions: sportCompetitions)
                 }
             )
