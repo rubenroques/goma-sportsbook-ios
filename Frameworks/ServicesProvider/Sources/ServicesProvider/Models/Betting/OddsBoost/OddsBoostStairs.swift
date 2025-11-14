@@ -27,13 +27,19 @@ public struct OddsBoostStairsResponse: Equatable {
     /// Example: [3→10%, 4→15%, 5→20%]
     public let allStairs: [OddsBoostStair]
 
+    /// Minimum odds requirement per selection to qualify for bonus
+    /// Example: 1.1 means each selection must have odds >= 1.1
+    /// Nil if no minimum odds requirement exists
+    public let minOdds: Double?
+
     public init(
         currentStair: OddsBoostStair?,
         nextStair: OddsBoostStair?,
         eligibleEventIds: [String],
         ubsWalletId: String,
         currency: String,
-        allStairs: [OddsBoostStair]
+        allStairs: [OddsBoostStair],
+        minOdds: Double? = nil
     ) {
         self.currentStair = currentStair
         self.nextStair = nextStair
@@ -41,6 +47,7 @@ public struct OddsBoostStairsResponse: Equatable {
         self.ubsWalletId = ubsWalletId
         self.currency = currency
         self.allStairs = allStairs
+        self.minOdds = minOdds
     }
 
     /// Whether user has reached maximum bonus tier

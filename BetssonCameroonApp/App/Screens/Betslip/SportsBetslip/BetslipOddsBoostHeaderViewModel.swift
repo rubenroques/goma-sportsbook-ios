@@ -68,12 +68,16 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
         // Extract real odds boost data from API response
         let (currentBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData()
 
+        // Extract and format minimum odds requirement
+        let minOdds: String? = oddsBoostState?.minOdds.map { String(format: "%.2f", $0) }
+
         // Create new state
         let state = BetslipOddsBoostHeaderState(
             selectionCount: eligibleEventsCount,  // From API, not betslip tickets
             totalEligibleCount: totalEligibleCount,
             nextTierPercentage: nextTierPercentage,
-            currentBoostPercentage: currentBoostPercentage
+            currentBoostPercentage: currentBoostPercentage,
+            minOdds: minOdds
         )
 
         // Update data subject

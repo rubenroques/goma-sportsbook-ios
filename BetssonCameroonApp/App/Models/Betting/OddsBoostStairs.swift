@@ -23,6 +23,11 @@ struct OddsBoostStairsState: Equatable {
     /// All available bonus tiers in the progression
     /// Used to show complete boost ladder to users
     let allTiers: [OddsBoostTier]
+
+    /// Minimum odds requirement per selection to qualify for bonus
+    /// Example: 1.1 means each selection must have odds >= 1.1
+    /// Nil if no minimum odds requirement exists
+    let minOdds: Double?
 }
 
 /// App model representing a single bonus tier/stair

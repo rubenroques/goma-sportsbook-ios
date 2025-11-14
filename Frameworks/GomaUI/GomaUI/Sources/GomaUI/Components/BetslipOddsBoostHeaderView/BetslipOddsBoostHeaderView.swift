@@ -219,7 +219,13 @@ public final class BetslipOddsBoostHeaderView: UIView {
 
         // Update description
         let remainingSelections = max(0, state.totalEligibleCount - state.selectionCount)
-        if remainingSelections > 0, let nextPercentage = state.nextTierPercentage {
+        if remainingSelections > 0, let minOdds = state.minOdds {
+            // Use "add_more_to_betslip" string with minOdds: "by adding {legNumber} more legs to your betslip ({minOdd} min odds)."
+            descriptionLabel.text = LocalizationProvider.string("add_more_to_betslip")
+                .replacingOccurrences(of: "{legNumber}", with: "\(remainingSelections)")
+                .replacingOccurrences(of: "{minOdd}", with: minOdds)
+        } else if remainingSelections > 0, let nextPercentage = state.nextTierPercentage {
+            // Fallback to original string if minOdds is not available
             descriptionLabel.text = LocalizationProvider.string("add_matches_bonus")
                 .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
                 .replacingOccurrences(of: "{percentage}", with: nextPercentage)

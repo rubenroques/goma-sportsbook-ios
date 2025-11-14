@@ -64,6 +64,16 @@ extension EveryMatrixModelMapper {
             )
         } ?? []
 
+        // Extract minimum odds requirement from first eligible event
+        // Uses first event's min odds as the representative value
+        let minOdds: Double? = {
+            guard let firstEventId = eligibleEventIds.first,
+                  let oddsRange = firstItem.odds?.oddsRange(forEventId: firstEventId) else {
+                return nil
+            }
+            return oddsRange.min
+        }()
+
         // Build domain response
         return OddsBoostStairsResponse(
             currentStair: currentStair,
@@ -71,7 +81,8 @@ extension EveryMatrixModelMapper {
             eligibleEventIds: eligibleEventIds,
             ubsWalletId: ubsWalletId,
             currency: firstItem.currency,
-            allStairs: allStairs
+            allStairs: allStairs,
+            minOdds: minOdds
         )
     }
 }

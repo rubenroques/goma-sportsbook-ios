@@ -44,7 +44,8 @@ extension ServiceProviderModelMapper {
             eligibleEventIds: spResponse.eligibleEventIds,
             ubsWalletId: spResponse.ubsWalletId,
             currency: spResponse.currency,
-            allTiers: allTiers
+            allTiers: allTiers,
+            minOdds: spResponse.minOdds
         )
     }
 }

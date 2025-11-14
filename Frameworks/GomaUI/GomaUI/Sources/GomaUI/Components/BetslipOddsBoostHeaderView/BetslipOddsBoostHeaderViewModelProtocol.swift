@@ -11,17 +11,20 @@ public struct BetslipOddsBoostHeaderState: Equatable {
     public let totalEligibleCount: Int       // Selections needed for boost
     public let nextTierPercentage: String?   // Next boost tier (e.g., "5%")
     public let currentBoostPercentage: String? // Current boost if max reached
+    public let minOdds: String?              // Minimum odds requirement (e.g., "1.1")
 
     public init(
         selectionCount: Int,
         totalEligibleCount: Int,
         nextTierPercentage: String?,
-        currentBoostPercentage: String?
+        currentBoostPercentage: String?,
+        minOdds: String? = nil
     ) {
         self.selectionCount = selectionCount
         self.totalEligibleCount = totalEligibleCount
         self.nextTierPercentage = nextTierPercentage
         self.currentBoostPercentage = currentBoostPercentage
+        self.minOdds = minOdds
     }
 }
 

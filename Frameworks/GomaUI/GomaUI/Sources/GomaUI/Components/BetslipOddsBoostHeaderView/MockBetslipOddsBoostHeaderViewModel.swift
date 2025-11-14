@@ -45,13 +45,15 @@ public extension MockBetslipOddsBoostHeaderViewModel {
         selectionCount: Int = 1,
         totalEligibleCount: Int = 3,
         nextTierPercentage: String? = "3%",
-        currentBoostPercentage: String? = nil
+        currentBoostPercentage: String? = nil,
+        minOdds: String? = "1.1"
     ) -> MockBetslipOddsBoostHeaderViewModel {
         let state = BetslipOddsBoostHeaderState(
             selectionCount: selectionCount,
             totalEligibleCount: totalEligibleCount,
             nextTierPercentage: nextTierPercentage,
-            currentBoostPercentage: currentBoostPercentage
+            currentBoostPercentage: currentBoostPercentage,
+            minOdds: minOdds
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state)
     }
@@ -62,7 +64,8 @@ public extension MockBetslipOddsBoostHeaderViewModel {
             selectionCount: 3,
             totalEligibleCount: 3,
             nextTierPercentage: nil,
-            currentBoostPercentage: "10%"
+            currentBoostPercentage: "10%",
+            minOdds: "1.1"
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state)
     }
@@ -76,7 +79,8 @@ public extension MockBetslipOddsBoostHeaderViewModel {
             selectionCount: selectionCount,
             totalEligibleCount: totalEligibleCount,
             nextTierPercentage: "3%",
-            currentBoostPercentage: nil
+            currentBoostPercentage: nil,
+            minOdds: "1.1"
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state, isEnabled: false)
     }
