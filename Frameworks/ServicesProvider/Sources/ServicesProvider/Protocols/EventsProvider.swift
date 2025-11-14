@@ -201,6 +201,8 @@ protocol EventsProvider: Connector {
     
     // User Favorites
     func getUserFavorites() -> AnyPublisher<UserFavoritesResponse, ServiceProviderError>
+    func addUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError>
+    func removeUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError>
 
     //
     // Utilities

@@ -1318,6 +1318,14 @@ extension SportRadarEventsProvider {
     func getUserFavorites() -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+    
+    func addUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func removeUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
         let endpoint = SportRadarRestAPIClient.getEventDetails(eventId: eventId)

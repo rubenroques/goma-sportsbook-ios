@@ -1307,6 +1307,14 @@ extension GomaProvider: EventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
+    func addUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func removeUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
     func deleteFavoriteItem(favoriteId: Int, type: String) -> AnyPublisher<BasicMessageResponse, ServiceProviderError> {
 
         let endpoint = GomaAPISchema.deleteFavorite(favoriteId: favoriteId, type: type)

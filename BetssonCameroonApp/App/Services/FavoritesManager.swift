@@ -49,11 +49,45 @@ class FavoritesManager {
     }
 
     func addUserFavorite(eventId: String) {
+        guard self.favoriteEventsIdPublisher.value.contains(eventId) == false else {
+            return
+        }
         
+        Env.servicesProvider.addUserFavorite(eventId: eventId)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case let .failure(error) = completion {
+                        print("Add user favorite failure: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    print("User Favorite Added!")
+                    self?.favoriteEventsIdPublisher.send(response.favoriteEvents)
+                }
+            )
+            .store(in: &cancellables)
     }
 
     func removeUserFavorite(eventId: String) {
-    
+        guard self.favoriteEventsIdPublisher.value.contains(eventId) else {
+            return
+        }
+
+        Env.servicesProvider.removeUserFavorite(eventId: eventId)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case let .failure(error) = completion {
+                        print("Remove user favorite failure: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    print("User Favorite Removed!")
+                    self?.favoriteEventsIdPublisher.send(response.favoriteEvents)
+                }
+            )
+            .store(in: &cancellables)
     }
 
     func isEventFavorite(eventId: String) -> Bool {

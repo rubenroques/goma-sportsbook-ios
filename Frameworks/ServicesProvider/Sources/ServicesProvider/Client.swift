@@ -905,6 +905,26 @@ extension Client {
 
         return eventsProvider.getUserFavorites()
     }
+    
+    public func addUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.addUserFavorite(eventId: eventId)
+    }
+    
+    public func removeUserFavorite(eventId: String) -> AnyPublisher<UserFavoritesResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.removeUserFavorite(eventId: eventId)
+    }
 
     public func subscribeToEventAndSecondaryMarkets(withId id: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
         guard

@@ -350,6 +350,7 @@ class ResponsibleGamingViewModel {
                 if case .failure(let error) = completion {
                     print("[ResponsibleGaming] Failed to set deposit limit: \(error)")
                     self?.onLimitError?("Deposit", error.localizedDescription)
+                    self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] limit in
                 guard let self = self else { return }
@@ -396,6 +397,7 @@ class ResponsibleGamingViewModel {
                 if case .failure(let error) = completion {
                     print("[ResponsibleGaming] Failed to set wagering limit: \(error)")
                     self?.onLimitError?("Wagering", error.localizedDescription)
+                    self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] limit in
                 guard let self = self else { return }
@@ -501,6 +503,7 @@ class ResponsibleGamingViewModel {
                 if case .failure(let error) = completion {
                     print("[ResponsibleGaming] Failed to delete limit: \(error)")
                     self?.onLimitError?("Delete", error.localizedDescription)
+                    self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] in
                 guard let self = self else { return }

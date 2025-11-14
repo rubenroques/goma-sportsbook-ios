@@ -74,3 +74,4 @@ struct ResponsibleGamingPeriod: Codable {
         self.customDatePeriodValue = customDatePeriodValue
     }
 }
+

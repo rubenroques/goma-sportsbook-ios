@@ -17,6 +17,7 @@ enum EveryMatrixOddsMatrixWebAPI {
     // Favorites
     case getFavorites(userId: String)
     case addFavorite(userId: String, eventId: String)
+    case removeFavorite(userId: String, eventId: String)
 }
 
 extension EveryMatrixOddsMatrixWebAPI: Endpoint {
@@ -43,13 +44,15 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
         case .getFavorites(let userId):
             return "/user-data-service/v1/favorite/events/\(domainId)/\(userId)"
         case .addFavorite:
-            return "/user-data-service/v1/favorite/events/"
+            return "/user-data-service/v1/favorite/events"
+        case .removeFavorite:
+            return "/user-data-service/v1/favorite/events"
         }
     }
     
     var query: [URLQueryItem]? {
         switch self {
-        case .placeBet, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite:
+        case .placeBet, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite, .removeFavorite:
             return nil
         case .getOpenBets(let limit, let placedBefore):
             return [
@@ -78,7 +81,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     var headers: HTTP.Headers? {
         let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
         switch self {
-        case .placeBet, .getFavorites, .addFavorite:
+        case .placeBet, .getFavorites, .addFavorite, .removeFavorite:
             let headers = [
                 "Content-Type": "application/json",
                 "Accept": "application/json",
@@ -122,6 +125,8 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             return .post
         case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .getFavorites:
             return .get
+        case .removeFavorite:
+            return .delete
         }
     }
     
@@ -136,7 +141,19 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
                        {
                         "operatorId": "\(EveryMatrixUnifiedConfiguration.shared.operatorId)",
                         "userId": "\(userId)",
-                        "favoriteEvents": "\([eventId])"
+                        "favoriteEvents": \([eventId])
+                       }
+                       """
+            
+            let data = body.data(using: String.Encoding.utf8)!
+            
+            return data
+        case .removeFavorite(let userId, let eventId):
+            let body = """
+                       {
+                        "operatorId": "\(EveryMatrixUnifiedConfiguration.shared.operatorId)",
+                        "userId": "\(userId)",
+                        "favoriteEvents": \([eventId])
                        }
                        """
             
@@ -154,7 +171,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     var requireSessionKey: Bool {
         switch self {
-        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite:
+        case .placeBet, .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .executeCashoutV2, .getFavorites, .addFavorite, .removeFavorite:
             return true
         }
     }
@@ -165,7 +182,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     func authHeaderKey(for type: AuthHeaderType) -> String? {
         switch self {
-        case .placeBet, .getFavorites, .addFavorite:
+        case .placeBet, .getFavorites, .addFavorite, .removeFavorite:
             // Place bet uses different header format
             switch type {
             case .sessionId:

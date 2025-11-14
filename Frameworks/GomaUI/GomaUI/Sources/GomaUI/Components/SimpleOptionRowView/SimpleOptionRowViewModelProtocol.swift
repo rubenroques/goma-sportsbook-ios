@@ -10,3 +10,4 @@ import Foundation
 public protocol SimpleOptionRowViewModelProtocol {
     var option: SortOption { get }
 }
+
