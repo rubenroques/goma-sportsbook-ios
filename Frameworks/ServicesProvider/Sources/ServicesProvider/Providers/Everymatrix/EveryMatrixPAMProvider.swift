@@ -776,10 +776,13 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
     -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
 
+        // Map selections to EveryMatrix format with all required fields
         let mappedSelections = selections.map { selection -> EveryMatrix.BetSelectionPointer in
             return EveryMatrix.BetSelectionPointer(
                 outcomeId: selection.outcomeId,
-                eventId: selection.eventId
+                eventId: selection.eventId,
+                marketId: selection.marketId,
+                odds: selection.odds.decimalOdd
             )
         }
 

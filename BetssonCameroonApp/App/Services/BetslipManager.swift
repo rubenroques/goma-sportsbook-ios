@@ -362,11 +362,16 @@ extension BetslipManager {
             return
         }
 
+        
+        
         // Map tickets to OddsBoostStairsSelections
         let oddsBoostSelections = bettingTicketsPublisher.value.map { ticket in
+            let odd = ServiceProviderModelMapper.serviceProviderOddFormat(fromOddFormat: ticket.odd)
             return ServicesProvider.OddsBoostStairsSelection(
                 outcomeId: ticket.id,
-                eventId: ticket.matchId
+                eventId: ticket.matchId,
+                marketId: ticket.marketId,
+                odds: odd
             )
         }
 

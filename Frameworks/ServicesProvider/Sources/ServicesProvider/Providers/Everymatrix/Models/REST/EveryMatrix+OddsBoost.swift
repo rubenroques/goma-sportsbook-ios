@@ -21,6 +21,8 @@ extension EveryMatrix {
     struct BetSelectionPointer: Codable {
         let outcomeId: String
         let eventId: String
+        let marketId: String
+        let odds: Double
     }
 
     // MARK: - Odds Boost Wallet Response

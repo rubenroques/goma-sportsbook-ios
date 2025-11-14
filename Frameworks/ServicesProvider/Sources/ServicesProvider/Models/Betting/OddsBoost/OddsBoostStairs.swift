@@ -102,7 +102,7 @@ public struct OddsBoostStair: Equatable {
 }
 
 /// Selection input for odds boost stairs calculation
-/// Only contains the minimal data needed to calculate bonus tiers
+/// Contains all data needed for EveryMatrix to validate bonus eligibility
 public struct OddsBoostStairsSelection: Equatable {
 
     /// Outcome ID (betting offer ID)
@@ -111,8 +111,22 @@ public struct OddsBoostStairsSelection: Equatable {
     /// Event ID (match ID)
     public let eventId: String
 
-    public init(outcomeId: String, eventId: String) {
+    /// Market ID
+    public let marketId: String
+
+    /// Odds value for this selection
+    /// Required for EveryMatrix to validate minimum odds requirements
+    public let odds: OddFormat
+
+    public init(
+        outcomeId: String,
+        eventId: String,
+        marketId: String,
+        odds: OddFormat
+    ) {
         self.outcomeId = outcomeId
         self.eventId = eventId
+        self.marketId = marketId
+        self.odds = odds
     }
 }

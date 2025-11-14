@@ -89,17 +89,37 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
     }
 
     /// Extracts odds boost UI data from current state
-    /// - Returns: Tuple of (currentTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
+    /// - Returns: Tuple of (maxTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
+    ///
+    /// IMPORTANT: The tuple values determine which UI state is shown:
+    /// - When maxTierPercentage != nil → Shows "Max win boost activated! (X%)"
+    /// - When nextTierPercentage != nil → Shows "Get X% win boost"
+    /// - When both are nil → Shows generic "Win boost available"
     private func extractOddsBoostData() -> (String?, Int, String?) {
         guard let oddsBoostState = self.oddsBoostState else {
             // No odds boost available (not logged in, no bonus configured, or API error)
             return (nil, 0, nil)
         }
 
-        // Extract current tier percentage for display (when max boost reached)
-        let currentPercentage: String? = oddsBoostState.currentTier.map { tier in
-            return "\(Int(tier.percentage * 100))%"
-        }
+        // CRITICAL LOGIC: Only return currentPercentage when user has reached THE MAXIMUM tier
+        // Even though API provides currentTier at tier 2/5, we return nil here because
+        // the UI should show "Get next boost" message, NOT "Max boost activated"
+        //
+        // Example at tier 2 of 5:
+        //   API: currentTier = 10%, nextTier = 15%
+        //   We return: (nil, 4, "15%") → UI shows "Get 15% win boost"
+        //
+        // Example at max tier 5 of 5:
+        //   API: currentTier = 40%, nextTier = nil
+        //   We return: ("40%", 10, nil) → UI shows "Max win boost activated! (40%)"
+        let currentPercentage: String? = {
+            // Only show "max boost activated" when there's NO next tier available
+            guard oddsBoostState.nextTier == nil,
+                  let currentTier = oddsBoostState.currentTier else {
+                return nil
+            }
+            return "\(Int(currentTier.percentage * 100))%"
+        }()
 
         // Extract next tier data for progress bar and call-to-action
         // If nextTier is nil, user has reached max tier - use currentTier to show all segments filled
