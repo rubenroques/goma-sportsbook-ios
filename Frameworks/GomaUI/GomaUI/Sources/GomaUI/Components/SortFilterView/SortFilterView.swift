@@ -21,17 +21,18 @@ public class SortFilterView: UIView {
         return label
     }()
     
-    private let collapseButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+    private let collapseIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         if let customImage = UIImage(named: "chevron_up_icon")?.withRenderingMode(.alwaysTemplate) {
-            button.setImage(customImage, for: .normal)
+            imageView.image = customImage
         }
         else if let systemImage = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate) {
-            button.setImage(systemImage, for: .normal)
+            imageView.image = systemImage
         }
-        button.tintColor = StyleProvider.Color.iconPrimary
-        return button
+        imageView.tintColor = StyleProvider.Color.iconPrimary
+        return imageView
     }()
     
     private let stackView: UIStackView = {
@@ -82,7 +83,7 @@ public class SortFilterView: UIView {
         
         addSubview(headerView)
         headerView.addSubview(titleLabel)
-        headerView.addSubview(collapseButton)
+        headerView.addSubview(collapseIcon)
         addSubview(stackView)
         
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0)
@@ -97,11 +98,11 @@ public class SortFilterView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 12),
             titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            
-            collapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            collapseButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            collapseButton.widthAnchor.constraint(equalToConstant: 24),
-            collapseButton.heightAnchor.constraint(equalToConstant: 24),
+
+            collapseIcon.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            collapseIcon.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            collapseIcon.widthAnchor.constraint(equalToConstant: 24),
+            collapseIcon.heightAnchor.constraint(equalToConstant: 24),
             
             stackView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -191,7 +192,7 @@ public class SortFilterView: UIView {
             
             // Update the arrow
             let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
-            self.collapseButton.transform = transform
+            self.collapseIcon.transform = transform
             
         } completion: { _ in
             // Hide the grid after animation when collapsing

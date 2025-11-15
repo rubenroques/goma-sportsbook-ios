@@ -44,16 +44,16 @@ public extension MockBetslipOddsBoostHeaderViewModel {
     static func activeMock(
         selectionCount: Int = 1,
         totalEligibleCount: Int = 3,
-        nextTierPercentage: String? = "3%",
-        currentBoostPercentage: String? = nil,
-        minOdds: String? = "1.1"
+        minOdds: String? = "1.1",
+        headingText: String = "Get 3% win boost",
+        descriptionText: String = "by adding 2 more legs to your betslip (1.10 min odds)."
     ) -> MockBetslipOddsBoostHeaderViewModel {
         let state = BetslipOddsBoostHeaderState(
             selectionCount: selectionCount,
             totalEligibleCount: totalEligibleCount,
-            nextTierPercentage: nextTierPercentage,
-            currentBoostPercentage: currentBoostPercentage,
-            minOdds: minOdds
+            minOdds: minOdds,
+            headingText: headingText,
+            descriptionText: descriptionText
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state)
     }
@@ -63,9 +63,9 @@ public extension MockBetslipOddsBoostHeaderViewModel {
         let state = BetslipOddsBoostHeaderState(
             selectionCount: 3,
             totalEligibleCount: 3,
-            nextTierPercentage: nil,
-            currentBoostPercentage: "10%",
-            minOdds: "1.1"
+            minOdds: "1.1",
+            headingText: "Max win boost activated! (10%)",
+            descriptionText: "All qualifying events added"
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state)
     }
@@ -78,9 +78,9 @@ public extension MockBetslipOddsBoostHeaderViewModel {
         let state = BetslipOddsBoostHeaderState(
             selectionCount: selectionCount,
             totalEligibleCount: totalEligibleCount,
-            nextTierPercentage: "3%",
-            currentBoostPercentage: nil,
-            minOdds: "1.1"
+            minOdds: "1.1",
+            headingText: "Get 3% win boost",
+            descriptionText: "by adding 2 more legs to your betslip (1.10 min odds)."
         )
         return MockBetslipOddsBoostHeaderViewModel(state: state, isEnabled: false)
     }

@@ -104,29 +104,33 @@ final class BetslipOddsBoostHeaderViewController: UIViewController {
             newState = BetslipOddsBoostHeaderState(
                 selectionCount: 1,
                 totalEligibleCount: 3,
-                nextTierPercentage: "3%",
-                currentBoostPercentage: nil
+                minOdds: "1.10",
+                headingText: "Get 3% win boost",
+                descriptionText: "by adding 2 more legs to your betslip (1.10 min odds)."
             )
         case 1:
             newState = BetslipOddsBoostHeaderState(
                 selectionCount: 2,
                 totalEligibleCount: 3,
-                nextTierPercentage: "5%",
-                currentBoostPercentage: nil
+                minOdds: "1.10",
+                headingText: "Get 5% win boost",
+                descriptionText: "by adding 1 more legs to your betslip (1.10 min odds)."
             )
         case 2:
             newState = BetslipOddsBoostHeaderState(
                 selectionCount: 3,
                 totalEligibleCount: 3,
-                nextTierPercentage: nil,
-                currentBoostPercentage: "10%"
+                minOdds: "1.10",
+                headingText: "Max win boost activated! (10%)",
+                descriptionText: "All qualifying events added"
             )
         default:
             newState = BetslipOddsBoostHeaderState(
                 selectionCount: 1,
                 totalEligibleCount: 3,
-                nextTierPercentage: "3%",
-                currentBoostPercentage: nil
+                minOdds: "1.10",
+                headingText: "Get 3% win boost",
+                descriptionText: "by adding 2 more legs to your betslip (1.10 min odds)."
             )
         }
 

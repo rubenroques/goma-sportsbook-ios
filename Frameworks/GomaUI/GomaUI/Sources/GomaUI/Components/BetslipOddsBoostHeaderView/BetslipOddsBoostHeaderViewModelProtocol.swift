@@ -9,22 +9,30 @@ import Combine
 public struct BetslipOddsBoostHeaderState: Equatable {
     public let selectionCount: Int           // Current selections in betslip
     public let totalEligibleCount: Int       // Selections needed for boost
-    public let nextTierPercentage: String?   // Next boost tier (e.g., "5%")
-    public let currentBoostPercentage: String? // Current boost if max reached
     public let minOdds: String?              // Minimum odds requirement (e.g., "1.1")
+
+    /// Pre-assembled heading text ready to display
+    /// ViewModel handles all localization and decision logic
+    /// Examples: "Max win boost activated! (40%)", "Get 15% win boost", "Win boost available"
+    public let headingText: String
+
+    /// Pre-assembled description text ready to display
+    /// ViewModel handles all localization and decision logic
+    /// Examples: "by adding 2 more legs to your betslip (1.10 min odds).", "All qualifying events added"
+    public let descriptionText: String
 
     public init(
         selectionCount: Int,
         totalEligibleCount: Int,
-        nextTierPercentage: String?,
-        currentBoostPercentage: String?,
-        minOdds: String? = nil
+        minOdds: String?,
+        headingText: String,
+        descriptionText: String
     ) {
         self.selectionCount = selectionCount
         self.totalEligibleCount = totalEligibleCount
-        self.nextTierPercentage = nextTierPercentage
-        self.currentBoostPercentage = currentBoostPercentage
         self.minOdds = minOdds
+        self.headingText = headingText
+        self.descriptionText = descriptionText
     }
 }
 

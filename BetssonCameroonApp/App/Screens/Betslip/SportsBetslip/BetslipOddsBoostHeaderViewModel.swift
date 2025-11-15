@@ -36,8 +36,9 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
         let initialState = BetslipOddsBoostHeaderState(
             selectionCount: 0,
             totalEligibleCount: 0,
-            nextTierPercentage: nil,
-            currentBoostPercentage: nil
+            minOdds: nil,
+            headingText: LocalizationProvider.string("win_boost_available"),
+            descriptionText: LocalizationProvider.string("all_qualifying_events_added")
         )
         let initialData = BetslipOddsBoostHeaderData(state: initialState, isEnabled: true)
         self.dataSubject = CurrentValueSubject(initialData)
@@ -66,18 +67,24 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
         let eligibleEventsCount = oddsBoostState?.eligibleEventIds.count ?? 0
 
         // Extract real odds boost data from API response
-        let (currentBoostPercentage, totalEligibleCount, nextTierPercentage) = extractOddsBoostData()
+        let displayData = extractOddsBoostData()
 
         // Extract and format minimum odds requirement
         let minOdds: String? = oddsBoostState?.minOdds.map { String(format: "%.2f", $0) }
 
+        // Compute pre-assembled heading text (business logic in ViewModel)
+        let headingText = computeHeadingText()
+
+        // Compute pre-assembled description text (business logic in ViewModel)
+        let descriptionText = computeDescriptionText()
+
         // Create new state
         let state = BetslipOddsBoostHeaderState(
             selectionCount: eligibleEventsCount,  // From API, not betslip tickets
-            totalEligibleCount: totalEligibleCount,
-            nextTierPercentage: nextTierPercentage,
-            currentBoostPercentage: currentBoostPercentage,
-            minOdds: minOdds
+            totalEligibleCount: displayData.totalEligibleCount,
+            minOdds: minOdds,
+            headingText: headingText,  // Pre-assembled message ready to display
+            descriptionText: descriptionText  // Pre-assembled message ready to display
         )
 
         // Update data subject
@@ -88,17 +95,61 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
         dataSubject.send(newData)
     }
 
-    /// Extracts odds boost UI data from current state
-    /// - Returns: Tuple of (maxTierPercentage, totalEligibleCount, nextTierPercentage) for UI display
+    // MARK: - Display Data Model
+
+    /// Represents the UI display state for odds boost header
+    /// Maps API state (currentTier/nextTier) to UI presentation logic
+    private struct OddsBoostDisplayData {
+        /// Percentage to show when user has reached THE MAXIMUM tier
+        /// Triggers "Max win boost activated! (X%)" message
+        /// nil for all intermediate tiers (even if currentTier exists in API)
+        let maxTierPercentage: String?
+
+        /// Total segments to display in progress bar
+        /// Equals next tier's minSelections, or current tier's if at max
+        let totalEligibleCount: Int
+
+        /// Percentage to show for the NEXT achievable tier
+        /// Triggers "Get X% win boost" message
+        /// nil only when at absolute maximum tier
+        let nextTierPercentage: String?
+
+        /// Whether user has reached the absolute maximum tier
+        var isAtMaxTier: Bool {
+            return maxTierPercentage != nil && nextTierPercentage == nil
+        }
+    }
+
+    /// ODDS BOOST UI STATE MACHINE:
     ///
-    /// IMPORTANT: The tuple values determine which UI state is shown:
-    /// - When maxTierPercentage != nil → Shows "Max win boost activated! (X%)"
-    /// - When nextTierPercentage != nil → Shows "Get X% win boost"
-    /// - When both are nil → Shows generic "Win boost available"
-    private func extractOddsBoostData() -> (String?, Int, String?) {
+    /// ┌─────────────────────────────────────────────────────────────┐
+    /// │ API State               │ UI Display                         │
+    /// ├─────────────────────────────────────────────────────────────┤
+    /// │ No bonus                │ [Component Hidden]                 │
+    /// ├─────────────────────────────────────────────────────────────┤
+    /// │ Below first tier        │ "Get 10% boost"                    │
+    /// │ currentTier: nil        │ Progress: 2/3 segments             │
+    /// │ nextTier: 3 → 10%       │ Description: "add 1 more legs..."  │
+    /// ├─────────────────────────────────────────────────────────────┤
+    /// │ At tier 2 of 5          │ "Get 15% boost" ← NOT "Max!"       │
+    /// │ currentTier: 3 → 10%    │ Progress: 3/4 segments             │
+    /// │ nextTier: 4 → 15%       │ Description: "add 1 more legs..."  │
+    /// ├─────────────────────────────────────────────────────────────┤
+    /// │ At max tier 5           │ "Max win boost activated! (40%)"   │
+    /// │ currentTier: 10 → 40%   │ Progress: 10/10 segments (full)    │
+    /// │ nextTier: nil           │ Description: "All qualifying..."   │
+    /// └─────────────────────────────────────────────────────────────┘
+
+    /// Extracts odds boost UI data from current state
+    /// - Returns: Display data struct with named properties for UI rendering
+    private func extractOddsBoostData() -> OddsBoostDisplayData {
         guard let oddsBoostState = self.oddsBoostState else {
             // No odds boost available (not logged in, no bonus configured, or API error)
-            return (nil, 0, nil)
+            return OddsBoostDisplayData(
+                maxTierPercentage: nil,
+                totalEligibleCount: 0,
+                nextTierPercentage: nil
+            )
         }
 
         // CRITICAL LOGIC: Only return currentPercentage when user has reached THE MAXIMUM tier
@@ -130,7 +181,58 @@ final class BetslipOddsBoostHeaderViewModel: BetslipOddsBoostHeaderViewModelProt
             return "\(Int(tier.percentage * 100))%"
         }
 
-        return (currentPercentage, totalEligibleCount, nextTierPercentage)
+        return OddsBoostDisplayData(
+            maxTierPercentage: currentPercentage,
+            totalEligibleCount: totalEligibleCount,
+            nextTierPercentage: nextTierPercentage
+        )
+    }
+
+    /// Computes the heading text based on current odds boost state
+    /// Encapsulates all localization and message assembly logic
+    /// View simply displays this pre-assembled message
+    private func computeHeadingText() -> String {
+        let displayData = extractOddsBoostData()
+
+        // Priority 1: At max tier - show "Max boost activated!"
+        if let maxTierPercentage = displayData.maxTierPercentage {
+            return LocalizationProvider.string("max_win_boost_activated") + " (\(maxTierPercentage))"
+        }
+
+        // Priority 2: Next tier available - show "Get X% boost"
+        if let nextPercentage = displayData.nextTierPercentage {
+            return LocalizationProvider.string("get_win_boost")
+                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
+        }
+
+        // Fallback: Generic message
+        return LocalizationProvider.string("win_boost_available")
+    }
+
+    /// Computes the description text based on current odds boost state
+    /// Encapsulates all localization and message assembly logic
+    /// View simply displays this pre-assembled message
+    private func computeDescriptionText() -> String {
+        let displayData = extractOddsBoostData()
+        let eligibleEventsCount = oddsBoostState?.eligibleEventIds.count ?? 0
+        let remainingSelections = max(0, displayData.totalEligibleCount - eligibleEventsCount)
+
+        if remainingSelections > 0, let minOdds = oddsBoostState?.minOdds {
+            // Priority 1: Use minOdds message
+            let minOddsStr = String(format: "%.2f", minOdds)
+            return LocalizationProvider.string("add_more_to_betslip")
+                .replacingOccurrences(of: "{legNumber}", with: "\(remainingSelections)")
+                .replacingOccurrences(of: "{minOdd}", with: minOddsStr)
+
+        } else if remainingSelections > 0, let nextPercentage = displayData.nextTierPercentage {
+            // Priority 2: Fallback to percentage-based message
+            return LocalizationProvider.string("add_matches_bonus")
+                .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
+                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
+        } else {
+            // All selections added
+            return LocalizationProvider.string("all_qualifying_events_added")
+        }
     }
 
     // MARK: - Protocol Methods

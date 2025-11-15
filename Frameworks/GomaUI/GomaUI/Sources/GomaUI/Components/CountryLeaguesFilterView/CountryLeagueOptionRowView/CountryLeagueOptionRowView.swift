@@ -44,17 +44,18 @@ public class CountryLeagueOptionRowView: UIView {
         return label
     }()
     
-    private let collapseButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+    private let collapseIconView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
         if let customImage = UIImage(named: "chevron_up_icon")?.withRenderingMode(.alwaysTemplate) {
-            button.setImage(customImage, for: .normal)
+            imageView.image = customImage
         }
         else if let systemImage = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate) {
-            button.setImage(systemImage, for: .normal)
+            imageView.image = systemImage
         }
-        button.tintColor = StyleProvider.Color.iconPrimary
-        return button
+        imageView.tintColor = StyleProvider.Color.iconPrimary
+        return imageView
     }()
     
     private let stackView: UIStackView = {
@@ -118,7 +119,7 @@ public class CountryLeagueOptionRowView: UIView {
         headerView.addSubview(iconImageView)
         headerView.addSubview(titleLabel)
         headerView.addSubview(countLabel)
-        headerView.addSubview(collapseButton)
+        headerView.addSubview(collapseIconView)
         
         addSubview(stackView)
         
@@ -146,22 +147,24 @@ public class CountryLeagueOptionRowView: UIView {
             titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             
             countLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 4),
-            countLabel.trailingAnchor.constraint(equalTo: collapseButton.leadingAnchor, constant: -4),
+            countLabel.trailingAnchor.constraint(equalTo: collapseIconView.leadingAnchor, constant: -4),
             countLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            
-            collapseButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
-            collapseButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            collapseButton.widthAnchor.constraint(equalToConstant: 24),
-            collapseButton.heightAnchor.constraint(equalToConstant: 24),
+
+            collapseIconView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -21),
+            collapseIconView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            collapseIconView.widthAnchor.constraint(equalToConstant: 14),
+            collapseIconView.heightAnchor.constraint(equalToConstant: 14),
             
             stackView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackViewBottomConstraint
         ])
-        
-        collapseButton.addTarget(self, action: #selector(collapseButtonTapped), for: .touchUpInside)
-        
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(headerTapped))
+        headerView.addGestureRecognizer(tapGesture)
+        headerView.isUserInteractionEnabled = true
+
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
@@ -227,7 +230,7 @@ public class CountryLeagueOptionRowView: UIView {
 
     }
     
-    @objc private func collapseButtonTapped() {
+    @objc private func headerTapped() {
         self.viewModel.toggleCollapse()
     }
     
@@ -244,7 +247,7 @@ public class CountryLeagueOptionRowView: UIView {
             
             // Update the arrow
             let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
-            self.collapseButton.transform = transform
+            self.collapseIconView.transform = transform
             
         } completion: { _ in
             // Hide the grid after animation when collapsing

@@ -30,14 +30,14 @@ public class LeagueOptionSelectionRowView: UIView {
         return label
     }()
     
-    private let radioButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.borderWidth = 2
-        button.layer.cornerRadius = 10
-        button.layer.borderColor = StyleProvider.Color.iconSecondary.cgColor
-        button.backgroundColor = StyleProvider.Color.allWhite
-        return button
+    private let radioButton: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.borderWidth = 2
+        view.layer.cornerRadius = 10
+        view.layer.borderColor = StyleProvider.Color.iconSecondary.cgColor
+        view.backgroundColor = StyleProvider.Color.allWhite
+        return view
     }()
     
     private let selectedDot: UIView = {
@@ -104,9 +104,10 @@ public class LeagueOptionSelectionRowView: UIView {
             separatorView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        // Add tap gesture
+        // Add tap gesture to entire row
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        radioButton.addGestureRecognizer(tapGesture)
+        self.addGestureRecognizer(tapGesture)
+        self.isUserInteractionEnabled = true
     }
     
     private func updateSelectedState() {

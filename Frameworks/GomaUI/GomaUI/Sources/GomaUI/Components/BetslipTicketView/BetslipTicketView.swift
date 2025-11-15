@@ -33,17 +33,18 @@ public final class BetslipTicketView: UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = StyleProvider.Color.highlightPrimary.withAlphaComponent(0.2)
+        view.isUserInteractionEnabled = true
         return view
     }()
-    
-    // Close button
-    private lazy var closeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.tintColor = StyleProvider.Color.highlightPrimary
-        button.addTarget(self, action: #selector(handleCloseTapped), for: .touchUpInside)
-        return button
+
+    // Close icon
+    private lazy var closeIconView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(systemName: "xmark")
+        imageView.tintColor = StyleProvider.Color.highlightPrimary
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     // League and date info label
@@ -173,6 +174,7 @@ public final class BetslipTicketView: UIView {
         super.init(frame: .zero)
         setupSubviews()
         setupConstraints()
+        setupGestures()
         setupBindings()
     }
     
@@ -183,10 +185,10 @@ public final class BetslipTicketView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         addSubview(containerView)
-        
-        // Add left strip and close button
+
+        // Add left strip and close icon
         containerView.addSubview(leftStripView)
-        leftStripView.addSubview(closeButton)
+        leftStripView.addSubview(closeIconView)
         
         // Add all labels directly to container
         containerView.addSubview(leagueDateLabel)
@@ -217,11 +219,11 @@ public final class BetslipTicketView: UIView {
             leftStripView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             leftStripView.widthAnchor.constraint(equalToConstant: 24),
             
-            // Close button
-            closeButton.centerXAnchor.constraint(equalTo: leftStripView.centerXAnchor),
-            closeButton.centerYAnchor.constraint(equalTo: leftStripView.centerYAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: 12),
-            closeButton.heightAnchor.constraint(equalToConstant: 12),
+            // Close icon
+            closeIconView.centerXAnchor.constraint(equalTo: leftStripView.centerXAnchor),
+            closeIconView.centerYAnchor.constraint(equalTo: leftStripView.centerYAnchor),
+            closeIconView.widthAnchor.constraint(equalToConstant: 12),
+            closeIconView.heightAnchor.constraint(equalToConstant: 12),
             
             // League and date label
             leagueDateLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
@@ -274,7 +276,12 @@ public final class BetslipTicketView: UIView {
             disabledLabel.centerYAnchor.constraint(equalTo: disabledView.centerYAnchor)
         ])
     }
-    
+
+    private func setupGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCloseTapped))
+        leftStripView.addGestureRecognizer(tapGesture)
+    }
+
     private func setupBindings() {
         viewModel.dataPublisher
             .receive(on: DispatchQueue.main)
@@ -451,7 +458,6 @@ public final class BetslipTicketView: UIView {
     
     // MARK: - Actions
     @objc private func handleCloseTapped() {
-        print("Close tapped!")
         viewModel.onCloseTapped?()
     }
     

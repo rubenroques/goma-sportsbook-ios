@@ -207,31 +207,11 @@ public final class BetslipOddsBoostHeaderView: UIView {
     private func render(data: BetslipOddsBoostHeaderData) {
         let state = data.state
 
-        // Update heading
-        if let currentBoost = state.currentBoostPercentage {
-            headingLabel.text = LocalizationProvider.string("max_win_boost_activated") + " (\(currentBoost))"
-        } else if let nextPercentage = state.nextTierPercentage {
-            headingLabel.text = LocalizationProvider.string("get_win_boost")
-                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
-        } else {
-            headingLabel.text = LocalizationProvider.string("win_boost_available")
-        }
+        // Update heading - ViewModel provides pre-assembled message
+        headingLabel.text = state.headingText
 
-        // Update description
-        let remainingSelections = max(0, state.totalEligibleCount - state.selectionCount)
-        if remainingSelections > 0, let minOdds = state.minOdds {
-            // Use "add_more_to_betslip" string with minOdds: "by adding {legNumber} more legs to your betslip ({minOdd} min odds)."
-            descriptionLabel.text = LocalizationProvider.string("add_more_to_betslip")
-                .replacingOccurrences(of: "{legNumber}", with: "\(remainingSelections)")
-                .replacingOccurrences(of: "{minOdd}", with: minOdds)
-        } else if remainingSelections > 0, let nextPercentage = state.nextTierPercentage {
-            // Fallback to original string if minOdds is not available
-            descriptionLabel.text = LocalizationProvider.string("add_matches_bonus")
-                .replacingOccurrences(of: "{nMatches}", with: "\(remainingSelections)")
-                .replacingOccurrences(of: "{percentage}", with: nextPercentage)
-        } else {
-            descriptionLabel.text = LocalizationProvider.string("all_qualifying_events_added")
-        }
+        // Update description - ViewModel provides pre-assembled message
+        descriptionLabel.text = state.descriptionText
 
         // Update progress segments
         updateProgressSegments(filledCount: state.selectionCount, totalCount: state.totalEligibleCount, animated: true)
@@ -260,7 +240,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
             viewModel: MockBetslipOddsBoostHeaderViewModel.activeMock(
                 selectionCount: 1,
                 totalEligibleCount: 3,
-                nextTierPercentage: "3%"
+                headingText: "Get 3% win boost"
             )
         )
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -286,7 +266,7 @@ public final class BetslipOddsBoostHeaderView: UIView {
             viewModel: MockBetslipOddsBoostHeaderViewModel.activeMock(
                 selectionCount: 2,
                 totalEligibleCount: 3,
-                nextTierPercentage: "5%"
+                headingText: "Get 5% win boost"
             )
         )
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -343,7 +323,7 @@ private final class BetslipOddsBoostHeaderInteractivePreviewController: UIViewCo
     private let mockViewModel = MockBetslipOddsBoostHeaderViewModel.activeMock(
         selectionCount: 1,
         totalEligibleCount: 3,
-        nextTierPercentage: "3%"
+        headingText: "Get 3% win boost"
     )
 
     private lazy var headerView = BetslipOddsBoostHeaderView(viewModel: mockViewModel)
@@ -523,24 +503,29 @@ private final class BetslipOddsBoostHeaderInteractivePreviewController: UIViewCo
     }
 
     private func updateState() {
-        // Calculate boost percentage based on progress
-        let nextBoost: String?
-        let currentBoost: String?
+        // Calculate heading text based on progress
+        let headingText: String
+        let descriptionText: String
 
         if currentSelections >= totalEligible {
-            nextBoost = nil
-            currentBoost = "\((totalEligible * 3))%"
+            // At max tier - show "Max boost activated!"
+            let percentage = (totalEligible * 3)
+            headingText = "Max win boost activated! (\(percentage)%)"
+            descriptionText = "All qualifying events added"
         } else {
+            // Below max tier - show "Get X% boost"
             let remainingToNext = totalEligible - currentSelections
-            nextBoost = "\((remainingToNext * 3))%"
-            currentBoost = nil
+            let percentage = remainingToNext * 3
+            headingText = "Get \(percentage)% win boost"
+            descriptionText = "by adding \(remainingToNext) more legs to your betslip (1.10 min odds)."
         }
 
         let newState = BetslipOddsBoostHeaderState(
             selectionCount: currentSelections,
             totalEligibleCount: totalEligible,
-            nextTierPercentage: nextBoost,
-            currentBoostPercentage: currentBoost
+            minOdds: "1.1",
+            headingText: headingText,
+            descriptionText: descriptionText
         )
 
         mockViewModel.updateState(newState)

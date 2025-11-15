@@ -36,17 +36,17 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
          servicesProvider: ServicesProvider.Client,
          contextId: String = "sports",
          isLiveMode: Bool = false) {
-        
+
         self.appliedFilters = currentFilters
         self.filterConfiguration = filterConfiguration
         self.currentContextId = contextId
         self.servicesProvider = servicesProvider
         self.isLiveMode = isLiveMode
-        
+
         createDynamicViewModels(for: filterConfiguration, contextId: currentContextId)
 
         self.getAllLeagues()
-        
+
     }
     
     func getAllLeagues(sportId: String? = nil) {
@@ -58,16 +58,11 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
             currentSportId = FilterIdentifier(stringValue: sportId)
         }
 
-        let activeSports = Env.sportsStore.getActiveSports()
-        print("[FILTERS_DEBUG] Looking for sport: \(currentSportId.rawValue)")
-        print("[FILTERS_DEBUG] Available sports: \(activeSports.map { "\($0.id):\($0.name)" }.joined(separator: ", "))")
-
         guard
             let currentSport = Env.sportsStore.getActiveSports().first(where: {
                 $0.id == currentSportId.rawValue
             })
         else {
-            print("[FILTERS_DEBUG] Sport not found for ID: \(currentSportId.rawValue) - hiding loading and setting empty data")
             self.isLoadingPublisher.send(false)
             self.setupAllLeagues(popularCompetitions: [], sportCompetitions: [])
             return
@@ -79,7 +74,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
             .catch { error -> AnyPublisher<[Competition], Never> in
-                print("[FILTERS_DEBUG] Sport tournaments failed: \(error)")
                 return Just([]).eraseToAnyPublisher()
             }
 
@@ -88,7 +82,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 return ServiceProviderModelMapper.competitions(fromTournaments: tournaments)
             }
             .catch { error -> AnyPublisher<[Competition], Never> in
-                print("[FILTERS_DEBUG] Popular tournaments failed: \(error)")
                 return Just([]).eraseToAnyPublisher()
             }
 
@@ -98,9 +91,8 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
-                        print("[FILTERS_DEBUG] All tournaments RPC calls completed")
+                        break
                     case .failure(let error):
-                        print("[FILTERS_DEBUG] Tournaments RPC calls failed: \(error)")
                         // Make sure to hide loading spinner on error
                         self?.isLoadingPublisher.send(false)
                         // Setup empty data on error
@@ -108,7 +100,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                     }
                 },
                 receiveValue: { [weak self] sportCompetitions, popularCompetitions in
-                    print("[FILTERS_DEBUG] Received \(popularCompetitions.count) popular competitions, \(sportCompetitions.count) sport competitions")
                     self?.setupAllLeagues(popularCompetitions: popularCompetitions, sportCompetitions: sportCompetitions)
                 }
             )
@@ -116,8 +107,6 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
     }
     
     func setupAllLeagues(popularCompetitions: [Competition], sportCompetitions: [Competition]) {
-        // Don't set loading here - it's already set in getAllLeagues
-        
         popularLeagues.removeAll()
         popularCountryLeagues.removeAll()
         otherCountryLeagues.removeAll()
@@ -125,11 +114,15 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         // Popular Leagues
         var allLeaguesOption = SortOption(id: "all", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
         
-        // Convert competitions to SortOptions
-        let newSortOptions = popularCompetitions.map { competition in
-            let count = isLiveMode ? 
-                (competition.numberLiveEvents ?? 0) : 
+        // Convert competitions to SortOptions and filter out empty leagues
+        let newSortOptions = popularCompetitions.compactMap { competition -> SortOption? in
+            let count = isLiveMode ?
+                (competition.numberLiveEvents ?? 0) :
                 (competition.numberEvents ?? 0)
+
+            // Skip leagues with no events
+            guard count > 0 else { return nil }
+
             return SortOption(
                 id: competition.id,
                 icon: "league_icon",
@@ -138,20 +131,23 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 iconTintChange: false
             )
         }
-        
+
         let totalCount = newSortOptions.reduce(0) { $0 + $1.count }
-        
+
         allLeaguesOption.count = totalCount
-        
-        popularLeagues.append(allLeaguesOption)
+
+        // Only add "All" option if there are leagues with events
+        if totalCount > 0 {
+            popularLeagues.append(allLeaguesOption)
+        }
         popularLeagues.append(contentsOf: newSortOptions)
-        
+
         // Popular and Other Country Leagues
         // Extract popular league IDs (excluding the "all" option)
         let popularLeagueIds = Set(popularLeagues.compactMap { league in
             league.id == "all" ? nil : league.id
         })
-        
+
         // Find venues that have at least one popular league
         var popularVenueIds = Set<String>()
         for competition in sportCompetitions {
@@ -162,13 +158,17 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         }
 
         var venueDict: [String: (venueName: String, leagues: [LeagueOption])] = [:]
-        
+
         for competition in sportCompetitions {
             let venueId = competition.venue?.id ?? ""
             let venueName = competition.venue?.name ?? ""
-            let count = isLiveMode ? 
-                (competition.numberLiveEvents ?? 0) : 
+            let count = isLiveMode ?
+                (competition.numberLiveEvents ?? 0) :
                 (competition.numberEvents ?? 0)
+
+            // Skip leagues with no events
+            guard count > 0 else { continue }
+
             let league = LeagueOption(
                 id: competition.id,
                 icon: nil,
@@ -187,12 +187,15 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         var otherCountryLeaguesArr: [CountryLeagueOptions] = []
 
         for (index, (venueId, value)) in venueDict.enumerated() {
+            // Skip countries with no leagues (all were filtered out due to 0 events)
+            guard !value.leagues.isEmpty else { continue }
+
             // Create "All" option for this country
             var leaguesWithAll = [LeagueOption]()
-            
+
             // Calculate total count for all leagues
             let totalCount = value.leagues.reduce(0) { $0 + $1.count }
-            
+
             // Add "All" option as first item
             let allOption = LeagueOption(
                 id: "\(venueId)_all",
@@ -201,10 +204,10 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 count: totalCount
             )
             leaguesWithAll.append(allOption)
-            
+
             // Add individual leagues
             leaguesWithAll.append(contentsOf: value.leagues)
-            
+
             let countryLeague = CountryLeagueOptions(
                 id: venueId,
                 icon: venueId,
@@ -221,33 +224,28 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
 
         popularCountryLeagues.append(contentsOf: popularCountryLeaguesArr)
         otherCountryLeagues.append(contentsOf: otherCountryLeaguesArr)
-        
+
         // Sort both arrays alphabetically by title
         popularCountryLeagues.sort { $0.title < $1.title }
         otherCountryLeagues.sort { $0.title < $1.title }
-        
+
         self.refreshLeaguesFilterData()
         self.refreshCountryLeaguesFilterData()
         self.isLoadingPublisher.send(false)
-       
     }
     
     func refreshLeaguesFilterData() {
-        if let leaguesViewModel = dynamicViewModels["leaguesFilter"] as? MockSortFilterViewModel {
-            
+        if let leaguesViewModel = dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
             leaguesViewModel.updateSortOptions(popularLeagues)
         }
-        
     }
-    
+
     func refreshCountryLeaguesFilterData() {
-        if let countryLeaguesViewModel = dynamicViewModels["popularCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
+        if let countryLeaguesViewModel = dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             countryLeaguesViewModel.updateCountryLeagueOptions(popularCountryLeagues)
         }
-        
-        if let otherCountryLeaguesViewModel = dynamicViewModels["otherCountryLeaguesFilter"] as? MockCountryLeaguesFilterViewModel {
-            
+
+        if let otherCountryLeaguesViewModel = dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             otherCountryLeaguesViewModel.updateCountryLeagueOptions(otherCountryLeagues)
         }
     }
