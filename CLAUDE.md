@@ -14,10 +14,11 @@ If you do not know something simply ask the user
 </IMPORTANT>
 
 <acronyms>
-EM === EveryMatrix
-SP === Services Provider framework
-VM === ViewModel
-VC === ViewController
+EM == EveryMatrix
+SP == Services Provider framework
+VM == ViewModel
+VC == ViewController
+DJ(s) == Development Journal(s) / Codding session md files
 </acronyms>
 
 ## Overview

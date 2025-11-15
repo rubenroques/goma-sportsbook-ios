@@ -15,27 +15,33 @@ final class CasinoSearchCoordinator: Coordinator {
     // MARK: - Coordinator Protocol
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
-    
+
+    // MARK: - Navigation Closures for MainTabBarCoordinator
+    var onLoginRequested: (() -> Void)?
+    var onDepositRequested: (() -> Void)?
+
     // MARK: - Properties
-    private let environment: Environment
+    private let servicesProvider: ServicesProvider.Client
+    private let userSessionStore: UserSessionStore
     private var casinoSearchViewController: CasinoSearchViewController?
     private var casinoSearchViewModel: CasinoSearchViewModelProtocol?
     private var subscriptions = Set<AnyCancellable>()
-    
+
     // Public accessor for RootTabBarCoordinator
     var viewController: UIViewController? {
         return casinoSearchViewController
     }
-    
+
     // MARK: - Init
-    init(navigationController: UINavigationController, environment: Environment) {
+    init(navigationController: UINavigationController, servicesProvider: ServicesProvider.Client, userSessionStore: UserSessionStore) {
         self.navigationController = navigationController
-        self.environment = environment
+        self.servicesProvider = servicesProvider
+        self.userSessionStore = userSessionStore
     }
     
     // MARK: - Coordinator
     func start() {
-        let viewModel = CasinoSearchViewModel(servicesProvider: environment.servicesProvider)
+        let viewModel = CasinoSearchViewModel(servicesProvider: servicesProvider)
         let viewController = CasinoSearchViewController(viewModel: viewModel)
         
         // Bind navigation intents
@@ -69,30 +75,32 @@ private extension CasinoSearchCoordinator {
         // Reuse the flow from CasinoCoordinator by constructing the pre-play screen here
         let gamePrePlayViewModel = CasinoGamePrePlayViewModel(
             gameId: gameId,
-            servicesProvider: environment.servicesProvider
+            servicesProvider: servicesProvider,
+            userSessionStore: userSessionStore
         )
-        
+
         gamePrePlayViewModel.onNavigateBack = { [weak self] in
             self?.navigationController.popViewController(animated: true)
         }
-        
+
         gamePrePlayViewModel.onLoginRequested = { [weak self] in
-            print("CasinoSearchCoordinator: Login requested")
+            self?.onLoginRequested?()
         }
-        
+
         gamePrePlayViewModel.onDepositRequested = { [weak self] in
-            print("CasinoSearchCoordinator: Deposit requested")
+            self?.onDepositRequested?()
         }
-        
-        gamePrePlayViewModel.onStartGame = { [weak self] mode, casinoGame in
+
+        gamePrePlayViewModel.onStartGame = { [weak self] (mode: CasinoGamePlayMode, casinoGame: CasinoGame?) in
+            guard let self = self else { return }
             let vm: CasinoGamePlayViewModel
             if let casinoGame = casinoGame {
-                vm = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: CasinoGamePlayMode.realMoney, servicesProvider: self?.environment.servicesProvider ?? Env.servicesProvider)
+                vm = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: self.servicesProvider)
             } else {
-                vm = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: self?.environment.servicesProvider ?? Env.servicesProvider)
+                vm = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: self.servicesProvider)
             }
             let vc = CasinoGamePlayViewController(viewModel: vm)
-            self?.navigationController.pushViewController(vc, animated: true)
+            self.navigationController.pushViewController(vc, animated: true)
         }
         
         let prePlayVC = CasinoGamePrePlayViewController(viewModel: gamePrePlayViewModel)

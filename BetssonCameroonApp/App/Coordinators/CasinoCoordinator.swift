@@ -20,6 +20,7 @@ class CasinoCoordinator: Coordinator {
     var onShowGamePlay: ((String) -> Void) = { _ in }
     var onShowSportsQuickLinkScreen: ((QuickLinkType) -> Void)?
     var onDepositRequested: (() -> Void)?
+    var onLoginRequested: (() -> Void)?
     
     // MARK: - Properties
     private let environment: Environment
@@ -154,10 +155,11 @@ class CasinoCoordinator: Coordinator {
     }
     
     func showGamePrePlay(gameId: String) {
-        // Create game pre-play view model
+        // Create game pre-play view model with proper DI
         let gamePrePlayViewModel = CasinoGamePrePlayViewModel(
             gameId: gameId,
-            servicesProvider: environment.servicesProvider
+            servicesProvider: environment.servicesProvider,
+            userSessionStore: environment.userSessionStore
         )
         
         // Setup navigation closures
@@ -166,8 +168,7 @@ class CasinoCoordinator: Coordinator {
         }
         
         gamePrePlayViewModel.onLoginRequested = { [weak self] in
-            // TODO: Navigate to login screen
-            print("CasinoCoordinator: Login requested")
+            self?.onLoginRequested?()
         }
         
         gamePrePlayViewModel.onDepositRequested = { [weak self] in

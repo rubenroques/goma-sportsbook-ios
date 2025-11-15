@@ -173,7 +173,8 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 id: competition.id,
                 icon: nil,
                 title: competition.name,
-                count: count
+                count: count,
+                isAllOption: false
             )
             if var entry = venueDict[venueId] {
                 entry.leagues.append(league)
@@ -201,7 +202,8 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 id: "\(venueId)_all",
                 icon: nil,
                 title: "All Leagues",
-                count: totalCount
+                count: totalCount,
+                isAllOption: true
             )
             leaguesWithAll.append(allOption)
 

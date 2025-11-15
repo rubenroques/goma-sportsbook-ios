@@ -131,7 +131,7 @@ class SportsBetslipViewController: UIViewController {
     private lazy var loginButtonContainerView: UIView = {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.backgroundColor = .clear
+        container.backgroundColor = StyleProvider.Color.backgroundSecondary
         return container
     }()
     
@@ -140,7 +140,9 @@ class SportsBetslipViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+
     // Bottom stack containing bet submission, code input and login button
     private lazy var bottomActionsStackView: UIStackView = {
         let stack = UIStackView()
@@ -186,6 +188,9 @@ class SportsBetslipViewController: UIViewController {
         setupConstraints()
         setupBindings()
         updateUI()
+
+        // Setup bottom safe area background color
+        bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundSecondary
     }
 
     override func viewDidLayoutSubviews() {
@@ -216,6 +221,7 @@ class SportsBetslipViewController: UIViewController {
         view.addSubview(ticketsTableView)
         view.addSubview(suggestedBetsView)
         view.addSubview(bottomActionsStackView)
+        view.addSubview(bottomSafeAreaView)
         view.addSubview(toasterView)
         
         // EmptyStateView overlays everything
@@ -267,8 +273,6 @@ class SportsBetslipViewController: UIViewController {
     private func setupConstraints() {
 
         NSLayoutConstraint.activate([
-            // No constraints for topSectionStackView - it's now the tableHeaderView
-
             // Button bar height (needed for stack height calculation)
             buttonBarView.heightAnchor.constraint(equalToConstant: 50),
 
@@ -283,10 +287,10 @@ class SportsBetslipViewController: UIViewController {
             clearBetslipButton.bottomAnchor.constraint(equalTo: buttonBarView.bottomAnchor, constant: -8),
 
             // Odds boost header inside container with padding
-            betslipOddsBoostHeaderView.topAnchor.constraint(equalTo: oddsBoostHeaderContainer.topAnchor, constant: 0),
-            betslipOddsBoostHeaderView.leadingAnchor.constraint(equalTo: oddsBoostHeaderContainer.leadingAnchor, constant: 0),
-            betslipOddsBoostHeaderView.trailingAnchor.constraint(equalTo: oddsBoostHeaderContainer.trailingAnchor, constant: 0),
-            betslipOddsBoostHeaderView.bottomAnchor.constraint(equalTo: oddsBoostHeaderContainer.bottomAnchor, constant: 0),
+            betslipOddsBoostHeaderView.topAnchor.constraint(equalTo: oddsBoostHeaderContainer.topAnchor),
+            betslipOddsBoostHeaderView.leadingAnchor.constraint(equalTo: oddsBoostHeaderContainer.leadingAnchor),
+            betslipOddsBoostHeaderView.trailingAnchor.constraint(equalTo: oddsBoostHeaderContainer.trailingAnchor),
+            betslipOddsBoostHeaderView.bottomAnchor.constraint(equalTo: oddsBoostHeaderContainer.bottomAnchor),
 
             // Tickets table view - starts at top, extends 30px behind suggested bets
             ticketsTableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -303,6 +307,12 @@ class SportsBetslipViewController: UIViewController {
             bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Bottom safe area view - fills area below safe area
+            bottomSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomSafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomSafeAreaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bottomSafeAreaView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
             // Empty state view - fill remaining space above bet info submission
             emptyStateView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -598,6 +608,15 @@ extension SportsBetslipViewController {
         return formatter.string(from: date)
     }
     
+}
+
+// MARK: - Factory Methods
+private extension SportsBetslipViewController {
+    static func createBottomSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 }
 
 // MARK: - Toast Handling

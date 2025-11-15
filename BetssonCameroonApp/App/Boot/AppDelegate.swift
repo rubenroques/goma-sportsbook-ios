@@ -40,6 +40,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Phrase.shared.setup(distributionID: "6d295e019be829c18ca3c20fa1acddf1", environmentSecret: "rExUgxvoqyX6AQJ9UBiK2DN9t02tsF_P-i0HEXvc-yg")
         #endif
 
+        #if LOCAL_DEBUGR
+            print("🔍 [LOCAL] test local-only code in debug")
+        #endif
+        
         Task {
             do {
                 let updated = try await Phrase.shared.updateTranslation()

@@ -94,13 +94,17 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         // Initialize with default currency, will be updated when user profile is available
         let currency = environment.userSessionStore.userWalletPublisher.value?.currency ?? "XAF"
-        self.betInfoSubmissionViewModel = MockBetInfoSubmissionViewModel(currency: currency)
+        self.betInfoSubmissionViewModel = BetInfoSubmissionViewModel(
+            currency: currency,
+            bettingOptionsPublisher: environment.betslipManager.bettingOptionsPublisher,
+            oddsBoostStairsPublisher: environment.betslipManager.oddsBoostStairsPublisher
+        )
         self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
         self.codeInputViewModel = MockCodeInputViewModel()
         
         
         self.loginButtonViewModel = MockButtonViewModel(buttonData:
-                                                            ButtonData(id: "login", title: localized("login"), style: .solidBackground)
+                                                            ButtonData(id: "login", title: localized("log_in_to_bet"), style: .solidBackground)
         )
         
         // Initialize suggested bets view model
@@ -377,28 +381,10 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                         betBuilderData: betBuilderData
                     )
                     self.ticketsStateSubject.send(ticketsState)
-                    
-                    // Update odds and calculate potential winnings with priority order
-                    let stake = self.betInfoSubmissionViewModel.currentData.amount
-                    
-                    if let betBuilderOdds {
-                        // Priority 1: Use betBuilder odds if present
-                        self.updateOdds(totalOdds: betBuilderOdds)
-                        self.calculatePotentialWinnings(totalOdds: betBuilderOdds, stake: stake)
-                    } else if invalidState != .none {
-                        // Priority 2: Set to 0 if invalid or forbidden
-                        self.updateOdds(totalOdds: 0.0)
-                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
-                    } else if let totalOdds = options.totalOdds {
-                        // Priority 3: Use regular totalOdds
-                        self.updateOdds(totalOdds: totalOdds)
-                        self.calculatePotentialWinnings(totalOdds: totalOdds, stake: stake)
-                    } else {
-                        // Priority 4: Default to 0 if all else fails
-                        self.updateOdds(totalOdds: 0.0)
-                        self.calculatePotentialWinnings(totalOdds: 0.0, stake: stake)
-                    }
-                    
+
+                    // Note: BetInfoSubmissionViewModel now handles odds and winnings calculations automatically
+                    // via its subscription to bettingOptionsPublisher. No manual updates needed here.
+
                     // Update valid tickets state after processing betting options
                     self.updateValidTicketsState()
                 }
@@ -466,11 +452,10 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         
         betInfoSubmissionViewModel.amountChanged = { [weak self] in
             if let amountDouble = Double(self?.betInfoSubmissionViewModel.currentData.amount ?? "") {
+                // Validate betting options with stake to get updated calculations from API
                 self?.environment.betslipManager.validateBettingOptions(withStake: amountDouble)
             }
-            else {
-                self?.calculatePotentialWinnings(totalOdds: 0.0, stake: "0")
-            }
+            // Note: BetInfoSubmissionViewModel handles recalculation automatically when amount changes
         }
         
         
@@ -539,39 +524,10 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             })
             .store(in: &cancellables)
     }
-    
-    private func calculatePotentialWinnings(totalOdds: Double, stake: String) {
 
-        guard let amount = Double(stake), amount > 0 else {
-            // If no amount or invalid amount, set potential winnings to 0
-            let currency = betInfoSubmissionViewModel.currentData.currency
-            betInfoSubmissionViewModel.updatePotentialWinnings(CurrencyHelper.formatAmountWithCurrency(0, currency: currency))
-            return
-        }
+    // Note: calculatePotentialWinnings and updateOdds methods removed
+    // BetInfoSubmissionViewModel now handles all calculations automatically
 
-        // Calculate potential winnings: amount * total odds
-        let potentialWinnings = amount * totalOdds
-
-        // Get the currency from the bet info submission view model
-        let currency = betInfoSubmissionViewModel.currentData.currency
-
-        // Format the potential winnings with the correct currency
-        let formattedWinnings = CurrencyHelper.formatAmountWithCurrency(potentialWinnings, currency: currency)
-
-        // Update the potential winnings in the bet info submission view model
-        betInfoSubmissionViewModel.updatePotentialWinnings(formattedWinnings)
-
-        print("Calculated potential winnings: \(formattedWinnings) (Amount: \(amount) × Total Odds: \(totalOdds))")
-    }
-    
-    private func updateOdds(totalOdds: Double) {
-        
-        let formattedOdds = String(format: "%.2f", totalOdds)
-
-        betInfoSubmissionViewModel.updateOdds(formattedOdds)
-        
-    }
-    
     func convertToDouble(_ string: String) -> Double {
         // Remove any whitespace
         let trimmed = string.trimmingCharacters(in: .whitespaces)

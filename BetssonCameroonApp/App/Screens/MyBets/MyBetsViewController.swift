@@ -6,9 +6,10 @@ import GomaUI
 class MyBetsViewController: UIViewController {
     
     // MARK: - Properties
-    
+
     private let viewModel: MyBetsViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let tabBarHeight: CGFloat = 56 // Matches MainTabBarViewController.swift:940
     
     // MARK: - UI Components
     private lazy var contentView: UIView = {
@@ -174,12 +175,17 @@ class MyBetsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
         setupTheme()
         setupBindings()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewInsets()
+    }
+
     // MARK: - Public Methods
     
     func refreshData() {
@@ -195,7 +201,16 @@ class MyBetsViewController: UIViewController {
     @objc private func handleRetry() {
         viewModel.refreshBets()
     }
-    
+
+    private func updateTableViewInsets() {
+        let safeAreaBottom = view.safeAreaInsets.bottom
+        let bottomContentInset = tabBarHeight + safeAreaBottom
+        let bottomIndicatorInset = bottomContentInset + 6 // +6pt for better visibility
+
+        tableView.contentInset.bottom = bottomContentInset
+        tableView.scrollIndicatorInsets.bottom = bottomIndicatorInset
+    }
+
     private func setupTheme() {
         
         self.view.backgroundColor = UIColor.App.backgroundPrimary

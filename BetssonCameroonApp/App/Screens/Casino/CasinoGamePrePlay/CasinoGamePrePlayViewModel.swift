@@ -25,22 +25,25 @@ class CasinoGamePrePlayViewModel: ObservableObject {
     // MARK: - Properties
     private let gameId: String
     private let servicesProvider: ServicesProvider.Client
+    private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
     
     // Child ViewModel for the selector component
     let playSelectorViewModel: CasinoGamePlayModeSelectorViewModel
     
     // MARK: - Initialization
-    init(gameId: String, servicesProvider: ServicesProvider.Client) {
+    init(gameId: String, servicesProvider: ServicesProvider.Client, userSessionStore: UserSessionStore) {
         self.gameId = gameId
         self.servicesProvider = servicesProvider
-        
-        // Create the play selector view model
+        self.userSessionStore = userSessionStore
+
+        // Create the play selector view model with proper DI
         self.playSelectorViewModel = CasinoGamePlayModeSelectorViewModel(
             gameId: gameId,
-            servicesProvider: servicesProvider
+            servicesProvider: servicesProvider,
+            userSessionStore: userSessionStore
         )
-        
+
         setupChildViewModelCallbacks()
     }
     
@@ -86,9 +89,10 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     public var displayStatePublisher: AnyPublisher<CasinoGamePlayModeSelectorDisplayState, Never> {
         return displayStateSubject.eraseToAnyPublisher()
     }
-    
+
     private let gameId: String
     private let servicesProvider: ServicesProvider.Client
+    private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
     private var gameDetails: CasinoGame?
     
@@ -105,16 +109,20 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     }
     
     // MARK: - Initialization
-    init(gameId: String, servicesProvider: ServicesProvider.Client) {
+    init(gameId: String, servicesProvider: ServicesProvider.Client, userSessionStore: UserSessionStore) {
         self.gameId = gameId
         self.servicesProvider = servicesProvider
-        
+        self.userSessionStore = userSessionStore
+
         // Create initial loading state
         let initialState = Self.createLoadingState(gameId: gameId)
         self.displayStateSubject = CurrentValueSubject(initialState)
-        
+
         // Load game details from API
         loadGameDetails()
+
+        // Subscribe to user session changes for reactive button updates
+        setupUserSessionTracking()
     }
     
     // MARK: - CasinoGamePlayModeSelectorViewModelProtocol
@@ -279,10 +287,27 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
         }
     }
     
-    private func checkUserLoginStatus() -> Bool {
-        return Env.userSessionStore.isUserLogged()
+    private func setupUserSessionTracking() {
+        // Subscribe to user profile status changes for reactive button updates
+        userSessionStore.userProfileStatusPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                guard let self = self else { return }
+
+                // Refresh button configuration when user logs in or out
+                if let gameDetails = self.gameDetails {
+                    let newState = self.createDisplayState(from: gameDetails, isLoading: false)
+                    self.displayStateSubject.send(newState)
+                }
+            }
+            .store(in: &cancellables)
     }
-    
+
+    private func checkUserLoginStatus() -> Bool {
+        return userSessionStore.isUserLogged()
+    }
+
     private func mapRatingToVolatility(_ rating: Double) -> String {
         // Map game rating to volatility level
         switch rating {

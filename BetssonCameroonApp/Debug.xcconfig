@@ -1,0 +1,7 @@
+// Debug.xcconfig
+// Shared debug configuration for all team members
+//
+// This file optionally includes Local.xcconfig if it exists
+// Local.xcconfig is gitignored and can contain user-specific flags
+
+#include? "Local.xcconfig"

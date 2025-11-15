@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE58B6EC2EC8B1B5001591C1 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */; };
 		CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */; };
 		CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145E2E2FE56400C6A9DD /* FirebaseAuth */; };
 		CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE6014602E2FE56400C6A9DD /* FirebaseCrashlytics */; };
@@ -40,9 +41,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Betsson CM Stg.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A1622E2E8D9500DDE78D /* BetssonCameroonAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE74A16C2E2E8D9500DDE78D /* BetssonCameroonAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BetssonCameroonAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEBUGXCCONFIG001 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = ../../Debug.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -116,6 +119,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE58B34D2EC8B152001591C1 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				DEBUGXCCONFIG001 /* Debug.xcconfig */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		CE74A1432E2E8D9400DDE78D = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +135,8 @@
 				CE74A16F2E2E8D9500DDE78D /* UITests */,
 				CE74A2252E2E8EA100DDE78D /* Frameworks */,
 				CE74A14D2E2E8D9400DDE78D /* Products */,
+				CE58B34D2EC8B152001591C1 /* Recovered References */,
+				CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -280,6 +293,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE58B6EC2EC8B1B5001591C1 /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +353,7 @@
 /* Begin XCBuildConfiguration section */
 		CE41A9292EB3478C00B2DC28 /* Debug-Production */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -690,6 +705,7 @@
 		};
 		CE74A1782E2E8D9500DDE78D /* Debug-Staging */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

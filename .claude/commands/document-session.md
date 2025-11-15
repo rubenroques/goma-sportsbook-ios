@@ -1,9 +1,14 @@
 Document this coding session.
 Place you journal entry file in the "./Documentation/DevelopmentJournal" directory.
 
-After writing the Journal for the coding session, give the user an associated short commit message, so he can commit the session work.
+<post-tun>
+After writing the Journal for the coding session include in the response: 
+-a short commit message, 
+-a single line commit message (this one can be used with other short messages, so a bit of context is important)
+so he can commit the session work with the message that best suits him.
+</post-tun>
 
-You should follow this instructions:
+FOLLOW this instructions to create the journal:
 
 <instructions>
 # Development Journal

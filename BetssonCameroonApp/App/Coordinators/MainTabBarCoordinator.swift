@@ -971,6 +971,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.presentDepositFlow()
             }
 
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
+            }
+
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -1006,6 +1010,10 @@ class MainTabBarCoordinator: Coordinator {
 
             coordinator.onDepositRequested = { [weak self] in
                 self?.presentDepositFlow()
+            }
+
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
             }
 
             virtualSportsCasinoCoordinator = coordinator
@@ -1046,6 +1054,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.presentDepositFlow()
             }
 
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
+            }
+
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -1069,8 +1081,18 @@ class MainTabBarCoordinator: Coordinator {
         if casinoSearchCoordinator == nil {
             let coordinator = CasinoSearchCoordinator(
                 navigationController: self.navigationController,
-                environment: self.environment
+                servicesProvider: environment.servicesProvider,
+                userSessionStore: environment.userSessionStore
             )
+
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
             casinoSearchCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -1104,6 +1126,10 @@ class MainTabBarCoordinator: Coordinator {
 
             coordinator.onDepositRequested = { [weak self] in
                 self?.presentDepositFlow()
+            }
+
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -1146,6 +1172,10 @@ class MainTabBarCoordinator: Coordinator {
 
             coordinator.onDepositRequested = { [weak self] in
                 self?.presentDepositFlow()
+            }
+
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
             }
 
             traditionalCasinoCoordinator = coordinator

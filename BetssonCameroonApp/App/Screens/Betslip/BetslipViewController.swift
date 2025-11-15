@@ -15,6 +15,9 @@ class BetslipViewController: UIViewController {
     private var viewModel: BetslipViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
+    private var currentIndex: Int = 0
+    private var shouldShowTypeSelector: Bool?
+    
     // MARK: - UI Components
     
     // Header view
@@ -52,9 +55,16 @@ class BetslipViewController: UIViewController {
     private lazy var virtualBetslipViewController: VirtualBetslipViewController = {
         return VirtualBetslipViewController(viewModel: viewModel.virtualBetslipViewModel)
     }()
-    
-    private var currentIndex: Int = 0
-    private var shouldShowTypeSelector: Bool?
+
+    private lazy var pageViewContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        return view
+    }()
+
+    // not used in BA
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
     
     // MARK: - Initialization
     init(viewModel: BetslipViewModelProtocol) {
@@ -73,6 +83,9 @@ class BetslipViewController: UIViewController {
         setupConstraints()
         setupBindings()
         setupPageViewController()
+
+        // Setup bottom safe area background color
+        bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
     }
     
     override func viewDidLayoutSubviews() {
@@ -86,8 +99,12 @@ class BetslipViewController: UIViewController {
         
         view.addSubview(headerView)
         view.addSubview(typeSelectorView)
-        view.addSubview(pageViewController.view)
-        
+        view.addSubview(pageViewContainer)
+        //view.addSubview(bottomSafeAreaView)
+
+        pageViewController.willMove(toParent: self)
+        pageViewContainer.addSubview(pageViewController.view)
+
         // Add page view controller as child
         addChild(pageViewController)
         pageViewController.didMove(toParent: self)
@@ -107,12 +124,24 @@ class BetslipViewController: UIViewController {
             typeSelectorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             typeSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             typeSelectorView.heightAnchor.constraint(equalToConstant: 50),
-            
-            // Page view controller
-            pageViewController.view.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
-            pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+
+            // Page view container
+            pageViewContainer.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
+            pageViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pageViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pageViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Page view controller (fills container)
+            pageViewController.view.topAnchor.constraint(equalTo: pageViewContainer.topAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: pageViewContainer.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: pageViewContainer.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: pageViewContainer.bottomAnchor),
+
+            // Bottom safe area view - fills area below safe area
+            //bottomSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            //bottomSafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            //bottomSafeAreaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            //bottomSafeAreaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -242,5 +271,14 @@ extension BetslipViewController: UIPageViewControllerDelegate {
                 }
             }
         }
+    }
+}
+
+// MARK: - Factory Methods
+private extension BetslipViewController {
+    static func createBottomSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 }

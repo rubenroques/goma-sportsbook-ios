@@ -416,6 +416,12 @@ class MainTabBarViewController: UIViewController {
             return
         }
 
+        #if LOCAL_DEBUGR
+        print("[LOCAL_DEBUGR] Bypassing Face ID authentication on app startup - auto-restoring session")
+        self.unlockAppWithUser()
+        return
+        #endif
+
         let context = LAContext()
 
         var error: NSError?
@@ -556,6 +562,11 @@ extension MainTabBarViewController {
     }
 
     @objc func appWillEnterForeground() {
+        #if LOCAL_DEBUGR
+        print("[LOCAL_DEBUGR] Bypassing Face ID re-authentication on foreground - skipping auth flow")
+        return
+        #endif
+
         if viewModel.handleAppWillEnterForeground() {
             self.authenticateUser()
         }

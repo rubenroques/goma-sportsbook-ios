@@ -285,9 +285,11 @@ public class CountryLeagueOptionRowView: UIView {
         iconImageView.tintColor = isSelected ? StyleProvider.Color.highlightPrimary : .black
         titleLabel.text = self.viewModel.countryLeagueOptions.title
         
-        let totalEvents = self.viewModel.countryLeagueOptions.leagues.compactMap { league in
-            league.count
-        }.reduce(0, +) // Combine all values into a single value
+        let totalEvents = self.viewModel.countryLeagueOptions.leagues
+            .filter { !$0.isAllOption }
+            .compactMap { league in
+                league.count
+            }.reduce(0, +)
 
         countLabel.text = totalEvents > 0 ? String(totalEvents) : "No Events"
         

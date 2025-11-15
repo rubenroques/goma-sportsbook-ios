@@ -110,6 +110,9 @@ iOSInjectionProject/
 #ignore ENV variables
 .env
 
+# User-specific build configuration (local development flags)
+Local.xcconfig
+
 # App Store Connect API Key (sensitive - never commit)
 *.p8
 
