@@ -459,7 +459,7 @@ public struct UpdateUserProfileForm {
     
 }
 
-public struct UserWallet {
+public struct UserWallet: Hashable {
     public var vipStatus: String?
     public var currency: String?
     public var loyaltyPoint: Int?

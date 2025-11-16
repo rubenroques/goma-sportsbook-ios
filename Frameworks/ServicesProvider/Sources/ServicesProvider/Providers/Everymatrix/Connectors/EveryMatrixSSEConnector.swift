@@ -1,8 +1,9 @@
 import Foundation
 import Combine
+import LDSwiftEventSource
 
-/// Connector for Server-Sent Events (SSE) streaming
-/// Used exclusively for real-time cashout value updates
+/// Connector for Server-Sent Events (SSE) streaming using LDSwiftEventSource
+/// Used for real-time updates (cashout values, wallet updates, user session events)
 class EveryMatrixSSEConnector: Connector {
 
     // MARK: - Properties
@@ -17,24 +18,15 @@ class EveryMatrixSSEConnector: Connector {
     /// Session coordinator for token management
     let sessionCoordinator: EveryMatrixSessionCoordinator
 
-    /// URLSession for SSE requests
-    private let session: URLSession
-
     /// JSON decoder
     private let decoder: JSONDecoder
-
-    /// SSE manager for streaming requests
-    private let sseManager: SSEManager
 
     // MARK: - Initialization
 
     init(sessionCoordinator: EveryMatrixSessionCoordinator,
-         session: URLSession = .shared,
          decoder: JSONDecoder = JSONDecoder()) {
         self.sessionCoordinator = sessionCoordinator
-        self.session = session
         self.decoder = decoder
-        self.sseManager = SSEManager(session: session, decoder: decoder)
     }
 
     // MARK: - Public Methods
@@ -43,9 +35,9 @@ class EveryMatrixSSEConnector: Connector {
     /// - Parameters:
     ///   - endpoint: The endpoint to stream from
     ///   - decodingType: The type to decode SSE messages to
-    /// - Returns: Publisher emitting SSE events or error
-    func request<T: Decodable>(_ endpoint: Endpoint, decodingType: T.Type) -> AnyPublisher<SSEEvent<T>, ServiceProviderError> {
-        
+    /// - Returns: Publisher emitting SSEStreamEvent or error
+    func request<T: Decodable>(_ endpoint: Endpoint, decodingType: T.Type) -> AnyPublisher<SSEStreamEvent, ServiceProviderError> {
+
         print("[EveryMatrix-SSE] Preparing SSE request for endpoint: \(endpoint.endpoint)")
 
         // Build URL components
@@ -67,7 +59,7 @@ class EveryMatrixSSEConnector: Connector {
         if endpoint.requireSessionKey {
             // Get valid token and make SSE request with retry logic
             return sessionCoordinator.publisherWithValidToken()
-                .flatMap { [weak self] session -> AnyPublisher<SSEEvent<T>, Error> in
+                .flatMap { [weak self] session -> AnyPublisher<SSEStreamEvent, Error> in
                     guard let self = self else {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
@@ -81,29 +73,13 @@ class EveryMatrixSSEConnector: Connector {
                     print("📡 SSE Request: \(url.absoluteString)")
                     print("📡 SSE Headers: \(authenticatedHeaders)")
 
-                    // Make SSE request via SSEManager
-                    return self.sseManager.subscribe(
+                    // Create EventSource with LDSwiftEventSource
+                    return self.createEventSource(
                         url: url,
                         headers: authenticatedHeaders,
-                        decodingType: decodingType,
-                        timeout: endpoint.timeout
+                        timeout: endpoint.timeout,
+                        decodingType: decodingType
                     )
-                    .mapError { error -> Error in
-                        // Map EveryMatrix.APIError to Error
-                        switch error {
-                        case .requestError(let value):
-                            return ServiceProviderError.errorMessage(message: value)
-                        case .decodingError(let value):
-                            return ServiceProviderError.decodingError(message: value)
-                        case .notConnected:
-                            return ServiceProviderError.errorMessage(message: "Not connected")
-                        case .noResultsReceived:
-                            return ServiceProviderError.errorMessage(message: "No results received")
-                        default:
-                            return ServiceProviderError.errorMessage(message: error.localizedDescription)
-                        }
-                    }
-                    .eraseToAnyPublisher()
                 }
                 .mapError { error -> ServiceProviderError in
                     // Convert Error to ServiceProviderError
@@ -120,32 +96,59 @@ class EveryMatrixSSEConnector: Connector {
             print("📡 SSE Request: \(url.absoluteString)")
             print("📡 SSE Headers: \(headers)")
 
-            return sseManager.subscribe(
+            return createEventSource(
                 url: url,
                 headers: headers,
-                decodingType: decodingType,
-                timeout: endpoint.timeout
+                timeout: endpoint.timeout,
+                decodingType: decodingType
             )
             .mapError { error -> ServiceProviderError in
-                // Map EveryMatrix.APIError to ServiceProviderError
-                switch error {
-                case .requestError(let value):
-                    return ServiceProviderError.errorMessage(message: value)
-                case .decodingError(let value):
-                    return ServiceProviderError.decodingError(message: value)
-                case .notConnected:
-                    return ServiceProviderError.errorMessage(message: "Not connected")
-                case .noResultsReceived:
-                    return ServiceProviderError.errorMessage(message: "No results received")
-                default:
-                    return ServiceProviderError.errorMessage(message: error.localizedDescription)
+                if let serviceError = error as? ServiceProviderError {
+                    return serviceError
                 }
+                return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()
         }
     }
 
     // MARK: - Private Methods
+
+    /// Create and configure LDSwiftEventSource EventSource
+    private func createEventSource<T: Decodable>(
+        url: URL,
+        headers: [String: String],
+        timeout: TimeInterval,
+        decodingType: T.Type
+    ) -> AnyPublisher<SSEStreamEvent, Error> {
+
+        // Create adapter for event handling
+        let adapter = SSEEventHandlerAdapter<T>(decoder: decoder)
+
+        // Configure EventSource
+        var config = EventSource.Config(handler: adapter, url: url)
+        config.method = "GET"
+        config.headers = headers
+        config.idleTimeout = timeout
+
+        // Create EventSource
+        let eventSource = EventSource(config: config)
+        adapter.setEventSource(eventSource)
+
+        print("🚀 SSEConnector: Starting EventSource connection")
+        eventSource.start()
+
+        // Return publisher with cleanup on cancellation
+        return adapter.subject
+            .mapError { $0 as Error }
+            .handleEvents(
+                receiveCancel: { [weak adapter] in
+                    print("🛑 SSEConnector: Subscription cancelled, stopping EventSource")
+                    adapter?.stop()
+                }
+            )
+            .eraseToAnyPublisher()
+    }
 
     /// Add authentication headers and return updated headers dictionary
     private func addAuthenticationHeaders(to headers: [String: String],

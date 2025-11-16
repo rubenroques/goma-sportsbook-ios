@@ -6,7 +6,11 @@ import SharedModels
 class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
 
     var restConnector: EveryMatrixRESTConnector
+    private let sseConnector: EveryMatrixSSEConnector
     private let sessionCoordinator: EveryMatrixSessionCoordinator
+
+    // User Info Stream Manager
+    private var userInfoStreamManager: UserInfoStreamManager?
 
     // Publishers
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
@@ -15,15 +19,18 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
         return self.userProfileSubject.eraseToAnyPublisher()
     }
-    
+
     private let sessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
     private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
 
     // Internal state
     private var cancellables: Set<AnyCancellable> = []
 
-    init(restConnector: EveryMatrixRESTConnector, sessionCoordinator: EveryMatrixSessionCoordinator) {
+    init(restConnector: EveryMatrixRESTConnector,
+         sseConnector: EveryMatrixSSEConnector,
+         sessionCoordinator: EveryMatrixSessionCoordinator) {
         self.restConnector = restConnector
+        self.sseConnector = sseConnector
         self.sessionCoordinator = sessionCoordinator
     }
     
@@ -850,7 +857,7 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
         let endpoint = EveryMatrixPlayerAPI.resetPasswordWithHashKey(hashKey: hashKey, plainTextPassword: plainTextPassword, isUserHash: isUserHash)
         let publisher: AnyPublisher<EveryMatrix.ResetPasswordByHashKeyResponse, ServiceProviderError> = self.restConnector.request(endpoint)
-        
+
         return publisher
             .map { internalResponse in
                 EveryMatrixModelMapper.resetPasswordByHashKeyResponse(from: internalResponse)
@@ -859,6 +866,34 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
                 return error
             }
             .eraseToAnyPublisher()
+    }
+
+    // MARK: - User Info Stream (Wallet + Session SSE)
+
+    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
+        print("📊 EveryMatrixPAMProvider: Starting user info stream")
+
+        // Create manager if needed
+        if userInfoStreamManager == nil {
+            userInfoStreamManager = UserInfoStreamManager(
+                restConnector: restConnector,
+                sseConnector: sseConnector,
+                sessionCoordinator: sessionCoordinator
+            )
+        }
+
+        return userInfoStreamManager!.start()
+    }
+
+    func stopUserInfoStream() {
+        print("🛑 EveryMatrixPAMProvider: Stopping user info stream")
+        userInfoStreamManager?.stop()
+        userInfoStreamManager = nil
+    }
+
+    func refreshUserBalance() {
+        print("🔄 EveryMatrixPAMProvider: Force refreshing balance")
+        userInfoStreamManager?.refreshBalance()
     }
 
 }

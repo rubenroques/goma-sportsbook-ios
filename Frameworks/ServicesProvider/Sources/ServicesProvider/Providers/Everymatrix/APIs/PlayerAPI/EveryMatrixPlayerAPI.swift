@@ -45,6 +45,9 @@ enum EveryMatrixPlayerAPI {
     // Bonus
     case getAvailableBonus
     case getGrantedBonus
+
+    // User Info SSE Stream
+    case getUserInformationUpdatesSSE(userId: String)
 }
 
 extension EveryMatrixPlayerAPI: Endpoint {
@@ -111,6 +114,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/bonus/applicable"
         case .getGrantedBonus:
             return "/v1/bonus/granted"
+        case .getUserInformationUpdatesSSE(let userId):
+            return "/v2/player/\(userId)/information/updates"
         }
     }
     
@@ -216,6 +221,12 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 "Accept": "application/json"
             ]
             return headers
+        case .getUserInformationUpdatesSSE:
+            return [
+                "Accept": "text/event-stream",
+                "User-Agent": "GOMA/native-app/iOS",
+                "X-Session-Type": "others"
+            ]
         case .getBankingWebView:
             return [
                 "Content-Type": "application/json",
@@ -293,6 +304,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getAvailableBonus:
             return .get
         case .getGrantedBonus:
+            return .get
+        case .getUserInformationUpdatesSSE:
             return .get
         }
     }
@@ -413,6 +426,8 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getAvailableBonus:
             return true
         case .getGrantedBonus:
+            return true
+        case .getUserInformationUpdatesSSE:
             return true
         default:
             return false

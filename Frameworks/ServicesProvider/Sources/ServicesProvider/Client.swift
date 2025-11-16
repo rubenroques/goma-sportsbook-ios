@@ -99,6 +99,7 @@ public class Client {
             //
             let everyMatrixPrivilegedAccessManager = EveryMatrixPAMProvider(
                 restConnector: everyMatrixRESTConnector,
+                sseConnector: everyMatrixSSEConnector,
                 sessionCoordinator: sessionCoordinator
             )
             self.privilegedAccessManager = everyMatrixPrivilegedAccessManager

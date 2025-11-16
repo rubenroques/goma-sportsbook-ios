@@ -572,6 +572,20 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         .eraseToAnyPublisher()
     }
 
+    //
+    //
+    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func stopUserInfoStream() {
+        // notSupportedForProvider
+    }
+    
+    func refreshUserBalance() {
+        // notSupportedForProvider
+    }
+    
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint = OmegaAPIClient.getBalance
         let publisher: AnyPublisher<SportRadarModels.BalanceResponse, ServiceProviderError> = self.connector.request(endpoint)

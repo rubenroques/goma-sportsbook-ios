@@ -33,6 +33,7 @@ class GomaProvider {
 
 extension GomaProvider: PrivilegedAccessManagerProvider {
     
+    
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
         return self.sessionStateSubject.eraseToAnyPublisher()
     }
@@ -171,6 +172,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
+    
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint: GomaAPISchema = GomaAPISchema.getUserWallet
         let publisher: AnyPublisher<GomaModels.UserWallet, ServiceProviderError> = self.connector.request(endpoint)
@@ -334,6 +336,18 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
 
     //
     //
+    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
+    func stopUserInfoStream() {
+        // notSupportedForProvider
+    }
+    
+    func refreshUserBalance() {
+        // notSupportedForProvider
+    }
+    
     func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

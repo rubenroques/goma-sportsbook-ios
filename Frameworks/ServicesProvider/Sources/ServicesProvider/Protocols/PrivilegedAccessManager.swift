@@ -56,6 +56,20 @@ protocol PrivilegedAccessManagerProvider {
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
     func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError>
 
+    // MARK: - User Info Stream (Wallet + Session SSE)
+
+    /// Start real-time user info stream (wallet balance + session state)
+    /// Hybrid REST + SSE: Fetches initial balance, then streams updates
+    /// - Returns: Publisher emitting SubscribableContent<UserInfo>
+    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError>
+
+    /// Stop user info stream and cleanup
+    func stopUserInfoStream()
+
+    /// Force refresh balance via REST (SSE continues in background)
+    /// Emits update via same SubscribableContent publisher
+    func refreshUserBalance()
+
     func signUpCompletion(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
 
     func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>

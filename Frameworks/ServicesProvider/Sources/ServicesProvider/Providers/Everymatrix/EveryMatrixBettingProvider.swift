@@ -182,17 +182,31 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
 
         let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betId: betId)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
 
         return self.sseConnector.request(endpoint, decodingType: EveryMatrix.CashoutValueSSEResponse.self)
-            .compactMap { sseEvent -> SubscribableContent<CashoutValue>? in
-                switch sseEvent {
+            .compactMap { streamEvent -> SubscribableContent<CashoutValue>? in
+                switch streamEvent {
                 case .connected:
                     print("✅ SSE Connected - waiting for cashout value...")
                     // Create simple subscription for SSE connection
                     let subscription = Subscription(id: "sse-cashout-\(betId)")
                     return .connected(subscription: subscription)
 
-                case .message(let response):
+                case .message(let messageEvent):
+                    // Decode JSON from MessageEvent.data
+                    guard let jsonData = messageEvent.data.data(using: .utf8) else {
+                        print("⚠️ Failed to convert message data to UTF-8")
+                        return nil
+                    }
+
+                    // Decode to CashoutValueSSEResponse
+                    guard let response = try? decoder.decode(EveryMatrix.CashoutValueSSEResponse.self, from: jsonData) else {
+                        print("❌ Failed to decode SSE message")
+                        return nil
+                    }
+
                     // Log message type
                     print("📨 SSE Message: type=\(response.messageType), code=\(response.details.code)")
 
