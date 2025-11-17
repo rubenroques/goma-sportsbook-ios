@@ -17,6 +17,11 @@ enum UserProfileStatus {
     case logged
 }
 
+enum SessionExpirationReason {
+    case sessionExpired(reason: String)  // "Expired", "Kicked", etc.
+    case sessionTerminated
+}
+
 class UserSessionStore {
 
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
@@ -62,14 +67,22 @@ class UserSessionStore {
         // There is a cached session user
         return UserDefaults.standard.userSession
     }
-    
+
     var loginFlowSuccess: CurrentValueSubject<Bool, Never> = .init(false)
     var passwordChanged: PassthroughSubject<Void, Never> = .init()
-    
+
+    /// Session expiration event publisher
+    /// Emits when session expires from SSE to trigger UI alert
+    var sessionExpirationPublisher = PassthroughSubject<SessionExpirationReason, Never>()
+
     var shouldAuthenticateUser = true
     var shouldRecordUserSession = true
-    
+
     private var cancellables = Set<AnyCancellable>()
+
+    // SSE User Info Stream Management
+    private var userInfoStreamCancellable: AnyCancellable?
+    private var isWalletSubscriptionActive: Bool = false
 
     init() {
         self.userSessionPublisher
@@ -84,7 +97,10 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
-                    self?.refreshUserWallet()
+                    print("[SSEDebug] 👤 UserSessionStore: User profile updated - will start SSE stream")
+                    print("[SSEDebug]    - Username: \(userProfile.username)")
+                    print("[SSEDebug]    - UserID: \(userProfile.userIdentifier)")
+                    self?.startUserInfoSSEStream()  // Start SSE stream for real-time wallet + session updates
                     self?.updateDeviceIdentifier()
                 }
             }
@@ -135,16 +151,21 @@ class UserSessionStore {
         self.saveUserSession(session)
     }
 
-    //
-    func logout() {
+    /// Logout user and cleanup session
+    /// - Parameter reason: Optional reason for logout (e.g., "SESSION_EXPIRATION", "MANUAL", "INVALID_CREDENTIALS")
+    func logout(reason: String? = nil) {
+        let reasonText = reason ?? "MANUAL"
+        print("[SSEDebug] 🚪 UserSessionStore: Logout triggered (reason: \(reasonText))")
+
         Env.userSessionStore.loginFlowSuccess.send(false)
-        
+
         if !self.isUserLogged() {
             // There is no user logged in
+            print("[SSEDebug] ⚠️ UserSessionStore: No user logged in, skipping logout")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
-        
+
         if let userSession = self.storedUserSession {
             try? KeychainInterface.deletePassword(service: Env.bundleId, account: userSession.userId)
         }
@@ -152,6 +173,10 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
 
         Env.favoritesManager.clearCachedFavorites()
+
+        // Stop SSE stream and cleanup
+        print("[SSEDebug] 🛑 UserSessionStore: Stopping SSE stream (logout reason: \(reasonText))")
+        self.stopUserInfoSSEStream()
 
         self.userProfilePublisher.send(nil)
         self.userSessionPublisher.send(nil)
@@ -326,11 +351,13 @@ extension UserSessionStore {
 
     func refreshUserWalletAfterDelay() {
         executeDelayed(0.3) {
-            self.refreshUserWallet()
+            self.forceRefreshUserWallet()
         }
     }
 
-    func refreshUserWallet() {
+    /// Force refresh wallet balance via REST (while SSE continues in background)
+    /// Use this for pull-to-refresh scenarios or when SSE may be delayed
+    func forceRefreshUserWallet() {
         guard self.isUserLogged() else {
             self.isRefreshingUserWallet = false
             return
@@ -342,11 +369,19 @@ extension UserSessionStore {
         }
 
         self.refreshCashbackBalance()
-        
+
         self.isRefreshingUserWallet = true
 
-        print("UserSessionStore - will refreshUserWallet")
+        print("UserSessionStore - will forceRefreshUserWallet via REST")
 
+        // If SSE is active, use SSE force refresh (keeps stream alive)
+        if self.isWalletSubscriptionActive {
+            // Env.servicesProvider.refreshUserBalance()
+            self.isRefreshingUserWallet = false
+            return
+        }
+
+        // Fallback: Direct REST call if SSE not active
         Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -359,14 +394,14 @@ extension UserSessionStore {
                     let currency = userWallet.currency,
                     let withdrawable = userWallet.withdrawable,
                     let bonus = userWallet.bonus
-                    
+
                 else {
                     self?.userWalletPublisher.send(nil)
                     return
                 }
-                
+
                 let totalBalance = withdrawable + bonus
-                
+
                 let wallet = UserWallet(total: totalBalance,
                                         bonus: userWallet.bonus,
                                         totalWithdrawable: userWallet.withdrawable,
@@ -374,6 +409,12 @@ extension UserSessionStore {
                 self?.userWalletPublisher.send(wallet)
             })
             .store(in: &self.cancellables)
+    }
+
+    /// Backward compatibility alias
+    @available(*, deprecated, message: "Use forceRefreshUserWallet() instead - SSE provides automatic updates")
+    func refreshUserWallet() {
+        forceRefreshUserWallet()
     }
 
     private func refreshCashbackBalance() {
@@ -396,7 +437,126 @@ extension UserSessionStore {
             })
             .store(in: &self.cancellables)
     }
-    
+
+    // MARK: - SSE User Info Stream Management
+
+    /// Start real-time SSE stream for wallet balance and session updates
+    /// Replaces periodic REST polling with continuous SSE updates
+    private func startUserInfoSSEStream() {
+        guard self.isUserLogged() else {
+            print("[SSEDebug] ⚠️ UserSessionStore: Cannot start SSE stream - user not logged in")
+            return
+        }
+
+        // DEFENSIVE: Stop any existing stream before starting new one
+        // This prevents duplicate subscriptions if called multiple times
+        if self.isWalletSubscriptionActive || self.userInfoStreamCancellable != nil {
+            print("[SSEDebug] ⚠️ UserSessionStore: SSE stream already active - stopping old stream first")
+            self.stopUserInfoSSEStream()
+        }
+
+        print("[SSEDebug] 🚀 UserSessionStore: Starting UserInfo SSE stream")
+        print("[SSEDebug]    - About to call servicesProvider.subscribeUserInfoUpdates()")
+
+        // Also refresh cashback (not part of UserInfo SSE yet)
+        self.refreshCashbackBalance()
+
+        self.userInfoStreamCancellable = Env.servicesProvider.subscribeUserInfoUpdates()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    print("[SSEDebug] 🔌 UserSessionStore: SSE stream completed")
+                    self?.isWalletSubscriptionActive = false
+
+                    switch completion {
+                    case .finished:
+                        print("[SSEDebug] ✅ UserSessionStore: SSE stream finished normally")
+                    case .failure(let error):
+                        print("[SSEDebug] ❌ UserSessionStore: SSE stream error: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] event in
+                    guard let self = self else { return }
+
+                    print("[SSEDebug] 📨 UserSessionStore: Received SSE event: \(event)")
+
+                    switch event {
+                    case .connected(let subscription):
+                        print("[SSEDebug] ✅ UserSessionStore: SSE connected - subscription ID: \(subscription.id)")
+                        self.isWalletSubscriptionActive = true
+
+                    case .contentUpdate(let userInfo):
+                        // Handle session expiration
+                        switch userInfo.sessionState {
+                        case .expired(let reason):
+                            print("[SSEDebug] ⚠️ UserSessionStore: Session expired from SSE - reason: \(reason ?? "unknown")")
+                            print("[SSEDebug] 📢 UserSessionStore: Publishing session expiration event")
+
+                            // Publish session expiration event BEFORE logout
+                            self.sessionExpirationPublisher.send(.sessionExpired(reason: reason ?? "unknown"))
+
+                            print("[SSEDebug] 🚪 UserSessionStore: Auto-logout will be triggered by SESSION_EXPIRATION")
+                            self.logout(reason: "SESSION_EXPIRATION")
+                            return
+
+                        case .terminated:
+                            print("[SSEDebug] ⚠️ UserSessionStore: Session terminated from SSE")
+                            print("[SSEDebug] 📢 UserSessionStore: Publishing session termination event")
+
+                            // Publish session termination event BEFORE logout
+                            self.sessionExpirationPublisher.send(.sessionTerminated)
+
+                            print("[SSEDebug] 🚪 UserSessionStore: Auto-logout will be triggered by SESSION_TERMINATED")
+                            self.logout(reason: "SESSION_TERMINATED")
+                            return
+
+                        case .active:
+                            // Session is active, process wallet update
+                            break
+                        }
+
+                        // Update wallet balance from SSE event
+                        guard let currency = userInfo.wallet.currency else {
+                            print("[SSEDebug] ⚠️ UserSessionStore: SSE update missing currency, skipping")
+                            return
+                        }
+
+                        let totalBalance = (userInfo.wallet.withdrawable ?? 0) + (userInfo.wallet.bonus ?? 0)
+
+                        let wallet = UserWallet(
+                            total: totalBalance,
+                            bonus: userInfo.wallet.bonus,
+                            totalWithdrawable: userInfo.wallet.totalWithdrawable,
+                            currency: currency
+                        )
+
+                        print("[SSEDebug] 💰 UserSessionStore: SSE wallet update - total: \(totalBalance) \(currency)")
+
+                        // Publish to all subscribers (21 wallet subscribers get real-time updates!)
+                        self.userWalletPublisher.send(wallet)
+
+                    case .disconnected:
+                        print("[SSEDebug] 🔌 UserSessionStore: SSE disconnected")
+                        self.isWalletSubscriptionActive = false
+                    }
+                }
+            )
+    }
+
+    /// Stop SSE stream and cleanup resources
+    private func stopUserInfoSSEStream() {
+        guard self.isWalletSubscriptionActive || self.userInfoStreamCancellable != nil else {
+            return
+        }
+
+        print("[SSEDebug] 🛑 UserSessionStore: Stopping UserInfo SSE stream")
+
+        Env.servicesProvider.stopUserInfoStream()
+        self.userInfoStreamCancellable?.cancel()
+        self.userInfoStreamCancellable = nil
+        self.isWalletSubscriptionActive = false
+    }
+
 }
 
 extension UserSessionStore {
@@ -427,10 +587,10 @@ extension UserSessionStore {
                     switch error {
                     case .invalidEmailPassword:
                         print("[AUTH_DEBUG] 🚫 UserSessionStore: Invalid credentials - logging out")
-                        self?.logout()
+                        self?.logout(reason: "INVALID_CREDENTIALS")
                     case .quickSignUpIncomplete:
                         print("[AUTH_DEBUG] 🚫 UserSessionStore: Incomplete signup - logging out")
-                        self?.logout()
+                        self?.logout(reason: "INCOMPLETE_SIGNUP")
                     case .restrictedCountry:
                         print("[AUTH_DEBUG] 🌍 UserSessionStore: Restricted country")
                         break

@@ -871,24 +871,39 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     // MARK: - User Info Stream (Wallet + Session SSE)
 
     func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
-        print("📊 EveryMatrixPAMProvider: Starting user info stream")
+        print("[SSEDebug] 📊 EveryMatrixPAMProvider: subscribeUserInfoUpdates() called")
 
-        // Create manager if needed
-        if userInfoStreamManager == nil {
-            userInfoStreamManager = UserInfoStreamManager(
-                restConnector: restConnector,
-                sseConnector: sseConnector,
-                sessionCoordinator: sessionCoordinator
-            )
+        // DEFENSIVE: Stop any existing manager before creating new one
+        // This prevents multiple UserInfoStreamManager instances if called repeatedly
+        if let existingManager = userInfoStreamManager {
+            print("[SSEDebug] ⚠️ EveryMatrixPAMProvider: Found existing UserInfoStreamManager - stopping it first")
+            existingManager.stop(reason: "REPLACING_WITH_NEW_MANAGER")
+            userInfoStreamManager = nil
         }
+
+        // Create fresh manager instance
+        print("[SSEDebug] 🆕 EveryMatrixPAMProvider: Creating new UserInfoStreamManager")
+        userInfoStreamManager = UserInfoStreamManager(
+            restConnector: restConnector,
+            sseConnector: sseConnector,
+            sessionCoordinator: sessionCoordinator
+        )
 
         return userInfoStreamManager!.start()
     }
 
     func stopUserInfoStream() {
-        print("🛑 EveryMatrixPAMProvider: Stopping user info stream")
-        userInfoStreamManager?.stop()
+        print("[SSEDebug] 🛑 EveryMatrixPAMProvider: stopUserInfoStream() called")
+
+        if let manager = userInfoStreamManager {
+            print("[SSEDebug] 🛑 EveryMatrixPAMProvider: Stopping existing UserInfoStreamManager")
+            manager.stop(reason: "STOP_USER_INFO_STREAM")
+        } else {
+            print("[SSEDebug] ⚠️ EveryMatrixPAMProvider: No UserInfoStreamManager to stop")
+        }
+
         userInfoStreamManager = nil
+        print("[SSEDebug] ✅ EveryMatrixPAMProvider: UserInfoStreamManager deallocated")
     }
 
     func refreshUserBalance() {

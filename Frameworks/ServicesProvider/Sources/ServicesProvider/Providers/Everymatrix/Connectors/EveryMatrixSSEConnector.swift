@@ -38,7 +38,7 @@ class EveryMatrixSSEConnector: Connector {
     /// - Returns: Publisher emitting SSEStreamEvent or error
     func request<T: Decodable>(_ endpoint: Endpoint, decodingType: T.Type) -> AnyPublisher<SSEStreamEvent, ServiceProviderError> {
 
-        print("[EveryMatrix-SSE] Preparing SSE request for endpoint: \(endpoint.endpoint)")
+        print("[SSEDebug] 📡 EveryMatrixSSEConnector: Preparing SSE request for endpoint: \(endpoint.endpoint)")
 
         // Build URL components
         guard var components = URLComponents(string: endpoint.url + endpoint.endpoint) else {
@@ -64,14 +64,14 @@ class EveryMatrixSSEConnector: Connector {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
 
-                    print("[EveryMatrix-SSE] Using session token for authenticated SSE request")
+                    print("[SSEDebug] 🔐 EveryMatrixSSEConnector: Using session token for authenticated SSE request")
 
                     // Add authentication headers
                     var authenticatedHeaders = headers
                     authenticatedHeaders = self.addAuthenticationHeaders(to: authenticatedHeaders, session: session, endpoint: endpoint)
 
-                    print("📡 SSE Request: \(url.absoluteString)")
-                    print("📡 SSE Headers: \(authenticatedHeaders)")
+                    print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
+                    print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Headers: \(authenticatedHeaders)")
 
                     // Create EventSource with LDSwiftEventSource
                     return self.createEventSource(
@@ -91,10 +91,10 @@ class EveryMatrixSSEConnector: Connector {
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct SSE request
-            print("[EveryMatrix-SSE] Making unauthenticated SSE request")
+            print("[SSEDebug] 🔓 EveryMatrixSSEConnector: Making unauthenticated SSE request")
 
-            print("📡 SSE Request: \(url.absoluteString)")
-            print("📡 SSE Headers: \(headers)")
+            print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
+            print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Headers: \(headers)")
 
             return createEventSource(
                 url: url,
@@ -125,17 +125,28 @@ class EveryMatrixSSEConnector: Connector {
         // Create adapter for event handling
         let adapter = SSEEventHandlerAdapter<T>(decoder: decoder)
 
-        // Configure EventSource
+        // Configure EventSource WITHOUT auto-reconnection
+        // Reconnection is handled manually in UserInfoStreamManager (matches Web implementation)
         var config = EventSource.Config(handler: adapter, url: url)
         config.method = "GET"
         config.headers = headers
         config.idleTimeout = timeout
 
+        // Disable LDSwiftEventSource auto-reconnection - we handle it manually
+        // Set reconnectTime to 0 to disable automatic reconnection
+        config.reconnectTime = 0.0              // ❌ Disable auto-reconnect
+        config.maxReconnectTime = 0.0           // ❌ Disable auto-reconnect
+        config.backoffResetThreshold = 0.0      // Not used when reconnectTime is 0
+
+        // print("[SSEDebug] ⚠️ EveryMatrixSSEConnector: LDSwiftEventSource auto-reconnect DISABLED")
+        // print("[SSEDebug]    - Manual reconnection handled by UserInfoStreamManager")
+        // print("[SSEDebug]    - Max retries: 6, Exponential backoff: 200ms → 400ms → 800ms → 1.6s → 3.2s → 6.4s")
+
         // Create EventSource
         let eventSource = EventSource(config: config)
         adapter.setEventSource(eventSource)
 
-        print("🚀 SSEConnector: Starting EventSource connection")
+        print("[SSEDebug] 🚀 EveryMatrixSSEConnector: Starting EventSource connection")
         eventSource.start()
 
         // Return publisher with cleanup on cancellation
@@ -143,7 +154,7 @@ class EveryMatrixSSEConnector: Connector {
             .mapError { $0 as Error }
             .handleEvents(
                 receiveCancel: { [weak adapter] in
-                    print("🛑 SSEConnector: Subscription cancelled, stopping EventSource")
+                    print("[SSEDebug] 🛑 EveryMatrixSSEConnector: Subscription cancelled, stopping EventSource")
                     adapter?.stop()
                 }
             )
@@ -159,18 +170,20 @@ class EveryMatrixSSEConnector: Connector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             updatedHeaders[sessionIdKey] = session.sessionId
-            print("[EveryMatrix-SSE] Added session token with key: \(sessionIdKey)")
+            print("[SSEDebug] 🔑 EveryMatrixSSEConnector: Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             updatedHeaders["X-SessionId"] = session.sessionId
+            print("[SSEDebug] 🔑 EveryMatrixSSEConnector: Added session token with default key: X-SessionId")
         }
 
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             updatedHeaders[userIdKey] = session.userId
-            print("[EveryMatrix-SSE] Added user ID with key: \(userIdKey)")
+            print("[SSEDebug] 👤 EveryMatrixSSEConnector: Added user ID with key: \(userIdKey)")
         }
 
+        print("[SSEDebug] \(dump(updatedHeaders))")
         return updatedHeaders
     }
 }

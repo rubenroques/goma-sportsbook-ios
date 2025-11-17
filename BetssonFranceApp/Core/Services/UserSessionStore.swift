@@ -119,10 +119,14 @@ class UserSessionStore {
         // There is a cached session user
         return UserDefaults.standard.userSession
     }
-    
+
     var loginFlowSuccess: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var cancellables = Set<AnyCancellable>()
+
+    // SSE User Info Stream Management
+    private var userInfoStreamCancellable: AnyCancellable?
+    private var isSSEStreamActive: Bool = false
 
     init() {
         self.acceptedTrackingPublisher.send(self.hasAcceptedTracking)
@@ -139,18 +143,21 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
-                    self?.refreshUserWallet()
-                    
+                    Logger.log("[SSEDebug] UserSessionStore: User profile updated - will start SSE stream")
+                    Logger.log("[SSEDebug]    - Username: \(userProfile.username)")
+                    Logger.log("[SSEDebug]    - UserID: \(userProfile.userIdentifier)")
+                    self?.startUserInfoSSEStream()  // Start SSE stream for real-time wallet + session updates
+
                     self?.updateDeviceIdentifier()
                     self?.checkAcceptedTermsUpdate()
 
                     self?.isUserProfileComplete = userProfile.isRegistrationCompleted
                     self?.isUserEmailVerified = userProfile.isEmailVerified
                     self?.userKnowYourCustomerStatus = userProfile.kycStatus
-                    
+
                     // TODO: Check for a more viable way to identify if Optimove is configured
 //                    Optimove.shared.setUserId(userProfile.userIdentifier)
-                    
+
                 }
                 else {
                     self?.isUserProfileComplete = nil
@@ -219,9 +226,12 @@ class UserSessionStore {
 
         // Remove previous registration info
         UserDefaults.standard.startedUserRegisterInfo = nil
-        
+
         //
         Env.gomaNetworkClient.reconnectSession()
+
+        // Stop SSE stream and cleanup
+        self.stopUserInfoSSEStream()
 
         self.userProfilePublisher.send(nil)
         self.userSessionPublisher.send(nil)
@@ -531,11 +541,13 @@ extension UserSessionStore {
 
     func refreshUserWalletAfterDelay() {
         executeDelayed(0.3) {
-            self.refreshUserWallet()
+            self.forceRefreshUserWallet()
         }
     }
 
-    func refreshUserWallet() {
+    /// Force refresh wallet balance via REST (while SSE continues in background)
+    /// Use this for pull-to-refresh scenarios or when SSE may be delayed
+    func forceRefreshUserWallet() {
         guard self.isUserLogged() else {
             self.isRefreshingUserWallet = false
             return
@@ -547,11 +559,19 @@ extension UserSessionStore {
         }
 
         self.refreshCashbackBalance()
-        
+
         self.isRefreshingUserWallet = true
 
-        Logger.log("UserSessionStore - will refreshUserWallet")
+        Logger.log("UserSessionStore - will forceRefreshUserWallet via REST")
 
+        // If SSE is active, use SSE force refresh (keeps stream alive)
+        if self.isSSEStreamActive {
+            Env.servicesProvider.refreshUserBalance()
+            self.isRefreshingUserWallet = false
+            return
+        }
+
+        // Fallback: Direct REST call if SSE not active
         Env.servicesProvider.getUserBalance()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -564,14 +584,14 @@ extension UserSessionStore {
                     let currency = userWallet.currency,
                     let withdrawable = userWallet.withdrawable,
                     let bonus = userWallet.bonus
-                    
+
                 else {
                     self?.userWalletPublisher.send(nil)
                     return
                 }
-                
+
                 let totalBalance = withdrawable + bonus
-                
+
                 let wallet = UserWallet(total: totalBalance,
                                         bonus: userWallet.bonus,
                                         totalWithdrawable: userWallet.withdrawable,
@@ -579,6 +599,12 @@ extension UserSessionStore {
                 self?.userWalletPublisher.send(wallet)
             })
             .store(in: &self.cancellables)
+    }
+
+    /// Backward compatibility alias
+    @available(*, deprecated, message: "Use forceRefreshUserWallet() instead - SSE provides automatic updates")
+    func refreshUserWallet() {
+        forceRefreshUserWallet()
     }
 
     private func refreshCashbackBalance() {
@@ -603,20 +629,127 @@ extension UserSessionStore {
     }
     
     func refreshMadeDepositStatus() {
-        
+
         Env.servicesProvider.getProfile()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 //
             }, receiveValue: { [weak self] userProfile in
-                
+
                 var currentUserProfile = self?.userProfilePublisher.value
-                
+
                 currentUserProfile?.hasMadeDeposit = userProfile.hasMadeDeposit
-                
+
                 self?.userProfilePublisher.send(currentUserProfile)
             })
             .store(in: &self.cancellables)
+    }
+
+    // MARK: - SSE User Info Stream Management
+
+    /// Start real-time SSE stream for wallet balance and session updates
+    /// Replaces periodic REST polling with continuous SSE updates
+    private func startUserInfoSSEStream() {
+        guard self.isUserLogged() else {
+            Logger.log("[SSEDebug] UserSessionStore: Cannot start SSE stream - user not logged in")
+            return
+        }
+
+        // Prevent duplicate subscriptions
+        if self.isSSEStreamActive {
+            Logger.log("[SSEDebug] UserSessionStore: SSE stream already active, skipping")
+            return
+        }
+
+        Logger.log("[SSEDebug] UserSessionStore: Starting UserInfo SSE stream")
+        Logger.log("[SSEDebug]    - About to call servicesProvider.subscribeUserInfoUpdates()")
+
+        // Also refresh cashback (not part of UserInfo SSE yet)
+        self.refreshCashbackBalance()
+
+        self.userInfoStreamCancellable = Env.servicesProvider.subscribeUserInfoUpdates()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    Logger.log("[SSEDebug] UserSessionStore: SSE stream completed")
+                    self?.isSSEStreamActive = false
+
+                    switch completion {
+                    case .finished:
+                        Logger.log("[SSEDebug] UserSessionStore: SSE stream finished normally")
+                    case .failure(let error):
+                        Logger.log("[SSEDebug] UserSessionStore: SSE stream error: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] event in
+                    guard let self = self else { return }
+
+                    Logger.log("[SSEDebug] UserSessionStore: Received SSE event: \(event)")
+
+                    switch event {
+                    case .connected(let subscription):
+                        Logger.log("[SSEDebug] UserSessionStore: SSE connected - subscription ID: \(subscription.id)")
+                        self.isSSEStreamActive = true
+
+                    case .contentUpdate(let userInfo):
+                        // Handle session expiration
+                        switch userInfo.sessionState {
+                        case .expired(let reason):
+                            Logger.log("[SSEDebug] UserSessionStore: Session expired from SSE - reason: \(reason ?? "unknown")")
+                            Logger.log("[SSEDebug] UserSessionStore: Auto-logout triggered by session expiration")
+                            self.logout()
+                            return
+
+                        case .terminated:
+                            Logger.log("[SSEDebug] UserSessionStore: Session terminated from SSE")
+                            self.logout()
+                            return
+
+                        case .active:
+                            // Session is active, process wallet update
+                            break
+                        }
+
+                        // Update wallet balance from SSE event
+                        guard let currency = userInfo.wallet.currency else {
+                            Logger.log("[SSEDebug] UserSessionStore: SSE update missing currency, skipping")
+                            return
+                        }
+
+                        let totalBalance = (userInfo.wallet.withdrawable ?? 0) + (userInfo.wallet.bonus ?? 0)
+
+                        let wallet = UserWallet(
+                            total: totalBalance,
+                            bonus: userInfo.wallet.bonus,
+                            totalWithdrawable: userInfo.wallet.totalWithdrawable,
+                            currency: currency
+                        )
+
+                        Logger.log("[SSEDebug] UserSessionStore: SSE wallet update - total: \(totalBalance) \(currency)")
+
+                        // Publish to all subscribers (21 wallet subscribers get real-time updates!)
+                        self.userWalletPublisher.send(wallet)
+
+                    case .disconnected:
+                        Logger.log("[SSEDebug] UserSessionStore: SSE disconnected")
+                        self.isSSEStreamActive = false
+                    }
+                }
+            )
+    }
+
+    /// Stop SSE stream and cleanup resources
+    private func stopUserInfoSSEStream() {
+        guard self.isSSEStreamActive || self.userInfoStreamCancellable != nil else {
+            return
+        }
+
+        Logger.log("[SSEDebug] UserSessionStore: Stopping UserInfo SSE stream")
+
+        Env.servicesProvider.stopUserInfoStream()
+        self.userInfoStreamCancellable?.cancel()
+        self.userInfoStreamCancellable = nil
+        self.isSSEStreamActive = false
     }
 
 }

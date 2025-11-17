@@ -4123,3 +4123,7 @@
 "potential_winnings" = "Gains Potentiels";
 
 "payout" = "Paiement";
+
+// Session Expiration Alert
+"you_are_logged_out" = "Vous êtes déconnecté";
+"your_session_has_ended" = "Votre session a expiré";

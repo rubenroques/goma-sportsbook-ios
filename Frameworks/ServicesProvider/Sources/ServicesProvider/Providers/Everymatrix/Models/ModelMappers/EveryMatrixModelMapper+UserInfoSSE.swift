@@ -30,24 +30,23 @@ extension EveryMatrixModelMapper {
 
             if walletType == "Real" {
                 // Update real balance fields (String + Double pairs)
-                updated.totalString = String(format: "%.2f", afterAmount)
-                updated.total = afterAmount
+                // Note: Don't set total here - calculate it at the end from withdrawable + bonus
                 updated.withdrawableString = String(format: "%.2f", afterAmount)
                 updated.withdrawable = afterAmount
 
-                print("Applied Real balance update: \(afterAmount) \(updateBody.currency)")
+                print("[SSEDebug] Applied Real balance update: \(afterAmount) \(updateBody.currency)")
 
             } else if walletType == "Bonus" {
                 // Update bonus balance fields (String + Double pairs)
                 updated.bonusString = String(format: "%.2f", afterAmount)
                 updated.bonus = afterAmount
 
-                print("Applied Bonus balance update: \(afterAmount) \(updateBody.currency)")
+                print("[SSEDebug] Applied Bonus balance update: \(afterAmount) \(updateBody.currency)")
             }
         }
 
         // Recalculate total (Real + Bonus) - matches WebApp logic
-        let realAmount = updated.total ?? 0.0
+        let realAmount = updated.withdrawable ?? 0.0  // Use withdrawable, not total!
         let bonusAmount = updated.bonus ?? 0.0
         let totalAmount = realAmount + bonusAmount
 
@@ -72,8 +71,17 @@ extension EveryMatrixModelMapper {
         let formatter = ISO8601DateFormatter()
         let timestamp = formatter.date(from: body.streamingDate) ?? Date()
 
+        // Handle optional transType (not always present in SSE messages)
+        let transactionType: BalanceUpdateEvent.TransactionType
+        if let transType = body.transType {
+            transactionType = BalanceUpdateEvent.TransactionType(rawValue: transType) ?? .unknown
+        } else {
+            // No transType in message - default to unknown
+            transactionType = .unknown
+        }
+
         return BalanceUpdateEvent(
-            transactionType: BalanceUpdateEvent.TransactionType(rawValue: body.transType) ?? .unknown,
+            transactionType: transactionType,
             operationType: BalanceUpdateEvent.OperationType(rawValue: body.operationType) ?? .debit,
             currency: body.currency,
             source: body.source,

@@ -1238,12 +1238,55 @@ extension Client {
         return privilegedAccessManager.lockPlayer(isPermanent: isPermanent, lockPeriodUnit: lockPeriodUnit, lockPeriod: lockPeriod)
     }
 
+    //
+    // WALLET BALANCE
+    //
+    public func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError>{
+        print("[SSEDebug] 📡 Client: subscribeUserInfoUpdates() called - starting UserInfo SSE stream")
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            print("[SSEDebug] ❌ Client: No privilegedAccessManager found")
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+        }
+
+        print("[SSEDebug] ✅ Client: Delegating to privilegedAccessManager.subscribeUserInfoUpdates()")
+        return privilegedAccessManager.subscribeUserInfoUpdates()
+    }
+
+    public func stopUserInfoStream() {
+        print("[SSEDebug] 🛑 Client: stopUserInfoStream() called - stopping UserInfo SSE stream")
+
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            print("[SSEDebug] ⚠️ Client: No privilegedAccessManager found")
+            return
+        }
+
+        print("[SSEDebug] ✅ Client: Delegating to privilegedAccessManager.stopUserInfoStream()")
+        return privilegedAccessManager.stopUserInfoStream()
+    }
+    
+    public func refreshUserBalance() {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return
+        }
+    
+        return privilegedAccessManager.refreshUserBalance()
+    }
+    
+    //
     public func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
+    
         return privilegedAccessManager.getUserBalance()
     }
 

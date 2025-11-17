@@ -61,9 +61,10 @@ class AppCoordinator: Coordinator {
         }
         
         print("🎨 Theme applied: \(UserDefaults.standard.appearanceMode) -> \(self.window.overrideUserInterfaceStyle.rawValue)")
-        
-        
+
+
         setupStateObservation()
+        setupSessionExpirationObservation()
     }
     
     // MARK: - Coordinator Protocol
@@ -86,6 +87,18 @@ class AppCoordinator: Coordinator {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.handleStateChange(state)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func setupSessionExpirationObservation() {
+        print("[AppCoordinator] 👂 Setting up session expiration observation")
+
+        environment.userSessionStore.sessionExpirationPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] expirationReason in
+                print("[AppCoordinator] 🚨 Session expiration event received: \(expirationReason)")
+                self?.showSessionExpiredAlert(reason: expirationReason)
             }
             .store(in: &cancellables)
     }
@@ -325,6 +338,74 @@ class AppCoordinator: Coordinator {
 
     private func showDeposit() {
         self.mainTabBarCoordinator?.presentDepositFlow()
+    }
+
+    // MARK: - Session Expiration Alert
+
+    private func showSessionExpiredAlert(reason: SessionExpirationReason) {
+        print("[AppCoordinator] 🔔 Showing session expired alert")
+
+        // Get top view controller to present alert
+        guard let topViewController = navigationController.topViewController else {
+            print("[AppCoordinator] ⚠️ No top view controller to present alert")
+            return
+        }
+
+        // Check if an alert is already being presented
+        if topViewController.presentedViewController is UIAlertController {
+            print("[AppCoordinator] ⚠️ Alert already presented, skipping")
+            return
+        }
+
+        // Create alert
+        let alert = UIAlertController(
+            title: localized("you_are_logged_out"),  // "You are logged out"
+            message: localized("your_session_has_ended"),  // "Your session has ended"
+            preferredStyle: .alert
+        )
+
+        // "Go Home" button (default style)
+        let goHomeAction = UIAlertAction(
+            title: localized("go_home"),  // "Go Home"
+            style: .default
+        ) { [weak self] _ in
+            print("[AppCoordinator] 👤 User tapped 'Go Home' after session expiration")
+            self?.handleGoHomeAfterExpiration()
+        }
+
+        // "Login" button (default style, will be bold via preferredAction)
+        let loginAction = UIAlertAction(
+            title: localized("login"),  // "Login"
+            style: .default
+        ) { [weak self] _ in
+            print("[AppCoordinator] 🔐 User tapped 'Login' after session expiration")
+            self?.handleLoginAfterExpiration()
+        }
+
+        alert.addAction(goHomeAction)
+        alert.addAction(loginAction)
+
+        // Set preferred action (makes it bold/primary)
+        alert.preferredAction = loginAction
+
+        print("[AppCoordinator] 📱 Presenting session expiration alert")
+        topViewController.present(alert, animated: true) {
+            print("[AppCoordinator] ✅ Session expiration alert presented")
+        }
+    }
+
+    private func handleGoHomeAfterExpiration() {
+        print("[AppCoordinator] 🏠 Navigating to home after session expiration")
+
+        // Navigate to splash/landing screen (user is already logged out)
+        showSportsHome()
+    }
+
+    private func handleLoginAfterExpiration() {
+        print("[AppCoordinator] 🔐 Navigating to login after session expiration")
+
+        // Navigate to splash which will show login screen (user is already logged out)
+        showLogin()
     }
 }
 

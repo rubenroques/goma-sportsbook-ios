@@ -42,41 +42,42 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
     // MARK: - EventHandler Protocol
 
     func onOpened() {
-        print("✅ SSEEventHandlerAdapter: Connection opened")
+        print("[SSEDebug] ✅ SSEEventHandlerAdapter: Connection opened")
         subject.send(.connected)
     }
 
     func onClosed() {
-        print("🔌 SSEEventHandlerAdapter: Connection closed")
+        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: Connection closed")
+        print("[SSEDebug]    - LDSwiftEventSource will auto-reconnect (NOT terminating publisher)")
         subject.send(.disconnected)
-        subject.send(completion: .finished)
+        // DO NOT send completion here - let LDSwiftEventSource handle reconnection!
+        // Only send completion when stop() is explicitly called or on error
     }
 
     func onMessage(eventType: String, messageEvent: MessageEvent) {
-        print("📨 SSEEventHandlerAdapter: Received event (type: \(eventType))")
+        print("[SSEDebug] 📨 SSEEventHandlerAdapter: Received event (type: \(eventType))")
 
         // Emit MessageEvent wrapped in SSEStreamEvent
         subject.send(.message(messageEvent))
     }
 
     func onComment(comment: String) {
-        print("💬 SSEEventHandlerAdapter: Comment received: \(comment)")
+        print("[SSEDebug] 💬 SSEEventHandlerAdapter: Comment received: \(comment)")
         // Comments are ignored for now
     }
 
     func onError(error: Error) {
-        print("❌ SSEEventHandlerAdapter: Error - \(error.localizedDescription)")
+        print("[SSEDebug] ❌ SSEEventHandlerAdapter: Error - \(error.localizedDescription)")
 
-        // Map LDSwiftEventSource errors to ServiceProviderError
-        let serviceError: ServiceProviderError
+        // Network errors (timeout, connection failure) should trigger reconnection, not terminate stream
+        // Send .disconnected event to let UserInfoStreamManager handle reconnection logic
+        // DO NOT send completion here - only stop() should terminate the publisher
 
-        if let unsuccessfulResponse = error as? UnsuccessfulResponseError {
-            serviceError = .errorMessage(message: "HTTP \(unsuccessfulResponse.responseCode)")
-        } else {
-            serviceError = .errorMessage(message: error.localizedDescription)
-        }
+        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: Error treated as disconnection - will trigger reconnection")
+        subject.send(.disconnected)
 
-        subject.send(completion: .failure(serviceError))
+        // Note: Completion is ONLY sent when stop() is explicitly called
+        // This allows reconnection logic to handle transient errors (timeouts, network failures)
     }
 
     // MARK: - Lifecycle Management
@@ -86,8 +87,16 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
     }
 
     func stop() {
-        print("🛑 SSEEventHandlerAdapter: Stopping event source")
+        print("[SSEDebug] 🛑 SSEEventHandlerAdapter: Stopping event source")
+        print("[SSEDebug]    - Explicitly stopping SSE stream (will send completion)")
+
+        // Stop the underlying EventSource to prevent auto-reconnection
         eventSource?.stop()
+        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: EventSource stopped - auto-reconnection prevented")
         eventSource = nil
+
+        // Only send completion when explicitly stopped (not on auto-reconnect)
+        subject.send(completion: .finished)
+        print("[SSEDebug] ✅ SSEEventHandlerAdapter: Publisher terminated - no auto-reconnection will occur")
     }
 }
