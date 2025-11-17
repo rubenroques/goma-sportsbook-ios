@@ -1305,7 +1305,16 @@ class MainTabBarCoordinator: Coordinator {
             }
         case .favourites:
             // TODO: Show favourites when available
-            break
+            if let viewController = self.nextUpEventsCoordinator?.viewController {
+                mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
+            }
+            else {
+                self.showNextUpEventsScreen(withContextChange: true)
+            }
+            var currentFilters = self.currentFilters
+            currentFilters.sortType = .favorites
+            self.applyFilters(currentFilters)
+
         case .lite:
             // TODO: Show lite(?) when available
             break

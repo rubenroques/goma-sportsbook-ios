@@ -21,3 +21,4 @@ public protocol UserLimitCardViewModelProtocol: AnyObject {
     var actionButtonViewModel: ButtonViewModelProtocol { get }
 }
 
+

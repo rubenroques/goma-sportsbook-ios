@@ -107,10 +107,10 @@ class SportsSearchViewController: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             // ContainerView
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            containerView.topAnchor.constraint(equalTo: view.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
             
             // SearchView
             searchView.topAnchor.constraint(equalTo: containerView.topAnchor),

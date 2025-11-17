@@ -56,3 +56,4 @@ public final class MockTextSectionViewModel: TextSectionViewModelProtocol {
         return MockTextSectionViewModel(content: content)
     }
 }
+

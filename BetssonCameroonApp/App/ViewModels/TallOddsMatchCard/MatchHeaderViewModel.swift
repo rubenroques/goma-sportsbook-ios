@@ -10,6 +10,9 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     private let isFavoriteSubject: CurrentValueSubject<Bool, Never>
     private let matchTimeSubject: CurrentValueSubject<String?, Never>
     private let isLiveSubject: CurrentValueSubject<Bool, Never>
+    private let favoritesManager: FavoritesManager
+    private let matchId: String
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Published Properties
     public var competitionNamePublisher: AnyPublisher<String, Never> {
@@ -50,22 +53,38 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     }
     
     // MARK: - Initialization
-    init(data: MatchHeaderData) {
+    init(data: MatchHeaderData, favoritesManager: FavoritesManager = Env.favoritesManager) {
+        self.matchId = data.id
+        self.favoritesManager = favoritesManager
         self.competitionNameSubject = CurrentValueSubject(data.competitionName)
         self.countryFlagImageNameSubject = CurrentValueSubject(data.countryFlagImageName)
         self.sportIconImageNameSubject = CurrentValueSubject(data.sportIconImageName)
-        self.isFavoriteSubject = CurrentValueSubject(data.isFavorite)
+        let initialFavoriteState = favoritesManager.isEventFavorite(eventId: data.id) || data.isFavorite
+        self.isFavoriteSubject = CurrentValueSubject(initialFavoriteState)
        
         self.matchTimeSubject = CurrentValueSubject(data.matchTime)
         self.isLiveSubject = CurrentValueSubject(data.isLive)
+        self.bindFavorites()
+    }
+    
+    // Binding
+    func bindFavorites() {
+        self.favoritesManager.favoriteEventsIdPublisher
+            .map { $0.contains(self.matchId) }
+            .removeDuplicates()
+            .sink { [weak self] isFavorite in
+                self?.isFavoriteSubject.send(isFavorite)
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Actions
     func toggleFavorite() {
-        let currentFavorite = isFavoriteSubject.value
-        isFavoriteSubject.send(!currentFavorite)
-        
-        // TODO: Integrate with favorites service
+        if self.isFavoriteSubject.value {
+            self.favoritesManager.removeUserFavorite(eventId: self.matchId)
+        } else {
+            self.favoritesManager.addUserFavorite(eventId: self.matchId)
+        }
     }
     
     
@@ -102,7 +121,7 @@ extension MatchHeaderViewModel {
             competitionName: match.competitionName,
             countryFlagImageName: extractCountryFlag(from: match),
             sportIconImageName: extractSportIcon(from: match),
-            isFavorite: false, // TODO: Check with favorites service when available
+            isFavorite: Env.favoritesManager.isEventFavorite(eventId: match.id),
             matchTime: formatMatchTime(from: match),
             isLive: match.status.isLive
         )

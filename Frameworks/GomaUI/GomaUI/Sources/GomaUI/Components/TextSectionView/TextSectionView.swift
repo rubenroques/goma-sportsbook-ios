@@ -96,7 +96,6 @@ extension TextSectionView {
 }
 
 // MARK: - Preview
-#if DEBUG
 import SwiftUI
 
 @available(iOS 17.0, *)
@@ -120,4 +119,5 @@ import SwiftUI
         return vc
     }
 }
+
 #endif
