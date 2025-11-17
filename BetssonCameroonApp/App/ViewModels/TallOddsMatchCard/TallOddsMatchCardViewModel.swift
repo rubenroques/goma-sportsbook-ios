@@ -192,7 +192,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Live Data Subscription
     
     private func subscribeToLiveData() {
-        print("[TallOddsMatchCardViewModel] 🟢 Starting live data subscription for match: \(matchData.matchId)")
+        print("[LIVE_SCORE TallOddsMatchCardViewModel] 🟢 Starting live data subscription for match: \(matchData.matchId)")
         liveDataCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchData.matchId)
             .removeDuplicates()
             .sink(receiveCompletion: { [weak self] completion in
@@ -219,9 +219,22 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     }
     
     private func updateScoreViewModel(from eventLiveData: EventLiveData) {
+        print("[LIVE_SCORE] 🎨 TallOddsMatchCardViewModel.updateScoreViewModel called")
+        print("[LIVE_SCORE]    Event ID: \(eventLiveData.id)")
+        print("[LIVE_SCORE]    Score: \(eventLiveData.homeScore?.description ?? "nil") - \(eventLiveData.awayScore?.description ?? "nil")")
+        print("[LIVE_SCORE]    DetailedScores: \(eventLiveData.detailedScores?.count ?? 0) entries")
+        print("[LIVE_SCORE]    YellowCards: home=\(eventLiveData.yellowCards?.home?.description ?? "nil"), away=\(eventLiveData.yellowCards?.away?.description ?? "nil")")
+        print("[LIVE_SCORE]    YellowRedCards: home=\(eventLiveData.yellowRedCards?.home?.description ?? "nil"), away=\(eventLiveData.yellowRedCards?.away?.description ?? "nil")")
+        print("[LIVE_SCORE]    RedCards: home=\(eventLiveData.redCards?.home?.description ?? "nil"), away=\(eventLiveData.redCards?.away?.description ?? "nil")")
+        if let totalCards = eventLiveData.totalCards {
+            print("[LIVE_SCORE]    TotalCards: home=\(totalCards.home), away=\(totalCards.away)")
+        }
+
         let liveScoreData = transformEventLiveDataToLiveScoreData(eventLiveData)
         let newScoreViewModel = Self.createScoreViewModel(from: liveScoreData)
-        
+
+        print("[LIVE_SCORE]    Created ScoreViewModel with \(liveScoreData?.scoreCells.count ?? 0) score cells")
+
         scoreViewModelSubject.send(newScoreViewModel)
     }
     
@@ -249,15 +262,19 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     }
     
     private func transformEventLiveDataToLiveScoreData(_ eventLiveData: EventLiveData) -> LiveScoreData? {
+        print("[LIVE_SCORE] 🔄 Transforming EventLiveData to LiveScoreData")
+
         var scoreCells: [ScoreDisplayData] = []
-        
+
         // Add detailed scores (sets, games, etc.)
         if let detailedScores = eventLiveData.detailedScores {
+            print("[LIVE_SCORE]    Processing \(detailedScores.count) detailed scores")
             for (scoreName, score) in detailedScores.sorted(by: { $0.value.sortValue < $1.value.sortValue }) {
                 let scoreCell: ScoreDisplayData
-                
+
                 switch score {
                 case .set(let index, let home, let away):
+                    print("[LIVE_SCORE]       - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                     scoreCell = ScoreDisplayData(
                         id: "set-\(scoreName)",
                         homeScore: home != nil ? "\(home!)" : "-",
@@ -266,6 +283,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                         style: .simple
                     )
                 case .gamePart(let home, let away):
+                    print("[LIVE_SCORE]       - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                     scoreCell = ScoreDisplayData(
                         id: "game-\(scoreName)",
                         homeScore: home != nil ? "\(home!)" : "-",
@@ -273,6 +291,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                         style: .background
                     )
                 case .matchFull(let home, let away):
+                    print("[LIVE_SCORE]       - MatchFull '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                     scoreCell = ScoreDisplayData(
                         id: "match-\(scoreName)",
                         homeScore: home != nil ? "\(home!)" : "-",
@@ -280,14 +299,15 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                         style: .simple
                     )
                 }
-                
+
                 scoreCells.append(scoreCell)
             }
         }
-        
+
         if scoreCells.isEmpty {
             // Add main score if available
             if let homeScore = eventLiveData.homeScore, let awayScore = eventLiveData.awayScore {
+                print("[LIVE_SCORE]    Adding main score (no detailed scores): \(homeScore) - \(awayScore)")
                 let mainScoreCell = ScoreDisplayData(
                     id: "match",
                     homeScore: "\(homeScore)",
@@ -297,9 +317,21 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
                 scoreCells.append(mainScoreCell)
             }
         }
-        
-        guard !scoreCells.isEmpty else { return nil }
-        
+
+        guard !scoreCells.isEmpty else {
+            print("[LIVE_SCORE]    ⚠️ No score cells created - returning nil")
+            return nil
+        }
+
+        print("[LIVE_SCORE]    ✅ Created LiveScoreData with \(scoreCells.count) score cells")
+
+        // ⚠️ NOTE: Cards are NOT being transformed here!
+        // The LiveScoreData model doesn't include card data
+        // Cards need to be handled separately in the UI layer
+        if eventLiveData.yellowCards != nil || eventLiveData.redCards != nil {
+            print("[LIVE_SCORE]    ⚠️ Card data exists but is NOT included in LiveScoreData transformation!")
+        }
+
         return LiveScoreData(
             scoreCells: scoreCells
         )

@@ -526,7 +526,7 @@ extension UserSessionStore {
                         let wallet = UserWallet(
                             total: totalBalance,
                             bonus: userInfo.wallet.bonus,
-                            totalWithdrawable: userInfo.wallet.totalWithdrawable,
+                            totalWithdrawable: userInfo.wallet.withdrawable,
                             currency: currency
                         )
 

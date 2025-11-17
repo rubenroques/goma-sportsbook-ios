@@ -404,6 +404,10 @@ class InPlayEventsViewModel {
         // Update market group selector with new matches and main markets
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
+        if marketGroupCardsViewModels.count == 0 {
+            print("Empty marketGroupCardsViewModels")
+        }
+        
         // Update all existing market group ViewModels with new matches and pagination state
         for (_, viewModel) in marketGroupCardsViewModels {
             viewModel.updateMatches(matches)

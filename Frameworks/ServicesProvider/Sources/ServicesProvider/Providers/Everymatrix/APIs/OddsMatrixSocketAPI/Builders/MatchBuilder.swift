@@ -47,34 +47,34 @@ extension EveryMatrix {
             let hierarchicalMarkets = matchMarkets.compactMap { market in
                 MarketBuilder.build(from: market, store: store)
             }
-            
-            // Sort markets within same bettingTypeId groups by paramFloat1, paramFloat2, paramFloat3
-            // Preserves original positioning for different betting types
-            let sortedMarkets = hierarchicalMarkets.sorted { market1, market2 in
-                // Only sort if same betting type - preserves original order otherwise
-                guard market1.bettingType?.id == market2.bettingType?.id else {
-                    return false
-                }
-                
-                // Sort by paramFloat1
-                let param1_1 = market1.paramFloat1 ?? Double.greatestFiniteMagnitude
-                let param1_2 = market2.paramFloat1 ?? Double.greatestFiniteMagnitude
-                if param1_1 != param1_2 {
-                    return param1_1 < param1_2
-                }
-                
-                // Sort by paramFloat2
-                let param2_1 = market1.paramFloat2 ?? Double.greatestFiniteMagnitude
-                let param2_2 = market2.paramFloat2 ?? Double.greatestFiniteMagnitude
-                if param2_1 != param2_2 {
-                    return param2_1 < param2_2
-                }
-                
-                // Sort by paramFloat3
-                let param3_1 = market1.paramFloat3 ?? Double.greatestFiniteMagnitude
-                let param3_2 = market2.paramFloat3 ?? Double.greatestFiniteMagnitude
-                return param3_1 < param3_2
-            }
+
+            // Use markets in original WAMP server order (same as events ordering strategy)
+            // Previously sorted by paramFloat1/2/3 within betting type groups - commented out to trust server ordering
+            // let sortedMarkets = hierarchicalMarkets.sorted { market1, market2 in
+            //     // Only sort if same betting type - preserves original order otherwise
+            //     guard market1.bettingType?.id == market2.bettingType?.id else {
+            //         return false
+            //     }
+            //
+            //     // Sort by paramFloat1
+            //     let param1_1 = market1.paramFloat1 ?? Double.greatestFiniteMagnitude
+            //     let param1_2 = market2.paramFloat1 ?? Double.greatestFiniteMagnitude
+            //     if param1_1 != param1_2 {
+            //         return param1_1 < param1_2
+            //     }
+            //
+            //     // Sort by paramFloat2
+            //     let param2_1 = market1.paramFloat2 ?? Double.greatestFiniteMagnitude
+            //     let param2_2 = market2.paramFloat2 ?? Double.greatestFiniteMagnitude
+            //     if param2_1 != param2_2 {
+            //         return param2_1 < param2_2
+            //     }
+            //
+            //     // Sort by paramFloat3
+            //     let param3_1 = market1.paramFloat3 ?? Double.greatestFiniteMagnitude
+            //     let param3_2 = market2.paramFloat3 ?? Double.greatestFiniteMagnitude
+            //     return param3_1 < param3_2
+            // }
 
             return Match(
                 id: match.id,
@@ -100,7 +100,7 @@ extension EveryMatrix {
                     id: match.statusId,
                     name: match.statusName
                 ),
-                markets: sortedMarkets,
+                markets: hierarchicalMarkets,
                 allowsLiveOdds: match.allowsLiveOdds,
                 numberOfMarkets: match.numberOfMarkets,
                 numberOfBettingOffers: match.numberOfBettingOffers

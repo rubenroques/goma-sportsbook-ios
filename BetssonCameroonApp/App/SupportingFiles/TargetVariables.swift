@@ -96,9 +96,9 @@ struct TargetVariables: SportsbookTarget {
                 secundaryMarketSpecsUrl: ""
             ),
             support: URLEndpoint.Support(
-                helpCenter: "https://support.betsson.com/",
+                helpCenter: localized("footer_help_center_link"),
                 zendesk: "",
-                customerSupport: "https://support.betsson.com/"
+                customerSupport: localized("footer_help_center_link")
             ),
             responsibleGaming: URLEndpoint.ResponsibleGaming(
                 gamblingAddictionHelpline: "",
