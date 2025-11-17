@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 import GomaUI
 
 final class WalletDetailViewModel: WalletDetailViewModelProtocol {
@@ -42,6 +43,15 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     // Button ViewModels
     public let withdrawButtonViewModel: ButtonViewModelProtocol
     public let depositButtonViewModel: ButtonViewModelProtocol
+    
+    // Pending Withdraw Section
+    public var pendingWithdrawSectionViewModel: CustomExpandableSectionViewModelProtocol?
+    public var pendingWithdrawViewModels: [PendingWithdrawViewModelProtocol] = [] {
+        didSet {
+            pendingWithdrawViewModelsSubject.send(pendingWithdrawViewModels)
+        }
+    }
+    private let pendingWithdrawViewModelsSubject = CurrentValueSubject<[PendingWithdrawViewModelProtocol], Never>([])
     
     // Action callbacks
     public var onWithdrawRequested: (() -> Void)?
@@ -112,6 +122,10 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     
     public var withdrawableAmountPublisher: AnyPublisher<String, Never> {
         withdrawableAmountSubject.eraseToAnyPublisher()
+    }
+    
+    public var pendingWithdrawViewModelsPublisher: AnyPublisher<[PendingWithdrawViewModelProtocol], Never> {
+        pendingWithdrawViewModelsSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Protocol Actions

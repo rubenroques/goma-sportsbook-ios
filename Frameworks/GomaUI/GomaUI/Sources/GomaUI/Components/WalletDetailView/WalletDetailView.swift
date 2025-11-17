@@ -12,6 +12,8 @@ final public class WalletDetailView: UIView {
     private lazy var headerView: WalletDetailHeaderView = Self.createHeaderView()
     private lazy var balanceView: WalletDetailBalanceView = Self.createBalanceView()
     private lazy var buttonsContainerView: UIView = Self.createButtonsContainerView()
+    private lazy var pendingWithdrawSectionContainer: UIView = Self.createPendingWithdrawContainer()
+    private var pendingWithdrawSection: CustomExpandableSectionView?
     private var withdrawButton: ButtonView!
     private var depositButton: ButtonView!
     
@@ -73,6 +75,20 @@ final public class WalletDetailView: UIView {
             }
             .store(in: &cancellables)
         
+        // Setup pending withdraw section from view model
+        self.updatePendingSectionViewModel(viewModel.pendingWithdrawSectionViewModel)
+        
+        // Observe pending withdraw view models and update content
+        viewModel.pendingWithdrawViewModelsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] viewModels in
+                self?.updatePendingWithdrawViews(viewModels)
+            }
+            .store(in: &cancellables)
+        
+        // Initial update
+        self.updatePendingWithdrawViews(viewModel.pendingWithdrawViewModels)
+        
         // Handle button actions through ViewModels
         self.withdrawButton.onButtonTapped = { [weak self] in
             self?.viewModel.performWithdraw()
@@ -80,6 +96,56 @@ final public class WalletDetailView: UIView {
         
         self.depositButton.onButtonTapped = { [weak self] in
             self?.viewModel.performDeposit()
+        }
+    }
+    
+    private func updatePendingSectionViewModel(_ viewModel: CustomExpandableSectionViewModelProtocol?) {
+        guard let viewModel else {
+            pendingWithdrawSectionContainer.isHidden = true
+            pendingWithdrawSection?.removeFromSuperview()
+            pendingWithdrawSection = nil
+            return
+        }
+        
+        if let sectionView = pendingWithdrawSection {
+            pendingWithdrawSectionContainer.isHidden = false
+            return
+        }
+        
+        let sectionView = CustomExpandableSectionView(viewModel: viewModel)
+        sectionView.translatesAutoresizingMaskIntoConstraints = false
+        pendingWithdrawSectionContainer.addSubview(sectionView)
+        NSLayoutConstraint.activate([
+            sectionView.leadingAnchor.constraint(equalTo: pendingWithdrawSectionContainer.leadingAnchor),
+            sectionView.trailingAnchor.constraint(equalTo: pendingWithdrawSectionContainer.trailingAnchor),
+            sectionView.topAnchor.constraint(equalTo: pendingWithdrawSectionContainer.topAnchor),
+            sectionView.bottomAnchor.constraint(equalTo: pendingWithdrawSectionContainer.bottomAnchor)
+        ])
+        pendingWithdrawSection = sectionView
+        pendingWithdrawSectionContainer.isHidden = false
+    }
+    
+    private func updatePendingWithdrawViews(_ viewModels: [PendingWithdrawViewModelProtocol]) {
+        // If section doesn't exist and we have view models, create the section first
+        if pendingWithdrawSection == nil && !viewModels.isEmpty {
+            updatePendingSectionViewModel(viewModel.pendingWithdrawSectionViewModel)
+        }
+        
+        guard let sectionView = pendingWithdrawSection else { return }
+        
+        // Remove existing views
+        sectionView.contentContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // Add new views for each view model
+        for viewModel in viewModels {
+            let pendingWithdrawView = PendingWithdrawView(viewModel: viewModel)
+            pendingWithdrawView.translatesAutoresizingMaskIntoConstraints = false
+            sectionView.contentContainer.addArrangedSubview(pendingWithdrawView)
+            
+            NSLayoutConstraint.activate([
+                pendingWithdrawView.leadingAnchor.constraint(equalTo: sectionView.contentContainer.leadingAnchor),
+                pendingWithdrawView.trailingAnchor.constraint(equalTo: sectionView.contentContainer.trailingAnchor)
+            ])
         }
     }
 }
@@ -133,6 +199,12 @@ extension WalletDetailView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+
+    private static func createPendingWithdrawContainer() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
     
     
     private func setupSubviews() {
@@ -147,6 +219,8 @@ extension WalletDetailView {
         self.stackView.addArrangedSubview(self.headerView)
         self.stackView.addArrangedSubview(self.balanceView)
         self.stackView.addArrangedSubview(self.buttonsContainerView)
+        self.stackView.addArrangedSubview(self.pendingWithdrawSectionContainer)
+        self.pendingWithdrawSectionContainer.isHidden = true
         
         self.buttonsContainerView.addSubview(self.withdrawButton)
         self.buttonsContainerView.addSubview(self.depositButton)
@@ -176,6 +250,7 @@ extension WalletDetailView {
             
             // Buttons container
             self.buttonsContainerView.heightAnchor.constraint(equalToConstant: 40),
+            self.pendingWithdrawSectionContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 0),
             
             // Withdraw button
             self.withdrawButton.leadingAnchor.constraint(equalTo: self.buttonsContainerView.leadingAnchor),
@@ -189,7 +264,10 @@ extension WalletDetailView {
             self.depositButton.leadingAnchor.constraint(equalTo: self.withdrawButton.trailingAnchor, constant: 12),
             
             // Equal width buttons
-            self.withdrawButton.widthAnchor.constraint(equalTo: self.depositButton.widthAnchor)
+            self.withdrawButton.widthAnchor.constraint(equalTo: self.depositButton.widthAnchor),
+            
+            self.pendingWithdrawSectionContainer.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor),
+            self.pendingWithdrawSectionContainer.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor)
         ])
     }
 }
@@ -357,7 +435,84 @@ extension WalletDetailView {
 }
 
 @available(iOS 17.0, *)
-#Preview("5. All States Grid") {
+#Preview("5. With Pending Withdraw") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+        
+        let mockViewModel = MockWalletDetailViewModel.defaultMock
+        
+        // Setup pending withdraw section
+        let pendingWithdrawSectionViewModel = MockCustomExpandableSectionViewModel(
+            title: "Pending Withdraws",
+            isExpanded: false,
+            leadingIconName: "arrow.down.circle",
+            collapsedIconName: "chevron.down",
+            expandedIconName: "chevron.up"
+        )
+        mockViewModel.pendingWithdrawSectionViewModel = pendingWithdrawSectionViewModel
+        
+        let walletDetailView = WalletDetailView(viewModel: mockViewModel)
+        walletDetailView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup pending withdraw view after wallet detail view is created
+        // Access the expandable section view and add pending withdraw content
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Find the CustomExpandableSectionView in the view hierarchy
+            func findExpandableSection(in view: UIView) -> CustomExpandableSectionView? {
+                if let expandable = view as? CustomExpandableSectionView {
+                    return expandable
+                }
+                for subview in view.subviews {
+                    if let found = findExpandableSection(in: subview) {
+                        return found
+                    }
+                }
+                return nil
+            }
+            
+            if let sectionView = findExpandableSection(in: walletDetailView) {
+                let pendingWithdrawViewModel = MockPendingWithdrawViewModel()
+                let pendingWithdrawView = PendingWithdrawView(viewModel: pendingWithdrawViewModel)
+                pendingWithdrawView.translatesAutoresizingMaskIntoConstraints = false
+                
+                sectionView.contentContainer.addArrangedSubview(pendingWithdrawView)
+                
+                NSLayoutConstraint.activate([
+                    pendingWithdrawView.leadingAnchor.constraint(equalTo: sectionView.contentContainer.leadingAnchor),
+                    pendingWithdrawView.trailingAnchor.constraint(equalTo: sectionView.contentContainer.trailingAnchor)
+                ])
+            }
+        }
+        
+        vc.view.addSubview(walletDetailView)
+        
+        NSLayoutConstraint.activate([
+            walletDetailView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            walletDetailView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            walletDetailView.leadingAnchor.constraint(greaterThanOrEqualTo: vc.view.leadingAnchor, constant: 20),
+            walletDetailView.trailingAnchor.constraint(lessThanOrEqualTo: vc.view.trailingAnchor, constant: -20)
+        ])
+        
+        // Add description label
+        let descLabel = UILabel()
+        descLabel.text = "Expand to see pending withdraw"
+        descLabel.textColor = StyleProvider.Color.textSecondary
+        descLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+        descLabel.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(descLabel)
+        
+        NSLayoutConstraint.activate([
+            descLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            descLabel.topAnchor.constraint(equalTo: walletDetailView.bottomAnchor, constant: 16)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("6. All States Grid") {
     PreviewUIViewController {
         let vc = UIViewController()
         vc.view.backgroundColor = .backgroundTestColor

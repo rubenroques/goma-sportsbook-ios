@@ -1377,13 +1377,13 @@ extension Client {
 
     // MARK: - Transaction History Methods
 
-    public func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    public func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.getBankingTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+        return privilegedAccessManager.getBankingTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber, types: types, states: states)
     }
 
     public func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
@@ -1395,13 +1395,13 @@ extension Client {
         return privilegedAccessManager.getWageringTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber)
     }
 
-    public func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    public func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
-        return privilegedAccessManager.getBankingTransactionsHistory(filter: filter, pageNumber: pageNumber)
+        return privilegedAccessManager.getBankingTransactionsHistory(filter: filter, pageNumber: pageNumber, types: types, states: states)
     }
 
     public func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {

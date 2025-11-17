@@ -679,7 +679,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
@@ -687,7 +687,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
