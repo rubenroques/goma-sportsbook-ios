@@ -95,6 +95,8 @@ extension TextSectionView {
     }
 }
 
+#if DEBUG
+
 // MARK: - Preview
 import SwiftUI
 
