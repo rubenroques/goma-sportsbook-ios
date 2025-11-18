@@ -120,7 +120,7 @@ final class WalletStatusViewModel: WalletStatusViewModelProtocol {
             // Update all balance displays with formatted amounts
             setTotalBalance(amount: CurrencyHelper.formatAmount(wallet.total))
             setBonusBalance(amount: CurrencyHelper.formatAmount(wallet.bonus ?? 0.0))
-            setCurrentBalance(amount: CurrencyHelper.formatAmount(wallet.total))
+            setCurrentBalance(amount: CurrencyHelper.formatAmount(wallet.totalRealAmount ?? 0.0))
             setWithdrawableBalance(amount: CurrencyHelper.formatAmount(wallet.totalWithdrawable ?? 0.0))
             setCashbackBalance(amount: CurrencyHelper.formatAmount(0.0))
 

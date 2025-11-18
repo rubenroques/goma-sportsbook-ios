@@ -403,6 +403,7 @@ extension UserSessionStore {
                 let totalBalance = withdrawable + bonus
 
                 let wallet = UserWallet(total: totalBalance,
+                                        totalRealAmount: userWallet.totalRealAmount,
                                         bonus: userWallet.bonus,
                                         totalWithdrawable: userWallet.withdrawable,
                                         currency: currency)
@@ -525,6 +526,7 @@ extension UserSessionStore {
 
                         let wallet = UserWallet(
                             total: totalBalance,
+                            totalRealAmount: userInfo.wallet.totalRealAmount,
                             bonus: userInfo.wallet.bonus,
                             totalWithdrawable: userInfo.wallet.withdrawable,
                             currency: currency

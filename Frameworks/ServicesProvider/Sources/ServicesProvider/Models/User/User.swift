@@ -466,6 +466,8 @@ public struct UserWallet: Hashable {
     
     public var totalString: String?
     public var total: Double?
+    public var totalRealAmountString: String?
+    public var totalRealAmount: Double?
     public var withdrawableString: String?
     public var withdrawable: Double?
     public var bonusString: String?
@@ -488,6 +490,8 @@ public struct UserWallet: Hashable {
     enum CodingKeys: String, CodingKey {
         case totalString = "totalBalance"
         case total = "totalBalanceNumber"
+        case totalRealAmountString = "totalRealAmount"
+        case totalRealAmount = "totalRealAmountNumber"
         case withdrawableString = "withdrawableBalance"
         case withdrawable = "withdrawableBalanceNumber"
         case bonusString = "bonusBalance"

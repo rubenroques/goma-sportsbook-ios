@@ -239,18 +239,27 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     }
     
     private func updateMatchHeaderViewModel(from eventLiveData: EventLiveData) {
-        // Update match time if available
+        // Update match time/status display
         if let matchTime = eventLiveData.matchTime {
+            // Has match time (Football, Basketball, etc.)
             if let status = eventLiveData.status, case .inProgress(let details) = status {
                 if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                    // Combine status + time: "1st Half, 10 min"
                     headerViewModel.updateMatchTime(details + ", " + matchTime + " min")
                 }
             }
             else if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                // Just show time
                 headerViewModel.updateMatchTime(matchTime)
             }
+        } else if let status = eventLiveData.status, case .inProgress(let details) = status {
+            // No match time but has status (Tennis, etc.)
+            // Show current game/set info: "6th Game (1st Set)"
+            if let headerViewModel = matchHeaderViewModelSubject.value as? MatchHeaderViewModel {
+                headerViewModel.updateMatchTime(details)
+            }
         }
-        
+
         // Update live status based on event status
         if let status = eventLiveData.status {
             let isLive = status.isInProgress

@@ -300,6 +300,9 @@ class AppCoordinator: Coordinator {
     }
     
     private func showSportsHome() {
+        let isLoggedIn = environment.userSessionStore.isLoggedIn
+        print("[SessionExpiredDebug] ➡️ showSportsHome() - User logged in: \(isLoggedIn), calling showNextUpEventsScreen()")
+
         self.mainTabBarCoordinator?.showNextUpEventsScreen()
     }
     
@@ -396,6 +399,9 @@ class AppCoordinator: Coordinator {
 
     private func handleGoHomeAfterExpiration() {
         print("[AppCoordinator] 🏠 Navigating to home after session expiration")
+
+        let isLoggedIn = environment.userSessionStore.isLoggedIn
+        print("[SessionExpiredDebug] 🔘 handleGoHomeAfterExpiration() - User logged in: \(isLoggedIn)")
 
         // Navigate to splash/landing screen (user is already logged out)
         showSportsHome()

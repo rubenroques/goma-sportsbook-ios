@@ -255,6 +255,7 @@ class NextUpEventsViewModel {
     }
     // MARK: - Public Methods
     func reloadEvents(forced: Bool = false) {
+        print("[SessionExpiredDebug] 🔁 NextUpEventsViewModel.reloadEvents(forced: \(forced)) - Calling loadEvents()")
         self.loadEvents()
     }
 
@@ -330,6 +331,7 @@ class NextUpEventsViewModel {
 
     // MARK: - Private Methods
     private func loadEvents() {
+        print("[SessionExpiredDebug] 📥 NextUpEventsViewModel.loadEvents() START - Setting isLoading=true")
         isLoading = true
         eventsStateSubject.send(.loading)
 
@@ -337,35 +339,48 @@ class NextUpEventsViewModel {
 
         // Convert AppliedEventsFilters to MatchesFilterOptions
         let filterOptions = appliedFilters.toMatchesFilterOptions()
-        
+
+        print("[SessionExpiredDebug] 📡 Creating subscription to subscribeToFilteredPreLiveMatches")
         // Use filtered subscription instead of unfiltered
         preLiveMatchesCancellable = servicesProvider.subscribeToFilteredPreLiveMatches(filters: filterOptions)
         .receive(on: DispatchQueue.main)
         .sink { completion in
-            print("0 \(completion)")
+            print("[SessionExpiredDebug] 🔚 Subscription completion: \(completion)")
+            switch completion {
+            case .finished:
+                print("[SessionExpiredDebug] ✅ Subscription finished normally")
+            case .failure(let error):
+                print("[SessionExpiredDebug] ❌ Subscription failed with error: \(error)")
+            }
         } receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
             switch subscribableContent {
             case .connected(let subscription):
+                print("[SessionExpiredDebug] 🟢 CONNECTED to subscription \(subscription.id)")
                 print("[NextUpEventsViewModel] 🟢 Connected to pre-live matches subscription \(subscription.id)")
 
             case .contentUpdate(let content):
+                print("[SessionExpiredDebug] 📦 CONTENT UPDATE received - \(content.count) event groups")
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
                 let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: content)
-                
+
                 print("[NextUpEventsViewModel] 📡 received pre-live groups \(content.count) mapped to matches \(matches.count)")
                 if let mainMarkets = mainMarkets {
                     print("[NextUpEventsViewModel] received \(mainMarkets.count) main markets")
                 }
-                      
+                print("[SessionExpiredDebug] 🎯 About to call processMatches with \(matches.count) matches")
+
                 self?.processMatches(matches, mainMarkets: mainMarkets)
 
             case .disconnected:
+                print("[SessionExpiredDebug] 🔴 DISCONNECTED from subscription")
                 print("[NextUpEventsViewModel] 🔴 Disconnected from pre-live matches subscription")
             }
         }
+        print("[SessionExpiredDebug] 🏁 loadEvents() subscription setup complete")
     }
 
     private func processMatches(_ matches: [Match], mainMarkets: [MainMarket]? = nil) {
+        print("[SessionExpiredDebug] 🎬 processMatches() called with \(matches.count) matches - Setting isLoading=false")
         print("[NextUpEventsViewModel] processMatches called with \(matches.count) matches")
         isLoading = false
         isLoadingMore = false  // Reset pagination state

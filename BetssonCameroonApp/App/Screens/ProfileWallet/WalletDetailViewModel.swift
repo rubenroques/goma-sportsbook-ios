@@ -172,7 +172,7 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     
     private func updateWalletData(wallet: UserWallet?, userProfile: UserProfile?) {
         let totalBalance = formatCurrency(wallet?.total ?? 0.0)
-        let currentBalance = formatCurrency(wallet?.total ?? 0.0) // Same as total
+        let currentBalance = formatCurrency(wallet?.totalRealAmount ?? 0.0)
         let bonusBalance = formatCurrency(wallet?.bonus ?? 0.0)
         let cashbackBalance = formatCurrency(0.0) // Not available in current system
         let withdrawableAmount = formatCurrency(wallet?.totalWithdrawable ?? 0.0)

@@ -662,6 +662,7 @@ struct PreviewModelsHelper {
     static func createGBPUserWallet() -> UserWallet {
         return UserWallet(
             total: 250.75,
+            totalRealAmount: 225.75,
             bonus: 25.0,
             totalWithdrawable: 225.75,
             currency: "GBP"
@@ -672,6 +673,7 @@ struct PreviewModelsHelper {
     static func createEURUserWallet() -> UserWallet {
         return UserWallet(
             total: 300.50,
+            totalRealAmount: 250.50,
             bonus: 50.0,
             totalWithdrawable: 250.50,
             currency: "EUR"
@@ -1111,6 +1113,7 @@ struct PreviewModelsHelper {
     static func createUSDUserWallet() -> UserWallet {
         return UserWallet(
             total: 500.00,
+            totalRealAmount: 400.00,
             bonus: 100.0,
             totalWithdrawable: 400.00,
             currency: "USD"
@@ -1121,6 +1124,7 @@ struct PreviewModelsHelper {
     static func createEmptyUserWallet() -> UserWallet {
         return UserWallet(
             total: 0.00,
+            totalRealAmount: 0.00,
             bonus: 0.0,
             totalWithdrawable: 0.00,
             currency: "EUR"
