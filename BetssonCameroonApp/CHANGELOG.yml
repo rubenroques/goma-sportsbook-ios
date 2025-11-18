@@ -11,11 +11,17 @@
 #       - "Feature or fix description"
 #       - "Another change"
 #
-# When you create a tag like: BCM-Stg-2.1.3(21309)
+# When you create a tag like: BCM-Stg-v2.1.3(21309)
 # The workflow will look for a matching entry with:
 #   - version: "2.1.3"
 #   - build: 21309
 #   - environment: staging
+#
+# Supported tag formats (all case-insensitive):
+#   BCM-Stg-v2.1.3(21309)   - Recommended format
+#   BCM-Stg-2.1(21309)      - X.Y version without 'v' prefix
+#   bcm_stg-v2.1.3(21309)   - Underscore separator
+#   BCM-Stage-2.1.3(21309)  - Full environment name
 #
 # If found, it will use the notes for Firebase distribution and Discord notification.
 # If not found, it will use generic notes: "Build 21309 - Version 2.1.3"

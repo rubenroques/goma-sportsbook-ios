@@ -37,20 +37,24 @@ releases:
 
 ```bash
 # For Betsson Cameroon Staging
-git tag BCM-Stg-2.1.3(21309)
-git push origin BCM-Stg-2.1.3(21309)
+git tag BCM-Stg-v2.1.3(21309)
+git push origin BCM-Stg-v2.1.3(21309)
 
 # For Betsson Cameroon Production
-git tag BCM-Prod-2.1.3(21309)
-git push origin BCM-Prod-2.1.3(21309)
+git tag BCM-Prod-v2.1.3(21309)
+git push origin BCM-Prod-v2.1.3(21309)
 
 # For Betsson France Staging
-git tag BFR-Stg-1.5.2(15200)
-git push origin BFR-Stg-1.5.2(15200)
+git tag BFR-Stg-v1.5.2(15200)
+git push origin BFR-Stg-v1.5.2(15200)
 
 # For Betsson France Production
-git tag BFR-Prod-1.5.2(15200)
-git push origin BFR-Prod-1.5.2(15200)
+git tag BFR-Prod-v1.5.2(15200)
+git push origin BFR-Prod-v1.5.2(15200)
+
+# Alternative formats also supported:
+git tag bcm_stg-2.1(21309)        # Underscore separator, X.Y version
+git tag BCM-Stg-2.1.3(21309)      # No 'v' prefix
 ```
 
 ### 3. Monitor Progress
@@ -66,7 +70,7 @@ git push origin BFR-Prod-1.5.2(15200)
 ### Standard Format
 
 ```
-CLIENT-ENVIRONMENT-VERSION(BUILD)
+CLIENT[-_]ENVIRONMENT[-]v?VERSION(BUILD)
 ```
 
 ### Components
@@ -74,8 +78,10 @@ CLIENT-ENVIRONMENT-VERSION(BUILD)
 | Component | Description | Examples |
 |-----------|-------------|----------|
 | **CLIENT** | Client code (case-insensitive) | `BCM`, `bcm`, `Bcm` (Betsson Cameroon)<br>`BFR`, `bfr`, `Bfr` (Betsson France) |
+| **SEPARATOR** | Hyphen or underscore | `-` or `_` (between client and environment only) |
 | **ENVIRONMENT** | Deployment environment | `Stg`, `Stage`, `Staging` → staging<br>`Prod`, `Production` → production |
-| **VERSION** | Marketing version (X.Y.Z) | `2.1.3`, `1.5.2` |
+| **VERSION PREFIX** | Optional 'v' prefix | `v` (optional) |
+| **VERSION** | Marketing version (X.Y or X.Y.Z) | `v2.1.3`, `2.1`, `1.5.2` |
 | **BUILD** | Build number | `21309`, `15200` |
 
 ### Valid Tag Examples
@@ -83,18 +89,27 @@ CLIENT-ENVIRONMENT-VERSION(BUILD)
 All of these formats work (case-insensitive):
 
 ```bash
-# Betsson Cameroon
-BCM-Stg-2.1.3(21309)
-bcm-stage-2.1.3(21309)
-BCM-STAGING-2.1.3(21309)
-Bcm-Prod-2.1.3(21309)
-bcm-production-2.1.3(21309)
+# Betsson Cameroon - With 'v' prefix
+BCM-Stg-v2.1.3(21309)
+BCM-Prod-v2.1.3(21309)
+bcm-stage-v2.1.3(21309)
+BCM-PRODUCTION-v2.1.3(21309)
 
-# Betsson France
-BFR-Stg-1.5.2(15200)
+# Betsson Cameroon - Without 'v' prefix
+BCM-Stg-2.1.3(21309)
+BCM-Prod-2.1(21309)           # X.Y format
+Bcm-Stg-2.3(21309)
+
+# Betsson Cameroon - With underscore separator
+bcm_stg-2.1.3(21309)
+bcm_prod-v2.1.3(21309)
+BCM_STG-v2.1(21309)
+
+# Betsson France - All variations work
+BFR-Stg-v1.5.2(15200)
 bfr-stage-1.5.2(15200)
-BFR-Prod-1.5.2(15200)
-bfr-production-1.5.2(15200)
+BFR-Prod-v1.5(15200)
+bfr_prod-1.5.2(15200)
 ```
 
 ### Invalid Tag Examples
@@ -102,15 +117,18 @@ bfr-production-1.5.2(15200)
 ```bash
 # ❌ Missing build number
 BCM-Stg-2.1.3
+BCM-Stg-v2.1.3
 
-# ❌ Wrong separator
+# ❌ Wrong separator for build
 BCM-Stg-2.1.3-21309
+BCM-Stg-v2.1.3-21309
 
-# ❌ Wrong client code
-BETSSON-Stg-2.1.3(21309)
+# ❌ Underscore before version
+BCM_Stg_2.1.3(21309)
 
 # ❌ Missing version
 BCM-Stg-(21309)
+BCM-Stg-v(21309)
 ```
 
 ---
@@ -203,7 +221,7 @@ When tag `BCM-Stg-2.1.3(21309)` is pushed:
 ### Step-by-Step
 
 ```
-Developer pushes tag: BCM-Stg-2.1.3(21309)
+Developer pushes tag: BCM-Stg-v2.1.3(21309)
           ↓
 GitHub Actions triggers
           ↓
@@ -302,13 +320,16 @@ When you tag `BCM-Prod-2.1.3(21309)`:
 
 ```bash
 # Staging: Test new features
-git tag BCM-Stg-2.1.3(21309)
+git tag BCM-Stg-v2.1.3(21309)
 
 # After QA approval, same version to production
-git tag BCM-Prod-2.1.3(21309)
+git tag BCM-Prod-v2.1.3(21309)
 
 # Or increment build for production
-git tag BCM-Prod-2.1.3(21310)
+git tag BCM-Prod-v2.1.3(21310)
+
+# X.Y version format for minor releases
+git tag BCM-Stg-v2.2(21311)
 ```
 
 ---
@@ -325,7 +346,7 @@ When a build completes, Discord receives:
 Client: Betsson Cameroon
 Environment: Staging
 Version: 2.1.3 (21309)
-Tag: BCM-Stg-2.1.3(21309)
+Tag: BCM-Stg-v2.1.3(21309)
 
 Release Notes:
 • Fixed live match score updates
@@ -355,14 +376,19 @@ Requires `DISCORD_WEBHOOK_URL` secret in GitHub repository settings.
 
 **Error:** `❌ Invalid tag format`
 
-**Solution:** Ensure tag follows format: `CLIENT-ENV-VERSION(BUILD)`
+**Solution:** Ensure tag follows format: `CLIENT[-_]ENV[-]v?VERSION(BUILD)`
 
 ```bash
-# ✅ Correct
-BCM-Stg-2.1.3(21309)
+# ✅ Correct formats
+BCM-Stg-v2.1.3(21309)
+BCM-Stg-2.1(21309)
+bcm_stg-v2.1.3(21309)
+BCM-Prod-2.1.3(21309)
 
-# ❌ Wrong
-BCM-Stg-2.1.3-21309
+# ❌ Wrong formats
+BCM-Stg-2.1.3-21309          # Wrong separator for build
+BCM_Stg_2.1.3(21309)         # Underscore before version
+BCM-Stg-2.1.3                # Missing build number
 ```
 
 ### Configuration Not Found
@@ -392,14 +418,14 @@ If you need to retag:
 
 ```bash
 # Delete local tag
-git tag -d BCM-Stg-2.1.3(21309)
+git tag -d BCM-Stg-v2.1.3(21309)
 
 # Delete remote tag
-git push --delete origin BCM-Stg-2.1.3(21309)
+git push --delete origin BCM-Stg-v2.1.3(21309)
 
 # Create new tag
-git tag BCM-Stg-2.1.3(21309)
-git push origin BCM-Stg-2.1.3(21309)
+git tag BCM-Stg-v2.1.3(21309)
+git push origin BCM-Stg-v2.1.3(21309)
 ```
 
 ---
@@ -414,16 +440,21 @@ git clone <repo-url>
 cd sportsbook-ios
 
 # Test tag parsing
-TAG="BCM-Stg-2.1.3(21309)"
+TAG="BCM-Stg-v2.1.3(21309)"
 
-if [[ $TAG =~ ^([A-Za-z]+)-(Stg|Stage|Staging|Prod|Production)-([0-9.]+)\(([0-9]+)\)$ ]]; then
+# Enable case-insensitive matching
+shopt -s nocasematch
+
+if [[ $TAG =~ ^([A-Za-z]+)[-_](Stg|Stage|Staging|Prod|Production)[-]v?([0-9]+\.[0-9]+(\.[0-9]+)?)\(([0-9]+)\)$ ]]; then
   echo "Client: ${BASH_REMATCH[1]^^}"
   echo "Environment: ${BASH_REMATCH[2],,}"
   echo "Version: ${BASH_REMATCH[3]}"
-  echo "Build: ${BASH_REMATCH[4]}"
+  echo "Build: ${BASH_REMATCH[5]}"
 else
   echo "Invalid tag format"
 fi
+
+shopt -u nocasematch
 ```
 
 ### Reading CHANGELOG.yml Locally
@@ -490,8 +521,8 @@ The workflow requires these secrets to be configured in repository settings:
 **A:** Yes! You can tag both with the same version:
 
 ```bash
-git tag BCM-Stg-2.1.3(21309)
-git tag BCM-Prod-2.1.3(21309)
+git tag BCM-Stg-v2.1.3(21309)
+git tag BCM-Prod-v2.1.3(21309)
 ```
 
 They'll build from different branches (`betsson-cm` vs `main`) as configured.

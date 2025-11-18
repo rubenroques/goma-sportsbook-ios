@@ -6,9 +6,15 @@ on:
       - 'BCM-**'
       - 'bcm-**'
       - 'Bcm-**'
+      - 'BCM_**'
+      - 'bcm_**'
+      - 'Bcm_**'
       - 'BFR-**'
       - 'bfr-**'
       - 'Bfr-**'
+      - 'BFR_**'
+      - 'bfr_**'
+      - 'Bfr_**'
 
 jobs:
   release:
@@ -27,12 +33,16 @@ jobs:
           shopt -s nocasematch
 
           # Parse tag (case-insensitive)
-          # Format: CLIENT-ENV-VERSION(BUILD)
-          if [[ $TAG =~ ^([A-Za-z]+)-(Stg|Stage|Staging|Prod|Production)-([0-9.]+)\(([0-9]+)\)$ ]]; then
+          # Format: CLIENT[-_]ENV[-]v?VERSION(BUILD)
+          # Supports:
+          # - Hyphen or underscore separator: BCM-Stg or bcm_stg
+          # - Optional 'v' prefix: v2.1.3 or 2.1.3
+          # - X.Y or X.Y.Z version format: 2.1 or 2.1.3
+          if [[ $TAG =~ ^([A-Za-z]+)[-_](Stg|Stage|Staging|Prod|Production)[-]v?([0-9]+\.[0-9]+(\.[0-9]+)?)\(([0-9]+)\)$ ]]; then
             CLIENT="${BASH_REMATCH[1]^^}"  # Uppercase
             ENV_RAW="${BASH_REMATCH[2]}"
-            VERSION="${BASH_REMATCH[3]}"
-            BUILD="${BASH_REMATCH[4]}"
+            VERSION="${BASH_REMATCH[3]}"  # BASH_REMATCH[4] is the optional .Z part
+            BUILD="${BASH_REMATCH[5]}"    # Shifted due to optional group
 
             # Normalize environment
             case "${ENV_RAW,,}" in

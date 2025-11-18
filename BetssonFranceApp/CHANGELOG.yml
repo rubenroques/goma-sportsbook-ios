@@ -11,11 +11,17 @@
 #       - "Feature or fix description"
 #       - "Another change"
 #
-# When you create a tag like: BFR-Stg-1.5.2(15200)
+# When you create a tag like: BFR-Stg-v1.5.2(15200)
 # The workflow will look for a matching entry with:
 #   - version: "1.5.2"
 #   - build: 15200
 #   - environment: staging
+#
+# Supported tag formats (all case-insensitive):
+#   BFR-Stg-v1.5.2(15200)   - Recommended format
+#   BFR-Stg-1.5(15200)      - X.Y version without 'v' prefix
+#   bfr_stg-v1.5.2(15200)   - Underscore separator
+#   BFR-Stage-1.5.2(15200)  - Full environment name
 #
 # If found, it will use the notes for Firebase distribution and Discord notification.
 # If not found, it will use generic notes: "Build 15200 - Version 1.5.2"
