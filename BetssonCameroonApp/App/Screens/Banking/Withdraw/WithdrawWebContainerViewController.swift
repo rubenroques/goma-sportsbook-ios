@@ -15,12 +15,19 @@ import ServicesProvider
 final class WithdrawWebContainerViewController: UIViewController {
     
     // MARK: - Properties
-    
+
     private let viewModel: WithdrawWebContainerViewModel
     private let webView: WKWebView
     private let loadingView: UIActivityIndicatorView
     private let javaScriptBridge: JavaScriptBridge
     private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Timing Properties
+
+    private var timingMetrics: BankingTimingMetrics?
+    private var timerOverlay: LoadingTimerOverlayView?
+    private var spinnerPollingTimer: Timer?
+    private var cashierURL: String?
     
     // MARK: - UI Components
 
@@ -68,7 +75,8 @@ final class WithdrawWebContainerViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
-        
+        setupTimingOverlay()
+
         // Start loading withdraw
         viewModel.loadWithdraw(currency: "XAF")
     }
@@ -139,8 +147,32 @@ final class WithdrawWebContainerViewController: UIViewController {
         // Setup button action
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
-    
-    
+
+    private func setupTimingOverlay() {
+        // Initialize timing metrics and start app phase
+        var metrics = BankingTimingMetrics()
+        metrics.startAppInitialization()
+        timingMetrics = metrics
+
+        // Create and add timer overlay
+        let overlay = LoadingTimerOverlayView(metrics: metrics)
+
+        // Set up URL callback for copy functionality
+        overlay.onCopyRequested = { [weak self] in
+            return self?.cashierURL
+        }
+
+        view.addSubview(overlay)
+
+        NSLayoutConstraint.activate([
+            overlay.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
+            overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        timerOverlay = overlay
+    }
+
     private func bindViewModel() {
         viewModel.$state
             .receive(on: DispatchQueue.main)
@@ -155,36 +187,60 @@ final class WithdrawWebContainerViewController: UIViewController {
         case .idle:
             webView.isHidden = true
             loadingView.stopAnimating()
-            
+
         case .loadingURL:
             webView.isHidden = true
             loadingView.startAnimating()
-            
+
+            // Track API call start
+            timingMetrics?.startAPICall()
+            updateTimerOverlay()
+
         case .loadingWebView(let url):
+            // Track API call end
+            timingMetrics?.endAPICall()
+            updateTimerOverlay()
+
+            // Store URL for copy functionality
+            cashierURL = url.absoluteString
+
+            // Log URL to console for analysis
+            print("💰 [Withdraw] Cashier URL received: \(url.absoluteString)")
+
             // Keep loading indicator while WebView loads
             loadingView.startAnimating()
-            
+
             // Create secure request
             var request = URLRequest(url: url)
             request.timeoutInterval = 30.0
-            
+
             // Add security headers
             for (key, value) in WebViewConfiguration.securityHeaders() {
                 request.setValue(value, forHTTPHeaderField: key)
             }
-            
+
             // Load the request
             webView.load(request)
-            
+
         case .ready:
             webView.isHidden = false
             loadingView.stopAnimating()
-            
+
+            // Mark timing as complete
+            timingMetrics?.complete()
+            updateTimerOverlay()
+
         case .error(let message):
             webView.isHidden = true
             loadingView.stopAnimating()
+            stopSpinnerPolling()
             showErrorAlert(message: message)
         }
+    }
+
+    private func updateTimerOverlay() {
+        guard let metrics = timingMetrics else { return }
+        timerOverlay?.updateMetrics(metrics)
     }
     
     // MARK: - Actions
@@ -217,22 +273,115 @@ final class WithdrawWebContainerViewController: UIViewController {
 // MARK: - WKNavigationDelegate
 
 extension WithdrawWebContainerViewController: WKNavigationDelegate {
-    
+
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        // Track WebView provisional load start
+        timingMetrics?.startWebViewProvisionalLoad()
+        updateTimerOverlay()
+        print("🌐 [Withdraw] WebView started provisional navigation")
+    }
+
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        // Track WebView commit phase
+        timingMetrics?.commitWebViewLoad()
+        updateTimerOverlay()
+        print("🌐 [Withdraw] WebView committed navigation")
+    }
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Track WebView DOM loaded
+        timingMetrics?.finishWebViewDOMLoad()
+        updateTimerOverlay()
+        print("🌐 [Withdraw] WebView finished loading DOM")
+
+        // Start polling for spinner removal (true webpage ready state)
+        startSpinnerPolling()
+
         viewModel.webViewDidFinishLoading()
     }
-    
+
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        stopSpinnerPolling()
         viewModel.webViewDidFail(error: error.localizedDescription)
     }
-    
+
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        stopSpinnerPolling()
         viewModel.webViewDidFail(error: error.localizedDescription)
     }
-    
+
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         // Allow navigation for now - JavaScript bridge will handle specific cases
         decisionHandler(.allow)
+    }
+}
+
+// MARK: - Spinner Polling
+
+extension WithdrawWebContainerViewController {
+
+    private func startSpinnerPolling() {
+        // Mark that we're polling for webpage ready state
+        timingMetrics?.startPollingForWebViewReady()
+        updateTimerOverlay()
+
+        print("🔍 [Withdraw] Started polling for spinner removal")
+
+        var pollCount = 0
+        spinnerPollingTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
+            guard let self = self else {
+                timer.invalidate()
+                return
+            }
+
+            pollCount += 1
+
+            // Check if spinner element is removed
+            let javascript = "document.getElementById('spinner') === null"
+            self.webView.evaluateJavaScript(javascript) { result, error in
+                if let isRemoved = result as? Bool, isRemoved {
+                    // Spinner is gone - webpage is fully ready
+                    print("✅ [Withdraw] Spinner removed - webpage fully loaded (poll count: \(pollCount))")
+                    self.onSpinnerRemoved()
+                } else if pollCount >= 60 {
+                    // Timeout after 30 seconds (60 polls * 0.5s)
+                    print("⏱️ [Withdraw] Spinner polling timeout after 30 seconds")
+                    self.onSpinnerPollingTimeout()
+                }
+            }
+        }
+    }
+
+    private func stopSpinnerPolling() {
+        spinnerPollingTimer?.invalidate()
+        spinnerPollingTimer = nil
+    }
+
+    private func onSpinnerRemoved() {
+        stopSpinnerPolling()
+
+        // Mark webpage as fully ready
+        timingMetrics?.markWebViewFullyReady()
+        updateTimerOverlay()
+
+        // Log final timing breakdown
+        if let metrics = timingMetrics {
+            print("📊 [Withdraw] Final Timing Breakdown:")
+            print("   APP: \(metrics.formattedAppDuration)")
+            print("   API: \(metrics.formattedApiDuration)")
+            print("   WEB: \(metrics.formattedWebDuration)")
+            print("   TOTAL: \(metrics.formattedTotalDuration)")
+        }
+    }
+
+    private func onSpinnerPollingTimeout() {
+        stopSpinnerPolling()
+
+        // Mark as ready anyway (timeout doesn't mean failure)
+        timingMetrics?.markWebViewFullyReady()
+        updateTimerOverlay()
+
+        print("⚠️ [Withdraw] Spinner polling timed out, marking as ready anyway")
     }
 }
 

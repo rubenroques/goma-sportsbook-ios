@@ -151,7 +151,7 @@ class NextUpEventsCoordinator: Coordinator {
     
     // MARK: - Public Methods for MainTabBarCoordinator
     func refresh() {
-        let isLoggedIn = environment.userSessionStore.isLoggedIn
+        let isLoggedIn = environment.userSessionStore.loggedUserProfile != nil
         print("[SessionExpiredDebug] 🔃 NextUpEventsCoordinator.refresh() - User logged in: \(isLoggedIn), calling reloadEvents(forced: true)")
         nextUpEventsViewModel?.reloadEvents(forced: true)
     }

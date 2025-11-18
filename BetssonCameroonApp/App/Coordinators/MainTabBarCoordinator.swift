@@ -182,7 +182,7 @@ class MainTabBarCoordinator: Coordinator {
     // MARK: - Lazy Screen Loading
     
     func showNextUpEventsScreen(withContextChange: Bool = false) {
-        let isLoggedIn = environment.userSessionStore.isLoggedIn
+        let isLoggedIn = environment.userSessionStore.loggedUserProfile != nil
         print("[SessionExpiredDebug] 📍 showNextUpEventsScreen() - User logged in: \(isLoggedIn), withContextChange: \(withContextChange)")
 
         // Lazy loading: only create coordinator when needed
@@ -231,7 +231,7 @@ class MainTabBarCoordinator: Coordinator {
         }
         
         // Refresh if needed
-        print("[SessionExpiredDebug] 🔄 Calling nextUpEventsCoordinator.refresh() - User logged in: \(environment.userSessionStore.isLoggedIn)")
+        print("[SessionExpiredDebug] 🔄 Calling nextUpEventsCoordinator.refresh() - User logged in: \(environment.userSessionStore.loggedUserProfile != nil)")
         nextUpEventsCoordinator?.refresh()
     }
     
