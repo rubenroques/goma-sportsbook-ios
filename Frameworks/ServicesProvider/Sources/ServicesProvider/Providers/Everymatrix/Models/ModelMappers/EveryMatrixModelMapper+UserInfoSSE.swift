@@ -34,6 +34,10 @@ extension EveryMatrixModelMapper {
                 updated.withdrawableString = String(format: "%.2f", afterAmount)
                 updated.withdrawable = afterAmount
 
+                // Also update totalRealAmount (Current Balance)
+                updated.totalRealAmountString = String(format: "%.2f", afterAmount)
+                updated.totalRealAmount = afterAmount
+
                 print("[SSEDebug] Applied Real balance update: \(afterAmount) \(updateBody.currency)")
 
             } else if walletType == "Bonus" {

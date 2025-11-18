@@ -18,11 +18,13 @@ extension EveryMatrixModelMapper {
         
         // Map the amounts
         let total = walletBalance.totalCashAmount.amount
+        let totalRealAmount = walletBalance.totalRealAmount.amount
         let withdrawable = walletBalance.totalWithdrawableAmount.amount
         let bonus = walletBalance.totalBonusAmount.amount
-        
+
         // Create string representations for compatibility
         let totalString = String(format: "%.2f", total)
+        let totalRealAmountString = String(format: "%.2f", totalRealAmount)
         let withdrawableString = String(format: "%.2f", withdrawable)
         let bonusString = String(format: "%.2f", bonus)
         
@@ -38,9 +40,11 @@ extension EveryMatrixModelMapper {
             vipStatus: nil, // Not available in EveryMatrix response
             currency: currency,
             loyaltyPoint: nil, // Not available in EveryMatrix response
-            
+
             totalString: totalString,
             total: total,
+            totalRealAmountString: totalRealAmountString,
+            totalRealAmount: totalRealAmount,
             withdrawableString: withdrawableString,
             withdrawable: withdrawable,
             bonusString: bonusString,

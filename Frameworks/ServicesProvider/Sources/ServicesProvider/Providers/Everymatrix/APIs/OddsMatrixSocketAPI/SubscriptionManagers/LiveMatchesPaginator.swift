@@ -566,14 +566,14 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 // Update all market changes
                 
                 // TODO: check which properties we need to observe and update
-                // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.MatchDTO.rawType {
                 // Update all match changes
                 
                 // TODO: check which properties we need to observe and update
-                // store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
-                // eventInfoStore.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
+                eventInfoStore.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.EventInfoDTO.rawType {
                 // Update EVENT_INFO changes - these are live data updates (scores, time, status)

@@ -9,6 +9,7 @@ import Foundation
 
 struct UserWallet: Codable, Hashable {
     let total: Double
+    let totalRealAmount: Double?
     let bonus: Double?
     let totalWithdrawable: Double?
     let currency: String
