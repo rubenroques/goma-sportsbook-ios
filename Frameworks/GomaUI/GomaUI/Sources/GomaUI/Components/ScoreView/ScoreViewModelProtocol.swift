@@ -10,13 +10,41 @@ public struct ScoreDisplayData: Equatable, Hashable {
     public let awayScore: String
     public let index: Int
     public let style: ScoreCellStyle
+    public let highlightingMode: HighlightingMode
+    public let showsTrailingSeparator: Bool
+    public let servingPlayer: ServingPlayer?
 
-    public init(id: String, homeScore: String, awayScore: String, index: Int = 0, style: ScoreCellStyle) {
+    public init(
+        id: String,
+        homeScore: String,
+        awayScore: String,
+        index: Int = 0,
+        style: ScoreCellStyle,
+        highlightingMode: HighlightingMode = .noHighlight,
+        showsTrailingSeparator: Bool = false,
+        servingPlayer: ServingPlayer? = nil
+    ) {
         self.id = id
         self.homeScore = homeScore
         self.awayScore = awayScore
         self.index = index
         self.style = style
+        self.highlightingMode = highlightingMode
+        self.showsTrailingSeparator = showsTrailingSeparator
+        self.servingPlayer = servingPlayer
+    }
+
+    /// Indicates which player is currently serving
+    public enum ServingPlayer: Equatable {
+        case home
+        case away
+    }
+
+    /// Defines how scores should be visually highlighted
+    public enum HighlightingMode: Equatable {
+        case winnerLoser    // Winner in black, loser in gray (for completed sets)
+        case bothHighlight  // Both scores in highlightPrimary (for current game/set and match total)
+        case noHighlight    // Both scores in default color
     }
 }
 

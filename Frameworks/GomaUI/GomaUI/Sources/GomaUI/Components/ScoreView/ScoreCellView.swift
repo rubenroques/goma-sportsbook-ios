@@ -6,7 +6,7 @@ class ScoreCellView: UIView {
     private lazy var backgroundView: UIView = Self.createBackgroundView()
     private lazy var homeScoreLabel: UILabel = Self.createScoreLabel()
     private lazy var awayScoreLabel: UILabel = Self.createScoreLabel()
-    
+
     private var widthConstraint: NSLayoutConstraint!
     private let data: ScoreDisplayData
     
@@ -26,11 +26,11 @@ class ScoreCellView: UIView {
     // MARK: - Private Methods
     private func setupSubviews() {
         translatesAutoresizingMaskIntoConstraints = false
-        
+
         addSubview(backgroundView)
         addSubview(homeScoreLabel)
         addSubview(awayScoreLabel)
-        
+
         setContentHuggingPriority(.required, for: .horizontal)
         setContentHuggingPriority(.required, for: .vertical)
         setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -38,7 +38,7 @@ class ScoreCellView: UIView {
     
     private func setupConstraints() {
         widthConstraint = backgroundView.widthAnchor.constraint(greaterThanOrEqualToConstant: 28)
-        
+
         NSLayoutConstraint.activate([
             // Background view
             backgroundView.topAnchor.constraint(equalTo: topAnchor),
@@ -47,13 +47,13 @@ class ScoreCellView: UIView {
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundView.heightAnchor.constraint(equalToConstant: 42),
             widthConstraint,
-            
+
             // Home score (top)
             homeScoreLabel.topAnchor.constraint(equalTo: topAnchor, constant: 1),
             homeScoreLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
             homeScoreLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
             homeScoreLabel.heightAnchor.constraint(equalToConstant: 20),
-            
+
             // Away score (bottom)
             awayScoreLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1),
             awayScoreLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
@@ -98,21 +98,37 @@ class ScoreCellView: UIView {
     }
     
     private func updateScoreHighlighting() {
-        // Only apply highlighting for simple style
-        guard data.style == .simple else {
+        switch data.highlightingMode {
+        case .winnerLoser:
+            // Winner/loser highlighting for completed sets
+            // Always full opacity
             homeScoreLabel.alpha = 1.0
             awayScoreLabel.alpha = 1.0
-            return
-        }
-        
-        // Compare scores as strings (preserving original logic)
-        if data.homeScore > data.awayScore {
+
+            // Compare scores as strings
+            if data.homeScore > data.awayScore {
+                homeScoreLabel.textColor = StyleProvider.Color.textPrimary    // Black - winner
+                awayScoreLabel.textColor = StyleProvider.Color.textSecondary  // Gray - loser
+            } else if data.awayScore > data.homeScore {
+                homeScoreLabel.textColor = StyleProvider.Color.textSecondary  // Gray - loser
+                awayScoreLabel.textColor = StyleProvider.Color.textPrimary    // Black - winner
+            } else {
+                // Tied - both black
+                homeScoreLabel.textColor = StyleProvider.Color.textPrimary
+                awayScoreLabel.textColor = StyleProvider.Color.textPrimary
+            }
+
+        case .bothHighlight:
+            // Both scores highlighted (current game/set, match total)
+            homeScoreLabel.textColor = StyleProvider.Color.highlightPrimary
+            awayScoreLabel.textColor = StyleProvider.Color.highlightPrimary
             homeScoreLabel.alpha = 1.0
-            awayScoreLabel.alpha = 0.5
-        } else if data.homeScore < data.awayScore {
-            homeScoreLabel.alpha = 0.5
             awayScoreLabel.alpha = 1.0
-        } else {
+
+        case .noHighlight:
+            // Default styling - both same color
+            homeScoreLabel.textColor = StyleProvider.Color.textPrimary
+            awayScoreLabel.textColor = StyleProvider.Color.textPrimary
             homeScoreLabel.alpha = 1.0
             awayScoreLabel.alpha = 1.0
         }
@@ -125,7 +141,7 @@ class ScoreCellView: UIView {
         view.layer.cornerRadius = 4
         return view
     }
-    
+
     private static func createScoreLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -238,6 +254,27 @@ import SwiftUI
         let football2 = ScoreCellView(data: ScoreDisplayData(id: "28", homeScore: "0", awayScore: "3", style: .border))
         let football3 = ScoreCellView(data: ScoreDisplayData(id: "29", homeScore: "1", awayScore: "1", style: .border))
         stackView.addArrangedSubview(createRowContainer(with: [football1, football2, football3]))
+
+        // HIGHLIGHTING MODE EXAMPLES
+        stackView.addArrangedSubview(createSectionLabel("Highlighting Modes"))
+
+        // Winner/Loser highlighting (completed sets)
+        let winnerLoser1 = ScoreCellView(data: ScoreDisplayData(id: "wl1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser))
+        let winnerLoser2 = ScoreCellView(data: ScoreDisplayData(id: "wl2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser))
+        let winnerLoser3 = ScoreCellView(data: ScoreDisplayData(id: "wl3", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser))
+        stackView.addArrangedSubview(createRowContainer(with: [winnerLoser1, winnerLoser2, winnerLoser3]))
+
+        // Both highlight (current game/set, match total)
+        let bothHigh1 = ScoreCellView(data: ScoreDisplayData(id: "bh1", homeScore: "15", awayScore: "30", style: .background, highlightingMode: .bothHighlight))
+        let bothHigh2 = ScoreCellView(data: ScoreDisplayData(id: "bh2", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight))
+        let bothHigh3 = ScoreCellView(data: ScoreDisplayData(id: "bh3", homeScore: "105", awayScore: "112", style: .background, highlightingMode: .bothHighlight))
+        stackView.addArrangedSubview(createRowContainer(with: [bothHigh1, bothHigh2, bothHigh3]))
+
+        // No highlight
+        let noHigh1 = ScoreCellView(data: ScoreDisplayData(id: "nh1", homeScore: "2", awayScore: "1", style: .border, highlightingMode: .noHighlight))
+        let noHigh2 = ScoreCellView(data: ScoreDisplayData(id: "nh2", homeScore: "0", awayScore: "0", style: .simple, highlightingMode: .noHighlight))
+        let noHigh3 = ScoreCellView(data: ScoreDisplayData(id: "nh3", homeScore: "3", awayScore: "3", style: .background, highlightingMode: .noHighlight))
+        stackView.addArrangedSubview(createRowContainer(with: [noHigh1, noHigh2, noHigh3]))
 
         // EDGE CASES
         stackView.addArrangedSubview(createSectionLabel("Edge Cases & Special Values"))

@@ -78,20 +78,73 @@ extension MockScoreViewModel {
     /// Tennis match with multiple sets and current game score
     public static var tennisMatch: MockScoreViewModel {
         let scoreCells = [
-            ScoreDisplayData(id: "set1", homeScore: "6", awayScore: "4", style: .simple),
-            ScoreDisplayData(id: "set2", homeScore: "4", awayScore: "6", style: .simple),
-            ScoreDisplayData(id: "set3", homeScore: "6", awayScore: "7", style: .border),
-            ScoreDisplayData(id: "current", homeScore: "15", awayScore: "30", style: .background)
+            // Current game (both highlighted, separator after, has serving)
+            ScoreDisplayData(
+                id: "current",
+                homeScore: "15",
+                awayScore: "30",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            // Set 1 (completed) - winner/loser highlighting
+            ScoreDisplayData(
+                id: "set1",
+                homeScore: "6",
+                awayScore: "4",
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            // Set 2 (completed) - winner/loser highlighting
+            ScoreDisplayData(
+                id: "set2",
+                homeScore: "4",
+                awayScore: "6",
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            // Set 3 (current) - both highlighted
+            ScoreDisplayData(
+                id: "set3",
+                homeScore: "7",
+                awayScore: "6",
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
         ]
         return MockScoreViewModel(scoreCells: scoreCells, visualState: .display)
     }
 
-    /// Tennis match with advantage scoring
+    /// Tennis match with advantage scoring (home serving)
     public static var tennisAdvantage: MockScoreViewModel {
         let scoreCells = [
-            ScoreDisplayData(id: "set1", homeScore: "6", awayScore: "3", style: .simple),
-            ScoreDisplayData(id: "set2", homeScore: "5", awayScore: "6", style: .border),
-            ScoreDisplayData(id: "current", homeScore: "A", awayScore: "40", style: .background)
+            // Current game with advantage - home serving
+            ScoreDisplayData(
+                id: "current",
+                homeScore: "A",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            // Set 1 (completed)
+            ScoreDisplayData(
+                id: "set1",
+                homeScore: "6",
+                awayScore: "3",
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            // Set 2 (completed)
+            ScoreDisplayData(
+                id: "set2",
+                homeScore: "5",
+                awayScore: "6",
+                style: .simple,
+                highlightingMode: .winnerLoser
+            )
         ]
         return MockScoreViewModel(scoreCells: scoreCells, visualState: .display)
     }
@@ -99,11 +152,16 @@ extension MockScoreViewModel {
     /// Basketball match with quarter scores
     public static var basketballMatch: MockScoreViewModel {
         let scoreCells = [
-            ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple),
-            ScoreDisplayData(id: "q2", homeScore: "18", awayScore: "28", style: .simple),
-            ScoreDisplayData(id: "q3", homeScore: "31", awayScore: "24", style: .simple),
-            ScoreDisplayData(id: "q4", homeScore: "26", awayScore: "30", style: .border),
-            ScoreDisplayData(id: "total", homeScore: "100", awayScore: "104", style: .background)
+            // Q1 (completed) - winner/loser highlighting
+            ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser),
+            // Q2 (completed) - winner/loser highlighting
+            ScoreDisplayData(id: "q2", homeScore: "18", awayScore: "28", style: .simple, highlightingMode: .winnerLoser),
+            // Q3 (completed) - winner/loser highlighting
+            ScoreDisplayData(id: "q3", homeScore: "31", awayScore: "24", style: .simple, highlightingMode: .winnerLoser),
+            // Q4 (current) - winner/loser highlighting
+            ScoreDisplayData(id: "q4", homeScore: "26", awayScore: "30", style: .simple, highlightingMode: .winnerLoser),
+            // Total - both highlighted
+            ScoreDisplayData(id: "total", homeScore: "100", awayScore: "104", style: .background, highlightingMode: .bothHighlight)
         ]
         return MockScoreViewModel(scoreCells: scoreCells, visualState: .display)
     }

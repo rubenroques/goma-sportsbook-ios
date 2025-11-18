@@ -159,12 +159,25 @@ public class ScoreView: UIView {
     
     private func updateScoreCells(_ scoreCells: [ScoreDisplayData]) {
         clearScoreCells()
-        
-        for scoreData in scoreCells {
+
+        for (index, scoreData) in scoreCells.enumerated() {
+            // Add serving indicator column as FIRST element (only once, for first cell with serving data)
+            if index == 0 && scoreData.servingPlayer != nil {
+                let servingIndicator = ServingIndicatorView(servingPlayer: scoreData.servingPlayer)
+                containerStackView.addArrangedSubview(servingIndicator)
+            }
+
+            // Add score cell
             let cellView = ScoreCellView(data: scoreData)
             containerStackView.addArrangedSubview(cellView)
+
+            // Add separator line if needed
+            if scoreData.showsTrailingSeparator {
+                let separator = Self.createSeparatorLine()
+                containerStackView.addArrangedSubview(separator)
+            }
         }
-        
+
         // Invalidate intrinsic content size when cells change
         invalidateIntrinsicContentSize()
     }
@@ -195,6 +208,14 @@ extension ScoreView {
         return stackView
     }
     
+    private static func createSeparatorLine() -> UIView {
+        let separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        separator.backgroundColor = StyleProvider.Color.separatorLine
+        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        return separator
+    }
+
     private static func createLoadingIndicator() -> UIActivityIndicatorView {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -463,6 +484,206 @@ extension ScoreView {
         NSLayoutConstraint.activate([
             scoreView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
             scoreView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("ScoreView - Tennis with Serving Indicator & Separator") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGray6
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Helper to create section headers
+        func createSectionLabel(_ text: String) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .bold, size: 20)
+            label.textColor = StyleProvider.Color.textPrimary
+            label.textAlignment = .left
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+
+        // Helper to create score view containers with description
+        func createScoreContainer(with scoreView: ScoreView, title: String, description: String) -> UIView {
+            let container = UIView()
+            container.translatesAutoresizingMaskIntoConstraints = false
+            container.backgroundColor = .systemGray5
+            container.layer.cornerRadius = 8
+
+            let titleLabel = UILabel()
+            titleLabel.text = title
+            titleLabel.font = StyleProvider.fontWith(type: .bold, size: 16)
+            titleLabel.textColor = StyleProvider.Color.textPrimary
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let descLabel = UILabel()
+            descLabel.text = description
+            descLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+            descLabel.textColor = StyleProvider.Color.textSecondary
+            descLabel.numberOfLines = 0
+            descLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            container.addSubview(titleLabel)
+            container.addSubview(descLabel)
+            container.addSubview(scoreView)
+
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 12),
+                titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
+                titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+
+                descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+                descLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
+                descLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+
+                scoreView.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 12),
+                scoreView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+                scoreView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12)
+            ])
+
+            return container
+        }
+
+        // TENNIS EXAMPLES WITH NEW LAYOUT
+        stackView.addArrangedSubview(createSectionLabel("Tennis: Serving Indicator + Separator + Highlighting"))
+
+        // Example 1: Home serving
+        let homeServingView = ScoreView()
+        let homeServingVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "40",
+                awayScore: "15",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "3", awayScore: "2", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        homeServingView.configure(with: homeServingVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: homeServingView,
+            title: "Home Player Serving (40-15)",
+            description: "[●] [40/15] | [6/4] [4/6] [3/2] - Serving indicator (●) in separate column, separator (|) after game, winner/loser highlighting on completed sets"
+        ))
+
+        // Example 2: Away serving
+        let awayServingView = ScoreView()
+        let awayServingVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "15",
+                awayScore: "30",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        awayServingView.configure(with: awayServingVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: awayServingView,
+            title: "Away Player Serving (15-30)",
+            description: "[●] [15/30] | [6/4] [4/6] [7/6] - Serving indicator on away row, both scores in current game/set highlighted in orange"
+        ))
+
+        // Example 3: Advantage scoring
+        let advantageView = ScoreView()
+        let advantageVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "A",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "3", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "5", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "6", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        advantageView.configure(with: advantageVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: advantageView,
+            title: "Advantage Point (A-40)",
+            description: "[●] [A/40] | [6/3] [5/6] [6/6] - Shows 'A' for advantage, tied current set shows both highlighted"
+        ))
+
+        // Example 4: Deuce situation
+        let deuceView = ScoreView()
+        let deuceVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "40",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "3", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "5", awayScore: "4", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        deuceView.configure(with: deuceVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: deuceView,
+            title: "Deuce (40-40)",
+            description: "[●] [40/40] | [7/6] [3/6] [5/4] - Equal game score shows both highlighted, away player serving"
+        ))
+
+        // COMPARISON: Basketball (no serving indicator)
+        stackView.addArrangedSubview(createSectionLabel("Basketball: No Serving Indicator"))
+
+        let basketballView = ScoreView()
+        let basketballVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q2", homeScore: "18", awayScore: "28", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q3", homeScore: "31", awayScore: "24", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q4", homeScore: "26", awayScore: "30", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "total", homeScore: "100", awayScore: "104", style: .background, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        basketballView.configure(with: basketballVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: basketballView,
+            title: "Basketball Quarters + Total",
+            description: "[25/22] [18/28] [31/24] [26/30] [100/104] - No serving column, quarters show winner/loser, total shows both highlighted"
+        ))
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
         ])
 
         return vc
