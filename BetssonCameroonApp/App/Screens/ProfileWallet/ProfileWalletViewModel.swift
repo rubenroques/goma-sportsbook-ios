@@ -133,7 +133,7 @@ final class ProfileWalletViewModel: ObservableObject {
                 } else {
                     // Create or update expandable section view model
                     if self.walletDetailViewModel.pendingWithdrawSectionViewModel == nil {
-                        self.walletDetailViewModel.pendingWithdrawSectionViewModel = MockCustomExpandableSectionViewModel(
+                        self.walletDetailViewModel.pendingWithdrawSectionViewModel = CustomExpandableSectionViewModel(
                             title: localized("pending_withdraws"),
                             isExpanded: false,
                             leadingIconName: "timelapse_icon",
@@ -264,7 +264,7 @@ final class ProfileWalletViewModel: ObservableObject {
         )
         
         // Create view model
-        let viewModel = MockPendingWithdrawViewModel(displayState: displayState)
+        let viewModel = PendingWithdrawViewModel(displayState: displayState)
         
         // Setup copy handler
         viewModel.onCopyRequested = { [weak self] transactionId in

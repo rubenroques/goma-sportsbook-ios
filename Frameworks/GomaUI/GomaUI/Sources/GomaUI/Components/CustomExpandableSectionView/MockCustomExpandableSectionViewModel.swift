@@ -2,25 +2,27 @@
 //  MockCustomExpandableSectionViewModel.swift
 //  GomaUI
 //
-//  Created by GPT-5.1 Codex on 17/11/2025.
+//  Created by André on 17/11/2025.
 //
+//  NOTE: This is an internal mock implementation for use within the GomaUI library only.
+//  For production use, create your own implementation of CustomExpandableSectionViewModelProtocol.
 
 import Combine
 import Foundation
 
-public final class MockCustomExpandableSectionViewModel: CustomExpandableSectionViewModelProtocol {
-    public var title: String
-    public var leadingIconName: String?
-    public var collapsedIconName: String?
-    public var expandedIconName: String?
+internal final class MockCustomExpandableSectionViewModel: CustomExpandableSectionViewModelProtocol {
+    internal var title: String
+    internal var leadingIconName: String?
+    internal var collapsedIconName: String?
+    internal var expandedIconName: String?
     
     private let subject: CurrentValueSubject<Bool, Never>
     
-    public var isExpandedPublisher: AnyPublisher<Bool, Never> {
+    internal var isExpandedPublisher: AnyPublisher<Bool, Never> {
         subject.eraseToAnyPublisher()
     }
     
-    public init(
+    internal init(
         title: String,
         isExpanded: Bool = false,
         leadingIconName: String? = "info.circle",
@@ -34,20 +36,20 @@ public final class MockCustomExpandableSectionViewModel: CustomExpandableSection
         self.subject = CurrentValueSubject(isExpanded)
     }
     
-    public func toggleExpanded() {
+    internal func toggleExpanded() {
         subject.send(!subject.value)
     }
     
     // MARK: - Factory Helpers
-    public static var defaultCollapsed: MockCustomExpandableSectionViewModel {
+    internal static var defaultCollapsed: MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(title: "Account Overview", isExpanded: false, leadingIconName: "person.crop.circle")
     }
     
-    public static var defaultExpanded: MockCustomExpandableSectionViewModel {
+    internal static var defaultExpanded: MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(title: "Responsible Gaming", isExpanded: true, leadingIconName: "shield.lefthalf.fill")
     }
     
-    public static func custom(title: String, icon: String?, collapsedIcon: String? = "chevron.down", expandedIcon: String? = "chevron.up", isExpanded: Bool = false) -> MockCustomExpandableSectionViewModel {
+    internal static func custom(title: String, icon: String?, collapsedIcon: String? = "chevron.down", expandedIcon: String? = "chevron.up", isExpanded: Bool = false) -> MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(
             title: title,
             isExpanded: isExpanded,

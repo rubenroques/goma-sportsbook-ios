@@ -2,7 +2,7 @@
 //  CustomExpandableSectionView.swift
 //  GomaUI
 //
-//  Created by GPT-5.1 Codex on 17/11/2025.
+//  Created by André on 17/11/2025.
 //
 
 import Combine

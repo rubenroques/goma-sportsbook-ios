@@ -2,33 +2,16 @@
 //  PendingWithdrawViewModelProtocol.swift
 //  GomaUI
 //
-//  Created by GPT-5.1 Codex on 17/11/2025.
+//  Created by André on 17/11/2025.
 //
 
 import Combine
-import UIKit
 
 public protocol PendingWithdrawViewModelProtocol: AnyObject {
     var currentDisplayState: PendingWithdrawViewDisplayState { get }
     var displayStatePublisher: AnyPublisher<PendingWithdrawViewDisplayState, Never> { get }
     
     func handleCopyTransactionID()
-}
-
-public struct PendingWithdrawStatusStyle {
-    public let textColor: UIColor
-    public let backgroundColor: UIColor
-    public let borderColor: UIColor?
-    
-    public init(
-        textColor: UIColor = StyleProvider.Color.buttonActiveHoverPrimary,
-        backgroundColor: UIColor = StyleProvider.Color.myTicketsWonFaded,
-        borderColor: UIColor? = StyleProvider.Color.buttonActiveHoverPrimary
-    ) {
-        self.textColor = textColor
-        self.backgroundColor = backgroundColor
-        self.borderColor = borderColor
-    }
 }
 
 public struct PendingWithdrawViewDisplayState {

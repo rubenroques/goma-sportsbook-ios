@@ -1,15 +1,15 @@
 //
-//  MockPendingWithdrawViewModel.swift
-//  GomaUI
+//  PendingWithdrawViewModel.swift
+//  BetssonCameroonApp
 //
-//  Created by André on 17/11/2025.
+//  Created on 17/11/2025.
 //
-//  NOTE: This is an internal mock implementation for use within the GomaUI library only.
-//  For production use, create your own implementation of PendingWithdrawViewModelProtocol.
 
+import Foundation
 import Combine
+import GomaUI
 
-internal final class MockPendingWithdrawViewModel: PendingWithdrawViewModelProtocol {
+final class PendingWithdrawViewModel: PendingWithdrawViewModelProtocol {
     private let subject: CurrentValueSubject<PendingWithdrawViewDisplayState, Never>
     
     public var onCopyRequested: ((String) -> Void)?
@@ -22,7 +22,7 @@ internal final class MockPendingWithdrawViewModel: PendingWithdrawViewModelProto
         subject.eraseToAnyPublisher()
     }
     
-    public init(displayState: PendingWithdrawViewDisplayState = .samplePending) {
+    public init(displayState: PendingWithdrawViewDisplayState) {
         self.subject = CurrentValueSubject(displayState)
     }
     
@@ -34,5 +34,4 @@ internal final class MockPendingWithdrawViewModel: PendingWithdrawViewModelProto
         onCopyRequested?(subject.value.transactionIdValueText)
     }
 }
-
 
