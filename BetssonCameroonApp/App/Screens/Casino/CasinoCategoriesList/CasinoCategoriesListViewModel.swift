@@ -18,6 +18,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     var onBannerGameSelected: ((String) -> Void) = { _ in }
     var onBannerURLSelected: ((String) -> Void) = { _ in }
     var onSportsQuickLinkSelected: ((QuickLinkType) -> Void)?
+    var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
     
     private static let gamesPlatform = "PC"
 
@@ -247,7 +248,12 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private func setupChildViewModelCallbacks() {
         // QuickLinks tab bar callbacks
         quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
-            self?.onSportsQuickLinkSelected?(quickLinkType)
+            if quickLinkType == .lite {
+                self?.onCasinoQuickLinkSelected?(quickLinkType)
+            }
+            else {
+                self?.onSportsQuickLinkSelected?(quickLinkType)
+            }
         }
 
         // Casino banner callbacks - only setup if banner is enabled

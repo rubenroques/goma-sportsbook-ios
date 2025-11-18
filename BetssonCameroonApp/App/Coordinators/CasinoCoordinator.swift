@@ -154,6 +154,26 @@ class CasinoCoordinator: Coordinator {
             .store(in: &cancellables)
     }
     
+    func showLiteGames() {
+        
+        casinoCategoriesListViewModel?.$categorySections
+            .first(where: { !$0.isEmpty })
+            .sink { [weak self] sections in
+                // Check if Aviator game exists
+                if let slotsCategory = sections
+                    .first(where: { $0.sectionData.id.lowercased().contains("lite") }) {
+                    
+                    // Game found - do something with it
+                    print("Found Lite Games section: \(slotsCategory)")
+                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                } else {
+                    // Game not found
+                    print("Lite Games section not found")
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
     func showGamePrePlay(gameId: String) {
         // Create game pre-play view model with proper DI
         let gamePrePlayViewModel = CasinoGamePrePlayViewModel(
@@ -245,6 +265,22 @@ class CasinoCoordinator: Coordinator {
             print("CasinoCoordinator: Cannot open URL: \(url)")
         }
     }
+    
+    private func checkCasinoQuickLinkSelected(quickLink: QuickLinkType) {
+        
+        switch quickLink {
+        case .aviator:
+            self.showAviatorGame()
+        case .slots:
+            self.showSlotsGames()
+        case .crash:
+            self.showCrashGames()
+        case .lite:
+            self.showLiteGames()
+        default:
+            break
+        }
+    }
 
     // MARK: - Coordinator Protocol
     
@@ -277,6 +313,10 @@ class CasinoCoordinator: Coordinator {
         
         viewModel.onSportsQuickLinkSelected = { [weak self] quickLink in
             self?.onShowSportsQuickLinkScreen?(quickLink)
+        }
+        
+        viewModel.onCasinoQuickLinkSelected = { [weak self] quickLink in
+            self?.checkCasinoQuickLinkSelected(quickLink: quickLink)
         }
         
         // Create view controller
