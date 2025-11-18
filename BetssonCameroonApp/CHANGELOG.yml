@@ -1,0 +1,44 @@
+# Changelog for Betsson Cameroon
+#
+# This file tracks release notes for all builds distributed via tag-based releases.
+#
+# Format:
+#   - version: "X.Y.Z"           # Marketing version (e.g., "2.1.3")
+#     build: NNNNN               # Build number (e.g., 21309)
+#     environment: staging|production
+#     date: "YYYY-MM-DD"         # Release date
+#     notes:                     # List of release notes (bulleted automatically)
+#       - "Feature or fix description"
+#       - "Another change"
+#
+# When you create a tag like: BCM-Stg-2.1.3(21309)
+# The workflow will look for a matching entry with:
+#   - version: "2.1.3"
+#   - build: 21309
+#   - environment: staging
+#
+# If found, it will use the notes for Firebase distribution and Discord notification.
+# If not found, it will use generic notes: "Build 21309 - Version 2.1.3"
+
+releases:
+  # Example staging release
+  - version: "0.2.0"
+    build: 2099
+    environment: staging
+    date: "2025-11-18"
+    notes:
+      - "Initial tag-based release system implementation"
+      - "Automated version management via GitHub Actions"
+      - "Discord notifications for releases"
+
+  # Example production release (template for future use)
+  # - version: "0.2.0"
+  #   build: 2100
+  #   environment: production
+  #   date: "2025-11-20"
+  #   notes:
+  #     - "First production release"
+  #     - "Stable build tested in staging"
+
+  # Add your releases below following the format above
+  # Remember to update version, build, environment, date, and notes

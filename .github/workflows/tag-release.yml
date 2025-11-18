@@ -1,0 +1,416 @@
+name: Tag-Based Release Distribution
+
+on:
+  push:
+    tags:
+      - 'BCM-**'
+      - 'bcm-**'
+      - 'Bcm-**'
+      - 'BFR-**'
+      - 'bfr-**'
+      - 'Bfr-**'
+
+jobs:
+  release:
+    name: Build and Distribute Release
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Parse tag and determine configuration
+        id: parse
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "📦 Processing tag: $TAG"
+
+          # Enable case-insensitive regex matching
+          shopt -s nocasematch
+
+          # Parse tag (case-insensitive)
+          # Format: CLIENT-ENV-VERSION(BUILD)
+          if [[ $TAG =~ ^([A-Za-z]+)-(Stg|Stage|Staging|Prod|Production)-([0-9.]+)\(([0-9]+)\)$ ]]; then
+            CLIENT="${BASH_REMATCH[1]^^}"  # Uppercase
+            ENV_RAW="${BASH_REMATCH[2]}"
+            VERSION="${BASH_REMATCH[3]}"
+            BUILD="${BASH_REMATCH[4]}"
+
+            # Normalize environment
+            case "${ENV_RAW,,}" in
+              stg|stage|staging)
+                ENVIRONMENT="staging"
+                ;;
+              prod|production)
+                ENVIRONMENT="production"
+                ;;
+              *)
+                echo "❌ Invalid environment: $ENV_RAW"
+                exit 1
+                ;;
+            esac
+
+            # Disable case-insensitive matching
+            shopt -u nocasematch
+
+            echo "client=$CLIENT" >> $GITHUB_OUTPUT
+            echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "build=$BUILD" >> $GITHUB_OUTPUT
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+            echo "✅ Parsed successfully:"
+            echo "   Client: $CLIENT"
+            echo "   Environment: $ENVIRONMENT"
+            echo "   Version: $VERSION"
+            echo "   Build: $BUILD"
+          else
+            echo "❌ Invalid tag format: $TAG"
+            echo "Expected format: CLIENT-ENV-VERSION(BUILD)"
+            echo "Examples: BCM-Stg-2.1.3(21309), BFR-Prod-1.5.2(15200)"
+            exit 1
+          fi
+
+      - name: Initial checkout to read config
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read configuration
+        id: config
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+          ENV="${{ steps.parse.outputs.environment }}"
+
+          # Install yq for YAML parsing
+          brew install yq
+
+          # Read configuration
+          BRANCH=$(yq e ".clients.$CLIENT.environments.$ENV.branch" .github/tag-config.yml)
+          SCHEME=$(yq e ".clients.$CLIENT.environments.$ENV.scheme" .github/tag-config.yml)
+          LANE=$(yq e ".clients.$CLIENT.environments.$ENV.fastlane_lane" .github/tag-config.yml)
+          DIRECTORY=$(yq e ".clients.$CLIENT.directory" .github/tag-config.yml)
+          PROJECT=$(yq e ".clients.$CLIENT.project" .github/tag-config.yml)
+          TARGET=$(yq e ".clients.$CLIENT.target" .github/tag-config.yml)
+          CLIENT_NAME=$(yq e ".clients.$CLIENT.name" .github/tag-config.yml)
+          CHANGELOG=$(yq e ".clients.$CLIENT.changelog" .github/tag-config.yml)
+          COLOR=$(yq e ".clients.$CLIENT.environments.$ENV.discord_color" .github/tag-config.yml)
+
+          # Validate
+          if [ "$BRANCH" == "null" ] || [ -z "$BRANCH" ]; then
+            echo "❌ Configuration not found for $CLIENT/$ENV in tag-config.yml"
+            exit 1
+          fi
+
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "scheme=$SCHEME" >> $GITHUB_OUTPUT
+          echo "lane=$LANE" >> $GITHUB_OUTPUT
+          echo "directory=$DIRECTORY" >> $GITHUB_OUTPUT
+          echo "project=$PROJECT" >> $GITHUB_OUTPUT
+          echo "target=$TARGET" >> $GITHUB_OUTPUT
+          echo "client_name=$CLIENT_NAME" >> $GITHUB_OUTPUT
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "discord_color=$COLOR" >> $GITHUB_OUTPUT
+
+          echo "✅ Configuration loaded:"
+          echo "   Branch: $BRANCH"
+          echo "   Scheme: $SCHEME"
+          echo "   Directory: $DIRECTORY"
+
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.config.outputs.branch }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read changelog and extract release notes
+        id: changelog
+        run: |
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          ENV="${{ steps.parse.outputs.environment }}"
+          CHANGELOG_FILE="${{ steps.config.outputs.changelog }}"
+
+          echo "📖 Reading changelog from: $CHANGELOG_FILE"
+
+          if [ ! -f "$CHANGELOG_FILE" ]; then
+            echo "⚠️  Changelog file not found, using generic notes"
+            NOTES="Build $BUILD - Version $VERSION"
+          else
+            # Find matching release in YAML
+            NOTES=$(yq e ".releases[] | select(.version == \"$VERSION\" and .build == $BUILD and .environment == \"$ENV\") | .notes | join(\"\n• \")" "$CHANGELOG_FILE")
+
+            if [ -z "$NOTES" ] || [ "$NOTES" == "null" ]; then
+              echo "⚠️  No matching changelog entry found for v$VERSION ($BUILD) in $ENV"
+              NOTES="Build $BUILD - Version $VERSION"
+            else
+              NOTES="• $NOTES"
+              echo "✅ Found changelog entry"
+            fi
+          fi
+
+          # Store in multiline format for GitHub Actions
+          {
+            echo 'notes<<EOF'
+            echo "$NOTES"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+          echo "Release notes:"
+          echo "$NOTES"
+
+      - name: Cache SPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/*/SourcePackages
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ steps.config.outputs.directory }}
+
+      - name: Setup App Store Connect API Key
+        working-directory: ${{ steps.config.outputs.directory }}/fastlane
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          echo "📝 Setting up App Store Connect API Key..."
+          echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_7NC93JSN42.p8
+          chmod 600 AuthKey_7NC93JSN42.p8
+          echo "✅ API Key configured"
+
+      - name: Setup environment variables
+        working-directory: ${{ steps.config.outputs.directory }}/fastlane
+        env:
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          FIREBASE_PROJECT_NUMBER: ${{ secrets.FIREBASE_PROJECT_NUMBER }}
+          GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
+          BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
+          BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
+        run: |
+          cat > .env << EOF
+          MATCH_GIT_URL=$MATCH_GIT_URL
+          MATCH_PASSWORD=$MATCH_PASSWORD
+          APP_STORE_CONNECT_API_KEY_ID=$APP_STORE_CONNECT_API_KEY_ID
+          APP_STORE_CONNECT_API_ISSUER_ID=$APP_STORE_CONNECT_API_ISSUER_ID
+          APP_STORE_CONNECT_API_KEY_FILEPATH=./fastlane/AuthKey_7NC93JSN42.p8
+          FIREBASE_CLI_TOKEN=$FIREBASE_CLI_TOKEN
+          FIREBASE_PROJECT_NUMBER=$FIREBASE_PROJECT_NUMBER
+          GOMA_TEAM_ID=$GOMA_TEAM_ID
+          BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
+          BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
+          EOF
+          echo "✅ Environment configured"
+
+      - name: Setup SSH for Match
+        env:
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/match_deploy_key
+          chmod 600 ~/.ssh/match_deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cat > ~/.ssh/config << EOF
+          Host github.com
+            HostName github.com
+            IdentityFile ~/.ssh/match_deploy_key
+            IdentitiesOnly yes
+          EOF
+
+      - name: Setup Keychain
+        run: |
+          KEYCHAIN_NAME="ci-build.keychain-db"
+          KEYCHAIN_PASSWORD="ci-temporary-password"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/$KEYCHAIN_NAME"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
+
+          echo "KEYCHAIN_NAME=$KEYCHAIN_NAME" >> $GITHUB_ENV
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
+
+      - name: Set version in Xcode project
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          PROJECT="${{ steps.config.outputs.project }}"
+          TARGET="${{ steps.config.outputs.target }}"
+
+          echo "📝 Setting version in Xcode project..."
+          echo "   Project: $PROJECT"
+          echo "   Target: $TARGET"
+          echo "   Marketing Version: $VERSION"
+          echo "   Build Number: $BUILD"
+
+          # Install fastlane if needed for version setting
+          bundle exec fastlane run increment_version_number_in_xcodeproj \
+            version_number:"$VERSION" \
+            xcodeproj:"$PROJECT" \
+            target:"$TARGET"
+
+          bundle exec fastlane run increment_build_number_in_xcodeproj \
+            build_number:"$BUILD" \
+            xcodeproj:"$PROJECT" \
+            target:"$TARGET"
+
+          echo "✅ Version set successfully"
+
+      - name: Build and distribute
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          LANE="${{ steps.config.outputs.lane }}"
+          NOTES="${{ steps.changelog.outputs.notes }}"
+
+          echo "🚀 Running fastlane lane: $LANE"
+
+          bundle exec fastlane $LANE release_notes:"$NOTES"
+
+          echo "✅ Build and distribution complete"
+
+      - name: Commit version changes
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+          ENV="${{ steps.parse.outputs.environment }}"
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          TAG="${{ steps.parse.outputs.tag }}"
+          CLIENT_NAME="${{ steps.config.outputs.client_name }}"
+          NOTES="${{ steps.changelog.outputs.notes }}"
+          PROJECT="${{ steps.config.outputs.directory }}/${{ steps.config.outputs.project }}"
+
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Check if there are changes
+          if git diff --quiet "$PROJECT"; then
+            echo "ℹ️  No version changes to commit"
+          else
+            # Create formatted commit message
+            cat > /tmp/commit_message << EOF
+          Release: $CLIENT_NAME ${ENV^} v$VERSION ($BUILD)
+
+          Environment: ${ENV^}
+          Version: $VERSION
+          Build: $BUILD
+          Tag: $TAG
+
+          Release Notes:
+          $NOTES
+
+          Automated release via GitHub Actions
+          EOF
+
+            git add "$PROJECT"
+            git commit -F /tmp/commit_message
+            git push origin ${{ steps.config.outputs.branch }}
+
+            echo "✅ Version changes committed and pushed"
+          fi
+
+      - name: Send Discord notification
+        if: always()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          CLIENT_NAME="${{ steps.config.outputs.client_name }}"
+          ENV="${{ steps.parse.outputs.environment }}"
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          TAG="${{ steps.parse.outputs.tag }}"
+          NOTES="${{ steps.changelog.outputs.notes }}"
+          COLOR="${{ steps.config.outputs.discord_color }}"
+
+          # Determine status
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS_EMOJI="✅"
+            STATUS_TEXT="Successfully distributed to Firebase"
+          else
+            STATUS_EMOJI="❌"
+            STATUS_TEXT="Build failed"
+            COLOR=15158332  # Red
+          fi
+
+          # Format release notes for Discord (escape quotes and newlines)
+          NOTES_ESCAPED=$(echo "$NOTES" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+
+          # Send webhook
+          curl -X POST "$DISCORD_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d @- << EOF
+          {
+            "embeds": [{
+              "title": "🚀 $CLIENT_NAME ${ENV^} Release - v$VERSION ($BUILD)",
+              "color": $COLOR,
+              "fields": [
+                {
+                  "name": "Client",
+                  "value": "$CLIENT_NAME",
+                  "inline": true
+                },
+                {
+                  "name": "Environment",
+                  "value": "${ENV^}",
+                  "inline": true
+                },
+                {
+                  "name": "Version",
+                  "value": "$VERSION ($BUILD)",
+                  "inline": true
+                },
+                {
+                  "name": "Tag",
+                  "value": "\`$TAG\`",
+                  "inline": false
+                },
+                {
+                  "name": "Release Notes",
+                  "value": "$NOTES_ESCAPED",
+                  "inline": false
+                },
+                {
+                  "name": "Build Status",
+                  "value": "$STATUS_EMOJI $STATUS_TEXT",
+                  "inline": false
+                }
+              ],
+              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
+            }]
+          }
+          EOF
+
+          echo "✅ Discord notification sent"
+
+      - name: Upload build artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastlane-logs-${{ steps.parse.outputs.client }}-${{ steps.parse.outputs.environment }}
+          path: |
+            ${{ steps.config.outputs.directory }}/fastlane/logs/
+            ${{ steps.config.outputs.directory }}/fastlane/report.xml
+          retention-days: 7
+
+      - name: Cleanup
+        if: always()
+        run: |
+          if [ -n "$KEYCHAIN_NAME" ]; then
+            security delete-keychain "$HOME/Library/Keychains/$KEYCHAIN_NAME" 2>/dev/null || true
+          fi
+          rm -f ~/.ssh/match_deploy_key
+          rm -f ${{ steps.config.outputs.directory }}/fastlane/.env
+          rm -f ${{ steps.config.outputs.directory }}/fastlane/AuthKey_7NC93JSN42.p8

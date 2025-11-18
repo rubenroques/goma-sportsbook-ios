@@ -1,0 +1,45 @@
+# Tag-based Release Configuration
+# Maps client + environment to build settings and branch strategy
+
+clients:
+  BCM:
+    name: "Betsson Cameroon"
+    directory: "BetssonCameroonApp"
+    project: "BetssonCameroonApp.xcodeproj"
+    workspace: "../Sportsbook.xcworkspace"
+    target: "BetssonCameroonApp"
+    changelog: "BetssonCameroonApp/CHANGELOG.yml"
+
+    environments:
+      staging:
+        branch: "betsson-cm"
+        scheme: "BetssonCM Staging"
+        fastlane_lane: "keep_version_distribute_staging"
+        discord_color: 3447003  # Blue
+
+      production:
+        branch: "main"
+        scheme: "BetssonCM Prod"
+        fastlane_lane: "keep_version_distribute_production"
+        discord_color: 3066993  # Green
+
+  BFR:
+    name: "Betsson France"
+    directory: "BetssonFranceApp"
+    project: "BetssonFranceApp.xcodeproj"
+    workspace: "../Sportsbook.xcworkspace"
+    target: "BetssonFranceApp"
+    changelog: "BetssonFranceApp/CHANGELOG.yml"
+
+    environments:
+      staging:
+        branch: "betsson-france-dev"
+        scheme: "Betsson UAT"
+        fastlane_lane: "betsson_uat"
+        discord_color: 3447003  # Blue
+
+      production:
+        branch: "main"
+        scheme: "Betsson PROD"
+        fastlane_lane: "betsson_prod"
+        discord_color: 3066993  # Green
