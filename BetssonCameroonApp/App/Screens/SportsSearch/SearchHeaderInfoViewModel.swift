@@ -1,14 +1,15 @@
 //
-//  MockSearchHeaderInfoViewModel.swift
-//  GomaUI
+//  SearchHeaderInfoViewModel.swift
+//  BetssonCameroonApp
 //
-//  Created on 2024-12-19.
+//  Created by André Lascas on 18/11/2025.
 //
 
 import Foundation
 import Combine
+import GomaUI
 
-public class MockSearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
+public class SearchHeaderInfoViewModel: SearchHeaderInfoViewModelProtocol {
     public var searchTerm: String
     public var categoryString: String
     public var showResultsString: String

@@ -2326,6 +2326,16 @@ extension Client {
 
         return homeContentProvider.getTopCompetitions()
     }
+
+    public func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getFooterLinks(language: language)
+    }
     
 }
 

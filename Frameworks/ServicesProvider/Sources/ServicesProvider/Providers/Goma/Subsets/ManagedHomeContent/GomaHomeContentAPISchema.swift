@@ -26,6 +26,7 @@ enum GomaHomeContentAPISchema {
     case news(pageIndex: Int, pageSize: Int)
     case proChoices
     case topCompetitions
+    case footerLinks(language: String?)
     
 }
 
@@ -64,6 +65,8 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "/api/promotions/v1/pro-choices"
         case .topCompetitions:
             return "/api/competitions/v1/featured"
+        case .footerLinks:
+            return "/api/cms/v1/footer/links"
         }
     }
 
@@ -81,6 +84,11 @@ extension GomaHomeContentAPISchema: Endpoint {
 
         case .initialDump:
             queryItems.append(URLQueryItem(name: "promotions", value: "false"))
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+        case .footerLinks(let language):
+            if let language {
+                queryItems.append(URLQueryItem(name: "language", value: language))
+            }
             queryItems.append(URLQueryItem(name: "platform", value: "ios"))
 
         default:
@@ -157,6 +165,8 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "Get top/featured competitions"
         case .initialDump:
             return "Get initial data dump including sports, competitions, and events"
+        case .footerLinks:
+            return "Get footer links for the configured client"
         }
     }
 }

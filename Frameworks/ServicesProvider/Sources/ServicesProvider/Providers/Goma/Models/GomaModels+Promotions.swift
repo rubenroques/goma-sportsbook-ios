@@ -347,6 +347,39 @@ extension GomaModels {
     typealias TopCompetitionPointers = [TopCompetitionPointer]
     typealias TopCompetitionPointer = String
 
+    typealias FooterLinks = [FooterLink]
+    struct FooterLink: Identifiable, Equatable, Hashable, Codable {
+        let id: Int
+        let type: String
+        let subType: String?
+        let label: String
+        let computedUrl: String
+        let target: String?
+        let order: Int
+        let platform: String?
+        let userType: String?
+        let status: String?
+        let language: String?
+        let startDate: String?
+        let endDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case type
+            case subType = "sub_type"
+            case label
+            case computedUrl = "computed_url"
+            case target
+            case order
+            case platform
+            case userType = "user_type"
+            case status
+            case language
+            case startDate = "start_date"
+            case endDate = "end_date"
+        }
+    }
+
     struct PromotionInfo: Codable {
         let id: Int
         let title: String

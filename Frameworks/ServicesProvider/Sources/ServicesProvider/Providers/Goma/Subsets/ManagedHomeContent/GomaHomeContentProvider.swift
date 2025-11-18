@@ -333,4 +333,10 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
+    func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError> {
+        return self.apiClient.footerLinks(language: language)
+            .map(GomaModelMapper.footerLinks(fromInternalFooterLinks:))
+            .eraseToAnyPublisher()
+    }
+
 }

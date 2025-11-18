@@ -135,4 +135,11 @@ protocol HomeContentProvider: Connector {
     
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>
 
+    // MARK: - Footer Links
+
+    /// Retrieves the configured footer links for the current client/language
+    /// - Parameter language: Optional language code override (defaults to backend inference when nil)
+    /// - Returns: Publisher that emits an ordered list of footer links
+    func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError>
+
 }

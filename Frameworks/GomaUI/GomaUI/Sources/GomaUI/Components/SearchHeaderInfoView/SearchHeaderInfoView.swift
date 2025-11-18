@@ -70,9 +70,9 @@ public class SearchHeaderInfoView: UIView {
         switch viewModel.state {
         case .loading:
             self.messageLabel.attributedText = self.createAttributedText(
-                prefix: "Searching for \"",
+                prefix: "\(viewModel.searchingString) \"",
                 searchTerm: viewModel.searchTerm,
-                suffix: "\" in \(viewModel.category)..."
+                suffix: "\" \(viewModel.categoryString)..."
             )
             self.iconImageView.isHidden = true
             self.startLoadingAnimation()
@@ -80,16 +80,16 @@ public class SearchHeaderInfoView: UIView {
         case .results:
             if let count = viewModel.count {
                 self.messageLabel.attributedText = self.createAttributedTextWithCount(
-                    prefix: "Showing Results for \"",
+                    prefix: "\(viewModel.showResultsString) \"",
                     searchTerm: viewModel.searchTerm,
-                    middle: "\" in \(viewModel.category) ",
+                    middle: "\" \(viewModel.categoryString) ",
                     count: "(\(count))"
                 )
             } else {
                 self.messageLabel.attributedText = self.createAttributedText(
-                    prefix: "Showing Results for \"",
+                    prefix: "\(viewModel.showResultsString) \"",
                     searchTerm: viewModel.searchTerm,
-                    suffix: "\" in \(viewModel.category)"
+                    suffix: "\" \(viewModel.categoryString)"
                 )
             }
             self.iconImageView.isHidden = true
@@ -97,9 +97,9 @@ public class SearchHeaderInfoView: UIView {
             
         case .noResults:
             self.messageLabel.attributedText = self.createAttributedText(
-                prefix: "No Results for \"",
+                prefix: "\(viewModel.noResultsString) \"",
                 searchTerm: viewModel.searchTerm,
-                suffix: "\" in \(viewModel.category)"
+                suffix: "\" \(viewModel.categoryString)"
             )
             self.iconImageView.isHidden = false
             self.stopLoadingAnimation()
@@ -229,9 +229,9 @@ public class SearchHeaderInfoView: UIView {
 
             // Build fresh attributed text from the current view model state
             let attributed = self.createAttributedText(
-                prefix: "Searching for \"",
+                prefix: "\(viewModel.searchingString) \"",
                 searchTerm: self.viewModel.searchTerm,
-                suffix: "\" in \(self.viewModel.category)\(ellipsis)"
+                suffix: "\" \(self.viewModel.categoryString)\(ellipsis)"
             )
             self.messageLabel.attributedText = attributed
             animationStep += 1

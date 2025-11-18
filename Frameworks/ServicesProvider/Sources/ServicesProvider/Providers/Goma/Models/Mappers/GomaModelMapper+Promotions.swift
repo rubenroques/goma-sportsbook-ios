@@ -211,6 +211,46 @@ extension GomaModelMapper {
     static func topCompetitionPointer(fromInternalTopCompetitionPointer pointer: GomaModels.TopCompetitionPointer) -> TopCompetitionPointer {
         return TopCompetitionPointer.init(id: pointer, name: "", competitionId: pointer)
     }
+
+    // MARK: - Footer Links
+
+    static func footerLinks(fromInternalFooterLinks links: GomaModels.FooterLinks) -> FooterLinks {
+        return links.map { footerLink(fromInternalFooterLink: $0) }
+    }
+
+    static func footerLink(fromInternalFooterLink link: GomaModels.FooterLink) -> FooterCMSLink {
+        let startDate = link.startDate.flatMap { GomaProvider.parseGomaDateString($0) }
+        let endDate = link.endDate.flatMap { GomaProvider.parseGomaDateString($0) }
+
+        return FooterCMSLink(
+            id: String(link.id),
+            type: footerLinkType(from: link.type),
+            subType: link.subType,
+            label: link.label,
+            computedUrl: link.computedUrl,
+            target: link.target,
+            order: link.order,
+            platform: link.platform,
+            userType: link.userType,
+            status: link.status,
+            language: link.language,
+            startDate: startDate,
+            endDate: endDate
+        )
+    }
+
+    private static func footerLinkType(from rawValue: String) -> FooterCMSLink.LinkType {
+        switch rawValue.lowercased() {
+        case FooterCMSLink.LinkType.pdf.rawValue:
+            return .pdf
+        case FooterCMSLink.LinkType.external.rawValue:
+            return .external
+        case FooterCMSLink.LinkType.mailto.rawValue:
+            return .mailto
+        default:
+            return .unknown
+        }
+    }
     
     static func promotionInfo(fromInternalPromotionInfo promotionInfo: GomaModels.PromotionInfo) -> PromotionInfo {
         
