@@ -600,10 +600,10 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
 
     // MARK: - Transaction History Methods
 
-    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
 
-        let endpoint = EveryMatrixPlayerAPI.getBankingTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+        let endpoint = EveryMatrixPlayerAPI.getBankingTransactions(userId: currentUserId, startDate: startDate, endDate: endDate, pageNumber: pageNumber, types: types, states: states)
         let publisher: AnyPublisher<EveryMatrix.BankingTransactionsResponse, ServiceProviderError> = self.restConnector.request(endpoint)
 
         return publisher
@@ -627,9 +627,9 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     }
 
     // Helper methods with date filter
-    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         let (startDate, endDate) = calculateDates(for: filter)
-        return getBankingTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber)
+        return getBankingTransactionsHistory(startDate: startDate, endDate: endDate, pageNumber: pageNumber, types: types, states: states)
     }
 
     func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {

@@ -1,3 +1,4 @@
+import GomaUI
 
 import Foundation
 import Combine
@@ -38,7 +39,10 @@ public struct WalletDetailDisplayState: Equatable {
     public let walletData: WalletDetailData
     public let isLoading: Bool
     
-    public init(walletData: WalletDetailData, isLoading: Bool = false) {
+    public init(
+        walletData: WalletDetailData,
+        isLoading: Bool = false
+    ) {
         self.walletData = walletData
         self.isLoading = isLoading
     }
@@ -75,6 +79,16 @@ public protocol WalletDetailViewModelProtocol {
     
     /// View model for the deposit button
     var depositButtonViewModel: ButtonViewModelProtocol { get }
+    
+    // MARK: - Pending Withdraw Section
+    /// View model for the pending withdraw expandable section (optional)
+    var pendingWithdrawSectionViewModel: CustomExpandableSectionViewModelProtocol? { get set }
+    
+    /// View models for individual pending withdraw items
+    var pendingWithdrawViewModels: [PendingWithdrawViewModelProtocol] { get set }
+    
+    /// Publisher for pending withdraw view models updates
+    var pendingWithdrawViewModelsPublisher: AnyPublisher<[PendingWithdrawViewModelProtocol], Never> { get }
     
     // MARK: - Actions
     /// Trigger withdraw action

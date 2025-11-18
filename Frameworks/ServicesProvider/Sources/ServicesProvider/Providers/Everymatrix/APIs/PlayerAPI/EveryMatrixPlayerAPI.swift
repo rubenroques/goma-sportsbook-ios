@@ -25,7 +25,7 @@ enum EveryMatrixPlayerAPI {
     //
     case getBankingWebView(userId: String, parameters: EveryMatrix.GetPaymentSessionRequest)
     case getWageringTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
-    case getBankingTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?)
+    case getBankingTransactions(userId: String, startDate: String, endDate: String, pageNumber: Int?, types: String?, states: [String]?)
     //
     case getRecentlyPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
     case getMostPlayedGames(playerId: String, language: String, platform: String, offset: Int, limit: Int)
@@ -90,7 +90,7 @@ extension EveryMatrixPlayerAPI: Endpoint {
             return "/v1/player/\(userId)/payment/GetPaymentSession"
         case .getWageringTransactions(let userId, _, _, _):
             return "/v1/player/\(userId)/transactions/wagering"
-        case .getBankingTransactions(let userId, _, _, _):
+        case .getBankingTransactions(let userId, _, _, _, _, _):
             return "/v1/player/\(userId)/transactions/banking"
         case .getRecentlyPlayedGames(let playerId, _, _, _, _):
             return "/v1/player/\(playerId)/games/last-played"
@@ -130,13 +130,21 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 queryItems.append(URLQueryItem(name: "page", value: String(pageNumber)))
             }
             return queryItems
-        case .getBankingTransactions(_, let startDate, let endDate, let pageNumber):
+        case .getBankingTransactions(_, let startDate, let endDate, let pageNumber, let types, let states):
             var queryItems = [
                 URLQueryItem(name: "startDate", value: startDate),
                 URLQueryItem(name: "endDate", value: endDate)
             ]
             if let pageNumber = pageNumber {
                 queryItems.append(URLQueryItem(name: "page", value: String(pageNumber)))
+            }
+            if let types = types {
+                queryItems.append(URLQueryItem(name: "types", value: types))
+            }
+            if let states = states, !states.isEmpty {
+                states.forEach { state in
+                    queryItems.append(URLQueryItem(name: "states", value: state))
+                }
             }
             return queryItems
         case .getResponsibleGamingLimits(_, let periodTypes, let limitTypes):

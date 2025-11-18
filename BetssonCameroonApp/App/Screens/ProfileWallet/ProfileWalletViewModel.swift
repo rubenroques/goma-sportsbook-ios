@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 import GomaUI
 import ServicesProvider
 
@@ -48,6 +49,7 @@ final class ProfileWalletViewModel: ObservableObject {
     var onWithdrawRequested: (() -> Void)?
     var onMenuItemSelected: ((ActionRowItem, String?) -> Void)?
     var showErrorAlert: ((String) -> Void)?
+    var onTransactionIdCopied: ((String) -> Void)?
     
     var isActionLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
@@ -84,10 +86,68 @@ final class ProfileWalletViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.displayState = ProfileWalletDisplayState(isLoading: false)
         }
+        
+        fetchPendingWithdraws()
     }
     
     func refreshData() {
         loadData()
+    }
+    
+    func fetchPendingWithdraws() {
+        
+        // Fetch pending withdraws with types='1' (withdraw) and states=['Pending', 'PendingNotification']
+        servicesProvider.getBankingTransactionsHistory(
+            filter: .all,
+            pageNumber: nil,
+            types: "1",
+            states: ["Pending", "PendingNotification"]
+        )
+        .receive(on: DispatchQueue.main)
+        .sink(
+            receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("Error fetching pending withdraws: \(error)")
+                    // Handle error if needed
+                }
+            },
+            receiveValue: { [weak self] response in
+                guard let self = self else { return }
+                
+                // Process the response and update wallet detail view model if needed
+                print("Fetched \(response.transactions.count) pending withdraws")
+                
+                // Map transactions to pending withdraw view models
+                let pendingWithdrawViewModels = response.transactions.map { transaction in
+                    self.createPendingWithdrawViewModel(from: transaction)
+                }
+                
+                // Update wallet detail view model
+                if pendingWithdrawViewModels.isEmpty {
+                    // Hide section if no pending withdraws
+                    self.walletDetailViewModel.pendingWithdrawSectionViewModel = nil
+                    self.walletDetailViewModel.pendingWithdrawViewModels = []
+                } else {
+                    // Create or update expandable section view model
+                    if self.walletDetailViewModel.pendingWithdrawSectionViewModel == nil {
+                        self.walletDetailViewModel.pendingWithdrawSectionViewModel = CustomExpandableSectionViewModel(
+                            title: localized("pending_withdraws"),
+                            isExpanded: false,
+                            leadingIconName: "timelapse_icon",
+                            collapsedIconName: "chevron_down_icon",
+                            expandedIconName: "chevron_up_icon"
+                        )
+                    }
+                    
+                    // Update view models
+                    self.walletDetailViewModel.pendingWithdrawViewModels = pendingWithdrawViewModels
+                }
+            }
+        )
+        .store(in: &cancellables)
     }
 
     func refreshLanguageDisplay() {
@@ -167,5 +227,59 @@ final class ProfileWalletViewModel: ObservableObject {
                 self.onMenuItemSelected?(menuItem, response.tokenId)
             })
             .store(in: &cancellables)
+    }
+    
+    // MARK: - Private Helper Methods
+    
+    private func createPendingWithdrawViewModel(from transaction: ServicesProvider.BankingTransaction) -> PendingWithdrawViewModelProtocol {
+        // Format date: "dd/MM/yyyy, HH:mm"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy, HH:mm"
+        let dateText = dateFormatter.string(from: transaction.created)
+        
+        // Format amount with currency
+        let amountValueText = CurrencyHelper.formatAmountWithCurrency(
+            abs(transaction.realAmount),
+            currency: transaction.currency
+        )
+        
+        // Format transaction ID (convert Int64 to String)
+        let transactionIdValueText = String(transaction.transId)
+        
+        // Determine status style based on status
+        let statusStyle = self.statusStyle(for: transaction.status)
+        
+        let transactionStatus = localized("in_progress")
+        
+        // Create display state
+        let displayState = PendingWithdrawViewDisplayState(
+            dateText: dateText,
+            statusText: transactionStatus,
+            statusStyle: statusStyle,
+            amountTitleText: localized("simple_amount"),
+            amountValueText: amountValueText,
+            transactionIdTitleText: localized("transaction_id"),
+            transactionIdValueText: transactionIdValueText,
+            copyIconName: "copy_icon"
+        )
+        
+        // Create view model
+        let viewModel = PendingWithdrawViewModel(displayState: displayState)
+        
+        // Setup copy handler
+        viewModel.onCopyRequested = { [weak self] transactionId in
+            UIPasteboard.general.string = transactionId
+            print("Copied transaction ID \(transactionId) to pasteboard")
+            // Notify view controller to show alert
+            self?.onTransactionIdCopied?(transactionId)
+        }
+        
+        return viewModel
+    }
+    
+    private func statusStyle(for status: String) -> PendingWithdrawStatusStyle {
+        // Use default style for pending statuses
+        // You can customize this based on different status values if needed
+        return PendingWithdrawStatusStyle()
     }
 }

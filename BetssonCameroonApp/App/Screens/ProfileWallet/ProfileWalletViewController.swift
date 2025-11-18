@@ -206,6 +206,16 @@ final class ProfileWalletViewController: UIViewController {
                 self?.render(displayState: displayState)
             }
             .store(in: &cancellables)
+        
+        viewModel.onTransactionIdCopied = { [weak self] transactionId in
+            let alert = UIAlertController(
+                title: localized("copied"),
+                message: localized("transaction_id_copied"),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+            self?.present(alert, animated: true)
+        }
     }
     
     private func setupActions() {

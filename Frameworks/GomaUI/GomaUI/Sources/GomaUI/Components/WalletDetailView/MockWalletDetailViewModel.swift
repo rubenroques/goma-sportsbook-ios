@@ -44,6 +44,19 @@ final public class MockWalletDetailViewModel: WalletDetailViewModelProtocol {
     public let withdrawButtonViewModel: ButtonViewModelProtocol
     public let depositButtonViewModel: ButtonViewModelProtocol
     
+    // MARK: - Pending Withdraw Section
+    public var pendingWithdrawSectionViewModel: CustomExpandableSectionViewModelProtocol?
+    public var pendingWithdrawViewModels: [PendingWithdrawViewModelProtocol] = [] {
+        didSet {
+            pendingWithdrawViewModelsSubject.send(pendingWithdrawViewModels)
+        }
+    }
+    private let pendingWithdrawViewModelsSubject = CurrentValueSubject<[PendingWithdrawViewModelProtocol], Never>([])
+    
+    public var pendingWithdrawViewModelsPublisher: AnyPublisher<[PendingWithdrawViewModelProtocol], Never> {
+        pendingWithdrawViewModelsSubject.eraseToAnyPublisher()
+    }
+    
     // MARK: - Internal State
     private var walletData: WalletDetailData
     

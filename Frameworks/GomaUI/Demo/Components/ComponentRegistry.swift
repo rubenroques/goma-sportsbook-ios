@@ -627,6 +627,15 @@ struct ComponentRegistry {
     // MARK: - Wallet & Financial Components
     private static let walletComponents: [UIComponent] = [
         UIComponent(
+            title: "Pending Withdraw View",
+            description: "Displays withdraw request summary with status badge, amount, and copy-to-clipboard transaction ID action.",
+            viewController: PendingWithdrawViewController.self,
+            previewFactory: {
+                let viewModel = MockPendingWithdrawViewModel()
+                return PendingWithdrawView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
             title: "Wallet Widget",
             description: "Compact wallet balance display with deposit action button",
             viewController: WalletWidgetViewController.self,
@@ -1204,6 +1213,22 @@ struct ComponentRegistry {
                 label.textColor = StyleProvider.Color.textSecondary
                 sectionView.contentContainer.addArrangedSubview(label)
                 
+                return sectionView
+            }
+        ),
+        UIComponent(
+            title: "Custom Expandable Section View",
+            description: "Expandable section that supports leading icons and fully customizable expand/collapse icons.",
+            viewController: CustomExpandableSectionViewController.self,
+            previewFactory: {
+                let viewModel = MockCustomExpandableSectionViewModel.defaultCollapsed
+                let sectionView = CustomExpandableSectionView(viewModel: viewModel)
+                let label = UILabel()
+                label.text = "Plug any UIView into the content stack to build settings, FAQs, or wallet information."
+                label.numberOfLines = 0
+                label.font = StyleProvider.fontWith(type: .regular, size: 13)
+                label.textColor = StyleProvider.Color.textSecondary
+                sectionView.contentContainer.addArrangedSubview(label)
                 return sectionView
             }
         )
