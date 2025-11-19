@@ -83,9 +83,11 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
             self?.handleLinkTap(linkType)
         }
         
-        self.fetchFooterLinks()
-        self.fetchFooterSponsors()
-        self.fetchFooterSocialLinks()
+        let language = Env.locale.language.languageCode?.identifier
+        
+        self.fetchFooterLinks(language: language)
+        self.fetchFooterSponsors(language: language)
+        self.fetchFooterSocialLinks(language: language)
     }
 
     // MARK: - Private Methods

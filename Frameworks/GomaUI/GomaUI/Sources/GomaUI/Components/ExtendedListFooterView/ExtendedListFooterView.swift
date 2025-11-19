@@ -45,6 +45,10 @@ public class ExtendedListFooterView: UIView {
     private var sponsorLogosContainer: UIView?
     private var sponsorViewMap: [UIView: FooterSponsor] = [:]
 
+    private var socialSectionContainer: UIView?
+    private var socialLinksContainer: UIView?
+    private var socialLinkViewMap: [UIView: FooterSocialLink] = [:]
+
     // MARK: - Initialization
 
     public init(viewModel: ExtendedListFooterViewModelProtocol) {
@@ -68,8 +72,15 @@ public class ExtendedListFooterView: UIView {
 
     private func bindViewModel() {
         viewModel.onSponsorsUpdated = { [weak self] sponsors in
-            self?.updateSponsorSection(with: sponsors)
-            
+            DispatchQueue.main.async {
+                self?.updateSponsorSection(with: sponsors)
+            }
+        }
+
+        viewModel.onSocialLinksUpdated = { [weak self] links in
+            DispatchQueue.main.async {
+                self?.updateSocialLinksSection(with: links)
+            }
         }
     }
 
@@ -226,9 +237,9 @@ public class ExtendedListFooterView: UIView {
         ])
 
         if let iconURL = sponsor.iconURL {
-            loadImage(from: iconURL, into: imageView)
+            loadImage(from: iconURL, into: imageView, context: "sponsor_\(sponsor.id)")
         } else {
-            imageView.image = UIImage(systemName: "photo")
+            imageView.image = UIImage(systemName: "sponsor_\(sponsor.id)")
             imageView.tintColor = StyleProvider.Color.allWhite
         }
 
@@ -249,18 +260,13 @@ public class ExtendedListFooterView: UIView {
         viewModel.handleSponsorTap(sponsor)
     }
 
-    private func loadImage(from url: URL, into imageView: UIImageView) {
+    private func loadImage(from url: URL, into imageView: UIImageView, context: String) {
         imageView.kf.cancelDownloadTask()
 
-        let options: KingfisherOptionsInfo = [
-            .transition(.fade(0.2)),
-            .cacheOriginalImage
-        ]
-
-        imageView.kf.setImage(with: url, placeholder: nil, options: options) { result in
+        imageView.kf.setImage(with: url, placeholder: nil, options: nil) { result in
             if case .failure(let error) = result {
-                print("[ExtendedListFooterView] Failed to load sponsor image: \(error)")
-                imageView.image = UIImage(systemName: "photo")
+                print("[ExtendedListFooterView] Failed to load \(context) image: \(error)")
+                imageView.image = UIImage(named: context)
                 imageView.tintColor = StyleProvider.Color.allWhite
             }
         }
@@ -406,22 +412,24 @@ public class ExtendedListFooterView: UIView {
     private func setupSocialMediaSection() {
         let sectionContainer = UIView()
         sectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        socialSectionContainer = sectionContainer
 
-        // Header
         let headerLabel = Self.createSectionHeaderLabel(text: viewModel.socialMediaHeaderText)
         sectionContainer.addSubview(headerLabel)
 
-        // Icons container
-        let iconsContainer = createSocialMediaIconsContainer()
-        sectionContainer.addSubview(iconsContainer)
+        let linksContainer = UIView()
+        linksContainer.translatesAutoresizingMaskIntoConstraints = false
+        sectionContainer.addSubview(linksContainer)
+        socialLinksContainer = linksContainer
 
         NSLayoutConstraint.activate([
             headerLabel.topAnchor.constraint(equalTo: sectionContainer.topAnchor),
             headerLabel.centerXAnchor.constraint(equalTo: sectionContainer.centerXAnchor),
 
-            iconsContainer.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: Constants.subSectionSpacing),
-            iconsContainer.centerXAnchor.constraint(equalTo: sectionContainer.centerXAnchor),
-            iconsContainer.bottomAnchor.constraint(equalTo: sectionContainer.bottomAnchor)
+            linksContainer.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: Constants.subSectionSpacing),
+            linksContainer.leadingAnchor.constraint(equalTo: sectionContainer.leadingAnchor),
+            linksContainer.trailingAnchor.constraint(equalTo: sectionContainer.trailingAnchor),
+            linksContainer.bottomAnchor.constraint(equalTo: sectionContainer.bottomAnchor)
         ])
 
         mainStackView.addArrangedSubview(sectionContainer)
@@ -429,9 +437,46 @@ public class ExtendedListFooterView: UIView {
         NSLayoutConstraint.activate([
             sectionContainer.widthAnchor.constraint(equalTo: mainStackView.widthAnchor)
         ])
+
+        updateSocialLinksSection(with: viewModel.socialLinks)
     }
 
-    private func createSocialMediaIconsContainer() -> UIView {
+    private func updateSocialLinksSection(with socialLinks: [FooterSocialLink]) {
+        guard let sectionContainer = socialSectionContainer,
+              let linksContainer = socialLinksContainer else { return }
+
+        linksContainer.subviews.forEach { $0.removeFromSuperview() }
+        socialLinkViewMap.removeAll()
+
+        if socialLinks.isEmpty {
+            let fallbackView = createDefaultSocialMediaView()
+            linksContainer.addSubview(fallbackView)
+
+            NSLayoutConstraint.activate([
+                fallbackView.topAnchor.constraint(equalTo: linksContainer.topAnchor),
+                fallbackView.leadingAnchor.constraint(equalTo: linksContainer.leadingAnchor),
+                fallbackView.trailingAnchor.constraint(equalTo: linksContainer.trailingAnchor),
+                fallbackView.bottomAnchor.constraint(equalTo: linksContainer.bottomAnchor)
+            ])
+
+            sectionContainer.isHidden = viewModel.socialMediaPlatforms.isEmpty
+            return
+        }
+
+        sectionContainer.isHidden = false
+
+        let gridView = createSocialLinksGrid(with: socialLinks)
+        linksContainer.addSubview(gridView)
+
+        NSLayoutConstraint.activate([
+            gridView.topAnchor.constraint(equalTo: linksContainer.topAnchor),
+            gridView.leadingAnchor.constraint(equalTo: linksContainer.leadingAnchor),
+            gridView.trailingAnchor.constraint(equalTo: linksContainer.trailingAnchor),
+            gridView.bottomAnchor.constraint(equalTo: linksContainer.bottomAnchor)
+        ])
+    }
+
+    private func createDefaultSocialMediaView() -> UIView {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
 
@@ -461,6 +506,96 @@ public class ExtendedListFooterView: UIView {
         ])
 
         return container
+    }
+
+    private func createSocialLinksGrid(with socialLinks: [FooterSocialLink]) -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        let verticalStack = UIStackView()
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.axis = .vertical
+        verticalStack.spacing = Constants.socialIconSpacing
+        verticalStack.alignment = .center
+
+        container.addSubview(verticalStack)
+
+        NSLayoutConstraint.activate([
+            verticalStack.topAnchor.constraint(equalTo: container.topAnchor),
+            verticalStack.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            verticalStack.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            verticalStack.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        let iconsPerRow = 4
+        var currentRowStack: UIStackView?
+
+        for (index, link) in socialLinks.enumerated() {
+            if index % iconsPerRow == 0 {
+                let rowStack = UIStackView()
+                rowStack.translatesAutoresizingMaskIntoConstraints = false
+                rowStack.axis = .horizontal
+                rowStack.spacing = Constants.socialIconSpacing
+                rowStack.alignment = .center
+                rowStack.distribution = .equalSpacing
+                verticalStack.addArrangedSubview(rowStack)
+                currentRowStack = rowStack
+            }
+
+            if let rowStack = currentRowStack {
+                let linkView = createSocialLinkView(for: link)
+                rowStack.addArrangedSubview(linkView)
+            }
+        }
+
+        return container
+    }
+
+    private func createSocialLinkView(for link: FooterSocialLink) -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            container.widthAnchor.constraint(equalToConstant: Constants.socialIconSize),
+            container.heightAnchor.constraint(equalToConstant: Constants.socialIconSize)
+        ])
+
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+
+        container.addSubview(imageView)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: container.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        if let iconURL = link.iconURL {
+            loadImage(from: iconURL, into: imageView, context: "social_\(link.id)")
+        } else {
+            imageView.image = UIImage(systemName: "globe")
+            imageView.tintColor = StyleProvider.Color.allWhite
+        }
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSocialLinkTap(_:)))
+        container.addGestureRecognizer(tapGesture)
+        container.isUserInteractionEnabled = true
+        socialLinkViewMap[container] = link
+
+        return container
+    }
+
+    @objc private func handleSocialLinkTap(_ gesture: UITapGestureRecognizer) {
+        guard let tappedView = gesture.view,
+              let link = socialLinkViewMap[tappedView] else {
+            return
+        }
+
+        viewModel.handleSocialLinkTap(link)
     }
 
     @objc private func handleSocialMediaTap(_ sender: UIButton) {
