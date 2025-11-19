@@ -123,9 +123,8 @@ class MarketGroupCardsViewModel: ObservableObject {
     
     // MARK: - Production Implementation
     private func createTallOddsViewModel(from filteredData: FilteredMatchData) -> TallOddsMatchCardViewModel {
-        // Use the factory method from TallOddsMatchCardViewModel
-        return TallOddsMatchCardViewModel.create(
-            from: filteredData.match,
+        return TallOddsMatchCardViewModel(
+            match: filteredData.match,
             relevantMarkets: filteredData.relevantMarkets,
             marketTypeId: marketTypeId,
             matchCardContext: self.matchCardContext

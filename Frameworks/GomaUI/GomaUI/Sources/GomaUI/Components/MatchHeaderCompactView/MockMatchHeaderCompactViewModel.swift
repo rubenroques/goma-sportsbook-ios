@@ -2,13 +2,21 @@ import Foundation
 import Combine
 
 public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
-    
+
     // MARK: - Properties
     @Published private var headerData: MatchHeaderCompactData
-    
+
     // MARK: - Protocol Conformance
     public var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> {
         $headerData.eraseToAnyPublisher()
+    }
+
+    public var matchTimePublisher: AnyPublisher<String?, Never> {
+        $headerData.map(\.matchTime).eraseToAnyPublisher()
+    }
+
+    public var isLivePublisher: AnyPublisher<Bool, Never> {
+        $headerData.map(\.isLive).eraseToAnyPublisher()
     }
 
     public var onStatisticsTapped: (() -> Void)?
@@ -35,7 +43,9 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            matchTime: currentData.matchTime,
+            isLive: currentData.isLive
         )
 
         // Also call the callback
@@ -114,6 +124,66 @@ public extension MockMatchHeaderCompactViewModel {
                 countryId: "country-germany",
                 leagueId: "league-ucl-playoffs",
                 hasStatistics: true
+            )
+        )
+    }
+
+    static var liveFootballMatch: MockMatchHeaderCompactViewModel {
+        MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "Liverpool FC",
+                awayTeamName: "Arsenal FC",
+                sport: "Football",
+                country: "England",
+                league: "Premier League",
+                countryId: "country-england",
+                leagueId: "league-premier-league",
+                hasStatistics: true,
+                isStatisticsCollapsed: true,
+                statisticsCollapsedTitle: "View Statistics",
+                statisticsExpandedTitle: "Close Statistics",
+                matchTime: "1st Half, 45 min",
+                isLive: true
+            )
+        )
+    }
+
+    static var liveTennisMatch: MockMatchHeaderCompactViewModel {
+        MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "Novak Djokovic",
+                awayTeamName: "Rafael Nadal",
+                sport: "Tennis",
+                country: "France",
+                league: "Roland Garros",
+                countryId: "country-france",
+                leagueId: "league-roland-garros",
+                hasStatistics: true,
+                isStatisticsCollapsed: true,
+                statisticsCollapsedTitle: "View Statistics",
+                statisticsExpandedTitle: "Close Statistics",
+                matchTime: "6th Game (2nd Set)",
+                isLive: true
+            )
+        )
+    }
+
+    static var liveBasketballMatch: MockMatchHeaderCompactViewModel {
+        MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "LA Lakers",
+                awayTeamName: "Boston Celtics",
+                sport: "Basketball",
+                country: "USA",
+                league: "NBA",
+                countryId: "country-usa",
+                leagueId: "league-nba",
+                hasStatistics: true,
+                isStatisticsCollapsed: true,
+                statisticsCollapsedTitle: "View Statistics",
+                statisticsExpandedTitle: "Close Statistics",
+                matchTime: "3rd Quarter, 8 min",
+                isLive: true
             )
         )
     }
