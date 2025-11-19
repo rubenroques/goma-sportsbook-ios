@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import GomaPerformanceKit
 
 /// Base connector for all EveryMatrix API clients
 /// Provides transparent token refresh on 401/403 errors
@@ -57,9 +58,35 @@ class EveryMatrixRESTConnector: Connector {
     /// - Returns: Publisher emitting decoded response or error
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
         print("[EveryMatrix-REST api] Preparing request for endpoint: \(endpoint.endpoint)")
-        
+
+        // Get performance feature from endpoint (nil if not tracked)
+        let feature = endpoint.performanceFeature
+
+        // Start performance tracking if feature exists
+        if let feature = feature {
+            PerformanceTracker.shared.start(
+                feature: feature,
+                layer: .api,
+                metadata: [
+                    "endpoint": endpoint.endpoint,
+                    "method": endpoint.method.value()
+                ]
+            )
+        }
+
         // Build base request
         guard var request = endpoint.request() else {
+            // End tracking on error if tracking was started
+            if let feature = feature {
+                PerformanceTracker.shared.end(
+                    feature: feature,
+                    layer: .api,
+                    metadata: [
+                        "status": "error",
+                        "error": "Invalid request format"
+                    ]
+                )
+            }
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
         
@@ -135,17 +162,44 @@ class EveryMatrixRESTConnector: Connector {
                     }
                     return ServiceProviderError.errorMessage(message: error.localizedDescription)
                 }
+                .handleEvents(
+                    receiveOutput: { _ in
+                        // End tracking on success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .api,
+                                metadata: ["status": "success"]
+                            )
+                        }
+                    },
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            // End tracking on error
+                            if let feature = feature {
+                                PerformanceTracker.shared.end(
+                                    feature: feature,
+                                    layer: .api,
+                                    metadata: [
+                                        "status": "error",
+                                        "error": error.localizedDescription
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                )
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct request
             print("[EveryMatrix-REST api] Making unauthenticated request")
-            
+
             return performRequest(request)
                 .tryMap { [weak self] data in
                     guard let self = self else {
                         throw ServiceProviderError.unknown
                     }
-                    
+
                     return try self.decoder.decode(T.self, from: data)
                 }
                 .mapError { error -> ServiceProviderError in
@@ -154,6 +208,33 @@ class EveryMatrixRESTConnector: Connector {
                     }
                     return ServiceProviderError.errorMessage(message: error.localizedDescription)
                 }
+                .handleEvents(
+                    receiveOutput: { _ in
+                        // End tracking on success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .api,
+                                metadata: ["status": "success"]
+                            )
+                        }
+                    },
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            // End tracking on error
+                            if let feature = feature {
+                                PerformanceTracker.shared.end(
+                                    feature: feature,
+                                    layer: .api,
+                                    metadata: [
+                                        "status": "error",
+                                        "error": error.localizedDescription
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                )
                 .eraseToAnyPublisher()
         }
     }

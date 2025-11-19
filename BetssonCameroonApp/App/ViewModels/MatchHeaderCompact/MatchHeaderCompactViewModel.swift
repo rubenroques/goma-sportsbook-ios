@@ -53,7 +53,9 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            scoreViewModel: currentData.scoreViewModel,
+            isLive: currentData.isLive
         )
         headerDataSubject.send(updatedData)
 
@@ -89,6 +91,12 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
         let leagueName = match.competitionName
         let leagueId = match.competitionId
 
+        // Determine if match is live
+        let isLive = match.status.isLive
+
+        // Create score view model for live matches
+        let scoreViewModel: ScoreViewModelProtocol? = isLive ? ScoreViewModel(from: match) : nil
+
         return MatchHeaderCompactData(
             homeTeamName: match.homeParticipant.name,
             awayTeamName: match.awayParticipant.name,
@@ -100,13 +108,21 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
             hasStatistics: false,
             isStatisticsCollapsed: true,
             statisticsCollapsedTitle: localized("view_statistics"),
-            statisticsExpandedTitle: localized("close_statistics")
+            statisticsExpandedTitle: localized("close_statistics"),
+            scoreViewModel: scoreViewModel,
+            isLive: isLive
         )
     }
 }
 
 // MARK: - Live Data Updates
 extension MatchHeaderCompactViewModel {
+
+    /// Updates the header with new match data (including live scores)
+    public func updateMatch(_ match: Match) {
+        let updatedData = Self.createHeaderData(from: match)
+        headerDataSubject.send(updatedData)
+    }
 
     /// Updates the header with new match information
     /// This would be called when live data updates are received
@@ -124,7 +140,9 @@ extension MatchHeaderCompactViewModel {
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            scoreViewModel: currentData.scoreViewModel,
+            isLive: currentData.isLive
         )
 
         headerDataSubject.send(updatedData)
@@ -145,7 +163,9 @@ extension MatchHeaderCompactViewModel {
             hasStatistics: hasStatistics,
             isStatisticsCollapsed: currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            scoreViewModel: currentData.scoreViewModel,
+            isLive: currentData.isLive
         )
 
         headerDataSubject.send(updatedData)

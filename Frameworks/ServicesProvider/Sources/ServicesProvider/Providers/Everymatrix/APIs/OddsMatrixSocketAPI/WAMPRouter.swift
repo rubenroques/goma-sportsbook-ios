@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 // swiftlint:disable type_body_length
 enum WAMPRouter {
@@ -560,3 +561,45 @@ enum WAMPRouter {
 //     unregister [id: 1234566] ----------------------->
 //
 //
+
+// MARK: - Performance Tracking Extension
+
+extension WAMPRouter {
+    /// Performance tracking feature for WAMP routes
+    /// Returns .sportsData for sports-related subscriptions/RPCs, nil otherwise
+    var performanceFeature: PerformanceFeature? {
+        switch self {
+        // Sports data RPC calls
+        case .getLocations, .getCustomTournaments, .getTournaments, .getPopularTournaments,
+             .getMatchDetails, .getMatchOdds, .matchWithMainMarkets,
+             .getBettingOffer, .getBettingOfferReference,
+             .searchV2, .multiSearch, .eventsDetails, .disciplines,
+             .locations, .tournaments, .popularTournaments,
+             .matches, .popularMatches, .todayMatches, .nextMatches,
+             .events, .odds:
+            return .sportsData
+
+        // Sports data subscriptions (publishers)
+        case .sportsInitialDump, .sportsPublisher, .sportsStatus, .oddsMatch,
+             .bettingOfferPublisher,
+             .liveMatchesPublisher, .popularMatchesPublisher, .todayMatchesPublisher,
+             .todayMatchesFilterPublisher, .customMatchesAggregatorPublisher,
+             .matchDetailsPublisher, .matchMarketGroupsPublisher,
+             .matchMarketGroupDetailsPublisher, .matchDetailsAggregatorPublisher,
+             .matchMarketOdds, .matchBalancedMarketOdds,
+             .eventPartScoresPublisher, .competitionsMatchesPublisher,
+             .locationsPublisher, .tournamentsPublisher,
+             .popularTournamentsPublisher, .upcomingTournamentsPublisher,
+             .liveSportsPublisher, .eventCategoryBySport,
+             .tournamentOddsPublisher:
+            return .sportsData
+
+        // Don't track user/account/marketing subscriptions
+        case .sessionStateChange, .getOperatorInfo, .getClientIdentity,
+             .getBettingOptionsV2, .getSharedBetTokens, .getSharedBetData,
+             .bannersInfoPublisher, .favoriteMatchesPublisher,
+             .accountBalancePublisher, .cashoutPublisher:
+            return nil
+        }
+    }
+}

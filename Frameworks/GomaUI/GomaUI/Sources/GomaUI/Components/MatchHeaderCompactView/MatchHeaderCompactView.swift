@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 
 public final class MatchHeaderCompactView: UIView {
-    
+
     // MARK: - UI Components
     private let containerView = UIView()
     private let gradientView = GradientView()
@@ -11,6 +11,7 @@ public final class MatchHeaderCompactView: UIView {
     private let teamsStackView = UIStackView()
     private let homeTeamLabel = UILabel()
     private let awayTeamLabel = UILabel()
+    private lazy var scoreView = Self.createScoreView()
     private let breadcrumbLabel = UILabel()
     private let statisticsButton = UIButton()
     private let bottomBorderView = UIView()
@@ -76,7 +77,11 @@ public final class MatchHeaderCompactView: UIView {
         
         teamsStackView.addArrangedSubview(homeTeamLabel)
         teamsStackView.addArrangedSubview(awayTeamLabel)
-        
+
+        // ScoreView setup (hidden by default, shown only for live matches)
+        leftContentView.addSubview(scoreView)
+        scoreView.isHidden = true  // Will be shown when live data is available
+
         // Breadcrumb setup
         leftContentView.addSubview(breadcrumbLabel)
         breadcrumbLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -140,11 +145,16 @@ public final class MatchHeaderCompactView: UIView {
             statisticsButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             statisticsButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             
-            // Teams stack constraints
+            // Teams stack constraints (no longer full width - makes room for scores)
             teamsStackView.topAnchor.constraint(equalTo: leftContentView.topAnchor),
             teamsStackView.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
-            teamsStackView.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
-            
+
+            // ScoreView constraints (aligned vertically with team labels)
+            scoreView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
+            scoreView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
+            scoreView.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
+            scoreView.leadingAnchor.constraint(greaterThanOrEqualTo: teamsStackView.trailingAnchor, constant: 8),
+
             // Breadcrumb constraints
             breadcrumbLabel.topAnchor.constraint(equalTo: teamsStackView.bottomAnchor, constant: 4),
             breadcrumbLabel.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
@@ -164,7 +174,15 @@ public final class MatchHeaderCompactView: UIView {
         // Set content hugging and compression resistance for proper layout priority
         leftContentView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         leftContentView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        
+
+        // Scores have highest priority - never compress (always visible)
+        scoreView.setContentHuggingPriority(.required, for: .horizontal)
+        scoreView.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        // Team labels compress when space is tight (scores take priority)
+        homeTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        awayTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         statisticsButton.setContentHuggingPriority(.required, for: .horizontal)
         statisticsButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -183,6 +201,12 @@ public final class MatchHeaderCompactView: UIView {
 
         homeTeamLabel.text = data.homeTeamName
         awayTeamLabel.text = data.awayTeamName
+
+        // Configure scoreView - only show for live matches with scores
+        scoreView.isHidden = !data.isLive
+        if let scoreViewModel = data.scoreViewModel {
+            scoreView.configure(with: scoreViewModel)
+        }
 
         // Create attributed string for breadcrumb with underlines
         let breadcrumbText = "\(data.sport) / \(data.country) / \(data.league)"
@@ -297,6 +321,14 @@ public final class MatchHeaderCompactView: UIView {
                 return
             }
         }
+    }
+
+    // MARK: - Factory Methods
+
+    private static func createScoreView() -> ScoreView {
+        let scoreView = ScoreView()
+        scoreView.translatesAutoresizingMaskIntoConstraints = false
+        return scoreView
     }
 }
 

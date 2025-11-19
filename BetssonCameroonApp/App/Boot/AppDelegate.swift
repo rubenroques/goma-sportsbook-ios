@@ -13,6 +13,7 @@ import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
 import FirebaseCore
+import GomaPerformanceKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,7 +23,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        // Configure performance tracking
+        #if DEBUG
+        let consoleDestination = ConsoleDestination()
+        consoleDestination.logLevel = .verbose
+        PerformanceTracker.shared.addDestination(consoleDestination)
+        #endif
+
+        // Configure device context for performance tracking
+        PerformanceTracker.shared.configure(
+            deviceContext: DeviceContext.current(networkType: "Unknown")
+        )
+
+        PerformanceTracker.shared.enable()
+        
         print("App Started")
+        
+        // Track overall app boot time
+        PerformanceTracker.shared.start(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "app_delegate_boot"]
+        )
+        
+        //
 
         // Register Settings.bundle defaults (makes iOS Settings app recognize our settings)
         SettingsBundleHelper.registerDefaultsFromSettingsBundle()
@@ -127,6 +151,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         self.bootstrap = Bootstrap(window: self.window!)
         self.bootstrap.boot()
+
+        // End app boot tracking
+        PerformanceTracker.shared.end(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "app_delegate_boot", "status": "complete"]
+        )
 
         return true
     }

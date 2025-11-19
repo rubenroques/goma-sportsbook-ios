@@ -20,7 +20,10 @@ public enum PerformanceFeature: String, Codable, CaseIterable {
 
     /// User registration
     case register
-
-    /// Sports data loading (matches, odds, etc.)
+    
+    // socket sports data
     case sportsData
+    
+    // App Load / Boot
+    case appBoot
 }

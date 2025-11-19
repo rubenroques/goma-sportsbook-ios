@@ -36,7 +36,7 @@ public class ConsoleDestination: PerformanceDestination {
 
     // MARK: - Initialization
 
-    public init(logLevel: LogLevel = .standard, prefix: String = "[Performance]") {
+    public init(logLevel: LogLevel = .standard, prefix: String = "[GomaPerformanceKit]") {
         self.logLevel = logLevel
         self.prefix = prefix
     }

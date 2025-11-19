@@ -21,10 +21,6 @@ let package = Package(
         .target(
             name: "GomaPerformanceKit",
             dependencies: []
-        ),
-        .testTarget(
-            name: "GomaPerformanceKitTests",
-            dependencies: ["GomaPerformanceKit"]
-        ),
+        )
     ]
 )

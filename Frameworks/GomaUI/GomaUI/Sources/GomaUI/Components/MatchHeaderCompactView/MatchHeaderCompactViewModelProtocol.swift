@@ -14,6 +14,8 @@ public struct MatchHeaderCompactData: Equatable {
     public let isStatisticsCollapsed: Bool
     public let statisticsCollapsedTitle: String
     public let statisticsExpandedTitle: String
+    public let scoreViewModel: ScoreViewModelProtocol?
+    public let isLive: Bool
 
     public init(
         homeTeamName: String,
@@ -26,7 +28,9 @@ public struct MatchHeaderCompactData: Equatable {
         hasStatistics: Bool = true,
         isStatisticsCollapsed: Bool = true,
         statisticsCollapsedTitle: String = "View Statistics",
-        statisticsExpandedTitle: String = "Close Statistics"
+        statisticsExpandedTitle: String = "Close Statistics",
+        scoreViewModel: ScoreViewModelProtocol? = nil,
+        isLive: Bool = false
     ) {
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -39,6 +43,24 @@ public struct MatchHeaderCompactData: Equatable {
         self.isStatisticsCollapsed = isStatisticsCollapsed
         self.statisticsCollapsedTitle = statisticsCollapsedTitle
         self.statisticsExpandedTitle = statisticsExpandedTitle
+        self.scoreViewModel = scoreViewModel
+        self.isLive = isLive
+    }
+
+    // Custom Equatable implementation (scoreViewModel compared by identity)
+    public static func == (lhs: MatchHeaderCompactData, rhs: MatchHeaderCompactData) -> Bool {
+        return lhs.homeTeamName == rhs.homeTeamName &&
+            lhs.awayTeamName == rhs.awayTeamName &&
+            lhs.sport == rhs.sport &&
+            lhs.country == rhs.country &&
+            lhs.league == rhs.league &&
+            lhs.countryId == rhs.countryId &&
+            lhs.leagueId == rhs.leagueId &&
+            lhs.hasStatistics == rhs.hasStatistics &&
+            lhs.isStatisticsCollapsed == rhs.isStatisticsCollapsed &&
+            lhs.statisticsCollapsedTitle == rhs.statisticsCollapsedTitle &&
+            lhs.statisticsExpandedTitle == rhs.statisticsExpandedTitle &&
+            lhs.isLive == rhs.isLive
     }
 }
 

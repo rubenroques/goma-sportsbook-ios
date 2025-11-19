@@ -11,6 +11,7 @@ import UIKit
 import ServicesProvider
 import GomaUI
 import Reachability
+import GomaPerformanceKit
 
 // MARK: - App State Definition
 
@@ -234,8 +235,16 @@ class AppStateManager {
     
     private func loadServicesInParallel() {
         print("AppStateManager: Starting parallel service loading")
+
+        // Track parallel service loading setup
+        PerformanceTracker.shared.start(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "load_services_parallel"]
+        )
+
         self.currentStateSubject.send(.servicesConnecting)
-        
+
         // Start theme loading (from SplashInformativeViewController:79)
         print("AppStateManager: Starting theme loading")
         ThemeService.shared.fetchThemeFromServer()
@@ -274,17 +283,39 @@ class AppStateManager {
                     break
                 case .loading:
                     print("AppStateManager: Sports data loading...")
+                    // Start tracking sports data loading
+                    PerformanceTracker.shared.start(
+                        feature: .appBoot,
+                        layer: .app,
+                        metadata: ["phase": "initial_sports_data"]
+                    )
                     break
                 case .loaded(let sportsData):
                     print("AppStateManager: Sports data loaded successfully (\(sportsData.count) sports)")
+
+                    // End tracking sports data loading - success
+                    PerformanceTracker.shared.end(
+                        feature: .appBoot,
+                        layer: .app,
+                        metadata: ["phase": "initial_sports_data", "status": "success", "sports_count": "\(sportsData.count)"]
+                    )
+
                     // We just need to have a valid list of sports, we can than ingore the updates
                     // and cancel the subscription
                     self?.sportsDataCancellable?.cancel()
                     self?.sportsDataCancellable = nil
-                    
+
                     self?.transitionToReady(sports: sportsData)
                 case .failed:
                     print("AppStateManager: Sports data loading failed")
+
+                    // End tracking sports data loading - failed
+                    PerformanceTracker.shared.end(
+                        feature: .appBoot,
+                        layer: .app,
+                        metadata: ["phase": "initial_sports_data", "status": "error"]
+                    )
+
                     self?.currentStateSubject.send(.error(.sportsLoadingFailed))
                 }
             }
@@ -307,6 +338,13 @@ class AppStateManager {
         environment.servicesProvider.connect()
         print("AppStateManager: Starting betslip manager")
         environment.betslipManager.start()
+
+        // End parallel service loading setup tracking
+        PerformanceTracker.shared.end(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "load_services_parallel", "status": "complete"]
+        )
     }
     
     private func performHealthCheckAndLoadSports() {

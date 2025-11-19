@@ -35,7 +35,9 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
             hasStatistics: currentData.hasStatistics,
             isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
             statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            scoreViewModel: currentData.scoreViewModel,
+            isLive: currentData.isLive
         )
 
         // Also call the callback
@@ -114,6 +116,121 @@ public extension MockMatchHeaderCompactViewModel {
                 countryId: "country-germany",
                 leagueId: "league-ucl-playoffs",
                 hasStatistics: true
+            )
+        )
+    }
+
+    // MARK: - Live Match Presets with Scores
+
+    static var liveFootballMatch: MockMatchHeaderCompactViewModel {
+        // Create mock score for football
+        let scoreData = [
+            ScoreDisplayData(
+                id: "match",
+                homeScore: "2",
+                awayScore: "1",
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        return MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "Arsenal",
+                awayTeamName: "Chelsea",
+                sport: "Football",
+                country: "England",
+                league: "Premier League",
+                countryId: "country-england",
+                leagueId: "league-premier",
+                hasStatistics: true,
+                scoreViewModel: scoreViewModel,
+                isLive: true
+            )
+        )
+    }
+
+    static var liveTennisMatch: MockMatchHeaderCompactViewModel {
+        // Create mock score for tennis (game + sets)
+        let scoreData = [
+            ScoreDisplayData(
+                id: "game-current",
+                homeScore: "40",
+                awayScore: "30",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(
+                id: "set-1",
+                homeScore: "6",
+                awayScore: "3",
+                index: 1,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-2",
+                homeScore: "4",
+                awayScore: "6",
+                index: 2,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-3",
+                homeScore: "2",
+                awayScore: "1",
+                index: 3,
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        return MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "Nadal",
+                awayTeamName: "Federer",
+                sport: "Tennis",
+                country: "France",
+                league: "Roland Garros",
+                countryId: "country-france",
+                leagueId: "league-roland-garros",
+                hasStatistics: true,
+                scoreViewModel: scoreViewModel,
+                isLive: true
+            )
+        )
+    }
+
+    static var liveLongNames: MockMatchHeaderCompactViewModel {
+        // Create mock score
+        let scoreData = [
+            ScoreDisplayData(
+                id: "match",
+                homeScore: "1",
+                awayScore: "2",
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        return MockMatchHeaderCompactViewModel(
+            headerData: MatchHeaderCompactData(
+                homeTeamName: "Wolverhampton Wanderers",
+                awayTeamName: "Brighton & Hove Albion",
+                sport: "Football",
+                country: "England",
+                league: "Premier League",
+                countryId: "country-england",
+                leagueId: "league-premier",
+                hasStatistics: true,
+                scoreViewModel: scoreViewModel,
+                isLive: true
             )
         )
     }

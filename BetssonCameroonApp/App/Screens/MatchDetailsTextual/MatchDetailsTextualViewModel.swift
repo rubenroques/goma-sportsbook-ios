@@ -55,7 +55,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
     
     let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
     
-    let matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol
+    let matchHeaderCompactViewModel: MatchHeaderCompactViewModel
     
     let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
@@ -159,6 +159,9 @@ class MatchDetailsTextualViewModel: ObservableObject {
 
                     // Update current match and update market group selector with real data
                     self?.currentMatch = match
+
+                    // Update header with live match data (including scores)
+                    self?.matchHeaderCompactViewModel.updateMatch(match)
 
                     // Update existing view model instead of recreating it
                     print("BLINK_DEBUG [MatchDetailsVM] 🚨 Calling updateMatch() on MarketGroupSelectorVM")
