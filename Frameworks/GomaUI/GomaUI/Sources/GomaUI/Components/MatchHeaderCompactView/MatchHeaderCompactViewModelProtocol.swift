@@ -14,8 +14,6 @@ public struct MatchHeaderCompactData: Equatable {
     public let isStatisticsCollapsed: Bool
     public let statisticsCollapsedTitle: String
     public let statisticsExpandedTitle: String
-    public let matchTime: String?
-    public let isLive: Bool
 
     public init(
         homeTeamName: String,
@@ -28,9 +26,7 @@ public struct MatchHeaderCompactData: Equatable {
         hasStatistics: Bool = true,
         isStatisticsCollapsed: Bool = true,
         statisticsCollapsedTitle: String = "View Statistics",
-        statisticsExpandedTitle: String = "Close Statistics",
-        matchTime: String? = nil,
-        isLive: Bool = false
+        statisticsExpandedTitle: String = "Close Statistics"
     ) {
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -43,8 +39,6 @@ public struct MatchHeaderCompactData: Equatable {
         self.isStatisticsCollapsed = isStatisticsCollapsed
         self.statisticsCollapsedTitle = statisticsCollapsedTitle
         self.statisticsExpandedTitle = statisticsExpandedTitle
-        self.matchTime = matchTime
-        self.isLive = isLive
     }
 }
 
@@ -52,8 +46,6 @@ public struct MatchHeaderCompactData: Equatable {
 public protocol MatchHeaderCompactViewModelProtocol: AnyObject {
     // Data
     var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> { get }
-    var matchTimePublisher: AnyPublisher<String?, Never> { get }
-    var isLivePublisher: AnyPublisher<Bool, Never> { get }
 
     // Actions
     var onStatisticsTapped: (() -> Void)? { get set }

@@ -36,7 +36,21 @@ extension EveryMatrixModelMapper {
             mappedSport = Self.sportType(fromInternalSport: sport)
         }
         else {
-            mappedSport = SportType(name: "FBL")
+            // Fallback: This should not happen now that MatchBuilder creates Sport from inline data
+            // But provide a safe default with proper IDs if it does
+            print("[EveryMatrix] WARNING: Match '\(internalMatch.id)' has no sport - using default Football")
+            mappedSport = SportType.init(
+                name: "Football",
+                numericId: "1",
+                alphaId: "FBL",
+                iconId: "1",
+                showEventCategory: false,
+                numberEvents: 0,
+                numberOutrightEvents: 0,
+                numberOutrightMarkets: 0,
+                numberLiveEvents: 0,
+                hasMatches: true,
+                hasOutrights: false)
         }
 
         // Convert EveryMatrix.Location to external Country

@@ -159,7 +159,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Cleanup
     deinit {
         print("[TallOddsMatchCardViewModel] 🔴 DEINIT - matchId: \(matchId)")
-        liveDataCancellable?.cancel()
+        // liveDataCancellable?.cancel()
         liveDataCancellable = nil
     }
 
@@ -365,75 +365,144 @@ extension TallOddsMatchCardViewModel {
             // Sort scores by sortValue to ensure correct ordering
             let sortedScores = detailedScores.sorted(by: { $0.value.sortValue < $1.value.sortValue })
 
-            // Find the last set index to determine current set
-            let lastSetIndex = sortedScores.compactMap { entry -> Int? in
-                if case .set(let index, _, _) = entry.value {
-                    return index
+            // For Type C sports (Tennis), separate game parts from sets to ensure correct layout:
+            // Layout: [Serving Indicator] [Game Part] | [Set1] [Set2] [Set3]
+            if isTypeCsport {
+                // Separate game parts and sets
+                let gameParts = sortedScores.filter { entry in
+                    if case .gamePart = entry.value { return true }
+                    return false
                 }
-                return nil
-            }.max()
 
-            // Map serving player for first cell only
-            let servingPlayer = mapServingPlayer(from: activePlayerServing)
-            var isFirstCell = true
+                let sets = sortedScores.filter { entry in
+                    if case .set = entry.value { return true }
+                    return false
+                }
 
-            for (scoreName, score) in sortedScores {
-                let scoreCell: ScoreDisplayData
+                let matchFulls = sortedScores.filter { entry in
+                    if case .matchFull = entry.value { return true }
+                    return false
+                }
 
-                switch score {
-                case .gamePart(let home, let away):
-                    // Current game points - always highlighted, separator for Type C, serving indicator
-                    print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
-                    scoreCell = ScoreDisplayData(
-                        id: "game-\(scoreName)",
-                        homeScore: home != nil ? "\(home!)" : "-",
-                        awayScore: away != nil ? "\(away!)" : "-",
-                        style: .background,
-                        highlightingMode: .bothHighlight,
-                        showsTrailingSeparator: isTypeCsport,
-                        servingPlayer: isFirstCell ? servingPlayer : nil
-                    )
-                    scoreCells.append(scoreCell)
-                    isFirstCell = false
-
-                case .set(let index, let home, let away):
-                    // Set scores - determine if current or completed
-                    let isCurrentSet = (index == lastSetIndex)
-                    let highlighting: ScoreDisplayData.HighlightingMode = isCurrentSet ? .bothHighlight : .winnerLoser
-
-                    print("[LIVE_SCORE]    - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
-                    scoreCell = ScoreDisplayData(
-                        id: "set-\(scoreName)",
-                        homeScore: home != nil ? "\(home!)" : "-",
-                        awayScore: away != nil ? "\(away!)" : "-",
-                        index: index,
-                        style: .simple,
-                        highlightingMode: highlighting,
-                        showsTrailingSeparator: false,
-                        servingPlayer: isFirstCell ? servingPlayer : nil
-                    )
-                    scoreCells.append(scoreCell)
-                    isFirstCell = false
-
-                case .matchFull(let home, let away):
-                    // Total score - skip for Type C sports (Tennis layout doesn't show totals)
-                    if isTypeCsport {
-                        print("[LIVE_SCORE]    - MatchFull '\(scoreName)' SKIPPED for Type C sport")
-                        continue
+                // Find the last set index to determine current set
+                let lastSetIndex = sets.compactMap { entry -> Int? in
+                    if case .set(let index, _, _) = entry.value {
+                        return index
                     }
+                    return nil
+                }.max()
 
-                    print("[LIVE_SCORE]    - MatchFull '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
-                    scoreCell = ScoreDisplayData(
-                        id: "match-\(scoreName)",
-                        homeScore: home != nil ? "\(home!)" : "-",
-                        awayScore: away != nil ? "\(away!)" : "-",
-                        style: .simple,
-                        highlightingMode: .bothHighlight,
-                        showsTrailingSeparator: false,
-                        servingPlayer: isFirstCell ? servingPlayer : nil
-                    )
-                    scoreCells.append(scoreCell)
-                    isFirstCell = false
+                // Map serving player for first cell only
+                let servingPlayer = mapServingPlayer(from: activePlayerServing)
+
+                // Process game parts FIRST (with serving indicator and separator)
+                for (scoreName, score) in gameParts {
+                    if case .gamePart(let home, let away) = score {
+                        print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") [FIRST]")
+                        let scoreCell = ScoreDisplayData(
+                            id: "game-\(scoreName)",
+                            homeScore: home != nil ? "\(home!)" : "-",
+                            awayScore: away != nil ? "\(away!)" : "-",
+                            style: .background,
+                            highlightingMode: .bothHighlight,
+                            showsTrailingSeparator: true,  // Always true for game parts in Type C
+                            servingPlayer: scoreCells.isEmpty ? servingPlayer : nil  // Only first cell gets serving indicator
+                        )
+                        scoreCells.append(scoreCell)
+                    }
+                }
+
+                // Then process sets in order
+                for (scoreName, score) in sets {
+                    if case .set(let index, let home, let away) = score {
+                        let isCurrentSet = (index == lastSetIndex)
+                        let highlighting: ScoreDisplayData.HighlightingMode = isCurrentSet ? .bothHighlight : .winnerLoser
+
+                        print("[LIVE_SCORE]    - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
+                        let scoreCell = ScoreDisplayData(
+                            id: "set-\(scoreName)",
+                            homeScore: home != nil ? "\(home!)" : "-",
+                            awayScore: away != nil ? "\(away!)" : "-",
+                            index: index,
+                            style: .simple,
+                            highlightingMode: highlighting,
+                            showsTrailingSeparator: false,
+                            servingPlayer: nil  // Only game part gets serving indicator
+                        )
+                        scoreCells.append(scoreCell)
+                    }
+                }
+
+                // Skip matchFull for Type C sports (Tennis doesn't show total score)
+                if !matchFulls.isEmpty {
+                    print("[LIVE_SCORE]    - MatchFull entries SKIPPED for Type C sport")
+                }
+            } else {
+                // Non-Type C sports: Use original ordering logic
+                // Find the last set index to determine current set
+                let lastSetIndex = sortedScores.compactMap { entry -> Int? in
+                    if case .set(let index, _, _) = entry.value {
+                        return index
+                    }
+                    return nil
+                }.max()
+
+                // Map serving player for first cell only
+                let servingPlayer = mapServingPlayer(from: activePlayerServing)
+                var isFirstCell = true
+
+                for (scoreName, score) in sortedScores {
+                    let scoreCell: ScoreDisplayData
+
+                    switch score {
+                    case .gamePart(let home, let away):
+                        // Current game points - always highlighted
+                        print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
+                        scoreCell = ScoreDisplayData(
+                            id: "game-\(scoreName)",
+                            homeScore: home != nil ? "\(home!)" : "-",
+                            awayScore: away != nil ? "\(away!)" : "-",
+                            style: .background,
+                            highlightingMode: .bothHighlight,
+                            showsTrailingSeparator: false,
+                            servingPlayer: isFirstCell ? servingPlayer : nil
+                        )
+                        scoreCells.append(scoreCell)
+                        isFirstCell = false
+
+                    case .set(let index, let home, let away):
+                        // Set scores - determine if current or completed
+                        let isCurrentSet = (index == lastSetIndex)
+                        let highlighting: ScoreDisplayData.HighlightingMode = isCurrentSet ? .bothHighlight : .winnerLoser
+
+                        print("[LIVE_SCORE]    - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
+                        scoreCell = ScoreDisplayData(
+                            id: "set-\(scoreName)",
+                            homeScore: home != nil ? "\(home!)" : "-",
+                            awayScore: away != nil ? "\(away!)" : "-",
+                            index: index,
+                            style: .simple,
+                            highlightingMode: highlighting,
+                            showsTrailingSeparator: false,
+                            servingPlayer: isFirstCell ? servingPlayer : nil
+                        )
+                        scoreCells.append(scoreCell)
+                        isFirstCell = false
+
+                    case .matchFull(let home, let away):
+                        print("[LIVE_SCORE]    - MatchFull '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
+                        scoreCell = ScoreDisplayData(
+                            id: "match-\(scoreName)",
+                            homeScore: home != nil ? "\(home!)" : "-",
+                            awayScore: away != nil ? "\(away!)" : "-",
+                            style: .simple,
+                            highlightingMode: .bothHighlight,
+                            showsTrailingSeparator: false,
+                            servingPlayer: isFirstCell ? servingPlayer : nil
+                        )
+                        scoreCells.append(scoreCell)
+                        isFirstCell = false
+                    }
                 }
             }
         }

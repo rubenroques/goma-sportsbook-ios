@@ -791,4 +791,26 @@ extension MatchDetailsManager {
     var areMarketGroupsLoaded: Bool {
         return marketGroupsLoaded
     }
+
+    /// Observe live data (EventInfo entities) for this match
+    /// Returns EventLiveData with scores, status, and match time updates
+    func observeEventInfosForEvent(eventId: String) -> AnyPublisher<EventLiveData, Never> {
+        return store.observeEventInfosForEvent(eventId: eventId)
+            .map { [weak self] eventInfos in
+                guard let self = self else {
+                    return EventLiveData(id: eventId, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
+                }
+
+                // Get the match data for participant mapping
+                let matchData = self.store.get(EveryMatrix.MatchDTO.self, id: eventId)
+
+                // Delegate to shared EventLiveDataBuilder for consistent transformation logic
+                return EventLiveDataBuilder.buildEventLiveData(
+                    eventId: eventId,
+                    from: eventInfos,
+                    matchData: matchData
+                )
+            }
+            .eraseToAnyPublisher()
+    }
 }

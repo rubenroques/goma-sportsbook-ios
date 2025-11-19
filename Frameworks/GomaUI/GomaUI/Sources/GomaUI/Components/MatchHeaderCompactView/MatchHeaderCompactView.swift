@@ -12,8 +12,6 @@ public final class MatchHeaderCompactView: UIView {
     private let homeTeamLabel = UILabel()
     private let awayTeamLabel = UILabel()
     private let breadcrumbLabel = UILabel()
-    private let matchTimeLabel = UILabel()
-    private let liveIndicatorView = UIView()
     private let statisticsButton = UIButton()
     private let bottomBorderView = UIView()
     
@@ -92,49 +90,6 @@ public final class MatchHeaderCompactView: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(breadcrumbTapped(_:)))
         breadcrumbLabel.addGestureRecognizer(tapGesture)
 
-        // Match time label setup
-        leftContentView.addSubview(matchTimeLabel)
-        matchTimeLabel.translatesAutoresizingMaskIntoConstraints = false
-        matchTimeLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
-        matchTimeLabel.textColor = StyleProvider.Color.gameHeaderTextSecondary
-        matchTimeLabel.numberOfLines = 1
-        matchTimeLabel.textAlignment = .left
-        matchTimeLabel.isHidden = true
-
-        // Live indicator view setup
-        leftContentView.addSubview(liveIndicatorView)
-        liveIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        liveIndicatorView.backgroundColor = StyleProvider.Color.highlightPrimary
-        liveIndicatorView.layer.cornerRadius = 8.5
-        liveIndicatorView.isHidden = true
-
-        // Add "LIVE" label and play icon to live indicator
-        let liveLabel = UILabel()
-        liveLabel.translatesAutoresizingMaskIntoConstraints = false
-        liveLabel.text = "LIVE"
-        liveLabel.font = StyleProvider.fontWith(type: .bold, size: 9)
-        liveLabel.textColor = .white
-
-        let playIconView = UIImageView()
-        playIconView.translatesAutoresizingMaskIntoConstraints = false
-        playIconView.image = UIImage(systemName: "play.fill")
-        playIconView.tintColor = .white
-        playIconView.contentMode = .scaleAspectFit
-
-        liveIndicatorView.addSubview(liveLabel)
-        liveIndicatorView.addSubview(playIconView)
-
-        NSLayoutConstraint.activate([
-            liveLabel.leadingAnchor.constraint(equalTo: liveIndicatorView.leadingAnchor, constant: 6),
-            liveLabel.centerYAnchor.constraint(equalTo: liveIndicatorView.centerYAnchor),
-
-            playIconView.leadingAnchor.constraint(equalTo: liveLabel.trailingAnchor, constant: 3),
-            playIconView.trailingAnchor.constraint(equalTo: liveIndicatorView.trailingAnchor, constant: -6),
-            playIconView.centerYAnchor.constraint(equalTo: liveIndicatorView.centerYAnchor),
-            playIconView.widthAnchor.constraint(equalToConstant: 8),
-            playIconView.heightAnchor.constraint(equalToConstant: 8)
-        ])
-
         // Statistics button setup
         containerView.addSubview(statisticsButton)
         statisticsButton.translatesAutoresizingMaskIntoConstraints = false
@@ -194,16 +149,7 @@ public final class MatchHeaderCompactView: UIView {
             breadcrumbLabel.topAnchor.constraint(equalTo: teamsStackView.bottomAnchor, constant: 4),
             breadcrumbLabel.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
             breadcrumbLabel.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
-
-            // Match time label constraints - below breadcrumb
-            matchTimeLabel.topAnchor.constraint(equalTo: breadcrumbLabel.bottomAnchor, constant: 4),
-            matchTimeLabel.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
-            matchTimeLabel.bottomAnchor.constraint(equalTo: leftContentView.bottomAnchor),
-
-            // Live indicator constraints - next to match time label
-            liveIndicatorView.leadingAnchor.constraint(equalTo: matchTimeLabel.trailingAnchor, constant: 6),
-            liveIndicatorView.centerYAnchor.constraint(equalTo: matchTimeLabel.centerYAnchor),
-            liveIndicatorView.heightAnchor.constraint(equalToConstant: 17),
+            breadcrumbLabel.bottomAnchor.constraint(equalTo: leftContentView.bottomAnchor),
             
             // Statistics button size constraints
             statisticsButton.heightAnchor.constraint(equalToConstant: 30),
@@ -228,25 +174,6 @@ public final class MatchHeaderCompactView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 self?.updateUI(with: data)
-            }
-            .store(in: &cancellables)
-
-        // Bind match time updates
-        viewModel.matchTimePublisher
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchTime in
-                self?.matchTimeLabel.text = matchTime
-                self?.matchTimeLabel.isHidden = matchTime == nil
-            }
-            .store(in: &cancellables)
-
-        // Bind live indicator updates
-        viewModel.isLivePublisher
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLive in
-                self?.liveIndicatorView.isHidden = !isLive
             }
             .store(in: &cancellables)
     }

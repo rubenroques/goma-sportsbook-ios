@@ -8,14 +8,16 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
 final class MatchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol {
     
     // MARK: - Private Properties
-    
+
     private let dataSubject: CurrentValueSubject<MatchDateNavigationBarData, Never>
     private let match: Match
     private var cancellables = Set<AnyCancellable>()
+    private var liveDataCancellable: AnyCancellable?
     
     // MARK: - Public Properties
     
@@ -51,12 +53,47 @@ final class MatchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProt
     // MARK: - Private Methods
     
     private func subscribeToLiveUpdates() {
-        // Subscribe to live match updates
-        // This would integrate with the existing live data service
-        // For now, we'll set up the structure
-        
-        // TODO: Integrate with Env.servicesProvider.subscribeToLiveDataUpdates
-        // This would update the match status in real-time
+        liveDataCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: match.id)
+            .removeDuplicates()
+            .sink(receiveCompletion: { completion in
+                print("[MatchDateNavigationBarVM] Live data subscription completed: \(completion)")
+            }, receiveValue: { [weak self] subscribableContent in
+                guard let self = self else { return }
+
+                switch subscribableContent {
+                case .connected(let subscription):
+                    print("[MatchDateNavigationBarVM] Connected to live data: \(subscription.id)")
+
+                case .contentUpdate(let eventLiveData):
+                    self.updateFromLiveData(eventLiveData)
+
+                case .disconnected:
+                    print("[MatchDateNavigationBarVM] Disconnected from live data")
+                }
+            })
+    }
+
+    private func updateFromLiveData(_ eventLiveData: EventLiveData) {
+        // Update match status display in navigation bar
+        if let status = eventLiveData.status {
+            switch status {
+            case .inProgress(let period):
+                // Update live status with period and time
+                let time = eventLiveData.matchTime ?? ""
+                updateMatchStatus(period: period, time: time)
+
+            case .ended:
+                // Match ended
+                updateMatchEnded()
+
+            default:
+                break
+            }
+        }
+    }
+
+    deinit {
+        liveDataCancellable?.cancel()
     }
     
     private static func createNavigationBarData(from match: Match) -> MatchDateNavigationBarData {
