@@ -285,6 +285,19 @@ class GomaHomeContentAPIClient {
         return self.connector.request(endpoint)
     }
 
+    /// Get footer sponsors configured in CMS
+    /// - Parameter language: Optional language override sent to the CMS (defaults to backend inference)
+    func footerSponsors(language: String?) -> AnyPublisher<GomaModels.FooterSponsors, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.footerSponsors(language: language)
+        return self.connector.request(endpoint)
+    }
+
+    /// Get footer social media links configured in CMS
+    func footerSocialLinks(language: String?) -> AnyPublisher<GomaModels.FooterSocialLinks, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.footerSocialMedia(language: language)
+        return self.connector.request(endpoint)
+    }
+
     /// Get initial data dump including sports, competitions, and events
     /// - Returns: A publisher with the decoded response or error
     func initialDump() -> AnyPublisher<GomaModels.InitialDump, ServiceProviderError> {

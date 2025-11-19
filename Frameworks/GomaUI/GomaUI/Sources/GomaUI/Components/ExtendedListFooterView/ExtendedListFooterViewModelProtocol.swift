@@ -13,14 +13,17 @@ public protocol ExtendedListFooterViewModelProtocol {
 
     // MARK: - Content Properties
 
-    /// Partner clubs to display in the footer
-    var partnerClubs: [PartnerClub] { get }
-
     /// Payment operators to display in the footer
     var paymentOperators: [PaymentOperator] { get }
 
-    /// Social media platforms to display
+    /// Social media platforms to display when no CMS data available
     var socialMediaPlatforms: [SocialPlatform] { get }
+
+    /// Social media links fetched from CMS
+    var socialLinks: [FooterSocialLink] { get }
+
+    /// Sponsor logos fetched from CMS, ordered as provided
+    var sponsors: [FooterSponsor] { get }
 
     /// Navigation links displayed in the footer
     var navigationLinks: [FooterLink] { get }
@@ -50,4 +53,16 @@ public protocol ExtendedListFooterViewModelProtocol {
 
     /// Callback when a footer link is tapped
     var onLinkTap: ((FooterLinkType) -> Void)? { get set }
+
+    /// Called when the UI needs to handle a sponsor tap interaction
+    func handleSponsorTap(_ sponsor: FooterSponsor)
+
+    /// Called when the UI needs to handle a CMS social link tap
+    func handleSocialLinkTap(_ link: FooterSocialLink)
+
+    /// Called to notify when CMS social links have updated
+    var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)? { get set }
+
+    /// Emits whenever the sponsor list changes (e.g. after CMS fetch)
+    var onSponsorsUpdated: (([FooterSponsor]) -> Void)? { get set }
 }

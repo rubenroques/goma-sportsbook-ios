@@ -142,4 +142,13 @@ protocol HomeContentProvider: Connector {
     /// - Returns: Publisher that emits an ordered list of footer links
     func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError>
 
+    /// Retrieves sponsor/collaboration logos for the footer
+    /// - Parameter language: Optional language override (defaults to backend inference when nil)
+    /// - Returns: Publisher that emits ordered footer sponsor entries
+    func getFooterSponsors(language: String?) -> AnyPublisher<FooterSponsors, ServiceProviderError>
+
+    /// Retrieves social media links for the footer
+    /// - Parameter language: Optional language override (defaults to backend inference when nil)
+    func getFooterSocialLinks(language: String?) -> AnyPublisher<FooterSocialLinks, ServiceProviderError>
+
 }

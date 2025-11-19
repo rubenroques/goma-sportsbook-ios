@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 // MARK: - Extended List Footer View
 
@@ -37,8 +38,12 @@ public class ExtendedListFooterView: UIView {
 
     // MARK: - Private Properties
 
-    private let viewModel: ExtendedListFooterViewModelProtocol
+    private var viewModel: ExtendedListFooterViewModelProtocol
     private lazy var mainStackView: UIStackView = Self.createMainStackView()
+
+    private var sponsorSectionContainer: UIView?
+    private var sponsorLogosContainer: UIView?
+    private var sponsorViewMap: [UIView: FooterSponsor] = [:]
 
     // MARK: - Initialization
 
@@ -58,6 +63,14 @@ public class ExtendedListFooterView: UIView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.setupSubviews()
         self.setupWithTheme()
+        self.bindViewModel()
+    }
+
+    private func bindViewModel() {
+        viewModel.onSponsorsUpdated = { [weak self] sponsors in
+            self?.updateSponsorSection(with: sponsors)
+            
+        }
     }
 
     private func setupSubviews() {
@@ -91,21 +104,23 @@ public class ExtendedListFooterView: UIView {
     private func setupPartnershipSection() {
         let sectionContainer = UIView()
         sectionContainer.translatesAutoresizingMaskIntoConstraints = false
+        sponsorSectionContainer = sectionContainer
 
-        // Header
         let headerLabel = Self.createSectionHeaderLabel(text: viewModel.partnershipHeaderText)
         sectionContainer.addSubview(headerLabel)
 
-        // Logo grid (2x2)
-        let logosContainer = createPartnerLogosGrid()
+        let logosContainer = UIView()
+        logosContainer.translatesAutoresizingMaskIntoConstraints = false
         sectionContainer.addSubview(logosContainer)
+        sponsorLogosContainer = logosContainer
 
         NSLayoutConstraint.activate([
             headerLabel.topAnchor.constraint(equalTo: sectionContainer.topAnchor),
             headerLabel.centerXAnchor.constraint(equalTo: sectionContainer.centerXAnchor),
 
             logosContainer.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: Constants.subSectionSpacing),
-            logosContainer.centerXAnchor.constraint(equalTo: sectionContainer.centerXAnchor),
+            logosContainer.leadingAnchor.constraint(equalTo: sectionContainer.leadingAnchor),
+            logosContainer.trailingAnchor.constraint(equalTo: sectionContainer.trailingAnchor),
             logosContainer.bottomAnchor.constraint(equalTo: sectionContainer.bottomAnchor)
         ])
 
@@ -114,41 +129,141 @@ public class ExtendedListFooterView: UIView {
         NSLayoutConstraint.activate([
             sectionContainer.widthAnchor.constraint(equalTo: mainStackView.widthAnchor)
         ])
+
+        updateSponsorSection(with: viewModel.sponsors)
     }
 
-    private func createPartnerLogosGrid() -> UIView {
+    private func updateSponsorSection(with sponsors: [FooterSponsor]) {
+        guard let sectionContainer = sponsorSectionContainer,
+              let logosContainer = sponsorLogosContainer else { return }
+
+        logosContainer.subviews.forEach { $0.removeFromSuperview() }
+        sponsorViewMap.removeAll()
+
+        guard !sponsors.isEmpty else {
+            sectionContainer.isHidden = true
+            return
+        }
+
+        sectionContainer.isHidden = false
+
+        let gridView = createSponsorLogosGrid(with: sponsors)
+        logosContainer.addSubview(gridView)
+
+        NSLayoutConstraint.activate([
+            gridView.topAnchor.constraint(equalTo: logosContainer.topAnchor),
+            gridView.leadingAnchor.constraint(equalTo: logosContainer.leadingAnchor),
+            gridView.trailingAnchor.constraint(equalTo: logosContainer.trailingAnchor),
+            gridView.bottomAnchor.constraint(equalTo: logosContainer.bottomAnchor)
+        ])
+    }
+
+    private func createSponsorLogosGrid(with sponsors: [FooterSponsor]) -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
         let verticalStack = UIStackView()
         verticalStack.translatesAutoresizingMaskIntoConstraints = false
         verticalStack.axis = .vertical
         verticalStack.spacing = Constants.partnerLogoSpacing
         verticalStack.alignment = .center
-        verticalStack.distribution = .equalSpacing
 
-        // Create rows with 2 logos per row
+        container.addSubview(verticalStack)
+
+        NSLayoutConstraint.activate([
+            verticalStack.topAnchor.constraint(equalTo: container.topAnchor),
+            verticalStack.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            verticalStack.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            verticalStack.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
         let logosPerRow = 2
-        let clubs = viewModel.partnerClubs
 
-        for rowIndex in stride(from: 0, to: clubs.count, by: logosPerRow) {
-            let horizontalStack = UIStackView()
-            horizontalStack.translatesAutoresizingMaskIntoConstraints = false
-            horizontalStack.axis = .horizontal
-            horizontalStack.spacing = Constants.partnerLogoSpacing
-            horizontalStack.alignment = .center
-            horizontalStack.distribution = .equalSpacing
+        var currentRowStack: UIStackView?
 
-            // Add logos to this row (up to 2)
-            let endIndex = min(rowIndex + logosPerRow, clubs.count)
-            for index in rowIndex..<endIndex {
-                let club = clubs[index]
-                let imageView = Self.createPartnerLogoImageView()
-                imageView.image = viewModel.imageResolver.image(for: .partnerLogo(club: club))
-                horizontalStack.addArrangedSubview(imageView)
+        for (index, sponsor) in sponsors.enumerated() {
+            if index % logosPerRow == 0 {
+                let rowStack = UIStackView()
+                rowStack.translatesAutoresizingMaskIntoConstraints = false
+                rowStack.axis = .horizontal
+                rowStack.spacing = Constants.partnerLogoSpacing
+                rowStack.alignment = .center
+                rowStack.distribution = .equalSpacing
+                verticalStack.addArrangedSubview(rowStack)
+                currentRowStack = rowStack
             }
 
-            verticalStack.addArrangedSubview(horizontalStack)
+            if let rowStack = currentRowStack {
+                let sponsorView = createSponsorView(for: sponsor)
+                rowStack.addArrangedSubview(sponsorView)
+            }
         }
 
-        return verticalStack
+        return container
+    }
+
+    private func createSponsorView(for sponsor: FooterSponsor) -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            container.widthAnchor.constraint(equalToConstant: Constants.partnerLogoWidth),
+            container.heightAnchor.constraint(equalToConstant: Constants.partnerLogoHeight)
+        ])
+
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+
+        container.addSubview(imageView)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: container.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        if let iconURL = sponsor.iconURL {
+            loadImage(from: iconURL, into: imageView)
+        } else {
+            imageView.image = UIImage(systemName: "photo")
+            imageView.tintColor = StyleProvider.Color.allWhite
+        }
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSponsorTap(_:)))
+        container.addGestureRecognizer(tapGesture)
+        container.isUserInteractionEnabled = true
+        sponsorViewMap[container] = sponsor
+
+        return container
+    }
+
+    @objc private func handleSponsorTap(_ gesture: UITapGestureRecognizer) {
+        guard let tappedView = gesture.view,
+              let sponsor = sponsorViewMap[tappedView] else {
+            return
+        }
+
+        viewModel.handleSponsorTap(sponsor)
+    }
+
+    private func loadImage(from url: URL, into imageView: UIImageView) {
+        imageView.kf.cancelDownloadTask()
+
+        let options: KingfisherOptionsInfo = [
+            .transition(.fade(0.2)),
+            .cacheOriginalImage
+        ]
+
+        imageView.kf.setImage(with: url, placeholder: nil, options: options) { result in
+            if case .failure(let error) = result {
+                print("[ExtendedListFooterView] Failed to load sponsor image: \(error)")
+                imageView.image = UIImage(systemName: "photo")
+                imageView.tintColor = StyleProvider.Color.allWhite
+            }
+        }
     }
 
     // MARK: - Section 2: Navigation Links

@@ -251,6 +251,58 @@ extension GomaModelMapper {
             return .unknown
         }
     }
+
+    // MARK: - Footer Sponsors
+
+    static func footerSponsors(fromInternalFooterSponsors sponsors: GomaModels.FooterSponsors) -> FooterSponsors {
+        return sponsors.map { footerSponsor(fromInternalFooterSponsor: $0) }
+    }
+
+    static func footerSponsor(fromInternalFooterSponsor sponsor: GomaModels.FooterSponsor) -> FooterCMSSponsor {
+        let startDate = sponsor.startDate.flatMap { GomaProvider.parseGomaDateString($0) }
+        let endDate = sponsor.endDate.flatMap { GomaProvider.parseGomaDateString($0) }
+        let iconURL = sponsor.iconUrl.flatMap { URL(string: $0) }
+
+        return FooterCMSSponsor(
+            id: String(sponsor.id),
+            url: sponsor.url,
+            target: sponsor.target,
+            order: sponsor.order,
+            iconURL: iconURL,
+            platform: sponsor.platform,
+            userType: sponsor.userType,
+            status: sponsor.status,
+            language: sponsor.language,
+            startDate: startDate,
+            endDate: endDate
+        )
+    }
+
+    // MARK: - Footer Social Links
+
+    static func footerSocialLinks(fromInternalFooterSocialLinks links: GomaModels.FooterSocialLinks) -> FooterSocialLinks {
+        return links.map { footerSocialLink(fromInternalFooterSocialLink: $0) }
+    }
+
+    static func footerSocialLink(fromInternalFooterSocialLink link: GomaModels.FooterSocialLink) -> FooterCMSSocialLink {
+        let startDate = link.startDate.flatMap { _ in GomaProvider.parseGomaDateString(link.startDate ?? "") }
+        let endDate = link.endDate.flatMap { _ in GomaProvider.parseGomaDateString(link.endDate ?? "") }
+        let iconURL = link.iconUrl.flatMap { URL(string: $0) }
+
+        return FooterCMSSocialLink(
+            id: String(link.id),
+            url: link.url,
+            target: link.target,
+            order: link.order,
+            iconURL: iconURL,
+            platform: link.platform,
+            userType: link.userType,
+            status: link.status,
+            language: link.language,
+            startDate: startDate,
+            endDate: endDate
+        )
+    }
     
     static func promotionInfo(fromInternalPromotionInfo promotionInfo: GomaModels.PromotionInfo) -> PromotionInfo {
         

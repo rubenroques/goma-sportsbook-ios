@@ -16,10 +16,11 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
 
     // MARK: - Content Properties
 
-    let partnerClubs: [PartnerClub]
     let paymentOperators: [PaymentOperator]
     let socialMediaPlatforms: [SocialPlatform]
     private(set) var navigationLinks: [FooterLink]
+    private(set) var sponsors: [FooterSponsor] = []
+    private(set) var socialLinks: [FooterSocialLink] = []
     let responsibleGamblingText: ResponsibleGamblingText
     let copyrightText: String
     let licenseHeaderText: String
@@ -39,14 +40,18 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     // MARK: - Link Tap Handler (Internal)
 
     var onLinkTap: ((FooterLinkType) -> Void)?
+    var onSponsorsUpdated: (([FooterSponsor]) -> Void)?
+    var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)?
 
     // MARK: - Dependencies
 
     private let servicesProvider: ServicesProvider.Client
     private var cancellables: Set<AnyCancellable> = []
 
-    /// Stores the last raw response retrieved from CMS so logs/debugging can inspect it.
+    /// Stores the last raw responses retrieved from CMS so logs/debugging can inspect them.
     private(set) var fetchedFooterLinks: [ServicesProvider.FooterCMSLink] = []
+    private(set) var fetchedFooterSponsors: [ServicesProvider.FooterCMSSponsor] = []
+    private(set) var fetchedFooterSocialLinks: [ServicesProvider.FooterCMSSocialLink] = []
 
     // MARK: - Initialization
 
@@ -58,7 +63,6 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         self.servicesProvider = servicesProvider
 
         // Cameroon-specific content
-        self.partnerClubs = PartnerClub.allCases
         self.paymentOperators = PaymentOperator.allCases
         self.socialMediaPlatforms = SocialPlatform.allCases
         self.navigationLinks = Self.cameroonNavigationLinks()
@@ -80,9 +84,21 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         }
         
         self.fetchFooterLinks()
+        self.fetchFooterSponsors()
+        self.fetchFooterSocialLinks()
     }
 
     // MARK: - Private Methods
+
+    func handleSponsorTap(_ sponsor: FooterSponsor) {
+        guard let url = sponsor.url else { return }
+        onURLOpenRequested?(url)
+    }
+
+    func handleSocialLinkTap(_ link: FooterSocialLink) {
+        guard let url = link.url else { return }
+        onURLOpenRequested?(url)
+    }
 
     private func handleLinkTap(_ linkType: FooterLinkType) {
         if let cmsLink = cmsLink(for: linkType) {
@@ -129,6 +145,44 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
             .store(in: &cancellables)
     }
 
+    /// Fetches footer sponsors from CMS so we can inspect the payload and eventually power the logos section.
+    func fetchFooterSponsors(language: String? = nil) {
+        servicesProvider
+            .getFooterSponsors(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("[ExtendedListFooterViewModel] ✅ Footer sponsors fetch completed")
+                case .failure(let error):
+                    print("[ExtendedListFooterViewModel] ❌ Failed to fetch footer sponsors: \(error)")
+                }
+            } receiveValue: { [weak self] sponsors in
+                self?.fetchedFooterSponsors = sponsors
+                self?.applyCMSFooterSponsors()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Fetches footer social links from CMS to power the social icons
+    func fetchFooterSocialLinks(language: String? = nil) {
+        servicesProvider
+            .getFooterSocialLinks(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("[ExtendedListFooterViewModel] ✅ Footer social links fetch completed")
+                case .failure(let error):
+                    print("[ExtendedListFooterViewModel] ❌ Failed to fetch footer social links: \(error)")
+                }
+            } receiveValue: { [weak self] links in
+                self?.fetchedFooterSocialLinks = links
+                self?.applyCMSSocialLinks()
+            }
+            .store(in: &cancellables)
+    }
+
     private func applyCMSFooterLinks() {
         guard !fetchedFooterLinks.isEmpty else { return }
 
@@ -142,6 +196,39 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         }
 
         navigationLinks = updatedLinks
+    }
+
+    private func applyCMSFooterSponsors() {
+        guard !fetchedFooterSponsors.isEmpty else { return }
+
+        sponsors = fetchedFooterSponsors.map { sponsor in
+            let iconURL = sponsor.iconURL
+            let tapURL = URL(string: sponsor.url)
+            return FooterSponsor(
+                id: sponsor.id,
+                iconURL: iconURL,
+                url: tapURL
+            )
+        }
+
+        onSponsorsUpdated?(sponsors)
+    }
+
+    private func applyCMSSocialLinks() {
+        guard !fetchedFooterSocialLinks.isEmpty else { return }
+
+        socialLinks = fetchedFooterSocialLinks.compactMap { link in
+            let iconURL = link.iconURL
+            let destination = URL(string: link.url)
+            return FooterSocialLink(
+                id: link.id,
+                iconURL: iconURL,
+                url: destination,
+                target: link.target
+            )
+        }
+
+        onSocialLinksUpdated?(socialLinks)
     }
 
     private func cmsLink(for linkType: FooterLinkType) -> ServicesProvider.FooterCMSLink? {

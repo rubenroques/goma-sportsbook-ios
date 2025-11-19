@@ -2336,7 +2336,27 @@ extension Client {
 
         return homeContentProvider.getFooterLinks(language: language)
     }
-    
+
+    public func getFooterSponsors(language: String?) -> AnyPublisher<FooterSponsors, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getFooterSponsors(language: language)
+    }
+
+    public func getFooterSocialLinks(language: String?) -> AnyPublisher<FooterSocialLinks, ServiceProviderError> {
+        guard
+            let homeContentProvider = self.homeContentProvider
+        else {
+            return Fail(error: .homeContentProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return homeContentProvider.getFooterSocialLinks(language: language)
+    }
+
 }
 
 // Social endpoints

@@ -380,6 +380,65 @@ extension GomaModels {
         }
     }
 
+    typealias FooterSponsors = [FooterSponsor]
+    struct FooterSponsor: Identifiable, Equatable, Hashable, Codable {
+        let id: Int
+        let url: String
+        let target: String?
+        let order: Int
+        let iconUrl: String?
+        let platform: String?
+        let userType: String?
+        let status: String?
+        let language: String?
+        let startDate: String?
+        let endDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case url
+            case target
+            case order
+            case iconUrl = "icon_url"
+            case platform
+            case userType = "user_type"
+            case status
+            case language
+            case startDate = "start_date"
+            case endDate = "end_date"
+        }
+    }
+
+    typealias FooterSocialLinks = [FooterSocialLink]
+    struct FooterSocialLink: Identifiable, Equatable, Hashable, Codable {
+        let id: Int
+        let url: String
+        let target: String?
+        let order: Int
+        let iconUrl: String?
+        let platform: String?
+        let userType: String?
+        let status: String?
+        let language: String?
+        let startDate: String?
+        let endDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case url
+            case target
+            case order
+            case iconUrl = "icon_url"
+            case platform
+            case userType = "user_type"
+            case status
+            case language
+            case startDate = "start_date"
+            case endDate = "end_date"
+        }
+    }
+
+
     struct PromotionInfo: Codable {
         let id: Int
         let title: String

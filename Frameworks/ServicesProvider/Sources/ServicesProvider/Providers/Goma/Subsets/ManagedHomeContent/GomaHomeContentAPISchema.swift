@@ -27,6 +27,8 @@ enum GomaHomeContentAPISchema {
     case proChoices
     case topCompetitions
     case footerLinks(language: String?)
+    case footerSponsors(language: String?)
+    case footerSocialMedia(language: String?)
     
 }
 
@@ -67,6 +69,10 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "/api/competitions/v1/featured"
         case .footerLinks:
             return "/api/cms/v1/footer/links"
+        case .footerSponsors:
+            return "/api/cms/v1/footer/sponsors"
+        case .footerSocialMedia:
+            return "/api/cms/v1/footer/social-media"
         }
     }
 
@@ -86,6 +92,16 @@ extension GomaHomeContentAPISchema: Endpoint {
             queryItems.append(URLQueryItem(name: "promotions", value: "false"))
             queryItems.append(URLQueryItem(name: "platform", value: "ios"))
         case .footerLinks(let language):
+            if let language {
+                queryItems.append(URLQueryItem(name: "language", value: language))
+            }
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+        case .footerSponsors(let language):
+            if let language {
+                queryItems.append(URLQueryItem(name: "language", value: language))
+            }
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+        case .footerSocialMedia(let language):
             if let language {
                 queryItems.append(URLQueryItem(name: "language", value: language))
             }
@@ -167,6 +183,10 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "Get initial data dump including sports, competitions, and events"
         case .footerLinks:
             return "Get footer links for the configured client"
+        case .footerSponsors:
+            return "Get footer sponsor logos for the configured client"
+        case .footerSocialMedia:
+            return "Get footer social media links for the configured client"
         }
     }
 }
