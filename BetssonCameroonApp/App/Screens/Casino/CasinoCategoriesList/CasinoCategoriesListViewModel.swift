@@ -22,7 +22,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private static let gamesPlatform = "PC"
 
     // MARK: - Lobby Configuration
-    private let lobbyType: CasinoLobbyType
+    let lobbyType: CasinoLobbyType
     let showTopBanner: Bool
 
     // MARK: - Published Properties

@@ -6,22 +6,22 @@ public class MockScoreViewModel: ScoreViewModelProtocol {
 
     // MARK: - Publishers
     private let scoreCellsSubject = CurrentValueSubject<[ScoreDisplayData], Never>([])
-    private let visualStateSubject = CurrentValueSubject<ScoreViewVisualState, Never>(.idle)
+    private let visualStateSubject = CurrentValueSubject<ScoreDisplayData.VisualState, Never>(.idle)
 
     public var scoreCellsPublisher: AnyPublisher<[ScoreDisplayData], Never> {
         scoreCellsSubject.eraseToAnyPublisher()
     }
 
-    public var visualStatePublisher: AnyPublisher<ScoreViewVisualState, Never> {
+    public var visualStatePublisher: AnyPublisher<ScoreDisplayData.VisualState, Never> {
         visualStateSubject.eraseToAnyPublisher()
     }
 
-    public var currentVisualState: ScoreViewVisualState {
+    public var currentVisualState: ScoreDisplayData.VisualState {
         visualStateSubject.value
     }
 
     // MARK: - Initialization
-    public init(scoreCells: [ScoreDisplayData] = [], visualState: ScoreViewVisualState = .idle) {
+    public init(scoreCells: [ScoreDisplayData] = [], visualState: ScoreDisplayData.VisualState = .idle) {
         scoreCellsSubject.send(scoreCells)
         visualStateSubject.send(visualState)
     }
@@ -36,7 +36,7 @@ public class MockScoreViewModel: ScoreViewModelProtocol {
         }
     }
 
-    public func setVisualState(_ state: ScoreViewVisualState) {
+    public func setVisualState(_ state: ScoreDisplayData.VisualState) {
         visualStateSubject.send(state)
     }
 

@@ -52,7 +52,8 @@
       "WebFetch(domain:medium.com)",
       "Bash(git fetch --all)",
       "Bash(git -c color.ui=always diff --stat Frameworks/GomaUI/)",
-      "WebFetch(domain:docs.xtremepush.com)"
+      "WebFetch(domain:docs.xtremepush.com)",
+      "Bash(cwamp subscribe:*)"
     ],
     "deny": []
   },

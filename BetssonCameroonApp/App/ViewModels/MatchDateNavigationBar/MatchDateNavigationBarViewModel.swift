@@ -159,7 +159,7 @@ extension MatchDateNavigationBarViewModel {
     public func updateMatchEnded() {
         let currentData = dataSubject.value
         let endedStatus = MatchStatus.live(period: "Ended", time: "")
-        
+
         let updatedData = MatchDateNavigationBarData(
             id: currentData.id,
             matchStatus: endedStatus,
@@ -167,7 +167,28 @@ extension MatchDateNavigationBarViewModel {
             isBackButtonHidden: currentData.isBackButtonHidden,
             dateFormat: currentData.dateFormat
         )
-        
+
         dataSubject.send(updatedData)
+    }
+
+    /// Updates the navigation bar with MatchLiveData
+    /// Wrapper for external callers (e.g., MatchDetailsTextualViewModel)
+    public func updateMatchWithLiveData(_ matchLiveData: MatchLiveData) {
+        // Update match status display in navigation bar
+        if let status = matchLiveData.status {
+            switch status {
+            case .inProgress(let period):
+                // Update live status with period and time
+                let time = matchLiveData.matchTime ?? ""
+                updateMatchStatus(period: period, time: time)
+
+            case .ended:
+                // Match ended
+                updateMatchEnded()
+
+            default:
+                break
+            }
+        }
     }
 }

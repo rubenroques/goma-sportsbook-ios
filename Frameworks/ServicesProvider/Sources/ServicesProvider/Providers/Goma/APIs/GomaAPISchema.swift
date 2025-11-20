@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 extension GomaAPISchema {
     enum ArgumentModels {
@@ -1127,6 +1128,24 @@ extension GomaAPISchema {
         guard let jsonData = try? encoder.encode(requestBody) else { return "" }
         return String(data: jsonData, encoding: .utf8) ?? ""
     }
-    
-    
+}
+
+// MARK: - Performance Tracking
+
+extension GomaAPISchema {
+    var performanceFeature: PerformanceFeature? {
+        switch self {
+        // Login endpoints
+        case .anonymousAuth, .login:
+            return .login
+
+        // Registration endpoints
+        case .register:
+            return .register
+
+        // Don't track other endpoints (social, search, wallet, favorites, etc.)
+        default:
+            return nil
+        }
+    }
 }

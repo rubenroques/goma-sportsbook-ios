@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum GomaHomeContentAPISchema {
     // Initial Dump
@@ -157,6 +158,17 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "Get top/featured competitions"
         case .initialDump:
             return "Get initial data dump including sports, competitions, and events"
+        }
+    }
+
+    var performanceFeature: PerformanceFeature? {
+        // All home content endpoints are CMS content loading
+        switch self {
+        case .initialDump, .homeTemplate,
+             .alertBanner, .banners, .sportBanners, .casinoCarouselBanners,
+             .boostedOdds, .topImageCards, .heroCards, .stories, .news,
+             .proChoices, .topCompetitions:
+            return .cms
         }
     }
 }

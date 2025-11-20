@@ -7,7 +7,6 @@ public final class MatchHeaderCompactView: UIView {
     // MARK: - UI Components
     private let containerView = UIView()
     private let gradientView = GradientView()
-    private let leftContentView = UIView()
     private let teamsStackView = UIStackView()
     private let homeTeamLabel = UILabel()
     private let awayTeamLabel = UILabel()
@@ -51,14 +50,9 @@ public final class MatchHeaderCompactView: UIView {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = .clear
-        
-        // Left content setup
-        containerView.addSubview(leftContentView)
-        leftContentView.translatesAutoresizingMaskIntoConstraints = false
-        leftContentView.backgroundColor = .clear
-        
+
         // Teams stack setup (vertical)
-        leftContentView.addSubview(teamsStackView)
+        containerView.addSubview(teamsStackView)
         teamsStackView.translatesAutoresizingMaskIntoConstraints = false
         teamsStackView.axis = .vertical
         teamsStackView.spacing = 2
@@ -79,11 +73,11 @@ public final class MatchHeaderCompactView: UIView {
         teamsStackView.addArrangedSubview(awayTeamLabel)
 
         // ScoreView setup (hidden by default, shown only for live matches)
-        leftContentView.addSubview(scoreView)
+        containerView.addSubview(scoreView)
         scoreView.isHidden = true  // Will be shown when live data is available
 
         // Breadcrumb setup
-        leftContentView.addSubview(breadcrumbLabel)
+        containerView.addSubview(breadcrumbLabel)
         breadcrumbLabel.translatesAutoresizingMaskIntoConstraints = false
         breadcrumbLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
         breadcrumbLabel.textColor = StyleProvider.Color.gameHeaderTextSecondary
@@ -134,32 +128,26 @@ public final class MatchHeaderCompactView: UIView {
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-            
-            // Left content constraints - anchored to left side, trailing to center
-            leftContentView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            leftContentView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            leftContentView.trailingAnchor.constraint(equalTo: statisticsButton.leadingAnchor, constant: -8),
-            leftContentView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
+
+            // Teams stack constraints - anchored to left side
+            teamsStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            teamsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+
+            // ScoreView constraints (aligned vertically with team labels, positioned at right edge)
+            scoreView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
+            scoreView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
+            scoreView.trailingAnchor.constraint(equalTo: statisticsButton.leadingAnchor, constant: -8),
+            scoreView.leadingAnchor.constraint(equalTo: teamsStackView.trailingAnchor, constant: 8),
+
             // Statistics button constraints - anchored to right side of container
             statisticsButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             statisticsButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            
-            // Teams stack constraints (no longer full width - makes room for scores)
-            teamsStackView.topAnchor.constraint(equalTo: leftContentView.topAnchor),
-            teamsStackView.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
-
-            // ScoreView constraints (aligned vertically with team labels)
-            scoreView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
-            scoreView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
-            scoreView.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
-            scoreView.leadingAnchor.constraint(greaterThanOrEqualTo: teamsStackView.trailingAnchor, constant: 8),
 
             // Breadcrumb constraints
             breadcrumbLabel.topAnchor.constraint(equalTo: teamsStackView.bottomAnchor, constant: 4),
-            breadcrumbLabel.leadingAnchor.constraint(equalTo: leftContentView.leadingAnchor),
-            breadcrumbLabel.trailingAnchor.constraint(equalTo: leftContentView.trailingAnchor),
-            breadcrumbLabel.bottomAnchor.constraint(equalTo: leftContentView.bottomAnchor),
+            breadcrumbLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            breadcrumbLabel.trailingAnchor.constraint(lessThanOrEqualTo: statisticsButton.leadingAnchor, constant: -8),
+            breadcrumbLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
             // Statistics button size constraints
             statisticsButton.heightAnchor.constraint(equalToConstant: 30),
@@ -170,11 +158,8 @@ public final class MatchHeaderCompactView: UIView {
             bottomBorderView.bottomAnchor.constraint(equalTo: bottomAnchor),
             bottomBorderView.heightAnchor.constraint(equalToConstant: 1)
         ])
-        
-        // Set content hugging and compression resistance for proper layout priority
-        leftContentView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        leftContentView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
+        // Set content hugging and compression resistance for proper layout priority
         // Scores have highest priority - never compress (always visible)
         scoreView.setContentHuggingPriority(.required, for: .horizontal)
         scoreView.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -183,6 +168,7 @@ public final class MatchHeaderCompactView: UIView {
         homeTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         awayTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
+        // Statistics button maintains its size
         statisticsButton.setContentHuggingPriority(.required, for: .horizontal)
         statisticsButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -387,6 +373,324 @@ public final class MatchHeaderCompactView: UIView {
             leagueId: "league-uefa-europa",
             hasStatistics: true,
             isStatisticsCollapsed: false
+        )
+
+        let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
+        let headerView = MatchHeaderCompactView(viewModel: viewModel)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        return vc
+    }
+}
+
+// MARK: - Live Tennis Previews
+
+@available(iOS 17.0, *)
+#Preview("Tennis - Live Match with Serving") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let headerView = MatchHeaderCompactView(viewModel: MockMatchHeaderCompactViewModel.liveTennisMatch)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Tennis - Long Names Truncation") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+
+        // Create complex tennis score with long names
+        let scoreData = [
+            ScoreDisplayData(
+                id: "game-current",
+                homeScore: "AD",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .winnerLoser,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(
+                id: "set-1",
+                homeScore: "7",
+                awayScore: "6",
+                index: 1,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-2",
+                homeScore: "3",
+                awayScore: "6",
+                index: 2,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-3",
+                homeScore: "6",
+                awayScore: "5",
+                index: 3,
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        let mockData = MatchHeaderCompactData(
+            homeTeamName: "Daniil Medvedev",
+            awayTeamName: "Alexander Zverev",
+            sport: "Tennis",
+            country: "Australia",
+            league: "Australian Open",
+            countryId: "country-australia",
+            leagueId: "league-aus-open",
+            hasStatistics: true,
+            scoreViewModel: scoreViewModel,
+            isLive: true
+        )
+
+        let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
+        let headerView = MatchHeaderCompactView(viewModel: viewModel)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Tennis - Final Set Tiebreak") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+
+        // Create tiebreak scenario in final set
+        let scoreData = [
+            ScoreDisplayData(
+                id: "tiebreak",
+                homeScore: "8",
+                awayScore: "7",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(
+                id: "set-1",
+                homeScore: "6",
+                awayScore: "7",
+                index: 1,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-2",
+                homeScore: "7",
+                awayScore: "6",
+                index: 2,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-3",
+                homeScore: "6",
+                awayScore: "6",
+                index: 3,
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        let mockData = MatchHeaderCompactData(
+            homeTeamName: "Djokovic",
+            awayTeamName: "Alcaraz",
+            sport: "Tennis",
+            country: "England",
+            league: "Wimbledon",
+            countryId: "country-uk",
+            leagueId: "league-wimbledon",
+            hasStatistics: true,
+            scoreViewModel: scoreViewModel,
+            isLive: true
+        )
+
+        let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
+        let headerView = MatchHeaderCompactView(viewModel: viewModel)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Tennis - Five Sets with Stats") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+
+        // Create five-set match (Grand Slam format)
+        let scoreData = [
+            ScoreDisplayData(
+                id: "game-current",
+                homeScore: "15",
+                awayScore: "30",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(
+                id: "set-1",
+                homeScore: "6",
+                awayScore: "4",
+                index: 1,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-2",
+                homeScore: "4",
+                awayScore: "6",
+                index: 2,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-3",
+                homeScore: "7",
+                awayScore: "6",
+                index: 3,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-4",
+                homeScore: "3",
+                awayScore: "6",
+                index: 4,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-5",
+                homeScore: "2",
+                awayScore: "1",
+                index: 5,
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        let mockData = MatchHeaderCompactData(
+            homeTeamName: "Sinner",
+            awayTeamName: "Tsitsipas",
+            sport: "Tennis",
+            country: "France",
+            league: "Roland Garros",
+            countryId: "country-france",
+            leagueId: "league-roland-garros",
+            hasStatistics: true,
+            isStatisticsCollapsed: false,
+            scoreViewModel: scoreViewModel,
+            isLive: true
+        )
+
+        let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
+        let headerView = MatchHeaderCompactView(viewModel: viewModel)
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(headerView)
+
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor)
+        ])
+
+        vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Tennis - Extremely Long Names") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+
+        // Test extreme truncation scenario
+        let scoreData = [
+            ScoreDisplayData(
+                id: "game-current",
+                homeScore: "40",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(
+                id: "set-1",
+                homeScore: "6",
+                awayScore: "3",
+                index: 1,
+                style: .simple,
+                highlightingMode: .winnerLoser
+            ),
+            ScoreDisplayData(
+                id: "set-2",
+                homeScore: "4",
+                awayScore: "5",
+                index: 2,
+                style: .simple,
+                highlightingMode: .bothHighlight
+            )
+        ]
+        let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
+
+        let mockData = MatchHeaderCompactData(
+            homeTeamName: "Stanislas Wawrinka",
+            awayTeamName: "Juan Martin del Potro",
+            sport: "Tennis",
+            country: "United States",
+            league: "US Open Championship",
+            countryId: "country-usa",
+            leagueId: "league-us-open",
+            hasStatistics: true,
+            scoreViewModel: scoreViewModel,
+            isLive: true
         )
 
         let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)

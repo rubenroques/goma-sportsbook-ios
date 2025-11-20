@@ -77,12 +77,6 @@ class MatchDetailsManager {
             .compactMap { [weak self] content -> SubscribableContent<Event>? in
                 return try? self?.handleMatchAggregatorContent(content)
             }
-            .mapError { error -> ServiceProviderError in
-                if let serviceError = error as? ServiceProviderError {
-                    return serviceError
-                }
-                return ServiceProviderError.unknown
-            }
             .eraseToAnyPublisher()
     }
     
@@ -106,12 +100,6 @@ class MatchDetailsManager {
             })
             .compactMap { [weak self] content -> SubscribableContent<[MarketGroup]>? in
                 return try? self?.handleMarketGroupsContent(content)
-            }
-            .mapError { error -> ServiceProviderError in
-                if let serviceError = error as? ServiceProviderError {
-                    return serviceError
-                }
-                return ServiceProviderError.unknown
             }
             .eraseToAnyPublisher()
     }

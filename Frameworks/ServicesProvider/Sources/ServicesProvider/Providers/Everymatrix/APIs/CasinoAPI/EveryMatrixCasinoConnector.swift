@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import GomaPerformanceKit
 
 class EveryMatrixCasinoConnector {
     
@@ -53,9 +54,35 @@ class EveryMatrixCasinoConnector {
     /// - Returns: Publisher emitting decoded response or error
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
         print("[EveryMatrix-Casino] Preparing request for endpoint: \(endpoint.endpoint)")
-        
+
+        // Get performance feature from endpoint (nil if not tracked)
+        let feature = endpoint.performanceFeature
+
+        // Start performance tracking if feature exists
+        if let feature = feature {
+            PerformanceTracker.shared.start(
+                feature: feature,
+                layer: .api,
+                metadata: [
+                    "endpoint": endpoint.endpoint,
+                    "method": endpoint.method.value()
+                ]
+            )
+        }
+
         // Build base request
         guard var request = endpoint.request() else {
+            // End tracking on error if tracking was started
+            if let feature = feature {
+                PerformanceTracker.shared.end(
+                    feature: feature,
+                    layer: .api,
+                    metadata: [
+                        "status": "error",
+                        "error": "Invalid request format"
+                    ]
+                )
+            }
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
         
@@ -136,11 +163,44 @@ class EveryMatrixCasinoConnector {
 
                     print("[EveryMatrix-Casino REST api] Decoding response data...")
 
+                    // Start parsing tracking
+                    if let feature = feature {
+                        PerformanceTracker.shared.start(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: ["type": "json_decode"]
+                        )
+                    }
+
                     do {
-                        return try self.decoder.decode(T.self, from: data)
+                        let result = try self.decoder.decode(T.self, from: data)
+
+                        // End parsing tracking - success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: ["status": "success"]
+                            )
+                        }
+
+                        return result
                     } catch let decodingError {
                         print("[EveryMatrix-Casino REST api] Decoding error: \(decodingError)")
                         print("[EveryMatrix-Casino REST api] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+
+                        // End parsing tracking - error
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: [
+                                    "status": "error",
+                                    "error": decodingError.localizedDescription
+                                ]
+                            )
+                        }
+
                         throw ServiceProviderError.decodingError(message: decodingError.localizedDescription)
                     }
                 }
@@ -150,18 +210,86 @@ class EveryMatrixCasinoConnector {
                     }
                     return ServiceProviderError.errorMessage(message: error.localizedDescription)
                 }
+                .handleEvents(
+                    receiveOutput: { _ in
+                        // End tracking on success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .api,
+                                metadata: ["status": "success"]
+                            )
+                        }
+                    },
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            // End tracking on error
+                            if let feature = feature {
+                                PerformanceTracker.shared.end(
+                                    feature: feature,
+                                    layer: .api,
+                                    metadata: [
+                                        "status": "error",
+                                        "error": error.localizedDescription
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                )
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct request
             print("[EveryMatrix-Casino] Making unauthenticated request")
-            
+
             return performRequest(request)
                 .tryMap { [weak self] data in
                     guard let self = self else {
                         throw ServiceProviderError.unknown
                     }
-                    
-                    return try self.decoder.decode(T.self, from: data)
+
+                    print("[EveryMatrix-Casino] Decoding response data...")
+
+                    // Start parsing tracking
+                    if let feature = feature {
+                        PerformanceTracker.shared.start(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: ["type": "json_decode"]
+                        )
+                    }
+
+                    do {
+                        let result = try self.decoder.decode(T.self, from: data)
+
+                        // End parsing tracking - success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: ["status": "success"]
+                            )
+                        }
+
+                        return result
+                    } catch let decodingError {
+                        print("[EveryMatrix-Casino] Decoding error: \(decodingError)")
+                        print("[EveryMatrix-Casino] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+
+                        // End parsing tracking - error
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: [
+                                    "status": "error",
+                                    "error": decodingError.localizedDescription
+                                ]
+                            )
+                        }
+
+                        throw ServiceProviderError.decodingError(message: decodingError.localizedDescription)
+                    }
                 }
                 .mapError { error -> ServiceProviderError in
                     if let serviceError = error as? ServiceProviderError {
@@ -169,6 +297,33 @@ class EveryMatrixCasinoConnector {
                     }
                     return ServiceProviderError.errorMessage(message: error.localizedDescription)
                 }
+                .handleEvents(
+                    receiveOutput: { _ in
+                        // End tracking on success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .api,
+                                metadata: ["status": "success"]
+                            )
+                        }
+                    },
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            // End tracking on error
+                            if let feature = feature {
+                                PerformanceTracker.shared.end(
+                                    feature: feature,
+                                    layer: .api,
+                                    metadata: [
+                                        "status": "error",
+                                        "error": error.localizedDescription
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                )
                 .eraseToAnyPublisher()
         }
     }

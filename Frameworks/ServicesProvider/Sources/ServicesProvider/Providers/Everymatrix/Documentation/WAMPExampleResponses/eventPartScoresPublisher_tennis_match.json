@@ -1,0 +1,101 @@
+CONNECTION: CONNECTED
+DEBUG: Session details
+{
+  "roles": {
+    "dealer": {
+      "features": {
+        "callee_blackwhite_listing": false,
+        "caller_exclusion": false,
+        "caller_identification": false,
+        "call_trustlevels": false,
+        "pattern_based_registration": false,
+        "partitioned_rpc": false,
+        "call_timeout": false,
+        "call_canceling": false,
+        "progressive_call_results": false
+      }
+    },
+    "broker": {
+      "features": {
+        "subscriber_blackwhite_listing": false,
+        "publisher_exclusion": false,
+        "publisher_identification": false,
+        "publication_trustlevels": false,
+        "pattern_based_subscription": false,
+        "partitioned_pubsub": false,
+        "subscriber_metaevents": false,
+        "subscriber_list": false,
+        "event_history": false
+      }
+    }
+  },
+  "transport": {
+    "type": "websocket",
+    "url": "wss://sportsapi-betsson-stage.everymatrix.com/v2",
+    "protocol": "wamp.2.json"
+  }
+}
+DEBUG: Initial dump for /sports/4093/en/287259481896947712/eventPartScores/small
+{
+  "args": [],
+  "kwargs": {
+    "version": "1763594158472",
+    "format": "BASIC",
+    "messageType": "INITIAL_DUMP",
+    "records": [
+      {
+        "_type": "EVENT_PART_SCORE",
+        "id": "287366695536861184",
+        "eventPartName": "Sets",
+        "shortEventPartName": "Sets",
+        "eventPartKey": "WholeMatch",
+        "homeScore": "1",
+        "awayScore": "0",
+        "eventInfoTypeId": "1",
+        "eventInfoTypeName": "Score",
+        "eventInfoTypeShortName": "Score",
+        "sportId": "3",
+        "headerDisplayType": "TEXT",
+        "currentEventPart": false
+      }
+    ]
+  }
+}
+✓ Subscribed to /sports/4093/en/287259481896947712/eventPartScores/small
+{
+  "status": "subscribed_with_initial",
+  "topic": "/sports/4093/en/287259481896947712/eventPartScores/small",
+  "initialData": {
+    "args": [],
+    "kwargs": {
+      "version": "1763594158472",
+      "format": "BASIC",
+      "messageType": "INITIAL_DUMP",
+      "records": [
+        {
+          "_type": "EVENT_PART_SCORE",
+          "id": "287366695536861184",
+          "eventPartName": "Sets",
+          "shortEventPartName": "Sets",
+          "eventPartKey": "WholeMatch",
+          "homeScore": "1",
+          "awayScore": "0",
+          "eventInfoTypeId": "1",
+          "eventInfoTypeName": "Score",
+          "eventInfoTypeShortName": "Score",
+          "sportId": "3",
+          "headerDisplayType": "TEXT",
+          "currentEventPart": false
+        }
+      ]
+    }
+  },
+  "subscription": {
+    "topic": "/sports/4093/en/287259481896947712/eventPartScores/small",
+    "messages": [],
+    "status": "timeout",
+    "duration": 5000
+  }
+}
+CONNECTION: DISCONNECTED
+CONNECTION: DISCONNECTED

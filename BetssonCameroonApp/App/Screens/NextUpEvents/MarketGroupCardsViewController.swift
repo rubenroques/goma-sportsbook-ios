@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import GomaUI
+import GomaPerformanceKit
 
 // MARK: - MarketGroupCardsViewController
 class MarketGroupCardsViewController: UIViewController {
@@ -10,6 +11,10 @@ class MarketGroupCardsViewController: UIViewController {
 
     private let tableView: UITableView
     private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Performance Tracking
+    private var hasTrackedFirstUpdate = false
+    private var hasTrackedFirstCell = false
 
     // MARK: - Footer Properties (BetssonFrance pattern)
     private let footerInnerView = UIView(frame: .zero)
@@ -177,8 +182,36 @@ class MarketGroupCardsViewController: UIViewController {
         viewModel.$matchCardsData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matchCardsData in
+                guard let self = self else { return }
                 print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED - \(matchCardsData.count) matches")
-                self?.tableView.reloadData()
+
+                // Track first UI update
+                if !self.hasTrackedFirstUpdate && !matchCardsData.isEmpty {
+                    self.hasTrackedFirstUpdate = true
+
+                    PerformanceTracker.shared.start(
+                        feature: .homeScreen,
+                        layer: .app,
+                        metadata: [
+                            "operation": "table_reload",
+                            "match_count": "\(matchCardsData.count)"
+                        ]
+                    )
+                }
+
+                self.tableView.reloadData()
+
+                // Track completion
+                if !matchCardsData.isEmpty {
+                    PerformanceTracker.shared.end(
+                        feature: .homeScreen,
+                        layer: .app,
+                        metadata: [
+                            "operation": "table_reload",
+                            "status": "complete"
+                        ]
+                    )
+                }
             }
             .store(in: &cancellables)
 
@@ -275,6 +308,20 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
             let isFirst = indexPath.row == 0
             let isLast = indexPath.row == totalMatchCards - 1
             cell.configureCellPosition(isFirst: isFirst, isLast: isLast)
+
+            // Track first cell creation (only once)
+            if indexPath.row == 0 && !hasTrackedFirstCell {
+                hasTrackedFirstCell = true
+
+                PerformanceTracker.shared.end(
+                    feature: .homeScreen,
+                    layer: .app,
+                    metadata: [
+                        "operation": "first_cell_rendered",
+                        "status": "complete"
+                    ]
+                )
+            }
 
             return cell
 

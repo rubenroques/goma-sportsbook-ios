@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import GomaUI
+import ServicesProvider
 
 final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     
@@ -122,6 +123,49 @@ extension MatchHeaderCompactViewModel {
     public func updateMatch(_ match: Match) {
         let updatedData = Self.createHeaderData(from: match)
         headerDataSubject.send(updatedData)
+    }
+
+    /// Updates header with MatchLiveData (scores, status, time)
+    public func updateMatchWithLiveData(_ liveData: MatchLiveData) {
+        let currentData = headerDataSubject.value
+
+        // Create new ScoreViewModel from live data
+        let scoreViewModel: ScoreViewModelProtocol? = ScoreViewModel(
+            detailedScores: liveData.detailedScores,
+            activePlayerServing: Self.mapActivePlayerServe(from: liveData.activePlayerServing),
+            homeScore: liveData.homeScore,
+            awayScore: liveData.awayScore,
+            sportId: match.sport.id
+        )
+
+        let updatedData = MatchHeaderCompactData(
+            homeTeamName: currentData.homeTeamName,
+            awayTeamName: currentData.awayTeamName,
+            sport: currentData.sport,
+            country: currentData.country,
+            league: currentData.league,
+            countryId: currentData.countryId,
+            leagueId: currentData.leagueId,
+            hasStatistics: currentData.hasStatistics,
+            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
+            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
+            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
+            scoreViewModel: scoreViewModel,
+            isLive: liveData.status?.isLive ?? currentData.isLive
+        )
+
+        headerDataSubject.send(updatedData)
+    }
+
+    private static func mapActivePlayerServe(from serve: Match.ActivePlayerServe?) -> ServicesProvider.ActivePlayerServe? {
+        switch serve {
+        case .home:
+            return .home
+        case .away:
+            return .away
+        case .none:
+            return nil
+        }
     }
 
     /// Updates the header with new match information

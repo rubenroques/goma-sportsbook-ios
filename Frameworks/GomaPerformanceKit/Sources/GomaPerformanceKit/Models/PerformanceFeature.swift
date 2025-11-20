@@ -20,10 +20,22 @@ public enum PerformanceFeature: String, Codable, CaseIterable {
 
     /// User registration
     case register
-    
-    // socket sports data
+
+    /// Socket sports data loading
     case sportsData
-    
-    // App Load / Boot
+
+    /// App initialization/boot
     case appBoot
+
+    /// CMS/Managed content loading
+    case cms
+
+    /// Casino home page load (categories, games, banners)
+    case casinoHome
+
+    /// Sports home screen (NextUpEvents) loading
+    case homeScreen
+
+    /// External third-party SDK initialization (Firebase, XtremePush, Phrase, etc.)
+    case externalDependencies
 }

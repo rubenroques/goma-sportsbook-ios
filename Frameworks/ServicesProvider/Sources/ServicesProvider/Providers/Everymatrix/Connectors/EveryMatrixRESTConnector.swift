@@ -145,14 +145,47 @@ class EveryMatrixRESTConnector: Connector {
                     guard let self = self else {
                         throw ServiceProviderError.unknown
                     }
-                    
+
                     print("[EveryMatrix-REST api] Decoding response data...")
-                    
+
+                    // Start parsing tracking
+                    if let feature = feature {
+                        PerformanceTracker.shared.start(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: ["type": "json_decode"]
+                        )
+                    }
+
                     do {
-                        return try self.decoder.decode(T.self, from: data)
+                        let result = try self.decoder.decode(T.self, from: data)
+
+                        // End parsing tracking - success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: ["status": "success"]
+                            )
+                        }
+
+                        return result
                     } catch let decodingError {
                         print("[EveryMatrix-REST api] Decoding error: \(decodingError)")
                         print("[EveryMatrix-REST api] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+
+                        // End parsing tracking - error
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .parsing,
+                                metadata: [
+                                    "status": "error",
+                                    "error": decodingError.localizedDescription
+                                ]
+                            )
+                        }
+
                         throw ServiceProviderError.decodingError(message: decodingError.localizedDescription)
                     }
                 }

@@ -27,6 +27,11 @@ final public class MultiWidgetToolbarView: UIView {
     public var onWidgetSelected: ((WidgetTypeIdentifier) -> Void) = { _ in }
     public var onBalanceTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
     public var onDepositTapped: ((WidgetTypeIdentifier) -> Void) = { _ in }
+    public var onLogoSecretTapped: (() -> Void)?
+
+    // MARK: - Private Properties (Secret Tap)
+    private var logoTapCount = 0
+    private var logoTapTimer: Timer?
 
     // MARK: - Initialization
     public init(viewModel: MultiWidgetToolbarViewModelProtocol) {
@@ -152,6 +157,11 @@ final public class MultiWidgetToolbarView: UIView {
         NSLayoutConstraint.activate([
             imageView.heightAnchor.constraint(equalToConstant: 32)
         ])
+
+        // Add secret tap gesture for debug screen
+        imageView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(logoTapped))
+        imageView.addGestureRecognizer(tapGesture)
 
         return imageView
     }
@@ -377,6 +387,20 @@ final public class MultiWidgetToolbarView: UIView {
         }
         viewModel.selectWidget(id: widgetID)
         onWidgetSelected(widgetID)
+    }
+
+    @objc private func logoTapped() {
+        logoTapCount += 1
+        logoTapTimer?.invalidate()
+
+        if logoTapCount >= 6 {
+            logoTapCount = 0
+            onLogoSecretTapped?()
+        } else {
+            logoTapTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+                self?.logoTapCount = 0
+            }
+        }
     }
 
     // MARK: - Public Methods

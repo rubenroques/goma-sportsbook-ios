@@ -41,27 +41,30 @@ public struct ScoreDisplayData: Equatable, Hashable {
     }
 
     /// Defines how scores should be visually highlighted
+    ///  Used on the label
     public enum HighlightingMode: Equatable {
         case winnerLoser    // Winner in black, loser in gray (for completed sets)
         case bothHighlight  // Both scores in highlightPrimary (for current game/set and match total)
         case noHighlight    // Both scores in default color
     }
+    /// Visual styles for score cells
+    ///  Used on the collumns
+    public enum ScoreCellStyle: Equatable, CaseIterable {
+        case simple    // Plain text with winner highlighting
+        case border    // Text with border outline
+        case background // Text with background fill
+    }
+
+    /// Visual states for the entire ScoreView
+    public enum VisualState: Equatable {
+        case idle
+        case loading
+        case display
+        case empty
+    }
+    
 }
 
-/// Visual styles for score cells
-public enum ScoreCellStyle: Equatable, CaseIterable {
-    case simple    // Plain text with winner highlighting
-    case border    // Text with border outline
-    case background // Text with background fill
-}
-
-/// Visual states for the entire ScoreView
-public enum ScoreViewVisualState: Equatable {
-    case idle
-    case loading
-    case display
-    case empty
-}
 
 // MARK: - Protocol
 
@@ -71,16 +74,16 @@ public protocol ScoreViewModelProtocol {
     var scoreCellsPublisher: AnyPublisher<[ScoreDisplayData], Never> { get }
 
     /// Publisher for the overall visual state
-    var visualStatePublisher: AnyPublisher<ScoreViewVisualState, Never> { get }
+    var visualStatePublisher: AnyPublisher<ScoreDisplayData.VisualState, Never> { get }
 
     /// Current visual state (for immediate access)
-    var currentVisualState: ScoreViewVisualState { get }
+    var currentVisualState: ScoreDisplayData.VisualState { get }
 
     /// Update the score cells data
     func updateScoreCells(_ cells: [ScoreDisplayData])
 
     /// Set the visual state
-    func setVisualState(_ state: ScoreViewVisualState)
+    func setVisualState(_ state: ScoreDisplayData.VisualState)
 
     /// Convenience method to clear all scores
     func clearScores()

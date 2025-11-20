@@ -69,7 +69,7 @@ class ScoreCellView: UIView {
         updateScoreHighlighting()
     }
     
-    private func applyStyle(_ style: ScoreCellStyle) {
+    private func applyStyle(_ style: ScoreDisplayData.ScoreCellStyle) {
         switch style {
         case .simple:
             widthConstraint.constant = 26

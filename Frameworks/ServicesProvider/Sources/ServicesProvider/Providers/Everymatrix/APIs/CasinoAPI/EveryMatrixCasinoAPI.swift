@@ -1,4 +1,5 @@
 import Foundation
+import GomaPerformanceKit
 
 enum EveryMatrixCasinoAPI {
     case getCategories(datasource: String, language: String, platform: String)
@@ -114,6 +115,15 @@ extension EveryMatrixCasinoAPI: Endpoint {
             return "Fetch searched games"
         case .getRecommendedGames:
             return "Fetch recommended games"
+        }
+    }
+
+    var performanceFeature: PerformanceFeature? {
+        switch self {
+        case .getCategories, .getGamesByCategory:
+            return .casinoHome
+        case .getGameDetails, .searchGames, .getRecommendedGames:
+            return nil  // Don't track these
         }
     }
 }

@@ -9,24 +9,24 @@ final class ScoreViewModel: ScoreViewModelProtocol {
 
     // MARK: - Publishers
     private let scoreCellsSubject = CurrentValueSubject<[ScoreDisplayData], Never>([])
-    private let visualStateSubject = CurrentValueSubject<ScoreViewVisualState, Never>(.idle)
+    private let visualStateSubject = CurrentValueSubject<ScoreDisplayData.VisualState, Never>(.idle)
 
     public var scoreCellsPublisher: AnyPublisher<[ScoreDisplayData], Never> {
         scoreCellsSubject.eraseToAnyPublisher()
     }
 
-    public var visualStatePublisher: AnyPublisher<ScoreViewVisualState, Never> {
+    public var visualStatePublisher: AnyPublisher<ScoreDisplayData.VisualState, Never> {
         visualStateSubject.eraseToAnyPublisher()
     }
 
-    public var currentVisualState: ScoreViewVisualState {
+    public var currentVisualState: ScoreDisplayData.VisualState {
         visualStateSubject.value
     }
 
     // MARK: - Initialization
 
     /// Simple initializer for manual score cell creation (testing/mocking)
-    init(scoreCells: [ScoreDisplayData] = [], visualState: ScoreViewVisualState = .idle) {
+    init(scoreCells: [ScoreDisplayData] = [], visualState: ScoreDisplayData.VisualState = .idle) {
         scoreCellsSubject.send(scoreCells)
         visualStateSubject.send(visualState)
     }
@@ -87,7 +87,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
         }
     }
 
-    func setVisualState(_ state: ScoreViewVisualState) {
+    func setVisualState(_ state: ScoreDisplayData.VisualState) {
         visualStateSubject.send(state)
     }
 

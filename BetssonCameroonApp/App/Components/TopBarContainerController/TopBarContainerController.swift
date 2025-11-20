@@ -68,6 +68,7 @@ class TopBarContainerController: UIViewController {
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
     var onSupportRequested: (() -> Void)?
+    var onDebugScreenRequested: (() -> Void)?
 
     // MARK: - Initialization
     init(contentViewController: UIViewController,
@@ -233,6 +234,11 @@ class TopBarContainerController: UIViewController {
 
         viewModel.walletStatusViewModel.onWithdrawRequested = { [weak self] in
             self?.onWithdrawRequested?()
+        }
+
+        // Secret logo tap for debug screen
+        multiWidgetToolbarView.onLogoSecretTapped = { [weak self] in
+            self?.onDebugScreenRequested?()
         }
     }
 
