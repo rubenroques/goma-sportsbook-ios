@@ -11,7 +11,7 @@ extension SportRadarModels {
     
     enum Score: Codable, Hashable {
         case set(index: Int, home: Int?, away: Int?)
-        case gamePart(home: Int?, away: Int?)
+        case gamePart(index: Int?, home: Int?, away: Int?)
         case matchFull(home: Int?, away: Int?)
         
         enum CompetitorCodingKeys: String, CodingKey {
@@ -29,7 +29,7 @@ extension SportRadarModels {
             
             switch scoreCodingKeys {
             case .gameScore:
-                self = .gamePart(home: homeScore, away: awayScore)
+                self = .gamePart(index: nil, home: homeScore, away: awayScore)
             case .currentScore:
                 self = .matchFull(home: homeScore, away: awayScore)
             case .matchScore:
@@ -60,7 +60,7 @@ extension SportRadarModels {
             case .matchScore, .currentScore:
                 self = .matchFull(home: homeScoreValue, away: awayScoreValue)
             case .gameScore:
-                self = .gamePart(home: homeScoreValue, away: awayScoreValue)
+                self = .gamePart(index: nil, home: homeScoreValue, away: awayScoreValue)
             case .periodScore(let index), .setScore(let index), .frameScore(let index):
                 self = .set(index: index, home: homeScoreValue, away: awayScoreValue)
             }
@@ -70,18 +70,21 @@ extension SportRadarModels {
             switch self {
             case .set(let index, _, _):
                 return index
-            case .gamePart:
-                return 100
+            case .gamePart(let index, _, _):
+                return index ?? 100
             case .matchFull:
                 return 200
             }
         }
-        
+
         var key: String {
             switch self {
             case .set(let index, _, _):
                 return "set\(index)"
-            case .gamePart:
+            case .gamePart(let index, _, _):
+                if let index = index {
+                    return "gamePart\(index)"
+                }
                 return "gamePart"
             case .matchFull:
                 return "matchFull"

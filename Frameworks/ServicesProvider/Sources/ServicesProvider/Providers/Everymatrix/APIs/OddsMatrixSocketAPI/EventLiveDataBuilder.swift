@@ -251,20 +251,21 @@ struct EventLiveDataBuilder {
         // 2. Quarters (Basketball, American Football)
         if EveryMatrixSportPatterns.isQuarter(eventPartName) {
             let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
-            detailedScores["Q\(index)"] = .gamePart(home: home, away: away)
+            detailedScores["Q\(index)"] = .gamePart(index: index, home: home, away: away)
             return
         }
 
         // 3. Periods (Ice Hockey, Floorball)
         if EveryMatrixSportPatterns.isPeriod(eventPartName) {
             let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
-            detailedScores["P\(index)"] = .gamePart(home: home, away: away)
+            detailedScores["P\(index)"] = .gamePart(index: index, home: home, away: away)
             return
         }
 
         // 4. Innings (Baseball, Cricket) - keep full name like "1st Inning"
         if EveryMatrixSportPatterns.isInning(eventPartName) {
-            detailedScores[eventPartName] = .gamePart(home: home, away: away)
+            let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
+            detailedScores[eventPartName] = .gamePart(index: index, home: home, away: away)
             return
         }
 
@@ -333,7 +334,7 @@ struct EventLiveDataBuilder {
            !EveryMatrixSportPatterns.isTieBreak(eventPartName) {
             // Store current game points (0, 15, 30, 40, 50=Advantage)
             // Use key "Game" instead of "1st Game", "2nd Game" for simplicity
-            detailedScores["Game"] = .gamePart(home: home, away: away)
+            detailedScores["Game"] = .gamePart(index: nil, home: home, away: away)
             return
         }
 

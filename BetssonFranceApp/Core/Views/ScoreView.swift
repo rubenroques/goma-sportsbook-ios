@@ -277,7 +277,7 @@ class ScoreView: UIView {
         
         // Add the game part (15, 30, 40)
         switch gamePartsFirst {
-        case .gamePart(let home, let away):
+        case .gamePart(_, let home, let away):
 //            var homeString: String = (home ?? 0) == 50 ? "A" : "\(home ?? 0)"
 //            var awayString: String = (away ?? 0) == 50 ? "A" : "\(away ?? 0)"
 //

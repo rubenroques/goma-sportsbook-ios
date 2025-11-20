@@ -166,7 +166,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
 
                 // Process game parts FIRST (with serving indicator and separator)
                 for (scoreName, score) in gameParts {
-                    if case .gamePart(let home, let away) = score {
+                    if case .gamePart(_, let home, let away) = score {
                         print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") [FIRST]")
                         let scoreCell = ScoreDisplayData(
                             id: "game-\(scoreName)",
@@ -224,7 +224,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                     let scoreCell: ScoreDisplayData
 
                     switch score {
-                    case .gamePart(let home, let away):
+                    case .gamePart(_, let home, let away):
                         // Current game points - always highlighted
                         print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                         scoreCell = ScoreDisplayData(
