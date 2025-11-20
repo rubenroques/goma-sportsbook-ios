@@ -17,6 +17,9 @@
       location = "container:Frameworks/ServicesProvider">
    </FileRef>
    <FileRef
+      location = "container:Frameworks/GomaPerformanceKit">
+   </FileRef>
+   <FileRef
       location = "container:Frameworks/HeaderTextField">
    </FileRef>
    <FileRef

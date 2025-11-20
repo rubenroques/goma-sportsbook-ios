@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum GomaPromotionalCampaignsAPISchema {
 
@@ -74,5 +75,10 @@ extension GomaPromotionalCampaignsAPISchema: Endpoint {
         case .promotionDetails:
             return "Get promotion details content"
         }
+    }
+
+    var performanceFeature: PerformanceFeature? {
+        // All promotional campaigns are CMS content
+        return .cms
     }
 }

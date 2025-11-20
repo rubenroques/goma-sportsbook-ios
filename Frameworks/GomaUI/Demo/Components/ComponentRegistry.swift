@@ -294,6 +294,19 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
+            title: "Score View Styles & Highlighting",
+            description: "Comprehensive guide showing all combinations of ScoreCellStyle and HighlightingMode with detailed explanations",
+            viewController: ScoreStylesViewController.self,
+            previewFactory: {
+                let viewModel = MockScoreViewModel.tennisMatch
+                let scoreView = ScoreView()
+                scoreView.configure(with: viewModel)
+                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
+                scoreView.layer.cornerRadius = 8
+                return scoreView
+            }
+        ),
+        UIComponent(
             title: "Statistics Widget",
             description: "Web-based statistics widget with paginated scroll view, tab navigation, and multiple content types for match statistics",
             viewController: StatisticsWidgetViewController.self,

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaPerformanceKit
 
 struct GomaSessionAccessToken: Codable {
     var hash: String
@@ -133,15 +134,62 @@ class GomaConnector: Connector {
             }
             .tryMap({ data in
                 print("[GOMAAPI][DEBUG] Decoding data...")
+
+                // Start parsing tracking
+                let feature = endpoint.performanceFeature
+                if let feature = feature {
+                    PerformanceTracker.shared.start(
+                        feature: feature,
+                        layer: .parsing,
+                        metadata: ["type": "json_decode"]
+                    )
+                }
+
                 do {
-                    return try self.decoder.decode(T.self, from: data)
+                    let result = try self.decoder.decode(T.self, from: data)
+
+                    // End parsing tracking - success
+                    if let feature = feature {
+                        PerformanceTracker.shared.end(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: ["status": "success"]
+                        )
+                    }
+
+                    return result
                 } catch let error as DecodingError {
                     // Handle DecodingError by printing the expected and received JSON
                     print("[GOMAAPI][DEBUG] Decoding Error: \(error)")
                     print("[GOMAAPI][DEBUG] Received JSON: \(String(data: data, encoding: .utf8) ?? "Invalid JSON")")
+
+                    // End parsing tracking - error
+                    if let feature = feature {
+                        PerformanceTracker.shared.end(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: [
+                                "status": "error",
+                                "error": error.localizedDescription
+                            ]
+                        )
+                    }
+
                     throw error
                 } catch {
                     // Propagate other errors
+                    // End parsing tracking - error
+                    if let feature = feature {
+                        PerformanceTracker.shared.end(
+                            feature: feature,
+                            layer: .parsing,
+                            metadata: [
+                                "status": "error",
+                                "error": error.localizedDescription
+                            ]
+                        )
+                    }
+
                     throw error
                 }
             })

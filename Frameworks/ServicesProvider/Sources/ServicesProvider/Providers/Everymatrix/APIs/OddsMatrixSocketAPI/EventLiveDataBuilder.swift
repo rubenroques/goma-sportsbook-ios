@@ -211,23 +211,23 @@ struct EventLiveDataBuilder {
         // All other periods (1st Half, 2nd Half, etc.) are ignored
     }
 
-    /// SIMPLE Template: Whole match + all active periods/quarters/innings/sets
+    /// SIMPLE Template: Whole match + ALL periods/quarters/innings/sets
     ///
     /// Used by 18 sports: Basketball, Ice Hockey, Baseball, Volleyball, Handball,
     /// American Football, Water Polo, Floorball, Bandy, Cricket, Beach Volleyball,
     /// Table Tennis, Badminton, Squash, Darts, Snooker, Virtual Basketball, Virtual Ice Hockey
     ///
-    /// Business Logic: Each period is significant for betting. Only show ACTIVE periods
-    /// (statusId "1") to avoid UI clutter with completed periods.
+    /// Business Logic: Each period is significant for betting. Show ALL periods/quarters/innings
+    /// (both active and completed) to provide full score breakdown.
     ///
     /// Output example (Basketball):
     /// ```
     /// detailedScores = [
-    ///   "Whole Match": .matchFull(home: 88, away: 84),
-    ///   "Q1": .gamePart(home: 25, away: 20),
-    ///   "Q2": .gamePart(home: 22, away: 24),
-    ///   "Q3": .gamePart(home: 18, away: 21),
-    ///   "Q4": .gamePart(home: 23, away: 19)  // Only active quarter shown
+    ///   "Whole Match": .matchFull(home: 93, away: 74),
+    ///   "Q1": .gamePart(home: 35, away: 18),  // Completed quarter
+    ///   "Q2": .gamePart(home: 26, away: 32),  // Completed quarter
+    ///   "Q3": .gamePart(home: 26, away: 21),  // Completed quarter
+    ///   "Q4": .gamePart(home: 6, away: 3)     // Active quarter
     /// ]
     /// ```
     private static func processSimpleScore(
@@ -248,30 +248,28 @@ struct EventLiveDataBuilder {
             return
         }
 
-        // 2. Only store ACTIVE periods (statusId "1")
-        guard info.statusId == "1" else { return }
-
-        // 3. Quarters (Basketball, American Football)
+        // 2. Quarters (Basketball, American Football)
         if EveryMatrixSportPatterns.isQuarter(eventPartName) {
             let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
-            detailedScores["Q\(index)"] = .gamePart(home: home, away: away)
+            detailedScores["Q\(index)"] = .gamePart(index: index, home: home, away: away)
             return
         }
 
-        // 4. Periods (Ice Hockey, Floorball)
+        // 3. Periods (Ice Hockey, Floorball)
         if EveryMatrixSportPatterns.isPeriod(eventPartName) {
             let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
-            detailedScores["P\(index)"] = .gamePart(home: home, away: away)
+            detailedScores["P\(index)"] = .gamePart(index: index, home: home, away: away)
             return
         }
 
-        // 5. Innings (Baseball, Cricket) - keep full name like "1st Inning"
+        // 4. Innings (Baseball, Cricket) - keep full name like "1st Inning"
         if EveryMatrixSportPatterns.isInning(eventPartName) {
-            detailedScores[eventPartName] = .gamePart(home: home, away: away)
+            let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
+            detailedScores[eventPartName] = .gamePart(index: index, home: home, away: away)
             return
         }
 
-        // 6. Sets (Volleyball, Table Tennis, Badminton, Squash)
+        // 5. Sets (Volleyball, Table Tennis, Badminton, Squash)
         // Note: Uses .set enum case (not .gamePart) to preserve set index
         if EveryMatrixSportPatterns.isSet(eventPartName) {
             let index = EveryMatrixSportPatterns.extractOrdinalNumber(from: eventPartName)
@@ -336,7 +334,7 @@ struct EventLiveDataBuilder {
            !EveryMatrixSportPatterns.isTieBreak(eventPartName) {
             // Store current game points (0, 15, 30, 40, 50=Advantage)
             // Use key "Game" instead of "1st Game", "2nd Game" for simplicity
-            detailedScores["Game"] = .gamePart(home: home, away: away)
+            detailedScores["Game"] = .gamePart(index: nil, home: home, away: away)
             return
         }
 

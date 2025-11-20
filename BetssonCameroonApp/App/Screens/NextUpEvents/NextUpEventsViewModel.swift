@@ -10,6 +10,7 @@ import GomaUI
 import Combine
 import ServicesProvider
 import SharedModels
+import GomaPerformanceKit
 
 // MARK: - NextUpEventsViewModel
 class NextUpEventsViewModel {
@@ -360,8 +361,31 @@ class NextUpEventsViewModel {
 
             case .contentUpdate(let content):
                 print("[SessionExpiredDebug] 📦 CONTENT UPDATE received - \(content.count) event groups")
+
+                // Start parsing tracking
+                PerformanceTracker.shared.start(
+                    feature: .homeScreen,
+                    layer: .parsing,
+                    metadata: [
+                        "operation": "match_mapping",
+                        "input_count": "\(content.count)"
+                    ]
+                )
+
                 let matches = ServiceProviderModelMapper.matches(fromEventsGroups: content)
                 let mainMarkets = ServiceProviderModelMapper.mainMarkets(fromEventsGroups: content)
+
+                // End parsing tracking
+                PerformanceTracker.shared.end(
+                    feature: .homeScreen,
+                    layer: .parsing,
+                    metadata: [
+                        "operation": "match_mapping",
+                        "output_matches": "\(matches.count)",
+                        "output_markets": "\(mainMarkets?.count ?? 0)",
+                        "status": "success"
+                    ]
+                )
 
                 print("[NextUpEventsViewModel] 📡 received pre-live groups \(content.count) mapped to matches \(matches.count)")
                 if let mainMarkets = mainMarkets {

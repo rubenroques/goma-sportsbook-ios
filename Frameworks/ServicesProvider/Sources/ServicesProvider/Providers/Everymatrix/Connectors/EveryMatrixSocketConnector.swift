@@ -1,4 +1,5 @@
 import Foundation
+import GomaPerformanceKit
 import Combine
 
 class EveryMatrixSocketConnector: Connector {
@@ -84,6 +85,21 @@ class EveryMatrixSocketConnector: Connector {
 
     // MARK: - Request Methods
     func request<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<T, ServiceProviderError> {
+        // Get performance feature from router (nil if not tracked)
+        let feature = router.performanceFeature
+
+        // Start tracking if feature exists
+        if let feature = feature {
+            PerformanceTracker.shared.start(
+                feature: feature,
+                layer: .api,
+                metadata: [
+                    "type": "rpc",
+                    "procedure": router.procedure
+                ]
+            )
+        }
+
         return self.serialQueue.sync {
             self.wampManager.getModel(router: router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
@@ -101,6 +117,33 @@ class EveryMatrixSocketConnector: Connector {
                         return .unknown
                     }
                 }
+                .handleEvents(
+                    receiveOutput: { _ in
+                        // End tracking on success
+                        if let feature = feature {
+                            PerformanceTracker.shared.end(
+                                feature: feature,
+                                layer: .api,
+                                metadata: ["status": "success"]
+                            )
+                        }
+                    },
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            // End tracking on error
+                            if let feature = feature {
+                                PerformanceTracker.shared.end(
+                                    feature: feature,
+                                    layer: .api,
+                                    metadata: [
+                                        "status": "error",
+                                        "error": error.localizedDescription
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                )
                 .eraseToAnyPublisher()
         }
     } 
@@ -124,19 +167,21 @@ class EveryMatrixSocketConnector: Connector {
                         return .unknown
                     }
                 }
-                .handleEvents(receiveOutput: { content in
-                    switch content {
-                    case .connect(_):
-                        print("EveryMatrixConnector: Subscription connected")
-                    case .initialContent(_):
-                        print("EveryMatrixConnector: Received initial content")
-                    case .updatedContent(_):
-                        break
-                        // print("EveryMatrixConnector: Received content update")
-                    case .disconnect:
-                        print("EveryMatrixConnector: Subscription disconnected")
+                .handleEvents(
+                    receiveOutput: { content in
+                        switch content {
+                        case .connect(_):
+                            print("EveryMatrixConnector: Subscription connected")
+                        case .initialContent(_):
+                            print("EveryMatrixConnector: Received initial content")
+                        case .updatedContent(_):
+                            break
+                            // print("EveryMatrixConnector: Received content update")
+                        case .disconnect:
+                            print("EveryMatrixConnector: Subscription disconnected")
+                        }
                     }
-                })
+                )
                 .eraseToAnyPublisher()
         }
     }

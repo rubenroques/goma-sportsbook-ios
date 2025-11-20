@@ -119,6 +119,10 @@ class MainTabBarCoordinator: Coordinator {
             self?.openSupportURL()
         }
 
+        container.onDebugScreenRequested = { [weak self] in
+            self?.showPerformanceDebugScreen()
+        }
+
         self.mainTabBarViewController = mainTabBarViewController
         navigationController.setViewControllers([container], animated: false)
         
@@ -1249,6 +1253,12 @@ class MainTabBarCoordinator: Coordinator {
                 print("❌ MainTabBarCoordinator: Failed to open support URL")
             }
         }
+    }
+
+    private func showPerformanceDebugScreen() {
+        let debugViewController = PerformanceDebugViewController()
+        debugViewController.modalPresentationStyle = .fullScreen
+        navigationController.present(debugViewController, animated: true)
     }
 
     private func setupBankingCoordinatorCallbacks(_ coordinator: BankingCoordinator) {

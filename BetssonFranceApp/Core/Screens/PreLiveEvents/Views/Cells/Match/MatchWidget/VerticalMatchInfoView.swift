@@ -428,7 +428,7 @@ extension VerticalMatchInfoView {
               "2a": Score.set(index: 1, home: 23, away: 40),
             "2b": Score.set(index: 2, home: 15, away: 40),
             "2c": Score.set(index: 3, home: 40, away: 40),
-              "3": Score.gamePart(home: 15, away: 10),
+              "3": Score.gamePart(index: nil, home: 15, away: 10),
               "4": Score.matchFull(home: 60, away: 70)]
              
             
@@ -513,7 +513,7 @@ extension VerticalMatchInfoView {
 
        let scores = ["1": Score.set(index: 0, home: 30, away: 45),
          "2": Score.set(index: 1, home: 23, away: 40),
-         "3": Score.gamePart(home: 15, away: 10),
+         "3": Score.gamePart(index: nil, home: 15, away: 10),
          "4": Score.matchFull(home: 60, away: 70)]
         
         

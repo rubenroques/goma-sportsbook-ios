@@ -18,8 +18,28 @@ extension EveryMatrix {
             let venueDTO = store.get(LocationDTO.self, id: match.venueId)
             let categoryDTO = store.get(EventCategoryDTO.self, id: match.categoryId)
 
-            // Convert DTOs to UI models using builders
-            let sport = sportDTO.flatMap { SportBuilder.build(from: $0, store: store) }
+            // Handle sport: SportDTO may not be sent separately by EveryMatrix WebSocket
+            // Fallback to embedded sport data in MatchDTO
+            let sport: Sport?
+            if let sportDTO = sportDTO {
+                // Prefer SportDTO from store if available
+                sport = SportBuilder.build(from: sportDTO, store: store)
+            } else {
+                // Fallback: Use embedded sport data from MatchDTO
+                sport = Sport(
+                    id: match.sportId,
+                    name: match.sportName,
+                    shortName: match.shortSportName,
+                    isVirtual: nil,
+                    numberOfEvents: nil,
+                    numberOfLiveEvents: nil,
+                    numberOfUpcomingMatches: nil,
+                    showEventCategory: nil,
+                    isTopSport: nil,
+                    hasMatches: nil,
+                    hasOutrights: nil
+                )
+            }
 
             // Handle venue: LocationDTO may not be sent separately by EveryMatrix WebSocket
             // Fallback to embedded venue data in MatchDTO

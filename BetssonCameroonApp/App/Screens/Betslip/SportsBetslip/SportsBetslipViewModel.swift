@@ -147,8 +147,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                 let matches = ServiceProviderModelMapper.matches(fromEvents: events)
                 
                 let items: [TallOddsMatchCardViewModelProtocol] = matches.map { match in
-                    let tallOddsMatchCardViewModel = TallOddsMatchCardViewModel.create(from: match, relevantMarkets: match.markets, marketTypeId: match.markets.first?.typeId ?? "", matchCardContext: .search)
-                    return tallOddsMatchCardViewModel
+                    return TallOddsMatchCardViewModel(
+                        match: match,
+                        relevantMarkets: match.markets,
+                        marketTypeId: match.markets.first?.typeId ?? "",
+                        matchCardContext: .search
+                    )
                 }
                 
                 // Update suggested bets view model with matches

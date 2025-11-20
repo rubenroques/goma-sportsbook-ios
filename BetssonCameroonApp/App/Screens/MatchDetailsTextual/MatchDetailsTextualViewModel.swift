@@ -37,7 +37,8 @@ class MatchDetailsTextualViewModel: ObservableObject {
     
     // WebSocket subscription management
     private var eventDetailsSubscription: AnyCancellable?
-    
+    private var liveDataSubscription: AnyCancellable?
+
     // Store match reference for real event ID
     private var currentMatch: Match?
     private var currentMatchId: String?
@@ -53,9 +54,9 @@ class MatchDetailsTextualViewModel: ObservableObject {
     // MARK: - Child ViewModels (Vertical Pattern)
     // MultiWidget and Wallet ViewModels are now managed by TopBarContainerController
     
-    let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModelProtocol
+    let matchDateNavigationBarViewModel: MatchDateNavigationBarViewModel
     
-    let matchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol
+    let matchHeaderCompactViewModel: MatchHeaderCompactViewModel
     
     let statisticsWidgetViewModel: StatisticsWidgetViewModelProtocol
     
@@ -160,6 +161,9 @@ class MatchDetailsTextualViewModel: ObservableObject {
                     // Update current match and update market group selector with real data
                     self?.currentMatch = match
 
+                    // Update header with live match data (including scores)
+                    self?.matchHeaderCompactViewModel.updateMatch(match)
+
                     // Update existing view model instead of recreating it
                     print("BLINK_DEBUG [MatchDetailsVM] 🚨 Calling updateMatch() on MarketGroupSelectorVM")
                     self?.marketGroupSelectorTabViewModel.updateMatch(match)
@@ -174,8 +178,40 @@ class MatchDetailsTextualViewModel: ObservableObject {
                     self?.checkLoadingCompletion()
                 }
             }
+
+        // Subscribe to live data for scores/status updates
+        subscribeLiveData(matchId: matchId)
     }
-    
+
+    private func subscribeLiveData(matchId: String) {
+        liveDataSubscription = servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print("[LIVE_DATA] Live data subscription completed: \(completion)")
+            } receiveValue: { [weak self] subscribableContent in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    print("[LIVE_DATA] ✅ Connected to live data: \(subscription.id)")
+
+                case .contentUpdate(let liveData):
+                    print("[LIVE_DATA] 📊 Received live data update")
+                    print("[LIVE_DATA]    Home Score: \(liveData.homeScore?.description ?? "nil")")
+                    print("[LIVE_DATA]    Away Score: \(liveData.awayScore?.description ?? "nil")")
+                    print("[LIVE_DATA]    Detailed Scores: \(liveData.detailedScores?.count ?? 0)")
+
+                    // Map ServicesProvider.EventLiveData to app MatchLiveData
+                    let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: liveData)
+
+                    // Update header with live scores
+                    self?.matchHeaderCompactViewModel.updateMatchWithLiveData(matchLiveData)
+                    self?.matchDateNavigationBarViewModel.updateMatchWithLiveData(matchLiveData)
+
+                case .disconnected:
+                    print("[LIVE_DATA] ❌ Disconnected from live data")
+                }
+            }
+    }
+
     func toggleStatistics() {
         let currentVisibility = statisticsVisibilitySubject.value
         statisticsVisibilitySubject.send(!currentVisibility)
@@ -192,7 +228,8 @@ class MatchDetailsTextualViewModel: ObservableObject {
     func refresh() {
         errorSubject.send(nil)
         eventDetailsSubscription?.cancel()
-        
+        liveDataSubscription?.cancel()
+
         if let currentMatchId = self.currentMatchId {
             self.loadMatchDetails(matchId: currentMatchId)
         }
@@ -236,11 +273,6 @@ class MatchDetailsTextualViewModel: ObservableObject {
     private func setupBindings() {
         // Setup communication between child ViewModels
 
-        // Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
-        matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
-            self?.toggleStatistics()
-        }
-
         // Wire up breadcrumb tap callbacks for navigation
         matchHeaderCompactViewModel.onCountryTapped = { [weak self] countryId in
             self?.handleCountryTapped(countryId: countryId)
@@ -279,6 +311,7 @@ class MatchDetailsTextualViewModel: ObservableObject {
     
     deinit {
         eventDetailsSubscription?.cancel()
+        liveDataSubscription?.cancel()
         marketGroupsSubscription?.cancel()
     }
     

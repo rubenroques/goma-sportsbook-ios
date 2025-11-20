@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import GomaUI
+import GomaPerformanceKit
 
 class CasinoCategoriesListViewController: UIViewController {
     
@@ -71,7 +72,17 @@ class CasinoCategoriesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // Track casino home screen initialization
+        PerformanceTracker.shared.start(
+            feature: .casinoHome,
+            layer: .app,
+            metadata: [
+                "screen": "CasinoCategoriesListViewController",
+                "lobbyType": viewModel.lobbyType.displayName
+            ]
+        )
+
         setupViews()
         setupBindings()
         loadData()
@@ -157,8 +168,23 @@ class CasinoCategoriesListViewController: UIViewController {
         viewModel.$categorySections
             .receive(on: DispatchQueue.main)
             .sink { [weak self] categorySections in
-                self?.categorySections = categorySections
-                self?.collectionView.reloadData()
+                guard let self = self else { return }
+
+                self.categorySections = categorySections
+                self.collectionView.reloadData()
+
+                // Only end tracking when we have actual data (not the initial empty state)
+                if categorySections.count > 0 {
+                    PerformanceTracker.shared.end(
+                        feature: .casinoHome,
+                        layer: .app,
+                        metadata: [
+                            "status": "complete",
+                            "categoriesLoaded": "\(categorySections.count)",
+                            "totalGames": "\(categorySections.reduce(0) { $0 + $1.sectionData.games.count })"
+                        ]
+                    )
+                }
             }
             .store(in: &cancellables)
         
@@ -167,6 +193,15 @@ class CasinoCategoriesListViewController: UIViewController {
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
+                // End tracking on error
+                PerformanceTracker.shared.end(
+                    feature: .casinoHome,
+                    layer: .app,
+                    metadata: [
+                        "status": "error",
+                        "error": errorMessage
+                    ]
+                )
                 self?.showError(errorMessage)
             }
             .store(in: &cancellables)

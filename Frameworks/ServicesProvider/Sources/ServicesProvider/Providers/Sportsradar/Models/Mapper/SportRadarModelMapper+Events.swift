@@ -119,8 +119,8 @@ extension SportRadarModelMapper {
 
         case .set(index: let index, home: let home, away: let away):
             return Score.set(index: index, home: home, away: away)
-        case .gamePart(home: let home, away: let away):
-            return Score.gamePart(home: home, away: away)
+        case .gamePart(index: let index, home: let home, away: let away):
+            return Score.gamePart(index: index, home: home, away: away)
         case .matchFull(home: let home, away: let away):
             return Score.matchFull(home: home, away: away)
         }

@@ -17,4 +17,7 @@ public enum PerformanceLayer: String, Codable, CaseIterable {
 
     /// Backend API response time
     case api
+
+    /// JSON/Data parsing time
+    case parsing
 }

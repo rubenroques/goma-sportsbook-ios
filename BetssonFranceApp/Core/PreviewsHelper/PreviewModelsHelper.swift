@@ -582,7 +582,7 @@ struct PreviewModelsHelper {
     static func createFootballDetailedScores() -> [String: Score] {
         return [
             "matchFull": .matchFull(home: 2, away: 1),
-            "gamePart": .gamePart(home: 1, away: 0)
+            "gamePart": .gamePart(index: nil, home: 1, away: 0)
         ]
     }
 
@@ -600,7 +600,7 @@ struct PreviewModelsHelper {
     static func createBasketballDetailedScores() -> [String: Score] {
         return [
             "matchFull": .matchFull(home: 105, away: 98),
-            "gamePart": .gamePart(home: 28, away: 24)
+            "gamePart": .gamePart(index: nil, home: 28, away: 24)
         ]
     }
 
@@ -849,7 +849,7 @@ struct PreviewModelsHelper {
             activePlayerServe: nil,
             detailedScores: [
                 "matchFull": .matchFull(home: 3, away: 2),
-                "gamePart": .gamePart(home: 1, away: 0)
+                "gamePart": .gamePart(index: nil, home: 1, away: 0)
             ]
         )
     }
@@ -879,7 +879,7 @@ struct PreviewModelsHelper {
             activePlayerServe: nil,
             detailedScores: [
                 "matchFull": .matchFull(home: 24, away: 17),
-                "gamePart": .gamePart(home: 14, away: 10)
+                "gamePart": .gamePart(index: nil, home: 14, away: 10)
             ]
         )
     }

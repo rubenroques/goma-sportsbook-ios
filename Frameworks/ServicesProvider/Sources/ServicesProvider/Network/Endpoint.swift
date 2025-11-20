@@ -1,11 +1,12 @@
 //
 //  Endpoint.swift
-//  
+//
 //
 //  Created by Ruben Roques on 24/10/2022.
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum AuthHeaderType {
     case sessionId
@@ -72,5 +73,17 @@ extension Endpoint {
         )
 
         return request
+    }
+
+    /// Performance tracking feature for this endpoint
+    /// Return nil for endpoints that shouldn't be tracked
+    /// Override in specific API enums to declare tracking features
+    var performanceFeature: PerformanceFeature? {
+        return nil // Default: no tracking
+    }
+
+    /// Computed property for convenient path access
+    var path: String {
+        return endpoint
     }
 }

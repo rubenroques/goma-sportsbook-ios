@@ -27,6 +27,7 @@ let package = Package(
 
         .package(name: "SharedModels", path: "../SharedModels"),
         .package(name: "Extensions", path: "../Extensions"),
+        .package(name: "GomaPerformanceKit", path: "../GomaPerformanceKit"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -41,6 +42,7 @@ let package = Package(
                 "Starscream",
                 "SharedModels",
                 "Extensions",
+                "GomaPerformanceKit"
             ]),
         .testTarget(
             name: "ServicesProviderTests",

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaPerformanceKit
 
 
 struct SimpleSubscription: EndpointPublisherIdentifiable {
@@ -62,6 +63,9 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     /// This allows loadNextPage() to return accurate boolean based on actual server response
     private var paginationResponseSubject: PassthroughSubject<Bool, ServiceProviderError>?
 
+    // MARK: - Performance Tracking
+    private var hasReceivedFirstData = false  // Track if we've received initial content (for performance tracking)
+
     // MARK: - Initialization
     init(connector: EveryMatrixSocketConnector,
          operatorId: String,
@@ -88,6 +92,17 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     /// Subscribe to pre-live matches for the configured sport
     /// Returns a publisher that remains alive during pagination - internal subscriptions are recreated
     func subscribe() -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+        // Start performance tracking for initial subscription only
+        PerformanceTracker.shared.start(
+            feature: .sportsData,
+            layer: .api,
+            metadata: [
+                "type": "subscription",
+                "sport": sportId,
+                "initialEventLimit": "\(currentEventLimit)"
+            ]
+        )
+
         // Start the internal subscription
         startInternalSubscription()
 
@@ -129,6 +144,19 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
                         print("[PreLiveMatchesPaginator] Internal subscription error: \(error)")
+
+                        // End performance tracking on FIRST error only (not pagination errors)
+                        if self?.hasReceivedFirstData == false {
+                            self?.hasReceivedFirstData = true
+                            PerformanceTracker.shared.end(
+                                feature: .sportsData,
+                                layer: .api,
+                                metadata: [
+                                    "status": "error",
+                                    "error": error.localizedDescription
+                                ]
+                            )
+                        }
 
                         // Emit error to pagination subject if waiting
                         if let paginationSubject = self?.paginationResponseSubject {
@@ -381,6 +409,19 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             if matchCount < currentEventLimit {
                 hasMoreEvents = false
                 print("[PreLiveMatchesPaginator] 🏁 Received \(matchCount) events, less than requested \(currentEventLimit) - no more pages available")
+            }
+
+            // End performance tracking on FIRST data arrival only (not pagination re-subscriptions)
+            if !hasReceivedFirstData {
+                hasReceivedFirstData = true
+                PerformanceTracker.shared.end(
+                    feature: .sportsData,
+                    layer: .api,
+                    metadata: [
+                        "status": "subscribed",
+                        "matchCount": "\(matchCount)"
+                    ]
+                )
             }
 
             // If this was a pagination request, send response based on actual data

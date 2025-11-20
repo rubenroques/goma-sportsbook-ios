@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum GomaHomeContentAPISchema {
     // Initial Dump
@@ -187,6 +188,17 @@ extension GomaHomeContentAPISchema: Endpoint {
             return "Get footer sponsor logos for the configured client"
         case .footerSocialMedia:
             return "Get footer social media links for the configured client"
+        }
+    }
+
+    var performanceFeature: PerformanceFeature? {
+        // All home content endpoints are CMS content loading
+        switch self {
+        case .initialDump, .homeTemplate,
+             .alertBanner, .banners, .sportBanners, .casinoCarouselBanners,
+             .boostedOdds, .topImageCards, .heroCards, .stories, .news,
+             .proChoices, .topCompetitions:
+            return .cms
         }
     }
 }

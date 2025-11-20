@@ -121,7 +121,7 @@ public class ScoreView: UIView {
             .store(in: &cancellables)
     }
     
-    private func updateVisualState(_ state: ScoreViewVisualState) {
+    private func updateVisualState(_ state: ScoreDisplayData.VisualState) {
         // Deactivate empty label constraints first
         NSLayoutConstraint.deactivate(emptyLabelConstraints)
         
@@ -159,12 +159,25 @@ public class ScoreView: UIView {
     
     private func updateScoreCells(_ scoreCells: [ScoreDisplayData]) {
         clearScoreCells()
-        
-        for scoreData in scoreCells {
+
+        for (index, scoreData) in scoreCells.enumerated() {
+            // Add serving indicator column as FIRST element (only once, for first cell with serving data)
+            if index == 0 && scoreData.servingPlayer != nil {
+                let servingIndicator = ServingIndicatorView(servingPlayer: scoreData.servingPlayer)
+                containerStackView.addArrangedSubview(servingIndicator)
+            }
+
+            // Add score cell
             let cellView = ScoreCellView(data: scoreData)
             containerStackView.addArrangedSubview(cellView)
+
+            // Add separator line if needed
+            if scoreData.showsTrailingSeparator {
+                let separator = Self.createSeparatorLine()
+                containerStackView.addArrangedSubview(separator)
+            }
         }
-        
+
         // Invalidate intrinsic content size when cells change
         invalidateIntrinsicContentSize()
     }
@@ -195,6 +208,14 @@ extension ScoreView {
         return stackView
     }
     
+    private static func createSeparatorLine() -> UIView {
+        let separator = UIView()
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        separator.backgroundColor = StyleProvider.Color.separatorLine
+        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        return separator
+    }
+
     private static func createLoadingIndicator() -> UIActivityIndicatorView {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -463,6 +484,580 @@ extension ScoreView {
         NSLayoutConstraint.activate([
             scoreView.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
             scoreView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("ScoreView - Tennis with Serving Indicator & Separator") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGray6
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Helper to create section headers
+        func createSectionLabel(_ text: String) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .bold, size: 20)
+            label.textColor = StyleProvider.Color.textPrimary
+            label.textAlignment = .left
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+
+        // Helper to create score view containers with description
+        func createScoreContainer(with scoreView: ScoreView, title: String, description: String) -> UIView {
+            let container = UIView()
+            container.translatesAutoresizingMaskIntoConstraints = false
+            container.backgroundColor = .systemGray5
+            container.layer.cornerRadius = 8
+
+            let titleLabel = UILabel()
+            titleLabel.text = title
+            titleLabel.font = StyleProvider.fontWith(type: .bold, size: 16)
+            titleLabel.textColor = StyleProvider.Color.textPrimary
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let descLabel = UILabel()
+            descLabel.text = description
+            descLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
+            descLabel.textColor = StyleProvider.Color.textSecondary
+            descLabel.numberOfLines = 0
+            descLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            container.addSubview(titleLabel)
+            container.addSubview(descLabel)
+            container.addSubview(scoreView)
+
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 12),
+                titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
+                titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+
+                descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+                descLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
+                descLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+
+                scoreView.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 12),
+                scoreView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+                scoreView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12)
+            ])
+
+            return container
+        }
+
+        // TENNIS EXAMPLES WITH NEW LAYOUT
+        stackView.addArrangedSubview(createSectionLabel("Tennis: Serving Indicator + Separator + Highlighting"))
+
+        // Example 1: Home serving
+        let homeServingView = ScoreView()
+        let homeServingVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "40",
+                awayScore: "15",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "3", awayScore: "2", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        homeServingView.configure(with: homeServingVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: homeServingView,
+            title: "Home Player Serving (40-15)",
+            description: "[●] [40/15] | [6/4] [4/6] [3/2] - Serving indicator (●) in separate column, separator (|) after game, winner/loser highlighting on completed sets"
+        ))
+
+        // Example 2: Away serving
+        let awayServingView = ScoreView()
+        let awayServingVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "15",
+                awayScore: "30",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        awayServingView.configure(with: awayServingVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: awayServingView,
+            title: "Away Player Serving (15-30)",
+            description: "[●] [15/30] | [6/4] [4/6] [7/6] - Serving indicator on away row, both scores in current game/set highlighted in orange"
+        ))
+
+        // Example 3: Advantage scoring
+        let advantageView = ScoreView()
+        let advantageVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "A",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "3", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "5", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "6", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        advantageView.configure(with: advantageVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: advantageView,
+            title: "Advantage Point (A-40)",
+            description: "[●] [A/40] | [6/3] [5/6] [6/6] - Shows 'A' for advantage, tied current set shows both highlighted"
+        ))
+
+        // Example 4: Deuce situation
+        let deuceView = ScoreView()
+        let deuceVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "game",
+                homeScore: "40",
+                awayScore: "40",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .away
+            ),
+            ScoreDisplayData(id: "s1", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s2", homeScore: "3", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "s3", homeScore: "5", awayScore: "4", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        deuceView.configure(with: deuceVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: deuceView,
+            title: "Deuce (40-40)",
+            description: "[●] [40/40] | [7/6] [3/6] [5/4] - Equal game score shows both highlighted, away player serving"
+        ))
+
+        // COMPARISON: Basketball (no serving indicator)
+        stackView.addArrangedSubview(createSectionLabel("Basketball: No Serving Indicator"))
+
+        let basketballView = ScoreView()
+        let basketballVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q2", homeScore: "18", awayScore: "28", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q3", homeScore: "31", awayScore: "24", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q4", homeScore: "26", awayScore: "30", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "total", homeScore: "100", awayScore: "104", style: .background, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        basketballView.configure(with: basketballVM)
+        stackView.addArrangedSubview(createScoreContainer(
+            with: basketballView,
+            title: "Basketball Quarters + Total",
+            description: "[25/22] [18/28] [31/24] [26/30] [100/104] - No serving column, quarters show winner/loser, total shows both highlighted"
+        ))
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
+        ])
+
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("ScoreView - Comprehensive Style Guide") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Helper to create section headers
+        func createSectionLabel(_ text: String, size: CGFloat = 20, color: UIColor? = nil) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .bold, size: size)
+            label.textColor = color ?? StyleProvider.Color.highlightPrimary
+            label.textAlignment = .left
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+
+        // Helper to create description labels
+        func createDescriptionLabel(_ text: String, italic: Bool = false) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .regular, size: 13)
+            label.textColor = StyleProvider.Color.textSecondary
+            label.numberOfLines = 0
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }
+
+        // Helper to create detail labels
+        func createDetailLabel(_ text: String) -> UILabel {
+            let label = UILabel()
+            label.text = text
+            label.font = StyleProvider.fontWith(type: .regular, size: 11)
+            label.textColor = StyleProvider.Color.textSecondary
+            label.numberOfLines = 0
+            label.backgroundColor = UIColor.systemGray5
+            label.layer.cornerRadius = 6
+            label.clipsToBounds = true
+            label.translatesAutoresizingMaskIntoConstraints = false
+
+            let padding: CGFloat = 8
+            label.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+
+            return label
+        }
+
+        // Helper to create example containers
+        func createExampleContainer(title: String, description: String, viewModel: MockScoreViewModel) -> UIView {
+            let container = UIView()
+            container.translatesAutoresizingMaskIntoConstraints = false
+            container.backgroundColor = .systemGray3
+            container.layer.cornerRadius = 8
+
+            let titleLabel = UILabel()
+            titleLabel.text = title
+            titleLabel.font = StyleProvider.fontWith(type: .medium, size: 13)
+            titleLabel.textColor = StyleProvider.Color.textPrimary
+            titleLabel.numberOfLines = 0
+            titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let descLabel = UILabel()
+            descLabel.text = description
+            descLabel.font = StyleProvider.fontWith(type: .regular, size: 11)
+            descLabel.textColor = StyleProvider.Color.textSecondary
+            descLabel.numberOfLines = 0
+            descLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let scoreView = ScoreView()
+            scoreView.configure(with: viewModel)
+            scoreView.translatesAutoresizingMaskIntoConstraints = false
+
+            container.addSubview(titleLabel)
+            container.addSubview(descLabel)
+            container.addSubview(scoreView)
+
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
+                titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
+                titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+
+                descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 3),
+                descLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 10),
+                descLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+
+                scoreView.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 10),
+                scoreView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
+                scoreView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10)
+            ])
+
+            return container
+        }
+
+        // Helper to add spacer
+        func addSpacer(_ height: CGFloat) {
+            let spacer = UIView()
+            spacer.translatesAutoresizingMaskIntoConstraints = false
+            spacer.heightAnchor.constraint(equalToConstant: height).isActive = true
+            stackView.addArrangedSubview(spacer)
+        }
+
+        // INTRODUCTION
+        let intro = createDescriptionLabel(
+            "ScoreView has two independent styling dimensions:\n\n" +
+            "1. ScoreCellStyle - Container appearance (border/background/plain)\n" +
+            "2. HighlightingMode - Text color logic (winner/loser/both/none)\n\n" +
+            "These work together to create flexible score displays."
+        )
+        intro.font = StyleProvider.fontWith(type: .medium, size: 14)
+        stackView.addArrangedSubview(intro)
+        addSpacer(16)
+
+        // PART 1: SCORECELLSTYLE
+        stackView.addArrangedSubview(createSectionLabel("Part 1: ScoreCellStyle (Container)"))
+        addSpacer(6)
+        stackView.addArrangedSubview(createDescriptionLabel("Controls the visual container: border, background, or plain", italic: true))
+        addSpacer(10)
+
+        // Simple Style
+        stackView.addArrangedSubview(createSectionLabel("Simple Style", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let simpleVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Plain container, no border, no background",
+            description: "Width: 26pt, transparent background",
+            viewModel: simpleVM
+        ))
+        addSpacer(10)
+
+        // Border Style
+        stackView.addArrangedSubview(createSectionLabel("Border Style", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let borderVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "2", homeScore: "25", awayScore: "22", style: .border, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "1pt border outline in highlightPrimary color",
+            description: "Width: 26pt, transparent background, bordered",
+            viewModel: borderVM
+        ))
+        addSpacer(10)
+
+        // Background Style
+        stackView.addArrangedSubview(createSectionLabel("Background Style", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let backgroundVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "3", homeScore: "105", awayScore: "98", style: .background, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Filled background in backgroundPrimary color",
+            description: "Width: 29pt (slightly wider), filled background",
+            viewModel: backgroundVM
+        ))
+        addSpacer(16)
+
+        // PART 2: HIGHLIGHTINGMODE
+        stackView.addArrangedSubview(createSectionLabel("Part 2: HighlightingMode (Text Color)"))
+        addSpacer(6)
+        stackView.addArrangedSubview(createDescriptionLabel("Controls text colors based on score comparison", italic: true))
+        addSpacer(10)
+
+        // Winner/Loser
+        stackView.addArrangedSubview(createSectionLabel("Winner/Loser Highlighting", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let winnerLoserVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "4", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "5", homeScore: "3", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "6", homeScore: "5", awayScore: "5", style: .simple, highlightingMode: .winnerLoser)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Winner: black (textPrimary), Loser: gray (textSecondary)",
+            description: "Used for completed sets/quarters - compares scores",
+            viewModel: winnerLoserVM
+        ))
+        addSpacer(4)
+        stackView.addArrangedSubview(createDetailLabel("Left: Home wins (6>4), Middle: Away wins (6>3), Right: Tied (5=5)"))
+        addSpacer(10)
+
+        // Both Highlight
+        stackView.addArrangedSubview(createSectionLabel("Both Highlight", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let bothHighlightVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "7", homeScore: "30", awayScore: "15", style: .simple, highlightingMode: .bothHighlight),
+            ScoreDisplayData(id: "8", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Both scores: orange (highlightPrimary)",
+            description: "Used for current game/set and match totals",
+            viewModel: bothHighlightVM
+        ))
+        addSpacer(4)
+        stackView.addArrangedSubview(createDetailLabel("Both scores highlighted regardless of winner"))
+        addSpacer(10)
+
+        // No Highlight
+        stackView.addArrangedSubview(createSectionLabel("No Highlight", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let noHighlightVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "9", homeScore: "2", awayScore: "1", style: .simple, highlightingMode: .noHighlight),
+            ScoreDisplayData(id: "10", homeScore: "0", awayScore: "3", style: .simple, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Both scores: black (textPrimary)",
+            description: "Default colors, no special highlighting",
+            viewModel: noHighlightVM
+        ))
+        addSpacer(4)
+        stackView.addArrangedSubview(createDetailLabel("No color differentiation for winners"))
+        addSpacer(16)
+
+        // PART 3: COMBINATIONS
+        stackView.addArrangedSubview(createSectionLabel("Part 3: Style × Highlighting Combinations"))
+        addSpacer(6)
+        stackView.addArrangedSubview(createDescriptionLabel("Each style can work with any highlighting mode", italic: true))
+        addSpacer(10)
+
+        // Simple × All Modes
+        stackView.addArrangedSubview(createSectionLabel("Simple Style × All Highlighting Modes", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let simpleAllVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "11", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "12", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight),
+            ScoreDisplayData(id: "13", homeScore: "2", awayScore: "1", style: .simple, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Simple container with different highlighting",
+            description: "Left: winnerLoser, Middle: bothHighlight, Right: noHighlight",
+            viewModel: simpleAllVM
+        ))
+        addSpacer(10)
+
+        // Border × All Modes
+        stackView.addArrangedSubview(createSectionLabel("Border Style × All Highlighting Modes", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let borderAllVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "14", homeScore: "25", awayScore: "22", style: .border, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "15", homeScore: "5", awayScore: "4", style: .border, highlightingMode: .bothHighlight),
+            ScoreDisplayData(id: "16", homeScore: "3", awayScore: "1", style: .border, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Bordered container with different highlighting",
+            description: "Left: winnerLoser, Middle: bothHighlight, Right: noHighlight",
+            viewModel: borderAllVM
+        ))
+        addSpacer(10)
+
+        // Background × All Modes
+        stackView.addArrangedSubview(createSectionLabel("Background Style × All Highlighting Modes", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let backgroundAllVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "17", homeScore: "105", awayScore: "98", style: .background, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "18", homeScore: "7", awayScore: "6", style: .background, highlightingMode: .bothHighlight),
+            ScoreDisplayData(id: "19", homeScore: "2", awayScore: "1", style: .background, highlightingMode: .noHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "Filled background with different highlighting",
+            description: "Left: winnerLoser, Middle: bothHighlight, Right: noHighlight",
+            viewModel: backgroundAllVM
+        ))
+        addSpacer(16)
+
+        // PART 4: REAL-WORLD EXAMPLES
+        stackView.addArrangedSubview(createSectionLabel("Part 4: Real-World Examples"))
+        addSpacer(6)
+        stackView.addArrangedSubview(createDescriptionLabel("How styles combine in practical match displays", italic: true))
+        addSpacer(10)
+
+        // Tennis Example
+        stackView.addArrangedSubview(createSectionLabel("Tennis Match", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let tennisRealVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(
+                id: "current_game",
+                homeScore: "30",
+                awayScore: "15",
+                style: .background,
+                highlightingMode: .bothHighlight,
+                showsTrailingSeparator: true,
+                servingPlayer: .home
+            ),
+            ScoreDisplayData(id: "set1", homeScore: "6", awayScore: "4", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "set2", homeScore: "4", awayScore: "6", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "set3", homeScore: "7", awayScore: "6", style: .simple, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "[●] [30/15] | [6/4] [4/6] [7/6]",
+            description: "Current game + separator + completed sets + current set",
+            viewModel: tennisRealVM
+        ))
+        addSpacer(4)
+        stackView.addArrangedSubview(createDetailLabel(
+            "• Game: background + bothHighlight (both orange)\n" +
+            "• Separator (|) after current game\n" +
+            "• Serving indicator (●) for home player\n" +
+            "• Sets 1-2: simple + winnerLoser (winner black, loser gray)\n" +
+            "• Set 3: simple + bothHighlight (both orange - current)"
+        ))
+        addSpacer(10)
+
+        // Basketball Example
+        stackView.addArrangedSubview(createSectionLabel("Basketball Match", size: 15, color: StyleProvider.Color.textPrimary))
+        addSpacer(4)
+        let basketballRealVM = MockScoreViewModel(scoreCells: [
+            ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q2", homeScore: "18", awayScore: "28", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q3", homeScore: "31", awayScore: "24", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "q4", homeScore: "26", awayScore: "30", style: .simple, highlightingMode: .winnerLoser),
+            ScoreDisplayData(id: "total", homeScore: "100", awayScore: "104", style: .background, highlightingMode: .bothHighlight)
+        ], visualState: .display)
+        stackView.addArrangedSubview(createExampleContainer(
+            title: "[25/22] [18/28] [31/24] [26/30] [100/104]",
+            description: "Quarters + final score",
+            viewModel: basketballRealVM
+        ))
+        addSpacer(4)
+        stackView.addArrangedSubview(createDetailLabel(
+            "• Q1-Q4: simple + winnerLoser (quarter winners highlighted)\n" +
+            "• Total: background + bothHighlight (both orange)\n" +
+            "• No serving indicator for basketball"
+        ))
+        addSpacer(16)
+
+        // SUMMARY
+        stackView.addArrangedSubview(createSectionLabel("Summary: Independent Dimensions"))
+        addSpacer(6)
+        let summary = createDescriptionLabel(
+            "ScoreCellStyle (Container):\n" +
+            "• .simple - Plain, 26pt\n" +
+            "• .border - 1pt outline, 26pt\n" +
+            "• .background - Filled, 29pt\n\n" +
+            "HighlightingMode (Text Color):\n" +
+            "• .winnerLoser - Black/gray by score\n" +
+            "• .bothHighlight - Both orange\n" +
+            "• .noHighlight - Both black\n\n" +
+            "3 styles × 3 modes = 9 combinations"
+        )
+        summary.font = StyleProvider.fontWith(type: .medium, size: 13)
+        summary.backgroundColor = StyleProvider.Color.backgroundPrimary
+        summary.layer.cornerRadius = 8
+        summary.clipsToBounds = true
+        let padding: CGFloat = 12
+        summary.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        stackView.addArrangedSubview(summary)
+
+        scrollView.addSubview(stackView)
+        vc.view.addSubview(scrollView)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -32)
         ])
 
         return vc

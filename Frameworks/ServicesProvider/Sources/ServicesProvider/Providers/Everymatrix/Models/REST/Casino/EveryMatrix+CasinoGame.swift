@@ -105,7 +105,9 @@ extension EveryMatrix {
     
     /// REST API model for individual category item
     struct CasinoGameCategoryItem: Codable {
-        let href: String
+        let href: String?  // Optional - not always present in API responses
+        let id: String
+        let name: String
     }
     
     /// REST API model for game jackpots

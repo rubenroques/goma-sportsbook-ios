@@ -1,6 +1,7 @@
 import UIKit
 import GomaUI
 import Combine
+import GomaPerformanceKit
 
 // MARK: - NextUpEventsViewController
 class NextUpEventsViewController: UIViewController {
@@ -46,6 +47,7 @@ class NextUpEventsViewController: UIViewController {
     private let viewModel: NextUpEventsViewModel
     private var marketGroupControllers: [String: MarketGroupCardsViewController] = [:]
     private var cancellables = Set<AnyCancellable>()
+    private var performanceSessionKey: String?
 
     // MARK: - MVVM-C Navigation Closures (Coordinator handles navigation)
     var onURLOpenRequested: ((URL) -> Void)?
@@ -86,15 +88,37 @@ class NextUpEventsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // Start home screen performance tracking
+        performanceSessionKey = UUID().uuidString
+        PerformanceTracker.shared.start(
+            feature: .homeScreen,
+            layer: .app,
+            metadata: [
+                "screen": "NextUpEventsViewController",
+                "sport": viewModel.sport.name,
+                "operation": "screen_init"
+            ]
+        )
+
         setupViews()
         setupBindings()
-        
+
         loadData()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        // Screen became visible to user
+        PerformanceTracker.shared.end(
+            feature: .homeScreen,
+            layer: .app,
+            metadata: [
+                "operation": "screen_visible",
+                "status": "complete"
+            ]
+        )
     }
     
     override func viewDidLayoutSubviews() {
@@ -311,6 +335,18 @@ class NextUpEventsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
                 self?.setLoadingIndicatorVisible(isLoading)
+
+                // Track data loading completion
+                if !isLoading {
+                    PerformanceTracker.shared.end(
+                        feature: .homeScreen,
+                        layer: .app,
+                        metadata: [
+                            "operation": "data_loaded",
+                            "status": "success"
+                        ]
+                    )
+                }
             }
             .store(in: &cancellables)
         

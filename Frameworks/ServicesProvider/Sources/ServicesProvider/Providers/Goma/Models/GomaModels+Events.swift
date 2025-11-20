@@ -374,7 +374,7 @@ extension GomaModels {
             // Tennis
             // TODO: Add game_score when available
             if self.sport.identifier == "2" {
-                let score = Score.gamePart(home: self.homeScore, away: self.awayScore)
+                let score = Score.gamePart(index: nil, home: self.homeScore, away: self.awayScore)
                 newScores["gamePart"] = score
             }
             

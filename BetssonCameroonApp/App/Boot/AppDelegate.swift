@@ -13,6 +13,7 @@ import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
 import FirebaseCore
+import GomaPerformanceKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,13 +23,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        // Configure performance tracking
+        #if DEBUG
+        let consoleDestination = ConsoleDestination()
+        consoleDestination.logLevel = .verbose
+        PerformanceTracker.shared.addDestination(consoleDestination)
+        #endif
+
+        // Configure device context for performance tracking
+        PerformanceTracker.shared.configure(
+            deviceContext: DeviceContext.current(networkType: "Unknown")
+        )
+
+        PerformanceTracker.shared.enable()
+        
         print("App Started")
+
+        // Track overall app boot time (app-specific initialization only)
+        PerformanceTracker.shared.start(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "app_delegate_boot"]
+        )
 
         // Register Settings.bundle defaults (makes iOS Settings app recognize our settings)
         SettingsBundleHelper.registerDefaultsFromSettingsBundle()
         SettingsBundleHelper.updateSettingsBundleValues()
 
-        // External Localization tool
+        // Disable autolayout errors/warnings console logs
+        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+
+        //
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+
+        // Store device id
+        if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString
+            print("Device ID: \(deviceId ?? "")")
+            UserDefaults.standard.set(deviceId!, forKey: "device_id")
+        }
+
+        // Track external third-party SDK initialization
+        PerformanceTracker.shared.start(
+            feature: .externalDependencies,
+            layer: .app,
+            metadata: ["sdks": "Phrase,Firebase,XtremePush"]
+        )
+
+        // External Localization tool (Phrase SDK)
         #if DEBUG
         let phraseConfiguration = PhraseConfiguration()
         phraseConfiguration.debugMode = false
@@ -43,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #if LOCAL_DEBUGR
             print("🔍 [LOCAL] test local-only code in debug")
         #endif
-        
+
         Task {
             do {
                 let updated = try await Phrase.shared.updateTranslation()
@@ -62,29 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        //
-        //
-        // Disable autolayout errors/warnings console logs
-        UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-
-        //
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = 24.0
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = true
-        // IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false // Disable placeholder in toolbar
-        // IQKeyboardManager.shared.shouldHidePreviousNext = true // Hide Previous/Next navigation buttons
-
-//        let disabledClasses = [BetslipViewController.self, PreSubmissionBetslipViewController.self]
-//        IQKeyboardManager.shared.disabledToolbarClasses = disabledClasses
-//        IQKeyboardManager.shared.disabledDistanceHandlingClasses = disabledClasses
-
-        // Store device id
-        if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
-            let deviceId = UIDevice.current.identifierForVendor?.uuidString
-            print("Device ID: \(deviceId ?? "")")
-            UserDefaults.standard.set(deviceId!, forKey: "device_id")
-        }
-
+        // Firebase Configuration
         FirebaseConfiguration.shared.setLoggerLevel(.min)
 
         FirebaseApp.configure()
@@ -121,12 +143,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         application.registerForRemoteNotifications()
 
+        // End external dependencies tracking
+        PerformanceTracker.shared.end(
+            feature: .externalDependencies,
+            layer: .app,
+            metadata: ["status": "complete"]
+        )
+
         // App Init
         //
         self.window = UIWindow()
 
         self.bootstrap = Bootstrap(window: self.window!)
         self.bootstrap.boot()
+
+        // End app boot tracking
+        PerformanceTracker.shared.end(
+            feature: .appBoot,
+            layer: .app,
+            metadata: ["phase": "app_delegate_boot", "status": "complete"]
+        )
 
         return true
     }

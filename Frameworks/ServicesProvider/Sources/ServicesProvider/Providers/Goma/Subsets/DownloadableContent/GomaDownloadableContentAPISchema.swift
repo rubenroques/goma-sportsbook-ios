@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum GomaDownloadableContentAPISchema {
     case downloadableContents
@@ -66,5 +67,10 @@ extension GomaDownloadableContentAPISchema: Endpoint {
         case .downloadableContents:
             return "Get downloadable contents"
         }
+    }
+
+    var performanceFeature: PerformanceFeature? {
+        // Downloadable content is CMS content
+        return .cms
     }
 }

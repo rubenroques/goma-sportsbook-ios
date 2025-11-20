@@ -10,10 +10,8 @@ public struct MatchHeaderCompactData: Equatable {
     public let league: String
     public let countryId: String?
     public let leagueId: String?
-    public let hasStatistics: Bool
-    public let isStatisticsCollapsed: Bool
-    public let statisticsCollapsedTitle: String
-    public let statisticsExpandedTitle: String
+    public let scoreViewModel: ScoreViewModelProtocol?
+    public let isLive: Bool
 
     public init(
         homeTeamName: String,
@@ -23,10 +21,8 @@ public struct MatchHeaderCompactData: Equatable {
         league: String,
         countryId: String? = nil,
         leagueId: String? = nil,
-        hasStatistics: Bool = true,
-        isStatisticsCollapsed: Bool = true,
-        statisticsCollapsedTitle: String = "View Statistics",
-        statisticsExpandedTitle: String = "Close Statistics"
+        scoreViewModel: ScoreViewModelProtocol? = nil,
+        isLive: Bool = false
     ) {
         self.homeTeamName = homeTeamName
         self.awayTeamName = awayTeamName
@@ -35,10 +31,20 @@ public struct MatchHeaderCompactData: Equatable {
         self.league = league
         self.countryId = countryId
         self.leagueId = leagueId
-        self.hasStatistics = hasStatistics
-        self.isStatisticsCollapsed = isStatisticsCollapsed
-        self.statisticsCollapsedTitle = statisticsCollapsedTitle
-        self.statisticsExpandedTitle = statisticsExpandedTitle
+        self.scoreViewModel = scoreViewModel
+        self.isLive = isLive
+    }
+
+    // Custom Equatable implementation (scoreViewModel compared by identity)
+    public static func == (lhs: MatchHeaderCompactData, rhs: MatchHeaderCompactData) -> Bool {
+        return lhs.homeTeamName == rhs.homeTeamName &&
+            lhs.awayTeamName == rhs.awayTeamName &&
+            lhs.sport == rhs.sport &&
+            lhs.country == rhs.country &&
+            lhs.league == rhs.league &&
+            lhs.countryId == rhs.countryId &&
+            lhs.leagueId == rhs.leagueId &&
+            lhs.isLive == rhs.isLive
     }
 }
 
@@ -48,12 +54,10 @@ public protocol MatchHeaderCompactViewModelProtocol: AnyObject {
     var headerDataPublisher: AnyPublisher<MatchHeaderCompactData, Never> { get }
 
     // Actions
-    var onStatisticsTapped: (() -> Void)? { get set }
     var onCountryTapped: ((String) -> Void)? { get set }
     var onLeagueTapped: ((String) -> Void)? { get set }
 
     // Methods
-    func handleStatisticsTap()
     func handleCountryTap()
     func handleLeagueTap()
 }

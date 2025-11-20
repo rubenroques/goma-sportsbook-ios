@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaPerformanceKit
 
 enum EveryMatrixPlayerAPI {
     
@@ -460,6 +461,43 @@ extension EveryMatrixPlayerAPI: Endpoint {
         case .getUserLimits:
             return "getUserLimits"
         default:
+            return nil
+        }
+    }
+
+    // MARK: - Performance Tracking
+
+    var performanceFeature: PerformanceFeature? {
+        switch self {
+        // Login tracking
+        case .login:
+            return .login
+
+        // Registration tracking
+        case .registerStep, .register:
+            return .register
+
+        // Banking tracking - distinguish deposit vs withdraw
+        case .getBankingWebView(_, let parameters):
+            // Check transaction type in request parameters
+            let type = parameters.type.lowercased()
+            if type == "deposit" {
+                return .deposit
+            } else if type == "withdraw" || type == "withdrawal" {
+                return .withdraw
+            }
+            // Default to deposit if ambiguous
+            return .deposit
+
+        // Don't track other endpoints
+        case .getRegistrationConfig, .getUserProfile, .getUserBalance,
+             .getResponsibleGamingLimits, .setUserLimit, .setTimeOut,
+             .setSelfExclusion, .updateUserLimit, .deleteUserLimit,
+             .getUserLimits, .getWageringTransactions, .getBankingTransactions,
+             .getRecentlyPlayedGames, .getMostPlayedGames, .createBookingCode,
+             .getFromBookingCode, .getSportsBonusWallets, .getResetPasswordTokenId,
+             .validateResetPasswordCode, .resetPasswordWithHashKey,
+             .getAvailableBonus, .getGrantedBonus, .getUserInformationUpdatesSSE:
             return nil
         }
     }

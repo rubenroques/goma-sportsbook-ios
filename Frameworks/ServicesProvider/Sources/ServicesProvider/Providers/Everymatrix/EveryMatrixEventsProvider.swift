@@ -293,22 +293,20 @@ class EveryMatrixEventsProvider: EventsProvider {
     }
 
     func subscribeToLiveDataUpdates(forEventWithId id: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError> {
-        
-        // First check if we have an active match details manager for this event
-        if let matchDetailsManager = self.matchDetailsManager {
-            // TODO: subscribeToLiveDataUpdates no live data events in match details
-            // Use the match details manager to observe live data
-//            return matchDetailsManager.observeEventInfosForEvent(eventId: id)
-//                .map { eventLiveData in
-//                    return SubscribableContent.contentUpdate(content: eventLiveData)
-//                }
-//                .setFailureType(to: ServiceProviderError.self)
-//                .eraseToAnyPublisher()
-            // TODO: match details manager to observe live data
-            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+
+        // Check if we have an active match details manager for THIS SPECIFIC event
+        if let matchDetailsManager = self.matchDetailsManager, matchDetailsManager.matchId == id {
+            // Use the match details manager to observe live data for this specific match
+            // This prevents duplicate subscriptions and shares data between match details and lists
+            return matchDetailsManager.observeEventInfosForEvent(eventId: id)
+                .map { eventLiveData in
+                    return SubscribableContent.contentUpdate(content: eventLiveData)
+                }
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
         }
-        
-        // Fallback to live paginator if no match details manager
+
+        // For all other events, use live paginator
         guard let livePaginator = self.livePaginator else {
             return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
         }
