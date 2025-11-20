@@ -1,4 +1,5 @@
 import Foundation
+import GomaPerformanceKit
 import Combine
 
 class EveryMatrixSocketConnector: Connector {

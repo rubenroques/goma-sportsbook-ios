@@ -24,7 +24,6 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
         headerDataSubject.eraseToAnyPublisher()
     }
 
-    var onStatisticsTapped: (() -> Void)?
     var onCountryTapped: ((String) -> Void)?
     var onLeagueTapped: ((String) -> Void)?
     
@@ -39,30 +38,6 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
     }
     
     // MARK: - MatchHeaderCompactViewModelProtocol
-
-    func handleStatisticsTap() {
-        // Toggle the collapsed state
-        let currentData = headerDataSubject.value
-        let updatedData = MatchHeaderCompactData(
-            homeTeamName: currentData.homeTeamName,
-            awayTeamName: currentData.awayTeamName,
-            sport: currentData.sport,
-            country: currentData.country,
-            league: currentData.league,
-            countryId: currentData.countryId,
-            leagueId: currentData.leagueId,
-            hasStatistics: currentData.hasStatistics,
-            isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
-            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
-            scoreViewModel: currentData.scoreViewModel,
-            isLive: currentData.isLive
-        )
-        headerDataSubject.send(updatedData)
-
-        // Also call the callback
-        onStatisticsTapped?()
-    }
 
     func handleCountryTap() {
         let currentData = headerDataSubject.value
@@ -106,10 +81,6 @@ final class MatchHeaderCompactViewModel: MatchHeaderCompactViewModelProtocol {
             league: leagueName,
             countryId: countryId,
             leagueId: leagueId,
-            hasStatistics: false,
-            isStatisticsCollapsed: true,
-            statisticsCollapsedTitle: localized("view_statistics"),
-            statisticsExpandedTitle: localized("close_statistics"),
             scoreViewModel: scoreViewModel,
             isLive: isLive
         )
@@ -146,10 +117,6 @@ extension MatchHeaderCompactViewModel {
             league: currentData.league,
             countryId: currentData.countryId,
             leagueId: currentData.leagueId,
-            hasStatistics: currentData.hasStatistics,
-            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
-            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
             scoreViewModel: scoreViewModel,
             isLive: liveData.status?.isLive ?? currentData.isLive
         )
@@ -181,33 +148,6 @@ extension MatchHeaderCompactViewModel {
             league: currentData.league,
             countryId: currentData.countryId,
             leagueId: currentData.leagueId,
-            hasStatistics: currentData.hasStatistics,
-            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
-            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
-            scoreViewModel: currentData.scoreViewModel,
-            isLive: currentData.isLive
-        )
-
-        headerDataSubject.send(updatedData)
-    }
-
-    /// Updates the statistics availability
-    public func updateStatisticsAvailability(_ hasStatistics: Bool) {
-        let currentData = headerDataSubject.value
-
-        let updatedData = MatchHeaderCompactData(
-            homeTeamName: currentData.homeTeamName,
-            awayTeamName: currentData.awayTeamName,
-            sport: currentData.sport,
-            country: currentData.country,
-            league: currentData.league,
-            countryId: currentData.countryId,
-            leagueId: currentData.leagueId,
-            hasStatistics: hasStatistics,
-            isStatisticsCollapsed: currentData.isStatisticsCollapsed,
-            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
             scoreViewModel: currentData.scoreViewModel,
             isLive: currentData.isLive
         )

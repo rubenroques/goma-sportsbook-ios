@@ -11,7 +11,6 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
         $headerData.eraseToAnyPublisher()
     }
 
-    public var onStatisticsTapped: (() -> Void)?
     public var onCountryTapped: ((String) -> Void)?
     public var onLeagueTapped: ((String) -> Void)?
     
@@ -21,29 +20,6 @@ public final class MockMatchHeaderCompactViewModel: MatchHeaderCompactViewModelP
     }
     
     // MARK: - Methods
-    public func handleStatisticsTap() {
-        // Toggle the collapsed state
-        let currentData = headerData
-        headerData = MatchHeaderCompactData(
-            homeTeamName: currentData.homeTeamName,
-            awayTeamName: currentData.awayTeamName,
-            sport: currentData.sport,
-            country: currentData.country,
-            league: currentData.league,
-            countryId: currentData.countryId,
-            leagueId: currentData.leagueId,
-            hasStatistics: currentData.hasStatistics,
-            isStatisticsCollapsed: !currentData.isStatisticsCollapsed,
-            statisticsCollapsedTitle: currentData.statisticsCollapsedTitle,
-            statisticsExpandedTitle: currentData.statisticsExpandedTitle,
-            scoreViewModel: currentData.scoreViewModel,
-            isLive: currentData.isLive
-        )
-
-        // Also call the callback
-        onStatisticsTapped?()
-    }
-
     public func handleCountryTap() {
         if let countryId = headerData.countryId {
             onCountryTapped?(countryId)
@@ -69,27 +45,11 @@ public extension MockMatchHeaderCompactViewModel {
                 country: "England",
                 league: "UEFA Europa League",
                 countryId: "country-england",
-                leagueId: "league-uefa-europa",
-                hasStatistics: true
+                leagueId: "league-uefa-europa"
             )
         )
     }
-    
-    static var withoutStatistics: MockMatchHeaderCompactViewModel {
-        MockMatchHeaderCompactViewModel(
-            headerData: MatchHeaderCompactData(
-                homeTeamName: "Real Madrid",
-                awayTeamName: "Barcelona",
-                sport: "Football",
-                country: "Spain",
-                league: "La Liga",
-                countryId: "country-spain",
-                leagueId: "league-la-liga",
-                hasStatistics: false
-            )
-        )
-    }
-    
+
     static var longNames: MockMatchHeaderCompactViewModel {
         MockMatchHeaderCompactViewModel(
             headerData: MatchHeaderCompactData(
@@ -99,12 +59,11 @@ public extension MockMatchHeaderCompactViewModel {
                 country: "Germany",
                 league: "UEFA Champions League Qualification",
                 countryId: "country-germany",
-                leagueId: "league-ucl-qual",
-                hasStatistics: true
+                leagueId: "league-ucl-qual"
             )
         )
     }
-    
+
     static var longContent: MockMatchHeaderCompactViewModel {
         MockMatchHeaderCompactViewModel(
             headerData: MatchHeaderCompactData(
@@ -114,8 +73,7 @@ public extension MockMatchHeaderCompactViewModel {
                 country: "Germany",
                 league: "UEFA Champions League Qualification Playoffs",
                 countryId: "country-germany",
-                leagueId: "league-ucl-playoffs",
-                hasStatistics: true
+                leagueId: "league-ucl-playoffs"
             )
         )
     }
@@ -144,7 +102,6 @@ public extension MockMatchHeaderCompactViewModel {
                 league: "Premier League",
                 countryId: "country-england",
                 leagueId: "league-premier",
-                hasStatistics: true,
                 scoreViewModel: scoreViewModel,
                 isLive: true
             )
@@ -199,7 +156,6 @@ public extension MockMatchHeaderCompactViewModel {
                 league: "Roland Garros",
                 countryId: "country-france",
                 leagueId: "league-roland-garros",
-                hasStatistics: true,
                 scoreViewModel: scoreViewModel,
                 isLive: true
             )
@@ -228,7 +184,6 @@ public extension MockMatchHeaderCompactViewModel {
                 league: "Premier League",
                 countryId: "country-england",
                 leagueId: "league-premier",
-                hasStatistics: true,
                 scoreViewModel: scoreViewModel,
                 isLive: true
             )

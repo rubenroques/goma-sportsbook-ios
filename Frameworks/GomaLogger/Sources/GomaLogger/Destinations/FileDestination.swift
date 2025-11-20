@@ -62,7 +62,11 @@ public final class FileDestination: LogDestination {
     }
 
     deinit {
-        try? fileHandle?.close()
+        if #available(iOS 13.0, macOS 10.15, *) {
+            try? fileHandle?.close()
+        } else {
+            fileHandle?.closeFile()
+        }
     }
 
     // MARK: - LogDestination
@@ -81,7 +85,7 @@ public final class FileDestination: LogDestination {
         lock.lock()
         defer { lock.unlock() }
 
-        guard let logFilePath = currentLogFilePath else {
+        guard currentLogFilePath != nil else {
             return
         }
 
@@ -129,7 +133,7 @@ public final class FileDestination: LogDestination {
                 setupLogFile()
             }
 
-            if #available(iOS 13.4, *) {
+            if #available(iOS 13.4, macOS 10.15.4, *) {
                 try? fileHandle?.write(contentsOf: data)
             } else {
                 fileHandle?.write(data)
@@ -151,8 +155,8 @@ public final class FileDestination: LogDestination {
 
         // Open file handle
         fileHandle = try? FileHandle(forWritingTo: logFilePath)
-        if #available(iOS 13.4, *) {
-            try? fileHandle?.seekToEnd()
+        if #available(iOS 13.4, macOS 10.15.4, *) {
+            _ = try? fileHandle?.seekToEnd()
         } else {
             fileHandle?.seekToEndOfFile()
         }
@@ -171,7 +175,11 @@ public final class FileDestination: LogDestination {
         }
 
         // Close current file
-        try? fileHandle?.close()
+        if #available(iOS 13.0, macOS 10.15, *) {
+            try? fileHandle?.close()
+        } else {
+            fileHandle?.closeFile()
+        }
         fileHandle = nil
 
         // Rotate existing backups
@@ -234,7 +242,11 @@ public final class FileDestination: LogDestination {
         lock.lock()
         defer { lock.unlock() }
 
-        try? fileHandle?.close()
+        if #available(iOS 13.0, macOS 10.15, *) {
+            try? fileHandle?.close()
+        } else {
+            fileHandle?.closeFile()
+        }
         fileHandle = nil
 
         for path in allLogFilePaths {

@@ -129,7 +129,7 @@ public final class GomaLogger {
             level: .debug,
             subsystem: subsystem,
             category: category,
-            message: message,
+            message: message(),
             metadata: metadata,
             file: file,
             function: function,
@@ -162,7 +162,7 @@ public final class GomaLogger {
             level: .info,
             subsystem: subsystem,
             category: category,
-            message: message,
+            message: message(),
             metadata: metadata,
             file: file,
             function: function,
@@ -195,7 +195,7 @@ public final class GomaLogger {
             level: .error,
             subsystem: subsystem,
             category: category,
-            message: message,
+            message: message(),
             metadata: metadata,
             file: file,
             function: function,
@@ -209,7 +209,7 @@ public final class GomaLogger {
         level: LogLevel,
         subsystem: LogSubsystem?,
         category: String?,
-        message: @autoclosure () -> String,
+        message: String,
         metadata: [String: Any]?,
         file: String,
         function: String,
@@ -220,8 +220,8 @@ public final class GomaLogger {
             return
         }
 
-        // Lazy message evaluation (only if we're logging)
-        let messageString = message()
+        // Message already evaluated
+        let messageString = message
         let timestamp = Date()
 
         // Send to all destinations

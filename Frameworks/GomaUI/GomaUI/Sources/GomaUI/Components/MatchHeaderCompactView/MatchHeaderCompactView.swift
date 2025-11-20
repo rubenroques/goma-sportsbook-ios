@@ -12,7 +12,6 @@ public final class MatchHeaderCompactView: UIView {
     private let awayTeamLabel = UILabel()
     private lazy var scoreView = Self.createScoreView()
     private let breadcrumbLabel = UILabel()
-    private let statisticsButton = UIButton()
     private let bottomBorderView = UIView()
     
     // MARK: - Properties
@@ -89,26 +88,6 @@ public final class MatchHeaderCompactView: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(breadcrumbTapped(_:)))
         breadcrumbLabel.addGestureRecognizer(tapGesture)
 
-        // Statistics button setup
-        containerView.addSubview(statisticsButton)
-        statisticsButton.translatesAutoresizingMaskIntoConstraints = false
-        statisticsButton.backgroundColor = .clear
-        statisticsButton.addTarget(self, action: #selector(statisticsButtonTapped), for: .touchUpInside)
-        
-        // Configure button appearance
-        statisticsButton.titleLabel?.font = StyleProvider.fontWith(type: .regular, size: 12)
-        statisticsButton.backgroundColor = .clear
-        statisticsButton.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
-        statisticsButton.tintColor = StyleProvider.Color.highlightPrimary
-        statisticsButton.semanticContentAttribute = .forceRightToLeft // Image on right, text on left
-        statisticsButton.contentHorizontalAlignment = .center
-        
-        // Add spacing between text and icon
-        let spacing: CGFloat = 2
-        statisticsButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: -spacing)
-        statisticsButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -spacing, bottom: 0, right: spacing)
-        statisticsButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
-        
         // Bottom border setup
         addSubview(bottomBorderView)
         bottomBorderView.translatesAutoresizingMaskIntoConstraints = false
@@ -133,24 +112,17 @@ public final class MatchHeaderCompactView: UIView {
             teamsStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
             teamsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
 
-            // ScoreView constraints (aligned vertically with team labels, positioned at right edge)
+            // ScoreView constraints (aligned vertically with team labels, snapped to right edge)
             scoreView.topAnchor.constraint(equalTo: homeTeamLabel.topAnchor),
             scoreView.bottomAnchor.constraint(equalTo: awayTeamLabel.bottomAnchor),
-            scoreView.trailingAnchor.constraint(equalTo: statisticsButton.leadingAnchor, constant: -8),
+            scoreView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             scoreView.leadingAnchor.constraint(equalTo: teamsStackView.trailingAnchor, constant: 8),
-
-            // Statistics button constraints - anchored to right side of container
-            statisticsButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            statisticsButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
 
             // Breadcrumb constraints
             breadcrumbLabel.topAnchor.constraint(equalTo: teamsStackView.bottomAnchor, constant: 4),
             breadcrumbLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            breadcrumbLabel.trailingAnchor.constraint(lessThanOrEqualTo: statisticsButton.leadingAnchor, constant: -8),
+            breadcrumbLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             breadcrumbLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
-            // Statistics button size constraints
-            statisticsButton.heightAnchor.constraint(equalToConstant: 30),
             
             // Bottom border constraints
             bottomBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -167,10 +139,6 @@ public final class MatchHeaderCompactView: UIView {
         // Team labels compress when space is tight (scores take priority)
         homeTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         awayTeamLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-
-        // Statistics button maintains its size
-        statisticsButton.setContentHuggingPriority(.required, for: .horizontal)
-        statisticsButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     private func bindViewModel() {
@@ -218,51 +186,9 @@ public final class MatchHeaderCompactView: UIView {
         }
 
         breadcrumbLabel.attributedText = attributedString
-        
-        // Show/hide statistics button
-        statisticsButton.isHidden = !data.hasStatistics
-        
-        // Update statistics button based on collapsed state
-        updateStatisticsButton(
-            isCollapsed: data.isStatisticsCollapsed,
-            collapsedTitle: data.statisticsCollapsedTitle,
-            expandedTitle: data.statisticsExpandedTitle
-        )
     }
-    
-    private func updateStatisticsButton(isCollapsed: Bool, collapsedTitle: String, expandedTitle: String) {
-        // Update button title
-        let title = isCollapsed ? collapsedTitle : expandedTitle
-        statisticsButton.setTitle(title, for: .normal)
-        
-        // Update icon based on collapsed state
-        let iconSize: CGFloat = 14
-        let config = UIImage.SymbolConfiguration(pointSize: iconSize, weight: .regular)
-        var buttonImage: UIImage?
-        
-        if isCollapsed {
-            // Try custom icon first, fallback to system icon
-            if let customImage = UIImage(named: "chevron_down_icon") {
-                buttonImage = customImage.withRenderingMode(.alwaysTemplate)
-            } else {
-                buttonImage = UIImage(systemName: "chevron.down", withConfiguration: config)
-            }
-        } else {
-            // Try custom icon first, fallback to system icon
-            if let customImage = UIImage(named: "chevron_up_icon") {
-                buttonImage = customImage.withRenderingMode(.alwaysTemplate)
-            } else {
-                buttonImage = UIImage(systemName: "chevron.up", withConfiguration: config)
-            }
-        }
-        
-        statisticsButton.setImage(buttonImage, for: .normal)
-    }
-    
+
     // MARK: - Actions
-    @objc private func statisticsButtonTapped() {
-        viewModel.handleStatisticsTap()
-    }
 
     @objc private func breadcrumbTapped(_ gesture: UITapGestureRecognizer) {
         guard let attributedText = breadcrumbLabel.attributedText,
@@ -359,7 +285,7 @@ public final class MatchHeaderCompactView: UIView {
 }
 
 @available(iOS 17.0, *)
-#Preview("Match Header - Expanded Statistics") {
+#Preview("Match Header - Standard") {
     PreviewUIViewController {
         let vc = UIViewController()
 
@@ -370,9 +296,7 @@ public final class MatchHeaderCompactView: UIView {
             country: "England",
             league: "UEFA Europa League",
             countryId: "country-england",
-            leagueId: "league-uefa-europa",
-            hasStatistics: true,
-            isStatisticsCollapsed: false
+            leagueId: "league-uefa-europa"
         )
 
         let viewModel = MockMatchHeaderCompactViewModel(headerData: mockData)
@@ -463,7 +387,6 @@ public final class MatchHeaderCompactView: UIView {
             league: "Australian Open",
             countryId: "country-australia",
             leagueId: "league-aus-open",
-            hasStatistics: true,
             scoreViewModel: scoreViewModel,
             isLive: true
         )
@@ -535,7 +458,6 @@ public final class MatchHeaderCompactView: UIView {
             league: "Wimbledon",
             countryId: "country-uk",
             leagueId: "league-wimbledon",
-            hasStatistics: true,
             scoreViewModel: scoreViewModel,
             isLive: true
         )
@@ -616,15 +538,13 @@ public final class MatchHeaderCompactView: UIView {
         let scoreViewModel = MockScoreViewModel(scoreCells: scoreData, visualState: .display)
 
         let mockData = MatchHeaderCompactData(
-            homeTeamName: "Sinner",
-            awayTeamName: "Tsitsipas",
+            homeTeamName: "Sinner Sinner Sinner Sinner",
+            awayTeamName: "Tsitsipas Tsitsipas Tsitsipas",
             sport: "Tennis",
             country: "France",
             league: "Roland Garros",
             countryId: "country-france",
             leagueId: "league-roland-garros",
-            hasStatistics: true,
-            isStatisticsCollapsed: false,
             scoreViewModel: scoreViewModel,
             isLive: true
         )
@@ -688,7 +608,6 @@ public final class MatchHeaderCompactView: UIView {
             league: "US Open Championship",
             countryId: "country-usa",
             leagueId: "league-us-open",
-            hasStatistics: true,
             scoreViewModel: scoreViewModel,
             isLive: true
         )

@@ -172,7 +172,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                             id: "game-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
                             awayScore: away != nil ? "\(away!)" : "-",
-                            style: .background,
+                            style: .simple,
                             highlightingMode: .bothHighlight,
                             showsTrailingSeparator: true,  // Always true for game parts in Type C
                             servingPlayer: scoreCells.isEmpty ? servingPlayer : nil  // Only first cell gets serving indicator
@@ -231,8 +231,8 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                             id: "game-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
                             awayScore: away != nil ? "\(away!)" : "-",
-                            style: .background,
-                            highlightingMode: .bothHighlight,
+                            style: .simple,
+                            highlightingMode: .winnerLoser,
                             showsTrailingSeparator: false,
                             servingPlayer: isFirstCell ? servingPlayer : nil
                         )

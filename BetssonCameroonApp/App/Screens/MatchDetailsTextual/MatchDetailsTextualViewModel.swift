@@ -273,11 +273,6 @@ class MatchDetailsTextualViewModel: ObservableObject {
     private func setupBindings() {
         // Setup communication between child ViewModels
 
-        // Wire up MatchHeaderCompactView statistics button to toggle StatisticsWidgetView
-        matchHeaderCompactViewModel.onStatisticsTapped = { [weak self] in
-            self?.toggleStatistics()
-        }
-
         // Wire up breadcrumb tap callbacks for navigation
         matchHeaderCompactViewModel.onCountryTapped = { [weak self] countryId in
             self?.handleCountryTapped(countryId: countryId)
