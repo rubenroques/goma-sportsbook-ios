@@ -521,6 +521,18 @@ class SportRadarManagedContentProvider: HomeContentProvider {
     func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
+
+    func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFooterSponsors(language: String?) -> AnyPublisher<FooterSponsors, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getFooterSocialLinks(language: String?) -> AnyPublisher<FooterSocialLinks, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
 
 

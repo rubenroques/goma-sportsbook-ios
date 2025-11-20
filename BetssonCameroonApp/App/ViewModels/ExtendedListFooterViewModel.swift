@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import ServicesProvider
 import GomaUI
 
 // MARK: - Extended List Footer View Model
@@ -14,10 +16,11 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
 
     // MARK: - Content Properties
 
-    let partnerClubs: [PartnerClub]
     let paymentOperators: [PaymentOperator]
     let socialMediaPlatforms: [SocialPlatform]
-    let navigationLinks: [FooterLink]
+    private(set) var navigationLinks: [FooterLink]
+    private(set) var sponsors: [FooterSponsor] = []
+    private(set) var socialLinks: [FooterSocialLink] = []
     let responsibleGamblingText: ResponsibleGamblingText
     let copyrightText: String
     let licenseHeaderText: String
@@ -37,14 +40,29 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     // MARK: - Link Tap Handler (Internal)
 
     var onLinkTap: ((FooterLinkType) -> Void)?
+    var onSponsorsUpdated: (([FooterSponsor]) -> Void)?
+    var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)?
+
+    // MARK: - Dependencies
+
+    private let servicesProvider: ServicesProvider.Client
+    private var cancellables: Set<AnyCancellable> = []
+
+    /// Stores the last raw responses retrieved from CMS so logs/debugging can inspect them.
+    private(set) var fetchedFooterLinks: [ServicesProvider.FooterCMSLink] = []
+    private(set) var fetchedFooterSponsors: [ServicesProvider.FooterCMSSponsor] = []
+    private(set) var fetchedFooterSocialLinks: [ServicesProvider.FooterCMSSocialLink] = []
 
     // MARK: - Initialization
 
-    init(imageResolver: ExtendedListFooterImageResolver) {
+    init(
+        imageResolver: ExtendedListFooterImageResolver,
+        servicesProvider: ServicesProvider.Client = Env.servicesProvider
+    ) {
         self.imageResolver = imageResolver
+        self.servicesProvider = servicesProvider
 
         // Cameroon-specific content
-        self.partnerClubs = PartnerClub.allCases
         self.paymentOperators = PaymentOperator.allCases
         self.socialMediaPlatforms = SocialPlatform.allCases
         self.navigationLinks = Self.cameroonNavigationLinks()
@@ -64,12 +82,32 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         self.onLinkTap = { [weak self] linkType in
             self?.handleLinkTap(linkType)
         }
+        
+        let language = Env.locale.language.languageCode?.identifier
+        
+        self.fetchFooterLinks(language: language)
+        self.fetchFooterSponsors(language: language)
+        self.fetchFooterSocialLinks(language: language)
     }
 
     // MARK: - Private Methods
 
+    func handleSponsorTap(_ sponsor: FooterSponsor) {
+        guard let url = sponsor.url else { return }
+        onURLOpenRequested?(url)
+    }
+
+    func handleSocialLinkTap(_ link: FooterSocialLink) {
+        guard let url = link.url else { return }
+        onURLOpenRequested?(url)
+    }
+
     private func handleLinkTap(_ linkType: FooterLinkType) {
-        // Map link types to URLs and request opening via coordinator
+        if let cmsLink = cmsLink(for: linkType) {
+            handleCMSLinkTap(for: linkType, cmsLink: cmsLink)
+            return
+        }
+
         if let url = linkType.url {
             onURLOpenRequested?(url)
         } else if let email = linkType.email {
@@ -78,19 +116,211 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private static func cameroonNavigationLinks() -> [FooterLink] {
-        return [
-            FooterLink(title: "Terms and Conditions", type: .termsAndConditions),
-            FooterLink(title: "Affiliates", type: .affiliates),
-            FooterLink(title: "Privacy Policy", type: .privacyPolicy),
-            FooterLink(title: "Cookie Policy", type: .cookiePolicy),
-            FooterLink(title: "Responsible Gambling", type: .responsibleGambling),
-            FooterLink(title: "Game Rules", type: .gameRules),
-            FooterLink(title: "Help Center", type: .helpCenter),
-            FooterLink(title: "Contact Us", type: .contactUs)
-        ]
+        return FooterLinkType.defaultOrderedTypes.map { type in
+            FooterLink(title: type.defaultFallbackTitle, type: type)
+        }
     }
 
     private static func cameroonLicenseText() -> String {
         return "The operator of this website is Ngantat Sarl, a licensed company with registration number RCCM N° RC/DLN/2024/B/137 and with registered address at Makepe Douala Cour Supreme, Bâtiment Domino, Unit 33, Douala, Cameroon."
+    }
+
+    // MARK: - Remote Footer Links Fetching
+
+    /// Fetches footer links from CMS so we can inspect the raw payload before wiring it into the UI.
+    /// - Parameter language: Optional language override passed to the CMS endpoint.
+    func fetchFooterLinks(language: String? = nil) {
+        servicesProvider
+            .getFooterLinks(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("[ExtendedListFooterViewModel] ✅ Footer links fetch completed")
+                case .failure(let error):
+                    print("[ExtendedListFooterViewModel] ❌ Failed to fetch footer links: \(error)")
+                }
+            } receiveValue: { [weak self] links in
+                self?.fetchedFooterLinks = links
+                self?.applyCMSFooterLinks()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Fetches footer sponsors from CMS so we can inspect the payload and eventually power the logos section.
+    func fetchFooterSponsors(language: String? = nil) {
+        servicesProvider
+            .getFooterSponsors(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("[ExtendedListFooterViewModel] ✅ Footer sponsors fetch completed")
+                case .failure(let error):
+                    print("[ExtendedListFooterViewModel] ❌ Failed to fetch footer sponsors: \(error)")
+                }
+            } receiveValue: { [weak self] sponsors in
+                self?.fetchedFooterSponsors = sponsors
+                self?.applyCMSFooterSponsors()
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Fetches footer social links from CMS to power the social icons
+    func fetchFooterSocialLinks(language: String? = nil) {
+        servicesProvider
+            .getFooterSocialLinks(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("[ExtendedListFooterViewModel] ✅ Footer social links fetch completed")
+                case .failure(let error):
+                    print("[ExtendedListFooterViewModel] ❌ Failed to fetch footer social links: \(error)")
+                }
+            } receiveValue: { [weak self] links in
+                self?.fetchedFooterSocialLinks = links
+                self?.applyCMSSocialLinks()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func applyCMSFooterLinks() {
+        guard !fetchedFooterLinks.isEmpty else { return }
+
+        var updatedLinks = Self.cameroonNavigationLinks()
+        for index in updatedLinks.indices {
+            let type = updatedLinks[index].type
+            guard let cmsLink = cmsLink(for: type) else { continue }
+            let localizedTitle = localized(cmsLink.label)
+            let displayTitle = localizedTitle.isEmpty ? updatedLinks[index].title : localizedTitle
+            updatedLinks[index] = FooterLink(title: displayTitle, type: type)
+        }
+
+        navigationLinks = updatedLinks
+    }
+
+    private func applyCMSFooterSponsors() {
+        guard !fetchedFooterSponsors.isEmpty else { return }
+
+        sponsors = fetchedFooterSponsors.map { sponsor in
+            let iconURL = sponsor.iconURL
+            let tapURL = URL(string: sponsor.url)
+            return FooterSponsor(
+                id: sponsor.id,
+                iconURL: iconURL,
+                url: tapURL
+            )
+        }
+
+        onSponsorsUpdated?(sponsors)
+    }
+
+    private func applyCMSSocialLinks() {
+        guard !fetchedFooterSocialLinks.isEmpty else { return }
+
+        socialLinks = fetchedFooterSocialLinks.compactMap { link in
+            let iconURL = link.iconURL
+            let destination = URL(string: link.url)
+            return FooterSocialLink(
+                id: link.id,
+                iconURL: iconURL,
+                url: destination,
+                target: link.target
+            )
+        }
+
+        onSocialLinksUpdated?(socialLinks)
+    }
+
+    private func cmsLink(for linkType: FooterLinkType) -> ServicesProvider.FooterCMSLink? {
+        let candidates = linkType.cmsIdentifiers
+        guard !candidates.isEmpty else { return nil }
+
+        return fetchedFooterLinks.first { link in
+            let keys = [
+                normalizedFooterKey(from: link.subType),
+                normalizedFooterKey(from: link.label)
+            ].compactMap { $0 }
+
+            return keys.contains { candidates.contains($0) }
+        }
+    }
+
+    private func handleCMSLinkTap(for linkType: FooterLinkType, cmsLink: ServicesProvider.FooterCMSLink) {
+        switch cmsLink.type {
+        case .mailto:
+            let email = cmsLink.computedUrl.replacingOccurrences(of: "mailto:", with: "")
+            onEmailRequested?(email)
+        case .pdf, .external, .unknown:
+            guard let url = URL(string: cmsLink.computedUrl) ?? linkType.url else { return }
+            onURLOpenRequested?(url)
+        }
+    }
+
+    // Produces stable slugs ("terms_and_conditions", "privacy_policy", etc.) so we can match CMS entries against our own semantic on FooterLinkTypes.cmsIdentifiers
+    private func normalizedFooterKey(from value: String?) -> String? {
+        guard let value = value?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty else {
+            return nil
+        }
+
+        return value
+            .lowercased()
+            .replacingOccurrences(of: "-", with: "_")
+            .replacingOccurrences(of: " ", with: "_")
+    }
+}
+
+// MARK: - Footer Link Helpers
+
+private extension FooterLinkType {
+    static var defaultOrderedTypes: [FooterLinkType] {
+        return [
+            .termsAndConditions,
+            .affiliates,
+            .privacyPolicy,
+            .cookiePolicy,
+            .responsibleGambling,
+            .gameRules,
+            .helpCenter,
+            .contactUs
+        ]
+    }
+
+    var defaultFallbackTitle: String {
+        switch self {
+        case .termsAndConditions: return "Terms and Conditions"
+        case .affiliates: return "Affiliates"
+        case .privacyPolicy: return "Privacy Policy"
+        case .cookiePolicy: return "Cookie Policy"
+        case .responsibleGambling: return "Responsible Gambling"
+        case .gameRules: return "Game Rules"
+        case .helpCenter: return "Help Center"
+        case .contactUs: return "Contact Us"
+        case .socialMedia(let platform): return platform.displayName
+        }
+    }
+
+    var cmsIdentifiers: [String] {
+        switch self {
+        case .termsAndConditions:
+            return ["terms_and_conditions", "terms_conditions", "termsconditions", "terms"]
+        case .affiliates:
+            return ["affiliates", "affiliate_program"]
+        case .privacyPolicy:
+            return ["privacy_policy", "privacypolicy"]
+        case .cookiePolicy:
+            return ["cookie_policy", "cookiepolicy"]
+        case .responsibleGambling:
+            return ["responsible_gambling", "responsiblegambling"]
+        case .gameRules:
+            return ["game_rules", "gamerules"]
+        case .helpCenter:
+            return ["help_center", "helpcenter", "support_center"]
+        case .contactUs:
+            return ["contact_us", "contactus", "support_email"]
+        case .socialMedia:
+            return []
+        }
     }
 }

@@ -14,9 +14,10 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
 
     // MARK: - Content Properties
 
-    public let partnerClubs: [PartnerClub]
     public let paymentOperators: [PaymentOperator]
     public let socialMediaPlatforms: [SocialPlatform]
+    public let socialLinks: [FooterSocialLink]
+    public let sponsors: [FooterSponsor]
     public let navigationLinks: [FooterLink]
     public let responsibleGamblingText: ResponsibleGamblingText
     public let copyrightText: String
@@ -32,13 +33,22 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
     // MARK: - Interaction
 
     public var onLinkTap: ((FooterLinkType) -> Void)?
+    public var onSponsorsUpdated: (([FooterSponsor]) -> Void)?
+    public var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)?
+    public func handleSponsorTap(_ sponsor: FooterSponsor) {
+        print("[MockExtendedListFooterViewModel] Sponsor tapped: \(sponsor.id) -> \(sponsor.url?.absoluteString ?? "nil")")
+    }
+    public func handleSocialLinkTap(_ link: FooterSocialLink) {
+        print("[MockExtendedListFooterViewModel] Social link tapped: \(link.id) -> \(link.url?.absoluteString ?? "nil")")
+    }
 
     // MARK: - Initialization
 
     public init(
-        partnerClubs: [PartnerClub] = PartnerClub.allCases,
         paymentOperators: [PaymentOperator] = PaymentOperator.allCases,
         socialMediaPlatforms: [SocialPlatform] = SocialPlatform.allCases,
+        sponsors: [FooterSponsor] = MockExtendedListFooterViewModel.defaultSponsors(),
+        socialLinks: [FooterSocialLink] = MockExtendedListFooterViewModel.defaultSocialLinks(),
         navigationLinks: [FooterLink] = [],
         responsibleGamblingText: ResponsibleGamblingText = ResponsibleGamblingText(
             warning: LocalizationProvider.string("gambling_can_be_addictive"),
@@ -51,9 +61,10 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
         socialMediaHeaderText: String = "Follow us",
         imageResolver: ExtendedListFooterImageResolver = DefaultExtendedListFooterImageResolver()
     ) {
-        self.partnerClubs = partnerClubs
         self.paymentOperators = paymentOperators
         self.socialMediaPlatforms = socialMediaPlatforms
+        self.sponsors = sponsors
+        self.socialLinks = socialLinks
         self.navigationLinks = navigationLinks.isEmpty ? Self.defaultNavigationLinks() : navigationLinks
         self.responsibleGamblingText = responsibleGamblingText
         self.copyrightText = copyrightText
@@ -62,6 +73,11 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
         self.partnershipHeaderText = partnershipHeaderText
         self.socialMediaHeaderText = socialMediaHeaderText
         self.imageResolver = imageResolver
+
+        DispatchQueue.main.async { [sponsors, socialLinks] in
+            self.onSponsorsUpdated?(sponsors)
+            self.onSocialLinksUpdated?(socialLinks)
+        }
     }
 
     // MARK: - Private Helpers
@@ -82,6 +98,64 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
     private static func defaultLicenseText() -> String {
         return "The operator of this website is Ngantat Sarl, a licensed company with registration number RCCM N° RC/DLN/2024/B/137 and with registered address at Makepe Douala Cour Supreme, Bâtiment Domino, Unit 33, Douala, Cameroon."
     }
+
+    public static func defaultSponsors() -> [FooterSponsor] {
+        return [
+            FooterSponsor(
+                id: "sponsor_1",
+                iconURL: URL(string: "https://placehold.co/200x80/111111/FFFFFF/png?text=Sponsor+1"),
+                url: URL(string: "https://example.com/sponsor1")
+            ),
+            FooterSponsor(
+                id: "sponsor_2",
+                iconURL: URL(string: "https://placehold.co/200x80/222222/FFFFFF/png?text=Sponsor+2"),
+                url: URL(string: "https://example.com/sponsor2")
+            ),
+            FooterSponsor(
+                id: "sponsor_3",
+                iconURL: URL(string: "https://placehold.co/200x80/333333/FFFFFF/png?text=Sponsor+3"),
+                url: URL(string: "https://example.com/sponsor3")
+            ),
+            FooterSponsor(
+                id: "sponsor_4",
+                iconURL: URL(string: "https://placehold.co/200x80/444444/FFFFFF/png?text=Sponsor+4"),
+                url: URL(string: "https://example.com/sponsor4")
+            ),
+            FooterSponsor(
+                id: "sponsor_5",
+                iconURL: URL(string: "https://placehold.co/200x80/555555/FFFFFF/png?text=Sponsor+5"),
+                url: URL(string: "https://example.com/sponsor5")
+            ),
+            FooterSponsor(
+                id: "sponsor_6",
+                iconURL: URL(string: "https://placehold.co/200x80/666666/FFFFFF/png?text=Sponsor+6"),
+                url: URL(string: "https://example.com/sponsor6")
+            )
+        ]
+    }
+
+    public static func defaultSocialLinks() -> [FooterSocialLink] {
+        return [
+            FooterSocialLink(
+                id: "social_x",
+                iconURL: URL(string: "https://placehold.co/80x80/000000/FFFFFF/png?text=X"),
+                url: URL(string: "https://twitter.com/example"),
+                target: "_blank"
+            ),
+            FooterSocialLink(
+                id: "social_fb",
+                iconURL: URL(string: "https://placehold.co/80x80/1877F2/FFFFFF/png?text=FB"),
+                url: URL(string: "https://facebook.com/example"),
+                target: "_blank"
+            ),
+            FooterSocialLink(
+                id: "social_ig",
+                iconURL: URL(string: "https://placehold.co/80x80/E4405F/FFFFFF/png?text=IG"),
+                url: URL(string: "https://instagram.com/example"),
+                target: "_blank"
+            )
+        ]
+    }
 }
 
 // MARK: - Factory Methods
@@ -96,9 +170,9 @@ extension MockExtendedListFooterViewModel {
     /// Minimal footer with reduced content for testing
     public static var minimalFooter: MockExtendedListFooterViewModel {
         return MockExtendedListFooterViewModel(
-            partnerClubs: [.interMiami, .bocaJuniors],
             paymentOperators: [.mtn],
             socialMediaPlatforms: [.facebook, .instagram],
+            sponsors: Array(defaultSponsors().prefix(2)),
             navigationLinks: [
                 FooterLink(title: "Terms", type: .termsAndConditions),
                 FooterLink(title: "Privacy", type: .privacyPolicy),
@@ -110,28 +184,29 @@ extension MockExtendedListFooterViewModel {
     /// Footer without navigation links for testing
     public static var noLinksFooter: MockExtendedListFooterViewModel {
         return MockExtendedListFooterViewModel(
+            sponsors: Array(defaultSponsors().prefix(3)),
             navigationLinks: []
         )
     }
 
-    /// Footer with 3 partner logos (tests dynamic grid with odd count)
+    /// Footer with 3 sponsor logos (tests dynamic grid with odd count)
     public static var threePartnersFooter: MockExtendedListFooterViewModel {
         return MockExtendedListFooterViewModel(
-            partnerClubs: [.interMiami, .bocaJuniors, .racingClub]
+            sponsors: Array(defaultSponsors().prefix(3))
         )
     }
 
-    /// Footer with 1 partner logo (tests single logo layout)
+    /// Footer with 1 sponsor logo (tests single logo layout)
     public static var singlePartnerFooter: MockExtendedListFooterViewModel {
         return MockExtendedListFooterViewModel(
-            partnerClubs: [.interMiami]
+            sponsors: Array(defaultSponsors().prefix(1))
         )
     }
 
-    /// Footer with 5 partner logos (tests 3 rows: 2+2+1)
+    /// Footer with 5 sponsor logos (tests 3 rows: 2+2+1)
     public static var fivePartnersFooter: MockExtendedListFooterViewModel {
         return MockExtendedListFooterViewModel(
-            partnerClubs: [.interMiami, .bocaJuniors, .racingClub, .atleticoNacional, .interMiami]
+            sponsors: Array(defaultSponsors().prefix(5))
         )
     }
 }

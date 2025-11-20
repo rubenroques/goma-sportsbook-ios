@@ -108,3 +108,33 @@ public struct ResponsibleGamblingText {
         self.advice = advice
     }
 }
+
+// MARK: - Footer Sponsor
+
+public struct FooterSponsor: Identifiable, Equatable, Hashable {
+    public let id: String
+    public let iconURL: URL?
+    public let url: URL?
+
+    public init(id: String, iconURL: URL?, url: URL?) {
+        self.id = id
+        self.iconURL = iconURL
+        self.url = url
+    }
+}
+
+// MARK: - Footer Social Link
+
+public struct FooterSocialLink: Identifiable, Equatable, Hashable {
+    public let id: String
+    public let iconURL: URL?
+    public let url: URL?
+    public let target: String?
+
+    public init(id: String, iconURL: URL?, url: URL?, target: String?) {
+        self.id = id
+        self.iconURL = iconURL
+        self.url = url
+        self.target = target
+    }
+}

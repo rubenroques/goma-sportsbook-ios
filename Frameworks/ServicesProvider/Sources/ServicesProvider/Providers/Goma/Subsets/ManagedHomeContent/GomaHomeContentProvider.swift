@@ -333,4 +333,22 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
+    func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError> {
+        return self.apiClient.footerLinks(language: language)
+            .map(GomaModelMapper.footerLinks(fromInternalFooterLinks:))
+            .eraseToAnyPublisher()
+    }
+
+    func getFooterSponsors(language: String?) -> AnyPublisher<FooterSponsors, ServiceProviderError> {
+        return self.apiClient.footerSponsors(language: language)
+            .map(GomaModelMapper.footerSponsors(fromInternalFooterSponsors:))
+            .eraseToAnyPublisher()
+    }
+
+    func getFooterSocialLinks(language: String?) -> AnyPublisher<FooterSocialLinks, ServiceProviderError> {
+        return self.apiClient.footerSocialLinks(language: language)
+            .map(GomaModelMapper.footerSocialLinks(fromInternalFooterSocialLinks:))
+            .eraseToAnyPublisher()
+    }
+
 }

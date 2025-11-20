@@ -10,7 +10,10 @@ import Combine
 
 public protocol SearchHeaderInfoViewModelProtocol: AnyObject {
     var searchTerm: String { get }
-    var category: String { get }
+    var categoryString: String { get }
+    var showResultsString: String { get }
+    var noResultsString: String { get }
+    var searchingString: String { get }
     var state: SearchState { get }
     var count: Int? { get }
     var statePublisher: AnyPublisher<SearchState, Never> { get }

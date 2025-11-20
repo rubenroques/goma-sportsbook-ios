@@ -131,10 +131,10 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
         // Create the SearchView's view model
-        self.searchComponentViewModel = MockSearchViewModel.default
+        self.searchComponentViewModel = SearchComponentViewModel(placeholder: localized("search_in_sportsbook"))
         
         // Create the SearchHeaderInfoView's view model
-        self.searchHeaderInfoViewModel = MockSearchHeaderInfoViewModel()
+        self.searchHeaderInfoViewModel = SearchHeaderInfoViewModel(searchTerm: "", categoryString: localized("in_sports"), showResultsString: localized("showing_results_for"), noResultsString: localized("unique_no_results_for"), searchingString: localized("searching_for"), state: .loading, count: nil)
         
         setupBindings()
         setupSearchComponentBindings()
@@ -334,7 +334,7 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         // Update the view model with new data
         searchHeaderInfoViewModel.updateSearch(
             term: searchText,
-            category: "Sports",
+            category: localized("in_sports"),
             state: state,
             count: count
         )

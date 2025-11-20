@@ -458,4 +458,16 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
         return gomaHomeContentProvider.getTopCompetitions()
     }
+
+    func getFooterLinks(language: String?) -> AnyPublisher<FooterLinks, ServiceProviderError> {
+        return gomaHomeContentProvider.getFooterLinks(language: language)
+    }
+
+    func getFooterSponsors(language: String?) -> AnyPublisher<FooterSponsors, ServiceProviderError> {
+        return gomaHomeContentProvider.getFooterSponsors(language: language)
+    }
+
+    func getFooterSocialLinks(language: String?) -> AnyPublisher<FooterSocialLinks, ServiceProviderError> {
+        return gomaHomeContentProvider.getFooterSocialLinks(language: language)
+    }
 }
