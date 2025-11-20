@@ -199,6 +199,8 @@ extension GomaHomeContentAPISchema: Endpoint {
              .boostedOdds, .topImageCards, .heroCards, .stories, .news,
              .proChoices, .topCompetitions:
             return .cms
+        default:
+            return .none
         }
     }
 }
