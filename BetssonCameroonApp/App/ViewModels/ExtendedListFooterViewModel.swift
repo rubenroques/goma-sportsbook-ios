@@ -18,6 +18,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
 
     let paymentOperators: [PaymentOperator]
     let socialMediaPlatforms: [SocialPlatform]
+    let partnerClubs: [PartnerClub]
     private(set) var navigationLinks: [FooterLink]
     private(set) var sponsors: [FooterSponsor] = []
     private(set) var socialLinks: [FooterSocialLink] = []
@@ -65,7 +66,10 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         // Cameroon-specific content
         self.paymentOperators = PaymentOperator.allCases
         self.socialMediaPlatforms = SocialPlatform.allCases
+        self.partnerClubs = PartnerClub.allCases
         self.navigationLinks = Self.cameroonNavigationLinks()
+        
+        // Sponsors will be populated from CMS or shown as defaults via partnerClubs in the view
 
         self.responsibleGamblingText = ResponsibleGamblingText(
             warning: "Gambling can be addictive.",
@@ -201,19 +205,19 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private func applyCMSFooterSponsors() {
-        guard !fetchedFooterSponsors.isEmpty else { return }
-
-        sponsors = fetchedFooterSponsors.map { sponsor in
-            let iconURL = sponsor.iconURL
-            let tapURL = URL(string: sponsor.url)
-            return FooterSponsor(
-                id: sponsor.id,
-                iconURL: iconURL,
-                url: tapURL
-            )
+        if !fetchedFooterSponsors.isEmpty {
+            sponsors = fetchedFooterSponsors.map { sponsor in
+                let iconURL = sponsor.iconURL
+                let tapURL = URL(string: sponsor.url)
+                return FooterSponsor(
+                    id: sponsor.id,
+                    iconURL: iconURL,
+                    url: tapURL
+                )
+            }
+            onSponsorsUpdated?(sponsors)
         }
-
-        onSponsorsUpdated?(sponsors)
+        // If CMS sponsors are empty, the view will show default sponsors from partnerClubs
     }
 
     private func applyCMSSocialLinks() {

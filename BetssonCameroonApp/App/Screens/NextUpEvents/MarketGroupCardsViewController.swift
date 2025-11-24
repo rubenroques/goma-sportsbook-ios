@@ -75,12 +75,32 @@ class MarketGroupCardsViewController: UIViewController {
 
         // Dynamically update tableFooterView height based on footerInnerView
         // (BetssonFrance pattern - required because tableFooterView uses frame-based layout)
-        if let footerView = tableView.tableFooterView {
-            let size = footerInnerView.frame.size
-            if footerView.frame.size.height != size.height {
-                footerView.frame.size.height = size.height
-                tableView.tableFooterView = footerView  // Reassign to trigger update
-            }
+        guard let footerView = tableView.tableFooterView else { return }
+        
+        // Update width to match tableView width
+        let tableViewWidth = tableView.bounds.width
+        if footerView.frame.width != tableViewWidth {
+            footerView.frame.size.width = tableViewWidth
+        }
+        
+        // Force layout pass to get accurate size measurements
+        footerInnerView.setNeedsLayout()
+        footerInnerView.layoutIfNeeded()
+        
+        // Use systemLayoutSizeFitting for accurate height calculation
+        let targetSize = CGSize(width: tableViewWidth, height: UIView.layoutFittingCompressedSize.height)
+        let calculatedSize = footerInnerView.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        
+        let calculatedHeight = calculatedSize.height
+        
+        // Only update if height has changed
+        if abs(footerView.frame.height - calculatedHeight) > 1.0 {
+            footerView.frame.size.height = calculatedHeight
+            tableView.tableFooterView = footerView  // Reassign to trigger update
         }
     }
 
@@ -117,7 +137,7 @@ class MarketGroupCardsViewController: UIViewController {
         footerInnerView.backgroundColor = .clear
 
         // Create table footer view with arbitrary height (will be adjusted by Auto Layout)
-        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 800))
+        let tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 800))
         tableFooterView.backgroundColor = .clear
 
         // Set as table footer
@@ -139,6 +159,7 @@ class MarketGroupCardsViewController: UIViewController {
         // Build constraints list
         var constraints: [NSLayoutConstraint] = [
             // Pin footerInnerView to tableFooterView edges
+            footerInnerView.topAnchor.constraint(equalTo: tableFooterView.topAnchor),
             footerInnerView.rightAnchor.constraint(equalTo: tableFooterView.rightAnchor),
             footerInnerView.leftAnchor.constraint(equalTo: tableFooterView.leftAnchor),
             footerInnerView.bottomAnchor.constraint(equalTo: tableFooterView.bottomAnchor),
