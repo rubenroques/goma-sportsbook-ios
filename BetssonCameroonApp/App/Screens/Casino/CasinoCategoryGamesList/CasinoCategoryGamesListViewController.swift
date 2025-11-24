@@ -260,7 +260,8 @@ extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {
             let buttonData = SeeMoreButtonData(
                 id: "load-more-\(viewModel.categoryTitle)",
                 title: localized("casino_load_more_games"),
-                remainingCount: nil
+                remainingCount: nil,
+                style: .bordered
             )
             
             cell.configure(

@@ -213,7 +213,7 @@ class SportsBetslipViewController: UIViewController {
         // Add only button bar and odds boost header to stack
         topSectionStackView.addArrangedSubview(oddsBoostHeaderContainer)
         topSectionStackView.addArrangedSubview(buttonBarView)
-        
+                
         // Add odds boost header to its container
         oddsBoostHeaderContainer.addSubview(betslipOddsBoostHeaderView)
 
@@ -257,17 +257,23 @@ class SportsBetslipViewController: UIViewController {
         topSectionStackView.layoutIfNeeded()
 
         // Calculate compressed size with proper width constraint
-        let fittingSize = topSectionStackView.systemLayoutSizeFitting(
+        var fittingSize = topSectionStackView.systemLayoutSizeFitting(
             CGSize(width: headerWidth, height: UIView.layoutFittingCompressedSize.height),
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
+        
+        // Make sure the height is greater than 0
+        if fittingSize.height == 0 {
+            fittingSize.height = 50
+        }
 
         // Update frame with calculated height
         topSectionStackView.frame.size = CGSize(width: headerWidth, height: fittingSize.height)
-
+        
         // Reassign to trigger table view layout update
         ticketsTableView.tableHeaderView = topSectionStackView
+        
     }
 
     private func setupConstraints() {

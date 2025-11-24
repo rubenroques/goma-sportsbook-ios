@@ -1,6 +1,14 @@
 import Combine
 import UIKit
 
+// MARK: - Button Style Enum
+
+/// Style options for SeeMoreButton
+public enum SeeMoreButtonStyle {
+    case solidBackground
+    case bordered
+}
+
 // MARK: - Data Models
 
 /// Data model for SeeMoreButton component configuration
@@ -14,10 +22,14 @@ public struct SeeMoreButtonData: Equatable, Hashable {
     /// Optional count to display (e.g., "Load 15 more games")
     public let remainingCount: Int?
     
-    public init(id: String, title: String, remainingCount: Int? = nil) {
+    /// Button style (defaults to solidBackground)
+    public let style: SeeMoreButtonStyle
+    
+    public init(id: String, title: String, remainingCount: Int? = nil, style: SeeMoreButtonStyle = .solidBackground) {
         self.id = id
         self.title = title
         self.remainingCount = remainingCount
+        self.style = style
     }
 }
 

@@ -63,7 +63,14 @@ extension TransactionItemViewModel {
             }
 
         case .wagering(let wageringType):
-            category = transactionHistoryItem.description
+            category = transactionHistoryItem.gameId ?? transactionHistoryItem.description
+            
+            if category == "OddsMatrix2" {
+                category = localized("sports")
+            }
+            else {
+                category = "\(localized("casino")) / \(transactionHistoryItem.gameName ?? "")"
+            }
 
             // Wagering: Show status badge based on transType (matches web: wageringTransactionStatuses)
             switch wageringType {

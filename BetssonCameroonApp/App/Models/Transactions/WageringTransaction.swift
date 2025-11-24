@@ -28,6 +28,7 @@ struct WageringTransaction: Hashable, Identifiable {
     let transName: String?
     let coreTransId: String?
     let currencyCode: String
+    let gameModel: GameModel?
 
     // Computed properties for normalized display
     var normalizedStatus: WageringTransactionStatus {
@@ -54,6 +55,9 @@ struct WageringTransaction: Hashable, Identifiable {
     }
 }
 
+struct GameModel: Hashable {
+    let name: String
+}
 enum WageringTransactionType: Hashable {
     case bet
     case win

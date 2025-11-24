@@ -105,6 +105,11 @@ extension EveryMatrix {
         let transName: String?  // Made optional
         let coreTransId: String?  // Made optional
         let currencyCode: String
+        let gameModel: GameModel?
+    }
+    
+    struct GameModel: Codable {
+        var name: String
     }
 
     // MARK: - Shared Models

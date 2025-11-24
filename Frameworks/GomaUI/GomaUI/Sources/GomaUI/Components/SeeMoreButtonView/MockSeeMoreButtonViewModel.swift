@@ -54,7 +54,8 @@ final public class MockSeeMoreButtonViewModel: SeeMoreButtonViewModelProtocol {
         buttonData = SeeMoreButtonData(
             id: buttonData.id,
             title: buttonData.title,
-            remainingCount: count
+            remainingCount: count,
+            style: buttonData.style
         )
         publishNewState()
     }

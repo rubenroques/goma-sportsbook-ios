@@ -26,7 +26,7 @@ public final class BetslipFloatingThinView: UIView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "betslip_icon") ?? UIImage(systemName: "ticket")
-        imageView.tintColor = StyleProvider.Color.highlightSecondaryContrast
+        imageView.tintColor = StyleProvider.Color.allWhite
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -36,7 +36,7 @@ public final class BetslipFloatingThinView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = LocalizationProvider.string("betslip") // TODO: localization
         label.font = StyleProvider.fontWith(type: .bold, size: 10)
-        label.textColor = StyleProvider.Color.highlightSecondaryContrast
+        label.textColor = StyleProvider.Color.allWhite
         label.textAlignment = .center
         return label
     }()
