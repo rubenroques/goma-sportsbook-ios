@@ -244,7 +244,11 @@ extension SportRadarModels {
                     let container = try completeContainer.nestedContainer(keyedBy: Score.CompetitorCodingKeys.self, forKey: key)
                     return try Score(from: container, key: key)
                 }
-                self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+//                self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+                self.scores = scoresArray.reduce(into: [:]) { dict, score in
+                    
+                    dict[score.key] = score   
+                }
                 //
                 
                 //
