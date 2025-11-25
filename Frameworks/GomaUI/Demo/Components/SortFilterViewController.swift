@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import GomaUI
+import SharedModels
 
 class SortFilterViewController: UIViewController {
     private let sortFilterView: SortFilterView
@@ -14,7 +15,7 @@ class SortFilterViewController: UIViewController {
                 SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
                 SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
             ],
-            selectedId: "1"
+            selectedFilter: .singleLeague(id: "1")
         )
         self.sortFilterView = SortFilterView(viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)

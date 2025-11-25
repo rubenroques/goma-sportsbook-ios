@@ -19,7 +19,7 @@ class ScoreStylesViewController: UIViewController {
 
     // MARK: - Setup
     private func setupViews() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = .backgroundTestColor
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
     }
@@ -388,7 +388,7 @@ class ScoreStylesViewController: UIViewController {
 
     private func addExplanationLabel(_ text: String) {
         let label = createDescriptionLabel(text)
-        label.font = StyleProvider.fontWith(type: .italic, size: 14)
+        label.font = StyleProvider.fontWith(type: .light, size: 14)
         label.textColor = StyleProvider.Color.textSecondary
         stackView.addArrangedSubview(label)
         addSpacer(height: 12)

@@ -435,8 +435,6 @@ final public class OutcomeItemView: UIView {
 
     // MARK: - Gesture Handlers
     @objc private func handleTap() {
-        viewModel.toggleSelection()
-        
         let wasSelected = viewModel.toggleSelection()
         let outcomeId = viewModel.outcomeDataSubject.value.id
         

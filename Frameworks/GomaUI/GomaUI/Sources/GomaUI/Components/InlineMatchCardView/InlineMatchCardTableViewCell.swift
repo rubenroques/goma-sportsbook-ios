@@ -167,6 +167,10 @@ private class TableViewController: UIViewController {
         .preLiveFootball,
         .liveTennis,
         .withSelectedOutcome,
+        .liveFootball,
+        .preLiveFootball,
+        .liveTennis,
+        .withSelectedOutcome,
         .liveFootball
     ]
 

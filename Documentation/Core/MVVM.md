@@ -1,7 +1,9 @@
-# MVVM Architecture Guide for iOS Development (UIKit)
+# MVVM-C Architecture Guide for iOS Development (UIKit)
 
 ## Core Principle
-**"Views are dumb, ViewModels are smart, ViewControllers are coordinators"**
+**"Views are dumb, ViewModels are smart, ViewControllers bind them, Coordinators navigate"**
+
+> **Important**: This guide follows **MVVM-C** (Model-View-ViewModel-Coordinator). The Coordinator pattern extracts navigation responsibility from ViewControllers, making them lighter and more testable.
 
 ## The Golden Rules
 
@@ -139,30 +141,60 @@ class PriceTagViewModel {
 ```
 
 ### ViewController
-- Creates and owns ViewModels
-- Handles navigation
+- **Receives** ViewModel via dependency injection (does NOT create it)
 - Binds Views to ViewModels
-- Coordinates between child ViewControllers
-- Creates ViewModels for other ViewControllers when navigating
+- Forwards navigation intents to Coordinator via callbacks/delegates
+- **Does NOT** handle navigation directly
+- **Does NOT** create ViewModels for other ViewControllers
 
 ```swift
-// ✅ DO: ViewController as coordinator
+// ✅ DO: ViewController receives ViewModel, delegates navigation
 class ProductViewController: UIViewController {
-    private let viewModel = ProductViewModel()
-    
+    private let viewModel: ProductViewModelProtocol
+    private var cancellables = Set<AnyCancellable>()
+
+    // Navigation callbacks - owned by Coordinator
+    var onNavigateToDetails: ((Product) -> Void)?
+    var onNavigateToCart: (() -> Void)?
+
+    // Dependency injection - Coordinator creates and injects ViewModel
+    init(viewModel: ProductViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
+        super.viewDidLoad()
         setupBindings()
         setupChildViews()
     }
-    
+
+    private func setupBindings() {
+        // Bind ViewModel navigation signals to Coordinator callbacks
+        viewModel.detailsRequested
+            .sink { [weak self] product in
+                self?.onNavigateToDetails?(product)
+            }
+            .store(in: &cancellables)
+    }
+
     private func setupChildViews() {
         // Configure views with child ViewModels from the main ViewModel
         priceTagView.configure(with: viewModel.priceTagViewModel)
         reviewsView.configure(with: viewModel.reviewsViewModel)
     }
-    
+}
+
+// ❌ DON'T: ViewController creating ViewModels or handling navigation
+class ProductViewController: UIViewController {
+    private let viewModel = ProductViewModel()  // Wrong! Should be injected
+
     private func navigateToDetails() {
-        // ViewController creates ViewModel for next screen
+        // Wrong! Navigation belongs in Coordinator
         let detailsVM = ProductDetailsViewModel(product: viewModel.selectedProduct)
         let detailsVC = ProductDetailsViewController(viewModel: detailsVM)
         navigationController?.pushViewController(detailsVC, animated: true)
@@ -259,92 +291,73 @@ class OrderCellViewModel {
 
 ## Horizontal Pattern: Navigation Between ViewControllers
 
-### Without Coordinators
+> **Note**: In MVVM-C, navigation is **always** handled by Coordinators. ViewControllers should never directly push/present other ViewControllers.
+
+### Coordinator Protocol Definition
+
 ```swift
-class ProductListViewController: UIViewController {
-    private let viewModel = ProductListViewModel()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // ViewModel tells VC when navigation is needed
-        viewModel.onProductSelected = { [weak self] product in
-            self?.showProductDetails(for: product)
-        }
-        
-        viewModel.onFilterRequested = { [weak self] in
-            self?.showFilterOptions()
-        }
-    }
-    
-    private func showProductDetails(for product: Product) {
-        // ViewController creates ViewModel for next screen
-        let detailsViewModel = ProductDetailsViewModel(product: product)
-        
-        // Set up callback for results
-        detailsViewModel.onPurchaseComplete = { [weak self] order in
-            self?.viewModel.handlePurchase(order)
-        }
-        
-        let detailsVC = ProductDetailsViewController(viewModel: detailsViewModel)
-        navigationController?.pushViewController(detailsVC, animated: true)
-    }
-    
-    private func showFilterOptions() {
-        // Create ViewModel for modal
-        let filterViewModel = FilterViewModel(currentFilters: viewModel.activeFilters)
-        
-        // Set up callback
-        filterViewModel.onFiltersApplied = { [weak self] filters in
-            self?.viewModel.applyFilters(filters)
-            self?.dismiss(animated: true)
-        }
-        
-        let filterVC = FilterViewController(viewModel: filterViewModel)
-        let navController = UINavigationController(rootViewController: filterVC)
-        present(navController, animated: true)
+// Standard Coordinator protocol
+protocol Coordinator: AnyObject {
+    var navigationController: UINavigationController { get set }
+    var childCoordinators: [Coordinator] { get set }
+    func start()
+}
+
+extension Coordinator {
+    /// Remove a child coordinator when its flow completes
+    func childDidFinish(_ child: Coordinator) {
+        childCoordinators.removeAll { $0 === child }
     }
 }
 ```
 
-### With Coordinators
+### The Coordinator Pattern (Required in MVVM-C)
+
 ```swift
-// Coordinator handles all navigation
+// Coordinator handles all navigation and ViewModel creation
 class ProductFlowCoordinator: Coordinator {
     var navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
-    
+    private var cancellables = Set<AnyCancellable>()
+
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-    
+
     func start() {
         let listViewModel = ProductListViewModel()
         let listVC = ProductListViewController(viewModel: listViewModel)
-        
-        // Coordinator owns navigation callbacks
-        listVC.onProductSelected = { [weak self] product in
-            self?.showProductDetails(product)
-        }
-        
-        listVC.onFilterRequested = { [weak self] in
-            self?.showFilterOptions()
-        }
-        
+
+        // Preferred: Coordinator subscribes directly to ViewModel signals
+        listViewModel.productSelectionRequested
+            .sink { [weak self] product in
+                self?.showProductDetails(product)
+            }
+            .store(in: &cancellables)
+
+        listViewModel.filterRequested
+            .sink { [weak self] in
+                self?.showFilterOptions()
+            }
+            .store(in: &cancellables)
+
         navigationController.pushViewController(listVC, animated: false)
     }
-    
+
     private func showProductDetails(_ product: Product) {
         let detailsViewModel = ProductDetailsViewModel(product: product)
         let detailsVC = ProductDetailsViewController(viewModel: detailsViewModel)
-        
-        detailsVC.onPurchaseComplete = { [weak self] order in
-            self?.handlePurchaseComplete(order)
-        }
-        
+
+        // Subscribe to ViewModel completion signals
+        detailsViewModel.purchaseCompleted
+            .sink { [weak self] order in
+                self?.handlePurchaseComplete(order)
+            }
+            .store(in: &cancellables)
+
         navigationController.pushViewController(detailsVC, animated: true)
     }
-    
+
     private func showFilterOptions() {
         let filterCoordinator = FilterCoordinator(
             presentingController: navigationController,
@@ -352,30 +365,104 @@ class ProductFlowCoordinator: Coordinator {
                 self?.applyFilters(filters)
             }
         )
-        
+
         childCoordinators.append(filterCoordinator)
+        filterCoordinator.parentCoordinator = self
         filterCoordinator.start()
+    }
+
+    private func handlePurchaseComplete(_ order: Order) {
+        // Handle purchase completion
+    }
+
+    private func applyFilters(_ filters: [Filter]) {
+        // Apply filters
     }
 }
 
-// ViewControllers become even simpler
+// ViewModel exposes navigation intents as Combine publishers
+class ProductListViewModel {
+    // Navigation signals - Coordinator subscribes to these
+    let productSelectionRequested = PassthroughSubject<Product, Never>()
+    let filterRequested = PassthroughSubject<Void, Never>()
+
+    @Published var products: [Product] = []
+
+    func selectProduct(_ product: Product) {
+        // Business logic first
+        trackProductView(product)
+        // Then signal navigation intent
+        productSelectionRequested.send(product)
+    }
+
+    func requestFilter() {
+        filterRequested.send()
+    }
+}
+
+// ViewController is thin - just binds UI to ViewModel
 class ProductListViewController: UIViewController {
     private let viewModel: ProductListViewModel
-    
-    // Navigation callbacks owned by Coordinator
-    var onProductSelected: ((Product) -> Void)?
-    var onFilterRequested: (() -> Void)?
-    
+    private var cancellables = Set<AnyCancellable>()
+
     init(viewModel: ProductListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupBindings()
+    }
+
+    private func setupBindings() {
+        // Bind UI state from ViewModel
+        viewModel.$products
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] products in
+                self?.updateProductList(products)
+            }
+            .store(in: &cancellables)
+    }
+
     @objc private func productTapped(_ product: Product) {
-        onProductSelected?(product)  // Just notify coordinator
+        // ViewController just tells ViewModel about user action
+        // ViewModel decides what to do (business logic + navigation signal)
+        viewModel.selectProduct(product)
     }
 }
 ```
+
+### Alternative: Callback Pattern (Simpler Cases)
+
+For simpler flows, you can use callbacks on the ViewController instead of Combine:
+
+```swift
+class SimpleCoordinator: Coordinator {
+    func start() {
+        let viewModel = SimpleViewModel()
+        let viewController = SimpleViewController(viewModel: viewModel)
+
+        // Coordinator sets callbacks on ViewController
+        viewController.onItemSelected = { [weak self] item in
+            self?.showItemDetails(item)
+        }
+
+        navigationController.pushViewController(viewController, animated: false)
+    }
+}
+
+class SimpleViewController: UIViewController {
+    // Navigation callbacks - set by Coordinator
+    var onItemSelected: ((Item) -> Void)?
+}
+```
+
+> **Recommendation**: Prefer Combine publishers on ViewModel for complex flows, callbacks for simple cases.
 
 ## Complex MVVM Hierarchies with Coordinators
 

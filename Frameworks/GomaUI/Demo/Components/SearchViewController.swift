@@ -55,7 +55,7 @@ class SearchViewController: UIViewController {
         let descriptionLabel = UILabel()
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = StyleProvider.fontWith(type: .regular, size: 16)
-        descriptionLabel.textColor = StyleProvider.Color.textColor
+        descriptionLabel.textColor = StyleProvider.Color.textPrimary
         descriptionLabel.text = "SearchView with leading icon, placeholder, and clear button. Shows default placeholder state and typing state."
 
         let search = SearchView(viewModel: viewModel)
@@ -64,7 +64,7 @@ class SearchViewController: UIViewController {
         let sampleHint = UILabel()
         sampleHint.numberOfLines = 0
         sampleHint.font = StyleProvider.fontWith(type: .regular, size: 14)
-        sampleHint.textColor = StyleProvider.Color.secondaryColor
+        sampleHint.textColor = StyleProvider.Color.textSecondary
         sampleHint.text = "Type ‘Liverpool’ to see the clear button appear."
 
         stackView.addArrangedSubview(descriptionLabel)

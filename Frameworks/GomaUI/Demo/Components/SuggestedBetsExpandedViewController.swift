@@ -6,7 +6,7 @@ final class SuggestedBetsExpandedViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = .backgroundTestColor
         title = "Suggested Bets"
 
         let vm = MockSuggestedBetsExpandedViewModel.demo

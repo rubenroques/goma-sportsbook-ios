@@ -1,5 +1,6 @@
 import UIKit
 import GomaUI
+import SharedModels
 
 // MARK: - Component Registry
 struct ComponentRegistry {
@@ -172,8 +173,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockBetslipOddsBoostHeaderViewModel.activeMock(
                     selectionCount: 1,
-                    totalEligibleCount: 3,
-                    nextTierPercentage: "3%"
+                    totalEligibleCount: 3
                 )
                 let headerView = BetslipOddsBoostHeaderView(viewModel: viewModel)
                 return headerView
@@ -430,7 +430,7 @@ struct ComponentRegistry {
                         SportFilter(id: "3", title: "Tennis", icon: "sport_icon"),
                         SportFilter(id: "4", title: "Voleyball", icon: "sport_icon")
                     ],
-                    selectedId: "1"
+                    selectedSport: .singleSport(id: "1")
                 )
                 let filterView = SportGamesFilterView(viewModel: viewModel)
                 filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
@@ -450,7 +450,7 @@ struct ComponentRegistry {
                         SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
                         SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
                     ],
-                    selectedId: "1"
+                    selectedFilter: .singleLeague(id: "1")
                 )
                 let filterView = SortFilterView(viewModel: viewModel)
                 filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
@@ -721,7 +721,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockPromotionCardViewModel.defaultMock
                 let cardView = PromotionCardView(viewModel: viewModel)
-                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.backgroundColor = .backgroundTestColor
                 cardView.layer.cornerRadius = 8
                 return cardView
             }
@@ -733,7 +733,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockBonusCardViewModel.defaultMock
                 let cardView = BonusCardView(viewModel: viewModel)
-                cardView.backgroundColor = StyleProvider.Color.backgroundColor
+                cardView.backgroundColor = .backgroundTestColor
                 cardView.layer.cornerRadius = 8
                 return cardView
             }
@@ -833,7 +833,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockActionButtonBlockViewModel.defaultMock
                 let buttonView = ActionButtonBlockView(viewModel: viewModel)
-                buttonView.backgroundColor = StyleProvider.Color.backgroundColor
+                buttonView.backgroundColor = .backgroundTestColor
                 buttonView.layer.cornerRadius = 8
                 return buttonView
             }
@@ -845,7 +845,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockBulletItemBlockViewModel.defaultMock
                 let bulletView = BulletItemBlockView(viewModel: viewModel)
-                bulletView.backgroundColor = StyleProvider.Color.backgroundColor
+                bulletView.backgroundColor = .backgroundTestColor
                 bulletView.layer.cornerRadius = 8
                 return bulletView
             }
@@ -868,7 +868,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockStackViewBlockViewModel.defaultMock
                 let stackView = StackViewBlockView(viewModel: viewModel)
-                stackView.backgroundColor = StyleProvider.Color.backgroundColor
+                stackView.backgroundColor = .backgroundTestColor
                 stackView.layer.cornerRadius = 8
                 return stackView
             }
@@ -880,7 +880,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockTitleBlockViewModel.defaultMock
                 let titleView = TitleBlockView(viewModel: viewModel)
-                titleView.backgroundColor = StyleProvider.Color.backgroundColor
+                titleView.backgroundColor = .backgroundTestColor
                 titleView.layer.cornerRadius = 8
                 return titleView
             }
@@ -892,7 +892,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockDescriptionBlockViewModel.defaultMock
                 let descriptionView = DescriptionBlockView(viewModel: viewModel)
-                descriptionView.backgroundColor = StyleProvider.Color.backgroundColor
+                descriptionView.backgroundColor = .backgroundTestColor
                 descriptionView.layer.cornerRadius = 8
                 return descriptionView
             }
@@ -904,7 +904,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockImageBlockViewModel.defaultMock
                 let imageView = ImageBlockView(viewModel: viewModel)
-                imageView.backgroundColor = StyleProvider.Color.backgroundColor
+                imageView.backgroundColor = .backgroundTestColor
                 imageView.layer.cornerRadius = 8
                 return imageView
             }
@@ -916,7 +916,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockImageSectionViewModel.defaultMock
                 let imageView = ImageSectionView(viewModel: viewModel)
-                imageView.backgroundColor = StyleProvider.Color.backgroundColor
+                imageView.backgroundColor = .backgroundTestColor
                 imageView.layer.cornerRadius = 8
                 return imageView
             }
@@ -928,7 +928,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockListBlockViewModel.defaultMock
                 let listView = ListBlockView(viewModel: viewModel)
-                listView.backgroundColor = StyleProvider.Color.backgroundColor
+                listView.backgroundColor = .backgroundTestColor
                 listView.layer.cornerRadius = 8
                 return listView
             }
@@ -940,7 +940,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockVideoBlockViewModel.defaultMock
                 let videoView = VideoBlockView(viewModel: viewModel)
-                videoView.backgroundColor = StyleProvider.Color.backgroundColor
+                videoView.backgroundColor = .backgroundTestColor
                 videoView.layer.cornerRadius = 8
                 return videoView
             }
@@ -952,7 +952,7 @@ struct ComponentRegistry {
             previewFactory: {
                 let viewModel = MockVideoSectionViewModel.defaultMock
                 let videoView = VideoSectionView(viewModel: viewModel)
-                videoView.backgroundColor = StyleProvider.Color.backgroundColor
+                videoView.backgroundColor = .backgroundTestColor
                 videoView.layer.cornerRadius = 8
                 return videoView
             }

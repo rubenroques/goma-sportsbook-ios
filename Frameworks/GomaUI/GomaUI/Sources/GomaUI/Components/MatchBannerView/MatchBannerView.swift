@@ -317,7 +317,7 @@ extension MatchBannerView {
         matchBanner.configure(with: MockMatchBannerViewModel.preliveMatch)
         matchBanner.translatesAutoresizingMaskIntoConstraints = false
 
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = UIColor.backgroundTestColor
         vc.view.addSubview(matchBanner)
 
         NSLayoutConstraint.activate([
@@ -339,7 +339,7 @@ extension MatchBannerView {
         matchBanner.configure(with: MockMatchBannerViewModel.liveMatch)
         matchBanner.translatesAutoresizingMaskIntoConstraints = false
 
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = UIColor.backgroundTestColor
         vc.view.addSubview(matchBanner)
 
         NSLayoutConstraint.activate([
@@ -361,7 +361,7 @@ extension MatchBannerView {
         matchBanner.configure(with: MockMatchBannerViewModel.interactiveMatch)
         matchBanner.translatesAutoresizingMaskIntoConstraints = false
 
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = UIColor.backgroundTestColor
         vc.view.addSubview(matchBanner)
 
         NSLayoutConstraint.activate([
@@ -383,7 +383,7 @@ extension MatchBannerView {
         matchBanner.configure(with: MockMatchBannerViewModel.emptyState)
         matchBanner.translatesAutoresizingMaskIntoConstraints = false
 
-        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.backgroundColor = UIColor.backgroundTestColor
         vc.view.addSubview(matchBanner)
 
         NSLayoutConstraint.activate([

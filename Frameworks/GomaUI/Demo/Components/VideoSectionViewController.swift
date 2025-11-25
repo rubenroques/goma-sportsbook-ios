@@ -26,7 +26,7 @@ class VideoSectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = .backgroundTestColor
     }
     
     private func setupView() {

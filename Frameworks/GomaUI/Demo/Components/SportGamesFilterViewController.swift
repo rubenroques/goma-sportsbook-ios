@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import GomaUI
+import SharedModels
 
 class SportGamesFilterViewController: UIViewController {
     private let sportGamesFilterView: SportGamesFilterView
@@ -16,7 +17,7 @@ class SportGamesFilterViewController: UIViewController {
                 SportFilter(id: "3", title: "Tennis", icon: "sport_icon"),
                 SportFilter(id: "4", title: "Voleyball", icon: "sport_icon")
             ],
-            selectedId: "1"
+            selectedSport: .singleSport(id: "1")
         )
         self.sportGamesFilterView = SportGamesFilterView(viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)

@@ -1,5 +1,6 @@
 import UIKit
 import GomaUI
+import SharedModels
 
 // MARK: - Component Model
 struct UIComponent {
@@ -477,7 +478,7 @@ class ComponentsTableViewController: UITableViewController {
                         SportFilter(id: "3", title: "Tennis", icon: "sport_icon"),
                         SportFilter(id: "4", title: "Voleyball", icon: "sport_icon")
                     ],
-                    selectedId: "1"
+                    selectedSport: .singleSport(id: "1")
                 )
                 let filterView = SportGamesFilterView(viewModel: viewModel)
                 filterView.backgroundColor = StyleProvider.Color.backgroundPrimary
@@ -497,7 +498,7 @@ class ComponentsTableViewController: UITableViewController {
                         SortOption(id: "2", icon: "clock.fill", title: "Upcoming", count: 15),
                         SortOption(id: "3", icon: "heart.fill", title: "Favourites", count: 0)
                     ],
-                    selectedId: "1"
+                    selectedFilter: .singleLeague(id: "1")
                 )
                 let filterView = SortFilterView(viewModel: viewModel)
                 filterView.backgroundColor = StyleProvider.Color.backgroundPrimary

@@ -61,6 +61,27 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         marketStateSubject.send(updatedState)
     }
 
+    public func setOutcomeDisabled(type: OutcomeType, disabled: Bool) {
+        let currentState = marketStateSubject.value
+        guard let currentOutcome = getOutcome(from: currentState, type: type) else { return }
+
+        let updatedOutcome = MarketOutcomeData(
+            id: currentOutcome.id,
+            bettingOfferId: currentOutcome.bettingOfferId,
+            title: currentOutcome.title,
+            completeName: currentOutcome.completeName,
+            value: currentOutcome.value,
+            oddsChangeDirection: currentOutcome.oddsChangeDirection,
+            isSelected: currentOutcome.isSelected,
+            isDisabled: disabled,
+            previousValue: currentOutcome.previousValue,
+            changeTimestamp: currentOutcome.changeTimestamp
+        )
+
+        let updatedState = updateOutcome(in: currentState, type: type, outcome: updatedOutcome)
+        marketStateSubject.send(updatedState)
+    }
+
     // MARK: - Enhanced Odds Update (Primary Method)
     public func updateOddsValue(type: OutcomeType, newValue: String) {
         let currentState = marketStateSubject.value

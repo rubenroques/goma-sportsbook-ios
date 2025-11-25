@@ -62,13 +62,6 @@ class PromotionItemViewController: UIViewController {
     }
     
     private func handlePromotionSelection(_ selectedView: PromotionItemView, title: String) {
-        // Reset all items to unselected
-        for view in promotionItemViews {
-            if let mockViewModel = view.viewModel as? MockPromotionItemViewModel {
-                mockViewModel.updateTitle(mockViewModel.titlePublisher.value)
-            }
-        }
-        
         // Show selection feedback
         let alert = UIAlertController(title: "Selection", message: "Selected: \(title)", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))

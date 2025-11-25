@@ -38,7 +38,7 @@ class ActionButtonBlockViewController: UIViewController {
     }
     
     private func setupWithTheme() {
-        view.backgroundColor = StyleProvider.Color.backgroundColor
+        view.backgroundColor = .backgroundTestColor
     }
 }
 

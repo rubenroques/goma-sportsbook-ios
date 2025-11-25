@@ -4,12 +4,10 @@
 //
 //  Created by André on 17/11/2025.
 //
-//  NOTE: This is an internal mock implementation for use within the GomaUI library only.
-//  For production use, create your own implementation of PendingWithdrawViewModelProtocol.
 
 import Combine
 
-internal final class MockPendingWithdrawViewModel: PendingWithdrawViewModelProtocol {
+public final class MockPendingWithdrawViewModel: PendingWithdrawViewModelProtocol {
     private let subject: CurrentValueSubject<PendingWithdrawViewDisplayState, Never>
     
     public var onCopyRequested: ((String) -> Void)?

@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 import GomaUI
+import SharedModels
 
 class CombinedFiltersDemoViewController: UIViewController {
     
@@ -227,37 +228,37 @@ class CombinedFiltersDemoViewController: UIViewController {
     private func resetFilters() {
         // Reset sports filter
         if let sportViewModel = viewModel.dynamicViewModels["sportsFilter"] as? SportGamesFilterViewModelProtocol {
-            sportViewModel.selectedId.send(viewModel.generalFilterSelection.sportId)
+            sportViewModel.selectedSport.send(.singleSport(id: viewModel.generalFilterSelection.sportId))
         }
-        
+
         // Reset time slider
         if let timeViewModel = viewModel.dynamicViewModels["timeFilter"] as? TimeSliderViewModelProtocol {
             let selectedIndex: Float
-            
+
             if let index = timeViewModel.timeOptions.firstIndex(where: { $0.value == viewModel.generalFilterSelection.timeValue }) {
                 selectedIndex = Float(index)
             } else {
                 selectedIndex = 0.0
             }
-            
+
             timeViewModel.selectedTimeValue.send(selectedIndex)
         }
-        
+
         // Reset sort filter
         if let sortViewModel = viewModel.dynamicViewModels["sortByFilter"] as? SortFilterViewModelProtocol {
-            sortViewModel.selectedOptionId.send(viewModel.generalFilterSelection.sortTypeId)
+            sortViewModel.selectedFilter.send(.singleLeague(id: viewModel.generalFilterSelection.sortTypeId))
         }
-        
+
         // Reset leagues filter
         if let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
-            leaguesViewModel.selectedOptionId.send(viewModel.generalFilterSelection.leagueId)
+            leaguesViewModel.selectedFilter.send(.singleLeague(id: viewModel.generalFilterSelection.leagueId))
         }
-        
+
         // Reset popular countries filter
         if let popularCountriesViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             popularCountriesViewModel.selectedOptionId.send(viewModel.generalFilterSelection.leagueId)
         }
-        
+
         // Reset other countries filter
         if let otherCountriesViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol {
             otherCountriesViewModel.selectedOptionId.send(viewModel.generalFilterSelection.leagueId)
@@ -521,19 +522,26 @@ extension CombinedFiltersDemoViewController {
     private func synchronizeLeagueSelection(_ selectedId: String, excludeWidget: String) {
         // Synchronize with leagues filter
         if excludeWidget != "leaguesFilter",
-           let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol,
-           leaguesViewModel.selectedOptionId.value != selectedId {
-            leaguesViewModel.selectedOptionId.send(selectedId)
-            viewModel.generalFilterSelection.leagueId = selectedId
+           let leaguesViewModel = viewModel.dynamicViewModels["leaguesFilter"] as? SortFilterViewModelProtocol {
+            let currentId: String
+            switch leaguesViewModel.selectedFilter.value {
+            case .all: currentId = "all"
+            case .allInCountry(let countryId): currentId = "\(countryId)_all"
+            case .singleLeague(let id): currentId = id
+            }
+            if currentId != selectedId {
+                leaguesViewModel.selectedFilter.send(.singleLeague(id: selectedId))
+                viewModel.generalFilterSelection.leagueId = selectedId
+            }
         }
-        
+
         // Synchronize with popular countries
         if excludeWidget != "popularCountryLeaguesFilter",
            let popularViewModel = viewModel.dynamicViewModels["popularCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol,
            popularViewModel.selectedOptionId.value != selectedId {
             popularViewModel.selectedOptionId.send(selectedId)
         }
-        
+
         // Synchronize with other countries
         if excludeWidget != "otherCountryLeaguesFilter",
            let otherViewModel = viewModel.dynamicViewModels["otherCountryLeaguesFilter"] as? CountryLeaguesFilterViewModelProtocol,
@@ -585,10 +593,10 @@ extension CombinedFiltersDemoViewController {
             SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
             SportFilter(id: "4", title: "Cricket", icon: "figure.cricket")
         ]
-        
+
         return MockSportGamesFilterViewModel(
             title: widget.label, sportFilters: sportFilters,
-            selectedId: viewModel.generalFilterSelection.sportId
+            selectedSport: .singleSport(id: viewModel.generalFilterSelection.sportId)
         )
     }
     
@@ -628,8 +636,8 @@ extension CombinedFiltersDemoViewController {
     
     private func createSortFilterViewModel(for widget: FilterWidget) -> SortFilterViewModelProtocol {
         var sortOptions: [SortOption] = []
-        var selectedId: String = "0"
-        
+        var selectedFilter: LeagueFilterIdentifier = .all
+
         if widget.id == "sortByFilter" {
             if let options = widget.details.options {
                 sortOptions = options.enumerated().map { index, option in
@@ -644,7 +652,7 @@ extension CombinedFiltersDemoViewController {
                     default:
                         iconName = "circle.fill"
                     }
-                    
+
                     return SortOption(
                         id: "\(index+1)",
                         icon: iconName,
@@ -653,16 +661,17 @@ extension CombinedFiltersDemoViewController {
                     )
                 }
             }
-            selectedId = viewModel.generalFilterSelection.sortTypeId
+            selectedFilter = .singleLeague(id: viewModel.generalFilterSelection.sortTypeId)
         } else if widget.id == "leaguesFilter" {
             sortOptions = viewModel.popularLeagues
-            selectedId = viewModel.generalFilterSelection.leagueId
+            let leagueId = viewModel.generalFilterSelection.leagueId
+            selectedFilter = leagueId == "all" ? .all : .singleLeague(id: leagueId)
         }
-        
+
         return MockSortFilterViewModel(
             title: widget.label,
             sortOptions: sortOptions,
-            selectedId: selectedId
+            selectedFilter: selectedFilter
         )
     }
     

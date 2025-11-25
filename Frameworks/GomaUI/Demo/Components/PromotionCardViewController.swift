@@ -34,7 +34,7 @@ class PromotionCardViewController: UIViewController {
     }
     
     private func setupWithTheme() {
-        self.view.backgroundColor = StyleProvider.Color.backgroundColor
+        self.view.backgroundColor = .backgroundTestColor
         self.contentView.backgroundColor = .clear
     }
     

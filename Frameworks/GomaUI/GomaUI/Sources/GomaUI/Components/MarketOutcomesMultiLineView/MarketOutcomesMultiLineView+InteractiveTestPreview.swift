@@ -565,8 +565,17 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     @objc private func toggleOutcomeDisabled() {
         guard selectedLineIndex < lineViewModels.count else { return }
         let outcomeType = selectedOutcomeType()
-        // Note: Mock doesn't have setDisabled, but we log the intent
-        logEvent("🔒 Line \(selectedLineIndex), \(outcomeType): Toggle disabled (mock limitation)")
+        let currentState = lineViewModels[selectedLineIndex].marketStateSubject.value
+
+        let currentDisabled: Bool
+        switch outcomeType {
+        case .left: currentDisabled = currentState.leftOutcome?.isDisabled ?? false
+        case .middle: currentDisabled = currentState.middleOutcome?.isDisabled ?? false
+        case .right: currentDisabled = currentState.rightOutcome?.isDisabled ?? false
+        }
+
+        lineViewModels[selectedLineIndex].setOutcomeDisabled(type: outcomeType, disabled: !currentDisabled)
+        logEvent("🔒 Line \(selectedLineIndex), \(outcomeType): Disabled = \(!currentDisabled)")
     }
 
     @objc private func oddsUp() {

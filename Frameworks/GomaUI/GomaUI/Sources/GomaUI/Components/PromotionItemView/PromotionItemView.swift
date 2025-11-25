@@ -9,7 +9,7 @@ final public class PromotionItemView: UIView {
     private let titleLabel = UILabel()
     
     private var cancellables = Set<AnyCancellable>()
-    private let viewModel: PromotionItemViewModelProtocol
+    public let viewModel: PromotionItemViewModelProtocol
     
     // MARK: - Public Properties
     public var onPromotionSelected: (() -> Void) = { }

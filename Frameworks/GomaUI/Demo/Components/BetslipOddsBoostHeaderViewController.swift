@@ -5,8 +5,7 @@ final class BetslipOddsBoostHeaderViewController: UIViewController {
 
     private let mockViewModel = MockBetslipOddsBoostHeaderViewModel.activeMock(
         selectionCount: 1,
-        totalEligibleCount: 3,
-        nextTierPercentage: "3%"
+        totalEligibleCount: 3
     )
 
     private lazy var headerView = BetslipOddsBoostHeaderView(viewModel: mockViewModel)
@@ -148,14 +147,9 @@ final class BetslipOddsBoostHeaderViewController: UIViewController {
         let state = data.state
 
         var stateDescription = "Selections: \(state.selectionCount)/\(state.totalEligibleCount)"
+        stateDescription += "\nHeading: \(state.headingText)"
 
-        if let current = state.currentBoostPercentage {
-            stateDescription += "\nCurrent Boost: \(current)"
-        } else if let next = state.nextTierPercentage {
-            stateDescription += "\nNext Boost: \(next)"
-        }
-
-        let enabledStatus = data.isEnabled ? "Enabled ✓" : "Disabled"
+        let enabledStatus = data.isEnabled ? "Enabled" : "Disabled"
         infoLabel.text = "\(stateDescription)\n\nStatus: \(enabledStatus)"
     }
 

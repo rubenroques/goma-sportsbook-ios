@@ -10,7 +10,7 @@ class MatchHeaderCompactViewController: UIViewController {
     
     // MARK: - View Models
     private let defaultViewModel = MockMatchHeaderCompactViewModel.default
-    private let noStatsViewModel = MockMatchHeaderCompactViewModel.withoutStatistics
+    private let liveFootballViewModel = MockMatchHeaderCompactViewModel.liveFootballMatch
     private let longNamesViewModel = MockMatchHeaderCompactViewModel.longNames
     private let longContentViewModel = MockMatchHeaderCompactViewModel.longContent
     
@@ -41,7 +41,7 @@ class MatchHeaderCompactViewController: UIViewController {
         
         // Add section headers and components
         addSection(title: "Default", viewModel: defaultViewModel)
-        addSection(title: "Without Statistics", viewModel: noStatsViewModel)
+        addSection(title: "Live Football Match", viewModel: liveFootballViewModel)
         addSection(title: "Long Team Names", viewModel: longNamesViewModel)
         addSection(title: "Long Content", viewModel: longContentViewModel)
         
@@ -100,11 +100,14 @@ class MatchHeaderCompactViewController: UIViewController {
     
     private func setupCallbacks() {
         // Setup callbacks for all view models
-        let viewModels = [defaultViewModel, noStatsViewModel, longNamesViewModel, longContentViewModel]
-        
+        let viewModels = [defaultViewModel, liveFootballViewModel, longNamesViewModel, longContentViewModel]
+
         for viewModel in viewModels {
-            viewModel.onStatisticsTapped = { [weak self] in
-                self?.showAlert(title: "Statistics", message: "Statistics button tapped")
+            viewModel.onCountryTapped = { [weak self] countryId in
+                self?.showAlert(title: "Country Tapped", message: "Country ID: \(countryId)")
+            }
+            viewModel.onLeagueTapped = { [weak self] leagueId in
+                self?.showAlert(title: "League Tapped", message: "League ID: \(leagueId)")
             }
         }
     }
