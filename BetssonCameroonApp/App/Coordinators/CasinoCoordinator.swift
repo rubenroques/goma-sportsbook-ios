@@ -24,7 +24,7 @@ class CasinoCoordinator: Coordinator {
     
     // MARK: - Properties
     private let environment: Environment
-    private let lobbyType: CasinoLobbyType
+    private let lobbyType: ServicesProvider.CasinoLobbyType
     private var casinoCategoriesListViewController: CasinoCategoriesListViewController?
     var casinoCategoriesListViewModel: CasinoCategoriesListViewModel?
     private var casinoCategoryGamesListViewController: CasinoCategoryGamesListViewController?
@@ -39,7 +39,7 @@ class CasinoCoordinator: Coordinator {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(navigationController: UINavigationController, environment: Environment, lobbyType: CasinoLobbyType = .casino) {
+    init(navigationController: UINavigationController, environment: Environment, lobbyType: ServicesProvider.CasinoLobbyType = .casino) {
         self.navigationController = navigationController
         self.environment = environment
         self.lobbyType = lobbyType
@@ -53,8 +53,8 @@ class CasinoCoordinator: Coordinator {
         let categoryGamesViewModel = CasinoCategoryGamesListViewModel(
             categoryId: categoryId,
             categoryTitle: categoryTitle,
-            servicesProvider: environment.servicesProvider,
-            lobbyType: lobbyType.serviceProviderType
+            casinoCacheProvider: environment.casinoCacheProvider,
+            lobbyType: lobbyType
         )
                 
         // Setup navigation closures
@@ -287,6 +287,7 @@ class CasinoCoordinator: Coordinator {
     func start() {
         // Create view model with injected dependencies
         let viewModel = CasinoCategoriesListViewModel(
+            casinoCacheProvider: environment.casinoCacheProvider,
             servicesProvider: environment.servicesProvider,
             lobbyType: lobbyType
         )

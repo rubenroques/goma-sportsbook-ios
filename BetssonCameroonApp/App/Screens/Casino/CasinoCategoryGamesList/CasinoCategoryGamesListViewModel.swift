@@ -49,20 +49,21 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     
     // MARK: - Properties
     private let categoryId: String
-    private let servicesProvider: ServicesProvider.Client
+    private let casinoCacheProvider: CasinoCacheProvider
     private let lobbyType: ServicesProvider.CasinoLobbyType?
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
-    init(categoryId: String, categoryTitle: String, servicesProvider: ServicesProvider.Client, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
+    init(categoryId: String, categoryTitle: String, casinoCacheProvider: CasinoCacheProvider, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
         self.categoryId = categoryId
         self.categoryTitle = categoryTitle
-        self.servicesProvider = servicesProvider
+        self.casinoCacheProvider = casinoCacheProvider
         self.lobbyType = lobbyType
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forCasinoScreens()
         // multiWidgetToolbarViewModel is now managed by TopBarContainerController
-        
+
         setupChildViewModelCallbacks()
+        setupCacheUpdateSubscriptions()
         loadInitialGames()
     }
     
@@ -94,7 +95,22 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods - API Integration
-    
+
+    /// Setup subscriptions to cache update publishers for silent background updates
+    private func setupCacheUpdateSubscriptions() {
+        // Subscribe to background game list updates from cache provider
+        // Filter for updates matching this category
+        casinoCacheProvider.gamesUpdatePublisher
+            .filter { [weak self] updateData in
+                updateData.categoryId == self?.categoryId
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updateData in
+                self?.handleSilentGamesUpdate(updateData.response, offset: updateData.offset)
+            }
+            .store(in: &cancellables)
+    }
+
     /// Load initial games for the category (first page)
     private func loadInitialGames() {
         currentPage = 0
@@ -115,7 +131,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
             limit: pageSize
         )
         
-        servicesProvider.getGamesByCategory(
+        casinoCacheProvider.getGamesByCategory(
             categoryId: categoryId,
             language: "en",
             platform: Self.gamesPlatform,
@@ -187,6 +203,34 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
         }
     }
     
+    /// Handle silent game list updates from background cache refresh
+    /// Updates UI without showing loading spinner
+    private func handleSilentGamesUpdate(_ gamesResponse: CasinoGamesResponse, offset: Int) {
+        // Only process updates for offset 0 (first page) to avoid complexity
+        guard offset == 0 else { return }
+
+        // Convert to game card data
+        let newGameCardData = gamesResponse.games.map {
+            ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+        }
+
+        // Convert to ViewModels
+        let newGameViewModels = newGameCardData.map { gameData in
+            let viewModel = MockCasinoGameCardViewModel(gameData: gameData)
+            viewModel.onGameSelected = { [weak self] gameId in
+                self?.gameSelected(gameId)
+            }
+            return viewModel
+        }
+
+        // Update games list silently (only first page to keep it simple)
+        if currentPage == 0 && !games.isEmpty {
+            games = newGameViewModels
+            totalGames = gamesResponse.total
+            hasMoreGames = games.count < totalGames
+        }
+    }
+
     /// Map ServiceProviderError to user-friendly display messages
     private func mapServiceProviderErrorToDisplayMessage(_ error: ServiceProviderError) -> String {
         switch error {

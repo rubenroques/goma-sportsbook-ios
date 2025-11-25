@@ -109,7 +109,18 @@ class Environment {
 
     let urlSchemaManager: URLSchemaManager = URLSchemaManager()
 
-    
+    /// Casino cache provider wrapper for improved UX with caching
+    lazy var casinoCacheProvider: CasinoCacheProvider = {
+        // ServicesProvider.Client implements CasinoProvider methods,
+        // so we can use it directly as the underlying provider
+        let cacheStore = CasinoCacheStore(configuration: .default)
+        return CasinoCacheProvider(
+            servicesProvider: servicesProvider,
+            cacheStore: cacheStore,
+            configuration: .default
+        )
+    }()
+
     init() {
 
     }

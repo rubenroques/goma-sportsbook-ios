@@ -1,0 +1,26 @@
+[
+  {
+    "id": "placeholder-slots",
+    "name": "Placeholder Slots",
+    "href": "/casino/placeholder-slots",
+    "gamesTotal": 100
+  },
+  {
+    "id": "placeholder-live",
+    "name": "Placeholder Live Casino",
+    "href": "/casino/placeholder-live",
+    "gamesTotal": 50
+  },
+  {
+    "id": "placeholder-table",
+    "name": "Placeholder Table Games",
+    "href": "/casino/placeholder-table",
+    "gamesTotal": 75
+  },
+  {
+    "id": "placeholder-jackpot",
+    "name": "Placeholder Jackpot",
+    "href": "/casino/placeholder-jackpot",
+    "gamesTotal": 30
+  }
+]

@@ -23,7 +23,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private static let gamesPlatform = "PC"
 
     // MARK: - Lobby Configuration
-    let lobbyType: CasinoLobbyType
+    let lobbyType: ServicesProvider.CasinoLobbyType
     let showTopBanner: Bool
 
     // MARK: - Published Properties
@@ -37,11 +37,13 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private(set) var recentlyPlayedGamesViewModel: MockRecentlyPlayedGamesViewModel
     
     // MARK: - Properties
+    private let casinoCacheProvider: CasinoCacheProvider
     private let servicesProvider: ServicesProvider.Client
     private var cancellables = Set<AnyCancellable>()
-    
+
     // MARK: - Initialization
-    init(servicesProvider: ServicesProvider.Client, lobbyType: CasinoLobbyType = .casino, showTopBanner: Bool? = nil) {
+    init(casinoCacheProvider: CasinoCacheProvider, servicesProvider: ServicesProvider.Client, lobbyType: ServicesProvider.CasinoLobbyType = .casino, showTopBanner: Bool? = nil) {
+        self.casinoCacheProvider = casinoCacheProvider
         self.servicesProvider = servicesProvider
         self.lobbyType = lobbyType
         self.showTopBanner = showTopBanner ?? (lobbyType == .casino)
@@ -59,6 +61,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
 
         setupChildViewModelCallbacks()
+        setupCacheUpdateSubscriptions()
         loadCategoriesFromAPI()
     }
     
@@ -77,12 +80,23 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     // MARK: - Private Methods - API Integration
     
+    /// Setup subscriptions to cache update publishers for silent background updates
+    private func setupCacheUpdateSubscriptions() {
+        // Subscribe to background category updates from cache provider
+        casinoCacheProvider.categoriesUpdatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] updatedCategories in
+                self?.handleSilentCategoriesUpdate(updatedCategories)
+            }
+            .store(in: &cancellables)
+    }
+
     /// Main method to load casino categories and their preview games from API
     private func loadCategoriesFromAPI() {
         isLoading = true
         errorMessage = nil
-        
-        servicesProvider.getCasinoCategories(language: "en", platform: Self.gamesPlatform, lobbyType: lobbyType.serviceProviderType)
+
+        casinoCacheProvider.getCasinoCategories(language: "en", platform: Self.gamesPlatform, lobbyType: lobbyType)
             .map { categories in
                 // Filter categories with games available
                 categories.filter { $0.gamesTotal > 0 }
@@ -128,11 +142,11 @@ class CasinoCategoriesListViewModel: ObservableObject {
     private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<MockCasinoCategorySectionViewModel, ServiceProviderError> {
         let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games as requested
         
-        return servicesProvider.getGamesByCategory(
+        return casinoCacheProvider.getGamesByCategory(
             categoryId: category.id,
             language: "en",
             platform: Self.gamesPlatform,
-            lobbyType: lobbyType.serviceProviderType,
+            lobbyType: lobbyType,
             pagination: pagination
         )
         .map { gamesResponse in
@@ -213,6 +227,29 @@ class CasinoCategoriesListViewModel: ObservableObject {
         categorySections = [MockCasinoCategorySectionViewModel.emptySection]
     }
     
+    /// Handle silent category updates from background cache refresh
+    /// Updates UI without showing loading spinner
+    private func handleSilentCategoriesUpdate(_ categories: [CasinoCategory]) {
+        // Filter categories with games available
+        let validCategories = categories.filter { $0.gamesTotal > 0 }
+
+        // Reload preview games for updated categories
+        loadPreviewGamesForAllCategories(validCategories)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("Silent update failed: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] sectionViewModels in
+                    self?.categorySections = sectionViewModels
+                    self?.updateRecentlyPlayedFromCategories()
+                }
+            )
+            .store(in: &cancellables)
+    }
+
     /// Update recently played games with first game from each loaded category
     private func updateRecentlyPlayedFromCategories() {
         // Extract first game from each category section (excluding "See More" cards)
