@@ -78,6 +78,7 @@ class BetslipCoordinator: Coordinator {
         
         
         let viewController = BetslipViewController(viewModel: viewModel)
+        viewController.isModalInPresentation = true
         self.betslipViewController = viewController
 
     }
