@@ -34,8 +34,8 @@ final class InlineScoreColumnView: UIView {
         switch mode {
         case .winnerLoser:
             // Regular font for completed sets/periods
-            homeScoreLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-            awayScoreLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
+            homeScoreLabel.font = StyleProvider.fontWith(type: .light, size: 14)
+            awayScoreLabel.font = StyleProvider.fontWith(type: .light, size: 14)
 
             // Compare scores to determine winner
             if data.homeScore > data.awayScore {
@@ -59,8 +59,8 @@ final class InlineScoreColumnView: UIView {
 
         case .noHighlight:
             // Regular font for neutral/informational scores
-            homeScoreLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
-            awayScoreLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
+            homeScoreLabel.font = StyleProvider.fontWith(type: .light, size: 14)
+            awayScoreLabel.font = StyleProvider.fontWith(type: .light, size: 14)
 
             homeScoreLabel.textColor = StyleProvider.Color.textPrimary
             awayScoreLabel.textColor = StyleProvider.Color.textPrimary

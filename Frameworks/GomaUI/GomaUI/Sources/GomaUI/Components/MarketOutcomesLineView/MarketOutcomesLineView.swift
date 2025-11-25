@@ -238,9 +238,14 @@ final public class MarketOutcomesLineView: UIView {
                 existingOutcomeView.removeFromSuperview()
                 return nil
             }
-            
+
             // Reconfigure existing view with new view model
             existingOutcomeView.configure(with: childViewModel)
+
+            // Reapply position (may have changed if market structure changed)
+            let position = determineOutcomePosition(outcomeType: outcomeType)
+            existingOutcomeView.setPosition(position)
+
             return existingOutcomeView
         }
 
@@ -365,6 +370,10 @@ final public class MarketOutcomesLineView: UIView {
         suspendedBaseView.isHidden = true
         seeAllBaseView.isHidden = true
         oddsStackView.isHidden = false
+
+        // Reset state that survives across reuse
+        positionOverrides = [:]
+        currentDisplayMode = .triple
     }
 }
 

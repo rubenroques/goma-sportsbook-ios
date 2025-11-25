@@ -148,12 +148,32 @@ extension InlineScoreView {
     }
 
     private static func createSeparatorView() -> UIView {
+        // Container view for spacing (2px on each side)
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+
+        // Separator line (1px width)
         let separator = UIView()
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.backgroundColor = StyleProvider.Color.textSecondary.withAlphaComponent(0.3)
-        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
-        separator.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        return separator
+
+        container.addSubview(separator)
+
+        NSLayoutConstraint.activate([
+            // 2px leading spacing
+            separator.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 3),
+            // 2px trailing spacing
+            separator.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -2),
+            // Center vertically
+            separator.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            // 1px width for the line
+            separator.widthAnchor.constraint(equalToConstant: 1),
+            // 32px height for the line
+            separator.heightAnchor.constraint(equalToConstant: 32)
+        ])
+
+        return container
     }
 }
 

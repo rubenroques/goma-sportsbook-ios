@@ -76,9 +76,10 @@ final public class MarketOutcomesMultiLineView: UIView {
             lineView.onOutcomeSelected = { _, _ in }
             lineView.onOutcomeDeselected = { _, _ in }
             lineView.onOutcomeLongPress = { _ in }
+            lineView.onSeeAllTapped = { }
         }
 
-        // Clear local callbacks
+        // Clear all local callbacks (prevent stale closures after cell reuse)
         onOutcomeSelected = { _, _ in }
         onOutcomeDeselected = { _, _ in }
         onOutcomeLongPress = { _, _ in }

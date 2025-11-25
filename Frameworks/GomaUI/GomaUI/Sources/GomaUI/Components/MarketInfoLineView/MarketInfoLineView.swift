@@ -26,14 +26,29 @@ final public class MarketInfoLineView: UIView {
     }
     
     // MARK: - Configuration
+    /// Cleans up the view for reuse in table/collection views
+    /// Call this in prepareForReuse() before configuring with a new view model
+    public func cleanupForReuse() {
+        // Clear bindings
+        cancellables.removeAll()
+
+        // Clear icon views
+        iconImageViews.forEach { $0.removeFromSuperview() }
+        iconImageViews.removeAll()
+
+        // Reset market count label
+        marketCountLabel.text = nil
+        marketCountLabel.isHidden = true
+    }
+
     /// Configures the view with a new view model for efficient reuse
     public func configure(with newViewModel: MarketInfoLineViewModelProtocol) {
         // Clear previous bindings
         cancellables.removeAll()
-        
+
         // Update view model reference
         self.viewModel = newViewModel
-        
+
         // Re-establish bindings with new view model
         setupBindings()
     }

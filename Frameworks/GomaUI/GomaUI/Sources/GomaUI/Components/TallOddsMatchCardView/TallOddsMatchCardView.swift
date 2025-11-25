@@ -101,6 +101,13 @@ final public class TallOddsMatchCardView: UIView {
         // Cancel all active publishers
         cancellables.removeAll()
 
+        // Clear callbacks to prevent stale closures
+        onMatchHeaderTapped = {}
+        onFavoriteToggled = {}
+        onOutcomeSelected = { _ in }
+        onMarketInfoTapped = {}
+        onCardTapped = {}
+
         // Reset child views to prevent stale state
         // Note: We don't remove the views from hierarchy, just reset their state
         resetChildViewsState()
@@ -124,7 +131,8 @@ final public class TallOddsMatchCardView: UIView {
         // Cleanup MarketOutcomesMultiLineView for reuse (CRITICAL for cell reuse fix)
         marketOutcomesView.cleanupForReuse()
 
-        // Note: MarketInfoLineView will be reconfigured when new bindings are established
+        // Cleanup MarketInfoLineView for reuse (clears icons and labels)
+        marketInfoLineView.cleanupForReuse()
     }
 }
 

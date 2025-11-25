@@ -32,16 +32,18 @@ sportsbook-ios / rr/boot_performance
   - Client implements all CasinoProvider methods but doesn't formally conform to protocol
   - Pragmatic solution: Don't segment providers now (separate refactoring task)
 
-### Key Decisions
+### Key Decisions (Updated After Discussion)
 - **3-Tier Fallback Strategy**: Fresh cache → Stale cache → Bundled placeholders → API call
   - Fresh (within 6h TTL): Return immediately, no network
   - Stale (expired): Return immediately + background refresh
   - Bundled: Return immediately + fetch real data
   - Miss: Blocking API call
-- **TTL Configuration**: 10 minutes default (aggressive refresh strategy)
+- **TTL Configuration**: 3 minutes default (aggressive refresh strategy)
   - Cache purpose: Instant UI while background refresh happens
-  - Not meant to avoid API calls, but to eliminate loading spinners
-  - Data never more than 10 minutes old
+  - Not meant to avoid API calls for hours, but to eliminate loading spinners
+  - Data never more than 3 minutes old
+  - Rationale: Casino content changes frequently (games, promotions, jackpots)
+  - User sessions typically last <30 minutes, so cache is effective within session
 - **Cache Scope**: Global (not per-user), survives logout and app restart
 - **Cache Storage**:
   - Memory cache for speed (~5ms access)
@@ -62,6 +64,36 @@ sportsbook-ios / rr/boot_performance
   - `casinoCacheProvider` for cached casino data
   - `servicesProvider` for non-cached banner data
 
+### Architecture Refinement Discussion
+
+**Initial Approach**: 6-hour TTL to maximize network request reduction
+**Problem Identified**: Cache purpose is instant UI, not long-term storage
+**Refined Approach**: 3-minute TTL (changed from 6h → 10min → 3min)
+
+**Rationale for 3-Minute TTL**:
+- Cache primary purpose: Eliminate 2-5s loading spinners → instant <500ms display
+- Secondary benefit: Reduce network calls within active browsing session
+- Casino content volatility: Games/promotions/jackpots change frequently
+- User behavior: Browsing sessions typically <30 minutes
+- Data freshness: Never more than 3 minutes old ensures relevance
+
+**Cache Refresh Flow Clarified**:
+```
+User opens casino → Check cache
+   ├─ Fresh (< 3min) → Return instantly, NO API call
+   ├─ Stale (> 3min) → Return instantly + background refresh
+   └─ Miss → API call + save to cache
+
+Background refresh → API returns → Cache updated with NEW timestamp
+                                 → Publish silent update to ViewModel
+                                 → UI refreshes smoothly (no spinner)
+```
+
+**Network Impact**:
+- 6-hour TTL: ~60-70% reduction (but stale data risk)
+- 3-minute TTL: ~40-50% reduction (fresh data guaranteed)
+- Trade-off accepted: Prioritize data freshness over network reduction
+
 ### Experiments & Notes
 - **Explored MVVM-C patterns** in BetssonCameroonApp:
   - ProfileWalletCoordinator: Excellent dependency injection example
@@ -72,12 +104,13 @@ sportsbook-ios / rr/boot_performance
   - Only appears once on first launch
   - Replaced by real data after first API call
   - Cache persists real data for subsequent launches
-- **Performance expectations**:
+- **Performance expectations** (with 3-minute TTL):
   - First launch: ~200ms (bundled data) + background API call
-  - Fresh cache: ~50ms (memory cache), no network
-  - Stale cache: ~200ms (disk cache) + background refresh
-  - Expected 95-98% improvement in perceived load time
-  - 60-70% reduction in network requests
+  - Fresh cache (< 3min): ~50ms (memory cache), no network call
+  - Stale cache (> 3min): ~200ms (disk cache) + background refresh
+  - Expected 95-98% improvement in perceived load time (2-5s → <500ms)
+  - Expected 40-50% reduction in network requests (within active sessions)
+  - Data freshness guaranteed: never older than 3 minutes
 
 ### Useful Files / Links
 - [Comprehensive Design Doc](../Plans/casino-cache-system.md)
