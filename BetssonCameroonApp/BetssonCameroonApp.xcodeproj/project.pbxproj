@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE04B7CB2ED59DCA000191DF /* GomaLogger in Frameworks */ = {isa = PBXBuildFile; productRef = CE04B7CA2ED59DCA000191DF /* GomaLogger */; };
+		CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */; };
 		CE58B6EC2EC8B1B5001591C1 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */; };
 		CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */; };
 		CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145E2E2FE56400C6A9DD /* FirebaseAuth */; };
@@ -90,10 +92,12 @@
 				CE60146B2E2FE61100C6A9DD /* Reachability in Frameworks */,
 				CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */,
 				CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */,
+				CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */,
 				CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */,
 				CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */,
 				CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */,
 				CE6014682E2FE5E400C6A9DD /* IQKeyboardManagerSwift in Frameworks */,
+				CE04B7CB2ED59DCA000191DF /* GomaLogger in Frameworks */,
 				CE74A2272E2E8EA100DDE78D /* GomaUI in Frameworks */,
 				CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */,
 				CEC736C72E6839670084368A /* XPush in Frameworks */,
@@ -190,6 +194,8 @@
 				CE60146A2E2FE61100C6A9DD /* Reachability */,
 				CE60146D2E2FE63A00C6A9DD /* PhraseSDK */,
 				CEC736C62E6839670084368A /* XPush */,
+				CE04B7CA2ED59DCA000191DF /* GomaLogger */,
+				CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */,
 			);
 			productName = BetssonCameroonApp;
 			productReference = CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */;
@@ -990,6 +996,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CE04B7CA2ED59DCA000191DF /* GomaLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaLogger;
+		};
+		CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GomaPerformanceKit;
+		};
 		CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

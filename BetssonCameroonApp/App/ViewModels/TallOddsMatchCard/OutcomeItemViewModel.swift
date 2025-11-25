@@ -2,6 +2,7 @@ import GomaUI
 import ServicesProvider
 import Combine
 import UIKit
+import GomaLogger
 
 /// Production implementation of OutcomeItemViewModel that connects to real-time outcome updates
 final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
@@ -155,16 +156,18 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     // MARK: - Private Methods
     private func setupOutcomeSubscription() {
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel.setupOutcomeSubscription - SUBSCRIBING to outcome updates for OUTCOME:\(outcomeId)")
         servicesProvider.subscribeToEventOnListsOutcomeUpdates(withId: outcomeId)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("Outcome subscription failed for \(self?.outcomeId ?? "unknown"): \(error)")
+                        GomaLogger.error(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel - SUBSCRIPTION FAILED for OUTCOME:\(self?.outcomeId ?? "unknown"): \(error)")
                         // Handle reconnection logic here if needed
                     }
                 },
                 receiveValue: { [weak self] serviceProviderOutcome in
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel - RECEIVED outcome update for OUTCOME:\(self?.outcomeId ?? "unknown")")
                     self?.processOutcomeUpdate(serviceProviderOutcome)
                 }
             )
@@ -194,6 +197,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         
         // Update individual properties as needed
         if currentValue != formattedOdds {
+            GomaLogger.info(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel.processOutcomeUpdate - ODDS CHANGED for OUTCOME:\(outcomeId) from \(currentValue) to \(formattedOdds)")
             updateOddsValue(formattedOdds)
         }
         

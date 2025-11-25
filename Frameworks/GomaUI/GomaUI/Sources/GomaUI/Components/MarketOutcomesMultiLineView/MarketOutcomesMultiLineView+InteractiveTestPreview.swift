@@ -37,7 +37,10 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
 
     // Event log
     private lazy var eventLogTextView: UITextView = Self.createEventLogTextView()
-    private lazy var clearLogButton: UIButton = Self.createButton(title: "Clear Log", backgroundColor: .systemGray)
+    private lazy var clearLogButton: UIButton = {
+        let button = Self.createButton(title: "Clear Log", action: #selector(clearLog), backgroundColor: .systemGray)
+        return button
+    }()
 
     // State inspector
     private lazy var stateInspectorTextView: UITextView = Self.createStateInspectorTextView()
@@ -104,9 +107,8 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
 
         // Create multi-line ViewModel
         multiLineViewModel = MockMarketOutcomesMultiLineViewModel(
-            lineViewModels: lineViewModels,
             groupTitle: "Total Goals",
-            isEmpty: false
+            lineViewModels: lineViewModels
         )
     }
 
@@ -493,7 +495,7 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
         lineViewModels = [
             MockMarketOutcomesLineViewModel.threeWayMarket,  // Triple
             MockMarketOutcomesLineViewModel.twoWayMarket,    // Double
-            MockMarketOutcomesLineViewModel.singleMarket,    // Single
+            MockMarketOutcomesLineViewModel.twoWayMarket,    // Double (no single factory exists)
             MockMarketOutcomesLineViewModel.threeWayMarket   // Triple
         ]
         updateMultiLineViewModel()
@@ -501,14 +503,13 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     }
 
     @objc private func toggleGroupTitle() {
-        let currentTitle = multiLineViewModel.displayStateSubject.value.groupTitle
+        let currentTitle = multiLineViewModel.currentDisplayState.groupTitle
         let newTitle = (currentTitle == nil || currentTitle?.isEmpty == true) ? "Total Goals" : nil
         logEvent("🏷️ Group title: \(newTitle ?? "nil")")
 
         multiLineViewModel = MockMarketOutcomesMultiLineViewModel(
-            lineViewModels: lineViewModels,
             groupTitle: newTitle,
-            isEmpty: lineViewModels.isEmpty
+            lineViewModels: lineViewModels
         )
         multiLineView.configure(with: multiLineViewModel)
         setupCallbacks()
@@ -543,7 +544,7 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     @objc private func suspendSelectedLine() {
         guard selectedLineIndex < lineViewModels.count else { return }
         logEvent("⏸️ Line \(selectedLineIndex): SUSPENDED")
-        lineViewModels[selectedLineIndex].setDisplayMode(.suspended("Market Suspended"))
+        lineViewModels[selectedLineIndex].setDisplayMode(.suspended(text: "Market Suspended"))
     }
 
     @objc private func resumeSelectedLine() {
@@ -647,9 +648,8 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
         lineViewModels = [newLine0, newLine1]
 
         let newMultiLineVM = MockMarketOutcomesMultiLineViewModel(
-            lineViewModels: lineViewModels,
             groupTitle: "Basketball - Total Points",
-            isEmpty: false
+            lineViewModels: lineViewModels
         )
 
         logEvent("   Calling configure(with: new VM)...")
@@ -833,7 +833,7 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
 
         for (index, lineVM) in lineViewModels.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + delay * Double(index)) { [weak lineVM] in
-                lineVM?.setDisplayMode(.suspended("Suspended"))
+                lineVM?.setDisplayMode(.suspended(text: "Suspended"))
             }
         }
     }
@@ -859,7 +859,7 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     // MARK: - State Updates
 
     private func updateStateLabel() {
-        let state = multiLineViewModel.displayStateSubject.value
+        let state = multiLineViewModel.currentDisplayState
         let lineCount = lineViewModels.count
         let title = state.groupTitle ?? "nil"
         stateLabel.text = "📊 Lines: \(lineCount) | Title: \(title) | Empty: \(state.isEmpty)"
@@ -869,7 +869,7 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
         var text = ""
 
         // Component state
-        let displayState = multiLineViewModel.displayStateSubject.value
+        let displayState = multiLineViewModel.currentDisplayState
         text += "┌─ Component State ─────────────┐\n"
         text += "│ Lines: \(lineViewModels.count)                        │\n"
         text += "│ Group Title: \"\(displayState.groupTitle ?? "nil")\"     │\n"
@@ -922,11 +922,10 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     }
 
     private func updateMultiLineViewModel() {
-        let currentTitle = multiLineViewModel.displayStateSubject.value.groupTitle
+        let currentTitle = multiLineViewModel.currentDisplayState.groupTitle
         multiLineViewModel = MockMarketOutcomesMultiLineViewModel(
-            lineViewModels: lineViewModels,
             groupTitle: currentTitle,
-            isEmpty: lineViewModels.isEmpty
+            lineViewModels: lineViewModels
         )
         multiLineView.configure(with: multiLineViewModel)
         setupCallbacks()

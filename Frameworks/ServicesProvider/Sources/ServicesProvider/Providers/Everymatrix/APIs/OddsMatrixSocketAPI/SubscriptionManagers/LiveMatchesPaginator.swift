@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SharedModels
+import GomaLogger
 
 /// Manages subscription to pre-live matches list structure changes and individual entity updates
 /// 
@@ -286,10 +287,16 @@ class LiveMatchesPaginator: UnsubscriptionController {
     
     /// Subscribe to market updates for a specific market ID
     func subscribeToMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError> {
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToMarketUpdates - CREATING subscription for MARKET:\(id)")
         return store.observeMarket(id: id)
+            .handleEvents(receiveOutput: { marketDTO in
+                if marketDTO != nil {
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToMarketUpdates - RECEIVED MarketDTO update for MARKET:\(id)")
+                }
+            })
             .compactMap { marketDTO -> EveryMatrix.Market? in
                 guard let marketDTO = marketDTO else { return nil }
-                
+
                 // Build hierarchical market from DTO
                 return EveryMatrix.MarketBuilder.build(from: marketDTO, store: self.store)
             }
@@ -308,21 +315,20 @@ class LiveMatchesPaginator: UnsubscriptionController {
     
     /// Subscribe to outcome updates for a specific outcome ID
     func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToOutcomeUpdates - CREATING subscription for OUTCOME:\(id)")
         return store.observeOutcome(id: id)
-            .handleEvents(receiveSubscription: { subscription in
-                // print("entityStore.observeOutcome.subscription")
-            }, receiveOutput: { outcome in
-                // print("entityStore.observeOutcome.outcome: \(outcome)")
-            }, receiveCompletion: { completion in
-                // print("entityStore.observeOutcome.completion: \(completion)")
+            .handleEvents(receiveSubscription: { _ in
+                GomaLogger.debug(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToOutcomeUpdates - SUBSCRIPTION active for OUTCOME:\(id)")
+            }, receiveOutput: { outcomeDTO in
+                if outcomeDTO != nil {
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToOutcomeUpdates - RECEIVED OutcomeDTO update for OUTCOME:\(id)")
+                }
             }, receiveCancel: {
-                // print("entityStore.observeOutcome.cancel")
-            }, receiveRequest: { demand in
-                // print("entityStore.observeOutcome.demand: \(demand)")
+                GomaLogger.debug(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToOutcomeUpdates - CANCELLED subscription for OUTCOME:\(id)")
             })
             .compactMap { outcomeDTO -> EveryMatrix.Outcome? in
                 guard let outcomeDTO = outcomeDTO else { return nil }
-                
+
                 // Build hierarchical outcome from DTO
                 return EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store)
             }
@@ -559,7 +565,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
             // Apply custom update logic based on entity type
             if change.entityType == EveryMatrix.BettingOfferDTO.rawType && changedProperties.keys.contains("odds") {
                 // Only update betting offers with odds changes
-                // print("[LiveMatchesPaginator] 🔄 Real odds update - BettingOffer ID: \(change.id), changedProperties: \(changedProperties)")
+                GomaLogger.info(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.handleMatchesChangeRecord - ODDS UPDATE received for BettingOffer:\(change.id)")
                 store.updateEntity(type: change.entityType, id: change.id, changedProperties: changedProperties)
                 
             } else if change.entityType == EveryMatrix.MarketDTO.rawType {

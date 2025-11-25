@@ -2,6 +2,7 @@ import GomaUI
 import ServicesProvider
 import Combine
 import UIKit
+import GomaLogger
 
 /// Production implementation of MarketOutcomesLineViewModel that connects to real-time market updates
 final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
@@ -139,24 +140,26 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     // MARK: - Private Methods
     private func setupMarketSubscription() {
         if matchCardContext == .lists {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "MarketOutcomesLineViewModel.setupMarketSubscription - SUBSCRIBING to market updates for MARKET:\(marketId)")
             servicesProvider.subscribeToEventOnListsMarketUpdates(withId: marketId)
                 .receive(on: DispatchQueue.main)
                 .sink(
                     receiveCompletion: { [weak self] completion in
                         if case .failure(let error) = completion {
-                            print("Market subscription failed for \(self?.marketId ?? "unknown"): \(error)")
+                            GomaLogger.error(.realtime, category: "ODDS_FLOW", "MarketOutcomesLineViewModel - SUBSCRIPTION FAILED for MARKET:\(self?.marketId ?? "unknown"): \(error)")
                             // Handle market suspension on connection failure
                             self?.handleMarketSuspension(reason: "Connection Error")
                         }
                     },
                     receiveValue: { [weak self] serviceProviderMarket in
+                        GomaLogger.info(.realtime, category: "ODDS_FLOW", "MarketOutcomesLineViewModel - RECEIVED market update for MARKET:\(self?.marketId ?? "unknown")")
                         self?.processMarketUpdate(serviceProviderMarket)
                     }
                 )
                 .store(in: &cancellables)
         }
         else {
-            print("MATCH CARD FROM SEARCH")
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "MarketOutcomesLineViewModel - SKIPPING subscription (matchCardContext=search) for MARKET:\(marketId)")
         }
     }
     

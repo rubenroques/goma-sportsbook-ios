@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaLogger
 
 extension EveryMatrix {
     
@@ -135,8 +136,13 @@ extension EveryMatrix {
         // Update entity with changed properties
         func updateEntity(type entityType: String, id: String, changedProperties: [String: AnyChange]) {
             guard let existingEntity = entities[entityType]?[id] else {
-                print("Cannot update entity \(entityType):\(id) - entity not found")
+                GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.updateEntity - entity NOT FOUND: \(entityType):\(id)")
                 return
+            }
+
+            // Log betting offer odds updates specifically
+            if entityType == "BETTING_OFFER", let oddsChange = changedProperties["odds"] {
+                GomaLogger.info(.realtime, category: "ODDS_FLOW", "EntityStore.updateEntity - BETTING_OFFER:\(id) odds changed to: \(oddsChange.jsonSafeValue ?? "nil")")
             }
 
             // Create updated entity by merging changed properties
@@ -147,6 +153,8 @@ extension EveryMatrix {
 
                 // Notify observers of the update
                 notifyEntityChange(updatedEntityValue)
+            } else {
+                GomaLogger.error(.realtime, category: "ODDS_FLOW", "EntityStore.updateEntity - MERGE FAILED for \(entityType):\(id)")
             }
         }
 
@@ -227,6 +235,11 @@ extension EveryMatrix {
             // Get current entity value
             let currentEntity = entities[T.rawType]?[id] as? T
 
+            // Log if entity not found - this is a potential issue
+            if currentEntity == nil {
+                GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.observeEntity - WARNING: No \(T.rawType):\(id) found in store (subscription created anyway)")
+            }
+
             // Get or create publisher for this entity
             let publisher = getOrCreatePublisher(entityType: T.rawType, id: id, currentValue: currentEntity)
 
@@ -236,16 +249,19 @@ extension EveryMatrix {
 
         /// Convenience method to observe market changes
         func observeMarket(id: String) -> AnyPublisher<MarketDTO?, Never> {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.observeMarket - SUBSCRIBING to MARKET:\(id)")
             return observeEntity(MarketDTO.self, id: id)
         }
 
         /// Convenience method to observe outcome changes
         func observeOutcome(id: String) -> AnyPublisher<OutcomeDTO?, Never> {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.observeOutcome - SUBSCRIBING to OUTCOME:\(id)")
             return observeEntity(OutcomeDTO.self, id: id)
         }
 
         /// Convenience method to observe betting offer changes
         func observeBettingOffer(id: String) -> AnyPublisher<BettingOfferDTO?, Never> {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.observeBettingOffer - SUBSCRIBING to BETTING_OFFER:\(id)")
             return observeEntity(BettingOfferDTO.self, id: id)
         }
 
@@ -333,9 +349,23 @@ extension EveryMatrix {
 
             // Update CurrentValueSubject with new value if it exists
             if let publisher = entityPublishers[entityType]?[id] {
+                GomaLogger.info(.realtime, category: "ODDS_FLOW", "EntityStore.notifyEntityChange - NOTIFYING observer for \(entityType):\(id)")
                 publisher.send(entity)
+            } else {
+                // Log when there's NO observer - this is the key debugging point
+                if entityType == "BETTING_OFFER" {
+                    // Check if there ARE observers for related OUTCOME (the parent)
+                    if let bettingOffer = entity as? BettingOfferDTO {
+                        let hasOutcomeObserver = entityPublishers["OUTCOME"]?[bettingOffer.outcomeId] != nil
+                        if hasOutcomeObserver {
+                            GomaLogger.error(.realtime, category: "ODDS_FLOW", "EntityStore.notifyEntityChange - MISMATCH! BETTING_OFFER:\(id) updated but UI observes OUTCOME:\(bettingOffer.outcomeId) - OUTCOME won't be notified!")
+                        } else {
+                            GomaLogger.debug(.realtime, category: "ODDS_FLOW", "EntityStore.notifyEntityChange - NO OBSERVER for BETTING_OFFER:\(id) (no related OUTCOME observer either)")
+                        }
+                    }
+                }
             }
-            
+
             // Update collection publishers if this is an EVENT_INFO
             if let eventInfo = entity as? EventInfoDTO {
                 updateEventInfoCollectionPublisher(for: eventInfo.eventId)
