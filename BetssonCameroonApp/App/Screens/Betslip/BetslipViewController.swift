@@ -14,11 +14,21 @@ class BetslipViewController: UIViewController {
     // MARK: - Properties
     private var viewModel: BetslipViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
-    
+
     private var currentIndex: Int = 0
-    private var shouldShowTypeSelector: Bool?
-    
+
     // MARK: - UI Components
+
+    // Main content stack view
+    private lazy var contentStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 0
+        stack.alignment = .fill
+        stack.distribution = .fill
+        return stack
+    }()
     
     // Header view
     private lazy var headerView: BetslipHeaderView = {
@@ -33,7 +43,15 @@ class BetslipViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
+
+    // Type selector container (for horizontal insets in stack view)
+    private lazy var typeSelectorContainer: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.backgroundColor = .clear
+        return container
+    }()
+
     // Page view controller
     private lazy var pageViewController: UIPageViewController = {
         let pageVC = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
@@ -84,6 +102,9 @@ class BetslipViewController: UIViewController {
         setupBindings()
         setupPageViewController()
 
+        // Setup type selector visibility (configuration - doesn't change)
+        typeSelectorContainer.isHidden = !viewModel.shouldShowTypeSelector
+
         // Setup bottom safe area background color
         bottomSafeAreaView.backgroundColor = StyleProvider.Color.backgroundTertiary
     }
@@ -96,64 +117,56 @@ class BetslipViewController: UIViewController {
     // MARK: - Setup Methods
     private func setupSubviews() {
         view.backgroundColor = StyleProvider.Color.backgroundTertiary
-        
-        view.addSubview(headerView)
-        view.addSubview(typeSelectorView)
-        view.addSubview(pageViewContainer)
-        //view.addSubview(bottomSafeAreaView)
 
+        // Add main content stack to view
+        view.addSubview(contentStackView)
+
+        // Add components to stack in order
+        contentStackView.addArrangedSubview(headerView)
+        contentStackView.addArrangedSubview(typeSelectorContainer)
+        contentStackView.addArrangedSubview(pageViewContainer)
+
+        // Add type selector to container (not directly to stack)
+        typeSelectorContainer.addSubview(typeSelectorView)
+
+        // Setup page view controller
         pageViewController.willMove(toParent: self)
         pageViewContainer.addSubview(pageViewController.view)
 
         // Add page view controller as child
         addChild(pageViewController)
         pageViewController.didMove(toParent: self)
-        
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Header view
-            headerView.topAnchor.constraint(equalTo: view.topAnchor),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            // Content stack view - fills entire view
+            contentStackView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // Header view - fixed height
             headerView.heightAnchor.constraint(equalToConstant: 52),
-            
-            // Type selector view
-            typeSelectorView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 8),
-            typeSelectorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            typeSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            typeSelectorView.heightAnchor.constraint(equalToConstant: 50),
 
-            // Page view container
-            pageViewContainer.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
-            pageViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            pageViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            pageViewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // Type selector container - fixed height
+            typeSelectorContainer.heightAnchor.constraint(equalToConstant: 58), // 50 + 8 top spacing
 
-            // Page view controller (fills container)
+            // Type selector view - inside container with horizontal insets
+            typeSelectorView.topAnchor.constraint(equalTo: typeSelectorContainer.topAnchor, constant: 8),
+            typeSelectorView.leadingAnchor.constraint(equalTo: typeSelectorContainer.leadingAnchor, constant: 16),
+            typeSelectorView.trailingAnchor.constraint(equalTo: typeSelectorContainer.trailingAnchor, constant: -16),
+            typeSelectorView.bottomAnchor.constraint(equalTo: typeSelectorContainer.bottomAnchor),
+
+            // Page view controller - fills its container
             pageViewController.view.topAnchor.constraint(equalTo: pageViewContainer.topAnchor),
             pageViewController.view.leadingAnchor.constraint(equalTo: pageViewContainer.leadingAnchor),
             pageViewController.view.trailingAnchor.constraint(equalTo: pageViewContainer.trailingAnchor),
-            pageViewController.view.bottomAnchor.constraint(equalTo: pageViewContainer.bottomAnchor),
-
-            // Bottom safe area view - fills area below safe area
-            //bottomSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            //bottomSafeAreaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            //bottomSafeAreaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            //bottomSafeAreaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            pageViewController.view.bottomAnchor.constraint(equalTo: pageViewContainer.bottomAnchor)
         ])
     }
     
     private func setupBindings() {
-        // Subscribe to betslip data to get configuration
-        viewModel.dataPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] data in
-                self?.updateTypeSelectorVisibility(shouldShow: data.shouldShowTypeSelector)
-            }
-            .store(in: &cancellables)
-        
         // Subscribe to type selection events
         viewModel.betslipTypeSelectorViewModel.selectionEventPublisher
             .receive(on: DispatchQueue.main)
@@ -172,43 +185,6 @@ class BetslipViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    private func updateTypeSelectorVisibility(shouldShow: Bool) {
-        // Only update if value has changed or this is the first time
-        guard shouldShowTypeSelector != shouldShow else { return }
-        
-        shouldShowTypeSelector = shouldShow
-        typeSelectorView.isHidden = !shouldShow
-        
-        // Update constraints to account for visibility
-        updateConstraints()
-    }
-    
-    private func updateConstraints() {
-        // Remove all existing constraints on pageViewController.view
-        NSLayoutConstraint.deactivate(
-            view.constraints.filter {
-                $0.firstItem === pageViewController.view || $0.secondItem === pageViewController.view
-            }
-        )
-        
-        // Add new constraints based on type selector visibility
-        if shouldShowTypeSelector == true {
-            NSLayoutConstraint.activate([
-                pageViewController.view.topAnchor.constraint(equalTo: typeSelectorView.bottomAnchor),
-                pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                pageViewController.view.topAnchor.constraint(equalTo: headerView.bottomAnchor),
-                pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                pageViewController.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            ])
-        }
-    }
-    
     private func handleTypeSelection(_ event: BetslipTypeSelectionEvent) {
         let targetIndex: Int
         let targetViewController: UIViewController
@@ -238,18 +214,18 @@ class BetslipViewController: UIViewController {
 extension BetslipViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         // Only allow swiping if type selector is visible (virtual betslip is enabled)
-        guard shouldShowTypeSelector == true else { return nil }
-        
+        guard viewModel.shouldShowTypeSelector else { return nil }
+
         if viewController === virtualBetslipViewController {
             return sportsBetslipViewController
         }
         return nil
     }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         // Only allow swiping if type selector is visible (virtual betslip is enabled)
-        guard shouldShowTypeSelector == true else { return nil }
-        
+        guard viewModel.shouldShowTypeSelector else { return nil }
+
         if viewController === sportsBetslipViewController {
             return virtualBetslipViewController
         }

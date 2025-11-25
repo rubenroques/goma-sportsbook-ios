@@ -43,7 +43,8 @@ final class TallOddsMatchCardTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        tallOddsMatchCardView.configure(with: nil)
+        // Call prepareForReuse on card view (triggers cleanupForReuse on child views)
+        tallOddsMatchCardView.prepareForReuse()
         cancellables.removeAll()
     }
 

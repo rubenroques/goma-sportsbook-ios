@@ -66,7 +66,12 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
     public var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol
     public var sportsBetslipViewModel: SportsBetslipViewModelProtocol
     public var virtualBetslipViewModel: VirtualBetslipViewModelProtocol
-    
+
+    // MARK: - Configuration
+    public var shouldShowTypeSelector: Bool {
+        betslipConfiguration.shouldShowTypeSelector
+    }
+
     // MARK: - Callbacks
     public var onHeaderCloseTapped: (() -> Void)?
     public var onHeaderJoinNowTapped: (() -> Void)?
@@ -102,22 +107,17 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
         var currentData = dataSubject.value
         currentData = BetslipData(
             isEnabled: isEnabled,
-            tickets: currentData.tickets,
-            shouldShowTypeSelector: currentData.shouldShowTypeSelector
+            tickets: currentData.tickets
         )
         dataSubject.send(currentData)
     }
     
     // MARK: - Private Methods
     private func setupInitialData() {
-        // Use betslip configuration to determine if type selector should be shown
-        let shouldShowTypeSelector = betslipConfiguration.shouldShowTypeSelector
-        
         // Start with empty betslip
         let initialData = BetslipData(
             isEnabled: true,
-            tickets: [],
-            shouldShowTypeSelector: shouldShowTypeSelector
+            tickets: []
         )
         dataSubject.send(initialData)
     }

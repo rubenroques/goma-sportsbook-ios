@@ -121,8 +121,10 @@ final public class TallOddsMatchCardView: UIView {
         // Cleanup ScoreView for reuse
         scoreView.cleanupForReuse()
 
-        // Note: MarketInfoLineView and MarketOutcomesMultiLineView will be reconfigured
-        // when new bindings are established using their configure methods
+        // Cleanup MarketOutcomesMultiLineView for reuse (CRITICAL for cell reuse fix)
+        marketOutcomesView.cleanupForReuse()
+
+        // Note: MarketInfoLineView will be reconfigured when new bindings are established
     }
 }
 
@@ -222,9 +224,13 @@ extension TallOddsMatchCardView {
         // Efficiently reconfigure existing view
         marketOutcomesView.configure(with: viewModel)
 
+        // ✅ CRITICAL FIX: Re-establish callbacks after configure
+        // cleanupForReuse() clears these callbacks, so we must restore them
+        setupMarketOutcomesCallbacks()
+
         // Invalidate intrinsic content size after outcomes update (most important for dynamic height)
         invalidateIntrinsicContentSize()
-        
+
     }
 
     private func updateScoreView(with viewModel: ScoreViewModelProtocol?) {
@@ -359,12 +365,18 @@ extension TallOddsMatchCardView {
         matchHeaderView.addGestureRecognizer(headerTapGesture)
         matchHeaderView.isUserInteractionEnabled = true
 
-        // Setup market outcomes callback
+        // Setup market outcomes callbacks (extracted to separate method for reuse)
+        setupMarketOutcomesCallbacks()
+    }
+
+    /// Sets up market outcomes view callbacks
+    /// Called during initialization and after reconfiguration to restore callbacks cleared by cleanupForReuse()
+    private func setupMarketOutcomesCallbacks() {
         marketOutcomesView.onOutcomeSelected = { [weak self] outcomeId, outcomeType in
             self?.onOutcomeSelected(outcomeId)
             self?.viewModel?.onOutcomeSelected(outcomeId: outcomeId)
         }
-        
+
         marketOutcomesView.onOutcomeDeselected = { [weak self] outcomeId, outcomeType in
             self?.viewModel?.onOutcomeDeselected(outcomeId: outcomeId)
         }

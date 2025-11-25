@@ -6,16 +6,13 @@ import GomaUI
 public struct BetslipData: Equatable {
     public let isEnabled: Bool
     public let tickets: [BettingTicket]
-    public let shouldShowTypeSelector: Bool
-    
+
     public init(
         isEnabled: Bool = true,
-        tickets: [BettingTicket] = [],
-        shouldShowTypeSelector: Bool = false
+        tickets: [BettingTicket] = []
     ) {
         self.isEnabled = isEnabled
         self.tickets = tickets
-        self.shouldShowTypeSelector = shouldShowTypeSelector
     }
 }
 
@@ -32,7 +29,11 @@ public protocol BetslipViewModelProtocol {
     var betslipTypeSelectorViewModel: BetslipTypeSelectorViewModelProtocol { get }
     var sportsBetslipViewModel: SportsBetslipViewModelProtocol { get }
     var virtualBetslipViewModel: VirtualBetslipViewModelProtocol { get }
-    
+
+    // MARK: - Configuration
+    /// Whether the type selector should be shown (based on enabled betslip tabs)
+    var shouldShowTypeSelector: Bool { get }
+
     /// Set the enabled state
     func setEnabled(_ isEnabled: Bool)
     

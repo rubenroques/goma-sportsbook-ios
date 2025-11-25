@@ -65,20 +65,40 @@ final public class MarketOutcomesMultiLineView: UIView {
     }
 
     // MARK: - Configuration
+    /// Cleans up the view for reuse in table/collection views
+    /// Call this in prepareForReuse() before configuring with a new view model
+    public func cleanupForReuse() {
+        // Clear bindings
+        cancellables.removeAll()
+
+        // Clear child view callbacks (prevent stale references)
+        lineViews.forEach { lineView in
+            lineView.onOutcomeSelected = { _, _ in }
+            lineView.onOutcomeDeselected = { _, _ in }
+            lineView.onOutcomeLongPress = { _ in }
+        }
+
+        // Clear local callbacks
+        onOutcomeSelected = { _, _ in }
+        onOutcomeDeselected = { _, _ in }
+        onOutcomeLongPress = { _, _ in }
+        onLineSuspended = { _ in }
+        onLineResumed = { _ in }
+        onOddsChanged = { _, _, _, _ in }
+        onGroupExpansionToggled = { _ in }
+    }
+
     /// Configures the view with a new view model for efficient reuse
+    /// Following GomaUI guidelines: reuses existing line views when possible
     public func configure(with newViewModel: MarketOutcomesMultiLineViewModelProtocol) {
         // Clear previous bindings
         cancellables.removeAll()
 
-        // Clear all line views
-        lineViews.forEach { $0.removeFromSuperview() }
-        lineViews.removeAll()
-
         // Update view model reference
         self.viewModel = newViewModel
 
-        // ✅ CRITICAL: Configure immediately with current data (synchronous for UITableView sizing)
-        configureImmediately(with: newViewModel)
+        // ✅ SMART REUSE: Only recreate views if structure changed
+        reconfigureOrRecreateLineViews(with: newViewModel)
 
         // Subscribe to updates for real-time changes (asynchronous)
         setupBindings()
@@ -91,7 +111,34 @@ final public class MarketOutcomesMultiLineView: UIView {
         updateDisplayState(viewModel.currentDisplayState)
 
         // Update line views immediately with current data
-        updateLineViews(with: viewModel.lineViewModels)
+        recreateAllLineViews(with: viewModel.lineViewModels)
+    }
+
+    /// Smart reuse logic: reconfigures existing views or recreates if structure changed
+    /// This is the core of the cell reuse fix
+    private func reconfigureOrRecreateLineViews(with viewModel: MarketOutcomesMultiLineViewModelProtocol) {
+        let newLineViewModels = viewModel.lineViewModels
+
+        // Update display state
+        updateDisplayState(viewModel.currentDisplayState)
+
+        // ✅ OPTIMIZATION: If count matches, reconfigure existing views (REUSE)
+        if lineViews.count == newLineViewModels.count {
+            for (index, lineViewModel) in newLineViewModels.enumerated() {
+                // Reuse existing view, just reconfigure with new ViewModel
+                lineViews[index].configure(with: lineViewModel)
+
+                // Re-establish callbacks (they were cleared in cleanupForReuse)
+                setupLineCallbacks(lineView: lineViews[index])
+            }
+
+            // Update corner radius (structure unchanged, just refresh)
+            applyMultiLineCornerRadiusToAllLines()
+
+        } else {
+            // ❗Structure changed (different number of lines) - must recreate
+            recreateAllLineViews(with: newLineViewModels)
+        }
     }
 
     // MARK: - Setup
@@ -192,7 +239,7 @@ final public class MarketOutcomesMultiLineView: UIView {
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] lineViewModels in
-                self?.updateLineViews(with: lineViewModels)
+                self?.recreateAllLineViews(with: lineViewModels)
             }
             .store(in: &cancellables)
 
@@ -226,7 +273,9 @@ final public class MarketOutcomesMultiLineView: UIView {
         }
     }
     
-    private func updateLineViews(with lineViewModels: [MarketOutcomesLineViewModelProtocol]) {
+    /// Recreates all line views from scratch
+    /// Only called when structure changes (different number of lines) or during initial setup
+    private func recreateAllLineViews(with lineViewModels: [MarketOutcomesLineViewModelProtocol]) {
         // Clear existing line views
         lineViews.forEach { $0.removeFromSuperview() }
         lineViews.removeAll()

@@ -20,7 +20,7 @@ final public class MarketOutcomesLineView: UIView {
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
     private var cancellables = Set<AnyCancellable>()
-    private let viewModel: MarketOutcomesLineViewModelProtocol
+    private var viewModel: MarketOutcomesLineViewModelProtocol
     
     // Store current display mode for corner radius calculations
     private var currentDisplayMode: MarketDisplayMode = .triple
@@ -51,6 +51,25 @@ final public class MarketOutcomesLineView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Configuration
+    /// Configures the view with a new view model for efficient reuse
+    /// Following GomaUI pattern from OutcomeItemView, MarketInfoLineView, etc.
+    public func configure(with newViewModel: MarketOutcomesLineViewModelProtocol) {
+        // Clear previous bindings
+        cancellables.removeAll()
+
+        // Update view model reference
+        self.viewModel = newViewModel
+
+        // Re-establish bindings with new ViewModel
+        setupBindings()
+
+        // Immediately apply current state from ViewModel
+        // After cell reuse, the ViewModel may already have selection state
+        // from betslip synchronization. We must render this state immediately.
+        updateMarketState(newViewModel.marketStateSubject.value)
     }
 
     // MARK: - Setup

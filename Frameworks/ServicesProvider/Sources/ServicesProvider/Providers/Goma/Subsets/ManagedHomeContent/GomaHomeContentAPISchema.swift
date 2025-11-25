@@ -193,14 +193,6 @@ extension GomaHomeContentAPISchema: Endpoint {
 
     var performanceFeature: PerformanceFeature? {
         // All home content endpoints are CMS content loading
-        switch self {
-        case .initialDump, .homeTemplate,
-             .alertBanner, .banners, .sportBanners, .casinoCarouselBanners,
-             .boostedOdds, .topImageCards, .heroCards, .stories, .news,
-             .proChoices, .topCompetitions:
-            return .cms
-        default:
-            return .none
-        }
+        return .cms
     }
 }

@@ -306,7 +306,7 @@ class SportsBetslipViewController: UIViewController {
             // Bottom actions stack - fixed at bottom
             bottomActionsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomActionsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomActionsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomActionsStackView.bottomAnchor.constraint(equalTo: bottomSafeAreaView.topAnchor),
 
             // Bottom safe area view - fills area below safe area
             bottomSafeAreaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
