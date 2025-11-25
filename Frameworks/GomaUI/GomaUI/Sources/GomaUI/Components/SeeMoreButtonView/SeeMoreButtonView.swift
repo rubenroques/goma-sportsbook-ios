@@ -40,6 +40,7 @@ final public class SeeMoreButtonView: UIView {
     
     private let viewModel: SeeMoreButtonViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+    private var currentStyle: SeeMoreButtonStyle = .solidBackground
     
     // MARK: - Public Callbacks
     
@@ -107,15 +108,58 @@ final public class SeeMoreButtonView: UIView {
     }
     
     private func applyInitialStyling() {
-        // Apply StyleProvider theming
-        containerView.backgroundColor = StyleProvider.Color.highlightPrimary
+        // Apply default styling (solidBackground)
         titleLabel.font = StyleProvider.fontWith(type: .medium, size: 13)
-        titleLabel.textColor = StyleProvider.Color.buttonTextPrimary
         loadingIndicator.color = StyleProvider.Color.buttonTextPrimary
+        
+        // Apply default style - will be updated when render is called with actual state
+        applyStyle(.solidBackground, isEnabled: true)
         
         // Set initial accessibility
         button.accessibilityTraits = .button
         isAccessibilityElement = true
+    }
+    
+    private func applyStyle(_ style: SeeMoreButtonStyle, isEnabled: Bool) {
+        currentStyle = style
+        
+        switch style {
+        case .solidBackground:
+            applySolidBackgroundStyle(isEnabled: isEnabled)
+        case .bordered:
+            applyBorderedStyle(isEnabled: isEnabled)
+        }
+    }
+    
+    private func applySolidBackgroundStyle(isEnabled: Bool) {
+        if isEnabled {
+            containerView.backgroundColor = StyleProvider.Color.highlightPrimary
+            titleLabel.textColor = StyleProvider.Color.buttonTextPrimary
+            loadingIndicator.color = StyleProvider.Color.buttonTextPrimary
+        } else {
+            containerView.backgroundColor = StyleProvider.Color.buttonDisablePrimary
+            titleLabel.textColor = StyleProvider.Color.buttonTextDisablePrimary
+            loadingIndicator.color = StyleProvider.Color.buttonTextDisablePrimary
+        }
+        
+        containerView.layer.borderWidth = 0
+        containerView.layer.borderColor = UIColor.clear.cgColor
+    }
+    
+    private func applyBorderedStyle(isEnabled: Bool) {
+        containerView.backgroundColor = .clear
+        
+        if isEnabled {
+            containerView.layer.borderWidth = 2
+            containerView.layer.borderColor = StyleProvider.Color.buttonBorderTertiary.cgColor
+            titleLabel.textColor = StyleProvider.Color.buttonBorderTertiary
+            loadingIndicator.color = StyleProvider.Color.buttonBorderTertiary
+        } else {
+            containerView.layer.borderWidth = 2
+            containerView.layer.borderColor = StyleProvider.Color.buttonDisablePrimary.cgColor
+            titleLabel.textColor = StyleProvider.Color.buttonTextDisablePrimary
+            loadingIndicator.color = StyleProvider.Color.buttonTextDisablePrimary
+        }
     }
     
     private func setupBindings() {
@@ -146,6 +190,9 @@ final public class SeeMoreButtonView: UIView {
         // Update enabled state
         button.isEnabled = state.isEnabled
         containerView.alpha = state.isEnabled ? 1.0 : 0.6
+        
+        // Apply style based on button data
+        applyStyle(state.buttonData.style, isEnabled: state.isEnabled)
         
         // Update title text
         updateTitleText(from: state.buttonData)

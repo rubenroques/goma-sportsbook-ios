@@ -33,7 +33,6 @@ public final class MockCustomExpandableSectionViewModel: CustomExpandableSection
         self.expandedIconName = expandedIconName
         self.subject = CurrentValueSubject(isExpanded)
     }
-
     public func toggleExpanded() {
         subject.send(!subject.value)
     }

@@ -151,8 +151,18 @@ public class ExtendedListFooterView: UIView {
         logosContainer.subviews.forEach { $0.removeFromSuperview() }
         sponsorViewMap.removeAll()
 
-        guard !sponsors.isEmpty else {
-            sectionContainer.isHidden = true
+        if sponsors.isEmpty {
+            let fallbackView = createDefaultSponsorsView()
+            logosContainer.addSubview(fallbackView)
+
+            NSLayoutConstraint.activate([
+                fallbackView.topAnchor.constraint(equalTo: logosContainer.topAnchor),
+                fallbackView.leadingAnchor.constraint(equalTo: logosContainer.leadingAnchor),
+                fallbackView.trailingAnchor.constraint(equalTo: logosContainer.trailingAnchor),
+                fallbackView.bottomAnchor.constraint(equalTo: logosContainer.bottomAnchor)
+            ])
+
+            sectionContainer.isHidden = viewModel.partnerClubs.isEmpty
             return
         }
 
@@ -167,6 +177,77 @@ public class ExtendedListFooterView: UIView {
             gridView.trailingAnchor.constraint(equalTo: logosContainer.trailingAnchor),
             gridView.bottomAnchor.constraint(equalTo: logosContainer.bottomAnchor)
         ])
+    }
+
+    private func createDefaultSponsorsView() -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        let verticalStack = UIStackView()
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.axis = .vertical
+        verticalStack.spacing = Constants.partnerLogoSpacing
+        verticalStack.alignment = .center
+
+        container.addSubview(verticalStack)
+
+        NSLayoutConstraint.activate([
+            verticalStack.topAnchor.constraint(equalTo: container.topAnchor),
+            verticalStack.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            verticalStack.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            verticalStack.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        let logosPerRow = 2
+        var currentRowStack: UIStackView?
+
+        for (index, club) in viewModel.partnerClubs.enumerated() {
+            if index % logosPerRow == 0 {
+                let rowStack = UIStackView()
+                rowStack.translatesAutoresizingMaskIntoConstraints = false
+                rowStack.axis = .horizontal
+                rowStack.spacing = Constants.partnerLogoSpacing
+                rowStack.alignment = .center
+                rowStack.distribution = .equalSpacing
+                verticalStack.addArrangedSubview(rowStack)
+                currentRowStack = rowStack
+            }
+
+            if let rowStack = currentRowStack {
+                let sponsorView = createDefaultSponsorView(for: club)
+                rowStack.addArrangedSubview(sponsorView)
+            }
+        }
+
+        return container
+    }
+
+    private func createDefaultSponsorView(for club: PartnerClub) -> UIView {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            container.widthAnchor.constraint(equalToConstant: Constants.partnerLogoWidth),
+            container.heightAnchor.constraint(equalToConstant: Constants.partnerLogoHeight)
+        ])
+
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.image = viewModel.imageResolver.image(for: .partnerLogo(club: club))
+        imageView.tintColor = StyleProvider.Color.allWhite
+
+        container.addSubview(imageView)
+
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: container.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        return container
     }
 
     private func createSponsorLogosGrid(with sponsors: [FooterSponsor]) -> UIView {

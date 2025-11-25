@@ -13,6 +13,7 @@ struct TransactionHistoryItem: Hashable, Identifiable {
     let iconName: String
     let balance: Double?
     let gameId: String?  // Required for sportsbook vs casino distinction
+    let gameName: String?
 
     // Display fields (matches web implementation pattern)
     let displayType: String
@@ -87,6 +88,7 @@ extension TransactionHistoryItem {
             iconName: bankingTransaction.type.iconName,
             balance: nil,  // Banking transactions don't have balance information
             gameId: nil,  // Banking transactions have no gameId
+            gameName: nil,
             displayType: bankingTransaction.type.displayName,
             displayStatus: bankingTransaction.normalizedStatus.displayName,
             displayAmountIndicator: bankingTransaction.amountIndicator,
@@ -110,6 +112,7 @@ extension TransactionHistoryItem {
             iconName: wageringTransaction.transType.iconName,
             balance: wageringTransaction.balance,  // Use the actual balance from wagering transaction
             gameId: wageringTransaction.gameId,  // Pass through gameId for game type filtering
+            gameName: wageringTransaction.gameModel?.name, 
             displayType: wageringTransaction.transType.displayName,
             displayStatus: wageringTransaction.normalizedStatus.displayName,
             displayAmountIndicator: wageringTransaction.amountIndicator,

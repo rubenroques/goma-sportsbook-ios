@@ -133,6 +133,12 @@ extension EveryMatrixModelMapper {
         guard let createdDate = parseEveryMatrixDate(internalModel.ins) else {
             return nil
         }
+        
+        var gameModel: GameModel? = nil
+        
+        if let internalGameModel = internalModel.gameModel {
+            gameModel = self.gameModel(from: internalGameModel)
+        }
 
         return WageringTransaction(
             transId: internalModel.transId,
@@ -153,8 +159,13 @@ extension EveryMatrixModelMapper {
             betType: internalModel.betType,
             transName: internalModel.transName,
             coreTransId: internalModel.coreTransId,
-            currencyCode: internalModel.currencyCode
+            currencyCode: internalModel.currencyCode,
+            gameModel: gameModel
         )
+    }
+    
+    static func gameModel(from internalGameModde: EveryMatrix.GameModel) -> GameModel {
+        return GameModel(name: internalGameModde.name)
     }
 
     // MARK: - Date Parsing Helper

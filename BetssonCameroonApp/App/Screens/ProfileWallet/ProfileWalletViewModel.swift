@@ -134,7 +134,7 @@ final class ProfileWalletViewModel: ObservableObject {
                     // Create or update expandable section view model
                     if self.walletDetailViewModel.pendingWithdrawSectionViewModel == nil {
                         self.walletDetailViewModel.pendingWithdrawSectionViewModel = CustomExpandableSectionViewModel(
-                            title: localized("pending_withdraws"),
+                            title: localized("pending_withdrawals"),
                             isExpanded: false,
                             leadingIconName: "timelapse_icon",
                             collapsedIconName: "chevron_down_icon",

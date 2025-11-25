@@ -16,6 +16,7 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
 
     public let paymentOperators: [PaymentOperator]
     public let socialMediaPlatforms: [SocialPlatform]
+    public let partnerClubs: [PartnerClub]
     public let socialLinks: [FooterSocialLink]
     public let sponsors: [FooterSponsor]
     public let navigationLinks: [FooterLink]
@@ -47,6 +48,7 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
     public init(
         paymentOperators: [PaymentOperator] = PaymentOperator.allCases,
         socialMediaPlatforms: [SocialPlatform] = SocialPlatform.allCases,
+        partnerClubs: [PartnerClub] = PartnerClub.allCases,
         sponsors: [FooterSponsor] = MockExtendedListFooterViewModel.defaultSponsors(),
         socialLinks: [FooterSocialLink] = MockExtendedListFooterViewModel.defaultSocialLinks(),
         navigationLinks: [FooterLink] = [],
@@ -63,6 +65,7 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
     ) {
         self.paymentOperators = paymentOperators
         self.socialMediaPlatforms = socialMediaPlatforms
+        self.partnerClubs = partnerClubs
         self.sponsors = sponsors
         self.socialLinks = socialLinks
         self.navigationLinks = navigationLinks.isEmpty ? Self.defaultNavigationLinks() : navigationLinks

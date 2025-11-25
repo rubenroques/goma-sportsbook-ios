@@ -18,6 +18,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
 
     let paymentOperators: [PaymentOperator]
     let socialMediaPlatforms: [SocialPlatform]
+    let partnerClubs: [PartnerClub]
     private(set) var navigationLinks: [FooterLink]
     private(set) var sponsors: [FooterSponsor] = []
     private(set) var socialLinks: [FooterSocialLink] = []
@@ -65,18 +66,21 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         // Cameroon-specific content
         self.paymentOperators = PaymentOperator.allCases
         self.socialMediaPlatforms = SocialPlatform.allCases
+        self.partnerClubs = PartnerClub.allCases
         self.navigationLinks = Self.cameroonNavigationLinks()
+        
+        // Sponsors will be populated from CMS or shown as defaults via partnerClubs in the view
 
         self.responsibleGamblingText = ResponsibleGamblingText(
-            warning: "Gambling can be addictive.",
-            advice: "Please play responsibly."
+            warning: localized("gambling_can_be_addictive"),
+            advice: localized("please_play_responsibly")
         )
 
-        self.copyrightText = "© Betsson 2025"
-        self.licenseHeaderText = "Licenses"
+        self.copyrightText = localized("copyright_betsson")
+        self.licenseHeaderText = localized("licenses")
         self.licenseBodyText = Self.cameroonLicenseText()
-        self.partnershipHeaderText = "In collaboration with"
-        self.socialMediaHeaderText = "Follow us"
+        self.partnershipHeaderText = localized("in_collaboration_with")
+        self.socialMediaHeaderText = localized("follow_us")
 
         // Set up link tap handler to map to URL/email requests
         self.onLinkTap = { [weak self] linkType in
@@ -122,7 +126,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private static func cameroonLicenseText() -> String {
-        return "The operator of this website is Ngantat Sarl, a licensed company with registration number RCCM N° RC/DLN/2024/B/137 and with registered address at Makepe Douala Cour Supreme, Bâtiment Domino, Unit 33, Douala, Cameroon."
+        return localized("license_text")
     }
 
     // MARK: - Remote Footer Links Fetching
@@ -201,19 +205,19 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private func applyCMSFooterSponsors() {
-        guard !fetchedFooterSponsors.isEmpty else { return }
-
-        sponsors = fetchedFooterSponsors.map { sponsor in
-            let iconURL = sponsor.iconURL
-            let tapURL = URL(string: sponsor.url)
-            return FooterSponsor(
-                id: sponsor.id,
-                iconURL: iconURL,
-                url: tapURL
-            )
+        if !fetchedFooterSponsors.isEmpty {
+            sponsors = fetchedFooterSponsors.map { sponsor in
+                let iconURL = sponsor.iconURL
+                let tapURL = URL(string: sponsor.url)
+                return FooterSponsor(
+                    id: sponsor.id,
+                    iconURL: iconURL,
+                    url: tapURL
+                )
+            }
+            onSponsorsUpdated?(sponsors)
         }
-
-        onSponsorsUpdated?(sponsors)
+        // If CMS sponsors are empty, the view will show default sponsors from partnerClubs
     }
 
     private func applyCMSSocialLinks() {
@@ -289,14 +293,14 @@ private extension FooterLinkType {
 
     var defaultFallbackTitle: String {
         switch self {
-        case .termsAndConditions: return "Terms and Conditions"
-        case .affiliates: return "Affiliates"
-        case .privacyPolicy: return "Privacy Policy"
-        case .cookiePolicy: return "Cookie Policy"
-        case .responsibleGambling: return "Responsible Gambling"
-        case .gameRules: return "Game Rules"
-        case .helpCenter: return "Help Center"
-        case .contactUs: return "Contact Us"
+        case .termsAndConditions: return localized("terms_and_conditions")
+        case .affiliates: return localized("affiliates")
+        case .privacyPolicy: return localized("privacy_policy")
+        case .cookiePolicy: return localized("cookie_policy")
+        case .responsibleGambling: return localized("responsible_gambling")
+        case .gameRules: return localized("game_rules")
+        case .helpCenter: return localized("help_center")
+        case .contactUs: return localized("contact_us")
         case .socialMedia(let platform): return platform.displayName
         }
     }

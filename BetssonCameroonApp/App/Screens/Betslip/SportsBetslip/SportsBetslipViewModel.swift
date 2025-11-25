@@ -466,6 +466,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         loginButtonViewModel.onButtonTapped = { [weak self] in
             self?.showLoginScreen?()
         }
+        
     }
     
     private func placeBet() {

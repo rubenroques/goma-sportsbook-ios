@@ -148,8 +148,9 @@ public struct WageringTransaction {
     public let transName: String?
     public let coreTransId: String?
     public let currencyCode: String
+    public let gameModel: GameModel?
 
-    public init(transId: String, userId: Int, transType: WageringTransactionType, totalAmount: Double?, realAmount: Double, bonusAmount: Double?, afterBalanceRealAmount: Double?, afterBalanceBonusAmount: Double?, balance: Double?, stakeTotal: Double?, gameId: String?, createdDate: Date, ceGameId: String?, roundId: String?, internalRoundId: String?, betType: Int?, transName: String?, coreTransId: String?, currencyCode: String) {
+    public init(transId: String, userId: Int, transType: WageringTransactionType, totalAmount: Double?, realAmount: Double, bonusAmount: Double?, afterBalanceRealAmount: Double?, afterBalanceBonusAmount: Double?, balance: Double?, stakeTotal: Double?, gameId: String?, createdDate: Date, ceGameId: String?, roundId: String?, internalRoundId: String?, betType: Int?, transName: String?, coreTransId: String?, currencyCode: String, gameModel: GameModel?) {
         self.transId = transId
         self.userId = userId
         self.transType = transType
@@ -169,7 +170,12 @@ public struct WageringTransaction {
         self.transName = transName
         self.coreTransId = coreTransId
         self.currencyCode = currencyCode
+        self.gameModel = gameModel
     }
+}
+
+public struct GameModel {
+    public let name: String
 }
 
 public enum WageringTransactionType {

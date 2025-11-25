@@ -77,6 +77,12 @@ extension ServiceProviderModelMapper {
         case .batchAmountsCredit:
             type = .batchAmountsCredit
         }
+        
+        var gameModel: GameModel? = nil
+        
+        if let serviceProviderGameModel = spTransaction.gameModel {
+            gameModel = self.gameModel(from: serviceProviderGameModel)
+        }
 
         return WageringTransaction(
             id: spTransaction.transId,
@@ -98,7 +104,12 @@ extension ServiceProviderModelMapper {
             betType: spTransaction.betType,
             transName: spTransaction.transName,
             coreTransId: spTransaction.coreTransId,
-            currencyCode: spTransaction.currencyCode
+            currencyCode: spTransaction.currencyCode,
+            gameModel: gameModel
         )
+    }
+    
+    static func gameModel(from serviceProviderGameModel: ServicesProvider.GameModel) -> GameModel {
+        return GameModel(name: serviceProviderGameModel.name)
     }
 }

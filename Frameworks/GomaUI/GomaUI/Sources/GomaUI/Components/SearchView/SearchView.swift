@@ -42,6 +42,7 @@ public final class SearchView: UIView {
     private func commonInit() {
         self.setupSubviews()
         self.setupWithTheme()
+        self.textField.delegate = self
     }
 
     // MARK: - Theme
@@ -207,6 +208,14 @@ public final class SearchView: UIView {
 
     @objc private func clearTapped() {
         self.viewModel.clearText()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension SearchView: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 

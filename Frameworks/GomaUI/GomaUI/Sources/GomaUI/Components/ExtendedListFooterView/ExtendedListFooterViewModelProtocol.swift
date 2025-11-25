@@ -22,6 +22,9 @@ public protocol ExtendedListFooterViewModelProtocol {
     /// Social media links fetched from CMS
     var socialLinks: [FooterSocialLink] { get }
 
+    /// Partner clubs to display when no CMS sponsor data available
+    var partnerClubs: [PartnerClub] { get }
+
     /// Sponsor logos fetched from CMS, ordered as provided
     var sponsors: [FooterSponsor] { get }
 
