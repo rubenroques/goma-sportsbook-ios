@@ -10,19 +10,19 @@
 import Combine
 import Foundation
 
-internal final class MockCustomExpandableSectionViewModel: CustomExpandableSectionViewModelProtocol {
-    internal var title: String
-    internal var leadingIconName: String?
-    internal var collapsedIconName: String?
-    internal var expandedIconName: String?
+public final class MockCustomExpandableSectionViewModel: CustomExpandableSectionViewModelProtocol {
+    public var title: String
+    public var leadingIconName: String?
+    public var collapsedIconName: String?
+    public var expandedIconName: String?
     
     private let subject: CurrentValueSubject<Bool, Never>
     
-    internal var isExpandedPublisher: AnyPublisher<Bool, Never> {
+    public var isExpandedPublisher: AnyPublisher<Bool, Never> {
         subject.eraseToAnyPublisher()
     }
     
-    internal init(
+    public init(
         title: String,
         isExpanded: Bool = false,
         leadingIconName: String? = "info.circle",
@@ -36,20 +36,20 @@ internal final class MockCustomExpandableSectionViewModel: CustomExpandableSecti
         self.subject = CurrentValueSubject(isExpanded)
     }
     
-    internal func toggleExpanded() {
+    public func toggleExpanded() {
         subject.send(!subject.value)
     }
     
     // MARK: - Factory Helpers
-    internal static var defaultCollapsed: MockCustomExpandableSectionViewModel {
+    public static var defaultCollapsed: MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(title: "Account Overview", isExpanded: false, leadingIconName: "person.crop.circle")
     }
     
-    internal static var defaultExpanded: MockCustomExpandableSectionViewModel {
+    public static var defaultExpanded: MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(title: "Responsible Gaming", isExpanded: true, leadingIconName: "shield.lefthalf.fill")
     }
     
-    internal static func custom(title: String, icon: String?, collapsedIcon: String? = "chevron.down", expandedIcon: String? = "chevron.up", isExpanded: Bool = false) -> MockCustomExpandableSectionViewModel {
+    public static func custom(title: String, icon: String?, collapsedIcon: String? = "chevron.down", expandedIcon: String? = "chevron.up", isExpanded: Bool = false) -> MockCustomExpandableSectionViewModel {
         MockCustomExpandableSectionViewModel(
             title: title,
             isExpanded: isExpanded,

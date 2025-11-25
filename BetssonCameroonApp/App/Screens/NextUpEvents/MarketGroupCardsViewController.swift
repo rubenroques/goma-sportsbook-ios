@@ -356,7 +356,7 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
 
             let buttonData = SeeMoreButtonData(
                 id: "load-more-matches",
-                title: "Load More Events",
+                title: localized("load_more_events"),
                 remainingCount: nil
             )
 

@@ -23,7 +23,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let resetButton: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("Reset"), for: .normal)
+        button.setTitle(localized("reset"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.textPrimary, for: .normal)
         button.backgroundColor = .clear
@@ -33,7 +33,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let titleLabel: UILabel = {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("Filters")
+        label.text = localized("filters")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
@@ -43,7 +43,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let closeButton: UIButton = {
        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("Close"), for: .normal)
+        button.setTitle(localized("close"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         button.backgroundColor = .clear
@@ -398,7 +398,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sportsFilter",
                 type: .sportsFilter,
-                label: "Sports",
+                label: localized("sports"),
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -409,16 +409,16 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "timeFilter",
                 type: .timeFilter,
-                label: "Filter by Time",
+                label: localized("filter_by_time"),
                 icon: "filterTime",
                 details: FilterDetails(
                     isExpandable: false,
                     expandedByDefault: false,
                     options: [
-                        FilterOption(id: "all", label: "all", value: "0"),
+                        FilterOption(id: "all", label: localized("all"), value: "0"),
                         FilterOption(id: "1h", label: "1h", value: "1"),
                         FilterOption(id: "8h", label: "8h", value: "8"),
-                        FilterOption(id: "today", label: "today", value: "24"),
+                        FilterOption(id: "today", label: localized("today"), value: "24"),
                         FilterOption(id: "48h", label: "48h", value: "48")
                     ]
                 )
@@ -426,22 +426,22 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "sortByFilter",
                 type: .radioFilterBasic,
-                label: "Sort by",
+                label: localized("sort_by"),
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
                     expandedByDefault: true,
                     options: [
-                        FilterOption(id: "popular", label: "Popular", value: "popular"),
-                        FilterOption(id: "upcoming", label: "Upcoming", value: "upcoming"),
-                        FilterOption(id: "favourites", label: "Favourites", value: "favourites")
+                        FilterOption(id: "popular", label: localized("popular"), value: "popular"),
+                        FilterOption(id: "upcoming", label: localized("upcoming"), value: "upcoming"),
+                        FilterOption(id: "favourites", label: localized("favourites"), value: "favourites")
                     ]
                 )
             ),
             FilterWidget(
                 id: "leaguesFilter",
                 type: .radioFilterBasic,
-                label: "Leagues",
+                label: localized("leagues"),
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -452,7 +452,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "popularCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "Popular Countries",
+                label: localized("popular_countries"),
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,
@@ -463,7 +463,7 @@ extension CombinedFiltersViewController {
             FilterWidget(
                 id: "otherCountryLeaguesFilter",
                 type: .radioFilterAccordion,
-                label: "Other Countries",
+                label: localized("other_countries"),
                 icon: nil,
                 details: FilterDetails(
                     isExpandable: true,

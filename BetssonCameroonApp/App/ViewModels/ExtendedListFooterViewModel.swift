@@ -72,15 +72,15 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
         // Sponsors will be populated from CMS or shown as defaults via partnerClubs in the view
 
         self.responsibleGamblingText = ResponsibleGamblingText(
-            warning: "Gambling can be addictive.",
-            advice: "Please play responsibly."
+            warning: localized("gambling_can_be_addictive"),
+            advice: localized("please_play_responsibly")
         )
 
-        self.copyrightText = "© Betsson 2025"
-        self.licenseHeaderText = "Licenses"
+        self.copyrightText = localized("copyright_betsson")
+        self.licenseHeaderText = localized("licenses")
         self.licenseBodyText = Self.cameroonLicenseText()
-        self.partnershipHeaderText = "In collaboration with"
-        self.socialMediaHeaderText = "Follow us"
+        self.partnershipHeaderText = localized("in_collaboration_with")
+        self.socialMediaHeaderText = localized("follow_us")
 
         // Set up link tap handler to map to URL/email requests
         self.onLinkTap = { [weak self] linkType in
@@ -126,7 +126,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private static func cameroonLicenseText() -> String {
-        return "The operator of this website is Ngantat Sarl, a licensed company with registration number RCCM N° RC/DLN/2024/B/137 and with registered address at Makepe Douala Cour Supreme, Bâtiment Domino, Unit 33, Douala, Cameroon."
+        return localized("license_text")
     }
 
     // MARK: - Remote Footer Links Fetching
@@ -293,14 +293,14 @@ private extension FooterLinkType {
 
     var defaultFallbackTitle: String {
         switch self {
-        case .termsAndConditions: return "Terms and Conditions"
-        case .affiliates: return "Affiliates"
-        case .privacyPolicy: return "Privacy Policy"
-        case .cookiePolicy: return "Cookie Policy"
-        case .responsibleGambling: return "Responsible Gambling"
-        case .gameRules: return "Game Rules"
-        case .helpCenter: return "Help Center"
-        case .contactUs: return "Contact Us"
+        case .termsAndConditions: return localized("terms_and_conditions")
+        case .affiliates: return localized("affiliates")
+        case .privacyPolicy: return localized("privacy_policy")
+        case .cookiePolicy: return localized("cookie_policy")
+        case .responsibleGambling: return localized("responsible_gambling")
+        case .gameRules: return localized("game_rules")
+        case .helpCenter: return localized("help_center")
+        case .contactUs: return localized("contact_us")
         case .socialMedia(let platform): return platform.displayName
         }
     }

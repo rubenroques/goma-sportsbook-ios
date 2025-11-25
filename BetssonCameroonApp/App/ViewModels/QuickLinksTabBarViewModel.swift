@@ -62,7 +62,7 @@ final class QuickLinksTabBarViewModel: QuickLinksTabBarViewModelProtocol {
     private static var defaultGamingQuickLinks: [QuickLinkItem] {
         return [
             QuickLinkItem(type: .aviator, title: localized("aviator"), icon: UIImage(named: "aviator_quick_link_icon")),
-            QuickLinkItem(type: .virtual, title: localized("virtual"), icon: UIImage(named: "virtual_quick_link_icon")),
+            QuickLinkItem(type: .virtual, title: localized("virtuals"), icon: UIImage(named: "virtual_quick_link_icon")),
             QuickLinkItem(type: .slots, title: localized("slots"), icon: UIImage(named: "slots_quick_link_icon")),
             QuickLinkItem(type: .crash, title: localized("crash"), icon: UIImage(named: "crash_quick_link_icon")),
             QuickLinkItem(type: .promos, title: localized("promos"), icon: UIImage(named: "promos_quick_link_icon"))
