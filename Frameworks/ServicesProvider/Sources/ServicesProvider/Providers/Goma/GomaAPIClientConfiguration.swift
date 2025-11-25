@@ -21,7 +21,7 @@ public struct GomaAPIClientConfiguration {
     public var apiHostname: String {
         switch self.environment {
         case .betsson: return "https://api.gomademo.com/"
-        case .betssonCameroon: return "https://api.gomademo.com/"
+        case .betssonCameroon: return "https://cms.betssonem.com/"
         case .gomaDemo: return "https://api.gomademo.com/"
         case .development: return "https://api.gomademo.com/"
         }
