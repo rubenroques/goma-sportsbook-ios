@@ -69,9 +69,82 @@ cwamp rpc \
   --pretty
 ```
 
-### 3. Subscriptions
+### 3. Register for Real-Time Data (Recommended for EveryMatrix)
 
-#### Subscribe to Live Sports
+EveryMatrix uses WAMP REGISTER/INVOKE pattern. Use `register` to receive real-time updates:
+
+#### Register for Live Sports Updates
+```bash
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --duration 30000 \
+  --pretty
+```
+
+Expected output:
+```json
+{
+  "status": "success",
+  "procedure": "/sports/4093/en/disciplines/LIVE/BOTH",
+  "invocations": [
+    {
+      "timestamp": 1732500000000,
+      "kwargs": {
+        "version": "1764033303918",
+        "format": "BASIC",
+        "messageType": "UPDATE",
+        "records": [
+          {
+            "changeType": "UPDATE",
+            "entityType": "SPORT",
+            "id": "1",
+            "changedProperties": {
+              "numberOfLiveEvents": 5,
+              "numberOfLiveMarkets": 357
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "duration": 30000
+}
+```
+
+#### Register with Initial Dump (Recommended)
+```bash
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --initial-dump \
+  --duration 30000 \
+  --pretty
+```
+
+This fetches the current state first (via RPC), then registers for updates - exactly like the iOS app.
+
+#### Register for Match Odds Updates
+```bash
+cwamp register \
+  --procedure "/sports/4093/en/287742034424664064/match-odds" \
+  --initial-dump \
+  --duration 60000 \
+  --verbose
+```
+
+#### Collect Limited Invocations
+```bash
+# Exit after receiving 5 updates
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --max-messages 5 \
+  --pretty
+```
+
+### 4. Subscriptions (Pub/Sub - Limited Use)
+
+> **Note**: EveryMatrix doesn't use pub/sub for most data. Use `register` instead.
+
+#### Subscribe to Live Sports (may receive 0 events)
 ```bash
 cwamp subscribe \
   --topic "/sports/1/en/disciplines/LIVE/BOTH" \
@@ -89,7 +162,7 @@ cwamp subscribe \
   --pretty
 ```
 
-### 4. Interactive Mode
+### 5. Interactive Mode
 
 Start an interactive WAMP session:
 
@@ -220,7 +293,20 @@ WAMP_DEBUG=false
 | `/sports#searchV2` | Search events | `lang`, `limit`, `query`, `eventStatuses`, `include`, `bettingTypeIds` |
 | `/sports#initialDump` | Get initial data for topic | `topic` |
 
-### Common Subscription Topics
+### Register Procedures (Real-Time Updates)
+
+Use with `cwamp register` to receive real-time INVOKE messages:
+
+| Procedure Pattern | Description |
+|-------------------|-------------|
+| `/sports/{operatorId}/{lang}/disciplines/LIVE/BOTH` | Live sports with real-time updates |
+| `/sports/{operatorId}/{lang}/disciplines/BOTH/BOTH` | All sports (live + prematch) |
+| `/sports/{operatorId}/{lang}/{matchId}/match-odds` | Match odds real-time updates |
+| `/sports/{operatorId}/{lang}/live-matches-aggregator-main/{sportId}/...` | Live matches for a sport |
+
+**Operator ID**: `4093` (Betsson Cameroon staging)
+
+### Common Subscription Topics (Pub/Sub - Limited Use)
 
 | Topic Pattern | Description |
 |---------------|-------------|
@@ -259,17 +345,30 @@ WAMP_DEBUG=false
 | `Connection timeout` | Increase WAMP_TIMEOUT_CONNECTION |
 | `RPC call timeout` | Increase WAMP_TIMEOUT_RPC |
 | `No messages received` | Topic may not have active data |
+| `subscribe` returns 0 events | Use `register` instead - EveryMatrix uses REGISTER/INVOKE pattern |
+| `register` returns 0 invocations | Check procedure URI format, ensure operatorId (4093) is correct |
 
 ## For Claude Code
 
 When using this tool with Claude Code, you can execute commands directly:
 
 ```bash
-# Get live match data
+# Get live match data via RPC
 cd tools/wamp-client && cwamp rpc --procedure "/sports#matches" --kwargs '{"lang":"en","matchId":"123"}' --pretty
 
-# Subscribe to updates for 10 seconds
+# Register for real-time updates (RECOMMENDED for EveryMatrix)
+cd tools/wamp-client && cwamp register --procedure "/sports/4093/en/disciplines/LIVE/BOTH" --initial-dump --duration 30000 --pretty
+
+# Register with verbose logging to see each update
+cd tools/wamp-client && cwamp register --procedure "/sports/4093/en/disciplines/LIVE/BOTH" --duration 30000 --verbose
+
+# Subscribe to topics (pub/sub - may receive 0 events from EveryMatrix)
 cd tools/wamp-client && cwamp subscribe --topic "/sports/1/en/disciplines/LIVE/BOTH" --duration 10000 --pretty
 ```
+
+**Key difference:**
+- `cwamp rpc` - One-time request/response
+- `cwamp register` - Real-time streaming via INVOKE (use this for live data)
+- `cwamp subscribe` - Pub/sub pattern (EveryMatrix doesn't use this)
 
 The tool outputs JSON, making it easy to parse and use the data in your automation scripts.

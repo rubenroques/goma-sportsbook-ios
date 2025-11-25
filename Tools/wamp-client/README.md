@@ -82,9 +82,9 @@ cwamp rpc \
   --kwargs '{"lang":"en","limit":10,"query":"barcelona","eventStatuses":[1,2],"include":["matches"],"bettingTypeIds":[1],"dataWithoutOdds":false}'
 ```
 
-#### Subscriptions
+#### Subscriptions (Pub/Sub Pattern)
 
-Subscribe to real-time updates:
+Subscribe to topics using WAMP pub/sub pattern:
 
 ```bash
 # Subscribe to live matches
@@ -98,12 +98,40 @@ cwamp subscribe \
   --topic "/sports/1/en/popular-matches-aggregator-main/1/10/5" \
   --initial-dump \
   --duration 10000
-
-# Subscribe to match details
-cwamp subscribe \
-  --topic "/sports/1/en/match-aggregator-groups-overview/12345/1" \
-  --duration 30000
 ```
+
+> **Note**: EveryMatrix uses the REGISTER/INVOKE pattern for most real-time data. If `subscribe` receives 0 events, use `register` instead.
+
+#### Register (REGISTER/INVOKE Pattern) - Recommended for EveryMatrix
+
+Register as an RPC callee to receive server invocations. This is how the iOS app receives real-time updates from EveryMatrix:
+
+```bash
+# Register for live sports updates (receives real-time data)
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --duration 30000 \
+  --pretty
+
+# Register with initial dump (recommended - like iOS app)
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --initial-dump \
+  --duration 60000 \
+  --pretty
+
+# Collect up to 10 invocations then exit
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --max-messages 10 \
+  --pretty
+```
+
+**Why use `register` instead of `subscribe`?**
+
+EveryMatrix uses WAMP's REGISTER/INVOKE pattern rather than traditional pub/sub:
+- **subscribe**: Client subscribes to a topic, server publishes events (0 events from EveryMatrix)
+- **register**: Client registers a procedure, server INVOKEs it with data updates (real-time data)
 
 #### Interactive Mode
 
@@ -165,26 +193,42 @@ cwamp rpc \
   --pretty
 ```
 
-### Subscribing to Live Updates
+### Receiving Real-Time Updates (Register)
+
+For EveryMatrix, use `register` to receive real-time data:
 
 ```bash
-# Live matches for football
+# Live sports disciplines with real-time updates
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/LIVE/BOTH" \
+  --initial-dump \
+  --duration 30000 \
+  --pretty
+
+# Live match updates
+cwamp register \
+  --procedure "/sports/4093/en/287742034424664064/match-odds" \
+  --initial-dump \
+  --duration 60000 \
+  --verbose
+
+# All sports (not just live)
+cwamp register \
+  --procedure "/sports/4093/en/disciplines/BOTH/BOTH" \
+  --initial-dump \
+  --duration 30000 \
+  --pretty
+```
+
+### Subscribing to Topics (Pub/Sub - Limited Use)
+
+The `subscribe` command uses WAMP pub/sub. Note: EveryMatrix may not publish to all topics.
+
+```bash
+# Attempt pub/sub subscription
 cwamp subscribe \
   --topic "/sports/1/en/live-matches-aggregator-main/1/all-locations/default-event-info/20/5" \
   --duration 10000 \
-  --pretty
-
-# Popular matches with initial data
-cwamp subscribe \
-  --topic "/sports/1/en/popular-matches-aggregator-main/1/10/5" \
-  --initial-dump \
-  --duration 5000 \
-  --pretty
-
-# Match odds updates
-cwamp subscribe \
-  --topic "/sports/1/en/123456/match-odds" \
-  --duration 30000 \
   --pretty
 ```
 
@@ -205,9 +249,24 @@ cwamp subscribe \
 - `/sports#searchV2` - Search for events
 - `/sports#initialDump` - Get initial data for a subscription topic
 
-### Subscription Topics
+### Register Procedures (Real-Time Data)
+
+These procedures receive real-time INVOKE messages from the server. Use with `cwamp register`:
+
+| Procedure Pattern | Description |
+|-------------------|-------------|
+| `/sports/{operatorId}/{lang}/disciplines/LIVE/BOTH` | Live sports with real-time updates |
+| `/sports/{operatorId}/{lang}/disciplines/BOTH/BOTH` | All sports (live + prematch) |
+| `/sports/{operatorId}/{lang}/{matchId}/match-odds` | Match odds real-time updates |
+| `/sports/{operatorId}/{lang}/live-matches-aggregator-main/{sportId}/...` | Live matches for a sport |
+
+**Operator IDs**: `4093` (Betsson Cameroon staging)
+
+### Subscription Topics (Pub/Sub)
 
 Topics follow the pattern: `/sports/{operatorId}/{language}/{type}/{parameters}`
+
+> **Note**: EveryMatrix primarily uses REGISTER/INVOKE, not pub/sub. These topics may not receive events.
 
 Examples:
 - `/sports/1/en/live-matches-aggregator-main/{sportId}/{locationId}/{eventInfo}/{eventLimit}/{marketLimit}`

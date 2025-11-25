@@ -287,6 +287,111 @@ ${chalk.bold('Output Format:')}
     }
   });
 
+// Register command (WAMP REGISTER/INVOKE pattern for EveryMatrix)
+program
+  .command('register')
+  .description('Register as RPC callee to receive server invocations (EveryMatrix real-time pattern)')
+  .requiredOption('-p, --procedure <procedure>', 'Procedure URI to register (e.g., /sports/4093/en/disciplines/LIVE/BOTH)')
+  .option('-d, --duration <ms>', 'Duration to listen for invocations in milliseconds', config.timeouts.subscription.toString())
+  .option('-m, --max-messages <count>', 'Maximum invocations to collect', config.maxSubscriptionMessages.toString())
+  .option('--initial-dump', 'Fetch initial data via RPC before registering', false)
+  .option('--url <url>', 'Override WAMP server URL')
+  .option('--realm <realm>', 'Override WAMP realm')
+  .option('--cid <cid>', 'Override client ID')
+  .option('--pretty', 'Pretty print JSON output', false)
+  .option('--verbose', 'Enable verbose logging', false)
+  .option('--debug', 'Enable debug output', false)
+  .option('--timestamp', 'Add timestamps to log messages', false)
+  .addHelpText('after', `
+${chalk.bold('Why use register instead of subscribe?')}
+  EveryMatrix uses the WAMP REGISTER/INVOKE pattern, not pub/sub.
+  The client registers a procedure, and the server INVOKEs it with updates.
+  This is how the iOS app receives real-time sports data.
+
+${chalk.bold('Examples:')}
+  ${chalk.gray('# Register for live sports updates')}
+  $ cwamp register -p "/sports/4093/en/disciplines/LIVE/BOTH" -d 30000 --pretty
+
+  ${chalk.gray('# Register with initial dump (like iOS app)')}
+  $ cwamp register -p "/sports/4093/en/disciplines/LIVE/BOTH" --initial-dump -d 60000
+
+  ${chalk.gray('# Collect up to 5 invocations')}
+  $ cwamp register -p "/sports/4093/en/287742034424664064/match-odds" -m 5 --verbose
+
+${chalk.bold('Output Format:')}
+  Returns JSON with invocations received:
+  { "status": "timeout|max_messages_reached", "procedure": "...", "invocations": [...] }
+`)
+  .action(async (options) => {
+    const clientConfig = {
+      ...config,
+      url: options.url || config.url,
+      realm: options.realm || config.realm,
+      cid: options.cid || config.cid,
+      verbose: options.verbose || config.verbose,
+      debug: options.debug || config.debug,
+      timestamp: options.timestamp || false
+    };
+
+    const client = new WAMPClient(clientConfig);
+
+    try {
+      if (options.debug) {
+        console.log(chalk.blue('Connecting to WAMP server...'));
+        console.log(chalk.gray(`URL: ${clientConfig.url}`));
+        console.log(chalk.gray(`Realm: ${clientConfig.realm}`));
+        if (clientConfig.cid) {
+          console.log(chalk.gray(`CID: ${clientConfig.cid}`));
+        }
+      }
+
+      await client.connect();
+
+      if (options.debug) {
+        console.log(chalk.green('Connected successfully'));
+      }
+
+      let result = {};
+
+      // Optionally fetch initial dump first
+      if (options.initialDump) {
+        try {
+          const initialData = await client.rpc('/sports#initialDump', [], { topic: options.procedure });
+          result.initialData = initialData;
+          if (options.debug) {
+            console.log(chalk.green('Initial dump received'));
+          }
+        } catch (error) {
+          if (options.verbose) {
+            console.log(chalk.yellow(`No initial dump available: ${error.message}`));
+          }
+        }
+      }
+
+      // Register for invocations
+      const registration = await client.register(options.procedure, {
+        duration: parseInt(options.duration),
+        maxMessages: parseInt(options.maxMessages)
+      });
+
+      result = { ...result, ...registration };
+
+      outputResult({
+        status: 'success',
+        ...result
+      }, options.pretty);
+
+    } catch (error) {
+      outputResult({
+        status: 'error',
+        error: error.message
+      }, options.pretty);
+      process.exit(1);
+    } finally {
+      await client.disconnect();
+    }
+  });
+
 // Test connection command
 program
   .command('test')

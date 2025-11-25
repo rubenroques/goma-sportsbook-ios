@@ -8,6 +8,7 @@ class WAMPClient {
     this.connection = null;
     this.session = null;
     this.subscriptions = new Map();
+    this.registrations = new Map();
     this.pendingRequests = new Map();
     this.messageFormatter = new MessageFormatter(config);
     this.isInitialized = false;
@@ -289,6 +290,122 @@ class WAMPClient {
   }
 
   /**
+   * Register as RPC callee to receive server invocations (WAMP REGISTER/INVOKE pattern)
+   * This is how EveryMatrix sends real-time updates - the server INVOKEs registered procedures
+   */
+  async register(procedure, options = {}) {
+    if (!this.session) {
+      throw new Error('Not connected to WAMP server');
+    }
+
+    const invocations = [];
+    const startTime = Date.now();
+    const duration = options.duration || this.config.timeouts.subscription;
+    const maxMessages = options.maxMessages || this.config.maxSubscriptionMessages;
+
+    return new Promise((resolve, reject) => {
+      let timeoutHandle;
+      let registration;
+      let resolved = false;
+
+      const cleanup = () => {
+        if (timeoutHandle) {
+          clearTimeout(timeoutHandle);
+        }
+        if (registration && !options.keepAlive) {
+          registration.unregister().catch((err) => {
+            this.logger.error(`Error unregistering ${procedure}`, err);
+          });
+          this.registrations.delete(procedure);
+        }
+      };
+
+      // Handler called when server INVOKEs our registered procedure
+      const invocationHandler = (args, kwargs, details) => {
+        this.logger.subscription('invocation', procedure, { args, kwargs });
+
+        const invocation = {
+          timestamp: Date.now(),
+          args: args || [],
+          kwargs: kwargs || {},
+          details: details || {}
+        };
+        invocations.push(invocation);
+
+        // Check message limit
+        if (maxMessages && invocations.length >= maxMessages && !resolved) {
+          resolved = true;
+          cleanup();
+          resolve({
+            procedure,
+            invocations,
+            status: 'max_messages_reached',
+            duration: Date.now() - startTime
+          });
+        }
+
+        // Return value for YIELD response (autobahn handles automatically)
+        return {};
+      };
+
+      // Set timeout for invocation collection
+      if (duration) {
+        timeoutHandle = setTimeout(() => {
+          if (!resolved) {
+            resolved = true;
+            cleanup();
+            resolve({
+              procedure,
+              invocations,
+              status: 'timeout',
+              duration: duration
+            });
+          }
+        }, duration);
+      }
+
+      this.logger.subscription('register', procedure);
+
+      this.session.register(procedure, invocationHandler, options.registerOptions || {}).then(
+        (reg) => {
+          registration = reg;
+          this.registrations.set(procedure, registration);
+          this.logger.success(`Registered ${procedure}`, { registrationId: reg.id });
+        },
+        (error) => {
+          if (timeoutHandle) {
+            clearTimeout(timeoutHandle);
+          }
+          this.logger.error(`Register error for ${procedure}`, error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  /**
+   * Unregister from a procedure
+   */
+  async unregister(procedure) {
+    const registration = this.registrations.get(procedure);
+
+    if (!registration) {
+      throw new Error(`Not registered for procedure: ${procedure}`);
+    }
+
+    if (!this.session) {
+      throw new Error('Not connected to WAMP server');
+    }
+
+    await registration.unregister();
+    this.registrations.delete(procedure);
+
+    this.logger.subscription('unregister', procedure);
+
+    return { procedure, status: 'unregistered' };
+  }
+
+  /**
    * Unsubscribe from a topic
    */
   async unsubscribe(topic) {
@@ -323,8 +440,18 @@ class WAMPClient {
           this.logger.error(`Error unsubscribing from ${topic}`, error);
         }
       }
-      
       this.subscriptions.clear();
+
+      // Unregister from all procedures
+      for (const [procedure, registration] of this.registrations) {
+        try {
+          await registration.unregister();
+        } catch (error) {
+          this.logger.error(`Error unregistering from ${procedure}`, error);
+        }
+      }
+      this.registrations.clear();
+
       this.connection.close();
       
       this.logger.connectionStatus('disconnected');
