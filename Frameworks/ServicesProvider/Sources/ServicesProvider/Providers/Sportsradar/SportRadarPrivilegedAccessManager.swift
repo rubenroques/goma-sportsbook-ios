@@ -1124,7 +1124,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getGrantedBonuses
 
@@ -1167,7 +1167,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getAvailableBonuses
 

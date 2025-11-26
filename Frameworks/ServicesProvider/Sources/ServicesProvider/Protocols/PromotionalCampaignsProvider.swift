@@ -10,8 +10,8 @@ import Combine
 
 protocol PromotionalCampaignsProvider {
     
-    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError>
+    func getPromotions(language: String?) -> AnyPublisher<[PromotionInfo], ServiceProviderError>
     
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError>
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String, language: String?) -> AnyPublisher<PromotionInfo, ServiceProviderError>
     
 }

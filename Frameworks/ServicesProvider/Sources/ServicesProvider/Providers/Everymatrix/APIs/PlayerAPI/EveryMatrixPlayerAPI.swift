@@ -44,8 +44,8 @@ enum EveryMatrixPlayerAPI {
     case resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool)
     
     // Bonus
-    case getAvailableBonus
-    case getGrantedBonus
+    case getAvailableBonus(language: String)
+    case getGrantedBonus(language: String)
 
     // User Info SSE Stream
     case getUserInformationUpdatesSSE(userId: String)
@@ -206,13 +206,13 @@ extension EveryMatrixPlayerAPI: Endpoint {
                 URLQueryItem(name: "tokenId", value: tokenId),
                 URLQueryItem(name: "validationCode", value: validationCode)
             ]
-        case .getAvailableBonus:
+        case .getAvailableBonus(let language):
             return [
-                URLQueryItem(name: "language", value: EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
+                URLQueryItem(name: "language", value: language)
             ]
-        case .getGrantedBonus:
+        case .getGrantedBonus(let language):
             return [
-                URLQueryItem(name: "language", value: EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
+                URLQueryItem(name: "language", value: language)
             ]
         default:
             return nil

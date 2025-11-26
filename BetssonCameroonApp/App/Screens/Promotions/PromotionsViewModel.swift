@@ -41,7 +41,9 @@ class PromotionsViewModel {
         
         self.isLoadingPublisher.send(true)
         
-        servicesProvider.getPromotions()
+        let language = Env.locale.language.languageCode?.identifier ?? "fr"
+
+        servicesProvider.getPromotions(language: language)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 
@@ -74,7 +76,7 @@ class PromotionsViewModel {
             let cardData = PromotionCardData(
                 id: String(promotion.id),
                 title: promotion.title,
-                description: promotion.listDisplayDescription ?? "",
+                description: promotion.listDisplayDescription ?? (promotion.listDisplayNote ?? ""),
                 imageURL: promotion.listDisplayImageUrl,
                 tag: promotion.tag,
                 ctaText: promotion.ctaText,
@@ -92,7 +94,7 @@ class PromotionsViewModel {
         let headerData = PromotionalHeaderData(
             id: "promotions_bonuses",
             icon: "gift.fill",
-            title: "Promotions & Bonuses",
+            title: localized("promotions_and_bonuses"),
             subtitle: nil
         )
         self.promotionalHeaderViewModel = MockPromotionalHeaderViewModel(headerData: headerData)

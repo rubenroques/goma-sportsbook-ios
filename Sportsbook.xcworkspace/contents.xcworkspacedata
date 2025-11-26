@@ -19,7 +19,7 @@
    <FileRef
       location = "container:Frameworks/GomaPerformanceKit">
    </FileRef>
-      <FileRef
+   <FileRef
       location = "container:Frameworks/GomaLogger">
    </FileRef>
    <FileRef

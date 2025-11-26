@@ -11,8 +11,8 @@ import GomaPerformanceKit
 enum GomaPromotionalCampaignsAPISchema {
 
     // Promotions
-    case allPromotions
-    case promotionDetails(promotionSlug: String, staticPageSlug: String)
+    case allPromotions(language: String)
+    case promotionDetails(promotionSlug: String, staticPageSlug: String, language: String)
 }
 
 extension GomaPromotionalCampaignsAPISchema: Endpoint {
@@ -25,13 +25,22 @@ extension GomaPromotionalCampaignsAPISchema: Endpoint {
 
         case .allPromotions:
             return "/api/promotions/v1"
-        case .promotionDetails(let promotionSlug, let staticPageSlug):
+        case .promotionDetails(let promotionSlug, let staticPageSlug, _):
             return "/api/promotions/v1/\(promotionSlug)/\(staticPageSlug)"
         }
     }
 
     var query: [URLQueryItem]? {
-        return nil
+        switch self {
+        case .allPromotions(let language):
+            return [
+                URLQueryItem(name: "language", value: language)
+            ]
+        case .promotionDetails(_, _, let language):
+            return [
+                URLQueryItem(name: "language", value: language)
+            ]
+        }
     }
 
     var headers: HTTP.Headers? {
