@@ -87,7 +87,7 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         self.clearBetslipButtonViewModel = MockButtonIconViewModel(
             title: localized("clear_betslip"),
             icon: "trash_icon",
-            layoutType: .iconLeft
+            layoutType: .iconRight
         )
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: localized("more_selections_to_bet").replacingOccurrences(of: "{selectionNumber}", with: "1"), actionButtonTitle: localized("log_in_to_bet"), image: "empty_betslip_icon")
