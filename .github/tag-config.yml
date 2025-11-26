@@ -1,5 +1,6 @@
 # Tag-based Release Configuration
-# Maps client + environment to build settings and branch strategy
+# Maps client to build settings and release workflow
+# Dual Release: Each tag deploys to BOTH staging AND production
 
 clients:
   BCM:
@@ -9,37 +10,21 @@ clients:
     workspace: "../Sportsbook.xcworkspace"
     target: "BetssonCameroonApp"
     changelog: "BetssonCameroonApp/CHANGELOG.yml"
-
-    environments:
-      staging:
-        branch: "betsson-cm"
-        scheme: "BetssonCM Staging"
-        fastlane_lane: "keep_version_distribute_staging"
-        discord_color: 3447003  # Blue
-
-      production:
-        branch: "main"
-        scheme: "BetssonCM Prod"
-        fastlane_lane: "keep_version_distribute_production"
-        discord_color: 3066993  # Green
+    devices_file: "fastlane/devices.csv"
+    release_branch: "betsson-cm"
+    staging_scheme: "BetssonCM Staging"
+    production_scheme: "BetssonCM Prod"
+    discord_color: 3066993  # Green
 
   BFR:
     name: "Betsson France"
     directory: "BetssonFranceApp"
-    project: "BetssonFranceApp.xcodeproj"
+    project: "Sportsbook.xcodeproj"
     workspace: "../Sportsbook.xcworkspace"
     target: "BetssonFranceApp"
     changelog: "BetssonFranceApp/CHANGELOG.yml"
-
-    environments:
-      staging:
-        branch: "betsson-france-dev"
-        scheme: "Betsson UAT"
-        fastlane_lane: "betsson_uat"
-        discord_color: 3447003  # Blue
-
-      production:
-        branch: "main"
-        scheme: "Betsson PROD"
-        fastlane_lane: "betsson_prod"
-        discord_color: 3066993  # Green
+    devices_file: "fastlane/devices.txt"
+    release_branch: "betsson-france-dev"
+    staging_scheme: "Betsson UAT"
+    production_scheme: "Betsson PROD"
+    discord_color: 3066993  # Green

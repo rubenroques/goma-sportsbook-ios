@@ -1,83 +1,74 @@
-name: Tag-Based Release Distribution
+name: Tag-Based Dual Release Distribution
 
 on:
   push:
     tags:
-      - 'BCM-**'
-      - 'bcm-**'
-      - 'Bcm-**'
-      - 'BCM_**'
-      - 'bcm_**'
-      - 'Bcm_**'
-      - 'BFR-**'
-      - 'bfr-**'
-      - 'Bfr-**'
-      - 'BFR_**'
-      - 'bfr_**'
-      - 'Bfr_**'
+      - 'BCM-[0-9]*'
+      - 'BCM-v[0-9]*'
+      - 'bcm-[0-9]*'
+      - 'bcm-v[0-9]*'
+      - 'BFR-[0-9]*'
+      - 'BFR-v[0-9]*'
+      - 'bfr-[0-9]*'
+      - 'bfr-v[0-9]*'
 
 jobs:
   release:
-    name: Build and Distribute Release
-    runs-on: macos-latest
-    timeout-minutes: 90
+    name: Build and Distribute Dual Release
+    runs-on: macos-26
+    timeout-minutes: 120
 
     steps:
       - name: Parse tag and determine configuration
         id: parse
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
-          echo "📦 Processing tag: $TAG"
-
-          # Enable case-insensitive regex matching
-          shopt -s nocasematch
+          echo "Processing tag: $TAG"
 
           # Parse tag (case-insensitive)
-          # Format: CLIENT[-_]ENV[-]v?VERSION(BUILD)
-          # Supports:
-          # - Hyphen or underscore separator: BCM-Stg or bcm_stg
-          # - Optional 'v' prefix: v2.1.3 or 2.1.3
-          # - X.Y or X.Y.Z version format: 2.1 or 2.1.3
-          if [[ $TAG =~ ^([A-Za-z]+)[-_](Stg|Stage|Staging|Prod|Production)[-]v?([0-9]+\.[0-9]+(\.[0-9]+)?)\(([0-9]+)\)$ ]]; then
+          # Format: CLIENT[-_]v?VERSION(BUILD)
+          # Examples: BCM-2.1.3(21309), BCM-v2.1.3(21309), bcm_2.1(2100)
+          if [[ $TAG =~ ^([A-Za-z]+)[-_]v?([0-9]+\.[0-9]+(\.[0-9]+)?)\(([0-9]+)\)$ ]]; then
             CLIENT="${BASH_REMATCH[1]^^}"  # Uppercase
-            ENV_RAW="${BASH_REMATCH[2]}"
-            VERSION="${BASH_REMATCH[3]}"  # BASH_REMATCH[4] is the optional .Z part
-            BUILD="${BASH_REMATCH[5]}"    # Shifted due to optional group
-
-            # Normalize environment
-            case "${ENV_RAW,,}" in
-              stg|stage|staging)
-                ENVIRONMENT="staging"
-                ;;
-              prod|production)
-                ENVIRONMENT="production"
-                ;;
-              *)
-                echo "❌ Invalid environment: $ENV_RAW"
-                exit 1
-                ;;
-            esac
-
-            # Disable case-insensitive matching
-            shopt -u nocasematch
+            VERSION="${BASH_REMATCH[2]}"
+            BUILD="${BASH_REMATCH[4]}"
 
             echo "client=$CLIENT" >> $GITHUB_OUTPUT
-            echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
             echo "version=$VERSION" >> $GITHUB_OUTPUT
             echo "build=$BUILD" >> $GITHUB_OUTPUT
             echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-            echo "✅ Parsed successfully:"
+            echo "Parsed successfully:"
             echo "   Client: $CLIENT"
-            echo "   Environment: $ENVIRONMENT"
             echo "   Version: $VERSION"
             echo "   Build: $BUILD"
           else
-            echo "❌ Invalid tag format: $TAG"
-            echo "Expected format: CLIENT-ENV-VERSION(BUILD)"
-            echo "Examples: BCM-Stg-2.1.3(21309), BFR-Prod-1.5.2(15200)"
+            echo "::error::Invalid tag format: $TAG"
+            echo "Expected format: CLIENT-VERSION(BUILD)"
+            echo "Examples: BCM-2.1.3(21309), BFR-v1.5.0(15000)"
             exit 1
           fi
+
+      - name: Validate version and build numbers
+        run: |
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+
+          echo "Validating version and build numbers..."
+
+          # Check version is >= 0.1
+          if [ "$(echo "$VERSION < 0.1" | bc -l)" -eq 1 ]; then
+            echo "::error::Invalid version: $VERSION (must be >= 0.1)"
+            exit 1
+          fi
+
+          # Check build is >= 1
+          if [ "$BUILD" -lt 1 ]; then
+            echo "::error::Invalid build: $BUILD (must be >= 1)"
+            exit 1
+          fi
+
+          echo "Version validation passed: v$VERSION ($BUILD)"
 
       - name: Initial checkout to read config
         uses: actions/checkout@v4
@@ -88,73 +79,115 @@ jobs:
         id: config
         run: |
           CLIENT="${{ steps.parse.outputs.client }}"
-          ENV="${{ steps.parse.outputs.environment }}"
 
           # Install yq for YAML parsing
           brew install yq
 
           # Read configuration
-          BRANCH=$(yq e ".clients.$CLIENT.environments.$ENV.branch" .github/tag-config.yml)
-          SCHEME=$(yq e ".clients.$CLIENT.environments.$ENV.scheme" .github/tag-config.yml)
-          LANE=$(yq e ".clients.$CLIENT.environments.$ENV.fastlane_lane" .github/tag-config.yml)
+          RELEASE_BRANCH=$(yq e ".clients.$CLIENT.release_branch" .github/tag-config.yml)
+          STAGING_SCHEME=$(yq e ".clients.$CLIENT.staging_scheme" .github/tag-config.yml)
+          PRODUCTION_SCHEME=$(yq e ".clients.$CLIENT.production_scheme" .github/tag-config.yml)
           DIRECTORY=$(yq e ".clients.$CLIENT.directory" .github/tag-config.yml)
           PROJECT=$(yq e ".clients.$CLIENT.project" .github/tag-config.yml)
           TARGET=$(yq e ".clients.$CLIENT.target" .github/tag-config.yml)
           CLIENT_NAME=$(yq e ".clients.$CLIENT.name" .github/tag-config.yml)
           CHANGELOG=$(yq e ".clients.$CLIENT.changelog" .github/tag-config.yml)
-          COLOR=$(yq e ".clients.$CLIENT.environments.$ENV.discord_color" .github/tag-config.yml)
+          DEVICES_FILE=$(yq e ".clients.$CLIENT.devices_file" .github/tag-config.yml)
+          COLOR=$(yq e ".clients.$CLIENT.discord_color" .github/tag-config.yml)
 
           # Validate
-          if [ "$BRANCH" == "null" ] || [ -z "$BRANCH" ]; then
-            echo "❌ Configuration not found for $CLIENT/$ENV in tag-config.yml"
+          if [ "$RELEASE_BRANCH" == "null" ] || [ -z "$RELEASE_BRANCH" ]; then
+            echo "::error::Configuration not found for $CLIENT in tag-config.yml"
             exit 1
           fi
 
-          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
-          echo "scheme=$SCHEME" >> $GITHUB_OUTPUT
-          echo "lane=$LANE" >> $GITHUB_OUTPUT
+          echo "release_branch=$RELEASE_BRANCH" >> $GITHUB_OUTPUT
+          echo "staging_scheme=$STAGING_SCHEME" >> $GITHUB_OUTPUT
+          echo "production_scheme=$PRODUCTION_SCHEME" >> $GITHUB_OUTPUT
           echo "directory=$DIRECTORY" >> $GITHUB_OUTPUT
           echo "project=$PROJECT" >> $GITHUB_OUTPUT
           echo "target=$TARGET" >> $GITHUB_OUTPUT
           echo "client_name=$CLIENT_NAME" >> $GITHUB_OUTPUT
           echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "devices_file=$DEVICES_FILE" >> $GITHUB_OUTPUT
           echo "discord_color=$COLOR" >> $GITHUB_OUTPUT
 
-          echo "✅ Configuration loaded:"
-          echo "   Branch: $BRANCH"
-          echo "   Scheme: $SCHEME"
+          echo "Configuration loaded:"
+          echo "   Release Branch: $RELEASE_BRANCH"
+          echo "   Staging Scheme: $STAGING_SCHEME"
+          echo "   Production Scheme: $PRODUCTION_SCHEME"
           echo "   Directory: $DIRECTORY"
 
-      - name: Checkout target branch
+      - name: Checkout release branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.config.outputs.branch }}
+          ref: ${{ steps.config.outputs.release_branch }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate tag matches Xcode project version
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          TAG_VERSION="${{ steps.parse.outputs.version }}"
+          TAG_BUILD="${{ steps.parse.outputs.build }}"
+          PROJECT="${{ steps.config.outputs.project }}"
+          TARGET="${{ steps.config.outputs.target }}"
+
+          echo "Validating tag version matches Xcode project..."
+          echo "   Tag: v$TAG_VERSION ($TAG_BUILD)"
+
+          # Extract version from Xcode project
+          PROJECT_VERSION=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "MARKETING_VERSION" | head -1 | awk '{print $3}')
+          PROJECT_BUILD=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "CURRENT_PROJECT_VERSION" | head -1 | awk '{print $3}')
+
+          echo "   Xcode: v$PROJECT_VERSION ($PROJECT_BUILD)"
+
+          if [ "$TAG_VERSION" != "$PROJECT_VERSION" ]; then
+            echo "::error::Version mismatch! Tag has $TAG_VERSION but Xcode project has $PROJECT_VERSION"
+            echo ""
+            echo "Please update the Xcode project version before tagging:"
+            echo "  1. Open Xcode project"
+            echo "  2. Set MARKETING_VERSION to $TAG_VERSION"
+            echo "  3. Commit and push"
+            echo "  4. Delete this tag and recreate it"
+            exit 1
+          fi
+
+          if [ "$TAG_BUILD" != "$PROJECT_BUILD" ]; then
+            echo "::error::Build number mismatch! Tag has $TAG_BUILD but Xcode project has $PROJECT_BUILD"
+            echo ""
+            echo "Please update the Xcode project build number before tagging:"
+            echo "  1. Open Xcode project"
+            echo "  2. Set CURRENT_PROJECT_VERSION to $TAG_BUILD"
+            echo "  3. Commit and push"
+            echo "  4. Delete this tag and recreate it"
+            exit 1
+          fi
+
+          echo "Version validation passed"
 
       - name: Read changelog and extract release notes
         id: changelog
         run: |
           VERSION="${{ steps.parse.outputs.version }}"
           BUILD="${{ steps.parse.outputs.build }}"
-          ENV="${{ steps.parse.outputs.environment }}"
           CHANGELOG_FILE="${{ steps.config.outputs.changelog }}"
 
-          echo "📖 Reading changelog from: $CHANGELOG_FILE"
+          echo "Reading changelog from: $CHANGELOG_FILE"
 
           if [ ! -f "$CHANGELOG_FILE" ]; then
-            echo "⚠️  Changelog file not found, using generic notes"
+            echo "Changelog file not found, using generic notes"
             NOTES="Build $BUILD - Version $VERSION"
           else
-            # Find matching release in YAML
-            NOTES=$(yq e ".releases[] | select(.version == \"$VERSION\" and .build == $BUILD and .environment == \"$ENV\") | .notes | join(\"\n• \")" "$CHANGELOG_FILE")
+            # Find matching release in YAML (match version + build only, no environment)
+            NOTES=$(yq e ".releases[] | select(.version == \"$VERSION\" and .build == $BUILD) | .notes | join(\"\n- \")" "$CHANGELOG_FILE")
 
             if [ -z "$NOTES" ] || [ "$NOTES" == "null" ]; then
-              echo "⚠️  No matching changelog entry found for v$VERSION ($BUILD) in $ENV"
+              echo "No matching changelog entry found for v$VERSION ($BUILD)"
               NOTES="Build $BUILD - Version $VERSION"
             else
-              NOTES="• $NOTES"
-              echo "✅ Found changelog entry"
+              NOTES="- $NOTES"
+              echo "Found changelog entry"
             fi
           fi
 
@@ -190,14 +223,15 @@ jobs:
         env:
           APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
         run: |
-          echo "📝 Setting up App Store Connect API Key..."
+          echo "Setting up App Store Connect API Key..."
           echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_7NC93JSN42.p8
           chmod 600 AuthKey_7NC93JSN42.p8
-          echo "✅ API Key configured"
+          echo "API Key configured"
 
       - name: Setup environment variables
         working-directory: ${{ steps.config.outputs.directory }}/fastlane
         env:
+          # Common secrets
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
@@ -205,8 +239,16 @@ jobs:
           FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
           FIREBASE_PROJECT_NUMBER: ${{ secrets.FIREBASE_PROJECT_NUMBER }}
           GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
+          # BCM-specific
           BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
           BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
+          # BFR-specific
+          BFR_MATCH_GIT_URL_PROD: ${{ secrets.BFR_MATCH_GIT_URL_PROD }}
+          BFR_PROD_TEAM_ID: ${{ secrets.BFR_PROD_TEAM_ID }}
+          BETSSON_UAT_FIREBASE_APP_ID: ${{ secrets.BFR_UAT_FIREBASE_APP_ID }}
+          BETSSON_PROD_FIREBASE_APP_ID: ${{ secrets.BFR_PROD_FIREBASE_APP_ID }}
+          FIREBASE_UAT_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          FIREBASE_PROD_CLI_TOKEN: ${{ secrets.BFR_PROD_FIREBASE_CLI_TOKEN }}
         run: |
           cat > .env << EOF
           MATCH_GIT_URL=$MATCH_GIT_URL
@@ -219,8 +261,16 @@ jobs:
           GOMA_TEAM_ID=$GOMA_TEAM_ID
           BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
           BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
+          MATCH_GIT_URL_UAT=$MATCH_GIT_URL
+          MATCH_GIT_URL_PROD=$BFR_MATCH_GIT_URL_PROD
+          BETSSON_UAT_TEAM_ID=$GOMA_TEAM_ID
+          BETSSON_PROD_TEAM_ID=$BFR_PROD_TEAM_ID
+          BETSSON_UAT_FIREBASE_APP_ID=$BETSSON_UAT_FIREBASE_APP_ID
+          BETSSON_PROD_FIREBASE_APP_ID=$BETSSON_PROD_FIREBASE_APP_ID
+          FIREBASE_UAT_CLI_TOKEN=$FIREBASE_UAT_CLI_TOKEN
+          FIREBASE_PROD_CLI_TOKEN=$FIREBASE_PROD_CLI_TOKEN
           EOF
-          echo "✅ Environment configured"
+          echo "Environment configured"
 
       - name: Setup SSH for Match
         env:
@@ -252,107 +302,100 @@ jobs:
           echo "KEYCHAIN_NAME=$KEYCHAIN_NAME" >> $GITHUB_ENV
           echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
 
-      - name: Set version in Xcode project
+      - name: Validate devices file exists
         working-directory: ${{ steps.config.outputs.directory }}
         run: |
-          VERSION="${{ steps.parse.outputs.version }}"
-          BUILD="${{ steps.parse.outputs.build }}"
-          PROJECT="${{ steps.config.outputs.project }}"
-          TARGET="${{ steps.config.outputs.target }}"
+          DEVICES_FILE="${{ steps.config.outputs.devices_file }}"
+          echo "Checking for devices file: $DEVICES_FILE"
 
-          echo "📝 Setting version in Xcode project..."
-          echo "   Project: $PROJECT"
-          echo "   Target: $TARGET"
-          echo "   Marketing Version: $VERSION"
-          echo "   Build Number: $BUILD"
-
-          # Install fastlane if needed for version setting
-          bundle exec fastlane run increment_version_number_in_xcodeproj \
-            version_number:"$VERSION" \
-            xcodeproj:"$PROJECT" \
-            target:"$TARGET"
-
-          bundle exec fastlane run increment_build_number_in_xcodeproj \
-            build_number:"$BUILD" \
-            xcodeproj:"$PROJECT" \
-            target:"$TARGET"
-
-          echo "✅ Version set successfully"
-
-      - name: Build and distribute
-        working-directory: ${{ steps.config.outputs.directory }}
-        run: |
-          LANE="${{ steps.config.outputs.lane }}"
-          NOTES="${{ steps.changelog.outputs.notes }}"
-
-          echo "🚀 Running fastlane lane: $LANE"
-
-          bundle exec fastlane $LANE release_notes:"$NOTES"
-
-          echo "✅ Build and distribution complete"
-
-      - name: Commit version changes
-        run: |
-          CLIENT="${{ steps.parse.outputs.client }}"
-          ENV="${{ steps.parse.outputs.environment }}"
-          VERSION="${{ steps.parse.outputs.version }}"
-          BUILD="${{ steps.parse.outputs.build }}"
-          TAG="${{ steps.parse.outputs.tag }}"
-          CLIENT_NAME="${{ steps.config.outputs.client_name }}"
-          NOTES="${{ steps.changelog.outputs.notes }}"
-          PROJECT="${{ steps.config.outputs.directory }}/${{ steps.config.outputs.project }}"
-
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Check if there are changes
-          if git diff --quiet "$PROJECT"; then
-            echo "ℹ️  No version changes to commit"
+          if [ ! -f "$DEVICES_FILE" ]; then
+            echo "WARNING: $DEVICES_FILE not found"
+            echo "   Device registration will be skipped"
           else
-            # Create formatted commit message
-            cat > /tmp/commit_message << EOF
-          Release: $CLIENT_NAME ${ENV^} v$VERSION ($BUILD)
-
-          Environment: ${ENV^}
-          Version: $VERSION
-          Build: $BUILD
-          Tag: $TAG
-
-          Release Notes:
-          $NOTES
-
-          Automated release via GitHub Actions
-          EOF
-
-            git add "$PROJECT"
-            git commit -F /tmp/commit_message
-            git push origin ${{ steps.config.outputs.branch }}
-
-            echo "✅ Version changes committed and pushed"
+            DEVICE_COUNT=$(grep -v "^#" "$DEVICES_FILE" | grep -v "^Device ID" | grep -v "^$" | wc -l | xargs)
+            echo "Devices file found with $DEVICE_COUNT device(s)"
           fi
 
-      - name: Send Discord notification
-        if: always()
+      - name: Build and distribute (Dual Release)
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          NOTES="${{ steps.changelog.outputs.notes }}"
+
+          echo "=============================================="
+          echo "DUAL RELEASE: Deploying to Staging + Production"
+          echo "=============================================="
+          echo "   Client: $CLIENT"
+          echo "   Version: v$VERSION ($BUILD)"
+          echo ""
+
+          if [ "$CLIENT" = "BCM" ]; then
+            echo ">>> Step 1/2: Building BCM Staging..."
+            bundle exec fastlane keep_version_distribute_staging release_notes:"$NOTES"
+
+            if [ $? -ne 0 ]; then
+              echo "::error::BCM Staging distribution failed"
+              exit 1
+            fi
+            echo "BCM Staging distribution complete"
+            echo ""
+
+            echo ">>> Step 2/2: Building BCM Production..."
+            bundle exec fastlane keep_version_distribute_production release_notes:"$NOTES"
+
+            if [ $? -ne 0 ]; then
+              echo "::error::BCM Production distribution failed"
+              exit 1
+            fi
+            echo "BCM Production distribution complete"
+
+          elif [ "$CLIENT" = "BFR" ]; then
+            echo ">>> Step 1/2: Building BFR UAT..."
+            bundle exec fastlane betsson_uat release_notes:"$NOTES"
+
+            if [ $? -ne 0 ]; then
+              echo "::error::BFR UAT distribution failed"
+              exit 1
+            fi
+            echo "BFR UAT distribution complete"
+            echo ""
+
+            echo ">>> Step 2/2: Building BFR Production..."
+            bundle exec fastlane betsson_prod release_notes:"$NOTES"
+
+            if [ $? -ne 0 ]; then
+              echo "::error::BFR Production distribution failed"
+              exit 1
+            fi
+            echo "BFR Production distribution complete"
+
+          else
+            echo "::error::Unknown client: $CLIENT"
+            exit 1
+          fi
+
+          echo ""
+          echo "=============================================="
+          echo "DUAL RELEASE COMPLETE"
+          echo "=============================================="
+
+      - name: Send Discord success notification
+        if: success()
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           CLIENT_NAME="${{ steps.config.outputs.client_name }}"
-          ENV="${{ steps.parse.outputs.environment }}"
           VERSION="${{ steps.parse.outputs.version }}"
           BUILD="${{ steps.parse.outputs.build }}"
           TAG="${{ steps.parse.outputs.tag }}"
           NOTES="${{ steps.changelog.outputs.notes }}"
           COLOR="${{ steps.config.outputs.discord_color }}"
 
-          # Determine status
-          if [ "${{ job.status }}" == "success" ]; then
-            STATUS_EMOJI="✅"
-            STATUS_TEXT="Successfully distributed to Firebase"
-          else
-            STATUS_EMOJI="❌"
-            STATUS_TEXT="Build failed"
-            COLOR=15158332  # Red
+          # Default to green if color not set
+          if [ -z "$COLOR" ] || ! [[ "$COLOR" =~ ^[0-9]+$ ]]; then
+            COLOR=3066993  # Green
           fi
 
           # Format release notes for Discord (escape quotes and newlines)
@@ -364,17 +407,12 @@ jobs:
             -d @- << EOF
           {
             "embeds": [{
-              "title": "🚀 $CLIENT_NAME ${ENV^} Release - v$VERSION ($BUILD)",
+              "title": "$CLIENT_NAME Dual Release - v$VERSION ($BUILD)",
               "color": $COLOR,
               "fields": [
                 {
                   "name": "Client",
                   "value": "$CLIENT_NAME",
-                  "inline": true
-                },
-                {
-                  "name": "Environment",
-                  "value": "${ENV^}",
                   "inline": true
                 },
                 {
@@ -393,8 +431,8 @@ jobs:
                   "inline": false
                 },
                 {
-                  "name": "Build Status",
-                  "value": "$STATUS_EMOJI $STATUS_TEXT",
+                  "name": "Status",
+                  "value": "Deployed to Staging and Production",
                   "inline": false
                 }
               ],
@@ -403,13 +441,65 @@ jobs:
           }
           EOF
 
-          echo "✅ Discord notification sent"
+          echo "Discord success notification sent"
+
+      - name: Send Discord failure notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          CLIENT_NAME="${{ steps.config.outputs.client_name }}"
+          VERSION="${{ steps.parse.outputs.version }}"
+          BUILD="${{ steps.parse.outputs.build }}"
+          TAG="${{ steps.parse.outputs.tag }}"
+
+          # Send failure notification
+          curl -X POST "$DISCORD_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d @- << EOF
+          {
+            "embeds": [{
+              "title": "$CLIENT_NAME Dual Release Failed - v$VERSION ($BUILD)",
+              "color": 15158332,
+              "fields": [
+                {
+                  "name": "Client",
+                  "value": "$CLIENT_NAME",
+                  "inline": true
+                },
+                {
+                  "name": "Version",
+                  "value": "$VERSION ($BUILD)",
+                  "inline": true
+                },
+                {
+                  "name": "Tag",
+                  "value": "\`$TAG\`",
+                  "inline": false
+                },
+                {
+                  "name": "Status",
+                  "value": "Dual release failed - check logs",
+                  "inline": false
+                },
+                {
+                  "name": "Action",
+                  "value": "Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details",
+                  "inline": false
+                }
+              ],
+              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
+            }]
+          }
+          EOF
+
+          echo "Discord failure notification sent"
 
       - name: Upload build artifacts (on failure)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: fastlane-logs-${{ steps.parse.outputs.client }}-${{ steps.parse.outputs.environment }}
+          name: fastlane-logs-${{ steps.parse.outputs.client }}-dual-release
           path: |
             ${{ steps.config.outputs.directory }}/fastlane/logs/
             ${{ steps.config.outputs.directory }}/fastlane/report.xml

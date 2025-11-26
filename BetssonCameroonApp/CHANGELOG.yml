@@ -1,50 +1,40 @@
 # Changelog for Betsson Cameroon
 #
-# This file tracks release notes for all builds distributed via tag-based releases.
+# This file tracks release notes for all builds distributed via tag-based dual releases.
 #
 # Format:
 #   - version: "X.Y.Z"           # Marketing version (e.g., "2.1.3")
 #     build: NNNNN               # Build number (e.g., 21309)
-#     environment: staging|production
 #     date: "YYYY-MM-DD"         # Release date
 #     notes:                     # List of release notes (bulleted automatically)
 #       - "Feature or fix description"
 #       - "Another change"
 #
-# When you create a tag like: BCM-Stg-v2.1.3(21309)
+# When you create a tag like: BCM-2.1.3(21309)
 # The workflow will look for a matching entry with:
 #   - version: "2.1.3"
 #   - build: 21309
-#   - environment: staging
 #
 # Supported tag formats (all case-insensitive):
-#   BCM-Stg-v2.1.3(21309)   - Recommended format
-#   BCM-Stg-2.1(21309)      - X.Y version without 'v' prefix
-#   bcm_stg-v2.1.3(21309)   - Underscore separator
-#   BCM-Stage-2.1.3(21309)  - Full environment name
+#   BCM-2.1.3(21309)      - Standard format
+#   BCM-v2.1.3(21309)     - With 'v' prefix
+#   bcm_2.1.3(21309)      - Underscore separator
+#   bcm-2.1(21309)        - X.Y version format
 #
-# If found, it will use the notes for Firebase distribution and Discord notification.
+# Dual Release: Each tag deploys to BOTH Staging AND Production automatically.
+#
+# If a matching entry is found, it will use the notes for Firebase distribution and Discord notification.
 # If not found, it will use generic notes: "Build 21309 - Version 2.1.3"
 
 releases:
-  # Example staging release
+  # Example release
   - version: "0.2.0"
     build: 2099
-    environment: staging
     date: "2025-11-18"
     notes:
       - "Initial tag-based release system implementation"
       - "Automated version management via GitHub Actions"
       - "Discord notifications for releases"
 
-  # Example production release (template for future use)
-  # - version: "0.2.0"
-  #   build: 2100
-  #   environment: production
-  #   date: "2025-11-20"
-  #   notes:
-  #     - "First production release"
-  #     - "Stable build tested in staging"
-
   # Add your releases below following the format above
-  # Remember to update version, build, environment, date, and notes
+  # Remember to update version, build, date, and notes
