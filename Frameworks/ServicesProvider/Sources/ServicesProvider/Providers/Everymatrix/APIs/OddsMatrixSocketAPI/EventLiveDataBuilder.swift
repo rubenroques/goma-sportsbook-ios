@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaLogger
 
 /// Stateless utility for building EventLiveData from EveryMatrix EventInfo DTOs
 ///
@@ -52,14 +53,14 @@ struct EventLiveDataBuilder {
         matchData: EveryMatrix.MatchDTO?
     ) -> EventLiveData {
 
-        print("[LIVE_SCORE] 🏗️ Building EventLiveData for event: \(eventId)")
-        print("[LIVE_SCORE]    Match: \(matchData?.homeParticipantName ?? "?") vs \(matchData?.awayParticipantName ?? "?")")
-        print("[LIVE_SCORE]    EventInfos count: \(eventInfos.count)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "Building EventLiveData for event: \(eventId)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Match: \(matchData?.homeParticipantName ?? "?") vs \(matchData?.awayParticipantName ?? "?")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   EventInfos count: \(eventInfos.count)")
 
         // Step 1: Determine sport template (default to .default for unknown sports)
         let sportId = matchData?.sportId ?? ""
         let template = EveryMatrixSportPatterns.sportTemplateMap[sportId] ?? .default
-        print("[LIVE_SCORE]    Sport ID: \(sportId), Template: \(template)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Sport ID: \(sportId), Template: \(template)")
 
         // Step 2: Initialize data containers
         var homeScore: Int?
@@ -82,19 +83,19 @@ struct EventLiveDataBuilder {
             case "2":  // YELLOW_CARDS
                 yellowCards = extractCards(info, matchData)
                 if let cards = yellowCards {
-                    print("[LIVE_SCORE] ⚡ YELLOW_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "YELLOW_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
                 }
 
             case "3":  // YELLOW_RED_CARDS
                 yellowRedCards = extractCards(info, matchData)
                 if let cards = yellowRedCards {
-                    print("[LIVE_SCORE] ⚡ YELLOW_RED_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "YELLOW_RED_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
                 }
 
             case "4":  // RED_CARDS
                 redCards = extractCards(info, matchData)
                 if let cards = redCards {
-                    print("[LIVE_SCORE] ⚡ RED_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "RED_CARDS extracted: home=\(cards.home?.description ?? "nil"), away=\(cards.away?.description ?? "nil")")
                 }
 
             case "37": // SERVE (tennis, table tennis, badminton, volleyball)
@@ -120,12 +121,12 @@ struct EventLiveDataBuilder {
         }
 
         // Step 5: Log final result
-        print("[LIVE_SCORE] ✅ EventLiveData built:")
-        print("[LIVE_SCORE]    Score: \(homeScore?.description ?? "nil") - \(awayScore?.description ?? "nil")")
-        print("[LIVE_SCORE]    DetailedScores count: \(detailedScores.count)")
-        print("[LIVE_SCORE]    Yellow: \(yellowCards?.home?.description ?? "nil")-\(yellowCards?.away?.description ?? "nil")")
-        print("[LIVE_SCORE]    YellowRed: \(yellowRedCards?.home?.description ?? "nil")-\(yellowRedCards?.away?.description ?? "nil")")
-        print("[LIVE_SCORE]    Red: \(redCards?.home?.description ?? "nil")-\(redCards?.away?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "EventLiveData built:")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Score: \(homeScore?.description ?? "nil") - \(awayScore?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   DetailedScores count: \(detailedScores.count)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Yellow: \(yellowCards?.home?.description ?? "nil")-\(yellowCards?.away?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   YellowRed: \(yellowRedCards?.home?.description ?? "nil")-\(yellowRedCards?.away?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Red: \(redCards?.home?.description ?? "nil")-\(redCards?.away?.description ?? "nil")")
         if let total = EventLiveData(
             id: eventId,
             homeScore: homeScore,
@@ -138,7 +139,7 @@ struct EventLiveDataBuilder {
             yellowRedCards: yellowRedCards,
             redCards: redCards
         ).totalCards {
-            print("[LIVE_SCORE]    Total cards: home=\(total.home), away=\(total.away)")
+            GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Total cards: home=\(total.home), away=\(total.away)")
         }
 
         // Step 6: Return EventLiveData
@@ -457,17 +458,17 @@ struct EventLiveDataBuilder {
         _ info: EveryMatrix.EventInfoDTO,
         _ matchData: EveryMatrix.MatchDTO?
     ) -> FootballCards? {
-        print("[LIVE_SCORE] 🔍 Extracting cards (typeId \(info.typeId)):")
-        print("[LIVE_SCORE]    paramFloat1: \(info.paramFloat1?.description ?? "nil"), paramParticipantId1: \(info.paramParticipantId1 ?? "nil")")
-        print("[LIVE_SCORE]    paramFloat2: \(info.paramFloat2?.description ?? "nil"), paramParticipantId2: \(info.paramParticipantId2 ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "Extracting cards (typeId \(info.typeId)):")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   paramFloat1: \(info.paramFloat1?.description ?? "nil"), paramParticipantId1: \(info.paramParticipantId1 ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   paramFloat2: \(info.paramFloat2?.description ?? "nil"), paramParticipantId2: \(info.paramParticipantId2 ?? "nil")")
 
         guard let match = matchData else {
-            print("[LIVE_SCORE]    ❌ No match data - cannot map cards")
+            GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   No match data - cannot map cards")
             return nil
         }
 
-        print("[LIVE_SCORE]    Match homeParticipantId: \(match.homeParticipantId)")
-        print("[LIVE_SCORE]    Match awayParticipantId: \(match.awayParticipantId)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Match homeParticipantId: \(match.homeParticipantId)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Match awayParticipantId: \(match.awayParticipantId)")
 
         var homeCards: Int?
         var awayCards: Int?
@@ -476,29 +477,29 @@ struct EventLiveDataBuilder {
         if let pid1 = info.paramParticipantId1, let count1 = info.paramFloat1 {
             if pid1 == match.homeParticipantId {
                 homeCards = Int(count1)
-                print("[LIVE_SCORE]    ✓ Mapped paramFloat1 (\(count1)) → HOME (participant \(pid1))")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Mapped paramFloat1 (\(count1)) -> HOME (participant \(pid1))")
             } else if pid1 == match.awayParticipantId {
                 awayCards = Int(count1)
-                print("[LIVE_SCORE]    ✓ Mapped paramFloat1 (\(count1)) → AWAY (participant \(pid1))")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Mapped paramFloat1 (\(count1)) -> AWAY (participant \(pid1))")
             } else {
-                print("[LIVE_SCORE]    ⚠️ paramParticipantId1 (\(pid1)) doesn't match home or away")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   paramParticipantId1 (\(pid1)) doesn't match home or away")
             }
         }
 
         if let pid2 = info.paramParticipantId2, let count2 = info.paramFloat2 {
             if pid2 == match.homeParticipantId {
                 homeCards = Int(count2)
-                print("[LIVE_SCORE]    ✓ Mapped paramFloat2 (\(count2)) → HOME (participant \(pid2))")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Mapped paramFloat2 (\(count2)) -> HOME (participant \(pid2))")
             } else if pid2 == match.awayParticipantId {
                 awayCards = Int(count2)
-                print("[LIVE_SCORE]    ✓ Mapped paramFloat2 (\(count2)) → AWAY (participant \(pid2))")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Mapped paramFloat2 (\(count2)) -> AWAY (participant \(pid2))")
             } else {
-                print("[LIVE_SCORE]    ⚠️ paramParticipantId2 (\(pid2)) doesn't match home or away")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   paramParticipantId2 (\(pid2)) doesn't match home or away")
             }
         }
 
         let cards = FootballCards(home: homeCards, away: awayCards)
-        print("[LIVE_SCORE]    Result: home=\(homeCards?.description ?? "nil"), away=\(awayCards?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Result: home=\(homeCards?.description ?? "nil"), away=\(awayCards?.description ?? "nil")")
 
         // Return nil if no cards, otherwise return the FootballCards struct
         return cards.hasCards ? cards : nil

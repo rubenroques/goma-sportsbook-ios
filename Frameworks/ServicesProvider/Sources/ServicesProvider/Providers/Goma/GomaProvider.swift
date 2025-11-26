@@ -726,7 +726,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
 }
 
 extension GomaProvider: EventsProvider {
-    
+        
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return self.connector.connectionStatePublisher.eraseToAnyPublisher()
     }
@@ -999,6 +999,10 @@ extension GomaProvider: EventsProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
    
+    func subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

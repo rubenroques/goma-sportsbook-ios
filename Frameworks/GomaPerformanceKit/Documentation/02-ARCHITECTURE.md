@@ -20,7 +20,7 @@ GomaPerformanceKit/
 │       │   └── PendingSession.swift          # In-flight tracking
 │       ├── Destinations/
 │       │   ├── PerformanceDestination.swift  # Protocol
-│       │   ├── ConsoleDestination.swift      # Debug console output
+│       │   ├── ConsolePerformanceDestination.swift      # Debug console output
 │       │   ├── FileDestination.swift         # JSON file storage
 │       │   └── AnalyticsDestination.swift    # Backend integration
 │       ├── Storage/
@@ -180,9 +180,9 @@ public protocol PerformanceDestination: AnyObject {
 }
 ```
 
-#### ConsoleDestination
+#### ConsolePerformanceDestination
 ```swift
-public class ConsoleDestination: PerformanceDestination {
+public class ConsolePerformanceDestination: PerformanceDestination {
     public enum LogLevel {
         case minimal    // Just duration
         case standard   // Duration + feature + layer
@@ -444,7 +444,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions ...
 
     // 5. Add destinations
     #if DEBUG
-    PerformanceTracker.shared.addDestination(ConsoleDestination())
+    PerformanceTracker.shared.addDestination(ConsolePerformanceDestination())
     #endif
 
     let fileDestination = FileDestination(

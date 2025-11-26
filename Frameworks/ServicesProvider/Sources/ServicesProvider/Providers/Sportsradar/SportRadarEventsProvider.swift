@@ -642,7 +642,10 @@ class SportRadarEventsProvider: EventsProvider {
         return Just(nil).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
 
-
+    func subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+    
     public func subscribeToMarketDetails(withId marketId: String, onEventId eventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError> {
 
         // Get the session

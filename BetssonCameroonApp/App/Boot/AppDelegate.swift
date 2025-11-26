@@ -14,6 +14,7 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import FirebaseCore
 import GomaPerformanceKit
+import GomaLogger
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,8 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Configure performance tracking
         #if DEBUG
-        let consoleDestination = ConsoleDestination()
-        consoleDestination.logLevel = .verbose
+        let consoleDestination = ConsolePerformanceDestination()
+        consoleDestination.logLevel = ConsolePerformanceDestination.LogLevel.verbose
         PerformanceTracker.shared.addDestination(consoleDestination)
         #endif
 
@@ -163,6 +164,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             layer: .app,
             metadata: ["phase": "app_delegate_boot", "status": "complete"]
         )
+        
+        // GomaLogger options
+        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG")
 
         return true
     }

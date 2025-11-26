@@ -2,6 +2,7 @@ import Combine
 import UIKit
 import GomaUI
 import ServicesProvider
+import GomaLogger
 
 final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
 
@@ -77,14 +78,14 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         marketTypeId: String,
         matchCardContext: MatchCardContext = .lists
     ) {
-        print("[TallOddsMatchCardViewModel] Creating VM for match: \(match.homeParticipant.name)-\(match.awayParticipant.name)")
+        GomaLogger.debug(.ui, category: "TALL_CARD", "Creating VM for match: \(match.homeParticipant.name)-\(match.awayParticipant.name)")
 
         // Debug: Log all Sport properties to diagnose sport ID issue
-        print("[SPORT_DEBUG] 🎾 Creating ViewModel for: \(match.homeParticipant.name) - \(match.awayParticipant.name)")
-        print("[SPORT_DEBUG]    Sport Name: \(match.sport.name)")
-        print("[SPORT_DEBUG]    Sport.id: '\(match.sport.id)'")
-        print("[SPORT_DEBUG]    Sport.alphaId: '\(match.sport.alphaId ?? "nil")'")
-        print("[SPORT_DEBUG]    Sport.numericId: '\(match.sport.numericId ?? "nil")'")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "Creating ViewModel for: \(match.homeParticipant.name) - \(match.awayParticipant.name)")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Sport Name: \(match.sport.name)")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Sport.id: '\(match.sport.id)'")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Sport.alphaId: '\(match.sport.alphaId ?? "nil")'")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Sport.numericId: '\(match.sport.numericId ?? "nil")'")
 
         // Store match identifiers
         self.matchId = match.id
@@ -96,7 +97,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
         self.matchDate = match.date
         self.matchCardContext = matchCardContext
 
-        print("[SPORT_DEBUG]    Stored sportId: '\(self.sportId)'")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Stored sportId: '\(self.sportId)'")
 
         // Create initial display state from match
         let initialDisplayState = TallOddsMatchCardDisplayState(
@@ -158,7 +159,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
 
     // MARK: - Cleanup
     deinit {
-        print("[TallOddsMatchCardViewModel] 🔴 DEINIT - matchId: \(matchId)")
+        GomaLogger.debug(.ui, category: "TALL_CARD", "DEINIT - matchId: \(matchId)")
         // liveDataCancellable?.cancel()
         liveDataCancellable = nil
     }
@@ -256,36 +257,36 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
     // MARK: - Live Data Subscription
 
     private func subscribeToLiveData() {
-        print("[LIVE_SCORE TallOddsMatchCardViewModel] 🟢 Starting live data subscription for match: \(matchId)")
+        GomaLogger.debug(.ui, category: "TALL_CARD", "Starting live data subscription for match: \(matchId)")
         liveDataCancellable = Env.servicesProvider.subscribeToLiveDataUpdates(forEventWithId: matchId)
             .removeDuplicates()
             .sink(receiveCompletion: { [weak self] completion in
-                print("[TallOddsMatchCardViewModel] 🔴 Live data subscription completed: \(completion) for match: \(self?.matchId ?? "unknown")")
+                GomaLogger.debug(.ui, category: "TALL_CARD", "Live data subscription completed: \(completion) for match: \(self?.matchId ?? "unknown")")
             }, receiveValue: { [weak self] subscribableContent in
                 guard let self = self else { return }
 
                 switch subscribableContent {
                 case .connected(let subscription):
-                    print("[TallOddsMatchCardViewModel] 🟢 Live data connected: \(subscription.id) for match: \(self.matchId)")
+                    GomaLogger.debug(.ui, category: "TALL_CARD", "Live data connected: \(subscription.id) for match: \(self.matchId)")
 
                 case .contentUpdate(let eventLiveData):
-                    print("[TallOddsMatchCardViewModel] contentUpdated live data")
+                    GomaLogger.debug(.ui, category: "TALL_CARD", "contentUpdated live data")
 
                     self.currentEventLiveData = eventLiveData
                     self.updateScoreViewModel(from: eventLiveData)
                     self.updateMatchHeaderViewModel(from: eventLiveData)
 
                 case .disconnected:
-                    print("[TallOddsMatchCardViewModel] 🔴 Live data disconnected for match: \(self.matchId)")
+                    GomaLogger.debug(.ui, category: "TALL_CARD", "Live data disconnected for match: \(self.matchId)")
                 }
             })
     }
 
     private func updateScoreViewModel(from eventLiveData: EventLiveData) {
-        print("[LIVE_SCORE] 🎨 TallOddsMatchCardViewModel.updateScoreViewModel called")
-        print("[LIVE_SCORE]    Event ID: \(eventLiveData.id)")
-        print("[LIVE_SCORE]    Score: \(eventLiveData.homeScore?.description ?? "nil") - \(eventLiveData.awayScore?.description ?? "nil")")
-        print("[LIVE_SCORE]    DetailedScores: \(eventLiveData.detailedScores?.count ?? 0) entries")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "TallOddsMatchCardViewModel.updateScoreViewModel called")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Event ID: \(eventLiveData.id)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Score: \(eventLiveData.homeScore?.description ?? "nil") - \(eventLiveData.awayScore?.description ?? "nil")")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   DetailedScores: \(eventLiveData.detailedScores?.count ?? 0) entries")
 
         // Map ServicesProvider types to app types
         let mappedScores = eventLiveData.detailedScores.map { ServiceProviderModelMapper.scoresDictionary(fromInternalScoresDictionary: $0) }
@@ -298,7 +299,7 @@ final class TallOddsMatchCardViewModel: TallOddsMatchCardViewModelProtocol {
             sportId: sportId
         )
 
-        print("[LIVE_SCORE]    Created ScoreViewModel")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Created ScoreViewModel")
         scoreViewModelSubject.send(newScoreViewModel)
     }
 
