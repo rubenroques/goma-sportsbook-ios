@@ -297,17 +297,9 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
 
         cell.configure(with: categorySection)
 
-        // Setup callbacks
-        cell.onCategoryButtonTapped = { [weak self] categoryId in
-            self?.viewModel.categoryButtonTapped(
-                categoryId: categoryId,
-                categoryTitle: categorySection.categoryTitle
-            )
-        }
-
-        cell.onGameSelected = { [weak self] gameId in
-            self?.viewModel.gameSelected(gameId)
-        }
+        // Note: Callbacks for category button and game selection are wired up
+        // through the ViewModel layer (CasinoCategoriesListViewModel sets
+        // sectionViewModel.onCategoryButtonTapped and onGameSelected)
 
         return cell
     }

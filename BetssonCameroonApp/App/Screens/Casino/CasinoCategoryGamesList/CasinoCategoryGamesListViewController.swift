@@ -51,14 +51,14 @@ class CasinoCategoryGamesListViewController: UIViewController {
     // MARK: - Properties
     let viewModel: CasinoCategoryGamesListViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var games: [MockCasinoGameCardViewModel] = []
-    
+    private var games: [CasinoGameImageViewModel] = []
+
     // MARK: - Constants
     private enum Constants {
-        static let cellSpacing: CGFloat = 16.0
+        static let cellSpacing: CGFloat = 8.0
         static let horizontalPadding: CGFloat = 16.0
-        static let itemsPerRow: Int = 2
-        static let itemAspectRatio: CGFloat = 167.0 / 266.0 // width / height from CasinoGameCardView
+        // Use CasinoGameImageView's fixed card size
+        static var cardSize: CGFloat { CasinoGameImageView.Constants.cardSize }
     }
     
     // MARK: - Lifecycle
@@ -126,7 +126,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
         collectionView.showsHorizontalScrollIndicator = false
         
         // Register cells
-        collectionView.register(CasinoGameCardCollectionViewCell.self, forCellWithReuseIdentifier: "GameCardCell")
+        collectionView.register(CasinoGameImageCollectionViewCell.self, forCellWithReuseIdentifier: "GameImageCell")
         collectionView.register(SeeMoreButtonCollectionViewCell.self, forCellWithReuseIdentifier: "SeeMoreButtonCell")
         
         // Set delegates
@@ -240,17 +240,12 @@ extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
-        case 0: // Game cards section
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCardCell", for: indexPath) as! CasinoGameCardCollectionViewCell
-            
+        case 0: // Game images section
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameImageCell", for: indexPath) as! CasinoGameImageCollectionViewCell
+
             let gameViewModel = games[indexPath.item]
             cell.configure(with: gameViewModel)
-            
-            // Set callback for game selection
-            cell.onGameSelected = { [weak self] gameId in
-                self?.viewModel.gameSelected(gameId)
-            }
-            
+
             return cell
             
         case 1: // See More button section
@@ -304,14 +299,8 @@ extension CasinoCategoryGamesListViewController: UICollectionViewDelegateFlowLay
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch indexPath.section {
-        case 0: // Game cards - use existing 2-column grid logic
-            let availableWidth = collectionView.bounds.width
-            let totalHorizontalPadding = Constants.horizontalPadding * 2
-            let totalSpacing = Constants.cellSpacing * CGFloat(Constants.itemsPerRow - 1)
-            let itemWidth = (availableWidth - totalHorizontalPadding - totalSpacing) / CGFloat(Constants.itemsPerRow)
-            let itemHeight = itemWidth / Constants.itemAspectRatio
-            
-            return CGSize(width: itemWidth, height: itemHeight)
+        case 0: // Game images - fixed 100x100 cards (3 columns)
+            return CGSize(width: Constants.cardSize, height: Constants.cardSize)
             
         case 1: // See More button - full width, fixed height
             let availableWidth = collectionView.bounds.width

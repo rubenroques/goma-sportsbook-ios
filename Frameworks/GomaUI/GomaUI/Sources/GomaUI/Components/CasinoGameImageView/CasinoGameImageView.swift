@@ -7,10 +7,9 @@ public final class CasinoGameImageView: UIView {
 
     // MARK: - Constants
 
-    private enum Constants {
+    public enum Constants {
+        public static let cardSize: CGFloat = 100.0
         static let cornerRadius: CGFloat = 16.0
-        static let widthValue: CGFloat = 100.0
-        static let heightValue: CGFloat = 100.0
     }
 
     // MARK: - Private Properties
@@ -238,9 +237,10 @@ extension CasinoGameImageView {
             // Failure label centered
             failureLabel.centerXAnchor.constraint(equalTo: failureView.centerXAnchor),
             failureLabel.centerYAnchor.constraint(equalTo: failureView.centerYAnchor),
-            
-            self.widthAnchor.constraint(equalToConstant: Constants.widthValue),
-            self.heightAnchor.constraint(equalToConstant: Constants.heightValue),
+
+            // Fixed card size
+            self.widthAnchor.constraint(equalToConstant: Constants.cardSize),
+            self.heightAnchor.constraint(equalToConstant: Constants.cardSize)
         ])
     }
 }
