@@ -5,12 +5,6 @@ Dotenv.load('.env')
 
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
-# Verify Apple credentials are set
-unless ENV["FASTLANE_USER"] && ENV["FASTLANE_PASSWORD"]
-  UI.important "⚠️  Fastlane credentials not found in environment variables"
-  UI.important "Please set FASTLANE_USER and FASTLANE_PASSWORD in your .env file"
-end
-
 # Fastfile
 default_platform(:ios)
 
@@ -56,6 +50,17 @@ error do |lane, exception|
 end
 
 platform :ios do
+
+  # Helper: Setup App Store Connect API Key for authentication
+  # This replaces Apple ID/password and eliminates 2FA prompts
+  lane :setup_api_key do
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_FILEPATH"],
+      in_house: false
+    )
+  end
 
   desc "Print environment variables and arguments"
   lane :test do |options|
@@ -127,6 +132,9 @@ platform :ios do
 
   desc "Setup certificates and provisioning profiles"
   lane :certificates do |options|
+    # Setup App Store Connect API Key for authentication
+    setup_api_key
+
     app_scheme = options[:app_scheme]
 
     # Get internal ID from scheme mapping if a scheme is provided
@@ -136,23 +144,21 @@ platform :ios do
     match_params = {
       type: "adhoc",
       force_for_new_devices: true,
-      readonly: true,
+      readonly: false,
       force: false,
-      verbose: false
+      verbose: true
     }
 
     case internal_id
     when "BETSSON_UAT"
       match_params.merge!({
         git_url: ENV["MATCH_GIT_URL_UAT"],
-        username: ENV["BETSSON_UAT_APPLE_ID"],
         team_id: ENV["BETSSON_UAT_TEAM_ID"],
         app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
     when "BETSSON_PROD"
       match_params.merge!({
         git_url: ENV["MATCH_GIT_URL_PROD"],
-        username: ENV["BETSSON_PROD_APPLE_ID"],
         team_id: ENV["BETSSON_PROD_TEAM_ID"],
         app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
@@ -160,17 +166,23 @@ platform :ios do
       UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
     end
 
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
     # Register new devices if devices.txt exists
     devices_file = "./fastlane/devices.txt"
     if File.exist?(devices_file)
-      require 'csv'
       register_devices(
         devices_file: devices_file,
-        username: match_params[:username],
         team_id: match_params[:team_id]
+        # Note: API Key authentication is automatic via lane context
       )
     else
-      UI.message "ℹNo devices.txt file found, skipping device registration"
+      UI.message "No devices.txt file found, skipping device registration"
     end
 
     # Fetch certificates and profiles
