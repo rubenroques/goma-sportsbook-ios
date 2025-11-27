@@ -9,7 +9,6 @@ public final class CasinoGameImagePairView: UIView {
 
     private enum Constants {
         static let verticalSpacing: CGFloat = 8.0
-        static let cardSize: CGFloat = 164.0
     }
 
     // MARK: - Private Properties
@@ -56,9 +55,10 @@ public final class CasinoGameImagePairView: UIView {
             // Configure top game (always present)
             topGameView.configure(with: viewModel.topGameViewModel)
 
-            // Configure bottom game (optional)
+            // Configure bottom game (optional) - never hide, just show empty placeholder
             bottomGameView.configure(with: viewModel.bottomGameViewModel)
-            bottomGameView.isHidden = (viewModel.bottomGameViewModel == nil)
+            // Keep bottomGameView visible to maintain consistent 2-row height
+            bottomGameView.alpha = (viewModel.bottomGameViewModel == nil) ? 0.0 : 1.0
 
             // Set up game selection callbacks on child ViewModels
             if let topVM = viewModel.topGameViewModel as? MockCasinoGameImageViewModel {
@@ -74,7 +74,7 @@ public final class CasinoGameImagePairView: UIView {
         } else {
             topGameView.configure(with: nil)
             bottomGameView.configure(with: nil)
-            bottomGameView.isHidden = true
+            bottomGameView.alpha = 1.0  // Show placeholder state
         }
     }
 
@@ -82,6 +82,7 @@ public final class CasinoGameImagePairView: UIView {
     public func prepareForReuse() {
         topGameView.prepareForReuse()
         bottomGameView.prepareForReuse()
+        bottomGameView.alpha = 1.0  // Reset alpha for reuse
         viewModel = nil
         onGameSelected = { _ in }
     }
@@ -123,14 +124,8 @@ extension CasinoGameImagePairView {
             stackView.topAnchor.constraint(equalTo: self.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-
-            // Fixed card sizes
-            topGameView.widthAnchor.constraint(equalToConstant: Constants.cardSize),
-            topGameView.heightAnchor.constraint(equalToConstant: Constants.cardSize),
-
-            bottomGameView.widthAnchor.constraint(equalToConstant: Constants.cardSize),
-            bottomGameView.heightAnchor.constraint(equalToConstant: Constants.cardSize)
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            // Note: CasinoGameImageView sets its own size (100x100)
         ])
     }
 }

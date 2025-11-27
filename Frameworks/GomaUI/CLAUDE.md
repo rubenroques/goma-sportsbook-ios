@@ -120,11 +120,19 @@ The wrapper cell calls the wrapped view's `prepareForReuse()` in its own `prepar
 - `currentDisplayState` - for **synchronous immediate access**
 
 ```swift
-// In configure(), render synchronously THEN setup bindings
+// In configure(), render synchronously THEN setup bindings with dropFirst()
 func configure(with viewModel: ViewModelProtocol) {
     self.viewModel = viewModel
     render(state: viewModel.currentDisplayState)  // Immediate - fixes layout
-    setupBindings()  // Future updates
+    setupBindings()
+}
+
+private func setupBindings() {
+    viewModel.displayStatePublisher
+        .dropFirst()  // Skip initial - already rendered synchronously
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] state in self?.render(state: state) }
+        .store(in: &cancellables)
 }
 ```
 

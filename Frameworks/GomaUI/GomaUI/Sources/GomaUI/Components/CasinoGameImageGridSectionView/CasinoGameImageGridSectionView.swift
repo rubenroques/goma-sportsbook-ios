@@ -10,12 +10,14 @@ public final class CasinoGameImageGridSectionView: UIView {
 
     private enum Constants {
         static let categoryBarHeight: CGFloat = 48.0
-        static let cardSize: CGFloat = 100
         static let verticalSpacing: CGFloat = 8.0
         static let horizontalSpacing: CGFloat = 12.0
         static let horizontalPadding: CGFloat = 16.0
         static let topSpacingBelowBar: CGFloat = 14.0
         static let bottomPadding: CGFloat = 8.0
+
+        // Use CasinoGameImageView's card size as the source of truth
+        static var cardSize: CGFloat { CasinoGameImageView.Constants.cardSize }
 
         // Collection height = 2 cards + spacing between them
         static var collectionHeight: CGFloat {
@@ -79,10 +81,10 @@ public final class CasinoGameImageGridSectionView: UIView {
         // Configure category bar
         categoryBarView.configure(with: viewModel.categoryBarViewModel)
 
-        // Category bar button callback
+        // Category bar button callback - only use the view's callback, not the ViewModel
+        // The ViewModel already wires its own callback in its init
         categoryBarView.onButtonTapped = { [weak self] categoryId in
             self?.onCategoryButtonTapped(categoryId)
-            self?.viewModel?.categoryButtonTapped()
         }
 
         // Game pair ViewModels

@@ -77,7 +77,8 @@ final class CasinoCacheProvider {
         lobbyType: ServicesProvider.CasinoLobbyType?
     ) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
 
-        let cacheResult = cacheStore.getCachedCategories()
+        let lobbyTypeKey = lobbyType?.displayName ?? "casino"
+        let cacheResult = cacheStore.getCachedCategories(lobbyType: lobbyTypeKey)
 
         switch cacheResult {
         case .fresh(let categories):
@@ -111,7 +112,8 @@ final class CasinoCacheProvider {
         pagination: CasinoPaginationParams
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
 
-        let cacheResult = cacheStore.getCachedGameList(categoryId: categoryId, offset: pagination.offset)
+        let lobbyTypeKey = lobbyType?.displayName ?? "casino"
+        let cacheResult = cacheStore.getCachedGameList(categoryId: categoryId, offset: pagination.offset, lobbyType: lobbyTypeKey)
 
         switch cacheResult {
         case .fresh(let gamesResponse):
@@ -193,11 +195,13 @@ final class CasinoCacheProvider {
         lobbyType: ServicesProvider.CasinoLobbyType?
     ) -> AnyPublisher<[CasinoCategory], ServiceProviderError> {
 
+        let lobbyTypeKey = lobbyType?.displayName ?? "casino"
+
         return servicesProvider.getCasinoCategories(language: language, platform: platform, lobbyType: lobbyType)
             .handleEvents(
                 receiveOutput: { [weak self] categories in
                     // Save to cache when API returns successfully
-                    self?.cacheStore.saveCachedCategories(categories)
+                    self?.cacheStore.saveCachedCategories(categories, lobbyType: lobbyTypeKey)
                 }
             )
             .eraseToAnyPublisher()
@@ -212,6 +216,8 @@ final class CasinoCacheProvider {
         pagination: CasinoPaginationParams
     ) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
 
+        let lobbyTypeKey = lobbyType?.displayName ?? "casino"
+
         return servicesProvider.getGamesByCategory(
             categoryId: categoryId,
             language: language,
@@ -222,7 +228,7 @@ final class CasinoCacheProvider {
         .handleEvents(
             receiveOutput: { [weak self] gamesResponse in
                 // Save to cache when API returns successfully
-                self?.cacheStore.saveCachedGameList(gamesResponse, categoryId: categoryId, offset: pagination.offset)
+                self?.cacheStore.saveCachedGameList(gamesResponse, categoryId: categoryId, offset: pagination.offset, lobbyType: lobbyTypeKey)
             }
         )
         .eraseToAnyPublisher()
