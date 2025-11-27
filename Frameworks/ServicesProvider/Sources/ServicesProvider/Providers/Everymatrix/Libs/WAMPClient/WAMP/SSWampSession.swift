@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GomaLogger
 
 public typealias CallCallback = (_ details: [String: Any], _ results: [Any]?, _ kwResults: [String: Any]?, _ arrResults: [String: [AnyObject]]?) -> Void
 public typealias ErrorCallCallback = (_ details: [String: Any], _ error: String, _ args: [Any]?, _ kwargs: [String: Any]?) -> Void
@@ -149,13 +150,7 @@ open class SSWampSession: SSWampTransportDelegate {
     }
 
     public func printMemoryLogs() {
-        print("------------- SSWampSession - Memory Logs ------------")
-        print("SubscribeRequests \(subscribeRequests.count)" )
-        print("Subscriptions \(subscriptions.count)" )
-        print("RegisterRequests  \(registerRequests.count)" )
-        print("Registers  \(registers.count)" )
-        print("------------  ------------  ------------  ------------")
-
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "SSWampSession Memory Logs - SubscribeRequests: \(subscribeRequests.count), Subscriptions: \(subscriptions.count), RegisterRequests: \(registerRequests.count), Registers: \(registers.count)")
     }
 
     final public func connect() {
@@ -298,7 +293,7 @@ open class SSWampSession: SSWampTransportDelegate {
                 self.sendMessage(AuthenticateSSWampMessage(signature: authResponse, extra: [:]))
             }
             else {
-                print("There was no delegate, aborting.")
+                GomaLogger.error(.realtime, category: "EM_WAMP", "No delegate found for WAMP challenge, aborting")
                 self.abort()
             }
         case let message as WelcomeSSWampMessage:
@@ -495,8 +490,7 @@ open class SSWampSession: SSWampTransportDelegate {
                 self.sendMessage(yieldMessage)
             }
             else {
-                // log this erroneous situation
-                print("InvocationSSWampMessage cannot found a register \(message) ")
+                GomaLogger.error(.realtime, category: "EM_WAMP", "InvocationSSWampMessage cannot find register: \(message)")
             }
             // send YieldSSWampMessage
             return
@@ -507,7 +501,7 @@ open class SSWampSession: SSWampTransportDelegate {
             ()
             return
         default:
-            print("message default fallback")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "Unhandled WAMP message type: \(type(of: message))")
             return
         }
     }

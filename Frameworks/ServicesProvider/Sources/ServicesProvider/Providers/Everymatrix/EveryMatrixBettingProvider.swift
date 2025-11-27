@@ -325,13 +325,13 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         let selections = betTickets.flatMap { betTicket in
             betTicket.tickets.map { selection in
                 EveryMatrix.BetSelectionInfo(
-                    bettingOfferId: selection.identifier,
+                    bettingOfferId: Int(selection.identifier) ?? 0,
                     priceValue: selection.odd.decimalOdd,
-                    eventId: selection.eventId ?? "",
-                    marketId: selection.marketId ?? "",
-                    bettingTypeId: selection.marketTypeId ?? "",
-                    outcomeId: selection.outcomeId ?? "",
-                    betBuilderPriceValue: betBuilderOdds
+                    outcomeId: selection.outcomeId.flatMap { Int($0) },
+                    bettingTypeId: selection.marketTypeId.flatMap { Int($0) },
+                    marketIDs: selection.marketId.flatMap { Int($0) }.map { [$0] } ?? [],
+                    betBuilderPriceValue: betBuilderOdds,
+                    banker: false
                 )
             }
         }

@@ -22,6 +22,7 @@ public final class CasinoGameImageView: UIView {
     private lazy var failureLabel: UILabel = Self.createFailureLabel()
 
     private var viewModel: CasinoGameImageViewModelProtocol?
+    private var currentImageTask: URLSessionDataTask?
 
     // MARK: - Lifetime and Cycle
 
@@ -55,6 +56,10 @@ public final class CasinoGameImageView: UIView {
     // MARK: - Public Configuration
 
     public func configure(with viewModel: CasinoGameImageViewModelProtocol?) {
+        // Cancel any pending image load task
+        currentImageTask?.cancel()
+        currentImageTask = nil
+
         self.viewModel = viewModel
 
         if let viewModel = viewModel {
@@ -62,6 +67,15 @@ public final class CasinoGameImageView: UIView {
         } else {
             showFailureState()
         }
+    }
+
+    /// Prepare the view for reuse in a collection/table view cell
+    public func prepareForReuse() {
+        currentImageTask?.cancel()
+        currentImageTask = nil
+        gameImageView.image = nil
+        viewModel = nil
+        showFailureState()
     }
 
     // MARK: - Private Setup
@@ -99,6 +113,9 @@ public final class CasinoGameImageView: UIView {
     // MARK: - Image Loading
 
     private func loadGameImage(from imageSource: String?) {
+        // Clear previous image before loading new one
+        gameImageView.image = nil
+
         guard let imageSource = imageSource else {
             showFailureState()
             return
@@ -112,8 +129,13 @@ public final class CasinoGameImageView: UIView {
             // It's a URL - load from network
             showLoadingState()
 
-            URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
                 DispatchQueue.main.async {
+                    // Check if task was cancelled
+                    guard error == nil || (error as? URLError)?.code != .cancelled else {
+                        return
+                    }
+
                     if let data = data, let image = UIImage(data: data) {
                         self?.gameImageView.image = image
                         self?.showLoadedState()
@@ -121,7 +143,9 @@ public final class CasinoGameImageView: UIView {
                         self?.showFailureState()
                     }
                 }
-            }.resume()
+            }
+            currentImageTask = task
+            task.resume()
         } else {
             showFailureState()
         }

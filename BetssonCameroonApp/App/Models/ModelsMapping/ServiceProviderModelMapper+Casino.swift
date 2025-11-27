@@ -27,14 +27,49 @@ extension ServiceProviderModelMapper {
         )
     }
     
+    // MARK: - CasinoGameImageData Mapping
+
+    /// Convert ServicesProvider CasinoGame to GomaUI CasinoGameImageData (for 2-row grid layout)
+    static func casinoGameImageData(fromCasinoGame casinoGame: CasinoGame) -> CasinoGameImageData {
+        return CasinoGameImageData(
+            id: casinoGame.id,
+            imageURL: bestImageURL(from: casinoGame),
+            gameURL: casinoGame.launchUrl ?? ""
+        )
+    }
+
+    /// Convert CasinoGameImageData to RecentlyPlayedGameData for recently played section
+    static func recentlyPlayedGameData(fromCasinoGameImageData imageData: CasinoGameImageData, gameName: String) -> RecentlyPlayedGameData {
+        return RecentlyPlayedGameData(
+            id: imageData.id,
+            name: gameName,
+            provider: nil,
+            imageURL: imageData.imageURL,
+            gameURL: imageData.gameURL
+        )
+    }
+
     // MARK: - CasinoCategory Mapping
-    
+
     /// Convert ServicesProvider CasinoCategory to GomaUI CasinoCategorySectionData
     static func casinoCategorySectionData(
         fromCasinoCategory casinoCategory: CasinoCategory,
         games: [CasinoGameCardData]
     ) -> CasinoCategorySectionData {
         return CasinoCategorySectionData(
+            id: casinoCategory.id,
+            categoryTitle: casinoCategory.name,
+            categoryButtonText: "\(localized("all")) \(casinoCategory.gamesTotal)",
+            games: games
+        )
+    }
+
+    /// Convert ServicesProvider CasinoCategory to GomaUI CasinoGameImageGridSectionData (for 2-row grid layout)
+    static func casinoGameImageGridSectionData(
+        fromCasinoCategory casinoCategory: CasinoCategory,
+        games: [CasinoGameImageData]
+    ) -> CasinoGameImageGridSectionData {
+        return CasinoGameImageGridSectionData(
             id: casinoCategory.id,
             categoryTitle: casinoCategory.name,
             categoryButtonText: "\(localized("all")) \(casinoCategory.gamesTotal)",

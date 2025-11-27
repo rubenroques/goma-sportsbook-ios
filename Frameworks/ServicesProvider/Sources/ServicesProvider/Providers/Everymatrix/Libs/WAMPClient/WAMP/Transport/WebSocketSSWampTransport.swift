@@ -8,6 +8,7 @@
 
 import Foundation
 import Starscream
+import GomaLogger
 
 class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     
@@ -80,13 +81,13 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
         
     public func websocketDidConnect(socket: WebSocketClient) {
-        print("TSWebSocketClient connect")
+        GomaLogger.info(.realtime, category: "EM_WAMP", "WebSocket connected")
         isConnected = true
         delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        print("TSWebSocketClient disconnect")
+        GomaLogger.info(.realtime, category: "EM_WAMP", "WebSocket disconnected")
         if isConnected {
             delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
         }
@@ -124,14 +125,14 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
             delegate?.ssWampTransportReceivedData(data)
 
         case .disconnected, .reconnectSuggested, .cancelled:
-            print("TSWebSocketClient disconnect")
+            GomaLogger.info(.realtime, category: "EM_WAMP", "WebSocket disconnected/cancelled")
             if isConnected {
                 delegate?.ssWampTransportDidDisconnect(nil, reason: disconnectionReason)
             }
             isConnected = false
 
         case .error(let error):
-            print("TSWebSocketClient disconnect")
+            GomaLogger.error(.realtime, category: "EM_WAMP", "WebSocket error: \(error?.localizedDescription ?? "unknown")")
             if isConnected {
                 delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
             }

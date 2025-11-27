@@ -3,6 +3,7 @@ import Foundation
 import DictionaryCoding
 import Combine
 import UIKit
+import GomaLogger
 
 enum WAMPSubscriptionContent<T> {
     case connect(publisherIdentifiable: EndpointPublisherIdentifiable)
@@ -34,7 +35,7 @@ final class WAMPManager {
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
     
     init() {
-        print("WAMPManager init")
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "WAMPManager init")
         
         self.swampSession = self.createSwampSession()
         
@@ -44,16 +45,16 @@ final class WAMPManager {
     func createSwampSession() -> SSWampSession {
         let wsEndPoint: String
         if let cachedCIDValue = UserDefaults.standard.string(forKey: EveryMatrixUnifiedConfiguration.cacheCIDKey) {
-            print("WAMPManager: cached CID found: \(cachedCIDValue)")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "Cached CID found: \(cachedCIDValue)")
             wsEndPoint = WAMPSocketParams.wsEndPoint + "?cid=" + cachedCIDValue
         }
         else {
-            print("WAMPManager: no CID found")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "No CID found")
             wsEndPoint = WAMPSocketParams.wsEndPoint
         }
-                
-        print("WAMPManager: URL: \(wsEndPoint)")
-        print("WAMPManager: Origin: \(WAMPSocketParams.origin)")
+
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "URL: \(wsEndPoint)")
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "Origin: \(WAMPSocketParams.origin)")
         
         guard let websocketHostnameServerURL = URL(string: wsEndPoint) else {
             fatalError("Invalid Webocket URL")
@@ -108,7 +109,7 @@ final class WAMPManager {
     }
     
     func connect() {
-        print("WAMPManager connect")
+        GomaLogger.info(.realtime, category: "EM_WAMP", "WAMPManager connect")
         self.swampSession?.delegate = self
         self.swampSession?.connect()
     }
@@ -120,7 +121,7 @@ final class WAMPManager {
                 if self.swampSession != nil {
                     if self.swampSession!.isConnected() {
                         self.swampSession?.subscribe(WAMPRouter.sessionStateChange.procedure, onSuccess: { subscription in
-                            print("EMSessionLoginFLow - sessionStateChanged subscribed")
+                            GomaLogger.info(.realtime, category: "EM_WAMP", "SessionStateChanged subscribed")
                             promise(.success(true))
                         }, onError: { details, errorStr in
                             promise(.failure(.requestError(value: errorStr)))
@@ -139,39 +140,39 @@ final class WAMPManager {
                                  */
                                 
                                 if code == 1 {
-                                    print("EMSessionLoginFLow - Expired")
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session expired")
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 2 {
-                                    print("EMSessionLoginFLow - Logged off")
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session logged off")
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 3 {
-                                    print("EMSessionLoginFLow - Forced logout")
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session forced logout (another login)")
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 5 {
-                                    print("EMSessionLoginFLow - Forced logout")
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session forced logout (time limit)")
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 6 {
-                                    print("EMSessionLoginFLow - Forced logout")
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session forced logout (self exclusion)")
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 0 {
                                     // TODO: sessionStateChange success handler to be added here - KVO mechanism as above can be used
-                                    print("EMSessionLoginFLow - Logged")
-                                    
+                                    GomaLogger.info(.realtime, category: "EM_WAMP", "Session logged in")
+
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .userSessionConnected, object: nil)
                                     }
@@ -197,10 +198,10 @@ final class WAMPManager {
                 }
                 
                 if let initialDumpProcedure = initialDumpProcedure {
-                    print("WAMPManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
+                    GomaLogger.debug(.realtime, category: "EM_WAMP", "getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [])")
                 }
                 else {
-                    print("WAMPManager getModel - url:\(router.procedure), args:\(router.args ?? [] ), kwargs:\(router.kwargs ?? [:] )")
+                    GomaLogger.debug(.realtime, category: "EM_WAMP", "getModel - url:\(router.procedure), args:\(router.args ?? []), kwargs:\(router.kwargs ?? [:])")
                 }
                 
                 if swampSession.isConnected() {
@@ -234,42 +235,31 @@ final class WAMPManager {
                             }
                         }
                         catch {
-                            print("🔴 WAMPManager getModel Decoding Error:")
-                            print("   ├─ Target Type: \(decodingType)")
-                            print("   ├─ Router: \(router.procedure)")
-                            print("   ├─ Error: \(error)")
+                            GomaLogger.error(.realtime, category: "EM_WAMP", "getModel Decoding Error - Type: \(decodingType), Router: \(router.procedure), Error: \(error)")
                             if let decodingError = error as? DecodingError {
-                                print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
                                 switch decodingError {
                                 case .keyNotFound(let key, let context):
-                                    print("   ├─ Missing Key: \(key.stringValue)")
-                                    print("   ├─ Context: \(context.debugDescription)")
+                                    GomaLogger.debug(.realtime, category: "EM_WAMP", "Missing Key: \(key.stringValue), Context: \(context.debugDescription)")
                                 case .typeMismatch(let type, let context):
-                                    print("   ├─ Type Mismatch: Expected \(type)")
-                                    print("   ├─ Context: \(context.debugDescription)")
+                                    GomaLogger.debug(.realtime, category: "EM_WAMP", "Type Mismatch: Expected \(type), Context: \(context.debugDescription)")
                                 case .valueNotFound(let type, let context):
-                                    print("   ├─ Value Not Found: \(type)")
-                                    print("   ├─ Context: \(context.debugDescription)")
+                                    GomaLogger.debug(.realtime, category: "EM_WAMP", "Value Not Found: \(type), Context: \(context.debugDescription)")
                                 case .dataCorrupted(let context):
-                                    print("   ├─ Data Corrupted: \(context.debugDescription)")
+                                    GomaLogger.debug(.realtime, category: "EM_WAMP", "Data Corrupted: \(context.debugDescription)")
                                 @unknown default:
                                     break
                                 }
                             }
                             if let kwResults = kwResults {
-                                print("   ├─ Raw kwResults: \(kwResults)")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Raw kwResults: \(kwResults)")
                             }
                             if let arrResults = arrResults {
-                                print("   └─ Raw arrResults: \(arrResults)")
-                            } else {
-                                print("   └─ No raw data available")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Raw arrResults: \(arrResults)")
                             }
                             promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
-                        print("❌ WAMPManager: RPC call ERROR for \(router.procedure)")
-                        print("❌ WAMPManager: Error: \(error)")
-                        print("❌ WAMPManager: Error kwargs: \(kwargs ?? [:])")
+                        GomaLogger.error(.realtime, category: "EM_WAMP", "RPC call ERROR for \(router.procedure): \(error), kwargs: \(kwargs ?? [:])")
                         
                         var desc = ""
                         if kwargs?["desc"] != nil {
@@ -306,7 +296,7 @@ final class WAMPManager {
                 }
                 
                 if swampSession.isConnected() {
-                    
+
                     swampSession.subscribe(procedure.procedure, onSuccess: { (subscription: WAMPSubscription) in
                         promise(.success(true))
                     }, onError: { (details: [String: Any], errorStr: String) in
@@ -319,7 +309,7 @@ final class WAMPManager {
                                 }
                             }
                             else if code == 0 {
-                                print("Subscribed!")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Subscribed to procedure: \(procedure.procedure)")
                             }
                         }
                     })
@@ -343,8 +333,8 @@ final class WAMPManager {
         
         
         let args: [String: Any] = endpoint.kwargs ?? [:]
-        
-        print("WAMPManager subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
         
         swampSession.subscribe(endpoint.procedure, options: args,
                                onSuccess: { (subscription: WAMPSubscription) in
@@ -381,41 +371,32 @@ final class WAMPManager {
                 }
             }
             catch {
-                print("🔴 WAMPManager subscribeEndpoint Decoding Error:")
-                print("   ├─ Target Type: \(decodingType)")
-                print("   ├─ Endpoint: \(endpoint.procedure)")
-                print("   ├─ Error: \(error)")
+                GomaLogger.error(.realtime, category: "EM_WAMP", "subscribeEndpoint Decoding Error - Type: \(decodingType), Endpoint: \(endpoint.procedure), Error: \(error)")
                 if let decodingError = error as? DecodingError {
-                    print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
                     switch decodingError {
                     case .keyNotFound(let key, let context):
-                        print("   ├─ Missing Key: \(key.stringValue)")
-                        print("   ├─ Context: \(context.debugDescription)")
+                        GomaLogger.debug(.realtime, category: "EM_WAMP", "Missing Key: \(key.stringValue), Context: \(context.debugDescription)")
                     case .typeMismatch(let type, let context):
-                        print("   ├─ Type Mismatch: Expected \(type)")
-                        print("   ├─ Context: \(context.debugDescription)")
+                        GomaLogger.debug(.realtime, category: "EM_WAMP", "Type Mismatch: Expected \(type), Context: \(context.debugDescription)")
                     case .valueNotFound(let type, let context):
-                        print("   ├─ Value Not Found: \(type)")
-                        print("   ├─ Context: \(context.debugDescription)")
+                        GomaLogger.debug(.realtime, category: "EM_WAMP", "Value Not Found: \(type), Context: \(context.debugDescription)")
                     case .dataCorrupted(let context):
-                        print("   ├─ Data Corrupted: \(context.debugDescription)")
+                        GomaLogger.debug(.realtime, category: "EM_WAMP", "Data Corrupted: \(context.debugDescription)")
                     @unknown default:
                         break
                     }
                 }
                 if let kwResults = kwResults {
-                    print("   └─ Raw kwResults: \(kwResults)")
-                } else {
-                    print("   └─ No raw data available")
+                    GomaLogger.debug(.realtime, category: "EM_WAMP", "Raw kwResults: \(kwResults)")
                 }
                 subject.send(completion: .failure(.decodingError(value: error.localizedDescription)))
             }
         })
-        
+
         return subject.handleEvents(receiveOutput: { content in
-            
+
         }, receiveCompletion: { completion in
-            print("completion \(completion)")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "subscribeEndpoint completion: \(completion)")
         }, receiveCancel: {
             
         }).eraseToAnyPublisher()
@@ -429,13 +410,13 @@ final class WAMPManager {
         else {
             return
         }
-        
-        print("WAMPManager: unsubscribeFromEndpoint \(endpointPublisherIdentifiable.identificationCode)")
-        
+
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "unsubscribeFromEndpoint \(endpointPublisherIdentifiable.identificationCode)")
+
         swampSession.unsubscribe(endpointPublisherIdentifiable.identificationCode) {
-            print("WAMPManager: unsubscribeFromEndpoint succeeded")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "unsubscribeFromEndpoint succeeded")
         } onError: { details, error in
-            print("WAMPManager: unsubscribeFromEndpoint error \(details) \(error)")
+            GomaLogger.error(.realtime, category: "EM_WAMP", "unsubscribeFromEndpoint error: \(details) \(error)")
         }
     }
     
@@ -446,20 +427,20 @@ final class WAMPManager {
         guard
             let swampSession = self.swampSession
         else {
-            print("WAMPManager: No swampSession available for registerOnEndpoint")
+            GomaLogger.error(.realtime, category: "EM_WAMP", "No swampSession available for registerOnEndpoint")
             subject.send(completion: .failure(.notConnected))
             return subject.eraseToAnyPublisher()
         }
-        
+
         guard swampSession.isConnected() else {
-            print("WAMPManager: SwampSession is not connected for registerOnEndpoint (state: \(swampSession.isConnected()))")
+            GomaLogger.error(.realtime, category: "EM_WAMP", "SwampSession is not connected for registerOnEndpoint (state: \(swampSession.isConnected()))")
             subject.send(completion: .failure(.notConnected))
             return subject.eraseToAnyPublisher()
         }
-        
+
         let args: [String: Any] = endpoint.kwargs ?? [:]
-        
-        print("WAMPManager: Registering on endpoint - url:\(endpoint.procedure), args:\(args)")
+
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "Registering on endpoint - url:\(endpoint.procedure), args:\(args)")
         
         swampSession.register(
             endpoint.procedure,
@@ -511,41 +492,32 @@ final class WAMPManager {
                         }
                     }
                     catch {
-                        print("🔴 WAMPManager registerOnEndpoint Decoding Error:")
-                        print("   ├─ Target Type: \(decodingType)")
-                        print("   ├─ Endpoint: \(endpoint.procedure)")
-                        print("   ├─ Error: \(error)")
+                        GomaLogger.error(.realtime, category: "EM_WAMP", "registerOnEndpoint Decoding Error - Type: \(decodingType), Endpoint: \(endpoint.procedure), Error: \(error)")
                         if let decodingError = error as? DecodingError {
-                            print("   ├─ Decoding Error Details: \(decodingError.localizedDescription)")
                             switch decodingError {
                             case .keyNotFound(let key, let context):
-                                print("   ├─ Missing Key: \(key.stringValue)")
-                                print("   ├─ Context: \(context.debugDescription)")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Missing Key: \(key.stringValue), Context: \(context.debugDescription)")
                             case .typeMismatch(let type, let context):
-                                print("   ├─ Type Mismatch: Expected \(type)")
-                                print("   ├─ Context: \(context.debugDescription)")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Type Mismatch: Expected \(type), Context: \(context.debugDescription)")
                             case .valueNotFound(let type, let context):
-                                print("   ├─ Value Not Found: \(type)")
-                                print("   ├─ Context: \(context.debugDescription)")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Value Not Found: \(type), Context: \(context.debugDescription)")
                             case .dataCorrupted(let context):
-                                print("   ├─ Data Corrupted: \(context.debugDescription)")
+                                GomaLogger.debug(.realtime, category: "EM_WAMP", "Data Corrupted: \(context.debugDescription)")
                             @unknown default:
                                 break
                             }
                         }
                         if let kwResults = kwResults {
-                            print("   └─ Raw kwResults: \(kwResults)")
-                        } else {
-                            print("   └─ No raw data available")
+                            GomaLogger.debug(.realtime, category: "EM_WAMP", "Raw kwResults: \(kwResults)")
                         }
                         subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
                     }
                 })
-        
+
         return subject.handleEvents(receiveOutput: { content in
-            
+
         }, receiveCompletion: { completion in
-            print("WAMPManager receiveCompletion \(completion)")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "registerOnEndpoint completion: \(completion)")
         }, receiveCancel: {
             
         }).eraseToAnyPublisher()
@@ -559,13 +531,13 @@ final class WAMPManager {
         else {
             return
         }
-        
-        print("WAMPManager: unregisterFromEndpoint \(endpointPublisherIdentifiable.identificationCode)")
-        
+
+        GomaLogger.debug(.realtime, category: "EM_WAMP", "unregisterFromEndpoint \(endpointPublisherIdentifiable.identificationCode)")
+
         swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
-            print("WAMPManager: unregisterFromEndpoint succeeded")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "unregisterFromEndpoint succeeded")
         } onError: { details, error in
-            print("WAMPManager: unregisterFromEndpoint error \(details) \(error)")
+            GomaLogger.error(.realtime, category: "EM_WAMP", "unregisterFromEndpoint error: \(details) \(error)")
         }
     }
     
@@ -611,30 +583,30 @@ extension WAMPManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
-        print("WAMPManager: WebSocket connected, establishing WAMP session...")
-        
+        GomaLogger.info(.realtime, category: "EM_WAMP", "WebSocket connected, establishing WAMP session...")
+
         NotificationCenter.default.post(name: .socketConnected, object: nil)
-        
+
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
-                print("WAMPManager: sessionStateChanged receiveCompletion: \(completion)")
+                GomaLogger.debug(.realtime, category: "EM_WAMP", "sessionStateChanged receiveCompletion: \(completion)")
                 switch completion {
                 case .failure(let error):
-                     print("WAMPManager: Failed to establish WAMP session: \(error)")
+                    GomaLogger.error(.realtime, category: "EM_WAMP", "Failed to establish WAMP session: \(error)")
                 case .finished:
                     break
                 }
             }, receiveValue: { [weak self] connected in
-                print("WAMPManager: sessionStateChanged receiveValue: \(connected)")
+                GomaLogger.debug(.realtime, category: "EM_WAMP", "sessionStateChanged receiveValue: \(connected)")
                 if connected {
-                    print("WAMPManager: WAMP session ready - emitting .connected state")
+                    GomaLogger.info(.realtime, category: "EM_WAMP", "WAMP session ready - emitting .connected state")
                     self?.connectionStateSubject.send(.connected)
                 } else {
-                    print("WAMPManager: WAMP session not ready")
+                    GomaLogger.debug(.realtime, category: "EM_WAMP", "WAMP session not ready")
                 }
             })
             .store(in: &globalCancellable)
-        
+
     }
     
     func ssWampSessionEnded(_ reason: String) {

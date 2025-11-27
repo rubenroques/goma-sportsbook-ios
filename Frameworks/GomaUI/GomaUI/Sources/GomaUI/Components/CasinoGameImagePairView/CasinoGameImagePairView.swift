@@ -77,6 +77,14 @@ public final class CasinoGameImagePairView: UIView {
             bottomGameView.isHidden = true
         }
     }
+
+    /// Prepare the view for reuse in a collection/table view cell
+    public func prepareForReuse() {
+        topGameView.prepareForReuse()
+        bottomGameView.prepareForReuse()
+        viewModel = nil
+        onGameSelected = { _ in }
+    }
 }
 
 // MARK: - Subviews Initialization and Setup

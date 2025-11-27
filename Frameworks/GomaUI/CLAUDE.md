@@ -102,6 +102,32 @@ final class CasinoGameCardCollectionViewCell: UICollectionViewCell {
 
 All components must be UIView subclasses for maximum reusability. Table/collection cells are created as thin wrappers.
 
+### 4. Cell Reuse Support
+
+Components used inside cells **must implement `prepareForReuse()`** that:
+- Clears `cancellables`
+- Resets callbacks to empty closures
+- Calls `cleanupForReuse()` on child components
+
+The wrapper cell calls the wrapped view's `prepareForReuse()` in its own `prepareForReuse()`.
+
+### 5. Synchronous State Access for Cell-Based Components
+
+**Problem**: Combine publishers have a micro-delay before emitting. UITableView/UICollectionView calculate cell sizes *before* Combine emits, causing broken layouts when view sizing depends on ViewModel data.
+
+**Solution**: ViewModel protocols for cell-based components must expose both:
+- `displayStatePublisher` - for reactive updates
+- `currentDisplayState` - for **synchronous immediate access**
+
+```swift
+// In configure(), render synchronously THEN setup bindings
+func configure(with viewModel: ViewModelProtocol) {
+    self.viewModel = viewModel
+    render(state: viewModel.currentDisplayState)  // Immediate - fixes layout
+    setupBindings()  // Future updates
+}
+```
+
 ## Production-Ready Component Standards
 
 **FUNDAMENTAL PRINCIPLE: Components must be 100% production-ready, not scaffolds awaiting "real" implementation.**

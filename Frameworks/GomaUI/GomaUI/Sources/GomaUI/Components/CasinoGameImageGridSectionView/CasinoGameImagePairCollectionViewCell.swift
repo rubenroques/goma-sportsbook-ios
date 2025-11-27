@@ -36,7 +36,7 @@ final class CasinoGameImagePairCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        pairView.configure(with: nil)
+        pairView.prepareForReuse()
         onGameSelected = { _ in }
     }
 

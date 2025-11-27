@@ -94,40 +94,41 @@ class CasinoCoordinator: Coordinator {
     }
     
     func showAviatorGame() {
-        
+        // Note: With the new 2-row grid layout, we no longer have game names in the section data
+        // This method would need to search for Aviator by game ID or use a different approach
+        // For now, we'll search for a category containing "aviator" in its name
         casinoCategoriesListViewModel?.$categorySections
             .first(where: { !$0.isEmpty })
             .sink { [weak self] sections in
-                // Check if Aviator game exists
-                if let aviatorGame = sections
-                    .flatMap({ $0.sectionData.games })
-                    .first(where: { $0.name == "Aviator" }) {
-                    
-                    // Game found - do something with it
-                    print("Found Aviator: \(aviatorGame)")
-                    self?.showGamePrePlay(gameId: aviatorGame.id)
+                // Check if Aviator category exists
+                if let aviatorCategory = sections
+                    .first(where: { $0.categoryTitle.lowercased().contains("aviator") }) {
+                    // Found category - navigate to first game
+                    if let firstPair = aviatorCategory.gamePairViewModels.first {
+                        let gameId = firstPair.topGameViewModel.gameId
+                        print("Found Aviator category, launching game: \(gameId)")
+                        self?.showGamePrePlay(gameId: gameId)
+                    }
                 } else {
-                    // Game not found
-                    print("Aviator game not found")
+                    // Category not found
+                    print("Aviator category not found")
                 }
             }
             .store(in: &cancellables)
     }
     
     func showSlotsGames() {
-        
         casinoCategoriesListViewModel?.$categorySections
             .first(where: { !$0.isEmpty })
             .sink { [weak self] sections in
-                // Check if Aviator game exists
+                // Check if Slots category exists
                 if let slotsCategory = sections
-                    .first(where: { $0.sectionData.id.lowercased().contains("slots") }) {
-                    
-                    // Game found - do something with it
-                    print("Found Slots Games section: \(slotsCategory)")
-                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                    .first(where: { $0.sectionId.lowercased().contains("slots") }) {
+                    // Category found - navigate to it
+                    print("Found Slots Games section: \(slotsCategory.categoryTitle)")
+                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionId, categoryTitle: slotsCategory.categoryTitle)
                 } else {
-                    // Game not found
+                    // Category not found
                     print("Slots Games section not found")
                 }
             }
@@ -135,19 +136,17 @@ class CasinoCoordinator: Coordinator {
     }
     
     func showCrashGames() {
-        
         casinoCategoriesListViewModel?.$categorySections
             .first(where: { !$0.isEmpty })
             .sink { [weak self] sections in
-                // Check if Aviator game exists
-                if let slotsCategory = sections
-                    .first(where: { $0.sectionData.id.lowercased().contains("crash") }) {
-                    
-                    // Game found - do something with it
-                    print("Found Crash Games section: \(slotsCategory)")
-                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                // Check if Crash category exists
+                if let crashCategory = sections
+                    .first(where: { $0.sectionId.lowercased().contains("crash") }) {
+                    // Category found - navigate to it
+                    print("Found Crash Games section: \(crashCategory.categoryTitle)")
+                    self?.showCategoryGamesList(categoryId: crashCategory.sectionId, categoryTitle: crashCategory.categoryTitle)
                 } else {
-                    // Game not found
+                    // Category not found
                     print("Crash Games section not found")
                 }
             }
@@ -155,19 +154,17 @@ class CasinoCoordinator: Coordinator {
     }
     
     func showLiteGames() {
-        
         casinoCategoriesListViewModel?.$categorySections
             .first(where: { !$0.isEmpty })
             .sink { [weak self] sections in
-                // Check if Aviator game exists
-                if let slotsCategory = sections
-                    .first(where: { $0.sectionData.id.lowercased().contains("lite") }) {
-                    
-                    // Game found - do something with it
-                    print("Found Lite Games section: \(slotsCategory)")
-                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionData.id, categoryTitle: slotsCategory.sectionData.categoryTitle)
+                // Check if Lite category exists
+                if let liteCategory = sections
+                    .first(where: { $0.sectionId.lowercased().contains("lite") }) {
+                    // Category found - navigate to it
+                    print("Found Lite Games section: \(liteCategory.categoryTitle)")
+                    self?.showCategoryGamesList(categoryId: liteCategory.sectionId, categoryTitle: liteCategory.categoryTitle)
                 } else {
-                    // Game not found
+                    // Category not found
                     print("Lite Games section not found")
                 }
             }
