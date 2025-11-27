@@ -21,32 +21,37 @@ The GitHub Action validates that your Xcode project version matches the tag, the
 Tags follow this format:
 
 ```
-CLIENT-VERSION(BUILD)
+CLIENT[-_]v?VERSION(BUILD)
 ```
 
 | Component | Description | Examples |
 |-----------|-------------|----------|
-| `CLIENT` | Client identifier (case-insensitive) | `BCM`, `BFR` |
+| `CLIENT` | Client identifier (case-insensitive) | `BCM`, `BFR`, `bcm`, `bfr` |
+| `SEPARATOR` | Hyphen or underscore | `-` or `_` |
+| `v` | Optional version prefix | `v` (optional) |
 | `VERSION` | Marketing version (X.Y or X.Y.Z) | `2.1`, `2.1.3` |
-| `BUILD` | Build number | `21309`, `100` |
+| `BUILD` | Build number in parentheses | `(21309)`, `(100)` |
 
-### Separator Flexibility
+### Supported Formats
 
-You can use hyphens (`-`) or underscores (`_`) as separators:
+| Format | Example | Works? |
+|--------|---------|--------|
+| `CLIENT-VERSION(BUILD)` | `BCM-0.3.0(3001)` | Yes |
+| `CLIENT-vVERSION(BUILD)` | `BCM-v0.3.0(3001)` | Yes |
+| `CLIENT_VERSION(BUILD)` | `BCM_0.3.0(3001)` | Yes |
+| `CLIENT_vVERSION(BUILD)` | `BCM_v0.3.0(3001)` | Yes |
+| Case insensitive | `bcm-0.3.0(3001)` | Yes |
+| Two-part version | `BCM-0.3(3001)` | Yes |
+| Three-part version | `BCM-0.3.0(3001)` | Yes |
 
-```
-BCM-2.1.3(21309)    # Hyphen
-BCM_2.1.3(21309)    # Underscore
-```
+### NOT Supported Formats
 
-### Optional 'v' Prefix
-
-The version can optionally include a `v` prefix:
-
-```
-BCM-v2.1.3(21309)   # With 'v'
-BCM-2.1.3(21309)    # Without 'v'
-```
+| Format | Example | Why |
+|--------|---------|-----|
+| No parentheses | `BCM-0.3.0-3001` | Build must be in `(BUILD)` format |
+| Spaces | `BCM - 0.3.0(3001)` | No spaces allowed |
+| No build number | `BCM-0.3.0` | Build number is required |
+| Environment in tag | `BCM-Stg-0.3.0(3001)` | Old format, no longer supported |
 
 ---
 
