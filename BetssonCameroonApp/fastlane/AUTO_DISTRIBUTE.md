@@ -2,122 +2,153 @@
 
 Complete guide for the **fully automated CI/CD workflow** for Betsson Cameroon.
 
-## 🎯 Quick Reference
+## Quick Reference
 
-### When to use which lane?
+### When to use which method?
 
-| **Scenario** | **Lane to Use** | **What Happens** |
-|-------------|----------------|------------------|
-| 🆕 **New release** (default) | `distribute_staging` | Prompts for build++, registers devices, builds, distributes |
-| 📱 **Added devices only** | `keep_version_distribute_staging` | NO bump, registers devices, builds (SAME build #), distributes |
+| **Scenario** | **Method** | **What Happens** |
+|-------------|------------|------------------|
+| **New release** (recommended) | Tag-based dual release | Deploys to BOTH staging + production |
+| **Adding devices only** | `keep_version_distribute_staging` | NO bump, registers devices, builds (SAME build #), distributes |
+| **Local testing** | `distribute_staging` | Prompts for build++, registers devices, builds, distributes |
 
-**Key principle:** ALL lanes check `devices.txt` and register devices automatically.
+**Key principle:** ALL lanes check `devices.csv` and register devices automatically.
 
 ---
 
-## 📱 Complete Workflow Examples
+## Tag-Based Dual Releases (Recommended)
 
-### Scenario 1: Normal Release (New Build Version)
+**The easiest way to create releases**: Push a Git tag, and GitHub Actions automatically builds and distributes to **BOTH** staging AND production.
 
-**When**: You've merged new features and want to release a new build.
+### Quick Start
 
 ```bash
-cd BetssonCameroonApp
+# 1. Update version in Xcode project first
+# 2. Commit and push
 
-# Default workflow: increment build + distribute
-fastlane distribute_staging
+# 3. Create a tag with format: CLIENT-VERSION(BUILD)
+git tag BCM-2.1.3(21309)
+git push origin BCM-2.1.3(21309)
 
-# Prompts you:
-# "Enter new build number, press enter to keep current, or '+' to increment:"
-# Type: +  (increments 1234 → 1235)
-
-# What happens:
-# ✅ Increments build number (1234 → 1235)
-# ✅ Reads devices.txt and registers any new devices
-# ✅ Updates provisioning profiles with new devices
-# ✅ Builds app with NEW build number
-# ✅ Distributes to Firebase App Distribution
-
-# With custom release notes
-fastlane distribute_staging release_notes:"Added live chat feature"
+# GitHub Actions automatically:
+# Step 1: Validates tag format and Xcode version match
+# Step 2: Reads CHANGELOG.yml for release notes
+# Step 3: Builds and distributes to STAGING
+# Step 4: Builds and distributes to PRODUCTION
+# Step 5: Sends Discord notification
 ```
 
-**Build Number**: Incremented (e.g., 1234 → 1235)
-**Why**: New release with code changes
-**Devices**: Automatically registered from devices.txt
+### Tag Format
 
----
+**Pattern**: `CLIENT-VERSION(BUILD)`
 
-### Scenario 2: Adding Devices Only (Keep Same Build)
+**Supported formats** (case-insensitive):
+- Separator: Hyphen (`-`) or underscore (`_`)
+- Version prefix: Optional `v` (e.g., `v2.1.3` or `2.1.3`)
+- Version format: `X.Y` or `X.Y.Z`
 
-**When**: You need to add new tester devices without changing the app version.
-
+**Examples:**
 ```bash
-# 1. Add device UDIDs to local file
-vim BetssonCameroonApp/fastlane/devices.txt
-# Add lines:
-# 00008030-001234567890001E	iPhone 15 Pro - John Doe
-# 00008110-000123456789ABCD	iPhone 16 - Jane Smith
-
-# 2. Run device registration + distribution (KEEP same build)
-cd BetssonCameroonApp
-fastlane keep_version_distribute_staging
-
-# What happens:
-# ✅ Reads devices.txt (2 new devices)
-# ✅ Registers devices with Apple Developer Portal
-# ✅ Regenerates provisioning profiles (force_for_new_devices: true)
-# ✅ Builds app with SAME build number but new profile
-# ✅ Distributes to Firebase App Distribution
-
-# With custom release notes
-fastlane keep_version_distribute_staging release_notes:"Added 2 new testers"
+BCM-2.1.3(21309)       # Standard format
+BCM-v2.1.3(21309)      # With v prefix
+bcm_2.1.3(21309)       # Underscore + lowercase
+bcm-2.1(2130)          # Two-part version
 ```
 
-**Build Number**: Same as current build (e.g., stays at 1234)
-**Why**: Only provisioning profile changed, app code unchanged
-**Devices**: Automatically registered from devices.txt
+**Invalid formats:**
+```bash
+BCM-2.1.3              # Missing build number
+BCM-Stg-2.1.3(21309)   # Old format with environment (no longer supported)
+2.1.3(21309)           # Missing client
+BCM-0.0(0)             # Invalid version/build (< minimums)
+```
 
----
+### Workflow Behavior
 
-## 🤖 GitHub Actions (CI/CD)
+**When you push a tag:**
 
-### Automatic Trigger on Device Changes
+1. **Parse & Validate** tag format and version numbers
+2. **Checkout** the release branch (`betsson-cm`)
+3. **Validate Version** - Xcode project must match tag (fails if mismatch)
+4. **Read CHANGELOG.yml** for release notes (optional - falls back to generic)
+5. **Build & Distribute Staging** - First environment
+6. **Build & Distribute Production** - Second environment
+7. **Notify** via Discord (success or failure)
 
-**When you push changes to `devices.txt`**, GitHub Actions automatically:
+**Configuration:**
+- Tag mapping defined in `.github/tag-config.yml`
+- BCM → branch: `betsson-cm`
+- Staging scheme: `BetssonCM Staging`
+- Production scheme: `BetssonCM Prod`
+
+### Release Notes (CHANGELOG.yml)
+
+**Optional** - Create `BetssonCameroonApp/CHANGELOG.yml` with release notes:
+
+**Format:**
+```yaml
+releases:
+  - version: "2.1.3"
+    build: 21309
+    date: "2025-11-26"
+    notes:
+      - "Added live score updates"
+      - "Fixed crash in match details"
+      - "Improved filter performance"
+```
+
+**Key points:**
+- Match by version + build only (no environment field)
+- Same notes used for both staging and production
+- If not found, uses generic notes: `"Build 21309 - Version 2.1.3"`
+
+### Complete Example
 
 ```bash
-# Locally: add devices
-vim BetssonCameroonApp/fastlane/devices.txt
+# 1. Update version in Xcode
+# Set MARKETING_VERSION = 2.1.3
+# Set CURRENT_PROJECT_VERSION = 21309
 
-# Commit and push
-git add BetssonCameroonApp/fastlane/devices.txt
-git commit -m "Add new tester devices for Cameroon"
+# 2. Update CHANGELOG.yml (optional)
+vim BetssonCameroonApp/CHANGELOG.yml
+# Add entry for version 2.1.3 build 21309
+
+# 3. Ensure devices.csv has latest devices
+vim BetssonCameroonApp/fastlane/devices.csv
+
+# 4. Commit changes
+git add .
+git commit -m "Prepare release 2.1.3 (21309)"
 git push origin betsson-cm
 
-# 🎉 GitHub Actions automatically runs:
-# - keep_version_distribute_staging
-# - Registers devices, rebuilds (same build #), distributes
+# 5. Create and push tag
+git tag BCM-2.1.3(21309)
+git push origin BCM-2.1.3(21309)
+
+# 6. Monitor workflow
+# Check: GitHub Actions → Tag-Based Dual Release Distribution
+# Discord notification will be sent on completion
 ```
 
-### Manual Trigger
+### Benefits of Tag-Based Dual Releases
 
-Go to **GitHub Actions** → **Auto-Distribute Betsson Cameroon** → **Run workflow**
-
-Options:
-- **Environment**: `staging` or `production`
-- **Release Notes**: Optional custom message
-
-**Note**: CI/CD always keeps the same build number (uses `keep_version_distribute_*`)
+- **Fully automated** - No manual Fastlane commands needed
+- **Dual release** - One tag deploys to both environments
+- **Version tracking** - Git tags provide permanent version history
+- **Consistency** - Same process every time, reduces human error
+- **Transparency** - Anyone can see release history via `git tag -l`
+- **Discord notifications** - Team stays informed automatically
 
 ---
 
-## 🛠️ Available Fastlane Lanes
+## Manual Fastlane Lanes
 
-### 🆕 Default Distribution Lanes (Increment Build)
+For local development and specific scenarios:
+
+### Default Distribution Lanes (Increment Build)
 
 #### `distribute_staging`
-**Use when**: Normal release to staging (most common)
+**Use when**: Local testing with new build number
 
 ```bash
 fastlane distribute_staging
@@ -127,16 +158,14 @@ fastlane distribute_staging release_notes:"Added live chat feature"
 **Flow**: Prompts for build++ → Registers devices → Builds → Distributes (NEW build #)
 
 #### `distribute_production`
-**Use when**: Normal release to production
+**Use when**: Local production release with new build
 
 ```bash
 fastlane distribute_production
 ```
 
-**Flow**: Prompts for build++ → Registers devices → Builds → Distributes (NEW build #)
-
 #### `distribute_all`
-**Use when**: Release to BOTH staging and production
+**Use when**: Local release to BOTH environments
 
 ```bash
 fastlane distribute_all
@@ -146,10 +175,10 @@ fastlane distribute_all
 
 ---
 
-### 📱 Keep Version Lanes (Same Build Number)
+### Keep Version Lanes (Same Build Number)
 
 #### `keep_version_distribute_staging`
-**Use when**: Adding devices without new app version
+**Use when**: Adding devices without changing app version
 
 ```bash
 fastlane keep_version_distribute_staging
@@ -174,7 +203,7 @@ fastlane keep_version_distribute_all
 
 ---
 
-### 🔧 Utility Lanes
+### Utility Lanes
 
 #### `register_new_devices`
 **Use when**: Only register devices, don't build/distribute
@@ -183,20 +212,16 @@ fastlane keep_version_distribute_all
 fastlane register_new_devices app_scheme:"BetssonCM Staging"
 ```
 
-**Flow**: Reads devices.txt → Registers with Apple → Updates profiles (NO build)
-
 #### `fetch_firebase_devices`
 **Use when**: Download all Firebase testers as reference
 
 ```bash
 fastlane fetch_firebase_devices
-
 # Creates: fastlane/firebase_devices.txt
-# Use to see all devices across projects, then manually copy to devices.txt
 ```
 
 #### `version_bump`
-**Use when**: Manually increment build number (without distributing)
+**Use when**: Manually increment build number
 
 ```bash
 fastlane version_bump
@@ -205,9 +230,9 @@ fastlane version_bump
 
 ---
 
-## 📝 devices.txt Format
+## devices.csv Format
 
-Location: `BetssonCameroonApp/fastlane/devices.txt`
+Location: `BetssonCameroonApp/fastlane/devices.csv`
 
 ```
 Device ID	Device Name
@@ -226,7 +251,7 @@ Device ID	Device Name
 
 ---
 
-## ⚙️ Setup Requirements
+## Setup Requirements
 
 ### 1. Local Environment (.env file)
 
@@ -239,17 +264,19 @@ MATCH_PASSWORD=your_match_encryption_password
 
 # Firebase Distribution
 FIREBASE_CLI_TOKEN=your_firebase_cli_token
-FIREBASE_PROJECT_NUMBER=123456789  # Find in Firebase Console > Project Settings
-FIREBASE_DISTRIBUTION_GROUPS=ios-internal
-FIREBASE_DISTRIBUTION_TESTERS=tester@example.com
+FIREBASE_PROJECT_NUMBER=123456789
 
-# Apple Developer Account (GOMA account hosts Betsson Cameroon)
-GOMA_APPLE_ID=apple@gomagaming.com
+# Apple Developer Account
 GOMA_TEAM_ID=422GNXXZJR
 
-# Firebase App IDs (find in Firebase Console > App Settings)
+# Firebase App IDs
 BETSSONCM_STG_FIREBASE_APP_ID=1:123456:ios:abc123
 BETSSONCM_PROD_FIREBASE_APP_ID=1:123456:ios:xyz789
+
+# App Store Connect API Key
+APP_STORE_CONNECT_API_KEY_ID=your_key_id
+APP_STORE_CONNECT_API_ISSUER_ID=your_issuer_id
+APP_STORE_CONNECT_API_KEY_FILEPATH=./fastlane/AuthKey_XXXX.p8
 ```
 
 ### 2. GitHub Secrets (for CI/CD)
@@ -258,175 +285,69 @@ Repository Settings → Secrets and Variables → Actions:
 
 - `MATCH_GIT_URL`
 - `MATCH_PASSWORD`
-- `MATCH_GIT_PRIVATE_KEY` (SSH private key for certificates repo)
+- `MATCH_GIT_PRIVATE_KEY`
 - `FIREBASE_CLI_TOKEN`
 - `FIREBASE_PROJECT_NUMBER`
-- `FIREBASE_DISTRIBUTION_GROUPS`
-- `FIREBASE_DISTRIBUTION_TESTERS`
-- `GOMA_APPLE_ID`
 - `GOMA_TEAM_ID`
 - `BETSSONCM_STG_FIREBASE_APP_ID`
 - `BETSSONCM_PROD_FIREBASE_APP_ID`
+- `APP_STORE_CONNECT_API_KEY_ID`
+- `APP_STORE_CONNECT_API_ISSUER_ID`
+- `APP_STORE_CONNECT_API_KEY_CONTENT`
+- `DISCORD_WEBHOOK_URL`
 
 ---
 
-## 🔍 Understanding Build Numbers
+## Troubleshooting
 
-### Default: New Build Number
-
-When using `distribute_*`:
-- **Build number**: 1234 → 1235 (incremented)
-- **What changed**: App code, features, fixes
-- **Devices**: Automatically registered from devices.txt
-- **Firebase**: Creates new build 1235 alongside old builds
-
-### Keep Version: Same Build Number
-
-When using `keep_version_distribute_*`:
-- **Build number**: 1234 (stays same)
-- **What changed**: Provisioning profile (new devices added)
-- **App code**: No changes
-- **Firebase**: Replaces existing build 1234 with new profile
-
----
-
-## 🔄 Device Registration Flow
-
-**Every distribution lane follows this pattern:**
-
+### Tag format rejected
 ```
-1. Check devices.txt exists
-2. Read all device UDIDs
-3. Register devices with Apple Developer Portal
-4. Update provisioning profiles (force_for_new_devices: true)
-5. Build app with updated profile
-6. Distribute to Firebase
+Invalid tag format: BCM-Stg-2.1.3(21309)
+Expected format: CLIENT-VERSION(BUILD)
 ```
+→ Fix: Remove environment from tag. Use `BCM-2.1.3(21309)` instead
 
-**This happens automatically** - you never need to worry about forgetting device registration!
+### Version mismatch
+```
+Version mismatch! Tag has 2.1.3 but Xcode project has 2.1.2
+```
+→ Fix: Update Xcode project version, commit, delete tag, recreate tag
+
+### CHANGELOG not found
+```
+Changelog file not found, using generic notes
+```
+→ This is OK - generic notes will be used. Create CHANGELOG.yml if you want custom notes.
+
+### Devices not registered
+```
+WARNING: devices.csv not found
+```
+→ Create `devices.csv` in `BetssonCameroonApp/fastlane/`
+
+### Staging succeeds but production fails
+→ Check production-specific secrets and Firebase App ID
 
 ---
 
-## 🐛 Troubleshooting
+## Quick Command Reference
 
-### "No devices.txt file found"
+### Tag-Based Dual Releases (Recommended)
 
 ```bash
-# Create the file
-cd BetssonCameroonApp/fastlane
-echo -e "Device ID\tDevice Name" > devices.txt
-# Then add your devices
+# Create dual release (deploys to BOTH staging + production)
+git tag BCM-2.1.3(21309)
+git push origin BCM-2.1.3(21309)
+
+# Delete a tag (if needed)
+git tag -d BCM-2.1.3(21309)
+git push origin :refs/tags/BCM-2.1.3(21309)
+
+# List tags
+git tag -l "BCM-*"
 ```
 
-### "Device already registered"
-
-✅ **This is normal!** Fastlane handles duplicates gracefully. Provisioning profiles will still be updated with all devices.
-
-### Empty devices.txt
-
-If `devices.txt` is empty or has no valid entries:
-- ✅ Lane continues normally
-- ⚠️ No new devices registered
-- ✅ Build proceeds with existing provisioning profile
-
-### Firebase Project Number
-
-Find it: **Firebase Console** → **Project Settings** → **General** → **Project number** (numeric value like 123456789)
-
-### Match SSH Key for CI/CD
-
-```bash
-# Generate SSH key
-ssh-keygen -t ed25519 -C "github-actions@gomagaming.com" -f ~/.ssh/match_deploy_key
-
-# Add public key to certificates repo:
-# GitHub.com → FastlaneAppleCertificates repo → Settings → Deploy keys
-cat ~/.ssh/match_deploy_key.pub
-
-# Add private key to GitHub secret MATCH_GIT_PRIVATE_KEY:
-cat ~/.ssh/match_deploy_key
-```
-
-### Build Fails in CI
-
-1. Check logs: GitHub Actions → Failed workflow → View logs
-2. Check local: `BetssonCameroonApp/fastlane/logs/`
-3. Verify all secrets are set correctly
-4. Test locally first: `fastlane keep_version_distribute_staging`
-
----
-
-## 📊 Workflow Diagram
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    WHICH WORKFLOW?                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  🆕 Normal release? (default)                               │
-│      └─> distribute_staging                                 │
-│          ├─ Prompts for build++                            │
-│          ├─ Registers devices automatically                │
-│          └─ Builds + distributes                           │
-│                                                             │
-│  📱 Only adding devices?                                    │
-│      └─> keep_version_distribute_staging                   │
-│          ├─ NO build increment                             │
-│          ├─ Registers devices automatically                │
-│          └─ Builds + distributes (same build #)            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-
-┌───────────────────────────────────────────────────────────┐
-│              distribute_staging Flow                      │
-│           (Default - increments build)                    │
-└───────────────────────────────────────────────────────────┘
-           │
-           ├─> Prompt for build number increment
-           │
-           ├─> Update build number in Xcode project
-           │
-           ├─> Read devices.txt
-           │
-           ├─> Register devices (Apple Developer Portal)
-           │
-           ├─> Update provisioning profiles (force_for_new_devices)
-           │
-           ├─> Build app (NEW build #, updated profile)
-           │
-           └─> Distribute to Firebase App Distribution
-
-┌───────────────────────────────────────────────────────────┐
-│       keep_version_distribute_staging Flow                │
-│         (Keep version - same build)                       │
-└───────────────────────────────────────────────────────────┘
-           │
-           ├─> Read devices.txt
-           │
-           ├─> Register devices (Apple Developer Portal)
-           │
-           ├─> Update provisioning profiles (force_for_new_devices)
-           │
-           ├─> Build app (SAME build #, updated profile)
-           │
-           └─> Distribute to Firebase App Distribution
-```
-
----
-
-## 💡 Best Practices
-
-1. **Default to `distribute_*`**: Use for normal releases (most common)
-2. **Use `keep_version_*` sparingly**: Only when adding devices without code changes
-3. **Test staging first**: Always use staging lanes before production
-4. **Keep devices.txt clean**: Remove inactive testers periodically
-5. **Commit devices.txt**: Track device list in git for transparency
-6. **Use release notes**: Always provide meaningful release notes
-7. **Trust automation**: All lanes check devices.txt automatically - no manual steps needed
-
----
-
-## 🚀 Quick Command Reference
+### Manual Fastlane Lanes
 
 ```bash
 # Most common: Normal release (increments build)
@@ -441,14 +362,8 @@ fastlane distribute_production
 # Deploy to both environments
 fastlane distribute_all
 
-# Utility: Fetch all Firebase devices as reference
-fastlane fetch_firebase_devices
-
 # Utility: Only register devices (no build)
 fastlane register_new_devices app_scheme:"BetssonCM Staging"
-
-# Utility: Manual version bump (prompts for build number)
-fastlane version_bump
 
 # Debug: Verify environment
 fastlane test
@@ -459,13 +374,13 @@ fastlane lanes
 
 ---
 
-## 🆘 Support
+## Support
 
 **Issues?**
 1. Check Fastlane logs: `BetssonCameroonApp/fastlane/logs/`
 2. Check GitHub Actions logs (for CI/CD runs)
 3. Verify `.env` file has all required variables
-4. Ensure `devices.txt` format is correct (tab-separated)
+4. Ensure `devices.csv` format is correct (tab-separated)
 5. Test locally before using CI/CD
 
-**Key Insight**: All distribution lanes automatically handle device registration - you can't forget this step!
+**Key Insight**: Tag-based dual releases are the recommended approach - they automatically deploy to both environments with a single tag push!

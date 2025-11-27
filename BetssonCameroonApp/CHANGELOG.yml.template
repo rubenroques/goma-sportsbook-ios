@@ -1,0 +1,88 @@
+# CHANGELOG.yml Template for Tag-Based Dual Releases
+#
+# This file is OPTIONAL. If not present or if a matching entry is not found,
+# the workflow will use generic release notes: "Build {build} - Version {version}"
+#
+# To use this template:
+# 1. Copy this file to CHANGELOG.yml: cp CHANGELOG.yml.template CHANGELOG.yml
+# 2. Add your release entries following the format below
+# 3. Commit CHANGELOG.yml to your repository
+#
+# Format:
+# releases:
+#   - version: "X.Y.Z"      # Must match tag version exactly
+#     build: 12345          # Must match tag build number exactly
+#     date: "YYYY-MM-DD"    # Release date (for documentation)
+#     notes:                # List of release notes (bullet points)
+#       - "First change description"
+#       - "Second change description"
+#       - "Third change description"
+#
+# DUAL RELEASE: Each tag deploys to BOTH Staging AND Production automatically.
+# The same release notes are used for both environments.
+#
+# The workflow will match releases by version + build only.
+# If no match is found, it falls back to generic notes.
+#
+# IMPORTANT:
+# - Version must be exact string match (e.g., "2.1.3" not "2.1.30")
+# - Build must be exact integer match
+# - Release notes are displayed as bullet points in Firebase and Discord
+
+releases:
+  # Example 1: Feature release
+  - version: "2.1.3"
+    build: 21309
+    date: "2025-11-20"
+    notes:
+      - "Added live score updates for tennis matches"
+      - "Fixed crash when viewing match details without internet"
+      - "Improved performance of event filters"
+      - "Updated casino game thumbnails"
+
+  # Example 2: Hotfix release
+  - version: "2.1.4"
+    build: 21401
+    date: "2025-11-23"
+    notes:
+      - "Hotfix: Resolved betting slip calculation error"
+      - "Fixed Firebase distribution device registration"
+
+  # Example 3: Major release with multiple features
+  - version: "3.0.0"
+    build: 30000
+    date: "2025-12-01"
+    notes:
+      - "Major update: Complete UI redesign"
+      - "New feature: In-play betting with live odds"
+      - "Enhanced: Faster event loading with pagination"
+      - "Added: Push notifications for bet results"
+      - "Fixed: Multiple stability and performance issues"
+      - "Updated: Latest compliance and regulatory requirements"
+
+  # Example 4: Minor update
+  - version: "2.2.0"
+    build: 22000
+    date: "2025-11-28"
+    notes:
+      - "New: Added support for multiple payment methods"
+      - "Improved: Faster deposit processing"
+      - "Fixed: Login session timeout issues"
+
+# Tips:
+# - Keep notes concise and user-friendly
+# - Focus on user-facing changes, not technical details
+# - Use emojis sparingly (only for major releases)
+# - List most important changes first
+# - Maximum recommended: 5-8 bullet points per release
+# - Consider using categories: "New", "Improved", "Fixed", "Updated"
+#
+# Bad examples:
+# - "Refactored ServiceProvider architecture" (too technical)
+# - "Updated pod dependencies" (implementation detail)
+# - "Fixed bug in line 234 of ViewController.swift" (too specific)
+#
+# Good examples:
+# - "Fixed crash when loading events"
+# - "Improved app startup time"
+# - "Added new payment method: Orange Money"

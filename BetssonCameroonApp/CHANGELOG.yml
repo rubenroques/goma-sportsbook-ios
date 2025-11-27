@@ -1,0 +1,117 @@
+# BetssonCameroonApp Release Changelog
+# Format: version + build uniquely identifies a release
+# Used by tag-release.yml workflow to generate Firebase release notes
+
+releases:
+  # ===== RECENT RELEASES (November 2025) =====
+
+  - version: "0.2.1"
+    build: 2113
+    date: "2025-11-25"
+    notes:
+      - "Extended footer view with corrected localized strings"
+      - "Added language parameter to casino categories and games endpoints"
+      - "Fixed keyboard action button close on search"
+      - "Added casino cache system with MVVM-C dependency injection"
+      - "Fixed inline match cards and betslip layout issues"
+      - "Fixed cell reuse bug and quarter ordering display"
+
+  - version: "0.2.1"
+    build: 2101
+    date: "2025-11-20"
+    notes:
+      - "Fixed score game part ordering"
+      - "MatchHeader component fixes"
+      - "Live scores implementation"
+      - "Fixed scores not appearing after opening match details"
+      - "GomaLogger package integration"
+      - "Casino category fixes"
+      - "Match details live data synchronization fixes"
+
+  - version: "0.2.1"
+    build: 2100
+    date: "2025-11-19"
+    notes:
+      - "Pending withdrawals components with production view models"
+      - "Footer social links implementation"
+      - "GomaPerformanceKit performance tracking library"
+      - "Footer sponsors link logic"
+      - "Fixed event live info data not returned by ServicesProvider"
+      - "Match status display in match details"
+      - "Tennis event info fixes"
+      - "SSE wallet and session reconnect"
+      - "Localized support URL links"
+
+  - version: "0.2.0"
+    build: 2099
+    date: "2025-11-17"
+    notes:
+      - "Win Boost integration and odds update fixes"
+      - "MyBets screen fixes"
+      - "Filter improvements with country counts"
+      - "Favorites endpoint and logic"
+      - "SSE integration"
+      - "Betslip calculations improvements"
+      - "Casino Pre-Game login button navigation"
+      - "Stable milestone release (bcm_milestone_1)"
+
+  - version: "0.2.0"
+    build: 2098
+    date: "2025-11-15"
+    notes:
+      - "Casino crash fix"
+      - "Splash screen message updates"
+      - "Filter system transactions"
+      - "Currency formatting fixes"
+      - "Match details improvements"
+      - "Keyboard done button localization"
+
+  # ===== OLDER RELEASES (October-November 2025) =====
+
+  - version: "0.2.0"
+    build: 2095
+    date: "2025-11-12"
+    notes:
+      - "Breadcrumbs navigation implementation"
+      - "Responsible gaming limits management"
+      - "Casino bridge implementation with transaction history"
+      - "Footer links localization"
+      - "LocalizationProvider system for centralized localization"
+
+  - version: "0.1.9"
+    build: 2091
+    date: "2025-11-07"
+    notes:
+      - "Responsible gaming UI"
+      - "Localization system implementation (218 string migrations)"
+      - "Currency fixes"
+      - "Match details fixes"
+      - "Keyboard Done button for bet placement"
+      - "Wallet gradient styling"
+
+  - version: "0.1.9"
+    build: 1960
+    date: "2025-10-30"
+    notes:
+      - "Fixed EventOddsRangeCollection"
+      - "Fixed casino and socket connection issues"
+      - "Added quick links for sports and casino"
+      - "Betslip odds boost UI integration"
+      - "Bonus odds boost API implementation"
+
+  - version: "0.1.9"
+    build: 1937
+    date: "2025-11-06"
+    notes:
+      - "XtremePush User ID retention"
+      - "Enable polling for push notifications"
+      - "CI/CD optimization"
+
+  - version: "0.1.9"
+    build: 1921
+    date: "2025-10-15"
+    notes:
+      - "Initial Firebase distribution release"
+      - "Core sports betting functionality"
+      - "Betslip implementation"
+      - "User authentication"

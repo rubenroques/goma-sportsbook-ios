@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 5. Add destinations
         #if DEBUG
         // Console output in debug builds
-        let consoleDestination = ConsoleDestination()
+        let consoleDestination = ConsolePerformanceDestination()
         consoleDestination.logLevel = .verbose
         PerformanceTracker.shared.addDestination(consoleDestination)
         #endif

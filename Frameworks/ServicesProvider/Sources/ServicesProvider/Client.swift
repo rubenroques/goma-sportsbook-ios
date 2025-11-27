@@ -497,7 +497,16 @@ extension Client {
         }
         return eventsProvider.subscribeToEventOnListsOutcomeUpdates(withId: id)
     }
-    
+
+    public func subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: bettingOfferId)
+    }
+
     public func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider

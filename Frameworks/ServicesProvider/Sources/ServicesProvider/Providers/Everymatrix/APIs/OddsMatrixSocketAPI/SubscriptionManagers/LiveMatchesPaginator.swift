@@ -312,7 +312,12 @@ class LiveMatchesPaginator: UnsubscriptionController {
     func outcomeExists(id: String) -> Bool {
         return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
     }
-    
+
+    /// Check if a betting offer with the given ID exists in this paginator's store
+    func bettingOfferExists(id: String) -> Bool {
+        return store.get(EveryMatrix.BettingOfferDTO.self, id: id) != nil
+    }
+
     /// Subscribe to outcome updates for a specific outcome ID
     func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         GomaLogger.debug(.realtime, category: "ODDS_FLOW", "LiveMatchesPaginator.subscribeToOutcomeUpdates - CREATING subscription for OUTCOME:\(id)")
@@ -339,11 +344,47 @@ class LiveMatchesPaginator: UnsubscriptionController {
             .setFailureType(to: ServiceProviderError.self)
             .eraseToAnyPublisher()
     }
-    
-    
+
+    /// Subscribe to betting offer updates and return the parent Outcome with updated odds
+    /// This fixes the entity mismatch where BETTING_OFFER updates don't notify OUTCOME observers
+    func subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+            "LiveMatchesPaginator.subscribeToBettingOfferAsOutcomeUpdates - SUBSCRIBING to BETTING_OFFER:\(bettingOfferId)")
+
+        return store.observeBettingOffer(id: bettingOfferId)
+            .handleEvents(receiveOutput: { bettingOfferDTO in
+                if bettingOfferDTO != nil {
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW",
+                        "LiveMatchesPaginator - RECEIVED BettingOfferDTO update for BETTING_OFFER:\(bettingOfferId)")
+                }
+            })
+            .compactMap { [weak self] bettingOfferDTO -> Outcome? in
+                guard let self = self,
+                      let bettingOfferDTO = bettingOfferDTO else { return nil }
+
+                // Look up parent OutcomeDTO using the foreign key
+                let outcomeId = bettingOfferDTO.outcomeId
+                guard let outcomeDTO = self.store.get(EveryMatrix.OutcomeDTO.self, id: outcomeId) else {
+                    GomaLogger.error(.realtime, category: "ODDS_FLOW",
+                        "LiveMatchesPaginator - Parent OUTCOME:\(outcomeId) not found for BETTING_OFFER:\(bettingOfferId)")
+                    return nil
+                }
+
+                // Build hierarchical Outcome with updated BettingOffers
+                guard let internalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store) else {
+                    return nil
+                }
+
+                // Map to domain Outcome
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: internalOutcome)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
     /// Observe EVENT_INFO entities for a specific event using the focused store
     func observeEventInfosForEvent(eventId: String) -> AnyPublisher<EventLiveData, Never> {
-        print("[LIVE_SCORE] 📡 LiveMatchesPaginator.observeEventInfosForEvent called for event: \(eventId)")
+        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "LiveMatchesPaginator.observeEventInfosForEvent called for event: \(eventId)")
 
         return eventInfoStore.observeEventInfosForEvent(eventId: eventId)
             .map { [weak self] eventInfos in
@@ -351,7 +392,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
                     return EventLiveData(id: eventId, homeScore: nil, awayScore: nil, matchTime: nil, status: nil, detailedScores: nil, activePlayerServing: nil)
                 }
 
-                print("[LIVE_SCORE] 📦 Received \(eventInfos.count) EventInfos for event: \(eventId)")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "Received \(eventInfos.count) EventInfos for event: \(eventId)")
 
                 // Log each EventInfo type
                 for info in eventInfos {
@@ -366,16 +407,16 @@ class LiveMatchesPaginator: UnsubscriptionController {
                     case "95": typeName = "MATCH_TIME"
                     default: typeName = "UNKNOWN(\(info.typeId))"
                     }
-                    print("[LIVE_SCORE]    - EventInfo typeId=\(info.typeId) (\(typeName))")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - EventInfo typeId=\(info.typeId) (\(typeName))")
                 }
 
                 // Get the match data for participant mapping
                 let matchData = self.eventInfoStore.get(EveryMatrix.MatchDTO.self, id: eventId)
 
                 if let match = matchData {
-                    print("[LIVE_SCORE] 🎯 Match data found: \(match.homeParticipantName) vs \(match.awayParticipantName)")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "Match data found: \(match.homeParticipantName) vs \(match.awayParticipantName)")
                 } else {
-                    print("[LIVE_SCORE] ⚠️ No match data found for event: \(eventId)")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "No match data found for event: \(eventId)")
                 }
 
                 return self.buildEventLiveData(eventId: eventId, from: eventInfos, matchData: matchData)

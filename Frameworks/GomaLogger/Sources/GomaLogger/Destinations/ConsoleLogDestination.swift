@@ -10,7 +10,7 @@ import Foundation
 /// 2025-11-20 00:15:32.123 🔍 [Betting/ODDS_BOOST] Fetching stairs
 /// 2025-11-20 00:15:33.456 ❌ [Networking] API call failed
 /// ```
-public struct ConsoleDestination: LogDestination {
+public struct ConsoleLogDestination: LogDestination {
     private let dateFormatter: DateFormatter
     private let includeFileInfo: Bool
 

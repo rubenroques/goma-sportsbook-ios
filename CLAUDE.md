@@ -9,8 +9,9 @@ this is THE REAL implementation.
 
 Betsson Cameroon target Follow Model-View-ViewModel-Coordinator aka MVVM-C
 ViewControllers should NEVER create Coordinators - that's the parent coordinator's job
-Do NOT insert placeholder code or todo comments, this is production. 
+Do NOT insert placeholder code or todo comments, this is production.
 If you do not know something simply ask the user
+GomaLogger only has debug/info/error - NO .warning() method exists
 </IMPORTANT>
 
 <acronyms>

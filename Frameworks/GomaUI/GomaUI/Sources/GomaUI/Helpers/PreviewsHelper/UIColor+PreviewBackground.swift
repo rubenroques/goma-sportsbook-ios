@@ -26,12 +26,12 @@ extension UIColor {
             switch traitCollection.userInterfaceStyle {
             case .dark:
                 // Dark mode: Dark gray with subtle red tint
-                return UIColor(red: 0.12, green: 0.11, blue: 0.11, alpha: 1.0) // #1E1C1C
+                return UIColor(red: 0.19, green: 0.11, blue: 0.11, alpha: 1.0)
             case .light, .unspecified:
                 // Light mode: Very light gray with subtle red tint
-                return UIColor(red: 0.97, green: 0.96, blue: 0.96, alpha: 1.0) // #F8F6F6
+                return UIColor(red: 0.99, green: 0.96, blue: 0.96, alpha: 1.0)
             @unknown default:
-                return UIColor(red: 0.97, green: 0.96, blue: 0.96, alpha: 1.0) // #F8F6F6
+                return UIColor(red: 0.99, green: 0.96, blue: 0.96, alpha: 1.0)
             }
         }
     }

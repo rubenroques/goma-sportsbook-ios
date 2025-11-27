@@ -51,7 +51,7 @@ The Betsson Cameroon app needed to track deposit/withdraw webpage loading perfor
 
 **Implementation**:
 ```swift
-PerformanceTracker.shared.addDestination(ConsoleDestination())
+PerformanceTracker.shared.addDestination(ConsolePerformanceDestination())
 PerformanceTracker.shared.addDestination(FileDestination())
 PerformanceTracker.shared.addDestination(AnalyticsDestination())
 ```

@@ -61,7 +61,11 @@ protocol EventsProvider: Connector {
     func subscribeToEventOnListsLiveDataUpdates(withId id: String) -> AnyPublisher<Event?, ServiceProviderError>
     func subscribeToEventOnListsMarketUpdates(withId id: String) -> AnyPublisher<Market?, ServiceProviderError>
     func subscribeToEventOnListsOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError>
-    
+
+    /// Subscribe to betting offer updates, returning the parent Outcome with merged odds data
+    /// Use this instead of subscribeToEventOnListsOutcomeUpdates when you need real-time odds updates
+    func subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError>
+
     // Tournaments
     func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError>
     

@@ -5,13 +5,9 @@ Dotenv.load('.env')
 
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
-# Verify Apple credentials are set
-unless ENV["FASTLANE_USER"] && ENV["FASTLANE_PASSWORD"]
-  UI.important "⚠️  Fastlane credentials not found in environment variables"
-  UI.important "Please set FASTLANE_USER and FASTLANE_PASSWORD in your .env file"
-end
-
-# Fastfile
+# Fastfile for BetssonFranceApp
+# Uses App Store Connect API Key authentication (no 2FA required)
+# Supports dual accounts: UAT (GOMA) and PROD (Client)
 default_platform(:ios)
 
 # Simple mapping between Xcode schemes and internal IDs
@@ -56,6 +52,30 @@ error do |lane, exception|
 end
 
 platform :ios do
+
+  # Helper: Setup App Store Connect API Key for authentication
+  # Supports dual accounts: UAT (GOMA) and PROD (Client)
+  lane :setup_api_key do |options|
+    environment = options[:environment] || "UAT"
+
+    if environment == "PROD"
+      # Client's App Store Connect API Key
+      app_store_connect_api_key(
+        key_id: ENV["BFR_PROD_APP_STORE_CONNECT_API_KEY_ID"],
+        issuer_id: ENV["BFR_PROD_APP_STORE_CONNECT_API_ISSUER_ID"],
+        key_filepath: ENV["BFR_PROD_APP_STORE_CONNECT_API_KEY_FILEPATH"],
+        in_house: false
+      )
+    else
+      # GOMA's App Store Connect API Key (UAT)
+      app_store_connect_api_key(
+        key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+        issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+        key_filepath: ENV["APP_STORE_CONNECT_API_KEY_FILEPATH"],
+        in_house: false
+      )
+    end
+  end
 
   desc "Print environment variables and arguments"
   lane :test do |options|
@@ -125,70 +145,139 @@ platform :ios do
     puts "Version updated to: #{new_version}"
   end
 
-  desc "Setup certificates and provisioning profiles"
-  lane :certificates do |options|
+  desc "Register new devices from local devices.txt and update provisioning profiles"
+  lane :register_new_devices do |options|
+    app_scheme = options[:app_scheme]
+    internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : nil
+
+    unless ["BETSSON_UAT", "BETSSON_PROD"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
+    end
+
+    # Determine environment for API key
+    environment = internal_id == "BETSSON_PROD" ? "PROD" : "UAT"
+
+    # Setup API Key for this environment
+    setup_api_key(environment: environment)
+
+    UI.message "Starting device registration for #{app_scheme}..."
+
+    devices_file = "./fastlane/devices.txt"
+    unless File.exist?(devices_file)
+      UI.message "No devices.txt found, skipping device registration"
+      next
+    end
+
+    # Get team ID based on environment
+    team_id = environment == "PROD" ? ENV["BETSSON_PROD_TEAM_ID"] : ENV["BETSSON_UAT_TEAM_ID"]
+
+    # Register devices
+    begin
+      register_devices(
+        devices_file: File.expand_path(devices_file),
+        team_id: team_id
+      )
+      UI.success "Devices registered with Apple Developer"
+    rescue => ex
+      UI.message "Device registration completed (some may already exist): #{ex.message}"
+    end
+
+    # Update provisioning profiles
+    match_params = {
+      type: "adhoc",
+      force_for_new_devices: true,
+      readonly: false,
+      verbose: true,
+      git_url: environment == "PROD" ? ENV["MATCH_GIT_URL_PROD"] : ENV["MATCH_GIT_URL_UAT"],
+      team_id: team_id,
+      app_identifier: BUNDLE_ID_MAPPING[internal_id].values
+    }
+
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
+    match(match_params)
+
+    UI.success "Device registration and profile update completed!"
+  end
+
+  desc "Setup certificates and provisioning profiles (internal use only)"
+  private_lane :certificates do |options|
+    # Note: This lane ONLY handles match (fetching/updating provisioning profiles)
+    # Device registration is handled separately by register_new_devices lane
+
     app_scheme = options[:app_scheme]
 
     # Get internal ID from scheme mapping if a scheme is provided
     internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : app_scheme
 
-    # Set Match parameters based on environment
+    # Determine environment for API key
+    environment = internal_id == "BETSSON_PROD" ? "PROD" : "UAT"
+
+    # Validate scheme
+    unless ["BETSSON_UAT", "BETSSON_PROD"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
+    end
+
+    # Setup API Key for this environment (uses context for match)
+    setup_api_key(environment: environment)
+
+    # Set Match parameters based on environment - API Key authentication via lane context
     match_params = {
       type: "adhoc",
       force_for_new_devices: true,
-      readonly: true,
+      readonly: false,
       force: false,
-      verbose: false
+      verbose: true
     }
 
     case internal_id
     when "BETSSON_UAT"
       match_params.merge!({
         git_url: ENV["MATCH_GIT_URL_UAT"],
-        username: ENV["BETSSON_UAT_APPLE_ID"],
         team_id: ENV["BETSSON_UAT_TEAM_ID"],
         app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
     when "BETSSON_PROD"
       match_params.merge!({
         git_url: ENV["MATCH_GIT_URL_PROD"],
-        username: ENV["BETSSON_PROD_APPLE_ID"],
         team_id: ENV["BETSSON_PROD_TEAM_ID"],
         app_identifier: BUNDLE_ID_MAPPING[internal_id].values
       })
-    else
-      UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
     end
 
-    # Register new devices if devices.txt exists
-    devices_file = "./fastlane/devices.txt"
-    if File.exist?(devices_file)
-      require 'csv'
-      register_devices(
-        devices_file: devices_file,
-        username: match_params[:username],
-        team_id: match_params[:team_id]
-      )
-    else
-      UI.message "ℹNo devices.txt file found, skipping device registration"
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
     end
 
     # Fetch certificates and profiles
     match(match_params)
   end
 
-  desc "Build and distribute to Firebase"
-  lane :distribute_to_firebase do |options|
-    is_verbose = options[:verbose] == true
-
-    UI.message "🚀 Starting distribution process..."
+  desc "Internal: Build and distribute to Firebase"
+  private_lane :build_and_distribute_to_firebase do |options|
+    UI.message "Starting distribution process for Betsson France..."
 
     app_scheme = options[:app_scheme]
     environment = options[:environment]
-    release_notes = options[:release_notes]
 
-    UI.message "📱 Building for scheme: #{app_scheme}"
-    UI.message "🌍 Environment: #{environment}"
+    # Prompt for release notes if not provided
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      release_notes = UI.input("Enter release notes for Firebase distribution:")
+      if release_notes.strip.empty?
+        release_notes = "Build #{get_build_number(xcodeproj: 'Sportsbook.xcodeproj')}"
+      end
+    end
+
+    UI.message "Building for scheme: #{app_scheme}"
+    UI.message "Environment: #{environment}"
+    UI.message "Release notes: #{release_notes}"
 
     # Get internal ID from scheme mapping
     internal_id = SCHEME_MAPPING[app_scheme]
@@ -196,7 +285,7 @@ platform :ios do
       UI.user_error!("Invalid scheme: #{app_scheme}. Must be one of: #{SCHEME_MAPPING.keys.join(', ')}")
     end
 
-    UI.message "🔍 Using internal ID: #{internal_id}" if is_verbose
+    UI.message "Using internal ID: #{internal_id}"
 
     # Validate scheme and environment variables
     unless ENV["#{internal_id}_FIREBASE_APP_ID"]
@@ -210,24 +299,21 @@ platform :ios do
       UI.user_error!("Missing Firebase CLI token for environment: #{environment}")
     end
 
-    # Update certificates
-    UI.message "🔐 Updating certificates..." if is_verbose
+    # Setup API Key and certificates (certificates lane handles API key setup)
+    UI.message "Updating certificates..."
     certificates(app_scheme: app_scheme)
 
     # Print Xcode version
-    if is_verbose
-      UI.message "🛠 Xcode Version:"
-      sh("xcodebuild -version")
-    end
+    UI.message "Xcode Version:"
+    sh("xcodebuild -version")
 
-    UI.message "🏗 Starting build process..." if is_verbose
+    UI.message "Starting build process..."
 
-    # Build app with detailed output
+    # Build app
     build_ios_app(
       scheme: app_scheme,
-      clean: true,
-      silent: !is_verbose,
-      suppress_xcode_output: !is_verbose,  # Only show xcodebuild output in verbose mode
+      workspace: "../Sportsbook.xcworkspace",
+      clean: false,
       skip_profile_detection: true,
       export_method: "ad-hoc",
       export_options: {
@@ -237,17 +323,11 @@ platform :ios do
         manageAppVersionAndBuildNumber: false,
         provisioningProfiles: PROVISIONING_PROFILE_MAPPING[internal_id]
       },
-      xcargs: is_verbose ? "-verbose" : nil,
       buildlog_path: "fastlane/logs",
-      output_directory: "fastlane/builds",
-      analyze_build_time: is_verbose,
-      include_symbols: true,
-      include_bitcode: false,
-      export_xcargs: is_verbose ? "-verbose" : nil,
-      xcodebuild_formatter: nil  # Remove xcpretty since we're using suppress_xcode_output
+      output_directory: "fastlane/builds"
     )
 
-    UI.message "📦 Build completed. Uploading to Firebase..."
+    UI.message "Build completed. Uploading to Firebase..."
 
     # Upload to Firebase
     firebase_app_distribution(
@@ -255,41 +335,73 @@ platform :ios do
       firebase_cli_token: firebase_cli_token,
       groups: firebase_groups,
       release_notes: release_notes,
-      debug: is_verbose
+      debug: true
     )
 
-    UI.success "✅ Distribution completed successfully!"
+    UI.success "Distribution completed successfully!"
   end
 
-  # Existing lanes with improved error handling
-  lane :betsson_uat do |options|
-    distribute_to_firebase(
+  desc "Keep version and distribute to UAT (SAME build, registers devices, distributes)"
+  lane :keep_version_distribute_uat do |options|
+    # Step 1: Register devices from devices.txt
+    register_new_devices(app_scheme: "Betsson UAT")
+
+    # Step 2: Build and distribute with updated profile
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
+      release_notes = "Build #{current_build} - Updated device list"
+    end
+
+    build_and_distribute_to_firebase(
       app_scheme: "Betsson UAT",
       environment: "UAT",
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
+      release_notes: release_notes
     )
+
+    UI.success "UAT distribution completed (same build number)!"
+  end
+
+  desc "Keep version and distribute to Production (SAME build, registers devices, distributes)"
+  lane :keep_version_distribute_prod do |options|
+    # Step 1: Register devices from devices.txt
+    register_new_devices(app_scheme: "Betsson PROD")
+
+    # Step 2: Build and distribute with updated profile
+    release_notes = options[:release_notes]
+    if release_notes.nil? || release_notes.strip.empty?
+      current_build = get_build_number(xcodeproj: "Sportsbook.xcodeproj")
+      release_notes = "Build #{current_build} - Updated device list"
+    end
+
+    build_and_distribute_to_firebase(
+      app_scheme: "Betsson PROD",
+      environment: "PROD",
+      release_notes: release_notes
+    )
+
+    UI.success "Production distribution completed (same build number)!"
+  end
+
+  desc "Keep version and distribute to both UAT and Production (SAME build)"
+  lane :keep_version_distribute_all do |options|
+    keep_version_distribute_uat(release_notes: options[:release_notes])
+    keep_version_distribute_prod(release_notes: options[:release_notes])
+  end
+
+  # Main distribution lanes - call keep_version_distribute_* (includes device registration)
+  lane :betsson_uat do |options|
+    keep_version_distribute_uat(release_notes: options[:release_notes])
   end
 
   lane :betsson_prod do |options|
-    distribute_to_firebase(
-      app_scheme: "Betsson PROD",
-      environment: "PROD",
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
-    )
+    keep_version_distribute_prod(release_notes: options[:release_notes])
   end
 
   lane :betsson do |options|
     version_bump
-    betsson_uat(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
-    )
-    betsson_prod(
-      release_notes: options[:release_notes],
-      verbose: options[:verbose]
-    )
+    betsson_uat(release_notes: options[:release_notes])
+    betsson_prod(release_notes: options[:release_notes])
   end
 
 end
