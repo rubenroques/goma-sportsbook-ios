@@ -1,0 +1,30 @@
+# Tag-based Release Configuration
+# Maps client to build settings and release workflow
+# Dual Release: Each tag deploys to BOTH staging AND production
+
+clients:
+  BCM:
+    name: "Betsson Cameroon"
+    directory: "BetssonCameroonApp"
+    project: "BetssonCameroonApp.xcodeproj"
+    workspace: "../Sportsbook.xcworkspace"
+    target: "BetssonCameroonApp"
+    changelog: "BetssonCameroonApp/CHANGELOG.yml"
+    devices_file: "fastlane/devices.csv"
+    release_branch: "betsson-cm"
+    staging_scheme: "BetssonCM Staging"
+    production_scheme: "BetssonCM Prod"
+    discord_color: 3066993  # Green
+
+  BFR:
+    name: "Betsson France"
+    directory: "BetssonFranceApp"
+    project: "Sportsbook.xcodeproj"
+    workspace: "../Sportsbook.xcworkspace"
+    target: "BetssonFranceApp"
+    changelog: "BetssonFranceApp/CHANGELOG.yml"
+    devices_file: "fastlane/devices.txt"
+    release_branch: "betsson-france-dev"
+    staging_scheme: "Betsson UAT"
+    production_scheme: "Betsson PROD"
+    discord_color: 3066993  # Green
