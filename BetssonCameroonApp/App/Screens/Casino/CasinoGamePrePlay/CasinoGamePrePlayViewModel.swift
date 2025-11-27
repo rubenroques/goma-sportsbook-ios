@@ -163,9 +163,12 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     // MARK: - Private Methods
     
     private func loadGameDetails() {
+        
+        let language = localized("current_language_code")
+
         servicesProvider.getGameDetails(
             gameId: gameId,
-            language: "en",
+            language: language,
             platform: Self.gamesPlatform
         )
         .receive(on: DispatchQueue.main)

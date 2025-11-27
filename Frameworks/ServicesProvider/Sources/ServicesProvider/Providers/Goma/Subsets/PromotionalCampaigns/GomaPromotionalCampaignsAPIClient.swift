@@ -34,14 +34,14 @@ class GomaPromotionalCampaignsAPIClient {
         return self.connector.request(endpoint)
     }
     
-    func getPromotions() -> AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> {
-        let endpoint = GomaPromotionalCampaignsAPISchema.allPromotions
+    func getPromotions(language: String?) -> AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> {
+        let endpoint = GomaPromotionalCampaignsAPISchema.allPromotions(language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
         let publisher: AnyPublisher<[GomaModels.PromotionInfo], ServiceProviderError> = self.connector.request(endpoint)
         return publisher.eraseToAnyPublisher()
     }
 
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<GomaModels.PromotionInfo, ServiceProviderError> {
-        let endpoint = GomaPromotionalCampaignsAPISchema.promotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String, language: String?) -> AnyPublisher<GomaModels.PromotionInfo, ServiceProviderError> {
+        let endpoint = GomaPromotionalCampaignsAPISchema.promotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug, language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
         let publisher: AnyPublisher<GomaModels.PromotionInfo, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.eraseToAnyPublisher()
     }

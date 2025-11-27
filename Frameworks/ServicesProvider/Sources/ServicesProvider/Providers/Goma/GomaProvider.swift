@@ -282,7 +282,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
 
-    func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
 
@@ -290,7 +290,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
 
-    func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
         return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
     }
 

@@ -235,7 +235,7 @@ class PhoneLoginViewController: UIViewController {
         
         let alert = UIAlertController(
             title: localized("login_error_title"),
-            message: errorMessage,
+            message: localized(ServiceProviderModelMapper.mappedErrorKey(from: errorMessage)),
             preferredStyle: .alert
         )
         

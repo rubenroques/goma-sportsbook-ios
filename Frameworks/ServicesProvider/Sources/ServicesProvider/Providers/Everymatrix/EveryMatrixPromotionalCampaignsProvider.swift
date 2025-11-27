@@ -16,11 +16,11 @@ class EveryMatrixPromotionalCampaignsProvider: PromotionalCampaignsProvider {
     // MARK: - PromotionalCampaignsProvider Implementation
     // All methods delegate to GomaPromotionalCampaignsProvider for CMS data
 
-    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
-        return gomaPromotionalCampaignsProvider.getPromotions()
+    func getPromotions(language: String?) -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+        return gomaPromotionalCampaignsProvider.getPromotions(language: language)
     }
 
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
-        return gomaPromotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String, language: String?) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        return gomaPromotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug, language: language)
     }
 }

@@ -105,9 +105,9 @@ protocol PrivilegedAccessManagerProvider {
 
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError>
 
-    func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>
+    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError>
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>
-    func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError>
+    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError>
     func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>
     func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>

@@ -274,7 +274,7 @@ extension PromotionsViewController {
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .bold, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "No promotions available"
+        label.text = localized("no_promotions_available")
         label.textAlignment = .center
         label.numberOfLines = 0
         return label
@@ -376,7 +376,7 @@ extension PromotionsViewController {
         NSLayoutConstraint.activate([
             self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.promotionSelectorBarView.bottomAnchor),
+            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.navigationBarView.bottomAnchor),
             self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
 
             self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),

@@ -1895,14 +1895,14 @@ extension Client {
         return privilegedAccessManager.getTransactionsHistory(startDate: startDate, endDate: endDate, transactionTypes: transactionTypes, pageNumber: pageNumber)
     }
 
-    public func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+    public func getGrantedBonuses(language: String? = nil) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.getGrantedBonuses()
+        return privilegedAccessManager.getGrantedBonuses(language: language)
     }
 
     public func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError> {
@@ -1915,14 +1915,14 @@ extension Client {
         return privilegedAccessManager.redeemBonus(code: code)
     }
 
-    public func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+    public func getAvailableBonuses(language: String? = nil) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
             return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
         }
 
-        return privilegedAccessManager.getAvailableBonuses()
+        return privilegedAccessManager.getAvailableBonuses(language: language)
     }
 
     public func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
@@ -2574,22 +2574,22 @@ extension Client {
 
 extension Client {
 
-    public func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+    public func getPromotions(language: String? = nil) -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
         guard
             let promotionalCampaignsProvider = self.promotionalCampaignsProvider
         else {
             return Fail(error: .promotionalCampaignsProviderNotFound).eraseToAnyPublisher()
         }
-        return promotionalCampaignsProvider.getPromotions()
+        return promotionalCampaignsProvider.getPromotions(language: language)
     }
 
-    public func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+    public func getPromotionDetails(promotionSlug: String, staticPageSlug: String, language: String? = nil) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
         guard
             let promotionalCampaignsProvider = self.promotionalCampaignsProvider
         else {
             return Fail(error: .promotionalCampaignsProviderNotFound).eraseToAnyPublisher()
         }
-        return promotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+        return promotionalCampaignsProvider.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug, language: language)
     }
 
 }

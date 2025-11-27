@@ -96,7 +96,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        let language = Env.locale.language.languageCode?.identifier
+        let language = localized("current_language_code")
 
         casinoCacheProvider.getCasinoCategories(language: language, platform: Self.gamesPlatform, lobbyType: lobbyType)
             .map { categories in
@@ -140,15 +140,15 @@ class CasinoCategoriesListViewModel: ObservableObject {
             .eraseToAnyPublisher()
     }
     
-    /// Load preview games for a single category (10 games for 2-row grid layout)
-    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<CasinoGameImageGridSectionViewModel, ServiceProviderError> {
-        let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games for grid
-
-        let language = Env.locale.language.languageCode?.identifier
+    /// Load preview games for a single category (10 games + See More card if needed)
+    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<MockCasinoCategorySectionViewModel, ServiceProviderError> {
+        let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games as requested
+        
+        let language = localized("current_language_code")
 
         return casinoCacheProvider.getGamesByCategory(
             categoryId: category.id,
-            language: language ?? "fr",
+            language: language,
             platform: Self.gamesPlatform,
             lobbyType: lobbyType,
             pagination: pagination
