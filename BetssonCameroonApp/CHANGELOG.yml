@@ -47,6 +47,7 @@ releases:
       - "Fix: SPOR-6474 - Search results shows count yet no results visible"
       - "Fix: SPOR-6482 - Update email in footer"
       - "Fix: SPOR-6366 - WO offer not working"
+      - "Fix: SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.2.1"
     build: 2113
@@ -58,10 +59,6 @@ releases:
       - "Added casino cache system with MVVM-C dependency injection"
       - "Fixed inline match cards and betslip layout issues"
       - "Fixed cell reuse bug and quarter ordering display"
-      - "Fixed position on Clear Betslip icon"
-      - "Fixed translation in the description of a Login Error"
-      - "Fixed string not being translated at Filter View"
-      - "Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.2.1"
     build: 2101
