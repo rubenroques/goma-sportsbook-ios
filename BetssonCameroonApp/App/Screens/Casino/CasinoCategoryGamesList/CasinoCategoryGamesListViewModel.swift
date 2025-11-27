@@ -131,11 +131,11 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
             limit: pageSize
         )
         
-        let language = Env.locale.language.languageCode?.identifier
+        let language = localized("current_language_code")
 
         casinoCacheProvider.getGamesByCategory(
             categoryId: categoryId,
-            language: language ?? "fr",
+            language: language,
             platform: Self.gamesPlatform,
             lobbyType: lobbyType,
             pagination: pagination

@@ -648,7 +648,7 @@ extension PromotionDetailViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = AppFont.with(type: .bold, size: 32)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Promotion Details"
+        titleLabel.text = localized("promotion_details")
         return titleLabel
     }
 
@@ -747,7 +747,7 @@ extension PromotionDetailViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 24)
-        label.text = "Terms and Conditions"
+        label.text = localized("terms_and_conditions")
         label.textAlignment = .left
         return label
     }
@@ -787,7 +787,7 @@ extension PromotionDetailViewController {
         label.textAlignment = .center
         label.font = AppFont.with(type: .bold, size: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Promotion not found"
+        label.text = localized("promotion_not_found")
         label.textAlignment = .center
         label.numberOfLines = 0
         return label

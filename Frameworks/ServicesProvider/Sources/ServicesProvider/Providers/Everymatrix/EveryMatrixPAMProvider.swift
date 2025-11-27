@@ -436,8 +436,8 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
-        let endpoint = EveryMatrixPlayerAPI.getGrantedBonus
+    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.getGrantedBonus(language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
         let publisher: AnyPublisher<EveryMatrix.GrantedBonusResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher.flatMap { grantedBonusResponse -> AnyPublisher<[GrantedBonus], ServiceProviderError> in
@@ -451,8 +451,8 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
     
-    func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
-        let endpoint = EveryMatrixPlayerAPI.getAvailableBonus
+    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+        let endpoint = EveryMatrixPlayerAPI.getAvailableBonus(language: language ?? EveryMatrixUnifiedConfiguration.shared.defaultLanguage)
         let publisher: AnyPublisher<EveryMatrix.BonusResponse, ServiceProviderError> = self.restConnector.request(endpoint)
         
         return publisher.flatMap { bonusResponse -> AnyPublisher<[AvailableBonus], ServiceProviderError> in

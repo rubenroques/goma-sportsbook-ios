@@ -35,8 +35,10 @@ class PromotionDetailViewModel {
     private func getPromotionDetails() {
         self.isLoadingPublisher.send(true)
         
+        let language = localized("current_language_code")
+
         if let staticPageSlug = promotion.staticPageSlug {
-            servicesProvider.getPromotionDetails(promotionSlug: self.promotion.slug, staticPageSlug: staticPageSlug)
+            servicesProvider.getPromotionDetails(promotionSlug: self.promotion.slug, staticPageSlug: staticPageSlug, language: language)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { [weak self] completion in
                     

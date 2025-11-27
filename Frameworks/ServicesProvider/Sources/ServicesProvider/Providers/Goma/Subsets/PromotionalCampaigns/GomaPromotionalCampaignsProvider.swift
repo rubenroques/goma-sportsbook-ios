@@ -28,9 +28,9 @@ class GomaPromotionalCampaignsProvider: PromotionalCampaignsProvider {
         self.init(authenticator: authenticator, apiClient: apiClient)
     }
     
-    func getPromotions() -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
+    func getPromotions(language: String?) -> AnyPublisher<[PromotionInfo], ServiceProviderError> {
         
-        return self.apiClient.getPromotions().map({ promotionsInfo in
+        return self.apiClient.getPromotions(language: language).map({ promotionsInfo in
             let convertedPromotionsResponse = promotionsInfo.map({
                 GomaModelMapper.promotionInfo(fromInternalPromotionInfo: $0)
             })
@@ -38,8 +38,8 @@ class GomaPromotionalCampaignsProvider: PromotionalCampaignsProvider {
         }).eraseToAnyPublisher()
     }
     
-    func getPromotionDetails(promotionSlug: String, staticPageSlug: String) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
-        return self.apiClient.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug)
+    func getPromotionDetails(promotionSlug: String, staticPageSlug: String, language: String?) -> AnyPublisher<PromotionInfo, ServiceProviderError> {
+        return self.apiClient.getPromotionDetails(promotionSlug: promotionSlug, staticPageSlug: staticPageSlug, language: language)
             .map({ promotionInfo in
                 let convertedPromotionsResponse = GomaModelMapper.promotionInfo(fromInternalPromotionInfo: promotionInfo)
                 return convertedPromotionsResponse
