@@ -141,7 +141,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     }
     
     /// Load preview games for a single category (10 games + See More card if needed)
-    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<MockCasinoCategorySectionViewModel, ServiceProviderError> {
+    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<CasinoGameImageGridSectionViewModel, ServiceProviderError> {
         let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games as requested
         
         let language = localized("current_language_code")
