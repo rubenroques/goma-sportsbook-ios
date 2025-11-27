@@ -271,18 +271,54 @@ class MatchDetailsManager {
         case .connect(let publisherIdentifiable):
             let subscription = Subscription(id: "\(publisherIdentifiable.identificationCode)")
             return SubscribableContent.connected(subscription: subscription)
-            
-        case .initialContent(let response), .updatedContent(let response):
-            // Parse markets data into isolated store for this market group
+
+        case .initialContent(let response):
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - INITIAL_CONTENT received, records: \(response.records.count)")
+
             parseMarketsDataForGroup(from: response, marketGroupKey: marketGroupKey)
-            
-            // Build and return markets array from isolated store
             let markets = buildMarketsArrayForGroup(marketGroupKey: marketGroupKey)
+
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - EMITTING \(markets.count) markets (initial)")
             return .contentUpdate(content: markets)
-            
+
+        case .updatedContent(let response):
+            // Log what entity types are in this update
+            let entityTypeCounts = categorizeRecords(response.records)
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - UPDATE received: \(entityTypeCounts)")
+
+            parseMarketsDataForGroup(from: response, marketGroupKey: marketGroupKey)
+            let markets = buildMarketsArrayForGroup(marketGroupKey: marketGroupKey)
+
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - EMITTING \(markets.count) markets (update)")
+            return .contentUpdate(content: markets)
+
         case .disconnect:
             return .disconnected
         }
+    }
+
+    /// Helper to categorize records by entity type for diagnostic logging
+    private func categorizeRecords(_ records: [EveryMatrix.EntityRecord]) -> String {
+        var counts: [String: Int] = [:]
+        for record in records {
+            let typeName: String
+            switch record {
+            case .match: typeName = "MATCH"
+            case .market: typeName = "MARKET"
+            case .outcome: typeName = "OUTCOME"
+            case .bettingOffer: typeName = "BETTING_OFFER"
+            case .changeRecord(let cr): typeName = "CHANGE(\(cr.entityType))"
+            case .eventInfo: typeName = "EVENT_INFO"
+            case .marketInfo: typeName = "MARKET_INFO"
+            default: typeName = "OTHER"
+            }
+            counts[typeName, default: 0] += 1
+        }
+        return counts.map { "\($0.key):\($0.value)" }.joined(separator: ", ")
     }
     
     private func handleEventDetailsContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<Event>? {
