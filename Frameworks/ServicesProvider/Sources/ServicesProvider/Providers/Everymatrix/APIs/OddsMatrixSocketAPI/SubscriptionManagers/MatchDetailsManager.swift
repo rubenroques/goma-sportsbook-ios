@@ -768,11 +768,21 @@ extension MatchDetailsManager {
 
     /// Subscribe to betting offer updates and return the parent Outcome with updated odds
     /// This fixes the entity mismatch where BETTING_OFFER updates don't notify OUTCOME observers
+    /// Note: Searches all stores (main + market group stores) to find the betting offer
     func subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        // Find the store that contains this betting offer
+        guard let targetStore = findStoreContainingBettingOffer(bettingOfferId) else {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+                "MatchDetailsManager.subscribeToBettingOfferAsOutcomeUpdates - BETTING_OFFER:\(bettingOfferId) not found in any store")
+            return Just(nil)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
         GomaLogger.debug(.realtime, category: "ODDS_FLOW",
             "MatchDetailsManager.subscribeToBettingOfferAsOutcomeUpdates - SUBSCRIBING to BETTING_OFFER:\(bettingOfferId)")
 
-        return store.observeBettingOffer(id: bettingOfferId)
+        return targetStore.observeBettingOffer(id: bettingOfferId)
             .handleEvents(receiveOutput: { bettingOfferDTO in
                 if bettingOfferDTO != nil {
                     GomaLogger.info(.realtime, category: "ODDS_FLOW",
@@ -780,19 +790,19 @@ extension MatchDetailsManager {
                 }
             })
             .compactMap { [weak self] bettingOfferDTO -> Outcome? in
-                guard let self = self,
+                guard self != nil,
                       let bettingOfferDTO = bettingOfferDTO else { return nil }
 
-                // Look up parent OutcomeDTO using the foreign key
+                // Look up parent OutcomeDTO using the foreign key - from the SAME store
                 let outcomeId = bettingOfferDTO.outcomeId
-                guard let outcomeDTO = self.store.get(EveryMatrix.OutcomeDTO.self, id: outcomeId) else {
+                guard let outcomeDTO = targetStore.get(EveryMatrix.OutcomeDTO.self, id: outcomeId) else {
                     GomaLogger.error(.realtime, category: "ODDS_FLOW",
                         "MatchDetailsManager - Parent OUTCOME:\(outcomeId) not found for BETTING_OFFER:\(bettingOfferId)")
                     return nil
                 }
 
-                // Build hierarchical Outcome with updated BettingOffers
-                guard let internalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store) else {
+                // Build hierarchical Outcome with updated BettingOffers - using SAME store
+                guard let internalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: targetStore) else {
                     return nil
                 }
 
@@ -818,22 +828,28 @@ extension MatchDetailsManager {
         return marketGroupsLoaded
     }
 
-    /// Check if a betting offer with the given ID exists in this manager's stores
-    /// Checks both main store and all market group stores
-    func bettingOfferExists(id: String) -> Bool {
+    /// Find the EntityStore that contains a specific betting offer
+    /// Searches main store first, then all market group stores
+    private func findStoreContainingBettingOffer(_ bettingOfferId: String) -> EveryMatrix.EntityStore? {
         // Check main store first
-        if store.get(EveryMatrix.BettingOfferDTO.self, id: id) != nil {
-            return true
+        if store.get(EveryMatrix.BettingOfferDTO.self, id: bettingOfferId) != nil {
+            return store
         }
 
-        // Check all market group stores (betting offers from market group subscriptions)
+        // Check market group stores
         for (_, groupStore) in marketGroupStores {
-            if groupStore.get(EveryMatrix.BettingOfferDTO.self, id: id) != nil {
-                return true
+            if groupStore.get(EveryMatrix.BettingOfferDTO.self, id: bettingOfferId) != nil {
+                return groupStore
             }
         }
 
-        return false
+        return nil
+    }
+
+    /// Check if a betting offer with the given ID exists in this manager's stores
+    /// Checks both main store and all market group stores
+    func bettingOfferExists(id: String) -> Bool {
+        return findStoreContainingBettingOffer(id) != nil
     }
 
     /// Observe live data (EventInfo entities) for this match
