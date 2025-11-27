@@ -376,7 +376,7 @@ class EveryMatrixRESTConnector: Connector {
                 case 500...599:
                     // Try to decode error message
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
-                        let errorMessage = apiError.thirdPartyResponse?.message ?? "Server Error"
+                        let errorMessage = apiError.thirdPartyResponse?.errorCode ?? "Server Error"
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.internalServerError
@@ -397,4 +397,3 @@ class EveryMatrixRESTConnector: Connector {
             .eraseToAnyPublisher()
     }
 }
-
