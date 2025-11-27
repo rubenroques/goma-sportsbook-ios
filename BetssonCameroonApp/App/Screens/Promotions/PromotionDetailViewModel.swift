@@ -35,7 +35,7 @@ class PromotionDetailViewModel {
     private func getPromotionDetails() {
         self.isLoadingPublisher.send(true)
         
-        let language = Env.locale.language.languageCode?.identifier ?? "fr"
+        let language = localized("current_language_code")
 
         if let staticPageSlug = promotion.staticPageSlug {
             servicesProvider.getPromotionDetails(promotionSlug: self.promotion.slug, staticPageSlug: staticPageSlug, language: language)

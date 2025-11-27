@@ -41,7 +41,7 @@ class PromotionsViewModel {
         
         self.isLoadingPublisher.send(true)
         
-        let language = Env.locale.language.languageCode?.identifier ?? "fr"
+        let language = localized("current_language_code")
 
         servicesProvider.getPromotions(language: language)
             .receive(on: DispatchQueue.main)

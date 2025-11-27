@@ -120,7 +120,7 @@ class BonusViewModel {
     private func loadAllBonuses() {
         self.isLoadingPublisher.send(true)
         
-        let language = Env.locale.language.languageCode?.identifier ?? "fr"
+        let language = localized("current_language_code")
         
         let availableBonusesPublisher = servicesProvider.getAvailableBonuses(language: language)
         let grantedBonusesPublisher = servicesProvider.getGrantedBonuses(language: language)
@@ -143,8 +143,8 @@ class BonusViewModel {
     private func getAvailableBonuses() {
         self.isLoadingPublisher.send(true)
 
-        let language = Env.locale.language.languageCode?.identifier ?? "fr"
-        
+        let language = localized("current_language_code")
+
         servicesProvider.getAvailableBonuses(language: language)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
