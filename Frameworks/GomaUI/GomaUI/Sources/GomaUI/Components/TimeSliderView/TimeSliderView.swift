@@ -26,7 +26,7 @@ public class TimeSliderView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = StyleProvider.Color.highlightPrimary
-        imageView.image = UIImage(systemName: "clock.fill")
+        imageView.image = UIImage(resource: .filterPerHour)
         return imageView
     }()
     
