@@ -20,7 +20,7 @@ releases:
       - "fix(localization) A dozen more localizations in alerts and pop ups." 
       - "fix(casino): Replace broken casino subscription-based quick links (between FR<>EN) with hardcoded category IDs and dynamic API-fetched titles"
       - "fix(casino): [SPOR-6632] [BC-218] Enable landscape rotation for casino game webview"
-
+      - "Fix: SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.3.0"
     build: 3001
@@ -69,6 +69,9 @@ releases:
       - "Added casino cache system with MVVM-C dependency injection"
       - "Fixed inline match cards and betslip layout issues"
       - "Fixed cell reuse bug and quarter ordering display"
+      - "Fixed position on Clear Betslip icon"
+      - "Fixed translation in the description of a Login Error"
+      - "Fixed string not being translated at Filter View"
 
   - version: "0.2.1"
     build: 2101
