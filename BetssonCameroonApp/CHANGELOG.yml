@@ -3,7 +3,6 @@
 # Used by tag-release.yml workflow to generate Firebase release notes
 
 releases:
-  # ===== RECENT RELEASES (November 2025) =====
 
   - version: "0.3.1"
     build: 3101
@@ -18,7 +17,10 @@ releases:
       - "fix(filters): [SPOR-6650] [BC-162]  Filtery Leagues tab"
       - "feature(maintenance): [SPOR-6610] Add a maintenance page"
       - "fix(register): SPOR-6648: [BC-287]  The 'Password' validation in FE is broken"
-      - "fix(localization) A couple more localizations in alerts and pop ups." 
+      - "fix(localization) A dozen more localizations in alerts and pop ups." 
+      - "fix(casino): Replace broken casino subscription-based quick links (between FR<>EN) with hardcoded category IDs and dynamic API-fetched titles"
+      - "fix(casino): [SPOR-6632] [BC-218] Enable landscape rotation for casino game webview"
+
 
   - version: "0.3.0"
     build: 3001
