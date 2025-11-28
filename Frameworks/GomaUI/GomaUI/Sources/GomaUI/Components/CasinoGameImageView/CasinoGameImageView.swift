@@ -62,7 +62,7 @@ public final class CasinoGameImageView: UIView {
         self.viewModel = viewModel
 
         if let viewModel = viewModel {
-            loadGameImage(from: viewModel.imageURL)
+            loadGameImage(from: viewModel.iconURL)
         } else {
             showFailureState()
         }

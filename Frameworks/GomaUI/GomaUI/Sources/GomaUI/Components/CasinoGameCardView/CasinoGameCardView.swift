@@ -272,11 +272,11 @@ final public class CasinoGameCardView: UIView {
             }
             .store(in: &cancellables)
         
-        // Image URL
-        viewModel.imageURLPublisher
+        // Icon URL
+        viewModel.iconURLPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] imageURL in
-                self?.loadGameImage(from: imageURL)
+            .sink { [weak self] iconURL in
+                self?.loadGameImage(from: iconURL)
             }
             .store(in: &cancellables)
     }
@@ -294,7 +294,7 @@ final public class CasinoGameCardView: UIView {
     
     private func renderPlaceholderState() {
         gameTitleLabel.text = LocalizationProvider.string("loading")
-        providerLabel.text = "Provider"
+        providerLabel.text = LocalizationProvider.string("provider")
         minStakeLabel.text = LocalizationProvider.string("min_stake")
         gameImageView.image = nil
         updateStarRating(0.0)

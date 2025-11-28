@@ -79,7 +79,7 @@ class SportsSearchViewController: UIViewController {
     
     // MARK: - Setup Methods
     private func setupNavigationBar() {
-        title = "Search Sports"
+        title = localized("search_sports")
         navigationController?.navigationBar.prefersLargeTitles = false
     }
     

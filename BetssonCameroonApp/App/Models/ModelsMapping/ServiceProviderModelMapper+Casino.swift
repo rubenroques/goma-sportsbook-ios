@@ -19,7 +19,7 @@ extension ServiceProviderModelMapper {
             id: casinoGame.id,
             name: casinoGame.name,
             gameURL: casinoGame.launchUrl,
-            imageURL: bestImageURL(from: casinoGame),
+            iconURL: bestIconURL(from: casinoGame),
             rating: bestRating(from: casinoGame),
             provider: casinoGame.vendor?.displayName,
             minStake: "-", // As specified: set to "-" when not available
@@ -33,7 +33,7 @@ extension ServiceProviderModelMapper {
     static func casinoGameImageData(fromCasinoGame casinoGame: CasinoGame) -> CasinoGameImageData {
         return CasinoGameImageData(
             id: casinoGame.id,
-            imageURL: bestImageURL(from: casinoGame),
+            iconURL: bestIconURL(from: casinoGame),
             gameURL: casinoGame.launchUrl ?? ""
         )
     }
@@ -44,7 +44,7 @@ extension ServiceProviderModelMapper {
             id: imageData.id,
             name: gameName,
             provider: nil,
-            imageURL: imageData.imageURL,
+            imageURL: imageData.iconURL,
             gameURL: imageData.gameURL
         )
     }
@@ -88,7 +88,7 @@ extension ServiceProviderModelMapper {
             id: "\(categoryId)-see-more",
             name: "See More",
             gameURL: "", // Empty - this will trigger navigation instead of game launch
-            imageURL: nil, // Use default "see more" placeholder
+            iconURL: nil, // Use default "see more" placeholder
             rating: 0.0,
             provider: "See \(remainingGamesCount) more games",
             minStake: ""
@@ -103,24 +103,49 @@ extension ServiceProviderModelMapper {
             id: cardData.id,
             name: cardData.name,
             provider: cardData.provider,  // Now optional, passes through
-            imageURL: cardData.imageURL,
+            imageURL: cardData.iconURL,
             gameURL: cardData.gameURL
         )
     }
     
     // MARK: - Private Helper Methods
-    
-    /// Get best available image URL with priority: thumbnail > backgroundImageUrl > icons["88"]
-    private static func bestImageURL(from casinoGame: CasinoGame) -> String? {
+
+    /// Get square icon URL for grid/list display (114x114 preferred)
+    private static func squareIconURL(from casinoGame: CasinoGame) -> String? {
+        guard let icons = casinoGame.icons else { return nil }
+        // Prefer highest quality square icon
+        if let iconUrl = icons["114"] ?? icons["88"] ?? icons["72"] {
+            return "https:" + iconUrl
+        }
+        return nil
+    }
+
+    /// Get rectangular thumbnail URL for preview display
+    static func thumbnailURL(from casinoGame: CasinoGame) -> String? {
         if !casinoGame.thumbnail.isEmpty {
             return "https:" + casinoGame.thumbnail
         }
+        return nil
+    }
+
+    /// Get large background URL for full-screen backgrounds (1280x720)
+    static func backgroundURL(from casinoGame: CasinoGame) -> String? {
         if !casinoGame.backgroundImageUrl.isEmpty {
             return "https:" + casinoGame.backgroundImageUrl
         }
         return nil
     }
-    
+
+    /// Get best available icon URL for grid cards - prefer square icons
+    private static func bestIconURL(from casinoGame: CasinoGame) -> String? {
+        // For grid cards, prefer square icons first
+        if let iconUrl = squareIconURL(from: casinoGame) {
+            return iconUrl
+        }
+        // Fallback to thumbnail if no icons available
+        return thumbnailURL(from: casinoGame)
+    }
+
     /// Get best available rating using popularity field or default to 0
     private static func bestRating(from casinoGame: CasinoGame) -> Double {
         return casinoGame.popularity ?? 0.0

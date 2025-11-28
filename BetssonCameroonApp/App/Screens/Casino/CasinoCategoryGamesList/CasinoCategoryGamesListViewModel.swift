@@ -29,7 +29,7 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     @Published private(set) var games: [CasinoGameImageViewModel] = []
     @Published private(set) var loadingState: LoadingState = .idle
     @Published private(set) var errorMessage: String?
-    @Published private(set) var categoryTitle: String
+    @Published private(set) var categoryTitle: String = ""
     
     // MARK: - Pagination Properties
     @Published private(set) var hasMoreGames: Bool = false
@@ -54,9 +54,9 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
-    init(categoryId: String, categoryTitle: String, casinoCacheProvider: CasinoCacheProvider, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
+    init(categoryId: String, categoryTitle: String?, casinoCacheProvider: CasinoCacheProvider, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
         self.categoryId = categoryId
-        self.categoryTitle = categoryTitle
+        self.categoryTitle = categoryTitle ?? ""  // Empty initially for quick links - will be populated from API
         self.casinoCacheProvider = casinoCacheProvider
         self.lobbyType = lobbyType
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forCasinoScreens()
@@ -181,6 +181,11 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
         // Update pagination state
         totalGames = gamesResponse.total
         hasMoreGames = games.count < totalGames
+
+        // Update category title from response if we started with empty title (quick link navigation)
+        if categoryTitle.isEmpty, let name = gamesResponse.categoryName {
+            categoryTitle = name
+        }
     }
     
     /// Handle API completion (success or failure)

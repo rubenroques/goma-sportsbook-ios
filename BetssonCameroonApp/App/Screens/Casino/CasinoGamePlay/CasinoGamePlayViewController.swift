@@ -423,12 +423,12 @@ class CasinoGamePlayViewController: UIViewController {
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.refresh()
         })
-        
+
         present(alert, animated: true)
     }
 }

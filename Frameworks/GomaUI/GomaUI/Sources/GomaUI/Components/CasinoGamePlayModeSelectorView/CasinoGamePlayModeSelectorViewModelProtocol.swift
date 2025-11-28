@@ -7,16 +7,18 @@ import UIKit
 public struct CasinoGamePlayModeSelectorGameData: Equatable, Hashable {
     public let id: String
     public let name: String
-    public let imageURL: String?
-    public let provider: String?  // Optional - not displayed if nil
+    public let thumbnailURL: String?    // rectangular preview image for center display
+    public let backgroundURL: String?   // large landscape image for full-screen background
+    public let provider: String?        // Optional - not displayed if nil
     public let volatility: String?
     public let minStake: String
     public let description: String?
-    
+
     public init(
         id: String,
         name: String,
-        imageURL: String? = nil,
+        thumbnailURL: String? = nil,
+        backgroundURL: String? = nil,
         provider: String? = nil,
         volatility: String? = nil,
         minStake: String,
@@ -24,7 +26,8 @@ public struct CasinoGamePlayModeSelectorGameData: Equatable, Hashable {
     ) {
         self.id = id
         self.name = name
-        self.imageURL = imageURL
+        self.thumbnailURL = thumbnailURL
+        self.backgroundURL = backgroundURL
         self.provider = provider
         self.volatility = volatility
         self.minStake = minStake

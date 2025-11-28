@@ -20,16 +20,16 @@ class DepositVerificationViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Deposit"
+        label.text = localized("deposit")
         label.font = StyleProvider.fontWith(type: .bold, size: 18)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
         return label
     }()
-    
+
     private let cancelButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Cancel", for: .normal)
+        button.setTitle(localized("cancel"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 14)
         button.setTitleColor(StyleProvider.Color.highlightTertiary, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false

@@ -133,10 +133,10 @@ final class NotificationsCoordinator: Coordinator {
             message: message,
             preferredStyle: .alert
         )
-        
-        let okAction = UIAlertAction(title: "OK", style: .default)
+
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
         alert.addAction(okAction)
-        
+
         notificationsViewController.present(alert, animated: true)
     }
     

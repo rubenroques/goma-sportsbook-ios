@@ -159,9 +159,9 @@ class MarketsTabSimpleViewController: UIViewController {
     // MARK: - Helper Methods
 
     private func showError(_ message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: localized("error"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.loadMarkets()
         })

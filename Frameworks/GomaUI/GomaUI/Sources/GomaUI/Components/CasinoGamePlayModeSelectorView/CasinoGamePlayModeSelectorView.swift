@@ -290,9 +290,9 @@ final public class CasinoGamePlayModeSelectorView: UIView {
         // updateVolatilityCapsule(gameData.volatility)
         // minStakeValueLabel.text = gameData.minStake
         
-        // Load game image if available
-        if let imageURLString = gameData.imageURL, let imageURL = URL(string: imageURLString) {
-            loadImage(from: imageURL)
+        // Load game thumbnail image if available
+        if let thumbnailURLString = gameData.thumbnailURL, let thumbnailURL = URL(string: thumbnailURLString) {
+            loadImage(from: thumbnailURL)
         } else {
             gameImageView.image = UIImage(systemName: "photo")
         }

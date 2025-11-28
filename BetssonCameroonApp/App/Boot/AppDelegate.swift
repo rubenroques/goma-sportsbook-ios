@@ -166,7 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         
         // GomaLogger options
-        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG")
+        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG", "ODDS_FLOW")
 
         return true
     }

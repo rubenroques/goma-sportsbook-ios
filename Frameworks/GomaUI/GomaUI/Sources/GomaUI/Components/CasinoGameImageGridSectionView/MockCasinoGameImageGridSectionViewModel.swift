@@ -98,14 +98,14 @@ extension MockCasinoGameImageGridSectionViewModel {
     /// Lite Games section with 8 games (4 columns, all pairs full)
     public static var liteGamesSection: MockCasinoGameImageGridSectionViewModel {
         let games: [CasinoGameImageData] = [
-            CasinoGameImageData(id: "plinkgoal-1", imageURL: "https://picsum.photos/164/164?random=1", gameURL: "https://example.com/plinkgoal"),
-            CasinoGameImageData(id: "plinkgoal-2", imageURL: "https://picsum.photos/164/164?random=2", gameURL: "https://example.com/plinkgoal"),
-            CasinoGameImageData(id: "samba-soccer-1", imageURL: "https://picsum.photos/164/164?random=3", gameURL: "https://example.com/samba"),
-            CasinoGameImageData(id: "samba-soccer-2", imageURL: "https://picsum.photos/164/164?random=4", gameURL: "https://example.com/samba"),
-            CasinoGameImageData(id: "aviator-1", imageURL: "https://picsum.photos/164/164?random=5", gameURL: "https://example.com/aviator"),
-            CasinoGameImageData(id: "aviator-2", imageURL: "https://picsum.photos/164/164?random=6", gameURL: "https://example.com/aviator"),
-            CasinoGameImageData(id: "beast-below-1", imageURL: "https://picsum.photos/164/164?random=7", gameURL: "https://example.com/beast"),
-            CasinoGameImageData(id: "beast-below-2", imageURL: "https://picsum.photos/164/164?random=8", gameURL: "https://example.com/beast")
+            CasinoGameImageData(id: "plinkgoal-1", iconURL: "https://picsum.photos/164/164?random=1", gameURL: "https://example.com/plinkgoal"),
+            CasinoGameImageData(id: "plinkgoal-2", iconURL: "https://picsum.photos/164/164?random=2", gameURL: "https://example.com/plinkgoal"),
+            CasinoGameImageData(id: "samba-soccer-1", iconURL: "https://picsum.photos/164/164?random=3", gameURL: "https://example.com/samba"),
+            CasinoGameImageData(id: "samba-soccer-2", iconURL: "https://picsum.photos/164/164?random=4", gameURL: "https://example.com/samba"),
+            CasinoGameImageData(id: "aviator-1", iconURL: "https://picsum.photos/164/164?random=5", gameURL: "https://example.com/aviator"),
+            CasinoGameImageData(id: "aviator-2", iconURL: "https://picsum.photos/164/164?random=6", gameURL: "https://example.com/aviator"),
+            CasinoGameImageData(id: "beast-below-1", iconURL: "https://picsum.photos/164/164?random=7", gameURL: "https://example.com/beast"),
+            CasinoGameImageData(id: "beast-below-2", iconURL: "https://picsum.photos/164/164?random=8", gameURL: "https://example.com/beast")
         ]
 
         return MockCasinoGameImageGridSectionViewModel(
@@ -121,13 +121,13 @@ extension MockCasinoGameImageGridSectionViewModel {
     /// Section with odd number of games (last column has only top card)
     public static var oddGamesSection: MockCasinoGameImageGridSectionViewModel {
         let games: [CasinoGameImageData] = [
-            CasinoGameImageData(id: "game-1", imageURL: "https://picsum.photos/164/164?random=10", gameURL: "https://example.com/1"),
-            CasinoGameImageData(id: "game-2", imageURL: "https://picsum.photos/164/164?random=11", gameURL: "https://example.com/2"),
-            CasinoGameImageData(id: "game-3", imageURL: "https://picsum.photos/164/164?random=12", gameURL: "https://example.com/3"),
-            CasinoGameImageData(id: "game-4", imageURL: "https://picsum.photos/164/164?random=13", gameURL: "https://example.com/4"),
-            CasinoGameImageData(id: "game-5", imageURL: "https://picsum.photos/164/164?random=14", gameURL: "https://example.com/5"),
-            CasinoGameImageData(id: "game-6", imageURL: "https://picsum.photos/164/164?random=15", gameURL: "https://example.com/6"),
-            CasinoGameImageData(id: "game-7", imageURL: "https://picsum.photos/164/164?random=16", gameURL: "https://example.com/7") // Odd - top only
+            CasinoGameImageData(id: "game-1", iconURL: "https://picsum.photos/164/164?random=10", gameURL: "https://example.com/1"),
+            CasinoGameImageData(id: "game-2", iconURL: "https://picsum.photos/164/164?random=11", gameURL: "https://example.com/2"),
+            CasinoGameImageData(id: "game-3", iconURL: "https://picsum.photos/164/164?random=12", gameURL: "https://example.com/3"),
+            CasinoGameImageData(id: "game-4", iconURL: "https://picsum.photos/164/164?random=13", gameURL: "https://example.com/4"),
+            CasinoGameImageData(id: "game-5", iconURL: "https://picsum.photos/164/164?random=14", gameURL: "https://example.com/5"),
+            CasinoGameImageData(id: "game-6", iconURL: "https://picsum.photos/164/164?random=15", gameURL: "https://example.com/6"),
+            CasinoGameImageData(id: "game-7", iconURL: "https://picsum.photos/164/164?random=16", gameURL: "https://example.com/7") // Odd - top only
         ]
 
         return MockCasinoGameImageGridSectionViewModel(
@@ -153,8 +153,8 @@ extension MockCasinoGameImageGridSectionViewModel {
     /// Section with few games (2 games = 1 column)
     public static var fewGamesSection: MockCasinoGameImageGridSectionViewModel {
         let games: [CasinoGameImageData] = [
-            CasinoGameImageData(id: "game-a", imageURL: "https://picsum.photos/164/164?random=20", gameURL: "https://example.com/a"),
-            CasinoGameImageData(id: "game-b", imageURL: "https://picsum.photos/164/164?random=21", gameURL: "https://example.com/b")
+            CasinoGameImageData(id: "game-a", iconURL: "https://picsum.photos/164/164?random=20", gameURL: "https://example.com/a"),
+            CasinoGameImageData(id: "game-b", iconURL: "https://picsum.photos/164/164?random=21", gameURL: "https://example.com/b")
         ]
 
         return MockCasinoGameImageGridSectionViewModel(

@@ -212,15 +212,15 @@ final public class SeeMoreButtonView: UIView {
     
     private func updateAccessibility(from state: SeeMoreButtonDisplayState) {
         if state.isLoading {
-            accessibilityLabel = "Loading more games"
-            accessibilityHint = "Please wait while more games are loaded"
+            accessibilityLabel = LocalizationProvider.string("loading_more_games")
+            accessibilityHint = LocalizationProvider.string("please_wait_loading")
             accessibilityTraits = .button
         } else if state.isEnabled {
             accessibilityLabel = titleLabel.text
-            accessibilityHint = "Tap to load more games"
+            accessibilityHint = LocalizationProvider.string("tap_to_load_more_games")
             accessibilityTraits = .button
         } else {
-            accessibilityLabel = "Load more button unavailable"
+            accessibilityLabel = LocalizationProvider.string("load_more_button_unavailable")
             accessibilityHint = nil
             accessibilityTraits = [.button, .notEnabled]
         }

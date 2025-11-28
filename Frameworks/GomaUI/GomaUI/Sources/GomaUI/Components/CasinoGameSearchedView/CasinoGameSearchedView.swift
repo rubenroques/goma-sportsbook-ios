@@ -209,7 +209,7 @@ extension CasinoGameSearchedView {
                 self?.titleLabel.text = data.title
                 self?.providerLabel.text = data.provider
                 self?.providerLabel.isHidden = data.provider == nil || data.provider?.isEmpty == true
-                self?.loadGameImage(from: data.imageURL)
+                self?.loadGameImage(from: data.iconURL)
             }
             .store(in: &cancellables)
         
@@ -273,8 +273,8 @@ extension CasinoGameSearchedView {
     }
     
     private func renderPlaceholderState() {
-        titleLabel.text = "Gonzo’s Quest"
-        providerLabel.text = "Netent"
+        titleLabel.text = LocalizationProvider.string("loading")
+        providerLabel.text = LocalizationProvider.string("provider")
         showImageFailureState()
     }
     

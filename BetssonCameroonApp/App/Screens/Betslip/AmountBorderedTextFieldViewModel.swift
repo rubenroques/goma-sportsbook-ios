@@ -158,9 +158,10 @@ extension AmountBorderedTextFieldViewModel {
                 text: "",
                 placeholder: localized("amount"),
                 visualState: .idle,
-                keyboardType: .numbersAndPunctuation,
+                keyboardType: .decimalPad,
                 returnKeyType: .go,
-                textContentType: .flightNumber
+                textContentType: .flightNumber,
+                allowedCharacters: CharacterSet(charactersIn: "0123456789.,")
             )
         )
     }

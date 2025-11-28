@@ -15,7 +15,7 @@ public class SortFilterView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Sort By"
+        label.text = LocalizationProvider.string("sort_by")
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
         return label

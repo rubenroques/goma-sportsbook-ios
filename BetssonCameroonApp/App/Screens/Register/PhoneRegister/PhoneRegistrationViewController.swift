@@ -77,6 +77,7 @@ class PhoneRegistrationViewController: UIViewController {
     private var lastNameField: BorderedTextFieldView?
     private var birthDateField: BorderedTextFieldView?
     private var termsView: TermsAcceptanceView?
+    private var promoCodeField: BorderedTextFieldView?
     private let createAccountButton: ButtonView
 
     // Date picker for birth date input
@@ -300,9 +301,26 @@ class PhoneRegistrationViewController: UIViewController {
             NSLayoutConstraint.activate([
                 termsView.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
                 termsView.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
-                termsView.topAnchor.constraint(equalTo: componentsStackView.bottomAnchor, constant: 36),
-                termsView.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor)
+                termsView.topAnchor.constraint(equalTo: componentsStackView.bottomAnchor, constant: 36)
             ])
+
+            // Add promo code field after terms (per config order)
+            if let promoCodeFieldViewModel = viewModel.promoCodeFieldViewModel {
+                let promoCodeField = BorderedTextFieldView(viewModel: promoCodeFieldViewModel)
+                self.promoCodeField = promoCodeField
+                promoCodeField.translatesAutoresizingMaskIntoConstraints = false
+                scrollView.addSubview(promoCodeField)
+
+                NSLayoutConstraint.activate([
+                    promoCodeField.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor, constant: 16),
+                    promoCodeField.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor, constant: -16),
+                    promoCodeField.topAnchor.constraint(equalTo: termsView.bottomAnchor, constant: 20),
+                    promoCodeField.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor)
+                ])
+            } else {
+                // No promo code field, tie terms to bottom
+                termsView.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor).isActive = true
+            }
         }
         
         self.componentsBaseView.setNeedsLayout()

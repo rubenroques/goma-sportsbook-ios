@@ -8,12 +8,11 @@ import GomaUI
 
 /// Production implementation of CasinoGameImageViewModelProtocol
 final class CasinoGameImageViewModel: CasinoGameImageViewModelProtocol {
-
     // MARK: - Protocol Properties
 
     let gameId: String
     let gameURL: String
-    let imageURL: String?
+    let iconURL: String?
 
     // MARK: - Callbacks
 
@@ -24,11 +23,11 @@ final class CasinoGameImageViewModel: CasinoGameImageViewModelProtocol {
     init(
         gameId: String,
         gameURL: String,
-        imageURL: String?
+        iconURL: String?
     ) {
         self.gameId = gameId
         self.gameURL = gameURL
-        self.imageURL = imageURL
+        self.iconURL = iconURL
     }
 
     // MARK: - Convenience Initializer
@@ -37,7 +36,7 @@ final class CasinoGameImageViewModel: CasinoGameImageViewModelProtocol {
         self.init(
             gameId: data.id,
             gameURL: data.gameURL,
-            imageURL: data.imageURL
+            iconURL: data.iconURL
         )
     }
 

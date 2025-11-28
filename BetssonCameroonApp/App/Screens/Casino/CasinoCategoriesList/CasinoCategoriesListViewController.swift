@@ -212,6 +212,14 @@ class CasinoCategoriesListViewController: UIViewController {
                 self?.showError(errorMessage)
             }
             .store(in: &cancellables)
+
+        // Recently played visibility
+        viewModel.$showRecentlyPlayed
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.collectionView.reloadSections(IndexSet(integer: 1))
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Data Loading
@@ -223,16 +231,16 @@ class CasinoCategoriesListViewController: UIViewController {
     
     private func showError(_ message: String) {
         let alert = UIAlertController(
-            title: "Error",
+            title: localized("error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.reloadCategories()
         })
-        
+
         present(alert, animated: true)
     }
 }
@@ -247,7 +255,7 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0: return viewModel.showTopBanner ? 1 : 0  // Banner (ignored if 0 items)
-        case 1: return 1  // Recently played (always shown)
+        case 1: return viewModel.showRecentlyPlayed ? 1 : 0  // Recently played (only if logged in + has games)
         case 2: return categorySections.count  // All categories
         default: return 0
         }

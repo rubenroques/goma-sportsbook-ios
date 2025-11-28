@@ -345,8 +345,9 @@ public struct PhoneSignUpForm {
     public var firstName: String?
     public var lastName: String?
     public var birthDate: String?
+    public var promoCode: String?
 
-    public init(phone: String, phonePrefix: String, password: String, registrationId: String, firstName: String? = nil, lastName: String? = nil, birthDate: String? = nil) {
+    public init(phone: String, phonePrefix: String, password: String, registrationId: String, firstName: String? = nil, lastName: String? = nil, birthDate: String? = nil, promoCode: String? = nil) {
         self.phone = phone
         self.phonePrefix = phonePrefix
         self.password = password
@@ -354,6 +355,7 @@ public struct PhoneSignUpForm {
         self.firstName = firstName
         self.lastName = lastName
         self.birthDate = birthDate
+        self.promoCode = promoCode
     }
 
 }

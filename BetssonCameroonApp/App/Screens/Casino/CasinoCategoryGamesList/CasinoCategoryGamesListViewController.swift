@@ -176,7 +176,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
                 self?.loadingIndicatorView.isHidden = !showFullScreenLoader
             }
             .store(in: &cancellables)
-        
+
         // Games
         viewModel.$games
             .receive(on: DispatchQueue.main)
@@ -185,7 +185,16 @@ class CasinoCategoryGamesListViewController: UIViewController {
                 self?.collectionView.reloadData()
             }
             .store(in: &cancellables)
-        
+
+        // Category title (updates navigation bar when title loads from API)
+        viewModel.$categoryTitle
+            .dropFirst()  // Skip initial value - already set during init
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] title in
+                self?.navigationBarView.updateTitle(title)
+            }
+            .store(in: &cancellables)
+
         // Error handling
         viewModel.$errorMessage
             .compactMap { $0 }
@@ -194,7 +203,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
                 self?.showError(errorMessage)
             }
             .store(in: &cancellables)
-        
+
         // HasMoreGames state (triggers collection view updates)
         viewModel.$hasMoreGames
             .receive(on: DispatchQueue.main)
@@ -208,16 +217,16 @@ class CasinoCategoryGamesListViewController: UIViewController {
     // MARK: - Error Handling
     private func showError(_ message: String) {
         let alert = UIAlertController(
-            title: "Error",
+            title: localized("error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.reloadGames()
         })
-        
+
         present(alert, animated: true)
     }
 }
