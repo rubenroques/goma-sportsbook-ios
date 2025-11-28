@@ -8,7 +8,7 @@ public class SportGamesFilterView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Games"
+        label.text = LocalizationProvider.string("games")
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
         return label

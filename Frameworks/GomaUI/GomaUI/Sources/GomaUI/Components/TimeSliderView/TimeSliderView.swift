@@ -15,7 +15,7 @@ public class TimeSliderView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Filter by Time"
+        label.text = LocalizationProvider.string("filter_by_time")
         label.font = StyleProvider.fontWith(type: .bold, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
         return label

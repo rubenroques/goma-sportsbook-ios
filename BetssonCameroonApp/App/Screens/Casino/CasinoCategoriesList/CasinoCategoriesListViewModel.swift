@@ -30,6 +30,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     @Published private(set) var categorySections: [CasinoGameImageGridSectionViewModel] = []
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
+    @Published private(set) var showRecentlyPlayed: Bool = false
     
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
@@ -57,11 +58,12 @@ class CasinoCategoriesListViewModel: ObservableObject {
             self.topBannerSliderViewModel = nil
         }
 
-        // Initialize with empty recently played - will be populated when categories load
+        // Initialize with empty recently played - will be populated from API when user is logged in
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
 
         setupChildViewModelCallbacks()
         setupCacheUpdateSubscriptions()
+        setupUserSessionSubscription()
         loadCategoriesFromAPI()
     }
     
@@ -113,7 +115,6 @@ class CasinoCategoriesListViewModel: ObservableObject {
                 },
                 receiveValue: { [weak self] sectionViewModels in
                     self?.categorySections = sectionViewModels
-                    self?.updateRecentlyPlayedFromCategories()
                     self?.isLoading = false
                 }
             )
@@ -239,38 +240,59 @@ class CasinoCategoriesListViewModel: ObservableObject {
                 },
                 receiveValue: { [weak self] sectionViewModels in
                     self?.categorySections = sectionViewModels
-                    self?.updateRecentlyPlayedFromCategories()
                 }
             )
             .store(in: &cancellables)
     }
 
-    /// Update recently played games with first game from each loaded category
-    private func updateRecentlyPlayedFromCategories() {
-        // Extract first game from each category section
-        let recentGames = categorySections.compactMap { section -> RecentlyPlayedGameData? in
-            // Get first pair, then first game from that pair
-            guard let firstPair = section.gamePairViewModels.first else {
-                return nil
+    /// Subscribe to user session changes to load recently played games when logged in
+    private func setupUserSessionSubscription() {
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] profile in
+                if profile != nil {
+                    self?.loadRecentlyPlayedGames()
+                } else {
+                    self?.showRecentlyPlayed = false
+                    self?.recentlyPlayedGamesViewModel.updateGames([])
+                }
             }
+            .store(in: &cancellables)
+    }
 
-            let topGameVM = firstPair.topGameViewModel
-
-            // Convert to RecentlyPlayedGameData (using category title as game name placeholder)
-            return RecentlyPlayedGameData(
-                id: topGameVM.gameId,
-                name: section.categoryTitle, // Use category as placeholder since we don't have game name
-                provider: nil,
-                imageURL: topGameVM.imageURL,
-                gameURL: topGameVM.gameURL
-            )
+    /// Load recently played games from API for logged-in user
+    private func loadRecentlyPlayedGames() {
+        guard let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier else {
+            showRecentlyPlayed = false
+            recentlyPlayedGamesViewModel.updateGames([])
+            return
         }
 
-        // Take up to 5 games to avoid overcrowding the recently played section
-        let limitedGames = Array(recentGames.prefix(5))
-
-        // Update the recently played games ViewModel
-        recentlyPlayedGamesViewModel.updateGames(limitedGames)
+        let language = localized("current_language_code")
+        servicesProvider.getRecentlyPlayedGames(playerId: userId, language: language, platform: Self.gamesPlatform)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure = completion {
+                        self?.showRecentlyPlayed = false
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    let games = response.games.map { game -> RecentlyPlayedGameData in
+                        let cardData = ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: game)
+                        return RecentlyPlayedGameData(
+                            id: cardData.id,
+                            name: cardData.name,
+                            provider: cardData.provider,
+                            imageURL: cardData.iconURL,
+                            gameURL: cardData.gameURL
+                        )
+                    }
+                    self?.recentlyPlayedGamesViewModel.updateGames(games)
+                    self?.showRecentlyPlayed = !games.isEmpty
+                }
+            )
+            .store(in: &cancellables)
     }
 
     /// Handle banner action from casino banner tap

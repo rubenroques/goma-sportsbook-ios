@@ -223,8 +223,8 @@ final public class RecentlyPlayedGamesCellView: UIView {
     
     // MARK: - Rendering
     private func renderPlaceholderState() {
-        gameTitleLabel.text = "Game Title"
-        providerLabel.text = "Provider"
+        gameTitleLabel.text = LocalizationProvider.string("loading")
+        providerLabel.text = LocalizationProvider.string("provider")
         gameImageView.image = nil
         showImageFailureState()
     }

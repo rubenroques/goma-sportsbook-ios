@@ -8,8 +8,8 @@ public protocol CasinoGameImageViewModelProtocol: AnyObject {
     /// The game's URL for launching
     var gameURL: String { get }
 
-    /// The image URL or bundle image name
-    var imageURL: String? { get }
+    /// The square icon URL or bundle image name (114x114)
+    var iconURL: String? { get }
 
     /// Called when the game card is tapped
     func gameSelected()

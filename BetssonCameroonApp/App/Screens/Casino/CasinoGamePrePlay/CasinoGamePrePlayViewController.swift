@@ -213,11 +213,11 @@ class CasinoGamePrePlayViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // Game data binding for background image
+        // Game data binding for background image (use large background URL for full-screen)
         viewModel.playSelectorViewModel.displayStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
-                self?.loadBackgroundImage(from: displayState.gameData.imageURL)
+                self?.loadBackgroundImage(from: displayState.gameData.backgroundURL)
             }
             .store(in: &cancellables)
         
@@ -249,16 +249,16 @@ class CasinoGamePrePlayViewController: UIViewController {
     // MARK: - Error Handling
     private func showError(_ message: String) {
         let alert = UIAlertController(
-            title: "Error",
+            title: localized("error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.refreshData()
         })
-        
+
         present(alert, animated: true)
     }
     

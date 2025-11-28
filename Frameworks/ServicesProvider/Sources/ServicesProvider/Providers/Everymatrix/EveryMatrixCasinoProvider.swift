@@ -83,7 +83,8 @@ class EveryMatrixCasinoProvider: CasinoProvider {
                     games: games,
                     pagination: gamesData.pages.map {
                         EveryMatrixModelMapper.casinoPaginationInfo(from: $0)
-                    }
+                    },
+                    categoryName: response.name
                 )
             }
             .mapError { error in

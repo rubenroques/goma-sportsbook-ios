@@ -7,7 +7,7 @@ public final class MockCasinoGameImageViewModel: CasinoGameImageViewModelProtoco
 
     public let gameId: String
     public let gameURL: String
-    public let imageURL: String?
+    public let iconURL: String?
 
     // MARK: - Callbacks
 
@@ -18,11 +18,11 @@ public final class MockCasinoGameImageViewModel: CasinoGameImageViewModelProtoco
     public init(
         gameId: String,
         gameURL: String,
-        imageURL: String?
+        iconURL: String?
     ) {
         self.gameId = gameId
         self.gameURL = gameURL
-        self.imageURL = imageURL
+        self.iconURL = iconURL
     }
 
     // MARK: - Convenience Initializer
@@ -31,7 +31,7 @@ public final class MockCasinoGameImageViewModel: CasinoGameImageViewModelProtoco
         self.init(
             gameId: data.id,
             gameURL: data.gameURL,
-            imageURL: data.imageURL
+            iconURL: data.iconURL
         )
     }
 
@@ -51,7 +51,7 @@ extension MockCasinoGameImageViewModel {
         MockCasinoGameImageViewModel(
             gameId: "plinkgoal-001",
             gameURL: "https://casino.example.com/games/plinkgoal",
-            imageURL: "https://picsum.photos/164/164?random=1"
+            iconURL: "https://picsum.photos/164/164?random=1"
         )
     }
 
@@ -60,7 +60,7 @@ extension MockCasinoGameImageViewModel {
         MockCasinoGameImageViewModel(
             gameId: "aviator-001",
             gameURL: "https://casino.example.com/games/aviator",
-            imageURL: "https://picsum.photos/164/164?random=2"
+            iconURL: "https://picsum.photos/164/164?random=2"
         )
     }
 
@@ -69,7 +69,7 @@ extension MockCasinoGameImageViewModel {
         MockCasinoGameImageViewModel(
             gameId: "samba-soccer-001",
             gameURL: "https://casino.example.com/games/samba-soccer",
-            imageURL: "https://picsum.photos/164/164?random=3"
+            iconURL: "https://picsum.photos/164/164?random=3"
         )
     }
 
@@ -78,7 +78,7 @@ extension MockCasinoGameImageViewModel {
         MockCasinoGameImageViewModel(
             gameId: "failed-game",
             gameURL: "https://casino.example.com/games/failed",
-            imageURL: "invalid-url-that-will-fail"
+            iconURL: "invalid-url-that-will-fail"
         )
     }
 
@@ -87,7 +87,7 @@ extension MockCasinoGameImageViewModel {
         MockCasinoGameImageViewModel(
             gameId: "no-image-game",
             gameURL: "https://casino.example.com/games/no-image",
-            imageURL: nil
+            iconURL: nil
         )
     }
 }

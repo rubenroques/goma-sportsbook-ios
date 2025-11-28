@@ -144,6 +144,19 @@ public final class SimpleNavigationBarView: UIView {
         applyCurrentStyle()
     }
 
+    /// Updates the title text displayed in the navigation bar.
+    ///
+    /// Use this method to update the title dynamically (e.g., when data loads from API).
+    /// - Parameter title: The new title text, or `nil` to hide the title label.
+    public func updateTitle(_ title: String?) {
+        if let title = title, !title.isEmpty {
+            titleLabel.text = title
+            titleLabel.isHidden = false
+        } else {
+            titleLabel.isHidden = true
+        }
+    }
+
     // MARK: - Setup
 
     private func setupViews() {

@@ -4,19 +4,19 @@ import UIKit
 // MARK: - Data Models
 public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
     public let id: String           // gameId
-    public let name: String         // gameName  
+    public let name: String         // gameName
     public let gameURL: String      // for game launch
-    public let imageURL: String?    // game image
+    public let iconURL: String?     // square icon image (114x114)
     public let rating: Double       // 0.0 to 5.0
     public let provider: String?     // game provider name
     public let minStake: String     // minimum stake amount
     public let subProvider: String?
-    
+
     public init(
         id: String,
         name: String,
         gameURL: String,
-        imageURL: String? = nil,
+        iconURL: String? = nil,
         rating: Double,
         provider: String? = nil,
         minStake: String,
@@ -25,7 +25,7 @@ public struct CasinoGameCardData: Equatable, Hashable, Identifiable {
         self.id = id
         self.name = name
         self.gameURL = gameURL
-        self.imageURL = imageURL
+        self.iconURL = iconURL
         self.rating = max(0.0, min(5.0, rating)) // Clamp between 0-5
         self.provider = provider
         self.minStake = minStake
@@ -60,7 +60,7 @@ public protocol CasinoGameCardViewModelProtocol: AnyObject {
     var gameNamePublisher: AnyPublisher<String, Never> { get }
     var providerNamePublisher: AnyPublisher<String?, Never> { get }
     var minStakePublisher: AnyPublisher<String, Never> { get }
-    var imageURLPublisher: AnyPublisher<String?, Never> { get }
+    var iconURLPublisher: AnyPublisher<String?, Never> { get }
     var ratingPublisher: AnyPublisher<Double, Never> { get }
     
     // Read-only properties

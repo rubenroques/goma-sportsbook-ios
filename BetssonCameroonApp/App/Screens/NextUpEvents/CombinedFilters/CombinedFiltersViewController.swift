@@ -76,7 +76,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let applyButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Apply", for: .normal)
+        button.setTitle(localized("apply"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 18)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
