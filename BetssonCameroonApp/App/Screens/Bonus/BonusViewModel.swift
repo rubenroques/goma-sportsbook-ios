@@ -300,7 +300,7 @@ class BonusViewModel {
     
     private func formatExpiryDate(_ date: Date?) -> String {
         guard let date = date else {
-            return "No expiry"
+            return localized("no_expiry")
         }
         
         let formatter = DateFormatter()

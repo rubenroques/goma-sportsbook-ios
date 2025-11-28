@@ -97,10 +97,8 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
-                    print("[SSEDebug] 👤 UserSessionStore: User profile updated - will start SSE stream")
-                    print("[SSEDebug]    - Username: \(userProfile.username)")
-                    print("[SSEDebug]    - UserID: \(userProfile.userIdentifier)")
-                    self?.startUserInfoSSEStream()  // Start SSE stream for real-time wallet + session updates
+                    print("[UserSessionStore] User profile updated - username: \(userProfile.username)")
+                    self?.forceRefreshUserWallet()  // Fetch wallet balance via REST
                     self?.updateDeviceIdentifier()
                 }
             }
@@ -173,10 +171,6 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
 
         Env.favoritesManager.clearCachedFavorites()
-
-        // Stop SSE stream and cleanup
-        print("[SSEDebug] 🛑 UserSessionStore: Stopping SSE stream (logout reason: \(reasonText))")
-        self.stopUserInfoSSEStream()
 
         self.userProfilePublisher.send(nil)
         self.userSessionPublisher.send(nil)

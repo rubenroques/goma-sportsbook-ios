@@ -171,6 +171,7 @@
 				CE74A1482E2E8D9400DDE78D /* Sources */,
 				CE74A1492E2E8D9400DDE78D /* Frameworks */,
 				CE74A14A2E2E8D9400DDE78D /* Resources */,
+				CEFC00002FB5F00000000001 /* Copy Firebase Config */,
 			);
 			buildRules = (
 			);
@@ -319,6 +320,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CEFC00002FB5F00000000001 /* Copy Firebase Config */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Firebase Config";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Copy correct GoogleService-Info.plist based on environment\nif [ \"${APP_ENVIRONMENT}\" == \"Production\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Production GoogleService-Info.plist\"\nelif [ \"${APP_ENVIRONMENT}\" == \"Staging\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Staging GoogleService-Info.plist\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CE74A1482E2E8D9400DDE78D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -431,7 +453,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3111;
+				CURRENT_PROJECT_VERSION = 3112;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -564,7 +586,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3111;
+				CURRENT_PROJECT_VERSION = 3112;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -639,7 +661,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3111;
+				CURRENT_PROJECT_VERSION = 3112;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -679,7 +701,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3111;
+				CURRENT_PROJECT_VERSION = 3112;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;

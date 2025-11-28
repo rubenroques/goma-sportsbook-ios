@@ -342,6 +342,8 @@
 
 "away_label_default" = "Away Team";
 
+"away_team" = "Away Team";
+
 "back" = "Back";
 
 "back_home" = "Back to Home";
@@ -385,6 +387,8 @@
 "bet_placed" = "Bet Placed";
 
 "bet_registered_success" = "Your bet was registered with success.";
+
+"bet_result" = "Bet result";
 
 "bet_settled" = "Bet Settled";
 
@@ -1394,6 +1398,8 @@
 
 "home_label_default" = "Home Team";
 
+"home_team" = "Home Team";
+
 "how_much_deposit" = "How much do you want to deposit in your account?";
 
 "how_much_withdraw" = "How much do you want to withdraw from your account?";
@@ -1535,6 +1541,8 @@
 "language_english" = "English";
 
 "language_french" = "Français";
+
+"language" = "Language";
 
 "last_name" = "Last name";
 
@@ -2121,6 +2129,8 @@
 
 "multiple_min_selection_total_error" = "Select at least 2 bets.";
 
+"multiple_bet_results" = "Multiple bet results";
+
 "must_accept_tc" = "You must accept the Terms & Conditions to continue.";
 
 "mute" = "Mute";
@@ -2213,9 +2223,11 @@
 
 "no_chatrooms" = "There are no chatrooms to display.";
 
-"no_deposits_description" = "There are no transactions for the period of time selected, it’s time to deposit some money and start betting on your favourites.";
+"no_deposits_description" = "There are no transactions for the period of time selected, it's time to deposit some money and start betting on your favourites.";
 
-"no_favorite_competitions" = "You don’t have any favourite competitions.";
+"no_expiry" = "No expiry";
+
+"no_favorite_competitions" = "You don't have any favourite competitions.";
 
 "no_favorite_games" = "You don't have favorite games.";
 
@@ -3618,6 +3630,10 @@
 "unit_period_exclusion" = "Unit Period Exclusion";
 
 "unknown_error" = "Unknown error";
+
+"unknown_date" = "Unknown Date";
+
+"unknown_league" = "Unknown League";
 
 "unlimited_time" = "Unlimited Time";
 

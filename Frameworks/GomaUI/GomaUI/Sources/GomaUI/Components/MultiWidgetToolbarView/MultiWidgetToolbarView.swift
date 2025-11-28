@@ -287,7 +287,7 @@ final public class MultiWidgetToolbarView: UIView {
 
         view.accessibilityIdentifier = widget.id.rawValue
         view.isAccessibilityElement = true
-        view.accessibilityLabel = widget.label ?? "Language"
+        view.accessibilityLabel = widget.label ?? LocalizationProvider.string("language")
         view.isUserInteractionEnabled = true
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))

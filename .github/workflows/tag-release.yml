@@ -180,13 +180,15 @@ jobs:
             NOTES="Build $BUILD - Version $VERSION"
           else
             # Find matching release in YAML (match version + build only, no environment)
-            NOTES=$(yq e ".releases[] | select(.version == \"$VERSION\" and .build == $BUILD) | .notes | join(\"\n- \")" "$CHANGELOG_FILE")
+            # Output each note on its own line, then prefix with bullet
+            RAW_NOTES=$(yq e ".releases[] | select(.version == \"$VERSION\" and .build == $BUILD) | .notes[]" "$CHANGELOG_FILE")
 
-            if [ -z "$NOTES" ] || [ "$NOTES" == "null" ]; then
+            if [ -z "$RAW_NOTES" ] || [ "$RAW_NOTES" == "null" ]; then
               echo "No matching changelog entry found for v$VERSION ($BUILD)"
               NOTES="Build $BUILD - Version $VERSION"
             else
-              NOTES="- $NOTES"
+              # Prefix each line with bullet point
+              NOTES=$(echo "$RAW_NOTES" | sed 's/^/- /')
               echo "Found changelog entry"
             fi
           fi
@@ -389,109 +391,35 @@ jobs:
           BUILD="${{ steps.parse.outputs.build }}"
           TAG="${{ steps.parse.outputs.tag }}"
           NOTES="${{ steps.changelog.outputs.notes }}"
-          COLOR="${{ steps.config.outputs.discord_color }}"
 
-          # Default to green if color not set
-          if [ -z "$COLOR" ] || ! [[ "$COLOR" =~ ^[0-9]+$ ]]; then
-            COLOR=3066993  # Green
+          # Random emoji flair
+          EMOJIS=("🚀" "🎯" "✨" "🔥" "💫" "⚡")
+          RANDOM_EMOJI=${EMOJIS[$RANDOM % ${#EMOJIS[@]}]}
+
+          # Friday easter egg
+          DAY_OF_WEEK=$(date +%u)
+          if [ "$DAY_OF_WEEK" = "5" ]; then
+            EASTER_EGG="\n\n_Weekend deploy! Bold move._"
+          else
+            EASTER_EGG=""
           fi
 
-          # Format release notes for Discord (escape quotes and newlines)
-          NOTES_ESCAPED=$(echo "$NOTES" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          # Format release notes: escape quotes and convert newlines to \n for JSON
+          NOTES_ESCAPED=$(printf '%s' "$NOTES" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
+
+          # Build the message content
+          MESSAGE="${RANDOM_EMOJI} **${CLIENT_NAME}** — STG and PROD Release\n\n"
+          MESSAGE+="**Version:** ${VERSION} (${BUILD})\n"
+          MESSAGE+="**Tag:** \`${TAG}\`\n\n"
+          MESSAGE+="**Release Notes:**\n${NOTES_ESCAPED}\n\n"
+          MESSAGE+="Deployed to Staging and Production${EASTER_EGG}"
 
           # Send webhook
-          curl -X POST "$DISCORD_WEBHOOK" \
+          curl -s -X POST "$DISCORD_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d @- << EOF
-          {
-            "embeds": [{
-              "title": "$CLIENT_NAME Dual Release - v$VERSION ($BUILD)",
-              "color": $COLOR,
-              "fields": [
-                {
-                  "name": "Client",
-                  "value": "$CLIENT_NAME",
-                  "inline": true
-                },
-                {
-                  "name": "Version",
-                  "value": "$VERSION ($BUILD)",
-                  "inline": true
-                },
-                {
-                  "name": "Tag",
-                  "value": "\`$TAG\`",
-                  "inline": false
-                },
-                {
-                  "name": "Release Notes",
-                  "value": "$NOTES_ESCAPED",
-                  "inline": false
-                },
-                {
-                  "name": "Status",
-                  "value": "Deployed to Staging and Production",
-                  "inline": false
-                }
-              ],
-              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
-            }]
-          }
-          EOF
+            -d "{\"content\": \"${MESSAGE}\"}"
 
           echo "Discord success notification sent"
-
-      - name: Send Discord failure notification
-        if: failure()
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_TEST_RELEASE_BOT_WEBHOOK }}
-        run: |
-          CLIENT_NAME="${{ steps.config.outputs.client_name }}"
-          VERSION="${{ steps.parse.outputs.version }}"
-          BUILD="${{ steps.parse.outputs.build }}"
-          TAG="${{ steps.parse.outputs.tag }}"
-
-          # Send failure notification
-          curl -X POST "$DISCORD_WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d @- << EOF
-          {
-            "embeds": [{
-              "title": "$CLIENT_NAME Dual Release Failed - v$VERSION ($BUILD)",
-              "color": 15158332,
-              "fields": [
-                {
-                  "name": "Client",
-                  "value": "$CLIENT_NAME",
-                  "inline": true
-                },
-                {
-                  "name": "Version",
-                  "value": "$VERSION ($BUILD)",
-                  "inline": true
-                },
-                {
-                  "name": "Tag",
-                  "value": "\`$TAG\`",
-                  "inline": false
-                },
-                {
-                  "name": "Status",
-                  "value": "Dual release failed - check logs",
-                  "inline": false
-                },
-                {
-                  "name": "Action",
-                  "value": "Check [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details",
-                  "inline": false
-                }
-              ],
-              "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
-            }]
-          }
-          EOF
-
-          echo "Discord failure notification sent"
 
       - name: Upload build artifacts (on failure)
         if: failure()

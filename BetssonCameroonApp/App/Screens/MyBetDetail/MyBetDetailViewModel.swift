@@ -211,9 +211,9 @@ extension MyBetDetailViewModel {
     /// Returns a label for the bet selections section
     var selectionsLabel: String {
         if bet.selections.count > 1 {
-            return "Multiple bet results"
+            return localized("multiple_bet_results")
         } else {
-            return "Bet result"
+            return localized("bet_result")
         }
     }
 }

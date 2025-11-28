@@ -212,10 +212,10 @@ extension VirtualBetslipViewController: UITableViewDataSource, UITableViewDelega
         
         // Create a proper mock view model with the actual ticket data
         let ticketViewModel = MockBetslipTicketViewModel(
-            leagueName: ticket.competition ?? "Unknown League",
-            startDate: ticket.date?.formatted() ?? "Unknown Date",
-            homeTeam: ticket.homeParticipantName ?? "Home Team",
-            awayTeam: ticket.awayParticipantName ?? "Away Team",
+            leagueName: ticket.competition ?? localized("unknown_league"),
+            startDate: ticket.date?.formatted() ?? localized("unknown_date"),
+            homeTeam: ticket.homeParticipantName ?? localized("home_team"),
+            awayTeam: ticket.awayParticipantName ?? localized("away_team"),
             selectedTeam: ticket.outcomeDescription,
             oddsValue: String(format: "%.2f", ticket.decimalOdd),
             oddsChangeState: .none

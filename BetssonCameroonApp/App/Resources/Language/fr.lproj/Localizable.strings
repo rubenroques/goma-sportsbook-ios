@@ -342,6 +342,8 @@
 
 "away_label_default" = "Équipe à l'extérieur";
 
+"away_team" = "Équipe à l'extérieur";
+
 "back" = "Retour";
 
 "back_home" = "Retour à la page d'accueil";
@@ -385,6 +387,8 @@
 "bet_placed" = "Pari Placé";
 
 "bet_registered_success" = "Votre pari a été placé avec succès.";
+
+"bet_result" = "Résultat du pari";
 
 "bet_settled" = "Pari Réglé";
 
@@ -1394,6 +1398,8 @@
 
 "home_label_default" = "Equipe à domicile";
 
+"home_team" = "Équipe à domicile";
+
 "how_much_deposit" = "Créditez votre compte";
 
 "how_much_withdraw" = "Combien souhaitez-vous retirer?";
@@ -1535,6 +1541,8 @@
 "language_english" = "English";
 
 "language_french" = "Français";
+
+"language" = "Langue";
 
 "last_name" = "Nom de naissance";
 
@@ -2121,6 +2129,8 @@
 
 "multiple_min_selection_total_error" = "Sélectionnez au moins 2 paris.";
 
+"multiple_bet_results" = "Résultats des paris multiples";
+
 "must_accept_tc" = "Vous devez accepter les Termes et Conditions pour continuer.";
 
 "mute" = "Sourdine";
@@ -2215,7 +2225,9 @@
 
 "no_deposits_description" = "Aucune transaction pour la période sélectionnée : faites un dépôt pour entrer en jeu !";
 
-"no_favorite_competitions" = "Vous n’avez aucune compétition préférée.";
+"no_expiry" = "Sans expiration";
+
+"no_favorite_competitions" = "Vous n'avez aucune compétition préférée.";
 
 "no_favorite_games" = "Aucun événement sur votre radar...";
 
@@ -3618,6 +3630,10 @@
 "unit_period_exclusion" = "Pause temporaire";
 
 "unknown_error" = "Erreur inconnue";
+
+"unknown_date" = "Date inconnue";
+
+"unknown_league" = "Ligue inconnue";
 
 "unlimited_time" = "Durée illimitée";
 
