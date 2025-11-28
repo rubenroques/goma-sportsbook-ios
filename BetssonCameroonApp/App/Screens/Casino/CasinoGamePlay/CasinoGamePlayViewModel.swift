@@ -49,15 +49,6 @@ class CasinoGamePlayViewModel: ObservableObject {
         loadGameDataWithMode(mode: mode)
     }
     
-    /// Initialize with gameId only (fallback - uses mock URLs)
-    init(gameId: String, servicesProvider: ServicesProvider.Client) {
-        self.gameId = gameId
-        self.servicesProvider = servicesProvider
-        self.casinoGame = nil
-        
-        loadGameData()
-    }
-    
     // MARK: - Public Methods
 
     func goBack() {
@@ -80,28 +71,6 @@ class CasinoGamePlayViewModel: ObservableObject {
         onNavigateBack()
     }
     
-    // MARK: - Private Methods
-    private func loadGameData() {
-        isLoading = true
-        errorMessage = nil
-        
-        // Simulate network call to get game details - replace with real service call later
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            guard let self = self else { return }
-            
-            let gameData = self.getGameData(for: self.gameId)
-            self.gameTitle = gameData.title
-            
-            if let url = URL(string: gameData.url) {
-                self.gameURL = url
-            } else {
-                self.errorMessage = localized("casino_invalid_game_url")
-            }
-            
-            self.isLoading = false
-        }
-    }
-    
     /// Load game data with proper session injection
     private func loadGameDataWithMode(mode: CasinoGamePlayMode) {
         guard let casinoGame = casinoGame else {
@@ -112,41 +81,27 @@ class CasinoGamePlayViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
-        print("[🎰 VIEWMODEL] ═══════════════════════════════════════")
-        print("[🎰 VIEWMODEL] Loading game: \(casinoGame.name)")
-        print("[🎰 VIEWMODEL] Play mode: \(mode)")
-
         gameTitle = casinoGame.name
 
         // Convert CasinoGamePlayMode to CasinoGameMode
         let casinoGameMode: CasinoGameMode
         let isUserLoggedIn = Env.userSessionStore.isUserLogged()
-        print("[🎰 VIEWMODEL] User logged in: \(isUserLoggedIn)")
 
         switch mode {
         case .practice:
             casinoGameMode = isUserLoggedIn ? .funLoggedIn : .funGuest
-            print("[🎰 VIEWMODEL] Practice mode → \(casinoGameMode)")
         case .realMoney:
             casinoGameMode = .realMoney
-            print("[🎰 VIEWMODEL] Real money mode → \(casinoGameMode)")
         }
 
-        // ✅ Use buildCasinoGameLaunchUrl to inject session parameters
-        print("[🎰 VIEWMODEL] Calling buildCasinoGameLaunchUrl()")
-        if
-            let urlString = servicesProvider.buildCasinoGameLaunchUrl(for: casinoGame, mode: casinoGameMode, language: "en"),
-            let url = URL(string: urlString)
-        {
+        let language = localized("current_language_code")
+        
+        if let urlString = servicesProvider.buildCasinoGameLaunchUrl(for: casinoGame, mode: casinoGameMode, language: language), let url = URL(string: urlString) {
             gameURL = url
-            print("[🎰 VIEWMODEL] ✅ Final URL set")
         }
         else {
             errorMessage = localized("casino_failed_build_url")
-            print("[🎰 VIEWMODEL] ❌ buildCasinoGameLaunchUrl returned nil")
         }
-
-        print("[🎰 VIEWMODEL] ═══════════════════════════════════════")
 
         isLoading = false
     }
@@ -197,29 +152,6 @@ class CasinoGamePlayViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // MARK: - Mock Game Data
-    private func getGameData(for gameId: String) -> (title: String, url: String) {
-        switch gameId {
-        case "new-001":
-            return ("Dragon's Fortune", "https://demo.pragmaticplay.net/gs2c/openGame.do?lang=en&cur=EUR&gameSymbol=vs25dragonhatch&websiteUrl=https%3A%2F%2Fdemogamesfree.pragmaticplay.net")
-        case "new-002":
-            return ("Mega Wheel", "https://demo.pragmaticplay.net/gs2c/openGame.do?lang=en&cur=EUR&gameSymbol=lg_megawheel&websiteUrl=https%3A%2F%2Fdemogamesfree.pragmaticplay.net")
-        case "popular-001":
-            return ("Starburst", "https://www.netent.com/en/games/starburst")
-        case "popular-002":
-            return ("Book of Dead", "https://demo.playngonetwork.com/casino/BookofDead")
-        case "live-001":
-            return ("Live Blackjack", "https://www.evolution.com/live-casino/blackjack")
-        case "jackpot-001":
-            return ("Mega Fortune", "https://www.netent.com/en/games/mega-fortune")
-        case "table-001":
-            return ("European Roulette", "https://www.netent.com/en/games/european-roulette")
-            
-        // Add more games as needed
-        default:
-            return ("Casino Game", "https://demo.pragmaticplay.net/gs2c/openGame.do?lang=en&cur=EUR&gameSymbol=vs20fruitparty&websiteUrl=https%3A%2F%2Fdemogamesfree.pragmaticplay.net")
-        }
-    }
 }
 
 // MARK: - WKNavigationDelegate Methods Support

@@ -140,10 +140,9 @@ final class BetInfoSubmissionViewModel: BetInfoSubmissionViewModelProtocol {
         let title: String
         if percentage > 0 {
             let percentageInt = Int(percentage * 100)
-            title = "WIN BOOST (\(percentageInt)%)"
+            title = String(format: localized("win_boost_format"), percentageInt)
         } else {
-            let noneText = LocalizationProvider.string("none").uppercased()
-            title = "WIN BOOST (\(noneText))"
+            title = localized("win_boost_none")
         }
 
         winBonusRowViewModel.updateTitle(title)

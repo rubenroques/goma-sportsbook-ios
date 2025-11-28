@@ -28,7 +28,7 @@ class FirstDepositPromotionsViewController: UIViewController {
     private let navigationTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Welcome to Betsson!"
+        label.text = localized("welcome_to_betsson")
         label.font = StyleProvider.fontWith(type: .bold, size: 16)
         label.textColor = StyleProvider.Color.highlightPrimary
         label.textAlignment = .center

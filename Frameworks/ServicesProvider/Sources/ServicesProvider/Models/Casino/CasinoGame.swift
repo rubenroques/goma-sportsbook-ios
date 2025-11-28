@@ -114,24 +114,28 @@ public struct CasinoGame: Codable, Hashable, Identifiable {
 
 /// Represents the paginated response for casino games
 public struct CasinoGamesResponse: Codable {
-    
+
     /// Number of games in current response
     public let count: Int
-    
+
     /// Total number of games available
     public let total: Int
-    
+
     /// Array of casino games
     public let games: [CasinoGame]
-    
+
     /// Pagination information
     public let pagination: CasinoPaginationInfo?
-    
-    public init(count: Int, total: Int, games: [CasinoGame], pagination: CasinoPaginationInfo?) {
+
+    /// Localized category name from API (when fetching games by category)
+    public let categoryName: String?
+
+    public init(count: Int, total: Int, games: [CasinoGame], pagination: CasinoPaginationInfo?, categoryName: String? = nil) {
         self.count = count
         self.total = total
         self.games = games
         self.pagination = pagination
+        self.categoryName = categoryName
     }
 }
 

@@ -380,9 +380,9 @@ class EveryMatrixCasinoConnector {
                 GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response status code: \(httpResponse.statusCode)")
                 
                 // Log response body for debugging
-                if let responseString = String(data: result.data, encoding: .utf8) {
-                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response body: \(responseString)")
-                }
+//                if let responseString = String(data: result.data, encoding: .utf8) {
+//                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response body: \(responseString)")
+//                }
                 
                 switch httpResponse.statusCode {
                 case 200...299:

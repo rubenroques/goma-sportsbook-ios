@@ -243,7 +243,7 @@ extension CompactMatchHeaderView {
     private static func createLiveBadgeLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "LIVE"
+        label.text = LocalizationProvider.string("live")
         label.font = StyleProvider.fontWith(type: .bold, size: 10)
         label.textColor = .white
         label.textAlignment = .center

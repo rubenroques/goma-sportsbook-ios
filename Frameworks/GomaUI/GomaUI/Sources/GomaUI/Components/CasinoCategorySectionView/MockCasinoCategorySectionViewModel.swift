@@ -148,7 +148,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "new-game-001",
                 name: "Dragon's Fortune",
                 gameURL: "https://casino.example.com/games/dragons-fortune",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.8,
                 provider: "Red Tiger Gaming",
                 minStake: "XAF 50"
@@ -157,7 +157,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "new-game-002", 
                 name: "Mega Wheel",
                 gameURL: "https://casino.example.com/games/mega-wheel",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.6,
                 provider: "Pragmatic Play",
                 minStake: "XAF 100"
@@ -166,7 +166,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "new-game-003",
                 name: "Crystal Quest",
                 gameURL: "https://casino.example.com/games/crystal-quest",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.4,
                 provider: "Thunderkick",
                 minStake: "XAF 25"
@@ -175,7 +175,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "new-game-004",
                 name: "Lucky Pharaoh",
                 gameURL: "https://casino.example.com/games/lucky-pharaoh",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.7,
                 provider: "Novomatic",
                 minStake: "XAF 200"
@@ -198,7 +198,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "popular-001",
                 name: "Starburst",
                 gameURL: "https://casino.example.com/games/starburst",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.9,
                 provider: "NetEnt",
                 minStake: "XAF 10"
@@ -207,7 +207,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "popular-002",
                 name: "Book of Dead",
                 gameURL: "https://casino.example.com/games/book-of-dead",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.8,
                 provider: "Play'n GO",
                 minStake: "XAF 20"
@@ -216,7 +216,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "popular-003",
                 name: "Gonzo's Quest",
                 gameURL: "https://casino.example.com/games/gonzo-quest",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.7,
                 provider: "NetEnt",
                 minStake: "XAF 50"
@@ -239,7 +239,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "slot-001",
                 name: "Mega Moolah",
                 gameURL: "https://casino.example.com/games/mega-moolah",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.5,
                 provider: "Microgaming",
                 minStake: "XAF 25"
@@ -248,7 +248,7 @@ extension MockCasinoCategorySectionViewModel {
                 id: "slot-002",
                 name: "Divine Fortune",
                 gameURL: "https://casino.example.com/games/divine-fortune",
-                imageURL: "casinoGameDemo",
+                iconURL: "casinoGameDemo",
                 rating: 4.6,
                 provider: "NetEnt",
                 minStake: "XAF 40"

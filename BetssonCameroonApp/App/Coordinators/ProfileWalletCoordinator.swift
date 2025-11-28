@@ -177,12 +177,12 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showLanguageSelection() {
-        let title = "Set Your App Language"
-        let message = "Continue to Settings to choose your preferred language for Betsson."
+        let title = localized("set_your_app_language")
+        let message = localized("language_settings_message")
 
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-        let openAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+        let openAction = UIAlertAction(title: localized("open_settings"), style: .default) { _ in
             DispatchQueue.main.async {
                 guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
                       UIApplication.shared.canOpenURL(settingsURL) else {
@@ -192,7 +192,7 @@ final class ProfileWalletCoordinator: Coordinator {
             }
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel)
 
         alertController.addAction(openAction)
         alertController.addAction(cancelAction)
@@ -403,11 +403,11 @@ final class ProfileWalletCoordinator: Coordinator {
     
     private func showPlaceholderAlert(title: String, message: String) {
         guard let profileViewController = profileViewController else { return }
-        
+
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
         alert.addAction(okAction)
-        
+
         profileViewController.present(alert, animated: true)
     }
     
@@ -509,22 +509,22 @@ final class ProfileWalletCoordinator: Coordinator {
     
     private func showTransactionErrorAlert(error: String) {
         guard let presentingViewController = profileNavigationController else { return }
-        
+
         let alert = UIAlertController(
-            title: "Transaction Error",
+            title: localized("error"),
             message: error,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
         
         presentingViewController.present(alert, animated: true)
     }
     
     private func showChangePasswordErrorAlert(error: String) {
         guard let presentingViewController = profileNavigationController else { return }
-        
+
         let alert = UIAlertController(
-            title: "Change Password Error",
+            title: localized("error"),
             message: error,
             preferredStyle: .alert
         )

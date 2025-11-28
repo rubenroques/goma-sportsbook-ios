@@ -55,7 +55,7 @@ public extension MockCasinoGameSearchedViewModel {
             id: "demo-id",
             title: "Demo Game",
             provider: "Demo Provider",
-            imageURL: nil
+            iconURL: nil
         )
         return MockCasinoGameSearchedViewModel(data: data, state: .loading)
     }
@@ -65,7 +65,7 @@ public extension MockCasinoGameSearchedViewModel {
             id: "demo-id",
             title: "Demo Game",
             provider: "Demo Provider",
-            imageURL: "https://example.com/demo.png"
+            iconURL: "https://example.com/demo.png"
         )
         return MockCasinoGameSearchedViewModel(data: data, state: .normal)
     }
@@ -75,7 +75,7 @@ public extension MockCasinoGameSearchedViewModel {
             id: "demo-id",
             title: "Demo Game",
             provider: "Demo Provider",
-            imageURL: "https://example.com/broken.png"
+            iconURL: "https://example.com/broken.png"
         )
         return MockCasinoGameSearchedViewModel(data: data, state: .imageError)
     }

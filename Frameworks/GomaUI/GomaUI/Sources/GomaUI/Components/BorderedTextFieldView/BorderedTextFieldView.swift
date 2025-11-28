@@ -173,7 +173,7 @@ final public class BorderedTextFieldView: UIView {
         suffixButton.accessibilityIdentifier = "borderedTextField.suffixButton"
         errorLabel.accessibilityIdentifier = "borderedTextField.errorLabel"
 
-        suffixButton.accessibilityLabel = "Toggle password visibility"
+        suffixButton.accessibilityLabel = LocalizationProvider.string("toggle_password_visibility")
     }
 
     private func setupTapGesture() {

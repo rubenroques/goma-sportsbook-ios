@@ -104,6 +104,11 @@ class CasinoGamePlayViewController: UIViewController {
         loadGame()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.post(name: .landscapeOrientationRequested, object: nil)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -118,13 +123,22 @@ class CasinoGamePlayViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        NotificationCenter.default.post(name: .portraitOrientationRequested, object: nil)
         stopSessionTimer()
     }
-    
+
     override var prefersStatusBarHidden: Bool {
         return true // Full-screen experience
     }
-    
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .allButUpsideDown
+    }
+
+    override var shouldAutorotate: Bool {
+        return true
+    }
+
     // MARK: - Setup
     private func setupViews() {
         view.backgroundColor = .black
@@ -423,12 +437,12 @@ class CasinoGamePlayViewController: UIViewController {
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.refresh()
         })
-        
+
         present(alert, animated: true)
     }
 }

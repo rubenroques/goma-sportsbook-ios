@@ -3,22 +3,33 @@
 # Used by tag-release.yml workflow to generate Firebase release notes
 
 releases:
-  # ===== RECENT RELEASES (November 2025) =====
 
   - version: "0.3.1"
-    build: 3002
+    build: 3101
     date: "2025-12-XX"
     notes:
-      - "Placeholder for next release"
+      - "fix(casino): [SPOR-6630] [BC-214] Use square icons for grid cards, separate thumbnail/background URLs"
+      - "fix(betslip): [SPOR-6614] [BC-283] Stake field input validation" 
+      - "fix(login): [SPOR-6617] [BC-279] Password input validation" 
+      - "fix(casino): Correct 'recently played' endpoint and presentation logic" 
+      - "feature(register): Fixed and added PromoCode field on sign up"
+      - "feature(register): Localized register screen textfiled placed holder fom legislation+phrase"
+      - "fix(filters): [SPOR-6650] [BC-162]  Filtery Leagues tab"
+      - "feature(maintenance): [SPOR-6610] Add a maintenance page"
+      - "fix(register): SPOR-6648: [BC-287]  The 'Password' validation in FE is broken"
+      - "fix(localization) A dozen more localizations in alerts and pop ups." 
+      - "fix(casino): Replace broken casino subscription-based quick links (between FR<>EN) with hardcoded category IDs and dynamic API-fetched titles"
+      - "fix(casino): [SPOR-6632] [BC-218] Enable landscape rotation for casino game webview"
+
 
   - version: "0.3.0"
     build: 3001
     date: "2025-11-27"
     notes:
       - "Feature: Performance improvements for Casino using a cache system with 3-tier fallback"
-      - "Feature: SPOR-6622 - New image based layout for Casino home and category"
+      - "Feature: [SPOR-6622] New image based layout for Casino home and category"
       - "Feature: GomaLogger migration and GomaPerformanceKit for monitoring"
-      - "Feature: SPOR-6472 - Footer links, social media and sponsors via CMS"
+      - "Feature: [SPOR-6472] Footer links, social media and sponsors via CMS"
       - "Fix: Casino Virtuals lobby opening wrong content due to cache key issue"
       - "Fix: Removed volatility indicator and minimum stake from Casino pre-match screen"
       - "Feature: PlaceBet v2 integration with new selection fields aligned to EM WebAPI spec"
@@ -29,24 +40,24 @@ releases:
       - "Fix: Filters showing empty leagues/countries and country counts"
       - "Fix: Win Boost and OddsBoost message/parsing issues"
       - "Fix: MyBets potential winnings display and tab bar bottom inset"
-      - "Fix: SPOR-6148 - Betslip Clear icon repositioned to comply with design"
-      - "Fix: SPOR-6574 - Keyboard dismiss on search header action button"
-      - "Fix: SPOR-6569 - Wrong bonus shown in My Bonus"
-      - "Fix: SPOR-6618 - Promotions and promo details endpoints language parameter"
-      - "Fix: SPOR-6620 - Casino endpoints language parameter"
-      - "Fix: SPOR-6577 - Games description stays in FR when swapping language"
-      - "Fix: SPOR-6581 - filter_by_time string not translated"
-      - "Fix: SPOR-5755 - Casino quicklinks bar incorrect"
-      - "Fix: SPOR-5757 - Casino Login to play button not working"
-      - "Fix: SPOR-5749 - Casino banner link not working"
-      - "Fix: SPOR-6144 - Betslip minimized 5px spacing"
-      - "Fix: SPOR-6527 - Filters sports filter touchpoint to open collapsable"
-      - "Fix: SPOR-6528 - Filters selector whole zone as touchpoint"
-      - "Fix: SPOR-6572 - Login popup error description string missing"
-      - "Fix: SPOR-6414 - Empty lite section in casino lobby"
-      - "Fix: SPOR-6474 - Search results shows count yet no results visible"
-      - "Fix: SPOR-6482 - Update email in footer"
-      - "Fix: SPOR-6366 - WO offer not working"
+      - "Fix: [SPOR-6148] Betslip Clear icon repositioned to comply with design"
+      - "Fix: [SPOR-6574] Keyboard dismiss on search header action button"
+      - "Fix: [SPOR-6569] Wrong bonus shown in My Bonus"
+      - "Fix: [SPOR-6618] Promotions and promo details endpoints language parameter"
+      - "Fix: [SPOR-6620] Casino endpoints language parameter"
+      - "Fix: [SPOR-6577] Games description stays in FR when swapping language"
+      - "Fix: [SPOR-6581] filter_by_time string not translated"
+      - "Fix: [SPOR-5755] Casino quicklinks bar incorrect"
+      - "Fix: [SPOR-5757] Casino Login to play button not working"
+      - "Fix: [SPOR-5749] Casino banner link not working"
+      - "Fix: [SPOR-6144] Betslip minimized 5px spacing"
+      - "Fix: [SPOR-6527] Filters sports filter touchpoint to open collapsable"
+      - "Fix: [SPOR-6528] Filters selector whole zone as touchpoint"
+      - "Fix: [SPOR-6572] Login popup error description string missing"
+      - "Fix: [SPOR-6414] Empty lite section in casino lobby"
+      - "Fix: [SPOR-6474] Search results shows count yet no results visible"
+      - "Fix: [SPOR-6482] Update email in footer"
+      - "Fix: [SPOR-6366] WO offer not working"
 
   - version: "0.2.1"
     build: 2113
@@ -108,8 +119,6 @@ releases:
       - "Currency formatting fixes"
       - "Match details improvements"
       - "Keyboard done button localization"
-
-  # ===== OLDER RELEASES (October-November 2025) =====
 
   - version: "0.2.0"
     build: 2095

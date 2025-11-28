@@ -350,6 +350,9 @@ extension EveryMatrixPlayerAPI: Endpoint {
             if let birthDate = form.birthDate {
                 registerUserDto["BirthDate"] = birthDate
             }
+            if let promoCode = form.promoCode {
+                registerUserDto["PromoCode"] = promoCode
+            }
 
             let bodyDict: [String: Any] = [
                 "Step": "Step1",

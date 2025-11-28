@@ -6,18 +6,18 @@ public struct CasinoGameSearchedData: Equatable, Hashable, Identifiable {
     public let id: String
     public let title: String
     public let provider: String?
-    public let imageURL: String?
-    
+    public let iconURL: String?     // square icon image (114x114)
+
     public init(
         id: String,
         title: String,
         provider: String? = nil,
-        imageURL: String? = nil
+        iconURL: String? = nil
     ) {
         self.id = id
         self.title = title
         self.provider = provider
-        self.imageURL = imageURL
+        self.iconURL = iconURL
     }
 }
 

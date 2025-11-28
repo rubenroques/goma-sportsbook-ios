@@ -14,7 +14,7 @@ public class CountryLeaguesFilterView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Popular Countries"
+        label.text = LocalizationProvider.string("popular_countries")
         label.font = StyleProvider.fontWith(type: .bold, size: 14)
         label.textColor = StyleProvider.Color.textPrimary
         return label

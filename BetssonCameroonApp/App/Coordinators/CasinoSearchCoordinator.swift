@@ -54,7 +54,7 @@ final class CasinoSearchCoordinator: Coordinator {
         self.casinoSearchViewModel = viewModel
         self.casinoSearchViewController = viewController
         
-        print("🔎 CasinoSearchCoordinator: Started casino search screen")
+        print("CasinoSearchCoordinator: Started casino search screen")
     }
     
     func finish() {
@@ -92,15 +92,16 @@ private extension CasinoSearchCoordinator {
         }
 
         gamePrePlayViewModel.onStartGame = { [weak self] (mode: CasinoGamePlayMode, casinoGame: CasinoGame?) in
-            guard let self = self else { return }
-            let vm: CasinoGamePlayViewModel
-            if let casinoGame = casinoGame {
-                vm = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: self.servicesProvider)
-            } else {
-                vm = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: self.servicesProvider)
+            guard
+                let self = self, let casinoGame = casinoGame
+            else {
+                return
             }
-            let vc = CasinoGamePlayViewController(viewModel: vm)
-            self.navigationController.pushViewController(vc, animated: true)
+            
+            let viewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: self.servicesProvider)
+            
+            let viewController = CasinoGamePlayViewController(viewModel: viewModel)
+            self.navigationController.pushViewController(viewController, animated: true)
         }
         
         let prePlayVC = CasinoGamePrePlayViewController(viewModel: gamePrePlayViewModel)

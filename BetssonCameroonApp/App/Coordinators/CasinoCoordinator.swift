@@ -11,7 +11,22 @@ import GomaUI
 import Combine
 
 class CasinoCoordinator: Coordinator {
-    
+
+    // MARK: - Quick Link Constants
+    private enum QuickLinkConstants {
+        // Aviator game ID (same across environments)
+        static let aviatorGameId = "32430"
+
+        // Category IDs - Production
+        static let slotsCategoryIdProduction = "Lobby1$video-slots"
+        static let crashCategoryIdProduction = "Lobby1$crash-games"
+        static let liteCategoryId = "Lobby1$lite"
+
+        // Category IDs - Staging (different naming convention)
+        static let slotsCategoryIdStaging = "Lobby1$videoslots"
+        static let crashCategoryIdStaging = "Lobby1$crashgames"
+    }
+
     // MARK: - Coordinator Protocol
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
@@ -47,8 +62,8 @@ class CasinoCoordinator: Coordinator {
     
     // MARK: - Navigation Methods
     
-    func showCategoryGamesList(categoryId: String, categoryTitle: String) {
-        
+    func showCategoryGamesList(categoryId: String, categoryTitle: String?) {
+
         // Create category games list view model
         let categoryGamesViewModel = CasinoCategoryGamesListViewModel(
             categoryId: categoryId,
@@ -93,82 +108,28 @@ class CasinoCoordinator: Coordinator {
         self.navigationController.pushViewController(container, animated: true)
     }
     
+    // MARK: - Quick Link Navigation
+
     func showAviatorGame() {
-        // Note: With the new 2-row grid layout, we no longer have game names in the section data
-        // This method would need to search for Aviator by game ID or use a different approach
-        // For now, we'll search for a category containing "aviator" in its name
-        casinoCategoriesListViewModel?.$categorySections
-            .first(where: { !$0.isEmpty })
-            .sink { [weak self] sections in
-                // Check if Aviator category exists
-                if let aviatorCategory = sections
-                    .first(where: { $0.categoryTitle.lowercased().contains("aviator") }) {
-                    // Found category - navigate to first game
-                    if let firstPair = aviatorCategory.gamePairViewModels.first {
-                        let gameId = firstPair.topGameViewModel.gameId
-                        print("Found Aviator category, launching game: \(gameId)")
-                        self?.showGamePrePlay(gameId: gameId)
-                    }
-                } else {
-                    // Category not found
-                    print("Aviator category not found")
-                }
-            }
-            .store(in: &cancellables)
+        showGamePrePlay(gameId: QuickLinkConstants.aviatorGameId)
     }
-    
+
     func showSlotsGames() {
-        casinoCategoriesListViewModel?.$categorySections
-            .first(where: { !$0.isEmpty })
-            .sink { [weak self] sections in
-                // Check if Slots category exists
-                if let slotsCategory = sections
-                    .first(where: { $0.sectionId.lowercased().contains("slots") }) {
-                    // Category found - navigate to it
-                    print("Found Slots Games section: \(slotsCategory.categoryTitle)")
-                    self?.showCategoryGamesList(categoryId: slotsCategory.sectionId, categoryTitle: slotsCategory.categoryTitle)
-                } else {
-                    // Category not found
-                    print("Slots Games section not found")
-                }
-            }
-            .store(in: &cancellables)
+        let categoryId = isProduction ? QuickLinkConstants.slotsCategoryIdProduction : QuickLinkConstants.slotsCategoryIdStaging
+        showCategoryGamesList(categoryId: categoryId, categoryTitle: nil)
     }
-    
+
     func showCrashGames() {
-        casinoCategoriesListViewModel?.$categorySections
-            .first(where: { !$0.isEmpty })
-            .sink { [weak self] sections in
-                // Check if Crash category exists
-                if let crashCategory = sections
-                    .first(where: { $0.sectionId.lowercased().contains("crash") }) {
-                    // Category found - navigate to it
-                    print("Found Crash Games section: \(crashCategory.categoryTitle)")
-                    self?.showCategoryGamesList(categoryId: crashCategory.sectionId, categoryTitle: crashCategory.categoryTitle)
-                } else {
-                    // Category not found
-                    print("Crash Games section not found")
-                }
-            }
-            .store(in: &cancellables)
+        let categoryId = isProduction ? QuickLinkConstants.crashCategoryIdProduction : QuickLinkConstants.crashCategoryIdStaging
+        showCategoryGamesList(categoryId: categoryId, categoryTitle: nil)
     }
-    
+
     func showLiteGames() {
-        casinoCategoriesListViewModel?.$categorySections
-            .first(where: { !$0.isEmpty })
-            .sink { [weak self] sections in
-                // Check if Lite category exists
-                if let liteCategory = sections
-                    .first(where: { $0.sectionId.lowercased().contains("lite") }) {
-                    // Category found - navigate to it
-                    print("Found Lite Games section: \(liteCategory.categoryTitle)")
-                    self?.showCategoryGamesList(categoryId: liteCategory.sectionId, categoryTitle: liteCategory.categoryTitle)
-                } else {
-                    // Category not found
-                    print("Lite Games section not found")
-                }
-            }
-            .store(in: &cancellables)
+        showCategoryGamesList(categoryId: QuickLinkConstants.liteCategoryId, categoryTitle: nil)
+    }
+
+    private var isProduction: Bool {
+        return TargetVariables.serviceProviderEnvironment == .prod
     }
     
     func showGamePrePlay(gameId: String) {
@@ -210,21 +171,10 @@ class CasinoCoordinator: Coordinator {
     }
     
     private func showGamePlay(gameId: String, casinoGame: CasinoGame?, mode: CasinoGamePlayMode) {
-        print("[🎰 COORDINATOR] ═══════════════════════════════════════")
-        print("[🎰 COORDINATOR] showGamePlay called")
-        print("[🎰 COORDINATOR] Mode: \(mode)")
-        print("[🎰 COORDINATOR] User logged in: \(environment.userSessionStore.isUserLogged())")
 
-        // Create game play view model with CasinoGame object if available
-        let gamePlayViewModel: CasinoGamePlayViewModel
-        if let casinoGame = casinoGame {
-            gamePlayViewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: environment.servicesProvider)
-        } else {
-            // Fallback to gameId-based initialization
-            gamePlayViewModel = CasinoGamePlayViewModel(gameId: gameId, servicesProvider: environment.servicesProvider)
-        }
-
-        print("[🎰 COORDINATOR] ═══════════════════════════════════════")
+        guard let casinoGame = casinoGame else { return }
+        
+        let gamePlayViewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: environment.servicesProvider)
         
         // Setup navigation closures
         gamePlayViewModel.onNavigateBack = { [weak self] in

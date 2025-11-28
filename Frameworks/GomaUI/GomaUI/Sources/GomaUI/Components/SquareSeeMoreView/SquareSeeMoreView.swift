@@ -96,7 +96,7 @@ extension SquareSeeMoreView {
     private static func createSeeMoreLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "See More"
+        label.text = LocalizationProvider.string("see_more")
         label.font = StyleProvider.fontWith(type: .medium, size: Constants.labelFontSize)
         label.textColor = StyleProvider.Color.textPrimary
         label.textAlignment = .center
