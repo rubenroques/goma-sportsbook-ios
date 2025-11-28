@@ -45,7 +45,7 @@ jobs:
             Review this iOS Swift pull request. Prioritize issues by severity:
 
             ## CRITICAL (must fix before merge):
-            - **Hardcoded user-facing strings**: Any text displayed to users (labels, buttons, alerts, error messages, placeholders) that is NOT using NSLocalizedString or the localization system. This is a multilingual app - all user-visible strings must be localized.
+            - **Hardcoded user-facing strings**: Any text displayed to users (labels, buttons, alerts, error messages, placeholders) that is NOT using localized() / NSLocalizedString or the localization system. This is a multilingual app - all user-visible strings must be localized.
             - Security vulnerabilities
             - Potential crashes or data loss
 

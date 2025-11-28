@@ -4,17 +4,18 @@
 
 releases:
 
-  - version: "0.3.2"
-    build: 3201
-    date: "2025-XX-XX"
+  - version: "0.3.1"
+    build: 3110
+    date: "2025-12-28"
     notes:
-      - "fix(register): [SPOR-6425] - BA - BC-84 - T&C, Privacy, Cookies - registration links pages doesn't exist (UAT)"
-      - "fix(footer): [SPOR-6472] [RELATED ISSUE] - BA - Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
-      - "fix(search): [SPOR-6391] [RELATED ISSUE] - BA - Fixed missing localized string"
+      - "fix(register): [SPOR-6425] [BC-84] T&C, Privacy, Cookies - registration links pages doesn't exist (UAT)"
+      - "fix(footer): [SPOR-6472] Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
+      - "fix(search): [SPOR-6391] Fixed missing localized string"
+      - "fix(profile): SPOR-6097 - Changed icons on Profile menu"
 
   - version: "0.3.1"
     build: 3101
-    date: "2025-12-XX"
+    date: "2025-12-28"
     notes:
       - "fix(casino): [SPOR-6630] [BC-214] Use square icons for grid cards, separate thumbnail/background URLs"
       - "fix(betslip): [SPOR-6614] [BC-283] Stake field input validation" 
@@ -31,7 +32,6 @@ releases:
       - "fix(filters): [SPOR-5787] Changing 'Filter by time' icon"
       - "fix(filters): SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
       - "fix(casino): SPOR-5761 - Replaced exit icon"
-      - "fix(profile): SPOR-6097 - Changed icons on Profile menu"
 
   - version: "0.3.0"
     build: 3001
