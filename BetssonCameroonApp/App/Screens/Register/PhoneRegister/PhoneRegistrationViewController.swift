@@ -323,12 +323,6 @@ class PhoneRegistrationViewController: UIViewController {
             }
         }
         
-        if let promoCodeFieldViewModel = viewModel.promoCodeFieldViewModel {
-            let promoCodeField = BorderedTextFieldView(viewModel: promoCodeFieldViewModel)
-            self.promoCodeField = promoCodeField
-            componentsStackView.addArrangedSubview(promoCodeField)
-        }
-        
         self.componentsBaseView.setNeedsLayout()
         self.componentsBaseView.layoutIfNeeded()
         

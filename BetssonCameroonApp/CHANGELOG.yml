@@ -4,6 +4,14 @@
 
 releases:
 
+  - version: "0.3.2"
+    build: 3201
+    date: "2025-XX-XX"
+    notes:
+      - "fix(register): [SPOR-6425] - BA - BC-84 - T&C, Privacy, Cookies - registration links pages doesn't exist (UAT)"
+      - "fix(footer): [SPOR-6472] [RELATED ISSUE] - BA - Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
+      - "fix(search): [SPOR-6391] [RELATED ISSUE] - BA - Fixed missing localized string"
+
   - version: "0.3.1"
     build: 3101
     date: "2025-12-XX"
