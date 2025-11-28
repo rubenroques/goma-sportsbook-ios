@@ -21,7 +21,6 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var birthDateFieldViewModel: BorderedTextFieldViewModelProtocol?
     var termsViewModel: TermsAcceptanceViewModelProtocol?
     var promoCodeFieldViewModel: BorderedTextFieldViewModelProtocol?
-    
     let buttonViewModel: ButtonViewModelProtocol
     
     private var cancellables = Set<AnyCancellable>()
@@ -87,14 +86,18 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 
                 let mappedRegistrationConfig = ServiceProviderModelMapper.registrationConfigResponse(fromInternalResponse: registrationConfigResponse)
                 
+                // Store config first so it's available when updating links
+                self?.registrationConfig = mappedRegistrationConfig.content
+                
                 if let termsConfig = mappedRegistrationConfig.content.fields.first(where: {
                     $0.name == "TermsAndConditions"
                 }) {
-                    let localizedTermsHTML = localized((termsConfig.displayName ?? "").lowercased())
-                    self?.extractedTermsHTMLData = RegisterConfigHelper.extractLinksAndCleanText(from: localizedTermsHTML)
+                    
+                    self?.extractedTermsHTMLData = RegisterConfigHelper.extractLinksAndCleanText(from: localized(termsConfig.displayName ?? ""))
+                    self?.getNavigationLinks()
+                } else {
+                    self?.handleRegistrationConfig(mappedRegistrationConfig.content)
                 }
-                
-                self?.handleRegistrationConfig(mappedRegistrationConfig.content)
                 
             })
             .store(in: &cancellables)
@@ -400,14 +403,18 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 }
                 .store(in: &cancellables)
         }
-
-        // Promo code field text subscription (optional field, no validation needed)
-        promoCodeFieldViewModel?.textPublisher
-            .sink { [weak self] text in
-                self?.promoCode = text
-            }
-            .store(in: &cancellables)
-
+        
+        // Last name field text subscription (if exists)
+        if let promoCodeFieldViewModel = promoCodeFieldViewModel {
+            promoCodeFieldViewModel.textPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] promoCodeText in
+                    guard let self = self else { return }
+                    
+                    self.promoCode = promoCodeText
+                }
+                .store(in: &cancellables)
+        }
     }
 
     func registerUser() {
@@ -480,45 +487,161 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    func getNavigationLinks() {
+        let language = localized("current_language_code")
+        
+        Env.servicesProvider.getFooterLinks(language: language)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished:
+                    print("FINISHED GET NAVIGATION LINKS")
+                case .failure(let error):
+                    print("ERROR GET NAVIGATION LINKS: \(error)")
+                }
+            }, receiveValue: { [weak self] footerLinks in
+                self?.updateExtractedLinksWithURLs(from: footerLinks)
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func updateExtractedLinksWithURLs(from footerLinks: [ServicesProvider.FooterCMSLink]) {
+        guard let extractedData = extractedTermsHTMLData,
+              let config = registrationConfig else {
+            if let config = registrationConfig {
+                handleRegistrationConfig(config)
+            }
+            return
+        }
+        
+        var updatedLinks: [RegisterConfigHelper.ExtractedLink] = []
+        
+        for extractedLink in extractedData.extractedLinks {
+            let matchingFooterLink = footerLinks.first { footerLink in
+                let lowercasedLabel = footerLink.label.lowercased()
+                
+                switch extractedLink.type {
+                case .terms:
+                    return lowercasedLabel.contains("terms")
+                case .privacyPolicy:
+                    return lowercasedLabel.contains("privacy")
+                case .cookies:
+                    return lowercasedLabel.contains("cookie")
+                case .none:
+                    return false
+                }
+            }
+            
+            let updatedUrl = matchingFooterLink?.computedUrl ?? extractedLink.url
+            let updatedLink = RegisterConfigHelper.ExtractedLink(
+                text: extractedLink.text,
+                url: updatedUrl,
+                type: extractedLink.type
+            )
+            updatedLinks.append(updatedLink)
+        }
+        
+        extractedTermsHTMLData = RegisterConfigHelper.ExtractedHTMLData(
+            fullText: extractedData.fullText,
+            extractedLinks: updatedLinks
+        )
+        
+        handleRegistrationConfig(config)
+    }
+    
 }
 
 class RegisterConfigHelper {
     
-    static func extractLinksAndCleanText(from htmlString: String) -> ExtractedHTMLData {
+    static func extractLinksAndCleanText(from text: String) -> ExtractedHTMLData {
+        if let placeholderResult = extractPlaceholderLinksAndText(from: text) {
+            return placeholderResult
+        }
+        
+        return extractHTMLLinksAndText(from: text)
+    }
+    
+    private static func extractPlaceholderLinksAndText(from text: String) -> ExtractedHTMLData? {
+        let placeholderPattern = #"\{([^}]+)\}"#
+        guard let regex = try? NSRegularExpression(pattern: placeholderPattern, options: []) else {
+            return nil
+        }
+        
+        let range = NSRange(location: 0, length: text.utf16.count)
+        let matches = regex.matches(in: text, options: [], range: range)
+        
+        guard !matches.isEmpty else {
+            return nil
+        }
+        
+        var extractedLinks: [ExtractedLink] = []
+        var hasRecognizedPlaceholder = false
+        let mutableCleanText = NSMutableString(string: text)
+        
+        let orderedMatches: [(range: NSRange, key: String)] = matches.compactMap { match in
+            guard match.numberOfRanges == 2,
+                  let keyRange = Range(match.range(at: 1), in: text) else {
+                return nil
+            }
+            
+            return (range: match.range(at: 0), key: String(text[keyRange]))
+        }
+        
+        guard !orderedMatches.isEmpty else {
+            return nil
+        }
+        
+        for match in orderedMatches.reversed() {
+            if let mapping = placeholderLinkInfo(for: match.key) {
+                hasRecognizedPlaceholder = true
+                let localizedText = localized(mapping.localizationKey)
+                
+                extractedLinks.insert(
+                    ExtractedLink(text: localizedText, url: "", type: mapping.type),
+                    at: 0
+                )
+                
+                mutableCleanText.replaceCharacters(in: match.range, with: localizedText)
+            } else {
+                let fallbackText = match.key.replacingOccurrences(of: "_", with: " ")
+                mutableCleanText.replaceCharacters(in: match.range, with: fallbackText)
+            }
+        }
+        
+        guard hasRecognizedPlaceholder else {
+            return nil
+        }
+        
+        return ExtractedHTMLData(fullText: mutableCleanText as String, extractedLinks: extractedLinks)
+    }
+    
+    private static func extractHTMLLinksAndText(from htmlString: String) -> ExtractedHTMLData {
         var cleanText = htmlString
         var links: [ExtractedLink] = []
         
-        // Regular expression to match <a href="..." target="_blank">...</a> tags
         let linkPattern = #"<a href="([^"]+)" target="_blank">([^<]+)</a>"#
         
         do {
             let regex = try NSRegularExpression(pattern: linkPattern, options: [])
             let range = NSRange(location: 0, length: htmlString.utf16.count)
-            
-            // Find all matches
             let matches = regex.matches(in: htmlString, options: [], range: range)
             
-            // Process matches in reverse order to avoid index shifting
             for match in matches.reversed() {
-                if match.numberOfRanges == 3 {
-                    let urlRange = match.range(at: 1)
-                    let textRange = match.range(at: 2)
-                    
-                    if let url = Range(urlRange, in: htmlString),
-                       let text = Range(textRange, in: htmlString) {
-                        let linkUrl = String(htmlString[url])
-                        let linkText = String(htmlString[text])
-                        let linkType = ExtractedLinkType(from: linkUrl)
-                        
-                        // Add to links array
-                        links.append(ExtractedLink(text: linkText, url: linkUrl, type: linkType))
-                        
-                        // Replace the entire <a> tag with just the text
-                        let fullMatchRange = match.range(at: 0)
-                        if let fullRange = Range(fullMatchRange, in: htmlString) {
-                            cleanText = cleanText.replacingCharacters(in: fullRange, with: linkText)
-                        }
-                    }
+                guard match.numberOfRanges == 3,
+                      let urlRange = Range(match.range(at: 1), in: htmlString),
+                      let textRange = Range(match.range(at: 2), in: htmlString) else {
+                    continue
+                }
+                
+                let linkUrl = String(htmlString[urlRange])
+                let linkText = String(htmlString[textRange])
+                let linkType = ExtractedLinkType(from: linkUrl)
+                
+                links.append(ExtractedLink(text: linkText, url: linkUrl, type: linkType))
+                
+                let fullMatchRange = match.range(at: 0)
+                if let fullRange = Range(fullMatchRange, in: htmlString) {
+                    cleanText = cleanText.replacingCharacters(in: fullRange, with: linkText)
                 }
             }
         } catch {
@@ -526,6 +649,24 @@ class RegisterConfigHelper {
         }
         
         return ExtractedHTMLData(fullText: cleanText, extractedLinks: links)
+    }
+    
+    private static func placeholderLinkInfo(for key: String) -> PlaceholderLinkInfo? {
+        switch key {
+        case "terms_and_conditions_link":
+            return PlaceholderLinkInfo(localizationKey: "terms_and_conditions", type: .terms)
+        case "privacy_policy_link":
+            return PlaceholderLinkInfo(localizationKey: "privacy_policy", type: .privacyPolicy)
+        case "cookies_policy_link":
+            return PlaceholderLinkInfo(localizationKey: "cookie_policy", type: .cookies)
+        default:
+            return nil
+        }
+    }
+    
+    private struct PlaceholderLinkInfo {
+        let localizationKey: String
+        let type: ExtractedLinkType
     }
     
     static func isValidPhoneNumber(phoneText: String, registrationConfig: RegistrationConfigContent) -> (Bool, String) {

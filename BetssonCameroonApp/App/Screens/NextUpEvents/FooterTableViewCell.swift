@@ -89,7 +89,14 @@ final class FooterTableViewCell: UITableViewCell {
             if let urlString = urls[platform] {
                 openURL(urlString)
             }
+        
+        case .casinoRules:
+            break
+            
+        case .custom(let url, _):
+            openURL(url)
         }
+   
     }
 
     private func openURL(_ urlString: String) {

@@ -108,6 +108,14 @@ extension ExtendedListFooterViewController {
             case .socialMedia(let platform):
                 print("📱 Demo: Tapped Social Media - \(platform.displayName)")
                 showAlert(title: platform.displayName, message: "Would open \(platform.displayName) app/website in production")
+                
+            case .casinoRules:
+                print("🎰 Demo: Tapped Casino Rules")
+                showAlert(title: "Casino Rules", message: "Would open casino rules page in production")
+                
+            case .custom(let url, let label):
+                print("🔗 Demo: Tapped Custom Link - \(label)")
+                showAlert(title: label, message: "Would open custom link: \(url)")
             }
         }
 

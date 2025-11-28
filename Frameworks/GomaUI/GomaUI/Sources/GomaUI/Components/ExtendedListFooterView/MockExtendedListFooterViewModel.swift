@@ -36,6 +36,7 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
     public var onLinkTap: ((FooterLinkType) -> Void)?
     public var onSponsorsUpdated: (([FooterSponsor]) -> Void)?
     public var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)?
+    public var onNavigationLinksUpdated: (([FooterLink]) -> Void)?
     public func handleSponsorTap(_ sponsor: FooterSponsor) {
         print("[MockExtendedListFooterViewModel] Sponsor tapped: \(sponsor.id) -> \(sponsor.url?.absoluteString ?? "nil")")
     }
@@ -77,9 +78,11 @@ public class MockExtendedListFooterViewModel: ExtendedListFooterViewModelProtoco
         self.socialMediaHeaderText = socialMediaHeaderText
         self.imageResolver = imageResolver
 
-        DispatchQueue.main.async { [sponsors, socialLinks] in
+        let navigationLinksCopy = self.navigationLinks
+        DispatchQueue.main.async { [sponsors, socialLinks, navigationLinksCopy] in
             self.onSponsorsUpdated?(sponsors)
             self.onSocialLinksUpdated?(socialLinks)
+            self.onNavigationLinksUpdated?(navigationLinksCopy)
         }
     }
 

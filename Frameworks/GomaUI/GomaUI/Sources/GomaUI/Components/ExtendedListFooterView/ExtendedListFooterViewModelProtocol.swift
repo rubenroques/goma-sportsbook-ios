@@ -68,4 +68,7 @@ public protocol ExtendedListFooterViewModelProtocol {
 
     /// Emits whenever the sponsor list changes (e.g. after CMS fetch)
     var onSponsorsUpdated: (([FooterSponsor]) -> Void)? { get set }
+    
+    /// Emits whenever the navigation links list changes
+    var onNavigationLinksUpdated: (([FooterLink]) -> Void)? { get set }
 }
