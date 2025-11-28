@@ -79,7 +79,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
         menuItems = [
             ActionRowItem(
                 id: "promotions",
-                icon: "promotion_icon",
+                icon: "megaphone_icon",
                 title: localized("promotions"),
                 subtitle: nil,
                 type: .navigation,
@@ -95,7 +95,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "notifications",
-                icon: "bell",
+                icon: "bell_icon",
                 title: localized("view_notifications"),
                 subtitle: nil,
                 type: .navigation,
@@ -103,7 +103,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "notification_settings",
-                icon: "bell.badge",
+                icon: "push_notification_icon",
                 title: localized("notifications_settings"),
                 subtitle: nil,
                 type: .navigation,
@@ -111,7 +111,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "transactions_history",
-                icon: "clock",
+                icon: "history_icon",
                 title: localized("transactions_history"),
                 subtitle: nil,
                 type: .navigation,
@@ -119,7 +119,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "change_language",
-                icon: "globe",
+                icon: "globe_icon",
                 title: localized("change_language"),
                 subtitle: currentLanguage,
                 type: .navigation,
@@ -135,7 +135,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "help_center",
-                icon: "questionmark.circle",
+                icon: "help_center_icon",
                 title: localized("help_center"),
                 subtitle: nil,
                 type: .navigation,
@@ -143,7 +143,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ),
             ActionRowItem(
                 id: "change_password",
-                icon: "lock",
+                icon: "lock_round_double_arrow_icon",
                 title: localized("change_password"),
                 subtitle: nil,
                 type: .navigation,
