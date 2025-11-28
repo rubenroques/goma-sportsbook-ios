@@ -214,7 +214,7 @@ class CasinoGamePlayViewController: UIViewController {
         bottomBarView.addSubview(exitContainer)
 
         // Exit button (icon) - add to container
-        exitButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        exitButton.setImage(UIImage(resource: .navbarExitIcon), for: .normal)
         exitButton.tintColor = Constants.textColor
         exitButton.isUserInteractionEnabled = false  // Let container handle taps
         exitButton.translatesAutoresizingMaskIntoConstraints = false
