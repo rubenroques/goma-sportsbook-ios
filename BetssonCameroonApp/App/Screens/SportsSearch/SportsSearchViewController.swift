@@ -575,7 +575,7 @@ extension SportsSearchViewController: UICollectionViewDataSource, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HeaderTextReusableView.identifier, for: indexPath) as! HeaderTextReusableView
-            header.configure(title: "Suggested Events")
+            header.configure(title: localized("suggested_bets"))
             return header
         }
         return UICollectionReusableView()

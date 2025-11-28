@@ -44,6 +44,11 @@ extension FooterLinkType {
         case .contactUs:
             // Contact Us uses email, not URL
             return nil
+        
+        case .casinoRules:
+            urlString = localized("footer_casino_rules_link")
+        case .custom(let urlString, _):
+            return URL(string: urlString)
         }
 
         return URL(string: urlString)

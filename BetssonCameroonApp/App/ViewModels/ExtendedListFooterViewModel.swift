@@ -19,7 +19,11 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     let paymentOperators: [PaymentOperator]
     let socialMediaPlatforms: [SocialPlatform]
     let partnerClubs: [PartnerClub]
-    private(set) var navigationLinks: [FooterLink]
+    private(set) var navigationLinks: [FooterLink] {
+        didSet {
+            onNavigationLinksUpdated?(navigationLinks)
+        }
+    }
     private(set) var sponsors: [FooterSponsor] = []
     private(set) var socialLinks: [FooterSocialLink] = []
     let responsibleGamblingText: ResponsibleGamblingText
@@ -43,6 +47,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     var onLinkTap: ((FooterLinkType) -> Void)?
     var onSponsorsUpdated: (([FooterSponsor]) -> Void)?
     var onSocialLinksUpdated: (([FooterSocialLink]) -> Void)?
+    var onNavigationLinksUpdated: (([FooterLink]) -> Void)?
 
     // MARK: - Dependencies
 
@@ -107,6 +112,14 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     }
 
     private func handleLinkTap(_ linkType: FooterLinkType) {
+        // Handle custom links (from CMS that don't match known types)
+        if case .custom(let urlString, _) = linkType {
+            if let url = URL(string: urlString) {
+                onURLOpenRequested?(url)
+            }
+            return
+        }
+        
         if let cmsLink = cmsLink(for: linkType) {
             handleCMSLinkTap(for: linkType, cmsLink: cmsLink)
             return
@@ -192,16 +205,24 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
     private func applyCMSFooterLinks() {
         guard !fetchedFooterLinks.isEmpty else { return }
 
-        var updatedLinks = Self.cameroonNavigationLinks()
-        for index in updatedLinks.indices {
-            let type = updatedLinks[index].type
-            guard let cmsLink = cmsLink(for: type) else { continue }
+        // Map CMS links to FooterLink objects, maintaining CMS order
+        let cmsOrderedLinks = fetchedFooterLinks.map { cmsLink -> FooterLink in
             let localizedTitle = localized(cmsLink.label)
-            let displayTitle = localizedTitle.isEmpty ? updatedLinks[index].title : localizedTitle
-            updatedLinks[index] = FooterLink(title: displayTitle, type: type)
+            
+            // Try to match to a known link type
+            if let linkType = linkType(for: cmsLink) {
+                let displayTitle = localizedTitle.isEmpty ? linkType.defaultFallbackTitle : localizedTitle
+                return FooterLink(title: displayTitle, type: linkType)
+            } else {
+                // Create a custom link type for unknown CMS links
+                let displayTitle = localizedTitle.isEmpty ? cmsLink.label : localizedTitle
+                let customType = FooterLinkType.custom(url: cmsLink.computedUrl, label: cmsLink.label)
+                return FooterLink(title: displayTitle, type: customType)
+            }
         }
 
-        navigationLinks = updatedLinks
+        // Replace navigation links with CMS-ordered links
+        navigationLinks = cmsOrderedLinks
     }
 
     private func applyCMSFooterSponsors() {
@@ -250,6 +271,25 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
             return keys.contains { candidates.contains($0) }
         }
     }
+    
+    private func linkType(for cmsLink: ServicesProvider.FooterCMSLink) -> FooterLinkType? {
+        let keys = [
+            normalizedFooterKey(from: cmsLink.subType),
+            normalizedFooterKey(from: cmsLink.label)
+        ].compactMap { $0 }
+        
+        guard !keys.isEmpty else { return nil }
+        
+        // Check each FooterLinkType to see if any of its cmsIdentifiers match
+        for linkType in FooterLinkType.defaultOrderedTypes {
+            let candidates = linkType.cmsIdentifiers
+            if keys.contains(where: { candidates.contains($0) }) {
+                return linkType
+            }
+        }
+        
+        return nil
+    }
 
     private func handleCMSLinkTap(for linkType: FooterLinkType, cmsLink: ServicesProvider.FooterCMSLink) {
         switch cmsLink.type {
@@ -287,7 +327,8 @@ private extension FooterLinkType {
             .responsibleGambling,
             .gameRules,
             .helpCenter,
-            .contactUs
+            .contactUs,
+            .casinoRules
         ]
     }
 
@@ -302,6 +343,8 @@ private extension FooterLinkType {
         case .helpCenter: return localized("help_center")
         case .contactUs: return localized("contact_us")
         case .socialMedia(let platform): return platform.displayName
+        case .casinoRules: return localized("casino_rules")
+        case .custom(_, let label): return label
         }
     }
 
@@ -324,6 +367,10 @@ private extension FooterLinkType {
         case .contactUs:
             return ["contact_us", "contactus", "support_email"]
         case .socialMedia:
+            return []
+        case .casinoRules:
+            return ["casino_rules", "casinorules"]
+        case .custom:
             return []
         }
     }

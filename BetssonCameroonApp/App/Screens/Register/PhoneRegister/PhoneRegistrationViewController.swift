@@ -77,6 +77,7 @@ class PhoneRegistrationViewController: UIViewController {
     private var lastNameField: BorderedTextFieldView?
     private var birthDateField: BorderedTextFieldView?
     private var termsView: TermsAcceptanceView?
+    private var promoCodeField: BorderedTextFieldView?
     private let createAccountButton: ButtonView
 
     // Date picker for birth date input
@@ -303,6 +304,12 @@ class PhoneRegistrationViewController: UIViewController {
                 termsView.topAnchor.constraint(equalTo: componentsStackView.bottomAnchor, constant: 36),
                 termsView.bottomAnchor.constraint(equalTo: componentsBaseView.bottomAnchor)
             ])
+        }
+        
+        if let promoCodeFieldViewModel = viewModel.promoCodeFieldViewModel {
+            let promoCodeField = BorderedTextFieldView(viewModel: promoCodeFieldViewModel)
+            self.promoCodeField = promoCodeField
+            componentsStackView.addArrangedSubview(promoCodeField)
         }
         
         self.componentsBaseView.setNeedsLayout()

@@ -15,10 +15,12 @@ public enum FooterLinkType {
     case privacyPolicy
     case cookiePolicy
     case responsibleGambling
-    case gameRules
+    case casinoRules
     case helpCenter
     case contactUs
+    case gameRules
     case socialMedia(SocialPlatform)
+    case custom(url: String, label: String)
 }
 
 // MARK: - Partner Club

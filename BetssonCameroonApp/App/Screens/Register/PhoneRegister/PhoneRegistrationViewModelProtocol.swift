@@ -20,6 +20,7 @@ protocol PhoneRegistrationViewModelProtocol {
     var lastNameFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var birthDateFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var termsViewModel: TermsAcceptanceViewModelProtocol? { get }
+    var promoCodeFieldViewModel: BorderedTextFieldViewModelProtocol? { get }
     var buttonViewModel: ButtonViewModelProtocol { get }
 
     var phonePrefixText: String { get }
@@ -28,6 +29,7 @@ protocol PhoneRegistrationViewModelProtocol {
     var firstName: String { get }
     var lastName: String { get }
     var birthDate: String { get }
+    var promoCode: String { get }
 
     var isLoadingPublisher: AnyPublisher<Bool, Never> { get }
     var isLoadingConfigPublisher: AnyPublisher<Bool, Never> { get }

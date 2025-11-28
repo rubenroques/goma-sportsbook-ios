@@ -48,6 +48,7 @@ public class ExtendedListFooterView: UIView {
     private var socialSectionContainer: UIView?
     private var socialLinksContainer: UIView?
     private var socialLinkViewMap: [UIView: FooterSocialLink] = [:]
+    private var navigationLinksLabel: UILabel?
 
     // MARK: - Initialization
 
@@ -80,6 +81,12 @@ public class ExtendedListFooterView: UIView {
         viewModel.onSocialLinksUpdated = { [weak self] links in
             DispatchQueue.main.async {
                 self?.updateSocialLinksSection(with: links)
+            }
+        }
+        
+        viewModel.onNavigationLinksUpdated = { [weak self] links in
+            DispatchQueue.main.async {
+                self?.updateNavigationLinksSection(with: links)
             }
         }
     }
@@ -356,10 +363,9 @@ public class ExtendedListFooterView: UIView {
     // MARK: - Section 2: Navigation Links
 
     private func setupNavigationLinksSection() {
-        guard !viewModel.navigationLinks.isEmpty else { return }
-
         let linksContainer = createNavigationLinksView()
         mainStackView.addArrangedSubview(linksContainer)
+        updateNavigationLinksSection(with: viewModel.navigationLinks)
     }
 
     private func createNavigationLinksView() -> UIView {
@@ -374,34 +380,7 @@ public class ExtendedListFooterView: UIView {
         label.numberOfLines = 0
         label.isUserInteractionEnabled = true
 
-        // Build attributed string with links
-        let attributedString = NSMutableAttributedString()
-
-        for (index, link) in viewModel.navigationLinks.enumerated() {
-            // Add link text
-            let linkText = NSAttributedString(
-                string: link.title,
-                attributes: [
-                    .foregroundColor: StyleProvider.Color.allWhite,
-                    .font: StyleProvider.fontWith(type: .regular, size: 16)
-                ]
-            )
-            attributedString.append(linkText)
-
-            // Add separator if not last item
-            if index < viewModel.navigationLinks.count - 1 {
-                let separator = NSAttributedString(
-                    string: Constants.linkSeparator,
-                    attributes: [
-                        .foregroundColor: StyleProvider.Color.allWhite,
-                        .font: StyleProvider.fontWith(type: .regular, size: 16)
-                    ]
-                )
-                attributedString.append(separator)
-            }
-        }
-
-        label.attributedText = attributedString
+        navigationLinksLabel = label
 
         // Add tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleNavigationLinkTap(_:)))
@@ -417,6 +396,19 @@ public class ExtendedListFooterView: UIView {
         ])
 
         return container
+    }
+    
+    private func updateNavigationLinksSection(with links: [FooterLink]) {
+        guard let label = navigationLinksLabel else { return }
+        
+        guard !links.isEmpty else {
+            label.attributedText = nil
+            label.isHidden = true
+            return
+        }
+        
+        label.isHidden = false
+        label.attributedText = Self.buildNavigationLinksAttributedString(from: links)
     }
 
     @objc private func handleNavigationLinkTap(_ gesture: UITapGestureRecognizer) {
@@ -825,6 +817,34 @@ extension ExtendedListFooterView {
         stackView.distribution = .equalSpacing
         return stackView
     }
+    
+    private static func buildNavigationLinksAttributedString(from links: [FooterLink]) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString()
+        
+        for (index, link) in links.enumerated() {
+            let linkText = NSAttributedString(
+                string: link.title,
+                attributes: [
+                    .foregroundColor: StyleProvider.Color.allWhite,
+                    .font: StyleProvider.fontWith(type: .regular, size: 16)
+                ]
+            )
+            attributedString.append(linkText)
+            
+            if index < links.count - 1 {
+                let separator = NSAttributedString(
+                    string: Constants.linkSeparator,
+                    attributes: [
+                        .foregroundColor: StyleProvider.Color.allWhite,
+                        .font: StyleProvider.fontWith(type: .regular, size: 16)
+                    ]
+                )
+                attributedString.append(separator)
+            }
+        }
+        
+        return attributedString
+    }
 
     private static func createSectionHeaderLabel(text: String) -> UILabel {
         let label = UILabel()
@@ -910,6 +930,10 @@ import SwiftUI
                 print("✅ Preview: Tapped Contact Us")
             case .socialMedia(let platform):
                 print("✅ Preview: Tapped Social Media - \(platform.displayName)")
+            case .casinoRules:
+                print("✅ Preview: Tapped Casino Rules")
+            case .custom(let url, let label):
+                print("✅ Preview: Tapped Custom Link - \(label) -> \(url)")
             }
         }
 
