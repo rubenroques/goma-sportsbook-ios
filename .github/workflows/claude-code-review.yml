@@ -42,15 +42,24 @@ jobs:
           
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
-            Please review this pull request and provide feedback on:
-            - Best practices
-            - Code quality
-            - Performance considerations
-            - Security concerns
-            - Mistakenly commited Debug prints and comments 
-            Be constructive and helpful in your feedback.
-          # - Potential bugs or issues
-          # - Test coverage
+            Review this iOS Swift pull request. Prioritize issues by severity:
+
+            ## CRITICAL (must fix before merge):
+            - **Hardcoded user-facing strings**: Any text displayed to users (labels, buttons, alerts, error messages, placeholders) that is NOT using NSLocalizedString or the localization system. This is a multilingual app - all user-visible strings must be localized.
+            - Security vulnerabilities
+            - Potential crashes or data loss
+
+            ## IMPORTANT:
+            - Code quality and Swift best practices
+            - Performance concerns (especially in UI/main thread)
+            - Memory management (retain cycles, leaks)
+            - MVVM-C architecture violations
+
+            ## MINOR (suggestions):
+            - Code style improvements
+            - Debug prints or development comments (note: some debug logging may be intentional, only flag if clearly accidental)
+
+            Focus on production readiness. Be concise and actionable.
             
             
 
