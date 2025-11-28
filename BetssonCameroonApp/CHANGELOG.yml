@@ -21,6 +21,7 @@ releases:
       - "fix(casino): Replace broken casino subscription-based quick links (between FR<>EN) with hardcoded category IDs and dynamic API-fetched titles"
       - "fix(casino): [SPOR-6632] [BC-218] Enable landscape rotation for casino game webview"
       - "Fix: SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
+      - "fix(filters): [SPOR-5787] Changing 'Filter per hour' icon"
 
   - version: "0.3.0"
     build: 3001
