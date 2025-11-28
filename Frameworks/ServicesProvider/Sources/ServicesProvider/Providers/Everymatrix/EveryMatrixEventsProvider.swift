@@ -426,7 +426,38 @@ class EveryMatrixEventsProvider: EventsProvider {
             return Fail(error: ServiceProviderError.errorMessage(message: "Outcome with id \(id) not found in any active paginator")).eraseToAnyPublisher()
         }
     }
-    
+
+    func subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        // NOTE: This method subscribes to BETTING_OFFER updates and returns the parent Outcome
+        // This fixes the entity mismatch where BETTING_OFFER updates don't notify OUTCOME observers
+
+        // Priority order: MatchDetails > Live > Pre-live
+        // - MatchDetails is authoritative when viewing match details screen
+        // - Live prioritized over pre-live (more frequent odds changes)
+
+        // 1. Check match details manager first (with existence validation)
+        if let matchDetailsManager = self.matchDetailsManager,
+           matchDetailsManager.bettingOfferExists(id: bettingOfferId) {
+            return matchDetailsManager.subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: bettingOfferId)
+        }
+
+        // 2. Check live paginator (most active odds changes)
+        if let livePaginator = livePaginator,
+           livePaginator.bettingOfferExists(id: bettingOfferId) {
+            return livePaginator.subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: bettingOfferId)
+        }
+
+        // 3. Fallback to pre-live paginator
+        if let prelivePaginator = prelivePaginator,
+           prelivePaginator.bettingOfferExists(id: bettingOfferId) {
+            return prelivePaginator.subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: bettingOfferId)
+        }
+
+        return Fail(error: ServiceProviderError.errorMessage(
+            message: "BettingOffer:\(bettingOfferId) not found in any active manager/paginator"
+        )).eraseToAnyPublisher()
+    }
+
     func subscribePopularTournaments(forSportType sportType: SportType, tournamentsCount: Int = 10) -> AnyPublisher<SubscribableContent<[Tournament]>, ServiceProviderError> {
         // Clean up any existing manager
         popularTournamentsManager?.unsubscribe()

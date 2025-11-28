@@ -21,7 +21,6 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var birthDateFieldViewModel: BorderedTextFieldViewModelProtocol?
     var termsViewModel: TermsAcceptanceViewModelProtocol?
     var promoCodeFieldViewModel: BorderedTextFieldViewModelProtocol?
-
     let buttonViewModel: ButtonViewModelProtocol
     
     private var cancellables = Set<AnyCancellable>()
@@ -49,7 +48,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     var lastName: String = ""
     var birthDate: String = ""
     var promoCode: String = ""
-
+    
     init() {
         
         headerViewModel = MockPromotionalHeaderViewModel(headerData: PromotionalHeaderData(id: "registerHeader",
@@ -118,7 +117,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 phonePrefixText = phoneConfig?.defaultValue ?? "+237"
                 phoneFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(id: "phone",
-                                                         placeholder: localized(field.displayName ?? localized("mobile_phone_number")),
+                                                         placeholder: localized((field.displayName ?? "mobile_phone_number").lowercased()),
                                                          prefix: phoneConfig?.defaultValue ?? "+237",
                                                          isSecure: false,
                                                          isRequired: true,
@@ -135,7 +134,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 
                 passwordFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(id: "password",
-                                                         placeholder: localized(field.displayName ?? localized("password_min_4_chars")),
+                                                         placeholder: localized((field.displayName ?? "password_min_4_chars").lowercased()),
                                                          isSecure: true,
                                                          isRequired: true,
                                                          visualState: .idle,
@@ -146,7 +145,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 firstNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "firstName",
-                        placeholder: localized(field.displayName ?? localized("first_name")),
+                        placeholder: localized((field.displayName ?? "first_name").lowercased()),
                         isSecure: false,
                         isRequired: true,
                         visualState: .idle,
@@ -159,7 +158,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 lastNameFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "lastName",
-                        placeholder: localized(field.displayName ?? localized("last_name")),
+                        placeholder: localized((field.displayName ?? "last_name").lowercased()),
                         isSecure: false,
                         isRequired: true,
                         visualState: .idle,
@@ -178,50 +177,52 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 birthDateFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "birthDate",
-                        placeholder: localized(field.displayName ?? localized("date_format_placeholder")),
+                        placeholder: localized((field.displayName ?? "date_format_placeholder").lowercased()),
                         isSecure: false,
                         isRequired: true,
                         usesCustomInput: true,  // Use date picker instead of keyboard
                         visualState: .idle,
                         keyboardType: .numbersAndPunctuation,
-                        returnKeyType: .next,
+                        returnKeyType: .done,
                         textContentType: .none
                     )
                 )
             case "TermsAndConditions":
                 let extractedTermsHTMLData = self.extractedTermsHTMLData
-                
+
                 // swiftlint:disable line_length
                 let fullText = extractedTermsHTMLData?.fullText ?? "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy"
-                
+
                 let termsData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .terms
                 })
-                
+
                 let privacyData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .privacyPolicy
                 })
-                
+
                 let cookiesData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .cookies
                 })
-                
+
                 termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
                                                                               termsText: termsData?.text ?? "Terms and Conditions",
                                                                               privacyText: privacyData?.text ?? "Privacy Policy",
                                                                               cookiesText: cookiesData?.text,
                                                                                         isAccepted: true))
             case "PromoCode":
+                let promoConfig = config.fields.first(where: { $0.name == "PromoCode" })
                 promoCodeFieldViewModel = MockBorderedTextFieldViewModel(
                     textFieldData: BorderedTextFieldData(
                         id: "promoCode",
-                        placeholder: localized(field.displayName ?? localized("promo_code")),
+                        placeholder: localized((field.displayName ?? "promo_code").lowercased()),
                         isSecure: false,
                         isRequired: false,
                         visualState: .idle,
                         keyboardType: .default,
                         returnKeyType: .done,
-                        textContentType: .none
+                        textContentType: .none,
+                        maxLength: promoConfig?.validate.maxLength
                     )
                 )
             default:
@@ -415,7 +416,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 .store(in: &cancellables)
         }
     }
-    
+
     func registerUser() {
         
         isLoadingSubject.send(true)
@@ -732,8 +733,8 @@ class RegisterConfigHelper {
             
             // Check regex rules from registration config
             if let regexRule = passwordCustomRules.first(where: {
-                let displayName = $0.displayName ?? ""
-                return $0.rule == "regex" && displayName.contains("numerical")
+                let displayName = $0.errorMessage.lowercased()
+                return $0.rule == "regex" && displayName.contains("only") && displayName.contains("numbers")
             }) {
                 if let regex = try? NSRegularExpression(pattern: regexRule.pattern ?? "") {
                     let range = NSRange(location: 0, length: passwordText.utf16.count)
@@ -745,22 +746,7 @@ class RegisterConfigHelper {
                 }
                 
             }
-            
-            if let regexRule = passwordCustomRules.first(where: {
-                let displayName = $0.displayName ?? ""
-                return $0.rule == "regex" && displayName.contains("include")
-            }) {
-                if let regex = try? NSRegularExpression(pattern: regexRule.pattern ?? "") {
-                    let range = NSRange(location: 0, length: passwordText.utf16.count)
-                    let isValid = regex.firstMatch(in: passwordText, options: [], range: range) != nil
-                    
-                    if !isValid {
-                        return (false, regexRule.errorMessage)
-                    }
-                }
-                
-            }
-            
+ 
         }
         
         return (true, "")

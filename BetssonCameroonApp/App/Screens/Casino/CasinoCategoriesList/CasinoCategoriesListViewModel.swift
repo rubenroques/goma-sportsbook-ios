@@ -27,9 +27,10 @@ class CasinoCategoriesListViewModel: ObservableObject {
     let showTopBanner: Bool
 
     // MARK: - Published Properties
-    @Published private(set) var categorySections: [MockCasinoCategorySectionViewModel] = []
+    @Published private(set) var categorySections: [CasinoGameImageGridSectionViewModel] = []
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
+    @Published private(set) var showRecentlyPlayed: Bool = false
     
     // MARK: - Child ViewModels
     let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
@@ -57,11 +58,12 @@ class CasinoCategoriesListViewModel: ObservableObject {
             self.topBannerSliderViewModel = nil
         }
 
-        // Initialize with empty recently played - will be populated when categories load
+        // Initialize with empty recently played - will be populated from API when user is logged in
         self.recentlyPlayedGamesViewModel = MockRecentlyPlayedGamesViewModel.emptyRecentlyPlayed
 
         setupChildViewModelCallbacks()
         setupCacheUpdateSubscriptions()
+        setupUserSessionSubscription()
         loadCategoriesFromAPI()
     }
     
@@ -113,7 +115,6 @@ class CasinoCategoriesListViewModel: ObservableObject {
                 },
                 receiveValue: { [weak self] sectionViewModels in
                     self?.categorySections = sectionViewModels
-                    self?.updateRecentlyPlayedFromCategories()
                     self?.isLoading = false
                 }
             )
@@ -121,14 +122,14 @@ class CasinoCategoriesListViewModel: ObservableObject {
     }
     
     /// Load preview games for all categories concurrently while preserving order
-    private func loadPreviewGamesForAllCategories(_ categories: [CasinoCategory]) -> AnyPublisher<[MockCasinoCategorySectionViewModel], ServiceProviderError> {
+    private func loadPreviewGamesForAllCategories(_ categories: [CasinoCategory]) -> AnyPublisher<[CasinoGameImageGridSectionViewModel], ServiceProviderError> {
         let indexedPublishers = categories.enumerated().map { index, category in
             loadPreviewGamesForCategory(category)
                 .map { sectionViewModel in
                     (index: index, sectionViewModel: sectionViewModel)
                 }
         }
-        
+
         return Publishers.MergeMany(indexedPublishers)
             .collect()
             .map { indexedResults in
@@ -141,7 +142,7 @@ class CasinoCategoriesListViewModel: ObservableObject {
     }
     
     /// Load preview games for a single category (10 games + See More card if needed)
-    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<MockCasinoCategorySectionViewModel, ServiceProviderError> {
+    private func loadPreviewGamesForCategory(_ category: CasinoCategory) -> AnyPublisher<CasinoGameImageGridSectionViewModel, ServiceProviderError> {
         let pagination = CasinoPaginationParams(offset: 0, limit: 10) // Load 10 games as requested
         
         let language = localized("current_language_code")
@@ -153,48 +154,32 @@ class CasinoCategoriesListViewModel: ObservableObject {
             lobbyType: lobbyType,
             pagination: pagination
         )
-        .map { gamesResponse in
-            // Convert CasinoGame[] to CasinoGameCardData[]
-            let gameCardData = gamesResponse.games.map { 
-                ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+        .map { [weak self] gamesResponse in
+            // Convert CasinoGame[] to CasinoGameImageData[] for 2-row grid
+            let gameImageData = gamesResponse.games.map {
+                ServiceProviderModelMapper.casinoGameImageData(fromCasinoGame: $0)
             }
-            
-            // Add "See More" card if there are more games available
-            let gamesWithSeeMore = self.addSeeMoreCardIfNeeded(
-                games: gameCardData,
-                category: category,
-                totalGames: gamesResponse.total
-            )
-            
+
             // Create section data using mapping
-            let sectionData = ServiceProviderModelMapper.casinoCategorySectionData(
+            let sectionData = ServiceProviderModelMapper.casinoGameImageGridSectionData(
                 fromCasinoCategory: category,
-                games: gamesWithSeeMore
+                games: gameImageData
             )
-            
-            // Create section ViewModel
-            return MockCasinoCategorySectionViewModel(sectionData: sectionData)
+
+            // Create production section ViewModel
+            let sectionViewModel = CasinoGameImageGridSectionViewModel(data: sectionData)
+
+            // Wire up callbacks
+            sectionViewModel.onGameSelected = { [weak self] gameId in
+                self?.gameSelected(gameId)
+            }
+            sectionViewModel.onCategoryButtonTapped = { [weak self] in
+                self?.categoryButtonTapped(categoryId: category.id, categoryTitle: category.name)
+            }
+
+            return sectionViewModel
         }
         .eraseToAnyPublisher()
-    }
-    
-    /// Add "See More" card if there are additional games beyond the loaded ones
-    private func addSeeMoreCardIfNeeded(
-        games: [CasinoGameCardData],
-        category: CasinoCategory,
-        totalGames: Int
-    ) -> [CasinoGameCardData] {
-        guard games.count < totalGames else {
-            return games // No more games available
-        }
-        
-        let remainingGamesCount = totalGames - games.count
-        let seeMoreCard = ServiceProviderModelMapper.seeMoreCard(
-            categoryId: category.id,
-            remainingGamesCount: remainingGamesCount
-        )
-        
-        return games + [seeMoreCard]
     }
     
     /// Handle API completion (success or failure)
@@ -228,7 +213,14 @@ class CasinoCategoriesListViewModel: ObservableObject {
     
     /// Minimal fallback categories if API fails completely
     private func setupFallbackCategories() {
-        categorySections = [MockCasinoCategorySectionViewModel.emptySection]
+        // Create empty section for fallback
+        let emptyData = CasinoGameImageGridSectionData(
+            id: "empty-section",
+            categoryTitle: localized("casino_games"),
+            categoryButtonText: "\(localized("all")) 0",
+            games: []
+        )
+        categorySections = [CasinoGameImageGridSectionViewModel(data: emptyData)]
     }
     
     /// Handle silent category updates from background cache refresh
@@ -248,30 +240,59 @@ class CasinoCategoriesListViewModel: ObservableObject {
                 },
                 receiveValue: { [weak self] sectionViewModels in
                     self?.categorySections = sectionViewModels
-                    self?.updateRecentlyPlayedFromCategories()
                 }
             )
             .store(in: &cancellables)
     }
 
-    /// Update recently played games with first game from each loaded category
-    private func updateRecentlyPlayedFromCategories() {
-        // Extract first game from each category section (excluding "See More" cards)
-        let recentGames = categorySections.compactMap { section -> RecentlyPlayedGameData? in
-            // Get first real game (not a "See More" card)
-            guard let firstGame = section.sectionData.games.first(where: { !$0.id.contains("see-more") }) else {
-                return nil
+    /// Subscribe to user session changes to load recently played games when logged in
+    private func setupUserSessionSubscription() {
+        Env.userSessionStore.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] profile in
+                if profile != nil {
+                    self?.loadRecentlyPlayedGames()
+                } else {
+                    self?.showRecentlyPlayed = false
+                    self?.recentlyPlayedGamesViewModel.updateGames([])
+                }
             }
-            
-            // Convert CasinoGameCardData to RecentlyPlayedGameData
-            return ServiceProviderModelMapper.recentlyPlayedGameData(fromCasinoGameCardData: firstGame)
+            .store(in: &cancellables)
+    }
+
+    /// Load recently played games from API for logged-in user
+    private func loadRecentlyPlayedGames() {
+        guard let userId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier else {
+            showRecentlyPlayed = false
+            recentlyPlayedGamesViewModel.updateGames([])
+            return
         }
-        
-        // Take up to 5 games to avoid overcrowding the recently played section
-        let limitedGames = Array(recentGames.prefix(5))
-        
-        // Update the recently played games ViewModel
-        recentlyPlayedGamesViewModel.updateGames(limitedGames)
+
+        let language = localized("current_language_code")
+        servicesProvider.getRecentlyPlayedGames(playerId: userId, language: language, platform: Self.gamesPlatform)
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure = completion {
+                        self?.showRecentlyPlayed = false
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    let games = response.games.map { game -> RecentlyPlayedGameData in
+                        let cardData = ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: game)
+                        return RecentlyPlayedGameData(
+                            id: cardData.id,
+                            name: cardData.name,
+                            provider: cardData.provider,
+                            imageURL: cardData.iconURL,
+                            gameURL: cardData.gameURL
+                        )
+                    }
+                    self?.recentlyPlayedGamesViewModel.updateGames(games)
+                    self?.showRecentlyPlayed = !games.isEmpty
+                }
+            )
+            .store(in: &cancellables)
     }
 
     /// Handle banner action from casino banner tap

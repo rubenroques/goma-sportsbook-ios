@@ -316,12 +316,12 @@ class TopBarContainerController: UIViewController {
 // MARK: - Settings Routing
 private extension TopBarContainerController {
     func presentLanguageSettingsConfirmation() {
-        let title = "Set Your App Language"
-        let message = "Continue to Settings to choose your preferred language for Betsson."
+        let title = localized("set_your_app_language")
+        let message = localized("language_settings_message")
 
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-        let openAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+        let openAction = UIAlertAction(title: localized("open_settings"), style: .default) { _ in
             DispatchQueue.main.async {
                 guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
                       UIApplication.shared.canOpenURL(settingsURL) else {
@@ -331,7 +331,7 @@ private extension TopBarContainerController {
             }
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel)
 
         alertController.addAction(openAction)
         alertController.addAction(cancelAction)

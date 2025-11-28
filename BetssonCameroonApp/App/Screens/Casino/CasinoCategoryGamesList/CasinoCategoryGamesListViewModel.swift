@@ -26,10 +26,10 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     private static let gamesPlatform = "PC"
     
     // MARK: - Published Properties
-    @Published private(set) var games: [MockCasinoGameCardViewModel] = []
+    @Published private(set) var games: [CasinoGameImageViewModel] = []
     @Published private(set) var loadingState: LoadingState = .idle
     @Published private(set) var errorMessage: String?
-    @Published private(set) var categoryTitle: String
+    @Published private(set) var categoryTitle: String = ""
     
     // MARK: - Pagination Properties
     @Published private(set) var hasMoreGames: Bool = false
@@ -54,9 +54,9 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
-    init(categoryId: String, categoryTitle: String, casinoCacheProvider: CasinoCacheProvider, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
+    init(categoryId: String, categoryTitle: String?, casinoCacheProvider: CasinoCacheProvider, lobbyType: ServicesProvider.CasinoLobbyType? = nil) {
         self.categoryId = categoryId
-        self.categoryTitle = categoryTitle
+        self.categoryTitle = categoryTitle ?? ""  // Empty initially for quick links - will be populated from API
         self.casinoCacheProvider = casinoCacheProvider
         self.lobbyType = lobbyType
         self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forCasinoScreens()
@@ -154,33 +154,38 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
     
     /// Handle API response with games data
     private func handleGamesResponse(_ gamesResponse: CasinoGamesResponse, isLoadingMore: Bool) {
-        // Convert CasinoGame[] to CasinoGameCardData[] using ServiceProviderModelMapper
-        let newGameCardData = gamesResponse.games.map {
-            ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+        // Convert CasinoGame[] to CasinoGameImageData[] using ServiceProviderModelMapper
+        let newGameImageData = gamesResponse.games.map {
+            ServiceProviderModelMapper.casinoGameImageData(fromCasinoGame: $0)
         }
-        
+
         // Convert to ViewModels
-        let newGameViewModels = newGameCardData.map { gameData in
-            let viewModel = MockCasinoGameCardViewModel(gameData: gameData)
+        let newGameViewModels = newGameImageData.map { gameData in
+            let viewModel = CasinoGameImageViewModel(data: gameData)
             viewModel.onGameSelected = { [weak self] gameId in
                 self?.gameSelected(gameId)
             }
             return viewModel
         }
-        
+
         // Update games list
         if isLoadingMore {
             games.append(contentsOf: newGameViewModels)
         } else {
             games = newGameViewModels
         }
-        
+
         // Reset loading state
         loadingState = .idle
-        
+
         // Update pagination state
         totalGames = gamesResponse.total
         hasMoreGames = games.count < totalGames
+
+        // Update category title from response if we started with empty title (quick link navigation)
+        if categoryTitle.isEmpty, let name = gamesResponse.categoryName {
+            categoryTitle = name
+        }
     }
     
     /// Handle API completion (success or failure)
@@ -211,14 +216,14 @@ class CasinoCategoryGamesListViewModel: ObservableObject {
         // Only process updates for offset 0 (first page) to avoid complexity
         guard offset == 0 else { return }
 
-        // Convert to game card data
-        let newGameCardData = gamesResponse.games.map {
-            ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
+        // Convert to game image data
+        let newGameImageData = gamesResponse.games.map {
+            ServiceProviderModelMapper.casinoGameImageData(fromCasinoGame: $0)
         }
 
         // Convert to ViewModels
-        let newGameViewModels = newGameCardData.map { gameData in
-            let viewModel = MockCasinoGameCardViewModel(gameData: gameData)
+        let newGameViewModels = newGameImageData.map { gameData in
+            let viewModel = CasinoGameImageViewModel(data: gameData)
             viewModel.onGameSelected = { [weak self] gameId in
                 self?.gameSelected(gameId)
             }

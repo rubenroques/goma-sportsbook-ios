@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SharedModels
+import GomaLogger
 
 /// Manages subscription to match details including event info and all markets
 /// 
@@ -270,18 +271,54 @@ class MatchDetailsManager {
         case .connect(let publisherIdentifiable):
             let subscription = Subscription(id: "\(publisherIdentifiable.identificationCode)")
             return SubscribableContent.connected(subscription: subscription)
-            
-        case .initialContent(let response), .updatedContent(let response):
-            // Parse markets data into isolated store for this market group
+
+        case .initialContent(let response):
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - INITIAL_CONTENT received, records: \(response.records.count)")
+
             parseMarketsDataForGroup(from: response, marketGroupKey: marketGroupKey)
-            
-            // Build and return markets array from isolated store
             let markets = buildMarketsArrayForGroup(marketGroupKey: marketGroupKey)
+
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - EMITTING \(markets.count) markets (initial)")
             return .contentUpdate(content: markets)
-            
+
+        case .updatedContent(let response):
+            // Log what entity types are in this update
+            let entityTypeCounts = categorizeRecords(response.records)
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - UPDATE received: \(entityTypeCounts)")
+
+            parseMarketsDataForGroup(from: response, marketGroupKey: marketGroupKey)
+            let markets = buildMarketsArrayForGroup(marketGroupKey: marketGroupKey)
+
+            GomaLogger.debug(.realtime, category: "BLINK_SOURCE",
+                "MatchDetailsManager[\(marketGroupKey)] - EMITTING \(markets.count) markets (update)")
+            return .contentUpdate(content: markets)
+
         case .disconnect:
             return .disconnected
         }
+    }
+
+    /// Helper to categorize records by entity type for diagnostic logging
+    private func categorizeRecords(_ records: [EveryMatrix.EntityRecord]) -> String {
+        var counts: [String: Int] = [:]
+        for record in records {
+            let typeName: String
+            switch record {
+            case .match: typeName = "MATCH"
+            case .market: typeName = "MARKET"
+            case .outcome: typeName = "OUTCOME"
+            case .bettingOffer: typeName = "BETTING_OFFER"
+            case .changeRecord(let cr): typeName = "CHANGE(\(cr.entityType))"
+            case .eventInfo: typeName = "EVENT_INFO"
+            case .marketInfo: typeName = "MARKET_INFO"
+            default: typeName = "OTHER"
+            }
+            counts[typeName, default: 0] += 1
+        }
+        return counts.map { "\($0.key):\($0.value)" }.joined(separator: ", ")
     }
     
     private func handleEventDetailsContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<Event>? {
@@ -765,6 +802,53 @@ extension MatchDetailsManager {
             .eraseToAnyPublisher()
     }
 
+    /// Subscribe to betting offer updates and return the parent Outcome with updated odds
+    /// This fixes the entity mismatch where BETTING_OFFER updates don't notify OUTCOME observers
+    /// Note: Searches all stores (main + market group stores) to find the betting offer
+    func subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        // Find the store that contains this betting offer
+        guard let targetStore = findStoreContainingBettingOffer(bettingOfferId) else {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+                "MatchDetailsManager.subscribeToBettingOfferAsOutcomeUpdates - BETTING_OFFER:\(bettingOfferId) not found in any store")
+            return Just(nil)
+                .setFailureType(to: ServiceProviderError.self)
+                .eraseToAnyPublisher()
+        }
+
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+            "MatchDetailsManager.subscribeToBettingOfferAsOutcomeUpdates - SUBSCRIBING to BETTING_OFFER:\(bettingOfferId)")
+
+        return targetStore.observeBettingOffer(id: bettingOfferId)
+            .handleEvents(receiveOutput: { bettingOfferDTO in
+                if bettingOfferDTO != nil {
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW",
+                        "MatchDetailsManager - RECEIVED BettingOfferDTO update for BETTING_OFFER:\(bettingOfferId)")
+                }
+            })
+            .compactMap { [weak self] bettingOfferDTO -> Outcome? in
+                guard self != nil,
+                      let bettingOfferDTO = bettingOfferDTO else { return nil }
+
+                // Look up parent OutcomeDTO using the foreign key - from the SAME store
+                let outcomeId = bettingOfferDTO.outcomeId
+                guard let outcomeDTO = targetStore.get(EveryMatrix.OutcomeDTO.self, id: outcomeId) else {
+                    GomaLogger.error(.realtime, category: "ODDS_FLOW",
+                        "MatchDetailsManager - Parent OUTCOME:\(outcomeId) not found for BETTING_OFFER:\(bettingOfferId)")
+                    return nil
+                }
+
+                // Build hierarchical Outcome with updated BettingOffers - using SAME store
+                guard let internalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: targetStore) else {
+                    return nil
+                }
+
+                // Map to domain Outcome
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: internalOutcome)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
     /// Get market groups for the match
     /// Returns empty array if market groups haven't been loaded yet
     func getMarketGroups() -> [MarketGroup] {
@@ -778,6 +862,30 @@ extension MatchDetailsManager {
     /// Check if market groups have been loaded
     var areMarketGroupsLoaded: Bool {
         return marketGroupsLoaded
+    }
+
+    /// Find the EntityStore that contains a specific betting offer
+    /// Searches main store first, then all market group stores
+    private func findStoreContainingBettingOffer(_ bettingOfferId: String) -> EveryMatrix.EntityStore? {
+        // Check main store first
+        if store.get(EveryMatrix.BettingOfferDTO.self, id: bettingOfferId) != nil {
+            return store
+        }
+
+        // Check market group stores
+        for (_, groupStore) in marketGroupStores {
+            if groupStore.get(EveryMatrix.BettingOfferDTO.self, id: bettingOfferId) != nil {
+                return groupStore
+            }
+        }
+
+        return nil
+    }
+
+    /// Check if a betting offer with the given ID exists in this manager's stores
+    /// Checks both main store and all market group stores
+    func bettingOfferExists(id: String) -> Bool {
+        return findStoreContainingBettingOffer(id) != nil
     }
 
     /// Observe live data (EventInfo entities) for this match

@@ -136,3 +136,7 @@ Tools/wamp-client/node_modules
 TODO_TASKS.md
 BetssonCameroonApp/fastlane/logs
 .claude/settings.local.json
+
+# Git worktrees directory (keep directory, ignore contents)
+git-worktrees/*
+!git-worktrees/.gitkeep

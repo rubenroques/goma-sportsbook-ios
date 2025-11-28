@@ -1945,6 +1945,10 @@
 
 "maintenance_mode_content_fallback" = "Nous effectuons une maintenance programmée. Nous serons de retour sous peu.";
 
+"maintenance_title" = "Patientez, nous sommes en maintenance";
+
+"maintenance_subtitle" = "Désolé pour le désagrément, nous serons de retour très bientôt. Merci pour votre patience!";
+
 "make_a_deposit" = "Faire un dépôt";
 
 "make_a_withdraw" = "Faire un retrait";
@@ -3421,6 +3425,8 @@
 
 "suggested_country" = "Pays suggéré";
 
+"suggested_events" = "Événements suggérés";
+
 "suggested_names" = "Noms suggérés";
 
 "support" = "Contactez-nous";
@@ -4127,3 +4133,25 @@
 // Session Expiration Alert
 "you_are_logged_out" = "Vous êtes déconnecté";
 "your_session_has_ended" = "Votre session a expiré";
+
+// Language Settings
+"set_your_app_language" = "Définir la langue de l'application";
+"language_settings_message" = "Accédez aux Paramètres pour choisir votre langue préférée pour Betsson.";
+"open_settings" = "Ouvrir les paramètres";
+
+// Welcome & Onboarding
+"welcome_to_betsson" = "Bienvenue chez Betsson !";
+
+// Loading States
+"loading_notifications" = "Chargement des notifications...";
+"loading_markets" = "Chargement des marchés...";
+
+// Search
+"search_sports" = "Rechercher Sports";
+
+// Notifications
+"notification_action" = "Action de notification";
+
+// Win Boost
+"win_boost_format" = "WIN BOOST (%d%%)";
+"win_boost_none" = "WIN BOOST (AUCUN)";

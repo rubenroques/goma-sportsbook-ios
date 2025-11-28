@@ -101,7 +101,7 @@ public class MarketGroupSelectorTabView: UIView {
 
         // Empty state label setup
         emptyStateLabel.translatesAutoresizingMaskIntoConstraints = false
-        emptyStateLabel.text = "No market groups available"
+        emptyStateLabel.text = LocalizationProvider.string("no_market_groups_available")
         emptyStateLabel.textColor = StyleProvider.Color.textSecondary
         emptyStateLabel.font = StyleProvider.fontWith(type: .regular, size: 14)
         emptyStateLabel.textAlignment = .center

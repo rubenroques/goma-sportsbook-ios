@@ -39,13 +39,14 @@ class CasinoCategoriesListViewController: UIViewController {
     // MARK: - Properties
     let viewModel: CasinoCategoriesListViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var categorySections: [MockCasinoCategorySectionViewModel] = []
-    
+    private var categorySections: [CasinoGameImageGridSectionViewModel] = []
+
     // MARK: - Constants
     private enum Constants {
         static let topBannerHeight: CGFloat = 136.0
         static let recentlyPlayedHeight: CGFloat = 132.0
-        static let categorySectionHeight: CGFloat = 338.0
+        // 2-row grid: category bar (48) + top spacing (14) + 2 cards (100x2) + gap (8) + bottom padding (8)
+        static let categorySectionHeight: CGFloat = 278.0
         static let verticalSpacing: CGFloat = 16.0
     }
     
@@ -117,7 +118,7 @@ class CasinoCategoriesListViewController: UIViewController {
         // Register cell types
         collectionView.register(TopBannerSliderCollectionViewCell.self, forCellWithReuseIdentifier: "TopBannerCell")
         collectionView.register(RecentlyPlayedGamesCollectionViewCell.self, forCellWithReuseIdentifier: "RecentlyPlayedCell")
-        collectionView.register(CasinoCategorySectionCollectionViewCell.self, forCellWithReuseIdentifier: "CategorySectionCell")
+        collectionView.register(CasinoGameImageGridSectionCollectionViewCell.self, forCellWithReuseIdentifier: "CategorySectionCell")
         
         // Set delegates
         collectionView.dataSource = self
@@ -175,13 +176,19 @@ class CasinoCategoriesListViewController: UIViewController {
 
                 // Only end tracking when we have actual data (not the initial empty state)
                 if categorySections.count > 0 {
+                    // Count games from pair ViewModels (each pair has 1-2 games)
+                    let totalGames = categorySections.reduce(0) { total, section in
+                        total + section.gamePairViewModels.reduce(0) { pairTotal, pair in
+                            pairTotal + (pair.bottomGameViewModel != nil ? 2 : 1)
+                        }
+                    }
                     PerformanceTracker.shared.end(
                         feature: .casinoHome,
                         layer: .app,
                         metadata: [
                             "status": "complete",
                             "categoriesLoaded": "\(categorySections.count)",
-                            "totalGames": "\(categorySections.reduce(0) { $0 + $1.sectionData.games.count })"
+                            "totalGames": "\(totalGames)"
                         ]
                     )
                 }
@@ -205,6 +212,14 @@ class CasinoCategoriesListViewController: UIViewController {
                 self?.showError(errorMessage)
             }
             .store(in: &cancellables)
+
+        // Recently played visibility
+        viewModel.$showRecentlyPlayed
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.collectionView.reloadSections(IndexSet(integer: 1))
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Data Loading
@@ -216,16 +231,16 @@ class CasinoCategoriesListViewController: UIViewController {
     
     private func showError(_ message: String) {
         let alert = UIAlertController(
-            title: "Error",
+            title: localized("error"),
             message: message,
             preferredStyle: .alert
         )
-        
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.reloadCategories()
         })
-        
+
         present(alert, animated: true)
     }
 }
@@ -240,7 +255,7 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
         case 0: return viewModel.showTopBanner ? 1 : 0  // Banner (ignored if 0 items)
-        case 1: return 1  // Recently played (always shown)
+        case 1: return viewModel.showRecentlyPlayed ? 1 : 0  // Recently played (only if logged in + has games)
         case 2: return categorySections.count  // All categories
         default: return 0
         }
@@ -284,23 +299,15 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
     }
 
     private func configureCategoryCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoCategorySectionCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoGameImageGridSectionCollectionViewCell
 
         let categorySection = categorySections[indexPath.item]
 
         cell.configure(with: categorySection)
 
-        // Setup callbacks
-        cell.onCategoryButtonTapped = { [weak self] categoryId in
-            self?.viewModel.categoryButtonTapped(
-                categoryId: categoryId,
-                categoryTitle: categorySection.categoryTitle
-            )
-        }
-
-        cell.onGameSelected = { [weak self] gameId in
-            self?.viewModel.gameSelected(gameId)
-        }
+        // Note: Callbacks for category button and game selection are wired up
+        // through the ViewModel layer (CasinoCategoriesListViewModel sets
+        // sectionViewModel.onCategoryButtonTapped and onGameSelected)
 
         return cell
     }

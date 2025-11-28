@@ -43,51 +43,50 @@ extension EveryMatrix {
     }
 
     struct BetSelectionInfo: Codable {
-        let bettingOfferId: String
+        let bettingOfferId: Int
         let priceValue: Double
-        let eventId: String
-        let marketId: String
-        let bettingTypeId: String
-        let outcomeId: String
+        let outcomeId: Int?
+        let bettingTypeId: Int?
+        let marketIDs: [Int]
         let betBuilderPriceValue: Double?
+        let banker: Bool
 
-        init(bettingOfferId: String,
+        init(bettingOfferId: Int,
              priceValue: Double,
-             eventId: String,
-             marketId: String,
-             bettingTypeId: String,
-             outcomeId: String,
-             betBuilderPriceValue: Double?) {
+             outcomeId: Int?,
+             bettingTypeId: Int?,
+             marketIDs: [Int],
+             betBuilderPriceValue: Double?,
+             banker: Bool) {
             self.bettingOfferId = bettingOfferId
             self.priceValue = priceValue
-            self.eventId = eventId
-            self.marketId = marketId
-            self.bettingTypeId = bettingTypeId
             self.outcomeId = outcomeId
+            self.bettingTypeId = bettingTypeId
+            self.marketIDs = marketIDs
             self.betBuilderPriceValue = betBuilderPriceValue
+            self.banker = banker
         }
-        
-        // Custom encoding to skip betBuilderPriceValue when nil
+
+        // Custom encoding to skip optional fields when nil
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(bettingOfferId, forKey: .bettingOfferId)
             try container.encode(priceValue, forKey: .priceValue)
-            try container.encode(eventId, forKey: .eventId)
-            try container.encode(marketId, forKey: .marketId)
-            try container.encode(bettingTypeId, forKey: .bettingTypeId)
-            try container.encode(outcomeId, forKey: .outcomeId)
-            // Only encode betBuilderPriceValue if it's not nil
+            try container.encodeIfPresent(outcomeId, forKey: .outcomeId)
+            try container.encodeIfPresent(bettingTypeId, forKey: .bettingTypeId)
+            try container.encode(marketIDs, forKey: .marketIDs)
             try container.encodeIfPresent(betBuilderPriceValue, forKey: .betBuilderPriceValue)
+            try container.encode(banker, forKey: .banker)
         }
-        
+
         enum CodingKeys: String, CodingKey {
             case bettingOfferId
             case priceValue
-            case eventId
-            case marketId
-            case bettingTypeId
             case outcomeId
+            case bettingTypeId
+            case marketIDs
             case betBuilderPriceValue
+            case banker
         }
     }
 

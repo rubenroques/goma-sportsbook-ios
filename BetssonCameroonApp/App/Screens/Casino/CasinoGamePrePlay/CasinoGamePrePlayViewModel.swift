@@ -200,7 +200,8 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
         let placeholderGameData = CasinoGamePlayModeSelectorGameData(
             id: gameId,
             name: localized("casino_loading"),
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: localized("casino_loading"),
             volatility: localized("casino_not_available"),
             minStake: localized("casino_not_available"),
@@ -227,11 +228,12 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     private func createDisplayState(from game: CasinoGame, isLoading: Bool) -> CasinoGamePlayModeSelectorDisplayState {
         // Convert CasinoGame to CasinoGamePlayModeSelectorGameData using ServiceProviderModelMapper
         let gameCardData = ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: game)
-        
+
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: gameCardData.id,
             name: gameCardData.name,
-            imageURL: gameCardData.imageURL,
+            thumbnailURL: ServiceProviderModelMapper.thumbnailURL(from: game),
+            backgroundURL: ServiceProviderModelMapper.backgroundURL(from: game),
             provider: gameCardData.provider,  // Now optional, passes through
             volatility: mapRatingToVolatility(gameCardData.rating),
             minStake: gameCardData.minStake,

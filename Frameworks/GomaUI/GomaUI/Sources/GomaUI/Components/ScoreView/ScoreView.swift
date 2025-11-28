@@ -227,7 +227,7 @@ extension ScoreView {
     private static func createEmptyLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "No scores"
+        label.text = LocalizationProvider.string("no_scores")
         label.font = StyleProvider.fontWith(type: .regular, size: 14)
         label.textAlignment = .center
         label.numberOfLines = 1

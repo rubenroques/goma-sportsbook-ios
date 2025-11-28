@@ -58,10 +58,12 @@ final class CasinoCacheStore {
 
     /// Cache keys for different data types
     private enum CacheKey {
-        static let categories = "casino_categories"
+        static func categories(lobbyType: String) -> String {
+            return "casino_categories_\(lobbyType)"
+        }
 
-        static func gameList(categoryId: String, offset: Int) -> String {
-            return "casino_games_\(categoryId)_offset_\(offset)"
+        static func gameList(categoryId: String, offset: Int, lobbyType: String) -> String {
+            return "casino_games_\(categoryId)_offset_\(offset)_\(lobbyType)"
         }
     }
 
@@ -96,17 +98,19 @@ final class CasinoCacheStore {
     // MARK: - Public Methods - Categories Cache
 
     /// Get cached casino categories
-    func getCachedCategories() -> CacheResult<[CasinoCategory]> {
+    func getCachedCategories(lobbyType: String) -> CacheResult<[CasinoCategory]> {
+        let cacheKey = CacheKey.categories(lobbyType: lobbyType)
+
         return queue.sync {
             // 1. Check memory cache first (fastest)
-            if let entry = memoryCache[CacheKey.categories] as? CacheEntry<[CasinoCategory]> {
+            if let entry = memoryCache[cacheKey] as? CacheEntry<[CasinoCategory]> {
                 return evaluateCacheEntry(entry)
             }
 
             // 2. Check disk cache
-            if let entry = loadCategoriesFromDisk() {
+            if let entry = loadCategoriesFromDisk(lobbyType: lobbyType) {
                 // Store in memory for next time
-                memoryCache[CacheKey.categories] = entry
+                memoryCache[cacheKey] = entry
                 return evaluateCacheEntry(entry)
             }
 
@@ -121,25 +125,27 @@ final class CasinoCacheStore {
     }
 
     /// Save casino categories to cache
-    func saveCachedCategories(_ categories: [CasinoCategory]) {
+    func saveCachedCategories(_ categories: [CasinoCategory], lobbyType: String) {
+        let cacheKey = CacheKey.categories(lobbyType: lobbyType)
+
         queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
 
             let entry = CacheEntry(data: categories, timestamp: Date(), version: self.currentCacheVersion)
 
             // Save to memory cache
-            self.memoryCache[CacheKey.categories] = entry
+            self.memoryCache[cacheKey] = entry
 
             // Save to disk cache
-            self.saveCategoriesToDisk(entry)
+            self.saveCategoriesToDisk(entry, lobbyType: lobbyType)
         }
     }
 
     // MARK: - Public Methods - Game List Cache
 
     /// Get cached game list for a specific category and offset
-    func getCachedGameList(categoryId: String, offset: Int) -> CacheResult<CasinoGamesResponse> {
-        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset)
+    func getCachedGameList(categoryId: String, offset: Int, lobbyType: String) -> CacheResult<CasinoGamesResponse> {
+        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset, lobbyType: lobbyType)
 
         return queue.sync {
             // 1. Check memory cache first (fastest)
@@ -148,7 +154,7 @@ final class CasinoCacheStore {
             }
 
             // 2. Check disk cache
-            if let entry = loadGameListFromDisk(categoryId: categoryId, offset: offset) {
+            if let entry = loadGameListFromDisk(categoryId: categoryId, offset: offset, lobbyType: lobbyType) {
                 // Store in memory for next time
                 memoryCache[cacheKey] = entry
                 return evaluateCacheEntry(entry)
@@ -166,14 +172,14 @@ final class CasinoCacheStore {
     }
 
     /// Save game list to cache for a specific category and offset
-    func saveCachedGameList(_ gamesResponse: CasinoGamesResponse, categoryId: String, offset: Int) {
+    func saveCachedGameList(_ gamesResponse: CasinoGamesResponse, categoryId: String, offset: Int, lobbyType: String) {
         // Only cache within the configured page limit
         let pageIndex = offset / 10  // Assuming 10 games per page
         guard pageIndex < configuration.maxCachedPagesPerCategory else {
             return  // Don't cache beyond limit
         }
 
-        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset)
+        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset, lobbyType: lobbyType)
 
         queue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
@@ -184,7 +190,7 @@ final class CasinoCacheStore {
             self.memoryCache[cacheKey] = entry
 
             // Save to disk cache
-            self.saveGameListToDisk(entry, categoryId: categoryId, offset: offset)
+            self.saveGameListToDisk(entry, categoryId: categoryId, offset: offset, lobbyType: lobbyType)
         }
     }
 
@@ -225,8 +231,9 @@ final class CasinoCacheStore {
 
     // MARK: - Private Methods - Disk Persistence (Categories)
 
-    private func loadCategoriesFromDisk() -> CacheEntry<[CasinoCategory]>? {
-        let fileURL = cacheDirectory.appendingPathComponent("\(CacheKey.categories).json")
+    private func loadCategoriesFromDisk(lobbyType: String) -> CacheEntry<[CasinoCategory]>? {
+        let cacheKey = CacheKey.categories(lobbyType: lobbyType)
+        let fileURL = cacheDirectory.appendingPathComponent("\(cacheKey).json")
 
         guard let data = try? Data(contentsOf: fileURL),
               let entry = try? JSONDecoder().decode(CacheEntry<[CasinoCategory]>.self, from: data) else {
@@ -236,8 +243,9 @@ final class CasinoCacheStore {
         return entry
     }
 
-    private func saveCategoriesToDisk(_ entry: CacheEntry<[CasinoCategory]>) {
-        let fileURL = cacheDirectory.appendingPathComponent("\(CacheKey.categories).json")
+    private func saveCategoriesToDisk(_ entry: CacheEntry<[CasinoCategory]>, lobbyType: String) {
+        let cacheKey = CacheKey.categories(lobbyType: lobbyType)
+        let fileURL = cacheDirectory.appendingPathComponent("\(cacheKey).json")
 
         guard let data = try? JSONEncoder().encode(entry) else {
             print("Failed to encode categories cache entry")
@@ -253,8 +261,8 @@ final class CasinoCacheStore {
 
     // MARK: - Private Methods - Disk Persistence (Game Lists)
 
-    private func loadGameListFromDisk(categoryId: String, offset: Int) -> CacheEntry<CasinoGamesResponse>? {
-        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset)
+    private func loadGameListFromDisk(categoryId: String, offset: Int, lobbyType: String) -> CacheEntry<CasinoGamesResponse>? {
+        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset, lobbyType: lobbyType)
         let fileURL = cacheDirectory.appendingPathComponent("\(cacheKey).json")
 
         guard let data = try? Data(contentsOf: fileURL),
@@ -265,8 +273,8 @@ final class CasinoCacheStore {
         return entry
     }
 
-    private func saveGameListToDisk(_ entry: CacheEntry<CasinoGamesResponse>, categoryId: String, offset: Int) {
-        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset)
+    private func saveGameListToDisk(_ entry: CacheEntry<CasinoGamesResponse>, categoryId: String, offset: Int, lobbyType: String) {
+        let cacheKey = CacheKey.gameList(categoryId: categoryId, offset: offset, lobbyType: lobbyType)
         let fileURL = cacheDirectory.appendingPathComponent("\(cacheKey).json")
 
         guard let data = try? JSONEncoder().encode(entry) else {

@@ -18,7 +18,7 @@ GomaLogger/
 │   ├── LogConfiguration.swift    # Runtime filtering configuration
 │   └── Destinations/
 │       ├── LogDestination.swift  # Protocol for custom destinations
-│       ├── ConsoleDestination.swift  # Xcode console output
+│       ├── ConsoleLogDestination.swift  # Xcode console output
 │       └── FileDestination.swift     # File logging with rotation
 └── Tests/GomaLoggerTests/
     └── GomaLoggerTests.swift     # Unit tests
@@ -119,7 +119,7 @@ public struct MyDestination: LogDestination {
 Not recommended - the three-level system (debug/info/error) is intentional. If you need more granularity, use categories instead.
 
 ### Modifying Console Output Format
-Edit `ConsoleDestination.swift` - the `log()` method builds the output string.
+Edit `ConsoleLogDestination.swift` - the `log()` method builds the output string.
 
 ### Changing Default Configuration
 Edit `LogConfiguration.swift` - the `init()` method sets defaults based on `#if DEBUG`.

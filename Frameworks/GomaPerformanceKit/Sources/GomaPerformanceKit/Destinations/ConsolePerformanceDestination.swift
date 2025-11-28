@@ -1,5 +1,5 @@
 //
-//  ConsoleDestination.swift
+//  ConsolePerformanceDestination.swift
 //  GomaPerformanceKit
 //
 //  Logs performance entries to the debug console
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Logs performance entries to the debug console (print)
-public class ConsoleDestination: PerformanceDestination {
+public class ConsolePerformanceDestination: PerformanceDestination {
 
     // MARK: - Log Level
 

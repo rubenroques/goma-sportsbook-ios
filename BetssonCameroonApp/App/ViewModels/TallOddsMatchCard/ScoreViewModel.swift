@@ -2,6 +2,7 @@ import UIKit
 import Combine
 import GomaUI
 import ServicesProvider
+import GomaLogger
 
 /// Production implementation of ScoreViewModelProtocol for live match scores
 /// Handles transformation of raw match score data into displayable score cells
@@ -120,16 +121,16 @@ final class ScoreViewModel: ScoreViewModelProtocol {
         let isTypeCsport = ["3", "20", "64", "63", "14"].contains(sportId)
 
         // Debug: Log Type C detection details
-        print("[SPORT_DEBUG] 🔄 Score Transformation")
-        print("[SPORT_DEBUG]    sportId used: '\(sportId)'")
-        print("[SPORT_DEBUG]    isTypeCsport: \(isTypeCsport)")
-        print("[SPORT_DEBUG]    Expected Type C IDs: [3=Tennis, 20=Volleyball, 14=Badminton, 63=TableTennis, 64=BeachVolley]")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "Score Transformation")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   sportId used: '\(sportId)'")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   isTypeCsport: \(isTypeCsport)")
+        GomaLogger.debug(.realtime, category: "SPORT_DEBUG", "   Expected Type C IDs: [3=Tennis, 20=Volleyball, 14=Badminton, 63=TableTennis, 64=BeachVolley]")
 
         var scoreCells: [ScoreDisplayData] = []
 
         // Process detailed scores if available
         if let detailedScores = detailedScores, !detailedScores.isEmpty {
-            print("[LIVE_SCORE] 🔄 Transforming \(detailedScores.count) detailed scores for sport ID: \(sportId) (Type C: \(isTypeCsport))")
+            GomaLogger.debug(.realtime, category: "LIVE_SCORE", "Transforming \(detailedScores.count) detailed scores for sport ID: \(sportId) (Type C: \(isTypeCsport))")
 
             // Sort scores by sortValue to ensure correct ordering
             let sortedScores = detailedScores.sorted(by: { $0.value.sortValue < $1.value.sortValue })
@@ -167,7 +168,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                 // Process game parts FIRST (with serving indicator and separator)
                 for (scoreName, score) in gameParts {
                     if case .gamePart(_, let home, let away) = score {
-                        print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") [FIRST]")
+                        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") [FIRST]")
                         let scoreCell = ScoreDisplayData(
                             id: "game-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
@@ -187,7 +188,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                         let isCurrentSet = (index == lastSetIndex)
                         let highlighting: ScoreDisplayData.HighlightingMode = isCurrentSet ? .bothHighlight : .winnerLoser
 
-                        print("[LIVE_SCORE]    - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
+                        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
                         let scoreCell = ScoreDisplayData(
                             id: "set-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
@@ -204,7 +205,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
 
                 // Skip matchFull for Type C sports (Tennis doesn't show total score)
                 if !matchFulls.isEmpty {
-                    print("[LIVE_SCORE]    - MatchFull entries SKIPPED for Type C sport")
+                    GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - MatchFull entries SKIPPED for Type C sport")
                 }
             } else {
                 // Non-Type C sports: Use original ordering logic
@@ -226,7 +227,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                     switch score {
                     case .gamePart(_, let home, let away):
                         // Current game points - always highlighted
-                        print("[LIVE_SCORE]    - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
+                        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - GamePart '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                         scoreCell = ScoreDisplayData(
                             id: "game-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
@@ -244,7 +245,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                         let isCurrentSet = (index == lastSetIndex)
                         let highlighting: ScoreDisplayData.HighlightingMode = isCurrentSet ? .bothHighlight : .winnerLoser
 
-                        print("[LIVE_SCORE]    - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
+                        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - Set \(index) '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-") (current: \(isCurrentSet))")
                         scoreCell = ScoreDisplayData(
                             id: "set-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
@@ -259,7 +260,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
                         isFirstCell = false
 
                     case .matchFull(let home, let away):
-                        print("[LIVE_SCORE]    - MatchFull '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
+                        GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   - MatchFull '\(scoreName)': \(home?.description ?? "-") - \(away?.description ?? "-")")
                         scoreCell = ScoreDisplayData(
                             id: "match-\(scoreName)",
                             homeScore: home != nil ? "\(home!)" : "-",
@@ -279,7 +280,7 @@ final class ScoreViewModel: ScoreViewModelProtocol {
         // Fallback to main score if no detailed scores
         if scoreCells.isEmpty {
             if let homeScore = homeScore, let awayScore = awayScore {
-                print("[LIVE_SCORE]    Adding main score (no detailed scores): \(homeScore) - \(awayScore)")
+                GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Adding main score (no detailed scores): \(homeScore) - \(awayScore)")
                 let mainScoreCell = ScoreDisplayData(
                     id: "match",
                     homeScore: "\(homeScore)",
@@ -292,9 +293,9 @@ final class ScoreViewModel: ScoreViewModelProtocol {
         }
 
         if scoreCells.isEmpty {
-            print("[LIVE_SCORE]    ⚠️ No score cells created")
+            GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   No score cells created")
         } else {
-            print("[LIVE_SCORE]    ✅ Created \(scoreCells.count) score cells")
+            GomaLogger.debug(.realtime, category: "LIVE_SCORE", "   Created \(scoreCells.count) score cells")
         }
 
         return scoreCells

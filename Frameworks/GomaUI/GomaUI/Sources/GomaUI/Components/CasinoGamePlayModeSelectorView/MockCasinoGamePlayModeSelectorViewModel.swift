@@ -102,7 +102,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "surging-7s",
             name: "Surging 7s",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "Pragmatic Play",
             volatility: "Medium",
             minStake: "XAF 1",
@@ -137,7 +138,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "mega-fortune",
             name: "Mega Fortune",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "NetEnt",
             volatility: "High",
             minStake: "XAF 5",
@@ -172,7 +174,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "book-of-dead",
             name: "Book of Dead",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "Play'n GO",
             volatility: "High",
             minStake: "XAF 10",
@@ -207,7 +210,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "starburst",
             name: "Starburst",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "NetEnt",
             volatility: "Low",
             minStake: "XAF 1",
@@ -243,7 +247,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "maintenance-game",
             name: "Under Maintenance",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "Provider",
             volatility: "N/A",
             minStake: "N/A",
@@ -271,7 +276,8 @@ extension MockCasinoGamePlayModeSelectorViewModel {
         let gameData = CasinoGamePlayModeSelectorGameData(
             id: "surging-7s",
             name: "Surging 7s",
-            imageURL: nil,
+            thumbnailURL: nil,
+            backgroundURL: nil,
             provider: "Pragmatic Play",
             volatility: "Medium",
             minStake: "XAF 1",

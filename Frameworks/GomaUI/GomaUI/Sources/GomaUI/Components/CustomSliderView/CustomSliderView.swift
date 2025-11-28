@@ -84,7 +84,7 @@ final public class CustomSliderView: UIView {
     private func setupAccessibility() {
         isAccessibilityElement = true
         accessibilityTraits = .adjustable
-        accessibilityLabel = "Custom slider"
+        accessibilityLabel = LocalizationProvider.string("custom_slider")
         accessibilityIdentifier = "customSlider.slider"
     }
 

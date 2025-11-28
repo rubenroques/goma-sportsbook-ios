@@ -46,7 +46,7 @@ class MatchDetailsTextualViewController: UIViewController {
     private lazy var pageLoadingLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading markets..."
+        label.text = localized("loading_markets")
         label.textColor = UIColor.App.textSecondary
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .center
@@ -515,9 +515,9 @@ class MatchDetailsTextualViewController: UIViewController {
     }
     
     private func showError(_ message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: localized("error"), message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
             self?.viewModel.refresh()
         })
         present(alert, animated: true)

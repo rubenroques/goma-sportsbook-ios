@@ -1,6 +1,7 @@
 import Foundation
 import GomaPerformanceKit
 import Combine
+import GomaLogger
 
 class EveryMatrixSocketConnector: Connector {
     
@@ -33,9 +34,9 @@ class EveryMatrixSocketConnector: Connector {
             .sink { [weak self] wampConnectionState in
                 switch wampConnectionState {
                 case .connected:
-                    print("EveryMatrixConnector init wamp connected")
+                    GomaLogger.info(.realtime, category: "EM_WAMP", "EveryMatrixConnector WAMP connected")
                 case .disconnected:
-                    print("EveryMatrixConnector init wamp disconnected")
+                    GomaLogger.info(.realtime, category: "EM_WAMP", "EveryMatrixConnector WAMP disconnected")
                     self?.forceReconnect()
                 }
             }
@@ -103,7 +104,7 @@ class EveryMatrixSocketConnector: Connector {
         return self.serialQueue.sync {
             self.wampManager.getModel(router: router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
-                    print("REQUEST ERROR: \(router.procedure)")
+                    GomaLogger.error(.realtime, category: "EM_WAMP", "Request error: \(router.procedure)")
                     switch error {
                     case .notConnected:
                         return .onConnection
@@ -150,10 +151,10 @@ class EveryMatrixSocketConnector: Connector {
 
     func subscribe<T: Codable>(_ router: WAMPRouter) -> AnyPublisher<WAMPSubscriptionContent<T>, ServiceProviderError> {
         return self.serialQueue.sync {
-            print("EveryMatrixConnector: Starting subscription to \(router.procedure)")
+            GomaLogger.debug(.realtime, category: "EM_WAMP", "Starting subscription to \(router.procedure)")
             return self.wampManager.registerOnEndpoint(router, decodingType: T.self)
                 .mapError { error -> ServiceProviderError in
-                    print("EveryMatrixConnector: Subscription error: \(error)")
+                    GomaLogger.error(.realtime, category: "EM_WAMP", "Subscription error: \(error)")
                     switch error {
                     case .notConnected:
                         return .onConnection
@@ -171,14 +172,13 @@ class EveryMatrixSocketConnector: Connector {
                     receiveOutput: { content in
                         switch content {
                         case .connect(_):
-                            print("EveryMatrixConnector: Subscription connected")
+                            GomaLogger.debug(.realtime, category: "EM_WAMP", "Subscription connected")
                         case .initialContent(_):
-                            print("EveryMatrixConnector: Received initial content")
+                            GomaLogger.debug(.realtime, category: "EM_WAMP", "Received initial content")
                         case .updatedContent(_):
                             break
-                            // print("EveryMatrixConnector: Received content update")
                         case .disconnect:
-                            print("EveryMatrixConnector: Subscription disconnected")
+                            GomaLogger.debug(.realtime, category: "EM_WAMP", "Subscription disconnected")
                         }
                     }
                 )

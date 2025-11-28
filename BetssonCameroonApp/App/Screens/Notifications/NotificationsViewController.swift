@@ -20,7 +20,7 @@ final class NotificationsViewController: UIViewController {
 
     private lazy var navigationBarView: SimpleNavigationBarView = {
         let viewModel = BetssonCameroonNavigationBarViewModel(
-            title: "Notifications",
+            title: localized("notifications"),
             onBackTapped: { [weak self] in
                 self?.viewModel.didTapClose()
             }
@@ -171,14 +171,14 @@ final class NotificationsViewController: UIViewController {
     private func handleNotificationAction(notification: NotificationData, action: NotificationAction) {
         // Show alert for demonstration (in production, this would navigate to specific screens)
         let alert = UIAlertController(
-            title: "Notification Action",
+            title: localized("notification_action"),
             message: "Tapped '\(action.title)' for notification '\(notification.title)'",
             preferredStyle: .alert
         )
-        
-        let okAction = UIAlertAction(title: "OK", style: .default)
+
+        let okAction = UIAlertAction(title: localized("ok"), style: .default)
         alert.addAction(okAction)
-        
+
         present(alert, animated: true)
     }
     
@@ -206,7 +206,7 @@ extension NotificationsViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Loading notifications..."
+        label.text = localized("loading_notifications")
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textSecondary
@@ -233,15 +233,15 @@ extension NotificationsViewController {
         
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Failed to load notifications"
+        label.text = localized("failed_to_load_notifications")
         label.textAlignment = .center
         label.font = StyleProvider.fontWith(type: .medium, size: 16)
         label.textColor = StyleProvider.Color.textPrimary
         label.numberOfLines = 0
-        
+
         let retryButton = UIButton(type: .system)
         retryButton.translatesAutoresizingMaskIntoConstraints = false
-        retryButton.setTitle("Try Again", for: .normal)
+        retryButton.setTitle(localized("try_again"), for: .normal)
         retryButton.setTitleColor(StyleProvider.Color.highlightPrimary, for: .normal)
         retryButton.titleLabel?.font = StyleProvider.fontWith(type: .semibold, size: 16)
         retryButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary

@@ -80,7 +80,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                         id: game.id,
                         title: game.name,
                         provider: game.provider != nil ? game.provider : game.subProvider,
-                        imageURL: game.imageURL
+                        iconURL: game.iconURL
                     )
                     let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)
                     viewModel.onSelected
@@ -98,59 +98,17 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
     private func getMostPlayedGames() {
         let playerId = Env.userSessionStore.userProfilePublisher.value?.userIdentifier ?? ""
         guard !playerId.isEmpty else { return }
-        
+
         guard config.sections.mostPlayed.enabled else { return }
-        // TODO: Enable correct endpoint later when it's functional
-//        servicesProvider.getMostPlayedGames(playerId: playerId)
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                if case .failure(let error) = completion {
-//                    print("MOST PLAYED FAILED: \(error)")
-//                }
-//            } receiveValue: { [weak self] response in
-//                guard let self = self else { return }
-//                // Map to CasinoGameSearchedViewModelProtocol
-//                let gameCardsData = response.games.map {
-//                    ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
-//                }
-//                let viewModels: [CasinoGameSearchedViewModelProtocol] = gameCardsData.map { game in
-//                    let data = CasinoGameSearchedData(
-//                        id: game.id,
-//                        title: game.name,
-//                        provider: game.provider != nil ? game.provider : game.subProvider,
-//                        imageURL: game.imageURL
-//                    )
-//                    let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)
-//                    viewModel.onSelected
-//                        .sink { [weak self] gameId in
-//                            self?.gameSelectedSubject.send(gameId)
-//                        }
-//                        .store(in: &self.cancellables)
-//                    return viewModel
-//                }
-//                self.mostPlayedGameViewModelsSubject.send(viewModels)
-//            }
-//            .store(in: &cancellables)
-        servicesProvider.getRecommendedGames()
+        servicesProvider.getMostPlayedGames(playerId: playerId)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case .failure(let error) = completion {
-                    print("RECOMMENDED GAMES FAILED: \(error)")
-                    let message: String
-                    switch error {
-                    case .errorMessage(let msg):
-                        message = msg
-                    default:
-                        message = localized("casino_suggested_games_error")
-                    }
-                    self.recommendedGamesErrorSubject.send(message)
-                    self.isLoadingSubject.send(false)
+                    print("MOST PLAYED FAILED: \(error)")
                 }
             } receiveValue: { [weak self] response in
                 guard let self = self else { return }
-                self.recommendedGamesErrorSubject.send(nil)
-                self.isLoadingSubject.send(false)
-                
+                // Map to CasinoGameSearchedViewModelProtocol
                 let gameCardsData = response.games.map {
                     ServiceProviderModelMapper.casinoGameCardData(fromCasinoGame: $0)
                 }
@@ -159,7 +117,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                         id: game.id,
                         title: game.name,
                         provider: game.provider != nil ? game.provider : game.subProvider,
-                        imageURL: game.imageURL
+                        iconURL: game.iconURL
                     )
                     let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)
                     viewModel.onSelected
@@ -258,7 +216,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
                         id: game.id,
                         title: game.name,
                         provider: game.provider != nil ? game.provider : game.subProvider,
-                        imageURL: game.imageURL
+                        iconURL: game.iconURL
                     )
                     
                     let viewModel = MockCasinoGameSearchedViewModel(data: data, state: .normal)

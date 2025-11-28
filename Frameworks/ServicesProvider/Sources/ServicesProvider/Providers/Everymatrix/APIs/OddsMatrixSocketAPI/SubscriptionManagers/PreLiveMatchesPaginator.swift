@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 import GomaPerformanceKit
-
+import GomaLogger
 
 struct SimpleSubscription: EndpointPublisherIdentifiable {
     var identificationCode: Int
@@ -343,7 +343,12 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
     func outcomeExists(id: String) -> Bool {
         return store.get(EveryMatrix.OutcomeDTO.self, id: id) != nil
     }
-    
+
+    /// Check if a betting offer with the given ID exists in this paginator's store
+    func bettingOfferExists(id: String) -> Bool {
+        return store.get(EveryMatrix.BettingOfferDTO.self, id: id) != nil
+    }
+
     /// Subscribe to outcome updates for a specific outcome ID
     func subscribeToOutcomeUpdates(withId id: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
         let realPublisher = store.observeOutcome(id: id)
@@ -384,7 +389,43 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
         return realPublisher.eraseToAnyPublisher()
     }
 
-    
+    /// Subscribe to betting offer updates and return the parent Outcome with updated odds
+    /// This fixes the entity mismatch where BETTING_OFFER updates don't notify OUTCOME observers
+    func subscribeToBettingOfferAsOutcomeUpdates(bettingOfferId: String) -> AnyPublisher<Outcome?, ServiceProviderError> {
+        GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+            "PreLiveMatchesPaginator.subscribeToBettingOfferAsOutcomeUpdates - SUBSCRIBING to BETTING_OFFER:\(bettingOfferId)")
+
+        return store.observeBettingOffer(id: bettingOfferId)
+            .handleEvents(receiveOutput: { bettingOfferDTO in
+                if bettingOfferDTO != nil {
+                    GomaLogger.info(.realtime, category: "ODDS_FLOW",
+                        "PreLiveMatchesPaginator - RECEIVED BettingOfferDTO update for BETTING_OFFER:\(bettingOfferId)")
+                }
+            })
+            .compactMap { [weak self] bettingOfferDTO -> Outcome? in
+                guard let self = self,
+                      let bettingOfferDTO = bettingOfferDTO else { return nil }
+
+                // Look up parent OutcomeDTO using the foreign key
+                let outcomeId = bettingOfferDTO.outcomeId
+                guard let outcomeDTO = self.store.get(EveryMatrix.OutcomeDTO.self, id: outcomeId) else {
+                    GomaLogger.error(.realtime, category: "ODDS_FLOW",
+                        "PreLiveMatchesPaginator - Parent OUTCOME:\(outcomeId) not found for BETTING_OFFER:\(bettingOfferId)")
+                    return nil
+                }
+
+                // Build hierarchical Outcome with updated BettingOffers
+                guard let internalOutcome = EveryMatrix.OutcomeBuilder.build(from: outcomeDTO, store: self.store) else {
+                    return nil
+                }
+
+                // Map to domain Outcome
+                return EveryMatrixModelMapper.outcome(fromInternalOutcome: internalOutcome)
+            }
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Private Methods
 
     private func handleSubscriptionContent(_ content: WAMPSubscriptionContent<EveryMatrix.AggregatorResponse>) throws -> SubscribableContent<[EventsGroup]>? {

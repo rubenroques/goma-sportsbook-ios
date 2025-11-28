@@ -14,19 +14,21 @@ import IQKeyboardManagerSwift
 import PhraseSDK
 import FirebaseCore
 import GomaPerformanceKit
+import GomaLogger
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var bootstrap: Bootstrap!
+    private var allowsLandscape = false
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // Configure performance tracking
         #if DEBUG
-        let consoleDestination = ConsoleDestination()
-        consoleDestination.logLevel = .verbose
+        let consoleDestination = ConsolePerformanceDestination()
+        consoleDestination.logLevel = ConsolePerformanceDestination.LogLevel.verbose
         PerformanceTracker.shared.addDestination(consoleDestination)
         #endif
 
@@ -163,6 +165,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             layer: .app,
             metadata: ["phase": "app_delegate_boot", "status": "complete"]
         )
+        
+        // GomaLogger options
+        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG", "ODDS_FLOW")
+
+        // Orientation notification observers
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleLandscapeRequest),
+            name: .landscapeOrientationRequested,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handlePortraitRequest),
+            name: .portraitOrientationRequested,
+            object: nil
+        )
 
         return true
     }
@@ -180,6 +199,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         Env.servicesProvider.reconnectIfNeeded()
+    }
+
+    // MARK: - Orientation Support
+
+    @objc private func handleLandscapeRequest() {
+        allowsLandscape = true
+    }
+
+    @objc private func handlePortraitRequest() {
+        allowsLandscape = false
+    }
+
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return allowsLandscape ? .allButUpsideDown : .portrait
     }
 
     // Universal Links

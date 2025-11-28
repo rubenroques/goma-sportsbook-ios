@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import GomaPerformanceKit
+import GomaLogger
 
 /// Base connector for all EveryMatrix API clients
 /// Provides transparent token refresh on 401/403 errors
@@ -57,7 +58,7 @@ class EveryMatrixRESTConnector: Connector {
     /// - Parameter endpoint: The endpoint to request
     /// - Returns: Publisher emitting decoded response or error
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-        print("[EveryMatrix-REST api] Preparing request for endpoint: \(endpoint.endpoint)")
+        GomaLogger.debug(.networking, category: "EM_REST", "Preparing request for endpoint: \(endpoint.endpoint)")
 
         // Get performance feature from endpoint (nil if not tracked)
         let feature = endpoint.performanceFeature
@@ -102,7 +103,7 @@ class EveryMatrixRESTConnector: Connector {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
                     
-                    print("[EveryMatrix-REST api] Using session token for authenticated request")
+                    GomaLogger.debug(.networking, category: "EM_REST", "Using session token for authenticated request")
                     
                     // Add authentication headers
                     var authenticatedRequest = request
@@ -116,7 +117,7 @@ class EveryMatrixRESTConnector: Connector {
                         throw ServiceProviderError.unknown
                     }
                     
-                    print("[EveryMatrix-REST api] Error encountered: \(error)")
+                    GomaLogger.error(.networking, category: "EM_REST", "Error encountered: \(error)")
                     
                     // Check if error is auth-related (401 or 403)
                     guard let serviceError = error as? ServiceProviderError,
@@ -125,12 +126,12 @@ class EveryMatrixRESTConnector: Connector {
                         throw error
                     }
                     
-                    print("[EveryMatrix-REST api] Auth error detected, attempting token refresh...")
+                    GomaLogger.info(.networking, category: "EM_REST", "Auth error detected, attempting token refresh...")
                     
                     // Force token refresh and retry
                     return self.sessionCoordinator.publisherWithValidToken(forceRefresh: true)
                         .flatMap { session -> AnyPublisher<Data, Error> in
-                            print("[EveryMatrix-REST api] Token refreshed, retrying request")
+                            GomaLogger.info(.networking, category: "EM_REST", "Token refreshed, retrying request")
                             
                             // Add new authentication headers
                             var retriedRequest = request
@@ -146,7 +147,7 @@ class EveryMatrixRESTConnector: Connector {
                         throw ServiceProviderError.unknown
                     }
 
-                    print("[EveryMatrix-REST api] Decoding response data...")
+                    GomaLogger.debug(.networking, category: "EM_REST", "Decoding response data...")
 
                     // Start parsing tracking
                     if let feature = feature {
@@ -171,8 +172,8 @@ class EveryMatrixRESTConnector: Connector {
 
                         return result
                     } catch let decodingError {
-                        print("[EveryMatrix-REST api] Decoding error: \(decodingError)")
-                        print("[EveryMatrix-REST api] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+                        GomaLogger.error(.networking, category: "EM_REST", "Decoding error: \(decodingError)")
+                        GomaLogger.debug(.networking, category: "EM_REST", "Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
 
                         // End parsing tracking - error
                         if let feature = feature {
@@ -225,7 +226,7 @@ class EveryMatrixRESTConnector: Connector {
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct request
-            print("[EveryMatrix-REST api] Making unauthenticated request")
+            GomaLogger.debug(.networking, category: "EM_REST", "Making unauthenticated request")
 
             return performRequest(request)
                 .tryMap { [weak self] data in
@@ -286,7 +287,7 @@ class EveryMatrixRESTConnector: Connector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             request.setValue(session.sessionId, forHTTPHeaderField: sessionIdKey)
-            print("[EveryMatrix-REST api] Added session token with key: \(sessionIdKey)")
+            GomaLogger.debug(.networking, category: "EM_REST", "Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             request.setValue(session.sessionId, forHTTPHeaderField: "X-SessionId")
@@ -295,28 +296,26 @@ class EveryMatrixRESTConnector: Connector {
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             request.setValue(session.userId, forHTTPHeaderField: userIdKey)
-            print("[EveryMatrix-REST api] Added user ID with key: \(userIdKey)")
+            GomaLogger.debug(.networking, category: "EM_REST", "Added user ID with key: \(userIdKey)")
         }
 
     }
 
     /// Perform HTTP request and handle response
     private func performRequest(_ request: URLRequest) -> AnyPublisher<Data, Error> {
-        print("[EveryMatrix-REST api] Performing request: \(request.url?.absoluteString ?? "unknown")")
+        GomaLogger.debug(.networking, category: "EM_REST", "Performing request: \(request.url?.absoluteString ?? "unknown")")
 
         // Log request body for debugging
         if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
-            print("[EveryMatrix-REST api] 📤 Request body: \(bodyString)")
+            GomaLogger.debug(.networking, category: "EM_REST", "Request body: \(bodyString)")
         }
 
         // Log headers for debugging
         if let headers = request.allHTTPHeaderFields {
-            print("[EveryMatrix-REST api] 📋 Request headers: \(headers)")
+            GomaLogger.debug(.networking, category: "EM_REST", "Request headers: \(headers)")
         }
 
-        print("\n============ \n [EveryMatrix-REST api] cURL Command:")
-        print(request.cURL(pretty: true))
-        print("============\n")
+        GomaLogger.debug(.networking, category: "EM_REST", "cURL Command:\n\(request.cURL(pretty: true))")
         
         return session.dataTaskPublisher(for: request)
             .tryMap { [weak self] result in
@@ -342,24 +341,24 @@ class EveryMatrixRESTConnector: Connector {
                     }
                     throw ServiceProviderError.badRequest
                 case 401:
-                    print("[EveryMatrix-REST api] Received 401 Unauthorized")
+                    GomaLogger.error(.networking, category: "EM_REST", "Received 401 Unauthorized")
                     throw ServiceProviderError.unauthorized
 
                 case 403:
                     // EveryMatrix often returns 403 for expired sessions
-                    print("[EveryMatrix-REST api] Received 403 Forbidden (likely expired session)")
+                    GomaLogger.error(.networking, category: "EM_REST", "Received 403 Forbidden (likely expired session)")
                     throw ServiceProviderError.forbidden
 
                 case 404:
-                    print("[EveryMatrix-REST api] ❌ 404 Not Found")
+                    GomaLogger.error(.networking, category: "EM_REST", "404 Not Found")
                     throw ServiceProviderError.notFound
 
                 case 409:
                     // 409 Conflict - usually duplicate bet or validation error
-                    print("[EveryMatrix-REST api] ⚠️ 409 Conflict - Possible duplicate bet or validation error")
+                    GomaLogger.error(.networking, category: "EM_REST", "409 Conflict - Possible duplicate bet or validation error")
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
                         let errorMessage = apiError.thirdPartyResponse?.message ?? apiError.error ?? "Conflict Error"
-                        print("[EveryMatrix-REST api] 409 Error message: \(errorMessage)")
+                        GomaLogger.error(.networking, category: "EM_REST", "409 Error message: \(errorMessage)")
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
@@ -376,13 +375,13 @@ class EveryMatrixRESTConnector: Connector {
                 case 500...599:
                     // Try to decode error message
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
-                        let errorMessage = apiError.thirdPartyResponse?.message ?? "Server Error"
+                        let errorMessage = apiError.thirdPartyResponse?.errorCode ?? "Server Error"
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.internalServerError
 
                 default:
-                    print("[EveryMatrix-REST api] ❌ Unexpected status code: \(httpResponse.statusCode)")
+                    GomaLogger.error(.networking, category: "EM_REST", "Unexpected status code: \(httpResponse.statusCode)")
                     throw ServiceProviderError.unknown
                 }
             }
@@ -397,4 +396,3 @@ class EveryMatrixRESTConnector: Connector {
             .eraseToAnyPublisher()
     }
 }
-

@@ -6,9 +6,10 @@ import GomaLogger
 
 /// Production implementation of OutcomeItemViewModel that connects to real-time outcome updates
 final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
-    
+
     // MARK: - Dependencies
     private let outcomeId: String
+    private let bettingOfferId: String?
     private let servicesProvider = Env.servicesProvider
     
     // MARK: - Subjects
@@ -56,13 +57,14 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     ) {
         self.outcomeDataSubject = .init(initialOutcomeData)
         self.outcomeId = outcomeId
+        self.bettingOfferId = initialOutcomeData.bettingOfferId
         self.titleSubject = CurrentValueSubject(initialOutcomeData.title)
         self.valueSubject = CurrentValueSubject(initialOutcomeData.value)
         self.isSelectedSubject = CurrentValueSubject(initialOutcomeData.isSelected)
         self.isDisabledSubject = CurrentValueSubject(initialOutcomeData.isDisabled)
         self.oddsChangeEventSubject = PassthroughSubject()
         self.displayStateSubject = CurrentValueSubject(initialOutcomeData.displayState)
-        
+
         setupOutcomeSubscription()
     }
     
@@ -156,22 +158,51 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     
     // MARK: - Private Methods
     private func setupOutcomeSubscription() {
-        GomaLogger.debug(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel.setupOutcomeSubscription - SUBSCRIBING to outcome updates for OUTCOME:\(outcomeId)")
-        servicesProvider.subscribeToEventOnListsOutcomeUpdates(withId: outcomeId)
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        GomaLogger.error(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel - SUBSCRIPTION FAILED for OUTCOME:\(self?.outcomeId ?? "unknown"): \(error)")
-                        // Handle reconnection logic here if needed
+        // Prefer BettingOffer subscription if we have the ID (for real-time odds updates)
+        if let bettingOfferId = bettingOfferId {
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+                "OutcomeItemViewModel - SUBSCRIBING to BETTING_OFFER:\(bettingOfferId) for OUTCOME:\(outcomeId)")
+
+            servicesProvider.subscribeToEventOnListsBettingOfferAsOutcomeUpdates(bettingOfferId: bettingOfferId)
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            GomaLogger.error(.realtime, category: "ODDS_FLOW",
+                                "OutcomeItemViewModel - BETTING_OFFER subscription FAILED for BETTING_OFFER:\(bettingOfferId): \(error)")
+                        }
+                    },
+                    receiveValue: { [weak self] serviceProviderOutcome in
+                        if serviceProviderOutcome != nil {
+                            GomaLogger.info(.realtime, category: "ODDS_FLOW",
+                                "OutcomeItemViewModel - RECEIVED BettingOffer update for BETTING_OFFER:\(bettingOfferId)")
+                        }
+                        self?.processOutcomeUpdate(serviceProviderOutcome)
                     }
-                },
-                receiveValue: { [weak self] serviceProviderOutcome in
-                    GomaLogger.info(.realtime, category: "ODDS_FLOW", "OutcomeItemViewModel - RECEIVED outcome update for OUTCOME:\(self?.outcomeId ?? "unknown")")
-                    self?.processOutcomeUpdate(serviceProviderOutcome)
-                }
-            )
-            .store(in: &cancellables)
+                )
+                .store(in: &cancellables)
+        } else {
+            // Fallback to outcome subscription if no bettingOfferId available
+            GomaLogger.debug(.realtime, category: "ODDS_FLOW",
+                "OutcomeItemViewModel - No bettingOfferId, falling back to OUTCOME subscription for OUTCOME:\(outcomeId)")
+
+            servicesProvider.subscribeToEventOnListsOutcomeUpdates(withId: outcomeId)
+                .receive(on: DispatchQueue.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            GomaLogger.error(.realtime, category: "ODDS_FLOW",
+                                "OutcomeItemViewModel - OUTCOME subscription FAILED for OUTCOME:\(self?.outcomeId ?? "unknown"): \(error)")
+                        }
+                    },
+                    receiveValue: { [weak self] serviceProviderOutcome in
+                        GomaLogger.info(.realtime, category: "ODDS_FLOW",
+                            "OutcomeItemViewModel - RECEIVED outcome update for OUTCOME:\(self?.outcomeId ?? "unknown")")
+                        self?.processOutcomeUpdate(serviceProviderOutcome)
+                    }
+                )
+                .store(in: &cancellables)
+        }
     }
     
     private func processOutcomeUpdate(_ serviceProviderOutcome: ServicesProvider.Outcome?) {

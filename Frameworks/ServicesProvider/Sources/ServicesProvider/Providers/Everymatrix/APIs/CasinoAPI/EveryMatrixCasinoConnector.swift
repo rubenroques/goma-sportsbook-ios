@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import GomaPerformanceKit
+import GomaLogger
 
 class EveryMatrixCasinoConnector {
     
@@ -53,7 +54,7 @@ class EveryMatrixCasinoConnector {
     /// - Parameter endpoint: The endpoint to request
     /// - Returns: Publisher emitting decoded response or error
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-        print("[EveryMatrix-Casino] Preparing request for endpoint: \(endpoint.endpoint)")
+        GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Preparing request for endpoint: \(endpoint.endpoint)")
 
         // Get performance feature from endpoint (nil if not tracked)
         let feature = endpoint.performanceFeature
@@ -98,7 +99,7 @@ class EveryMatrixCasinoConnector {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
                     
-                    print("[EveryMatrix-Casino REST api] Using session token for authenticated request")
+                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Using session token for authenticated request")
                     
                     // Add authentication headers
                     var authenticatedRequest = request
@@ -112,7 +113,7 @@ class EveryMatrixCasinoConnector {
                         throw ServiceProviderError.unknown
                     }
                     
-                    print("[EveryMatrix-Casino REST api] Error encountered: \(error)")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "Error encountered: \(error)")
                     
                     // Check if error is auth-related (401 or 403)
                     guard let serviceError = error as? ServiceProviderError,
@@ -121,12 +122,12 @@ class EveryMatrixCasinoConnector {
                         throw error
                     }
                     
-                    print("[EveryMatrix-Casino REST api] Auth error detected, attempting token refresh...")
+                    GomaLogger.info(.networking, category: "EM_REST_CASINO", "Auth error detected, attempting token refresh...")
                     
                     // Force token refresh and retry
                     return self.sessionCoordinator.publisherWithValidToken(forceRefresh: true)
                         .flatMap { session -> AnyPublisher<Data, Error> in
-                            print("[EveryMatrix-Casino REST api] Token refreshed, retrying request")
+                            GomaLogger.info(.networking, category: "EM_REST_CASINO", "Token refreshed, retrying request")
                             
                             // Add new authentication headers
                             var retriedRequest = request
@@ -142,17 +143,17 @@ class EveryMatrixCasinoConnector {
                         throw ServiceProviderError.unknown
                     }
 
-                    print("[EveryMatrix-Casino REST api] Checking for error response...")
+                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Checking for error response...")
 
                     // Pre-parse check for Casino API error codes (e.g., 4004 InvalidXSessionId)
                     // Casino API returns HTTP 200 with error details in body instead of 401/403
                     if let errorCheck = try? self.decoder.decode(EveryMatrix.CasinoAPIErrorCheck.self, from: data),
                        errorCheck.success == false {
-                        print("[EveryMatrix-Casino REST api] Detected API error: code=\(errorCheck.errorCode ?? 0), message=\(errorCheck.errorMessage ?? "unknown")")
+                        GomaLogger.error(.networking, category: "EM_REST_CASINO", "Detected API error: code=\(errorCheck.errorCode ?? 0), message=\(errorCheck.errorMessage ?? "unknown")")
 
                         // Check for InvalidXSessionId error (4004)
                         if errorCheck.errorCode == 4004 {
-                            print("[EveryMatrix-Casino REST api] Error 4004 (InvalidXSessionId) detected - will trigger token refresh")
+                            GomaLogger.error(.networking, category: "EM_REST_CASINO", "Error 4004 (InvalidXSessionId) detected - will trigger token refresh")
                             throw ServiceProviderError.unauthorized
                         }
 
@@ -161,7 +162,7 @@ class EveryMatrixCasinoConnector {
                         throw ServiceProviderError.errorMessage(message: errorMsg)
                     }
 
-                    print("[EveryMatrix-Casino REST api] Decoding response data...")
+                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Decoding response data...")
 
                     // Start parsing tracking
                     if let feature = feature {
@@ -186,8 +187,8 @@ class EveryMatrixCasinoConnector {
 
                         return result
                     } catch let decodingError {
-                        print("[EveryMatrix-Casino REST api] Decoding error: \(decodingError)")
-                        print("[EveryMatrix-Casino REST api] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+                        GomaLogger.error(.networking, category: "EM_REST_CASINO", "Decoding error: \(decodingError)")
+                        GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
 
                         // End parsing tracking - error
                         if let feature = feature {
@@ -240,7 +241,7 @@ class EveryMatrixCasinoConnector {
                 .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct request
-            print("[EveryMatrix-Casino] Making unauthenticated request")
+            GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Making unauthenticated request")
 
             return performRequest(request)
                 .tryMap { [weak self] data in
@@ -248,7 +249,7 @@ class EveryMatrixCasinoConnector {
                         throw ServiceProviderError.unknown
                     }
 
-                    print("[EveryMatrix-Casino] Decoding response data...")
+                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Decoding response data...")
 
                     // Start parsing tracking
                     if let feature = feature {
@@ -273,8 +274,8 @@ class EveryMatrixCasinoConnector {
 
                         return result
                     } catch let decodingError {
-                        print("[EveryMatrix-Casino] Decoding error: \(decodingError)")
-                        print("[EveryMatrix-Casino] Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
+                        GomaLogger.error(.networking, category: "EM_REST_CASINO", "Decoding error: \(decodingError)")
+                        GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response data: \(String(data: data, encoding: .utf8) ?? "Invalid")")
 
                         // End parsing tracking - error
                         if let feature = feature {
@@ -337,7 +338,7 @@ class EveryMatrixCasinoConnector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             request.setValue(session.sessionId, forHTTPHeaderField: sessionIdKey)
-            print("[EveryMatrix-Casino] Added session token with key: \(sessionIdKey)")
+            GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             request.setValue(session.sessionId, forHTTPHeaderField: "X-SessionId")
@@ -346,27 +347,25 @@ class EveryMatrixCasinoConnector {
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             request.setValue(session.userId, forHTTPHeaderField: userIdKey)
-            print("[EveryMatrix-Casino] Added user ID with key: \(userIdKey)")
+            GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Added user ID with key: \(userIdKey)")
         }
     }
-    
+
     /// Perform HTTP request and handle response
     private func performRequest(_ request: URLRequest) -> AnyPublisher<Data, Error> {
-        print("[EveryMatrix-Casino] Performing request: \(request.url?.absoluteString ?? "unknown")")
-        
+        GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Performing request: \(request.url?.absoluteString ?? "unknown")")
+
         // Log request body for debugging
         if let body = request.httpBody, let bodyString = String(data: body, encoding: .utf8) {
-            print("[EveryMatrix-Casino] 📤 Request body: \(bodyString)")
+            GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Request body: \(bodyString)")
         }
-        
+
         // Log headers for debugging
         if let headers = request.allHTTPHeaderFields {
-            print("[EveryMatrix-Casino] 📋 Request headers: \(headers)")
+            GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Request headers: \(headers)")
         }
-        
-        print("============ \n [EveryMatrix-Casino] cURL Command:")
-        print(request.cURL(pretty: true))
-        print("============\n")
+
+        GomaLogger.debug(.networking, category: "EM_REST_CASINO", "cURL Command:\n\(request.cURL(pretty: true))")
         
         return session.dataTaskPublisher(for: request)
             .tryMap { [weak self] result in
@@ -378,12 +377,12 @@ class EveryMatrixCasinoConnector {
                     throw ServiceProviderError.invalidResponse
                 }
                 
-                print("[EveryMatrix-Casino REST api] Response status code: \(httpResponse.statusCode)")
+                GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response status code: \(httpResponse.statusCode)")
                 
                 // Log response body for debugging
-                if let responseString = String(data: result.data, encoding: .utf8) {
-                    print("[EveryMatrix-Casino REST api] 📥 Response body: \(responseString)")
-                }
+//                if let responseString = String(data: result.data, encoding: .utf8) {
+//                    GomaLogger.debug(.networking, category: "EM_REST_CASINO", "Response body: \(responseString)")
+//                }
                 
                 switch httpResponse.statusCode {
                 case 200...299:
@@ -395,24 +394,24 @@ class EveryMatrixCasinoConnector {
                     }
                     throw ServiceProviderError.badRequest
                 case 401:
-                    print("[EveryMatrix-Casino REST api] Received 401 Unauthorized")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "Received 401 Unauthorized")
                     throw ServiceProviderError.unauthorized
-                    
+
                 case 403:
                     // EveryMatrix often returns 403 for expired sessions
-                    print("[EveryMatrix-Casino REST api] Received 403 Forbidden (likely expired session)")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "Received 403 Forbidden (likely expired session)")
                     throw ServiceProviderError.forbidden
-                    
+
                 case 404:
-                    print("[EveryMatrix-Casino REST api] ❌ 404 Not Found")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "404 Not Found")
                     throw ServiceProviderError.notFound
-                    
+
                 case 409:
                     // 409 Conflict - usually duplicate bet or validation error
-                    print("[EveryMatrix-Casino REST api] ⚠️ 409 Conflict - Possible duplicate bet or validation error")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "409 Conflict - Possible duplicate bet or validation error")
                     if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
                         let errorMessage = apiError.thirdPartyResponse?.message ?? apiError.error ?? "Conflict Error"
-                        print("[EveryMatrix-Casino REST api] 409 Error message: \(errorMessage)")
+                        GomaLogger.error(.networking, category: "EM_REST_CASINO", "409 Error message: \(errorMessage)")
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
                     throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
@@ -435,7 +434,7 @@ class EveryMatrixCasinoConnector {
                     throw ServiceProviderError.internalServerError
                     
                 default:
-                    print("[EveryMatrix-Casino REST api] ❌ Unexpected status code: \(httpResponse.statusCode)")
+                    GomaLogger.error(.networking, category: "EM_REST_CASINO", "Unexpected status code: \(httpResponse.statusCode)")
                     throw ServiceProviderError.unknown
                 }
             }

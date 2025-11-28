@@ -22,7 +22,7 @@ import Foundation
 /// ```
 public final class GomaLogger {
     private static var lock = NSLock()
-    private static var destinations: [LogDestination] = [ConsoleDestination()]
+    private static var destinations: [LogDestination] = [ConsoleLogDestination()]
 
     /// Configuration singleton
     public static let configuration = LogConfiguration.shared
@@ -74,9 +74,19 @@ public final class GomaLogger {
         configuration.disableCategory(category)
     }
 
+    /// Disable multiple categories at once
+    public static func disableCategories(_ categories: String...) {
+        categories.forEach { configuration.disableCategory($0) }
+    }
+
     /// Enable a previously disabled category
     public static func enableCategory(_ category: String) {
         configuration.enableCategory(category)
+    }
+
+    /// Enable multiple categories at once
+    public static func enableCategories(_ categories: String...) {
+        categories.forEach { configuration.enableCategory($0) }
     }
 
     // MARK: - Destination Management
@@ -99,7 +109,7 @@ public final class GomaLogger {
     public static func resetDestinations() {
         lock.lock()
         defer { lock.unlock() }
-        destinations = [ConsoleDestination()]
+        destinations = [ConsoleLogDestination()]
     }
 
     // MARK: - Logging API

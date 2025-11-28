@@ -45,8 +45,8 @@ public final class VirtualBetslipViewModel: VirtualBetslipViewModelProtocol {
         
         self.clearBetslipButtonViewModel = MockButtonIconViewModel(
             title: localized("clear_betslip"),
-            icon: "trash",
-            layoutType: .iconLeft
+            icon: "trash_icon",
+            layoutType: .iconRight
         )
         
         self.emptyStateViewModel = MockEmptyStateActionViewModel.loggedOutMock()

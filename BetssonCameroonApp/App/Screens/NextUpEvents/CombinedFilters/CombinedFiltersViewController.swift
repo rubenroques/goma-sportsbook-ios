@@ -76,7 +76,7 @@ public class CombinedFiltersViewController: UIViewController {
     private let applyButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Apply", for: .normal)
+        button.setTitle(localized("apply"), for: .normal)
         button.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 18)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
@@ -173,9 +173,6 @@ public class CombinedFiltersViewController: UIViewController {
         setupConstraints()
         
         bind(toViewModel: viewModel)
-        
-        // Update button states based on initial state
-        updateButtonStates()
     }
     
     // MARK: - Setup
@@ -281,26 +278,11 @@ public class CombinedFiltersViewController: UIViewController {
                 guard let self = self else { return }
                 self.loadingView.isHidden = !isLoading
                 self.isLoading = isLoading
-                // Update all button states when loading changes
-                self.updateButtonStates()
             })
             .store(in: &cancellables)
     }
     
-    // MARK: - Button State Management
-    private func updateButtonStates() {
-        // Apply button: enabled only if filters changed from initial and not loading
-        let hasChanges = temporaryFilters != initialFilters
-        applyButton.isEnabled = hasChanges && !isLoading
-        applyButton.alpha = (hasChanges && !isLoading) ? 1.0 : 0.5
-        
-        // Reset button: enabled only if not at defaults
-        let isAtDefaults = temporaryFilters == AppliedEventsFilters.defaultFilters
-        resetButton.isEnabled = !isAtDefaults
-        resetButton.alpha = isAtDefaults ? 0.5 : 1.0
-    }
-    
-    // MARK: Functions
+    // MARK: - Functions
     private func resetFilters() {
         let defaultFilters = AppliedEventsFilters.defaultFilters
         temporaryFilters = defaultFilters
@@ -348,8 +330,6 @@ public class CombinedFiltersViewController: UIViewController {
     // MARK: - Actions
     @objc private func resetButtonTapped() {
         self.resetFilters()
-        updateButtonStates()
-        // Don't call onReset here - reset only affects temporary state
     }
     
     @objc private func closeButtonTapped() {
@@ -367,6 +347,18 @@ public class CombinedFiltersViewController: UIViewController {
     }
 
     @objc private func applyButtonTapped() {
+        defer {
+            // Close the modal
+            if let navigationController = self.navigationController {
+                navigationController.popViewController(animated: true)
+            } else {
+                self.dismiss(animated: true)
+            }
+        }
+        
+        // Checks if there was any change.
+        guard temporaryFilters != initialFilters else { return }
+        
         // Update viewModel with temporary filters
         viewModel.appliedFilters = temporaryFilters
         
@@ -378,15 +370,7 @@ public class CombinedFiltersViewController: UIViewController {
         
         // Update initial filters to the applied ones
         initialFilters = temporaryFilters
-        
-        // Close the modal
-        if let navigationController = self.navigationController {
-            navigationController.popViewController(animated: true)
-        } else {
-            self.dismiss(animated: true)
-        }
     }
-    
 }
 
 // MARK: - Filter Configuration and Views Methods
@@ -577,7 +561,6 @@ extension CombinedFiltersViewController {
 
                 // Fetch leagues for new sport
                 self.viewModel.getAllLeagues(sportId: selectedId)
-                self.updateButtonStates()
             }
         }
         
@@ -595,7 +578,6 @@ extension CombinedFiltersViewController {
                         if let timeFilter = AppliedEventsFilters.TimeFilter(rawValue: actualTimeValue) {
                             self.temporaryFilters.timeFilter = timeFilter
                         }
-                        self.updateButtonStates()
                     }
                 }
             }
@@ -608,7 +590,6 @@ extension CombinedFiltersViewController {
                 if let sortType = AppliedEventsFilters.SortType(rawValue: selectedId) {
                     self?.temporaryFilters.sortType = sortType
                 }
-                self?.updateButtonStates()
             }
         }
         
@@ -617,7 +598,6 @@ extension CombinedFiltersViewController {
             leaguesView.onSortFilterSelected = { [weak self] selectedId in
                 self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "leaguesFilter")
-                self?.updateButtonStates()
             }
         }
 
@@ -626,7 +606,6 @@ extension CombinedFiltersViewController {
             popularCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
                 self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "popularCountryLeaguesFilter")
-                self?.updateButtonStates()
             }
         }
 
@@ -635,7 +614,6 @@ extension CombinedFiltersViewController {
             otherCountriesView.onLeagueFilterSelected = { [weak self] selectedId in
                 self?.temporaryFilters.leagueFilter = LeagueFilterIdentifier(stringValue: selectedId)
                 self?.synchronizeLeagueSelection(selectedId, excludeWidget: "otherCountryLeaguesFilter")
-                self?.updateButtonStates()
             }
         }
     }
