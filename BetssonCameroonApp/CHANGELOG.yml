@@ -9,7 +9,7 @@ releases:
     build: 3002
     date: "2025-12-XX"
     notes:
-      - "Placeholder for next release"
+      - "Fix: SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.3.0"
     build: 3001
@@ -47,7 +47,6 @@ releases:
       - "Fix: SPOR-6474 - Search results shows count yet no results visible"
       - "Fix: SPOR-6482 - Update email in footer"
       - "Fix: SPOR-6366 - WO offer not working"
-      - "Fix: SPOR-5785 - Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.2.1"
     build: 2113
@@ -62,7 +61,6 @@ releases:
       - "Fixed position on Clear Betslip icon"
       - "Fixed translation in the description of a Login Error"
       - "Fixed string not being translated at Filter View"
-      - "Changed behavior of Apply button to always available at the Filter view"
 
   - version: "0.2.1"
     build: 2101
