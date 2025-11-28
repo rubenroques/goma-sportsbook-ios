@@ -68,7 +68,7 @@ BCM-0.0(0)             # Invalid version/build (< minimums)
 **When you push a tag:**
 
 1. **Parse & Validate** tag format and version numbers
-2. **Checkout** the release branch (`betsson-cm`)
+2. **Checkout** the release branch (`main`)
 3. **Validate Version** - Xcode project must match tag (fails if mismatch)
 4. **Read CHANGELOG.yml** for release notes (optional - falls back to generic)
 5. **Build & Distribute Staging** - First environment
@@ -77,7 +77,7 @@ BCM-0.0(0)             # Invalid version/build (< minimums)
 
 **Configuration:**
 - Tag mapping defined in `.github/tag-config.yml`
-- BCM → branch: `betsson-cm`
+- BCM → branch: `main`
 - Staging scheme: `BetssonCM Staging`
 - Production scheme: `BetssonCM Prod`
 
@@ -119,7 +119,7 @@ vim BetssonCameroonApp/fastlane/devices.csv
 # 4. Commit changes
 git add .
 git commit -m "Prepare release 2.1.3 (21309)"
-git push origin betsson-cm
+git push origin main
 
 # 5. Create and push tag
 git tag BCM-2.1.3(21309)

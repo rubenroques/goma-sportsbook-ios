@@ -23,7 +23,6 @@ on:
       - 'BetssonCameroonApp/fastlane/devices.csv'
     branches:
       - main
-      - betsson-cm  # Adjust to your main branch
 
 jobs:
   auto-distribute:

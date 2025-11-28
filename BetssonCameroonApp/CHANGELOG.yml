@@ -5,9 +5,10 @@
 releases:
 
   - version: "0.3.1"
-    build: 3110
+    build: 3111
     date: "2025-12-28"
     notes:
+      - "fix(ci): Updated CI/CD branch references from betsson-cm to main"
       - "fix(register): [SPOR-6425] [BC-84] T&C, Privacy, Cookies - registration links pages doesn't exist (UAT)"
       - "fix(footer): [SPOR-6472] Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
       - "fix(search): [SPOR-6391] Fixed missing localized string"

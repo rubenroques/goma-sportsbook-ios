@@ -11,7 +11,7 @@ clients:
     target: "BetssonCameroonApp"
     changelog: "BetssonCameroonApp/CHANGELOG.yml"
     devices_file: "fastlane/devices.csv"
-    release_branch: "betsson-cm"
+    release_branch: "main"
     staging_scheme: "BetssonCM Staging"
     production_scheme: "BetssonCM Prod"
     discord_color: 3066993  # Green
