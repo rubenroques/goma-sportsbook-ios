@@ -589,9 +589,17 @@ class MyTicketCardView: NibView {
         
         //
         self.winningsTitleLabel.text = localized("possible_winnings")
+        
+        let isFreeBet = betHistoryEntry.freeBet ?? false
+        
         if let maxWinnings = betHistoryEntry.maxWinning,
-           let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
-            self.winningsSubtitleLabel.text = maxWinningsString
+           let totalBetAmount = betHistoryEntry.totalBetAmount {
+           
+            var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+            
+            if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
+                self.winningsSubtitleLabel.text = maxWinningsString
+            }
         }
         
         if let status = betHistoryEntry.status?.uppercased() {
@@ -628,11 +636,23 @@ class MyTicketCardView: NibView {
                 
             case "LOST":
                 self.highlightCard(withColor: UIColor.App.myTicketsLost)
-                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
-                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
-                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
-                    self.winningsSubtitleLabel.text = maxWinningsString
+                self.winningsTitleLabel.text = localized("possible_winnings")
+                
+//                if let maxWinnings = betHistoryEntry.maxWinning,
+//                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+//                    self.winningsSubtitleLabel.text = maxWinningsString
+//                }
+                
+                if let maxWinnings = betHistoryEntry.maxWinning,
+                   let totalBetAmount = betHistoryEntry.totalBetAmount {
+                   
+                    var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+                    
+                    if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
+                        self.winningsSubtitleLabel.text = maxWinningsString
+                    }
                 }
+                
                 self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -673,11 +693,23 @@ class MyTicketCardView: NibView {
                 
             case "CANCELLED":
                 self.highlightCard(withColor: UIColor.App.myTicketsOther)
-                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
-                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
-                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
-                    self.winningsSubtitleLabel.text = maxWinningsString
+                self.winningsTitleLabel.text = localized("possible_winnings")
+                
+//                if let maxWinnings = betHistoryEntry.maxWinning,
+//                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+//                    self.winningsSubtitleLabel.text = maxWinningsString
+//                }
+                
+                if let maxWinnings = betHistoryEntry.maxWinning,
+                   let totalBetAmount = betHistoryEntry.totalBetAmount {
+                   
+                    var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+                    
+                    if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
+                        self.winningsSubtitleLabel.text = maxWinningsString
+                    }
                 }
+                
                 self.totalOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.totalOddSubtitleLabel.textColor = UIColor.App.buttonTextPrimary
                 self.betAmountTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -688,12 +720,23 @@ class MyTicketCardView: NibView {
                 
             case "OPEN":
                 self.resetHighlightedCard()
-                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
+                self.winningsTitleLabel.text = localized("possible_winnings")
                 
-                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
-                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
-                    self.winningsSubtitleLabel.text = maxWinningsString
+//                if let maxWinnings = betHistoryEntry.maxWinning,
+//                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+//                    self.winningsSubtitleLabel.text = maxWinningsString
+//                }
+                
+                if let maxWinnings = betHistoryEntry.maxWinning,
+                   let totalBetAmount = betHistoryEntry.totalBetAmount {
+                   
+                    var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+                    
+                    if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
+                        self.winningsSubtitleLabel.text = maxWinningsString
+                    }
                 }
+                
                 self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
                 self.totalOddSubtitleLabel.textColor = UIColor.App.textPrimary
                 self.betAmountTitleLabel.textColor = UIColor.App.textPrimary

@@ -153,7 +153,12 @@ extension SportRadarModels {
                 return try Score(from: container, key: key)
             }
             
-            self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+//            self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+            
+            self.scores = scoresArray.reduce(into: [:]) { dict, score in
+                
+                dict[score.key] = score
+            }
             
             //
             if self.matchTime == nil, self.status == nil, self.homeScore == nil,
