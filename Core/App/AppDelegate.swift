@@ -16,6 +16,7 @@ import AdyenActions
 import OptimoveSDK
 import AdjustSdk
 import FirebaseCore
+import FirebaseAuth
 import FirebaseFirestore
 
 @main
@@ -43,15 +44,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         Phrase.shared.setup(distributionID: "8dff53ee102cd6a5c31935d4d5938c3f", environmentSecret: "UmPDmeEDM8dGvFdKu9-x_bJxI0-8eaJX5CDeq88Eepk")
         #endif
 
-        do {
-            try Phrase.shared.updateTranslation { updatedResult in
-                print("PhraseSDK updateTranslation")
-                let translation = localized("phrase.test")
-                print("PhraseSDK NSLocalizedString via bundle proxy: ", translation)
+        Task {
+            do {
+                let updated = try await Phrase.shared.updateTranslation()
+                if updated {
+                    print("PhraseSDK - Translations changed")
+                    Phrase.shared.applyPendingUpdates()
+
+                    print("PhraseSDK - updateTranslation")
+                    let translation = localized("phrase.test")
+                    print("PhraseSDK - NSLocalizedString via bundle proxy: ", translation)
+                } else {
+                    print("PhraseSDK - Translations remain unchanged")
+                }
+            } catch {
+                print("PhraseSDK - An error occurred: \(error)")
             }
-        }
-        catch {
-            print("PhraseSDK updateTranslation crashed error \(error)")
         }
 
         //

@@ -19,7 +19,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/airbnb/lottie-spm.git", .upToNextMajor(from: "4.2.0")),
-        .package(url: "https://github.com/optimove-tech/Optimove-SDK-iOS.git", .upToNextMajor(from: "5.0.0")),
+        .package(url: "https://github.com/optimove-tech/Optimove-SDK-iOS.git", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/marmelroy/PhoneNumberKit", from: "3.7.0"),
         .package(name: "Extensions", path: "../Extensions"),
         .package(name: "HeaderTextField", path: "../HeaderTextField"),

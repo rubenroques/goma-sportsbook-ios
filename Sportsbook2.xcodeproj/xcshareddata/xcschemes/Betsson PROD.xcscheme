@@ -47,9 +47,18 @@
             BlueprintIdentifier = "45A3302B298976BA008181E9"
             BuildableName = "Betsson.app"
             BlueprintName = "Betsson PROD"
-            ReferencedContainer = "container:Sportsbook.xcodeproj">
+            ReferencedContainer = "container:Sportsbook2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "45A3302B298976BA008181E9"
+            BuildableName = "Betsson.app"
+            BlueprintName = "Betsson PROD"
+            ReferencedContainer = "container:Sportsbook.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-optimove-debug-enabled"
@@ -80,6 +89,15 @@
             ReferencedContainer = "container:Sportsbook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "45A3302B298976BA008181E9"
+            BuildableName = "Betsson.app"
+            BlueprintName = "Betsson PROD"
+            ReferencedContainer = "container:Sportsbook.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
