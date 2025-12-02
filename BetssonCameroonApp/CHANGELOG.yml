@@ -11,7 +11,8 @@ releases:
       - "fix(architecture): Refactor OutcomeItemView selection to proper MVVM pattern - single source of truth, unidirectional data flow, parent VM observes child VM publishers"
       - "fix(security): [SPOR-6688] [BC-321] Clear MyBets cached data on logout to prevent next user from seeing previous user's betting history"
       - "fix(register): Change priority on localization to all registration field validation error messages code (LegislationAPI key > phrase > local fallack)"
-
+      - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
+      
   - version: "0.3.1"
     build: 3112
     date: "2025-12-28"
@@ -22,7 +23,6 @@ releases:
       - "fix(footer): [SPOR-6472] Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
       - "fix(search): [SPOR-6391] Fixed missing localized string"
       - "fix(profile): SPOR-6097 - Changed icons on Profile menu"
-      - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
 
   - version: "0.3.1"
     build: 3101
