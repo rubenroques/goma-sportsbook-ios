@@ -14,7 +14,9 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     // MARK: - Subjects
     public let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
+    private let outcomeSelectionDidChangeSubject: PassthroughSubject<MarketOutcomeSelectionEvent, Never>
     private var cancellables = Set<AnyCancellable>()
+    private var childCancellables = Set<AnyCancellable>()
     
     // MARK: - Child ViewModels
     private var outcomeViewModels: [OutcomeType: OutcomeItemViewModel] = [:]
@@ -27,7 +29,13 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     public var oddsChangeEventPublisher: AnyPublisher<OddsChangeEvent, Never> {
         oddsChangeEventSubject.eraseToAnyPublisher()
     }
-    
+
+    /// Publisher for selection changes from child OutcomeItemViewModels.
+    /// View observes this to notify external callbacks (proper MVVM pattern).
+    public var outcomeSelectionDidChangePublisher: AnyPublisher<MarketOutcomeSelectionEvent, Never> {
+        outcomeSelectionDidChangeSubject.eraseToAnyPublisher()
+    }
+
     var matchCardContext: MatchCardContext
     
     // MARK: - Initialization
@@ -39,25 +47,18 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
         self.marketId = marketId
         self.marketStateSubject = CurrentValueSubject(initialDisplayState)
         self.oddsChangeEventSubject = PassthroughSubject()
-        
+        self.outcomeSelectionDidChangeSubject = PassthroughSubject()
+
         self.matchCardContext = matchCardContext
-        
+
         // Create initial outcome view models
         createOutcomeViewModels(from: initialDisplayState)
-        
+
         // Setup market subscription
         setupMarketSubscription()
     }
     
     // MARK: - Public Methods
-    public func toggleOutcome(type: OutcomeType) -> Bool {
-        guard let outcomeViewModel = outcomeViewModels[type] else {
-            return false
-        }
-        
-        return outcomeViewModel.toggleSelection()
-    }
-    
     public func setOutcomeSelected(type: OutcomeType) {
         guard let outcomeViewModel = outcomeViewModels[type] else { return }
         
@@ -277,6 +278,7 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
     }
     
     private func subscribeToOutcomeEvents(outcomeVM: OutcomeItemViewModel, outcomeType: OutcomeType) {
+        // Subscribe to odds change events
         outcomeVM.oddsChangeEventPublisher
             .sink { [weak self] outcomeEvent in
                 // Convert OutcomeItemOddsChangeEvent to OddsChangeEvent for the line level
@@ -290,6 +292,21 @@ final class MarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
                 self?.oddsChangeEventSubject.send(lineEvent)
             }
             .store(in: &cancellables)
+
+        // Subscribe to selection change events (proper MVVM - parent observes child)
+        outcomeVM.selectionDidChangePublisher
+            .sink { [weak self] event in
+                // Transform child event to parent event (adding OutcomeType)
+                let parentEvent = MarketOutcomeSelectionEvent(
+                    outcomeId: event.outcomeId,
+                    bettingOfferId: event.bettingOfferId,
+                    outcomeType: outcomeType,
+                    isSelected: event.isSelected,
+                    timestamp: event.timestamp
+                )
+                self?.outcomeSelectionDidChangeSubject.send(parentEvent)
+            }
+            .store(in: &childCancellables)
     }
     
     private func createOutcomeViewModels(from displayState: MarketOutcomesLineDisplayState) {

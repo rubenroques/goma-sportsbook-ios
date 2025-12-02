@@ -147,8 +147,18 @@ final public class MarketOutcomesLineView: UIView {
             }
             .store(in: &cancellables)
 
-        // Note: Odds change events are now handled by the parent view model
-        // which forwards them to the appropriate child view models
+        // Observe selection changes from parent ViewModel (proper MVVM pattern)
+        // Parent VM observes child VMs' selectionDidChangePublisher and re-publishes here
+        viewModel.outcomeSelectionDidChangePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                if event.isSelected {
+                    self?.onOutcomeSelected(event.outcomeId, event.outcomeType)
+                } else {
+                    self?.onOutcomeDeselected(event.outcomeId, event.outcomeType)
+                }
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Update Methods
@@ -282,10 +292,7 @@ final public class MarketOutcomesLineView: UIView {
     }
 
     private func setupOutcomeViewCallbacks(_ outcomeView: OutcomeItemView, outcomeType: OutcomeType) {
-        outcomeView.onTap = { [weak self] outcomeId in
-            self?.handleOutcomeTap(outcomeType, outcomeId: outcomeId)
-        }
-
+        // Long press callback only - tap is handled via ViewModel publishers
         outcomeView.onLongPress = { [weak self] in
             self?.onOutcomeLongPress(outcomeType)
         }
@@ -294,18 +301,6 @@ final public class MarketOutcomesLineView: UIView {
     // MARK: - Actions
     @objc private func didTapSeeAll() {
         onSeeAllTapped()
-    }
-
-    private func handleOutcomeTap(_ type: OutcomeType, outcomeId: String) {
-        // Toggle the selection state and get the new state
-        let isNowSelected = viewModel.toggleOutcome(type: type)
-        
-        // Call the appropriate callback based on the new state
-        if isNowSelected {
-            onOutcomeSelected(outcomeId, type)
-        } else {
-            onOutcomeDeselected(outcomeId, type)
-        }
     }
 
     // MARK: - Corner Radius Logic

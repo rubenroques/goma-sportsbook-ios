@@ -54,7 +54,6 @@ final public class OutcomeItemView: UIView {
     private var viewModel: OutcomeItemViewModelProtocol
 
     // MARK: - Public Properties
-    public var onTap: ((String) -> Void) = { _ in }
     public var onLongPress: (() -> Void) = { }
 
     // MARK: - Constants
@@ -237,12 +236,24 @@ final public class OutcomeItemView: UIView {
                 self?.handleOddsChangeAnimation(changeEvent)
             }
             .store(in: &cancellables)
-            
+
         // Display state binding
         viewModel.displayStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.updateDisplayState(displayState)
+            }
+            .store(in: &cancellables)
+
+        // Haptic feedback when selection changes to selected
+        // Using dropFirst() to avoid firing on initial binding
+        viewModel.isSelectedPublisher
+            .dropFirst()
+            .filter { $0 } // Only when becoming selected
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                impactFeedback.impactOccurred()
             }
             .store(in: &cancellables)
     }
@@ -435,18 +446,10 @@ final public class OutcomeItemView: UIView {
 
     // MARK: - Gesture Handlers
     @objc private func handleTap() {
-        viewModel.toggleSelection()
-        
-        let wasSelected = viewModel.toggleSelection()
-        let outcomeId = viewModel.outcomeDataSubject.value.id
-        
-        onTap(outcomeId)
-
-        // Provide haptic feedback
-        if wasSelected {
-            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-            impactFeedback.impactOccurred()
-        }
+        // Single call - View requests action, ViewModel decides outcome
+        // This is the correct MVVM pattern: View -> ViewModel -> State -> Publishers
+        // Haptic feedback is handled via isSelectedPublisher observation in setupBindings()
+        viewModel.userDidTapOutcome()
     }
 
     @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {

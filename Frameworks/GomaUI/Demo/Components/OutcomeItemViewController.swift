@@ -157,10 +157,6 @@ class OutcomeItemViewController: UIViewController {
     }
 
     private func setupOutcomeViewCallbacks(_ outcomeView: OutcomeItemView) {
-        outcomeView.onTap = { _ in
-            print("✅ Outcome tapped")
-        }
-
         outcomeView.onLongPress = {
             print("🔄 Outcome long pressed")
         }
@@ -291,8 +287,9 @@ class OutcomeItemViewController: UIViewController {
         guard !currentViewModels.isEmpty else { return }
 
         let firstViewModel = currentViewModels[0]
-        let wasSelected = firstViewModel.toggleSelection()
-        
+        firstViewModel.userDidTapOutcome()
+        let wasSelected = firstViewModel.outcomeDataSubject.value.isSelected
+
         showAlert(title: "Selection Toggled", message: "First outcome is now \(wasSelected ? "selected" : "unselected")")
     }
 
@@ -336,7 +333,8 @@ class OutcomeItemViewController: UIViewController {
         print("✅ Value updated to \(newValue)")
         
         // Test selection toggle
-        let wasSelected = testViewModel.toggleSelection()
+        testViewModel.userDidTapOutcome()
+        let wasSelected = testViewModel.outcomeDataSubject.value.isSelected
         print("✅ Selection toggled to: \(wasSelected)")
         
         // Test disabled state

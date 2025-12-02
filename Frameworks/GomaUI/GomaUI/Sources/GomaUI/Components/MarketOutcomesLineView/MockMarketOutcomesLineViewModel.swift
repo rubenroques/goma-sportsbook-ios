@@ -4,10 +4,12 @@ import UIKit
 /// Mock implementation of `MarketOutcomesLineViewModelProtocol` for testing.
 final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelProtocol {
 
-    // MARK: - Publishers
+    // MARK: - Subjects
     public let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
+    private let outcomeSelectionDidChangeSubject: PassthroughSubject<MarketOutcomeSelectionEvent, Never>
 
+    // MARK: - Publishers
     public var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> {
         return marketStateSubject.eraseToAnyPublisher()
     }
@@ -15,6 +17,15 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     public var oddsChangeEventPublisher: AnyPublisher<OddsChangeEvent, Never> {
         return oddsChangeEventSubject.eraseToAnyPublisher()
     }
+
+    /// Publisher for selection changes from child OutcomeItemViewModels.
+    /// View observes this to notify external callbacks (proper MVVM pattern).
+    public var outcomeSelectionDidChangePublisher: AnyPublisher<MarketOutcomeSelectionEvent, Never> {
+        return outcomeSelectionDidChangeSubject.eraseToAnyPublisher()
+    }
+
+    // MARK: - Child Subscriptions
+    private var childCancellables = Set<AnyCancellable>()
 
     // MARK: - Initialization
     public init(displayMode: MarketDisplayMode = .triple,
@@ -31,20 +42,10 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         self.marketStateSubject = CurrentValueSubject(initialState)
         self.oddsChangeEventSubject = PassthroughSubject()
+        self.outcomeSelectionDidChangeSubject = PassthroughSubject()
     }
 
     // MARK: - MarketOutcomesLineViewModelProtocol
-    public func toggleOutcome(type: OutcomeType) -> Bool {
-        let currentState = marketStateSubject.value
-        guard let currentOutcome = getOutcome(from: currentState, type: type) else { return false }
-
-        let newSelectionState = !currentOutcome.isSelected
-        let updatedState = updateOutcomeSelection(in: currentState, type: type, isSelected: newSelectionState)
-        marketStateSubject.send(updatedState)
-
-        return newSelectionState
-    }
-    
     public func setOutcomeSelected(type: OutcomeType) {
         let currentState = marketStateSubject.value
         guard let currentOutcome = getOutcome(from: currentState, type: type) else { return }
@@ -180,6 +181,22 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         // Create and return a new child view model
         let childViewModel = MockOutcomeItemViewModel(outcomeData: outcomeItemData)
 
+        // Subscribe to child's selection changes and forward to parent's publisher
+        // This is the proper MVVM pattern: parent VM observes child VM, re-publishes for View
+        childViewModel.selectionDidChangePublisher
+            .sink { [weak self] event in
+                // Transform child event to parent event (adding OutcomeType)
+                let parentEvent = MarketOutcomeSelectionEvent(
+                    outcomeId: event.outcomeId,
+                    bettingOfferId: event.bettingOfferId,
+                    outcomeType: outcomeType,
+                    isSelected: event.isSelected,
+                    timestamp: event.timestamp
+                )
+                self?.outcomeSelectionDidChangeSubject.send(parentEvent)
+            }
+            .store(in: &childCancellables)
+
         // Set up binding to forward odds change events from parent to child
         oddsChangeEventPublisher
             .filter { $0.outcomeType == outcomeType }
@@ -188,7 +205,7 @@ final public class MockMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
             }
             .store(in: &childViewModel.cancellables)
 
-        // Set up binding to sync selection state from parent to child
+        // Set up binding to sync selection state from parent to child (for external sync like betslip)
         marketStatePublisher
             .compactMap { [weak self] state in
                 self?.getOutcome(from: state, type: outcomeType)

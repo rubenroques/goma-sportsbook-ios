@@ -558,8 +558,22 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
     @objc private func toggleOutcomeSelection() {
         guard selectedLineIndex < lineViewModels.count else { return }
         let outcomeType = selectedOutcomeType()
-        let isSelected = lineViewModels[selectedLineIndex].toggleOutcome(type: outcomeType)
-        logEvent("🎯 Line \(selectedLineIndex), \(outcomeType): Selection = \(isSelected)")
+        let currentState = lineViewModels[selectedLineIndex].marketStateSubject.value
+
+        let currentlySelected: Bool
+        switch outcomeType {
+        case .left: currentlySelected = currentState.leftOutcome?.isSelected ?? false
+        case .middle: currentlySelected = currentState.middleOutcome?.isSelected ?? false
+        case .right: currentlySelected = currentState.rightOutcome?.isSelected ?? false
+        }
+
+        if currentlySelected {
+            lineViewModels[selectedLineIndex].setOutcomeDeselected(type: outcomeType)
+        } else {
+            lineViewModels[selectedLineIndex].setOutcomeSelected(type: outcomeType)
+        }
+
+        logEvent("🎯 Line \(selectedLineIndex), \(outcomeType): Selection = \(!currentlySelected)")
     }
 
     @objc private func toggleOutcomeDisabled() {
@@ -678,10 +692,10 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
         // Step 1: Select some outcomes
         logEvent("   Step 1: Selecting outcomes...")
         if lineViewModels.count > 0 {
-            lineViewModels[0].toggleOutcome(type: .left)
+            lineViewModels[0].setOutcomeSelected(type: .left)
         }
         if lineViewModels.count > 1 {
-            lineViewModels[1].toggleOutcome(type: .right)
+            lineViewModels[1].setOutcomeSelected(type: .right)
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
@@ -814,22 +828,37 @@ final class MarketOutcomesMultiLineInteractiveTestViewController: UIViewControll
             let state = lineVM.marketStateSubject.value
 
             if state.leftOutcome != nil {
+                let currentlySelected = state.leftOutcome?.isSelected ?? false
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay * Double(index)) { [weak lineVM] in
-                    lineVM?.toggleOutcome(type: .left)
+                    if currentlySelected {
+                        lineVM?.setOutcomeDeselected(type: .left)
+                    } else {
+                        lineVM?.setOutcomeSelected(type: .left)
+                    }
                 }
                 index += 1
             }
 
             if state.middleOutcome != nil {
+                let currentlySelected = state.middleOutcome?.isSelected ?? false
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay * Double(index)) { [weak lineVM] in
-                    lineVM?.toggleOutcome(type: .middle)
+                    if currentlySelected {
+                        lineVM?.setOutcomeDeselected(type: .middle)
+                    } else {
+                        lineVM?.setOutcomeSelected(type: .middle)
+                    }
                 }
                 index += 1
             }
 
             if state.rightOutcome != nil {
+                let currentlySelected = state.rightOutcome?.isSelected ?? false
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay * Double(index)) { [weak lineVM] in
-                    lineVM?.toggleOutcome(type: .right)
+                    if currentlySelected {
+                        lineVM?.setOutcomeDeselected(type: .right)
+                    } else {
+                        lineVM?.setOutcomeSelected(type: .right)
+                    }
                 }
                 index += 1
             }

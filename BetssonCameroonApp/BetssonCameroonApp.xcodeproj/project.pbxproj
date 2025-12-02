@@ -55,6 +55,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
+				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
 				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
