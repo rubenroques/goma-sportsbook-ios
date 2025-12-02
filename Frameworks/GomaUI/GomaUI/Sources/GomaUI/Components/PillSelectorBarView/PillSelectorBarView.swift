@@ -376,7 +376,8 @@ extension PillData {
             title: self.title,
             leftIconName: self.leftIconName,
             showExpandIcon: self.showExpandIcon,
-            isSelected: isSelected
+            isSelected: isSelected,
+            shouldApplyTintColor: self.shouldApplyTintColor
         )
     }
 }

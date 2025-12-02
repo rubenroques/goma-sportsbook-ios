@@ -112,9 +112,8 @@ final public class PillItemView: UIView {
         stackView.addArrangedSubview(expandIconImageView)
 
         // Setup default theme
-        leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
         expandIconImageView.tintColor = StyleProvider.Color.highlightPrimary
-
+        
 //        #if DEBUG
 //        stackView.layer.borderColor = UIColor.red.cgColor
 //        stackView.layer.borderWidth = 1
@@ -150,14 +149,16 @@ final public class PillItemView: UIView {
             .store(in: &cancellables)
 
         // Left icon binding
-        viewModel.leftIconNamePublisher
+        Publishers.CombineLatest(viewModel.leftIconNamePublisher, viewModel.shouldApplyTintColorPublisher)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] iconName in
+            .sink { [weak self] iconName, shouldApplyTintColorPublisher in
                 if let iconName = iconName {
                     self?.leftIconImageView.isHidden = false
-                    if let image = UIImage(named: iconName)?.withRenderingMode(.alwaysTemplate) {
+                    if let image = UIImage(named: iconName)?.withRenderingMode(shouldApplyTintColorPublisher ? .alwaysTemplate : .alwaysOriginal) {
                         self?.leftIconImageView.image = image
-                        self?.leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
+                        if shouldApplyTintColorPublisher {
+                            self?.leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
+                        }
                     }
                     else {
                         self?.leftIconImageView.image = UIImage(systemName: iconName)

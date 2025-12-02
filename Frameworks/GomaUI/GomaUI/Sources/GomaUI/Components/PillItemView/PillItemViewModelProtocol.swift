@@ -8,13 +8,15 @@ public struct PillData: Equatable, Hashable {
     public let leftIconName: String?
     public let showExpandIcon: Bool
     public let isSelected: Bool
+    public let shouldApplyTintColor: Bool
 
-    public init(id: String, title: String, leftIconName: String? = nil, showExpandIcon: Bool = false, isSelected: Bool = false) {
+    public init(id: String, title: String, leftIconName: String? = nil, showExpandIcon: Bool = false, isSelected: Bool = false, shouldApplyTintColor: Bool = true) {
         self.id = id
         self.title = title
         self.leftIconName = leftIconName
         self.showExpandIcon = showExpandIcon
         self.isSelected = isSelected
+        self.shouldApplyTintColor = shouldApplyTintColor
     }
 }
 
@@ -35,6 +37,7 @@ public protocol PillItemViewModelProtocol {
     var leftIconNamePublisher: AnyPublisher<String?, Never> { get }
     var showExpandIconPublisher: AnyPublisher<Bool, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
+    var shouldApplyTintColorPublisher: AnyPublisher<Bool, Never> { get }
     
     // Read-only state - when true, selectPill() should not change the selection state
     var isReadOnly: Bool { get }

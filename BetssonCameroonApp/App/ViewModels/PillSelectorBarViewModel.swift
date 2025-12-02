@@ -55,16 +55,17 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
             PillData(
                 id: "popular",
                 title: "Popular",
-                leftIconName: "flame.fill",
+                leftIconName: "flame_bar_icon",
                 showExpandIcon: false,
                 isSelected: false
             ),
             PillData(
                 id: "all_popular",
                 title: "All Popular Leagues",
-                leftIconName: "trophy.fill",
+                leftIconName: "trophy_winners_icon",
                 showExpandIcon: false,
-                isSelected: false
+                isSelected: false,
+                shouldApplyTintColor: false
             )
         ]
         

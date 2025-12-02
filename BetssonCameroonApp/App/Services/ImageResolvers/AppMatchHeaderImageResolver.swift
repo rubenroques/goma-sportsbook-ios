@@ -11,7 +11,7 @@ struct AppMatchHeaderImageResolver: MatchHeaderImageResolver {
     
     func sportIconImage(for sportId: String) -> UIImage? {
         let assetName = "sport_type_icon_\(sportId)"
-        return UIImage(named: assetName) ?? UIImage(named: "sport_type_icon_default")
+        return UIImage(named: assetName) ?? UIImage(named: "sport_type_icon_defaults")
     }
     
     func favoriteIcon(isFavorite: Bool) -> UIImage? {
