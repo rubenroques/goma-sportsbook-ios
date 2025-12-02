@@ -138,10 +138,10 @@ final class MyBetsViewModel {
                 guard let self = self else { return }
                 switch status {
                 case .anonymous:
-                    // User logged out - MUST clear all user-specific data
+                    // User logged out - clear data and show empty state
                     print("[SECURITY] MyBetsViewModel: User logged out, clearing cached bets")
                     self.betListDataCache.removeAll()
-                    self.betsStateSubject.send(.loading)
+                    self.betsStateSubject.send(.loaded([]))
                 case .logged:
                     // User logged in - refresh data for new user
                     print("MyBetsViewModel: User logged in, refreshing bets")
@@ -186,6 +186,13 @@ final class MyBetsViewModel {
     }
     
     func loadBets(forced: Bool = false) {
+        // Check auth first - show empty state if not logged in (matches web behavior)
+        guard Env.userSessionStore.isUserLogged() else {
+            print("MyBetsViewModel: User not logged in - showing empty state")
+            betsStateSubject.send(.loaded([]))
+            return
+        }
+
         let cacheKey = "\(selectedTabType.rawValue)_\(selectedStatusType.rawValue)"
         
         // Check cache first if not forced
@@ -232,6 +239,9 @@ final class MyBetsViewModel {
     }
     
     func loadMoreBets() {
+        // Don't try to load more if not logged in
+        guard Env.userSessionStore.isUserLogged() else { return }
+
         let cacheKey = "\(selectedTabType.rawValue)_\(selectedStatusType.rawValue)"
         guard let currentData = betListDataCache[cacheKey], currentData.hasMore else {
             print("📄 MyBetsViewModel: No more bets to load")
@@ -263,6 +273,12 @@ final class MyBetsViewModel {
     }
     
     func refreshBets() {
+        // Don't refresh if not logged in
+        guard Env.userSessionStore.isUserLogged() else {
+            betsStateSubject.send(.loaded([]))
+            return
+        }
+
         print("🔄 MyBetsViewModel: Refreshing bets")
         betListDataCache.removeAll()
         loadBets(forced: true)

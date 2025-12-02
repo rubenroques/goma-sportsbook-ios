@@ -634,8 +634,39 @@ class MainTabBarCoordinator: Coordinator {
             return parseDeepLinkPath(urlString)
         }
 
+        // Check for internal web URLs - redirect internally instead of opening browser
+        if let host = url.host?.lowercased(), Self.isInternalWebDomain(host) {
+            let path = Self.stripLanguagePrefix(from: url.path)
+            return parseDeepLinkPath(path)
+        }
+
         // Not an internal deep link
         return nil
+    }
+
+    // MARK: - Internal Web Domain Handling
+
+    /// Web domains that should be handled internally instead of opening in browser.
+    /// Add new domains here when needed (e.g., for different markets or environments).
+    private static let internalWebDomains: Set<String> = [
+        "betssonem.com",
+        "www.betssonem.com"
+    ]
+
+    private static func isInternalWebDomain(_ host: String) -> Bool {
+        internalWebDomains.contains(host.lowercased())
+    }
+
+    private static func stripLanguagePrefix(from path: String) -> String {
+        // Remove language prefixes like /en/, /fr/, /pt/ from the path
+        // Pattern matches: /en, /en/, /fr, /fr/, etc. at the start of the path
+        let languagePrefixPattern = #"^/(en|fr|pt|es|de)(/|$)"#
+        guard let regex = try? NSRegularExpression(pattern: languagePrefixPattern, options: .caseInsensitive) else {
+            return path
+        }
+        let range = NSRange(path.startIndex..., in: path)
+        let stripped = regex.stringByReplacingMatches(in: path, options: [], range: range, withTemplate: "/")
+        return stripped.isEmpty ? "/" : stripped
     }
 
     private func parseDeepLinkPath(_ path: String) -> Route? {
@@ -658,6 +689,21 @@ class MainTabBarCoordinator: Coordinator {
             if components.count > 1 {
                 return .competition(id: components[1])
             }
+        case "register", "signup":
+            return .register
+        case "login", "signin":
+            return .login
+        case "sports":
+            return .sportsHome
+        case "live":
+            return .liveGames
+        case "casino":
+            if components.count > 1 && components[1].lowercased() == "virtuals" {
+                return .casinoVirtuals
+            }
+            return .casinoHome
+        case "mybets", "my-bets":
+            return .myBets
         default:
             break
         }
@@ -677,9 +723,33 @@ class MainTabBarCoordinator: Coordinator {
             navigateToMatchDetail(withId: matchId)
         case .competition:
             break
-        default:
+        case .register:
+            showRegistration()
+        case .login:
+            showLogin()
+        case .sportsHome:
+            showNextUpEventsScreen()
+        case .liveGames:
+            showInPlayEventsScreen()
+        case .myBets:
+            showMyBetsScreen()
+        case .casinoHome:
+            showCasinoHomeScreen()
+        case .casinoVirtuals:
+            showCasinoVirtualSportsScreen()
+        case .casinoGame(let gameId):
+            showCasinoGameScreen(gameId: gameId)
+        case .casinoSearch, .sportsSearch:
+            showSearchScreen()
+        case .none:
             break
         }
+    }
+
+    private func showCasinoGameScreen(gameId: String) {
+        // First ensure casino home is shown, then open the game
+        showCasinoHomeScreen()
+        traditionalCasinoCoordinator?.showGamePrePlay(gameId: gameId)
     }
 
     private func navigateToMatchDetail(withId matchId: String) {

@@ -8,10 +8,14 @@ releases:
     build: 3120
     date: "2025-12-XX"
     notes:
+      - "fix(mybets): Show friendly empty state instead of error when user is not logged in - matches web behavior"
       - "fix(architecture): Refactor OutcomeItemView selection to proper MVVM pattern - single source of truth, unidirectional data flow, parent VM observes child VM publishers"
       - "fix(security): [SPOR-6688] [BC-321] Clear MyBets cached data on logout to prevent next user from seeing previous user's betting history"
       - "fix(register): Change priority on localization to all registration field validation error messages code (LegislationAPI key > phrase > local fallack)"
       - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
+      - "fix(banners): [SPOR-6652] [BC-301] Banners now navigate internally instead of opening web browser (🔨 workaround - CMS should send deep links instead of web URLs)"
+      - "feature(version-update): Convert VersionUpdateViewController from XIB to ViewCode with SwiftUI previews - supports both 'Update Required' (forced) and 'Update Available' (dismissible) modes via Firebase Realtime Database"
+      - "feature(firebase): Add GomaLogger debugging to RealtimeSocketClient for Firebase boot_configurations diagnostics"
       
   - version: "0.3.1"
     build: 3112
