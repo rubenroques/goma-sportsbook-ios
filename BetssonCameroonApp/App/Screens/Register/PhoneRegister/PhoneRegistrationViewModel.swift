@@ -138,7 +138,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                          isSecure: true,
                                                          isRequired: true,
                                                          visualState: .idle,
-                                                         keyboardType: .default,
+                                                         keyboardType: .numbersAndPunctuation,
                                                          returnKeyType: .next,
                                                          textContentType: .password))
             case "FirstnameOnDocument":
@@ -190,8 +190,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             case "TermsAndConditions":
                 let extractedTermsHTMLData = self.extractedTermsHTMLData
 
-                // swiftlint:disable line_length
-                let fullText = extractedTermsHTMLData?.fullText ?? "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy"
+                let fullText = extractedTermsHTMLData?.fullText ?? localized("terms_fallback_text")
 
                 let termsData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .terms
@@ -206,8 +205,8 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
 
                 termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
-                                                                              termsText: termsData?.text ?? "Terms and Conditions",
-                                                                              privacyText: privacyData?.text ?? "Privacy Policy",
+                                                                              termsText: termsData?.text ?? localized("terms_and_conditions"),
+                                                                              privacyText: privacyData?.text ?? localized("privacy_policy"),
                                                                               cookiesText: cookiesData?.text,
                                                                                         isAccepted: true))
             case "PromoCode":
@@ -308,10 +307,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 
                 let isValidPhoneNumberData = RegisterConfigHelper.isValidPhoneNumber(phoneText: phoneText, registrationConfig: registrationConfig)
                 
-                if phoneText.isEmpty {
-                    phoneFieldViewModel.clearError()
-                } else if !isValidPhoneNumberData.0 {
-                    phoneFieldViewModel.setError("\(isValidPhoneNumberData.1)")
+                if !isValidPhoneNumberData.0 && !phoneText.isEmpty {
+                    let error = isValidPhoneNumberData.1
+                    let translatedError = localized(error)
+                    phoneFieldViewModel.setError(translatedError)
                 } else {
                     phoneFieldViewModel.clearError()
                 }
@@ -328,7 +327,9 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 let isValidPasswordData = RegisterConfigHelper.isValidPassword(passwordText: passwordText, registrationConfig: registrationConfig)
                 
                 if !isValidPasswordData.0 && !passwordText.isEmpty {
-                    passwordFieldViewModel.setError("\(isValidPasswordData.1)")
+                    let error = isValidPasswordData.1
+                    let translatedError = localized(error)
+                    passwordFieldViewModel.setError(translatedError)
                 }
                 else {
                     passwordFieldViewModel.clearError()
@@ -347,10 +348,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     
                     let isValidFirstNameData = RegisterConfigHelper.isValidFirstName(text: firstNameText, registrationConfig: registrationConfig)
                     
-                    if firstNameText.isEmpty {
-                        firstNameFieldViewModel.clearError()
-                    } else if !isValidFirstNameData.0 {
-                        firstNameFieldViewModel.setError("\(isValidFirstNameData.1)")
+                    if !isValidFirstNameData.0 && !firstNameText.isEmpty {
+                        let error = isValidFirstNameData.1
+                        let translatedError = localized(error)
+                        firstNameFieldViewModel.setError(translatedError)
                     } else {
                         firstNameFieldViewModel.clearError()
                     }
@@ -369,10 +370,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     
                     let isValidLastNameData = RegisterConfigHelper.isValidLastName(text: lastNameText, registrationConfig: registrationConfig)
                     
-                    if lastNameText.isEmpty {
-                        lastNameFieldViewModel.clearError()
-                    } else if !isValidLastNameData.0 {
-                        lastNameFieldViewModel.setError("\(isValidLastNameData.1)")
+                    if !isValidLastNameData.0 && !lastNameText.isEmpty {
+                        let error = isValidLastNameData.1
+                        let translatedError = localized(error)
+                        lastNameFieldViewModel.setError(translatedError)
                     } else {
                         lastNameFieldViewModel.clearError()
                     }
@@ -391,10 +392,10 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                     
                     let isValidBirthDateData = RegisterConfigHelper.isValidBirthDate(dateText: birthDateText, registrationConfig: registrationConfig)
                     
-                    if birthDateText.isEmpty {
-                        birthDateFieldViewModel.clearError()
-                    } else if !isValidBirthDateData.0 {
-                        birthDateFieldViewModel.setError("\(isValidBirthDateData.1)")
+                    if !isValidBirthDateData.0 && !birthDateText.isEmpty {
+                        let error = isValidBirthDateData.1
+                        let translatedError = localized(error)
+                        birthDateFieldViewModel.setError(translatedError)
                     } else {
                         birthDateFieldViewModel.clearError()
                     }

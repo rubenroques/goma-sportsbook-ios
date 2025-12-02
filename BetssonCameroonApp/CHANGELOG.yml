@@ -5,6 +5,15 @@
 releases:
 
   - version: "0.3.1"
+    build: 3120
+    date: "2025-12-XX"
+    notes:
+      - "fix(architecture): Refactor OutcomeItemView selection to proper MVVM pattern - single source of truth, unidirectional data flow, parent VM observes child VM publishers"
+      - "fix(security): [SPOR-6688] [BC-321] Clear MyBets cached data on logout to prevent next user from seeing previous user's betting history"
+      - "fix(register): Change priority on localization to all registration field validation error messages code (LegislationAPI key > phrase > local fallack)"
+      - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
+      
+  - version: "0.3.1"
     build: 3112
     date: "2025-12-28"
     notes:

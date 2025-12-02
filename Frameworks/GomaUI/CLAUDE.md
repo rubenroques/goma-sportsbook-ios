@@ -102,34 +102,64 @@ final class CasinoGameCardCollectionViewCell: UICollectionViewCell {
 
 All components must be UIView subclasses for maximum reusability. Table/collection cells are created as thin wrappers.
 
-### 4. Cell Reuse Support
+### 4. ReusableView Protocol - Cell Reuse Support
 
-Components used inside cells **must implement `prepareForReuse()`** that:
-- Clears `cancellables`
-- Resets callbacks to empty closures
-- Calls `cleanupForReuse()` on child components
+**All GomaUI components must conform to `ReusableView`** and be able to render themselves without a ViewModel (blank/empty state). This ensures no stale data appears during cell recycling.
 
-The wrapper cell calls the wrapped view's `prepareForReuse()` in its own `prepareForReuse()`.
+```swift
+public protocol ReusableView {
+    func prepareForReuse()
+}
+```
 
-### 5. Synchronous State Access for Cell-Based Components
+**Requirements:**
 
-**Problem**: Combine publishers have a micro-delay before emitting. UITableView/UICollectionView calculate cell sizes *before* Combine emits, causing broken layouts when view sizing depends on ViewModel data.
+1. **ViewModel must be optional** - component handles `nil` gracefully with empty/blank state
+2. **`prepareForReuse()`** clears cancellables, resets callbacks, nils ViewModel, clears visuals, calls child cleanup
+3. **`configure(with:)`** sets ViewModel and renders synchronously
 
-**Solution**: ViewModel protocols for cell-based components must expose both:
+```swift
+final class SomeView: UIView, ReusableView {
+    private var viewModel: SomeViewModelProtocol?  // Optional!
+    private var cancellables = Set<AnyCancellable>()
+
+    func prepareForReuse() {
+        cancellables.removeAll()
+        viewModel = nil
+        onCallback = {}
+        childView.prepareForReuse()
+        renderEmptyState()  // titleLabel.text = nil, imageView.image = nil, etc.
+    }
+
+    func configure(with viewModel: SomeViewModelProtocol) {
+        self.viewModel = viewModel
+        render(state: viewModel.currentDisplayState)  // Sync first
+        setupBindings()
+    }
+}
+```
+
+### 5. Synchronous State Access (Reactive Components)
+
+**Problem**: Combine publishers have a micro-delay. UITableView/UICollectionView calculate cell sizes *before* Combine emits, breaking layouts.
+
+**Solution**: Reactive ViewModel protocols must expose both:
 - `displayStatePublisher` - for reactive updates
 - `currentDisplayState` - for **synchronous immediate access**
 
+ViewModels must use `CurrentValueSubject` (not `PassthroughSubject`) to back the publisher.
+
 ```swift
-// In configure(), render synchronously THEN setup bindings with dropFirst()
-func configure(with viewModel: ViewModelProtocol) {
-    self.viewModel = viewModel
-    render(state: viewModel.currentDisplayState)  // Immediate - fixes layout
-    setupBindings()
+// ViewModel Protocol
+protocol XViewModelProtocol {
+    var currentDisplayState: XDisplayState { get }
+    var displayStatePublisher: AnyPublisher<XDisplayState, Never> { get }
 }
 
+// View bindings - use dropFirst() to avoid double-render
 private func setupBindings() {
-    viewModel.displayStatePublisher
-        .dropFirst()  // Skip initial - already rendered synchronously
+    viewModel?.displayStatePublisher
+        .dropFirst()  // Skip initial - already rendered synchronously in configure()
         .receive(on: DispatchQueue.main)
         .sink { [weak self] state in self?.render(state: state) }
         .store(in: &cancellables)

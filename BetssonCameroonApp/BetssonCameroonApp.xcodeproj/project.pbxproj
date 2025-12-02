@@ -55,6 +55,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
+				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
 				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
@@ -329,15 +330,18 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist",
+				"$(SRCROOT)/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
 			name = "Copy Firebase Config";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(PRODUCT_NAME).app/GoogleService-Info.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Copy correct GoogleService-Info.plist based on environment\nif [ \"${APP_ENVIRONMENT}\" == \"Production\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Production GoogleService-Info.plist\"\nelif [ \"${APP_ENVIRONMENT}\" == \"Staging\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Staging GoogleService-Info.plist\"\nfi\n";
+			shellScript = "# Copy correct GoogleService-Info.plist based on environment\necho \"APP_ENVIRONMENT is: ${APP_ENVIRONMENT}\"\necho \"SRCROOT is: ${SRCROOT}\"\necho \"BUILT_PRODUCTS_DIR is: ${BUILT_PRODUCTS_DIR}\"\necho \"PRODUCT_NAME is: ${PRODUCT_NAME}\"\n\nif [ \"${APP_ENVIRONMENT}\" = \"Production\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Production GoogleService-Info.plist\"\nelif [ \"${APP_ENVIRONMENT}\" = \"Staging\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Staging GoogleService-Info.plist\"\nelse\n    echo \"WARNING: APP_ENVIRONMENT not recognized: ${APP_ENVIRONMENT}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

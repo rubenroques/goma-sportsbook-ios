@@ -2,7 +2,7 @@ import UIKit
 import Combine
 
 /// Mock implementation of CompactMatchHeaderViewModelProtocol for testing and previews
-internal final class MockCompactMatchHeaderViewModel: CompactMatchHeaderViewModelProtocol {
+public final class MockCompactMatchHeaderViewModel: CompactMatchHeaderViewModelProtocol {
 
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<CompactMatchHeaderDisplayState, Never>

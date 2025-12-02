@@ -2,13 +2,15 @@ import UIKit
 import Combine
 
 /// Mock implementation of CompactOutcomesLineViewModelProtocol for testing and previews
-internal final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
+public final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
 
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<CompactOutcomesLineDisplayState, Never>
     private let leftOutcomeSubject: CurrentValueSubject<OutcomeItemViewModelProtocol?, Never>
     private let middleOutcomeSubject: CurrentValueSubject<OutcomeItemViewModelProtocol?, Never>
     private let rightOutcomeSubject: CurrentValueSubject<OutcomeItemViewModelProtocol?, Never>
+    private let outcomeSelectionDidChangeSubject: PassthroughSubject<CompactOutcomeSelectionEvent, Never>
+    private var childCancellables = Set<AnyCancellable>()
 
     // MARK: - Protocol Properties
     public var displayStatePublisher: AnyPublisher<CompactOutcomesLineDisplayState, Never> {
@@ -43,6 +45,11 @@ internal final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewMo
         rightOutcomeSubject.value
     }
 
+    /// Publisher for selection changes from child OutcomeItemViewModels.
+    public var outcomeSelectionDidChangePublisher: AnyPublisher<CompactOutcomeSelectionEvent, Never> {
+        outcomeSelectionDidChangeSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Initialization
     public init(
         displayMode: CompactOutcomesDisplayMode,
@@ -57,17 +64,42 @@ internal final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewMo
             rightOutcome: rightOutcome
         )
         self.displayStateSubject = CurrentValueSubject(state)
+        self.outcomeSelectionDidChangeSubject = PassthroughSubject()
 
         // Create child view models
-        self.leftOutcomeSubject = CurrentValueSubject(
-            leftOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
-        )
-        self.middleOutcomeSubject = CurrentValueSubject(
-            middleOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
-        )
-        self.rightOutcomeSubject = CurrentValueSubject(
-            rightOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
-        )
+        let leftVM = leftOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
+        let middleVM = middleOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
+        let rightVM = rightOutcome.map { MockOutcomeItemViewModel(outcomeData: $0) }
+
+        self.leftOutcomeSubject = CurrentValueSubject(leftVM)
+        self.middleOutcomeSubject = CurrentValueSubject(middleVM)
+        self.rightOutcomeSubject = CurrentValueSubject(rightVM)
+
+        // Subscribe to child selection changes
+        if let vm = leftVM {
+            subscribeToChildSelectionChanges(vm, type: .left)
+        }
+        if let vm = middleVM {
+            subscribeToChildSelectionChanges(vm, type: .middle)
+        }
+        if let vm = rightVM {
+            subscribeToChildSelectionChanges(vm, type: .right)
+        }
+    }
+
+    private func subscribeToChildSelectionChanges(_ childVM: OutcomeItemViewModelProtocol, type: OutcomeType) {
+        childVM.selectionDidChangePublisher
+            .sink { [weak self] event in
+                let parentEvent = CompactOutcomeSelectionEvent(
+                    outcomeId: event.outcomeId,
+                    bettingOfferId: event.bettingOfferId,
+                    outcomeType: type,
+                    isSelected: event.isSelected,
+                    timestamp: event.timestamp
+                )
+                self?.outcomeSelectionDidChangeSubject.send(parentEvent)
+            }
+            .store(in: &childCancellables)
     }
 
     // MARK: - Protocol Methods

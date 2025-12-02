@@ -154,34 +154,69 @@ public struct MarketOutcomesLineDisplayState: Equatable {
     }
 }
 
+// MARK: - Selection Change Event
+/// Event emitted when a child OutcomeItemViewModel's selection changes via user tap.
+/// Includes OutcomeType so the View knows which position was affected.
+/// This is the proper MVVM pattern: Parent VM observes children, re-publishes for its View.
+public struct MarketOutcomeSelectionEvent: Equatable {
+    public let outcomeId: String
+    public let bettingOfferId: String?
+    public let outcomeType: OutcomeType
+    public let isSelected: Bool
+    public let timestamp: Date
+
+    public init(outcomeId: String,
+                bettingOfferId: String?,
+                outcomeType: OutcomeType,
+                isSelected: Bool,
+                timestamp: Date = Date()) {
+        self.outcomeId = outcomeId
+        self.bettingOfferId = bettingOfferId
+        self.outcomeType = outcomeType
+        self.isSelected = isSelected
+        self.timestamp = timestamp
+    }
+}
+
 // MARK: - View Model Protocol
 public protocol MarketOutcomesLineViewModelProtocol {
-    // Single state publisher for all market data
+    // MARK: - Publishers
+
+    /// Main state publisher for all market data
     var marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never> { get }
     var marketStatePublisher: AnyPublisher<MarketOutcomesLineDisplayState, Never> { get }
 
-    // Odds change events for animation triggers (separate for performance)
+    /// Odds change events for animation triggers
     var oddsChangeEventPublisher: AnyPublisher<OddsChangeEvent, Never> { get }
 
-    // Actions
-    func toggleOutcome(type: OutcomeType) -> Bool
+    /// Selection change events from child OutcomeItemViewModels.
+    /// View observes this to notify external callbacks (Coordinator/BetslipService).
+    /// This is the proper MVVM pattern - parent VM re-publishes child events for its View.
+    var outcomeSelectionDidChangePublisher: AnyPublisher<MarketOutcomeSelectionEvent, Never> { get }
+
+    // MARK: - State Mutations (called by external systems)
+
+    /// Sets outcome as selected from external source (e.g., betslip sync)
     func setOutcomeSelected(type: OutcomeType)
+
+    /// Sets outcome as deselected from external source (e.g., betslip sync)
     func setOutcomeDeselected(type: OutcomeType)
 
-    // Enhanced odds update with automatic direction calculation
+    /// Updates odds value with automatic direction calculation
     func updateOddsValue(type: OutcomeType, newValue: String)
 
-    // Legacy method for manual direction specification (for testing)
+    /// Updates odds value with manual direction specification (for testing)
     func updateOddsValue(type: OutcomeType, value: String, changeDirection: OddsChangeDirection)
 
+    /// Sets the display mode
     func setDisplayMode(_ mode: MarketDisplayMode)
 
-    // Clear odds change indicators (called after animation completes)
+    /// Clears odds change indicator after animation completes
     func clearOddsChangeIndicator(type: OutcomeType)
 
-    // Child ViewModel creation - following MVVM pattern where parent creates children
+    /// Creates child ViewModel for a given outcome type
     func createOutcomeViewModel(for outcomeType: OutcomeType) -> OutcomeItemViewModelProtocol?
 
-    // Selection state synchronization from external source (e.g., betslip)
+    /// Synchronizes selection states from external source (e.g., betslip)
     func updateSelectionStates(selectedOfferIds: Set<String>)
 }

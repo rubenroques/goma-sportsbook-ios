@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 import GomaUI
-import ServicesProvider
 
 public final class BetslipViewModel: BetslipViewModelProtocol {
     
@@ -23,7 +22,7 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
             config: BetslipConfigMetadata(
                 name: "standard-betslip-container",
                 version: "1.0.0",
-                defaultLanguage: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
+                defaultLanguage: localized("current_language_code"),
                 id: "standard-betslip-container"
             ),
             settings: [

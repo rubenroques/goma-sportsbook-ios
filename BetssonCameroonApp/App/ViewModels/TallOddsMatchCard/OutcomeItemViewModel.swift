@@ -20,7 +20,8 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let isSelectedSubject: CurrentValueSubject<Bool, Never>
     private let isDisabledSubject: CurrentValueSubject<Bool, Never>
     private let oddsChangeEventSubject: PassthroughSubject<GomaUI.OutcomeItemOddsChangeEvent, Never>
-    
+    private let selectionDidChangeSubject: PassthroughSubject<GomaUI.OutcomeSelectionChangeEvent, Never>
+
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Protocol Conformance
@@ -48,8 +49,13 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     public var oddsChangeEventPublisher: AnyPublisher<GomaUI.OutcomeItemOddsChangeEvent, Never> {
         oddsChangeEventSubject.eraseToAnyPublisher()
     }
-    
-    
+
+    /// Publisher for selection changes triggered by user interaction.
+    /// Parent ViewModels observe this to know when selection changes.
+    public var selectionDidChangePublisher: AnyPublisher<GomaUI.OutcomeSelectionChangeEvent, Never> {
+        selectionDidChangeSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Initialization
     init(
         outcomeId: String,
@@ -63,16 +69,42 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
         self.isSelectedSubject = CurrentValueSubject(initialOutcomeData.isSelected)
         self.isDisabledSubject = CurrentValueSubject(initialOutcomeData.isDisabled)
         self.oddsChangeEventSubject = PassthroughSubject()
+        self.selectionDidChangeSubject = PassthroughSubject()
         self.displayStateSubject = CurrentValueSubject(initialOutcomeData.displayState)
 
         setupOutcomeSubscription()
     }
     
-    // MARK: - Public Methods
-    public func toggleSelection() -> Bool {
+    // MARK: - User Actions
+
+    /// Called by the View when user taps the outcome.
+    /// This is the single entry point for user-initiated selection changes.
+    public func userDidTapOutcome() {
+        let currentDisplayState = displayStateSubject.value
+
+        // Only allow toggling if in normal state
+        guard currentDisplayState.canBeSelected else { return }
+
         let newIsSelected = !isSelectedSubject.value
         isSelectedSubject.send(newIsSelected)
-        return newIsSelected
+
+        // Update display state
+        switch currentDisplayState {
+        case .normal(_, let isBoosted):
+            let newDisplayState = GomaUI.OutcomeDisplayState.normal(isSelected: newIsSelected, isBoosted: isBoosted)
+            displayStateSubject.send(newDisplayState)
+        default:
+            break
+        }
+
+        // Publish selection change event for parent ViewModels to observe
+        let event = GomaUI.OutcomeSelectionChangeEvent(
+            outcomeId: outcomeId,
+            bettingOfferId: bettingOfferId,
+            isSelected: newIsSelected,
+            timestamp: Date()
+        )
+        selectionDidChangeSubject.send(event)
     }
     
     public func updateOddsValue(_ newValue: String) {

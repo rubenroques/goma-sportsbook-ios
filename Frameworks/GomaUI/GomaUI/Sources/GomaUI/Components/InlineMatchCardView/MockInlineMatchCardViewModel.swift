@@ -2,7 +2,7 @@ import UIKit
 import Combine
 
 /// Mock implementation of InlineMatchCardViewModelProtocol for testing and previews
-internal final class MockInlineMatchCardViewModel: InlineMatchCardViewModelProtocol {
+public  final class MockInlineMatchCardViewModel: InlineMatchCardViewModelProtocol {
 
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<InlineMatchCardDisplayState, Never>

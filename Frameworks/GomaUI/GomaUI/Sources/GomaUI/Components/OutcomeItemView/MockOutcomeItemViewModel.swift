@@ -5,15 +5,24 @@ import UIKit
 /// Mock implementation of `OutcomeItemViewModelProtocol` for testing.
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
-    // MARK: - Publishers
+    // MARK: - Subjects
     public let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>
+    private let selectionDidChangeSubject: PassthroughSubject<OutcomeSelectionChangeEvent, Never>
 
     // MARK: - Internal Properties
     internal var cancellables = Set<AnyCancellable>()
 
+    // MARK: - Publishers
+
     public var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> {
         return oddsChangeEventSubject.eraseToAnyPublisher()
+    }
+
+    /// Publisher for selection changes triggered by user interaction.
+    /// Parent ViewModels should observe this instead of calling toggleSelection().
+    public var selectionDidChangePublisher: AnyPublisher<OutcomeSelectionChangeEvent, Never> {
+        return selectionDidChangeSubject.eraseToAnyPublisher()
     }
 
     // Individual publishers for granular updates
@@ -32,7 +41,7 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
     public var isDisabledPublisher: AnyPublisher<Bool, Never> {
         return outcomeDataSubject.map(\.isDisabled).eraseToAnyPublisher()
     }
-    
+
     public var displayStatePublisher: AnyPublisher<OutcomeDisplayState, Never> {
         return outcomeDataSubject.map(\.displayState).eraseToAnyPublisher()
     }
@@ -41,23 +50,37 @@ final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
     public init(outcomeData: OutcomeItemData) {
         self.outcomeDataSubject = CurrentValueSubject(outcomeData)
         self.oddsChangeEventSubject = PassthroughSubject()
+        self.selectionDidChangeSubject = PassthroughSubject()
     }
 
-    // MARK: - OutcomeItemViewModelProtocol
-    public func toggleSelection() -> Bool {
+    // MARK: - User Actions (called by View)
+
+    /// Called by the View when user taps the outcome.
+    /// This is the single entry point for user-initiated selection changes.
+    /// It toggles the selection and publishes the change for parent observation.
+    public func userDidTapOutcome() {
         let currentData = outcomeDataSubject.value
-        
+
         // Only allow toggling if in normal state
-        guard case .normal(let isSelected, let isBoosted) = currentData.displayState else {
-            return false // Can't select loading/locked/unavailable states
+        guard currentData.displayState.canBeSelected else {
+            return // Can't select loading/locked/unavailable states
         }
-        
-        let newSelectionState = !isSelected
-        let newData = currentData.withSelection(newSelectionState)
+
+        let newSelected = !currentData.isSelected
+        let newData = currentData.withSelection(newSelected)
         outcomeDataSubject.send(newData)
-        
-        return newSelectionState
+
+        // Publish selection change event for parent ViewModels to observe
+        let event = OutcomeSelectionChangeEvent(
+            outcomeId: currentData.id,
+            bettingOfferId: currentData.bettingOfferId,
+            isSelected: newSelected,
+            timestamp: Date()
+        )
+        selectionDidChangeSubject.send(event)
     }
+
+    // MARK: - State Mutations
 
     public func updateValue(_ newValue: String) {
         let currentData = outcomeDataSubject.value
