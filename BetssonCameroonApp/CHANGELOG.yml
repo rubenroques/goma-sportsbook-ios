@@ -12,6 +12,7 @@ releases:
       - "fix(security): [SPOR-6688] [BC-321] Clear MyBets cached data on logout to prevent next user from seeing previous user's betting history"
       - "fix(register): Change priority on localization to all registration field validation error messages code (LegislationAPI key > phrase > local fallack)"
       - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
+      - "fix(filter): SPOR-5789 - Icons changed; Added behavior for icon that doesn't need tint coloring"
       
   - version: "0.3.1"
     build: 3112
