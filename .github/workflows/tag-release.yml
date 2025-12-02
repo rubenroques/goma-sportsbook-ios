@@ -125,6 +125,13 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ steps.config.outputs.directory }}
+
       - name: Validate tag matches Xcode project version
         working-directory: ${{ steps.config.outputs.directory }}
         run: |
@@ -136,9 +143,9 @@ jobs:
           echo "Validating tag version matches Xcode project..."
           echo "   Tag: v$TAG_VERSION ($TAG_BUILD)"
 
-          # Extract version from Xcode project
-          PROJECT_VERSION=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "MARKETING_VERSION" | head -1 | awk '{print $3}')
-          PROJECT_BUILD=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "CURRENT_PROJECT_VERSION" | head -1 | awk '{print $3}')
+          # Extract version from Xcode project using fastlane-plugin-versioning (fast, no xcodebuild)
+          PROJECT_VERSION=$(bundle exec fastlane run get_version_number_from_xcodeproj xcodeproj:"$PROJECT" target:"$TARGET" 2>&1 | grep -o "Result: [0-9.]*" | awk '{print $2}')
+          PROJECT_BUILD=$(bundle exec fastlane run get_build_number_from_xcodeproj xcodeproj:"$PROJECT" target:"$TARGET" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
 
           echo "   Xcode: v$PROJECT_VERSION ($PROJECT_BUILD)"
 
@@ -212,13 +219,6 @@ jobs:
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-          working-directory: ${{ steps.config.outputs.directory }}
 
       - name: Setup App Store Connect API Key
         working-directory: ${{ steps.config.outputs.directory }}/fastlane

@@ -5,6 +5,12 @@
 releases:
 
   - version: "0.3.2"
+    build: 3201
+    date: "2025-12-02"
+    notes:
+      - "ci: Optimize tag validation step from ~4min to ~10sec by using fastlane-plugin-versioning instead of xcodebuild"
+
+  - version: "0.3.2"
     build: 3121
     date: "2025-12-02"
     notes:
