@@ -140,3 +140,4 @@ BetssonCameroonApp/fastlane/logs
 # Git worktrees directory (keep directory, ignore contents)
 git-worktrees/*
 !git-worktrees/.gitkeep
+compare_services_provider.py

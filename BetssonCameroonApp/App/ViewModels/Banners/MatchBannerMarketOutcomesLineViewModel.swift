@@ -17,7 +17,9 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     // MARK: - Subjects
     public let marketStateSubject: CurrentValueSubject<MarketOutcomesLineDisplayState, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OddsChangeEvent, Never>
+    private let outcomeSelectionDidChangeSubject: PassthroughSubject<MarketOutcomeSelectionEvent, Never>
     private var cancellables = Set<AnyCancellable>()
+    private var childCancellables = Set<AnyCancellable>()
 
     // MARK: - Child ViewModels
     private var outcomeViewModels: [OutcomeType: OutcomeItemViewModel] = [:]
@@ -35,6 +37,11 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         oddsChangeEventSubject.eraseToAnyPublisher()
     }
 
+    /// Publisher for selection changes from child OutcomeItemViewModels.
+    public var outcomeSelectionDidChangePublisher: AnyPublisher<MarketOutcomeSelectionEvent, Never> {
+        outcomeSelectionDidChangeSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Initialization
     init(match: Match, market: Market) {
         self.match = match
@@ -45,6 +52,7 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
 
         self.marketStateSubject = CurrentValueSubject(initialDisplayState)
         self.oddsChangeEventSubject = PassthroughSubject()
+        self.outcomeSelectionDidChangeSubject = PassthroughSubject()
 
         // Create outcome view models with correct selection state
         createOutcomeViewModels(from: initialDisplayState)
@@ -54,14 +62,6 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     }
 
     // MARK: - Public Methods
-    public func toggleOutcome(type: OutcomeType) -> Bool {
-        guard let outcomeViewModel = outcomeViewModels[type] else {
-            return false
-        }
-
-        return outcomeViewModel.toggleSelection()
-    }
-
     public func setOutcomeSelected(type: OutcomeType) {
         guard let outcomeViewModel = outcomeViewModels[type] else { return }
         outcomeViewModel.setSelected(true)
@@ -115,12 +115,14 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
     // MARK: - Private Methods
     private func createOutcomeViewModels(from displayState: MarketOutcomesLineDisplayState) {
         outcomeViewModels.removeAll()
+        childCancellables.removeAll()
 
         // Create left outcome
         if let leftOutcome = displayState.leftOutcome {
             let outcomeItemData = convertToOutcomeItemData(leftOutcome)
             let viewModel = OutcomeItemViewModel(outcomeId: leftOutcome.id, initialOutcomeData: outcomeItemData)
             outcomeViewModels[.left] = viewModel
+            subscribeToChildSelectionChanges(viewModel, type: .left)
         }
 
         // Create middle outcome
@@ -128,6 +130,7 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
             let outcomeItemData = convertToOutcomeItemData(middleOutcome)
             let viewModel = OutcomeItemViewModel(outcomeId: middleOutcome.id, initialOutcomeData: outcomeItemData)
             outcomeViewModels[.middle] = viewModel
+            subscribeToChildSelectionChanges(viewModel, type: .middle)
         }
 
         // Create right outcome
@@ -135,7 +138,23 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
             let outcomeItemData = convertToOutcomeItemData(rightOutcome)
             let viewModel = OutcomeItemViewModel(outcomeId: rightOutcome.id, initialOutcomeData: outcomeItemData)
             outcomeViewModels[.right] = viewModel
+            subscribeToChildSelectionChanges(viewModel, type: .right)
         }
+    }
+
+    private func subscribeToChildSelectionChanges(_ childVM: OutcomeItemViewModel, type: OutcomeType) {
+        childVM.selectionDidChangePublisher
+            .sink { [weak self] event in
+                let parentEvent = MarketOutcomeSelectionEvent(
+                    outcomeId: event.outcomeId,
+                    bettingOfferId: event.bettingOfferId,
+                    outcomeType: type,
+                    isSelected: event.isSelected,
+                    timestamp: event.timestamp
+                )
+                self?.outcomeSelectionDidChangeSubject.send(parentEvent)
+            }
+            .store(in: &childCancellables)
     }
 
     private func setupBetslipSubscription() {

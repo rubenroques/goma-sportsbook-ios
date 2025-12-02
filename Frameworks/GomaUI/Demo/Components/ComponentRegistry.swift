@@ -237,6 +237,48 @@ struct ComponentRegistry {
     // MARK: - Match & Sports Display Components
     private static let matchDisplayComponents: [UIComponent] = [
         UIComponent(
+            title: "Inline Match Card",
+            description: "Compact match card with real-time simulation for odds, scores, and market availability. Includes 10+ cells for cell reuse testing",
+            viewController: InlineMatchCardViewController.self,
+            previewFactory: {
+                let viewModel = MockInlineMatchCardViewModel.preLiveFootball
+                let cardView = InlineMatchCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundCards
+                cardView.layer.cornerRadius = 8
+                return cardView
+            }
+        ),
+        UIComponent(
+            title: "Inline Score View",
+            description: "Multi-column score display for live matches with sport-specific layouts (football, tennis, basketball)",
+            viewController: InlineScoreViewController.self,
+            previewFactory: {
+                let viewModel = MockInlineScoreViewModel.footballMatch
+                let scoreView = InlineScoreView(viewModel: viewModel)
+                return scoreView
+            }
+        ),
+        UIComponent(
+            title: "Compact Match Header",
+            description: "Pre-live date/time or LIVE badge with status, feature icons, and market count",
+            viewController: CompactMatchHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockCompactMatchHeaderViewModel.liveTennis
+                let headerView = CompactMatchHeaderView(viewModel: viewModel)
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Compact Outcomes Line",
+            description: "2-way or 3-way betting outcomes in compact horizontal layout with selection and odds updates",
+            viewController: CompactOutcomesLineViewController.self,
+            previewFactory: {
+                let viewModel = MockCompactOutcomesLineViewModel.threeWayMarket
+                let outcomesView = CompactOutcomesLineView(viewModel: viewModel)
+                return outcomesView
+            }
+        ),
+        UIComponent(
             title: "Match Header",
             description: "Sports competition header with country flag, sport icon, and favorite toggle functionality",
             viewController: MatchHeaderViewController.self,

@@ -2,7 +2,7 @@ import UIKit
 import Combine
 
 /// Mock implementation of InlineScoreViewModelProtocol for testing and previews
-internal final class MockInlineScoreViewModel: InlineScoreViewModelProtocol {
+public final class MockInlineScoreViewModel: InlineScoreViewModelProtocol {
 
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<InlineScoreDisplayState, Never>

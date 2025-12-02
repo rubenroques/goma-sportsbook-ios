@@ -60,6 +60,29 @@ public struct CompactOutcomesLineDisplayState: Equatable, Hashable {
     }
 }
 
+// MARK: - Selection Event
+
+/// Event emitted when a child OutcomeItemViewModel's selection changes via user tap.
+public struct CompactOutcomeSelectionEvent: Equatable {
+    public let outcomeId: String
+    public let bettingOfferId: String?
+    public let outcomeType: OutcomeType
+    public let isSelected: Bool
+    public let timestamp: Date
+
+    public init(outcomeId: String,
+                bettingOfferId: String?,
+                outcomeType: OutcomeType,
+                isSelected: Bool,
+                timestamp: Date = Date()) {
+        self.outcomeId = outcomeId
+        self.bettingOfferId = bettingOfferId
+        self.outcomeType = outcomeType
+        self.isSelected = isSelected
+        self.timestamp = timestamp
+    }
+}
+
 // MARK: - Protocol
 
 /// Protocol defining the interface for CompactOutcomesLineView ViewModels
@@ -80,10 +103,14 @@ public protocol CompactOutcomesLineViewModelProtocol: AnyObject {
     var currentMiddleOutcomeViewModel: OutcomeItemViewModelProtocol? { get }
     var currentRightOutcomeViewModel: OutcomeItemViewModelProtocol? { get }
 
-    /// Handle outcome selection
+    /// Publisher for selection changes from child OutcomeItemViewModels.
+    /// View observes this to notify external callbacks (proper MVVM pattern).
+    var outcomeSelectionDidChangePublisher: AnyPublisher<CompactOutcomeSelectionEvent, Never> { get }
+
+    /// Handle outcome selection (called by ViewModel internally, not View)
     func onOutcomeSelected(outcomeId: String, outcomeType: OutcomeType)
 
-    /// Handle outcome deselection
+    /// Handle outcome deselection (called by ViewModel internally, not View)
     func onOutcomeDeselected(outcomeId: String, outcomeType: OutcomeType)
 
     /// Set outcome selected state programmatically

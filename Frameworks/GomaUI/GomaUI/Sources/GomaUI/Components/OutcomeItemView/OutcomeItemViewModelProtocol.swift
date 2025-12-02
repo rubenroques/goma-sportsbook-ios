@@ -200,29 +200,67 @@ public struct OutcomeItemOddsChangeEvent: Equatable {
     }
 }
 
+// MARK: - Selection Change Event
+/// Event emitted when outcome selection state changes via user interaction.
+/// Parent ViewModels should observe this publisher instead of calling toggle methods directly.
+/// This enforces unidirectional data flow: View -> ViewModel -> Publishers -> Parent Observer
+public struct OutcomeSelectionChangeEvent: Equatable {
+    public let outcomeId: String
+    public let bettingOfferId: String?
+    public let isSelected: Bool
+    public let timestamp: Date
+
+    public init(outcomeId: String,
+                bettingOfferId: String?,
+                isSelected: Bool,
+                timestamp: Date = Date()) {
+        self.outcomeId = outcomeId
+        self.bettingOfferId = bettingOfferId
+        self.isSelected = isSelected
+        self.timestamp = timestamp
+    }
+}
+
 // MARK: - View Model Protocol
 public protocol OutcomeItemViewModelProtocol {
-    // Publishers
-    var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
+    // MARK: - Publishers
+
+    /// Main data subject containing all outcome state
     var outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never> { get }
+
+    /// Publisher for odds change animations
+    var oddsChangeEventPublisher: AnyPublisher<OutcomeItemOddsChangeEvent, Never> { get }
+
+    /// Publisher for selection changes - Parent ViewModels should observe this
+    /// instead of calling toggleSelection() directly. This is the cornerstone of
+    /// proper MVVM architecture for nested components.
+    var selectionDidChangePublisher: AnyPublisher<OutcomeSelectionChangeEvent, Never> { get }
 
     // Individual publishers for granular updates (backward compatibility)
     var titlePublisher: AnyPublisher<String, Never> { get }
     var valuePublisher: AnyPublisher<String, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
     var isDisabledPublisher: AnyPublisher<Bool, Never> { get }
-    
-    // New unified state publisher
+
+    // Unified state publisher
     var displayStatePublisher: AnyPublisher<OutcomeDisplayState, Never> { get }
 
-    // Actions
-    func toggleSelection() -> Bool
+    // MARK: - User Actions (called by View)
+
+    /// Called by the View when user taps the outcome.
+    /// The ViewModel decides whether to toggle based on current state.
+    /// This is the ONLY method the View should call for user interaction.
+    func userDidTapOutcome()
+
+    // MARK: - State Mutations (called by parent/external systems)
+
+    /// Sets selection state from external source (e.g., betslip sync).
+    /// Does NOT emit selectionDidChange event since this is external sync, not user action.
+    func setSelected(_ selected: Bool)
+
+    func setDisabled(_ disabled: Bool)
+    func setDisplayState(_ state: OutcomeDisplayState)
     func updateValue(_ newValue: String)
     func updateValue(_ newValue: String, changeDirection: OddsChangeDirection)
-    func setSelected(_ selected: Bool)
-    func setDisabled(_ disabled: Bool)
     func clearOddsChangeIndicator()
-    
-    // Unified state action
-    func setDisplayState(_ state: OutcomeDisplayState)
 } 

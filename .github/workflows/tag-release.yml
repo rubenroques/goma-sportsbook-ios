@@ -332,17 +332,26 @@ jobs:
           echo ""
 
           if [ "$CLIENT" = "BCM" ]; then
-            echo ">>> Step 1/2: Building BCM Staging..."
-            bundle exec fastlane keep_version_distribute_staging release_notes:"$NOTES"
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ BCM STAGING DISTRIBUTION - Comment this block to skip staging  ║
+            # ╚════════════════════════════════════════════════════════════════╝
+            # echo ">>> Step 1/2: Building BCM Staging..."
+            # bundle exec fastlane keep_version_distribute_staging release_notes:"$NOTES"
+            #
+            # if [ $? -ne 0 ]; then
+            #   echo "::error::BCM Staging distribution failed"
+            #   exit 1
+            # fi
+            # echo "BCM Staging distribution complete"
+            # echo ""
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ END BCM STAGING DISTRIBUTION                                   ║
+            # ╚════════════════════════════════════════════════════════════════╝
 
-            if [ $? -ne 0 ]; then
-              echo "::error::BCM Staging distribution failed"
-              exit 1
-            fi
-            echo "BCM Staging distribution complete"
-            echo ""
-
-            echo ">>> Step 2/2: Building BCM Production..."
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ BCM PRODUCTION DISTRIBUTION                                    ║
+            # ╚════════════════════════════════════════════════════════════════╝
+            echo ">>> Building BCM Production..."
             bundle exec fastlane keep_version_distribute_production release_notes:"$NOTES"
 
             if [ $? -ne 0 ]; then
@@ -350,8 +359,14 @@ jobs:
               exit 1
             fi
             echo "BCM Production distribution complete"
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ END BCM PRODUCTION DISTRIBUTION                                ║
+            # ╚════════════════════════════════════════════════════════════════╝
 
           elif [ "$CLIENT" = "BFR" ]; then
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ BFR UAT DISTRIBUTION - Comment this block to skip UAT          ║
+            # ╚════════════════════════════════════════════════════════════════╝
             echo ">>> Step 1/2: Building BFR UAT..."
             bundle exec fastlane betsson_uat release_notes:"$NOTES"
 
@@ -361,7 +376,13 @@ jobs:
             fi
             echo "BFR UAT distribution complete"
             echo ""
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ END BFR UAT DISTRIBUTION                                       ║
+            # ╚════════════════════════════════════════════════════════════════╝
 
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ BFR PRODUCTION DISTRIBUTION                                    ║
+            # ╚════════════════════════════════════════════════════════════════╝
             echo ">>> Step 2/2: Building BFR Production..."
             bundle exec fastlane betsson_prod release_notes:"$NOTES"
 
@@ -370,6 +391,9 @@ jobs:
               exit 1
             fi
             echo "BFR Production distribution complete"
+            # ╔════════════════════════════════════════════════════════════════╗
+            # ║ END BFR PRODUCTION DISTRIBUTION                                ║
+            # ╚════════════════════════════════════════════════════════════════╝
 
           else
             echo "::error::Unknown client: $CLIENT"
@@ -408,11 +432,11 @@ jobs:
           NOTES_ESCAPED=$(printf '%s' "$NOTES" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
 
           # Build the message content
-          MESSAGE="${RANDOM_EMOJI} **${CLIENT_NAME}** — STG and PROD Release\n\n"
+          MESSAGE="${RANDOM_EMOJI} **${CLIENT_NAME}** — PROD Release\n\n"
           MESSAGE+="**Version:** ${VERSION} (${BUILD})\n"
           MESSAGE+="**Tag:** \`${TAG}\`\n\n"
           MESSAGE+="**Release Notes:**\n${NOTES_ESCAPED}\n\n"
-          MESSAGE+="Deployed to Staging and Production${EASTER_EGG}"
+          MESSAGE+="Deployed to Production${EASTER_EGG}"
 
           # Send webhook
           curl -s -X POST "$DISCORD_WEBHOOK" \

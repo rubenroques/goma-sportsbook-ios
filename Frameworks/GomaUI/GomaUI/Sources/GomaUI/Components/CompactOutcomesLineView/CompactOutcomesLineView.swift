@@ -138,6 +138,18 @@ extension CompactOutcomesLineView {
             self?.updateOutcomeViews(left: left, middle: middle, right: right)
         }
         .store(in: &cancellables)
+
+        // Observe selection changes from parent ViewModel (proper MVVM pattern)
+        viewModel.outcomeSelectionDidChangePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                if event.isSelected {
+                    self?.onOutcomeSelected(event.outcomeId, event.outcomeType)
+                } else {
+                    self?.onOutcomeDeselected(event.outcomeId, event.outcomeType)
+                }
+            }
+            .store(in: &cancellables)
     }
 
     private func updateDisplayMode(_ mode: CompactOutcomesDisplayMode) {
@@ -216,20 +228,9 @@ extension CompactOutcomesLineView {
     }
 
     private func setupOutcomeCallbacks(view: OutcomeItemView, type: OutcomeType) {
-        view.onTap = { [weak self] outcomeId in
-            guard let self = self else { return }
-
-            // Check if already selected to determine select/deselect
-            let isCurrentlySelected = self.isOutcomeSelected(type: type)
-
-            if isCurrentlySelected {
-                self.onOutcomeDeselected(outcomeId, type)
-                self.viewModel?.onOutcomeDeselected(outcomeId: outcomeId, outcomeType: type)
-            } else {
-                self.onOutcomeSelected(outcomeId, type)
-                self.viewModel?.onOutcomeSelected(outcomeId: outcomeId, outcomeType: type)
-            }
-        }
+        // No onTap callback needed - the new architecture uses publisher observation
+        // User taps are handled by the ViewModel's userDidTapOutcome() method
+        // Selection changes are observed through publishers
     }
 
     private func isOutcomeSelected(type: OutcomeType) -> Bool {

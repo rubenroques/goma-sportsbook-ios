@@ -128,7 +128,28 @@ final class MyBetsViewModel {
     
     private func setupBindings() {
         print("📡 MyBetsViewModel: Setting up bindings")
-        
+
+        // Subscribe to user logout to clear cached data (SECURITY)
+        // This prevents the next user from seeing the previous user's betting history
+        Env.userSessionStore.userProfileStatusPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                guard let self = self else { return }
+                switch status {
+                case .anonymous:
+                    // User logged out - MUST clear all user-specific data
+                    print("[SECURITY] MyBetsViewModel: User logged out, clearing cached bets")
+                    self.betListDataCache.removeAll()
+                    self.betsStateSubject.send(.loading)
+                case .logged:
+                    // User logged in - refresh data for new user
+                    print("MyBetsViewModel: User logged in, refreshing bets")
+                    self.loadBets(forced: true)
+                }
+            }
+            .store(in: &cancellables)
+
         // Listen to tab changes - skip initial value to prevent duplicate API call
         selectedTabTypePublisher
             .dropFirst()  // Skip the initial value

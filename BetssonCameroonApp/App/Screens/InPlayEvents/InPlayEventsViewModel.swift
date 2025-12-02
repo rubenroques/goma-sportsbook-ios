@@ -69,16 +69,16 @@ class InPlayEventsViewModel {
     // MARK: - Navigation Closures (MVVM-C Pattern)
     // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
     var onMatchSelected: ((Match) -> Void) = { _ in
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onSportsSelectionRequested: (() -> Void)  = {
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onFiltersRequested: (() -> Void) = {
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onLiveStatsRequested: ((String) -> Void) = { _ in
-        print("Empty clojure")
+        print("Empty closure")
     }
     
     // Casino navigation closure for QuickLinks
