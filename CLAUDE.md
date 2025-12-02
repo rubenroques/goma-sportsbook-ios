@@ -413,3 +413,8 @@ This workspace has two specialized MCP (Model Context Protocol) servers configur
 - **Resolution**: Fix at appropriate architectural layer (UI → GomaUI, Data → ServicesProvider, App → specific project)
 
 This workspace represents a sophisticated evolution from monolithic to modular architecture, enabling scalable multi-client development while maintaining code quality through established component libraries and backend abstractions.
+
+## BetssonCameroonApp Releases
+
+**Tag format**: `bcm-vVERSION(BUILD)` (e.g., `bcm-v0.3.2(3120)`)
+**Full guide**: [BetssonCameroonApp/fastlane/AUTO_DISTRIBUTE.md](BetssonCameroonApp/fastlane/AUTO_DISTRIBUTE.md)

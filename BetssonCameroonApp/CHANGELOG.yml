@@ -5,9 +5,10 @@
 releases:
 
   - version: "0.3.2"
-    build: 3120
+    build: 3121
     date: "2025-12-02"
     notes:
+      - "fix(firebase): Fix GoogleService-Info.plist missing in archive builds - refactored to copy before bundle resources"
       - "fix(mybets): Show friendly empty state instead of error when user is not logged in - matches web behavior"
       - "fix(architecture): Refactor OutcomeItemView selection to proper MVVM pattern - single source of truth, unidirectional data flow, parent VM observes child VM publishers"
       - "fix(security): [SPOR-6688] [BC-321] Clear MyBets cached data on logout to prevent next user from seeing previous user's betting history"
