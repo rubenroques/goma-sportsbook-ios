@@ -135,15 +135,11 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         return publisher
             .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
 
-//                if internalPlacedBetsResponse.responseCode == "1" ||
-//                    internalPlacedBetsResponse.responseCode == "2" ||
-//                    internalPlacedBetsResponse.responseCode == "3"
-
                 if internalPlacedBetsResponse.responseCode == "2" {
                     let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-                else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
+                else if internalPlacedBetsResponse.responseCode == "1" && (internalPlacedBetsResponse.detailedResponseCode == "66" || internalPlacedBetsResponse.detailedResponseCode == "10") {
                     var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     placedBetsResponse.requiredConfirmation = true
 
@@ -170,8 +166,8 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        let endpoint = BettingAPIClient.confirmBoostedBet(identifier: identifier)
+    func confirmBoostedBet(identifier: String, detailedCode: String?) -> AnyPublisher<Bool, ServiceProviderError> {
+        let endpoint = BettingAPIClient.confirmBoostedBet(identifier: identifier, detailedCode: detailedCode)
         let publisher: AnyPublisher<SportRadarModels.ConfirmBetPlaceResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .mapError { error in
@@ -270,10 +266,10 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
         if let oddChangeRunningOrPreMatch = betslipSettings.oddChangeRunningOrPreMatch {
             let endpointPreMatch = BettingAPIClient.updateBetslipSettingsPreMatch(oddChange: oddChangeRunningOrPreMatch)
-            let publisherPreMatch: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointPreMatch)
+            let publisherPreMatch: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointPreMatch)
 
             let endpointRunning = BettingAPIClient.updateBetslipSettingsRunning(oddChange: oddChangeRunningOrPreMatch)
-            let publisherRunning: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointRunning)
+            let publisherRunning: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointRunning)
 
             return Publishers.CombineLatest(publisherPreMatch, publisherRunning)
                 .map({ publisherPreMatchResponse, publisherRunningResponse -> Bool in
@@ -284,7 +280,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         }
         else if let oddChangeLegacy = betslipSettings.oddChangeLegacy {
             let endpointLegacy = BettingAPIClient.updateBetslipSettings(oddChange: oddChangeLegacy)
-            let publisherLegacy: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointLegacy)
+            let publisherLegacy: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointLegacy)
             return publisherLegacy
                 .mapError({ error in
                     return error

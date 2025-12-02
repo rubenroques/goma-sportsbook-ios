@@ -857,13 +857,13 @@ class MyTicketCardView: NibView {
             if let awardedTier = grantedWinBoost.awardedTier,
                let maxWinnings = betHistoryEntry.maxWinning {
                 
-                let winValue = (maxWinnings * awardedTier.boostMultiplier) > 500 ? 500 : maxWinnings * awardedTier.boostMultiplier
+                let winValue = (maxWinnings * awardedTier.boostMultiplier) > 200 ? 200 : maxWinnings * awardedTier.boostMultiplier
                 
                 var winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                 
                 if let partialCashoutPotentialWinnings = self.partialCashoutPotentialWinnings {
                     
-                    var winValue = (partialCashoutPotentialWinnings * awardedTier.boostMultiplier) > 500 ? 500 : partialCashoutPotentialWinnings * awardedTier.boostMultiplier
+                    var winValue = (partialCashoutPotentialWinnings * awardedTier.boostMultiplier) > 200 ? 200 : partialCashoutPotentialWinnings * awardedTier.boostMultiplier
                     
                     winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                 }
@@ -874,7 +874,7 @@ class MyTicketCardView: NibView {
             }
             else if let boostAmount = grantedWinBoost.boostAmount {
                 
-                let winValue = boostAmount > 500 ? 500 : boostAmount
+                let winValue = boostAmount > 200 ? 200 : boostAmount
                 
                 let winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
                 

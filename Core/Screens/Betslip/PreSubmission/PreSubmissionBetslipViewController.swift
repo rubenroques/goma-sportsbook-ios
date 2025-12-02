@@ -2859,7 +2859,8 @@ extension PreSubmissionBetslipViewController {
     }
 
     func confirmBoostedBet(betDetails: PlacedBetsResponse) {
-        Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier)
+        
+        Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier, detailedCode: betDetails.detailedCode)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
