@@ -138,7 +138,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                                                          isSecure: true,
                                                          isRequired: true,
                                                          visualState: .idle,
-                                                         keyboardType: .default,
+                                                         keyboardType: .numbersAndPunctuation,
                                                          returnKeyType: .next,
                                                          textContentType: .password))
             case "FirstnameOnDocument":
@@ -190,8 +190,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
             case "TermsAndConditions":
                 let extractedTermsHTMLData = self.extractedTermsHTMLData
 
-                // swiftlint:disable line_length
-                let fullText = extractedTermsHTMLData?.fullText ?? "By creating an account I agree that I am 21 years of age or older and have read and accepted our general Terms and Conditions and Privacy Policy"
+                let fullText = extractedTermsHTMLData?.fullText ?? localized("terms_fallback_text")
 
                 let termsData = extractedTermsHTMLData?.extractedLinks.first(where: {
                     $0.type == .terms
@@ -206,8 +205,8 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
                 })
 
                 termsViewModel = MockTermsAcceptanceViewModel(data: TermsAcceptanceData(fullText: fullText,
-                                                                              termsText: termsData?.text ?? "Terms and Conditions",
-                                                                              privacyText: privacyData?.text ?? "Privacy Policy",
+                                                                              termsText: termsData?.text ?? localized("terms_and_conditions"),
+                                                                              privacyText: privacyData?.text ?? localized("privacy_policy"),
                                                                               cookiesText: cookiesData?.text,
                                                                                         isAccepted: true))
             case "PromoCode":

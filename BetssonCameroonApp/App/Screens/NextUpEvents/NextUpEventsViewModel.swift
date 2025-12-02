@@ -71,13 +71,13 @@ class NextUpEventsViewModel {
     // MARK: - Navigation Closures (MVVM-C Pattern)
     // ViewModels signal navigation intent through closures - Coordinators handle actual navigation
     var onMatchSelected: ((Match) -> Void) = { match in
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onSportsSelectionRequested: (() -> Void)  = {
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onFiltersRequested: (() -> Void) = {
-        print("Empty clojure")
+        print("Empty closure")
     }
     var onBetslipRequested: (() -> Void)?
     

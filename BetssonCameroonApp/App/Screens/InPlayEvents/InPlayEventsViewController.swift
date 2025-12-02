@@ -172,7 +172,7 @@ class InPlayEventsViewController: UIViewController {
         // Create filter pill button
         let filterPillData = PillData(
             id: "filter",
-            title: "Filter",
+            title: localized("filter"),
             leftIconName: "line.3.horizontal.decrease",
             showExpandIcon: true,
             isSelected: false

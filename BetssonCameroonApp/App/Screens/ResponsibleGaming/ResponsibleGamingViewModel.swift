@@ -349,7 +349,7 @@ class ResponsibleGamingViewModel {
             .sink { [weak self] completion in
                 if case .failure(let error) = completion {
                     print("[ResponsibleGaming] Failed to set deposit limit: \(error)")
-                    self?.onLimitError?("Deposit", error.localizedDescription)
+                    self?.onLimitError?(localized("deposit"), error.localizedDescription)
                     self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] limit in
@@ -396,7 +396,7 @@ class ResponsibleGamingViewModel {
             .sink { [weak self] completion in
                 if case .failure(let error) = completion {
                     print("[ResponsibleGaming] Failed to set wagering limit: \(error)")
-                    self?.onLimitError?("Wagering", error.localizedDescription)
+                    self?.onLimitError?(localized("wagering"), error.localizedDescription)
                     self?.isLoading.send(false)
                 }
             } receiveValue: { [weak self] limit in
