@@ -2,7 +2,7 @@ import UIKit
 import Combine
 
 /// Mock implementation of CompactOutcomesLineViewModelProtocol for testing and previews
-internal final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
+public final class MockCompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
 
     // MARK: - Private Properties
     private let displayStateSubject: CurrentValueSubject<CompactOutcomesLineDisplayState, Never>
