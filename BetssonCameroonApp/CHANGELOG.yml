@@ -14,6 +14,7 @@ releases:
       - "fix(footer): [SPOR-6472] Fixed footer links to display all CMS fetched links, replacing default links if they are missing"
       - "fix(search): [SPOR-6391] Fixed missing localized string"
       - "fix(profile): SPOR-6097 - Changed icons on Profile menu"
+      - "fix(mybets): SPOR-6115 - Colors of selected pill adjusted"
 
   - version: "0.3.1"
     build: 3101

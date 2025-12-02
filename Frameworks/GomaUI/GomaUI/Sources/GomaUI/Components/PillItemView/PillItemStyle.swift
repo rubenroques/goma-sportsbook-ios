@@ -32,8 +32,8 @@ extension PillItemStyle {
     /// Default style for selected state using StyleProvider colors
     public static func defaultSelected() -> PillItemStyle {
         return PillItemStyle(
-            textColor: StyleProvider.Color.textPrimary,
-            backgroundColor: StyleProvider.Color.pills,
+            textColor: StyleProvider.Color.buttonTextPrimary,
+            backgroundColor: StyleProvider.Color.highlightPrimary,
             borderColor: StyleProvider.Color.highlightPrimary,
             borderWidth: 2.0
         )
