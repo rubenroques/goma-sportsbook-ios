@@ -15,7 +15,7 @@
 ## Checklist
 - [ ] Tested on simulator and/or device
 - [ ] No new SwiftLint warnings
-- [ ] Unit tests added/updated (if applicable)
+- [ ] Localized strings
 
 ## Notes
 <!-- Breaking changes, migration steps, architecture decisions, or anything reviewers should know -->
