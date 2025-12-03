@@ -9,6 +9,7 @@ releases:
     date: "2025-12-02"
     notes:
       - "ci: Optimize tag validation step from ~4min to ~10sec by using fastlane-plugin-versioning instead of xcodebuild"
+      - "ci: Use generic release notes for Firebase distribution (internal changelog stays in Discord only)"
 
   - version: "0.3.2"
     build: 3121
