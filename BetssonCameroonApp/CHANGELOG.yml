@@ -10,6 +10,7 @@ releases:
     notes:
       - "ci: Optimize tag validation step from ~4min to ~10sec by using fastlane-plugin-versioning instead of xcodebuild"
       - "ci: Use generic release notes for Firebase distribution (internal changelog stays in Discord only)"
+      - "fix(lifecycle): Adopt UIScene lifecycle - added SceneDelegate, updated AppDelegate, and configured UIApplicationSceneManifest in Info.plist files"
 
   - version: "0.3.2"
     build: 3121

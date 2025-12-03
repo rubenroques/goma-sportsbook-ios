@@ -57,9 +57,7 @@
 				"SupportingFiles/Firebase/GoogleService-Info-Production.plist",
 				"SupportingFiles/Firebase/GoogleService-Info-Staging.plist",
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
-				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
-				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
 			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
 		};

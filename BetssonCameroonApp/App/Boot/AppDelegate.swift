@@ -19,8 +19,6 @@ import GomaLogger
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
-    var bootstrap: Bootstrap!
     private var allowsLandscape = false
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -152,20 +150,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             metadata: ["status": "complete"]
         )
 
-        // App Init
-        //
-        self.window = UIWindow()
-
-        self.bootstrap = Bootstrap(window: self.window!)
-        self.bootstrap.boot()
-
-        // End app boot tracking
+        // End app boot tracking (window/bootstrap initialization moved to SceneDelegate)
         PerformanceTracker.shared.end(
             feature: .appBoot,
             layer: .app,
             metadata: ["phase": "app_delegate_boot", "status": "complete"]
         )
-        
+
         // GomaLogger options
         GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG", "ODDS_FLOW")
 
@@ -192,13 +183,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    // MARK: - UISceneSession Lifecycle
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        Env.servicesProvider.reconnectIfNeeded()
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
     // MARK: - Orientation Support
@@ -214,59 +204,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return allowsLandscape ? .allButUpsideDown : .portrait
-    }
-
-    // Universal Links
-    func application(_ application: UIApplication,
-                     continue userActivity: NSUserActivity,
-                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-
-        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
-            guard let url = userActivity.webpageURL else {
-                return false
-            }
-
-            let urlSections = url.pathComponents
-            let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-
-            if urlSections.contains("register") {
-                self.openSharedRoute(Route.register, onApplication: application)
-            }
-            else if urlSections.contains("login") {
-                self.openSharedRoute(Route.login, onApplication: application)
-            }
-            else if urlSections.contains("live") {
-                self.openSharedRoute(Route.liveGames, onApplication: application)
-            }
-            else if urlSections.contains("mybets") {
-                self.openSharedRoute(Route.myBets, onApplication: application)
-            }
-            else if urlSections.contains("search") && urlSections.contains("sports") {
-                self.openSharedRoute(Route.sportsSearch, onApplication: application)
-            }
-            else if urlSections.contains("virtuals") && urlSections.contains("casino") {
-                self.openSharedRoute(Route.casinoVirtuals, onApplication: application)
-            }
-            else if urlSections.contains("game") && urlSections.contains("casino"),
-                        let gameId = urlSections.last {
-                self.openSharedRoute(Route.casinoGame(gameId: gameId), onApplication: application)
-            }
-            else if urlSections.contains("search") && urlSections.contains("casino") {
-                self.openSharedRoute(Route.casinoSearch, onApplication: application)
-            }
-            else if urlSections.contains("sports") {
-                self.openSharedRoute(Route.sportsHome, onApplication: application)
-            }
-            else if urlSections.contains("casino") {
-                self.openSharedRoute(Route.casinoHome, onApplication: application)
-            }
-            // Deposit does not exists in an url section
-            else if urlSections.contains("deposit") {
-                self.openSharedRoute(Route.deposit, onApplication: application)
-            }
-            
-        }
-        return true
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -364,30 +301,18 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 
-    private func openRoute(_ route: Route, onApplication application: UIApplication) {
-
-        if application.applicationState == .active {
-            // This should be sent to AppCoordinator
-            // self.bootstrap.router.openedNotificationRouteWhileActive(route)
-        }
-        else if application.applicationState == .inactive {
-            // This should be sent to AppCoordinator
-            // self.bootstrap.router.configureStartingRoute(route)
-        }
-        else if application.applicationState == .background {
-            // This should be sent to AppCoordinator
-            // self.bootstrap.router.configureStartingRoute(route)
-        }
-
+    private var sceneDelegate: SceneDelegate? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0.delegate as? SceneDelegate }
+            .first
     }
 
-    private func openSharedRoute(_ route: Route, onApplication application: UIApplication) {
-        self.bootstrap.appCoordinator?.openSharedRoute(route)
+    private func openRoute(_ route: Route, onApplication application: UIApplication) {
+        sceneDelegate?.bootstrap.appCoordinator?.openSharedRoute(route)
     }
 
     private func openPushNotificationRoute(_ route: Route) {
-        // self.bootstrap.router.openPushNotificationRoute(route)
-        self.bootstrap.appCoordinator?.openSharedRoute(route)
+        sceneDelegate?.bootstrap.appCoordinator?.openSharedRoute(route)
     }
 
 }
