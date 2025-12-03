@@ -61,6 +61,31 @@ class TopBarContainerController: UIViewController {
         return view
     }()
 
+    // MARK: - Language Selector Overlay Components
+
+    private lazy var languageSelectorOverlayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        view.isHidden = true
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideLanguageSelectorOverlay))
+        view.addGestureRecognizer(tapGesture)
+
+        return view
+    }()
+
+    private lazy var languageSelectorView: LanguageSelectorView = {
+        let view = LanguageSelectorView(
+            viewModel: viewModel.languageSelectorViewModelProtocol,
+            imageResolver: AppLanguageFlagImageResolver()
+        )
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private var languageSelectorDismissCancellable: AnyCancellable?
+
     // MARK: - Navigation Callbacks
     var onLoginRequested: (() -> Void)?
     var onRegistrationRequested: (() -> Void)?
@@ -117,6 +142,8 @@ class TopBarContainerController: UIViewController {
         view.addSubview(overlayContainerView)
         overlayContainerView.addSubview(walletStatusOverlayView)
         walletStatusOverlayView.addSubview(walletStatusView)
+        overlayContainerView.addSubview(languageSelectorOverlayView)
+        languageSelectorOverlayView.addSubview(languageSelectorView)
     }
 
     private func setupConstraints() {
@@ -165,7 +192,18 @@ class TopBarContainerController: UIViewController {
             // Wallet Status View (positioned below top bar)
             walletStatusView.leadingAnchor.constraint(equalTo: overlayContainerView.leadingAnchor, constant: 50),
             walletStatusView.trailingAnchor.constraint(equalTo: overlayContainerView.trailingAnchor, constant: -32),
-            walletStatusView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: 16)
+            walletStatusView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: 16),
+
+            // Language Selector Overlay (covers entire screen)
+            languageSelectorOverlayView.topAnchor.constraint(equalTo: overlayContainerView.topAnchor),
+            languageSelectorOverlayView.leadingAnchor.constraint(equalTo: overlayContainerView.leadingAnchor),
+            languageSelectorOverlayView.trailingAnchor.constraint(equalTo: overlayContainerView.trailingAnchor),
+            languageSelectorOverlayView.bottomAnchor.constraint(equalTo: overlayContainerView.bottomAnchor),
+
+            // Language Selector View (centered below top bar)
+            languageSelectorView.leadingAnchor.constraint(equalTo: overlayContainerView.leadingAnchor, constant: 32),
+            languageSelectorView.trailingAnchor.constraint(equalTo: overlayContainerView.trailingAnchor, constant: -32),
+            languageSelectorView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: 16)
         ])
     }
 
@@ -255,8 +293,7 @@ class TopBarContainerController: UIViewController {
             print("👤 TopBarContainer: Profile requested")
             onProfileRequested?()
         case .languageSwitcher:
-            print("🌐 TopBarContainer: Language settings requested")
-            presentLanguageSettingsConfirmation()
+            showLanguageSelectorOverlay()
         case .support:
             print("❓ TopBarContainer: Support requested")
             onSupportRequested?()
@@ -291,6 +328,56 @@ class TopBarContainerController: UIViewController {
                 self.walletStatusOverlayView.isHidden = true
                 self.overlayContainerView.isUserInteractionEnabled = false
             }
+        }
+    }
+
+    func showLanguageSelectorOverlay() {
+        // Add haptic feedback
+        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+        impactFeedback.impactOccurred()
+
+        // Prepare language selector via ViewModel
+        viewModel.prepareLanguageSelector()
+
+        // Subscribe to dismiss signal from ViewModel
+        languageSelectorDismissCancellable = viewModel.shouldDismissLanguageSelectorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.hideLanguageSelectorOverlayAnimated()
+            }
+
+        // Show overlay with animation
+        overlayContainerView.isUserInteractionEnabled = true
+        languageSelectorOverlayView.alpha = 0
+        languageSelectorView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        languageSelectorOverlayView.isHidden = false
+
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+            self.languageSelectorOverlayView.alpha = 1.0
+            self.languageSelectorView.transform = CGAffineTransform.identity
+        }
+    }
+
+    @objc private func hideLanguageSelectorOverlay(_ sender: UITapGestureRecognizer) {
+        let location = sender.location(in: languageSelectorOverlayView)
+        let selectorViewFrame = languageSelectorView.frame
+
+        // Only dismiss if tap is outside the language selector view
+        if !selectorViewFrame.contains(location) {
+            hideLanguageSelectorOverlayAnimated()
+        }
+    }
+
+    private func hideLanguageSelectorOverlayAnimated() {
+        languageSelectorDismissCancellable?.cancel()
+        languageSelectorDismissCancellable = nil
+
+        UIView.animate(withDuration: 0.2, animations: {
+            self.languageSelectorOverlayView.alpha = 0.0
+            self.languageSelectorView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }) { _ in
+            self.languageSelectorOverlayView.isHidden = true
+            self.overlayContainerView.isUserInteractionEnabled = false
         }
     }
 

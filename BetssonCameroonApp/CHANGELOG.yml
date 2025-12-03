@@ -5,6 +5,12 @@
 releases:
 
   - version: "0.3.2"
+    build: 3211
+    date: "2025-12-03"
+    notes:
+      - "feature(language): Add language selector UI with floating overlay (top bar) and full-screen (profile) presentation modes"
+
+  - version: "0.3.2"
     build: 3201
     date: "2025-12-02"
     notes:
