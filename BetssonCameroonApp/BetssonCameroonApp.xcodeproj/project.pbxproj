@@ -474,6 +474,7 @@
 				);
 				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.prod";
@@ -502,7 +503,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
 			};
 			name = "Debug-Production";
 		};
@@ -607,6 +608,7 @@
 				);
 				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.prod";
@@ -635,7 +637,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
 			};
 			name = "Release-Production";
 		};
@@ -682,6 +684,7 @@
 				);
 				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.stg";
@@ -722,6 +725,7 @@
 				);
 				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.stg";
@@ -872,7 +876,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Stg.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Stg";
 			};
 			name = "Debug-Staging";
 		};
@@ -891,7 +895,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Stg.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Stg";
 			};
 			name = "Release-Staging";
 		};
