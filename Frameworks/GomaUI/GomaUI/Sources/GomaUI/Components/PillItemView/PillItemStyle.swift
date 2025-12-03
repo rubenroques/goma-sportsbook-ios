@@ -30,10 +30,10 @@ public struct PillItemStyle: Equatable {
 // MARK: - Default Styles
 extension PillItemStyle {
     /// Default style for selected state using StyleProvider colors
-    public static func defaultSelected() -> PillItemStyle {
+    public static func defaultSelected(isReadOnly: Bool = false) -> PillItemStyle {
         return PillItemStyle(
-            textColor: StyleProvider.Color.buttonTextPrimary,
-            backgroundColor: StyleProvider.Color.highlightPrimary,
+            textColor: isReadOnly ? StyleProvider.Color.textPrimary : StyleProvider.Color.buttonTextPrimary,
+            backgroundColor: isReadOnly ? StyleProvider.Color.pills : StyleProvider.Color.highlightPrimary,
             borderColor: StyleProvider.Color.highlightPrimary,
             borderWidth: 2.0
         )

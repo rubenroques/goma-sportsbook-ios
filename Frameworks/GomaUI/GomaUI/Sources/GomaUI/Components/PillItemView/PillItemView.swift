@@ -205,7 +205,7 @@ final public class PillItemView: UIView {
         if let customization = customization {
             style = isSelected ? customization.selectedStyle : customization.unselectedStyle
         } else {
-            style = isSelected ? PillItemStyle.defaultSelected() : PillItemStyle.defaultUnselected()
+            style = isSelected ? PillItemStyle.defaultSelected(isReadOnly: viewModel.isReadOnly) : PillItemStyle.defaultUnselected()
         }
 
         // Apply the style

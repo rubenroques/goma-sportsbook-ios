@@ -10,7 +10,7 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
     private let leftIconNameSubject: CurrentValueSubject<String?, Never>
     private let showExpandIconSubject: CurrentValueSubject<Bool, Never>
     private let isSelectedSubject: CurrentValueSubject<Bool, Never>
-    private let shouldApplyTintColor: CurrentValueSubject<Bool, Never>
+    private let shouldApplyTintColorSubject: CurrentValueSubject<Bool, Never>
     
     // MARK: - Read-only mode
     public let isReadOnly: Bool
@@ -35,9 +35,8 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         return isSelectedSubject.eraseToAnyPublisher()
     }
     
-    
     public var shouldApplyTintColorPublisher: AnyPublisher<Bool, Never> {
-        return shouldApplyTintColor.eraseToAnyPublisher()
+        return shouldApplyTintColorSubject.eraseToAnyPublisher()
     }
 
     // MARK: - Initialization
@@ -47,7 +46,7 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         self.leftIconNameSubject = CurrentValueSubject(pillData.leftIconName)
         self.showExpandIconSubject = CurrentValueSubject(pillData.showExpandIcon)
         self.isSelectedSubject = CurrentValueSubject(pillData.isSelected)
-        self.shouldApplyTintColor = CurrentValueSubject(pillData.shouldApplyTintColor)
+        self.shouldApplyTintColorSubject = CurrentValueSubject<Bool, Never>(pillData.shouldApplyTintColor)
         self.isReadOnly = isReadOnly
     }
 
