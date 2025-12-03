@@ -566,7 +566,7 @@ extension UserSessionStore {
                                         currency: currency)
                 
                 let freeBetBalance = userWallet.externalFreeBetBalances?.reduce(0.0) { sum, freeBet in
-                    sum + (Double(freeBet.balance) ?? 0.0)
+                    return sum + freeBet.balance.toDouble()
                 } ?? 0.0
                 
                 self?.userFreeBetBalance.send(freeBetBalance)
