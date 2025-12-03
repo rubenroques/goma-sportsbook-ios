@@ -117,7 +117,7 @@ class MaintenanceViewController: UIViewController {
 }
 
 // MARK: - Preview
-
+#if DEBUG
 import SwiftUI
 
 @available(iOS 17.0, *)
@@ -135,3 +135,4 @@ import SwiftUI
     }
     .preferredColorScheme(.dark)
 }
+#endif

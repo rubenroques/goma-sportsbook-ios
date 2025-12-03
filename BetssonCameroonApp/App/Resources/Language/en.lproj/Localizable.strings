@@ -3663,7 +3663,7 @@
 
 "update_available" = "Update available";
 
-"update_available_text" = "Check out the latest Update and improve your experience in Sportsbook.";
+"update_available_text" = "Check out the latest Update and improve your experience in Betsson Cameroon app.";
 
 "update_available_title" = "New Update Available";
 
@@ -3671,7 +3671,7 @@
 
 "update_password" = "Update Password";
 
-"update_required_text" = "Please get the latest update to continue enjoying Sportsbook.";
+"update_required_text" = "Please get the latest update to continue enjoying the Betsson Cameroon app.";
 
 "update_required_title" = "New Update Required";
 
@@ -3980,7 +3980,7 @@
 
 "mybets_error_load_failed" = "Failed to load bets";
 
-"mybets_empty_state" = "No bets found";
+"mybets_empty_state" = "No bets to display";
 
 "mybets_replace_betslip_title" = "Replace Current Betslip";
 

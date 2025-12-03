@@ -3980,7 +3980,7 @@
 
 "mybets_error_load_failed" = "Échec du chargement des paris";
 
-"mybets_empty_state" = "Aucun pari trouvé";
+"mybets_empty_state" = "Aucun pari à afficher";
 
 "mybets_replace_betslip_title" = "Remplacer le bulletin actuel";
 

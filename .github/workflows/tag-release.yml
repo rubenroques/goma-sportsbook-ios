@@ -125,6 +125,13 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ steps.config.outputs.directory }}
+
       - name: Validate tag matches Xcode project version
         working-directory: ${{ steps.config.outputs.directory }}
         run: |
@@ -136,9 +143,9 @@ jobs:
           echo "Validating tag version matches Xcode project..."
           echo "   Tag: v$TAG_VERSION ($TAG_BUILD)"
 
-          # Extract version from Xcode project
-          PROJECT_VERSION=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "MARKETING_VERSION" | head -1 | awk '{print $3}')
-          PROJECT_BUILD=$(xcodebuild -showBuildSettings -project "$PROJECT" -target "$TARGET" 2>/dev/null | grep "CURRENT_PROJECT_VERSION" | head -1 | awk '{print $3}')
+          # Extract version from Xcode project using fastlane-plugin-versioning (fast, no xcodebuild)
+          PROJECT_VERSION=$(bundle exec fastlane run get_version_number_from_xcodeproj xcodeproj:"$PROJECT" target:"$TARGET" 2>&1 | grep -o "Result: [0-9.]*" | awk '{print $2}')
+          PROJECT_BUILD=$(bundle exec fastlane run get_build_number_from_xcodeproj xcodeproj:"$PROJECT" target:"$TARGET" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
 
           echo "   Xcode: v$PROJECT_VERSION ($PROJECT_BUILD)"
 
@@ -212,13 +219,6 @@ jobs:
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-          bundler-cache: true
-          working-directory: ${{ steps.config.outputs.directory }}
 
       - name: Setup App Store Connect API Key
         working-directory: ${{ steps.config.outputs.directory }}/fastlane
@@ -323,6 +323,7 @@ jobs:
           VERSION="${{ steps.parse.outputs.version }}"
           BUILD="${{ steps.parse.outputs.build }}"
           NOTES="${{ steps.changelog.outputs.notes }}"
+          FIREBASE_NOTES="Version $VERSION ($BUILD)"  # Generic message for public Firebase distribution
 
           echo "=============================================="
           echo "DUAL RELEASE: Deploying to Staging + Production"
@@ -336,7 +337,7 @@ jobs:
             # ║ BCM STAGING DISTRIBUTION - Comment this block to skip staging  ║
             # ╚════════════════════════════════════════════════════════════════╝
             # echo ">>> Step 1/2: Building BCM Staging..."
-            # bundle exec fastlane keep_version_distribute_staging release_notes:"$NOTES"
+            # bundle exec fastlane keep_version_distribute_staging release_notes:"$FIREBASE_NOTES"
             #
             # if [ $? -ne 0 ]; then
             #   echo "::error::BCM Staging distribution failed"
@@ -352,7 +353,7 @@ jobs:
             # ║ BCM PRODUCTION DISTRIBUTION                                    ║
             # ╚════════════════════════════════════════════════════════════════╝
             echo ">>> Building BCM Production..."
-            bundle exec fastlane keep_version_distribute_production release_notes:"$NOTES"
+            bundle exec fastlane keep_version_distribute_production release_notes:"$FIREBASE_NOTES"
 
             if [ $? -ne 0 ]; then
               echo "::error::BCM Production distribution failed"
@@ -368,7 +369,7 @@ jobs:
             # ║ BFR UAT DISTRIBUTION - Comment this block to skip UAT          ║
             # ╚════════════════════════════════════════════════════════════════╝
             echo ">>> Step 1/2: Building BFR UAT..."
-            bundle exec fastlane betsson_uat release_notes:"$NOTES"
+            bundle exec fastlane betsson_uat release_notes:"$FIREBASE_NOTES"
 
             if [ $? -ne 0 ]; then
               echo "::error::BFR UAT distribution failed"
@@ -384,7 +385,7 @@ jobs:
             # ║ BFR PRODUCTION DISTRIBUTION                                    ║
             # ╚════════════════════════════════════════════════════════════════╝
             echo ">>> Step 2/2: Building BFR Production..."
-            bundle exec fastlane betsson_prod release_notes:"$NOTES"
+            bundle exec fastlane betsson_prod release_notes:"$FIREBASE_NOTES"
 
             if [ $? -ne 0 ]; then
               echo "::error::BFR Production distribution failed"

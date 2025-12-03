@@ -1,18 +1,22 @@
-## What does this PR do?
-<!-- Brief description of the change -->
+## Summary
+<!-- 1-2 sentences: what changed and why -->
 
 ## Ticket
 <!-- SPOR-XXXX or link -->
 
-## Type
-- [ ] Bug fix
-- [ ] Feature
-- [ ] Refactor
-- [ ] Chore
+## Screenshots
+<!-- Required for UI changes. Include light/dark mode if applicable -->
+<!-- Delete this section if no UI changes -->
 
-## How to test
+## How to Test
 1.
 2.
 
-## Screenshots
-<!-- If UI change, otherwise delete this section -->
+## Checklist
+- [ ] Tested on simulator and/or device
+- [ ] No new SwiftLint warnings
+- [ ] Localized strings
+
+## Notes
+<!-- Breaking changes, migration steps, architecture decisions, or anything reviewers should know -->
+<!-- Delete this section if not needed -->

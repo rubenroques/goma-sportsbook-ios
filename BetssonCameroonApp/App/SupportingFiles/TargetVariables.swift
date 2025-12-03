@@ -42,12 +42,12 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var firebaseDatabaseURL: String {
-        return "https://goma-sportsbook-betsson-cm-ios.europe-west1.firebasedatabase.app/"
         return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
     }
 
     static var appStoreURL: String {
-        return "https://goma-sportsbook-betsson-cm-ios.europe-west1.firebasedatabase.app/"
+        // TODO: this needs to have the final app store URL
+        return "https://appdistribution.firebase.google.com/"
     }
     
     static var supportedThemes: [AppearanceMode] {

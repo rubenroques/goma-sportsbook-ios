@@ -54,10 +54,10 @@
 		CE394B982E2FD45200715418 /* Exceptions for "App" folder in "BetssonCameroonApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"SupportingFiles/Firebase/GoogleService-Info-Production.plist",
+				"SupportingFiles/Firebase/GoogleService-Info-Staging.plist",
 				"SupportingFiles/Misc-Prod/BetssonCM-PROD-Info.plist",
-				"SupportingFiles/Misc-Prod/GoogleService-Info.plist",
 				"SupportingFiles/Misc-Stg/BetssonCM-STG-Info.plist",
-				"SupportingFiles/Misc-Stg/GoogleService-Info.plist",
 			);
 			target = CE74A14B2E2E8D9400DDE78D /* BetssonCameroonApp */;
 		};
@@ -169,10 +169,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE74A1752E2E8D9500DDE78D /* Build configuration list for PBXNativeTarget "BetssonCameroonApp" */;
 			buildPhases = (
+				CEFC00002FB5F00000000001 /* Copy Firebase Config */,
 				CE74A1482E2E8D9400DDE78D /* Sources */,
 				CE74A1492E2E8D9400DDE78D /* Frameworks */,
 				CE74A14A2E2E8D9400DDE78D /* Resources */,
-				CEFC00002FB5F00000000001 /* Copy Firebase Config */,
 			);
 			buildRules = (
 			);
@@ -330,18 +330,18 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist",
-				"$(SRCROOT)/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist",
+				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-Production.plist",
+				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-Staging.plist",
 			);
 			name = "Copy Firebase Config";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(PRODUCT_NAME).app/GoogleService-Info.plist",
+				"$(SRCROOT)/App/SupportingFiles/GoogleService-Info.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Copy correct GoogleService-Info.plist based on environment\necho \"APP_ENVIRONMENT is: ${APP_ENVIRONMENT}\"\necho \"SRCROOT is: ${SRCROOT}\"\necho \"BUILT_PRODUCTS_DIR is: ${BUILT_PRODUCTS_DIR}\"\necho \"PRODUCT_NAME is: ${PRODUCT_NAME}\"\n\nif [ \"${APP_ENVIRONMENT}\" = \"Production\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Prod/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Production GoogleService-Info.plist\"\nelif [ \"${APP_ENVIRONMENT}\" = \"Staging\" ]; then\n    cp \"${SRCROOT}/App/SupportingFiles/Misc-Stg/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\n    echo \"Copied Staging GoogleService-Info.plist\"\nelse\n    echo \"WARNING: APP_ENVIRONMENT not recognized: ${APP_ENVIRONMENT}\"\nfi\n";
+			shellScript = "# Copy correct GoogleService-Info.plist based on CONFIGURATION\n# Configurations: Debug-Production, Release-Production, Debug-Staging, Release-Staging\necho \"CONFIGURATION is: ${CONFIGURATION}\"\necho \"SRCROOT is: ${SRCROOT}\"\n\nFIREBASE_DIR=\"${SRCROOT}/App/SupportingFiles/Firebase\"\nDEST_PLIST=\"${SRCROOT}/App/SupportingFiles/GoogleService-Info.plist\"\n\ncase \"${CONFIGURATION}\" in\n    *Production*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Production.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Production GoogleService-Info.plist\"\n        ;;\n    *Staging*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Staging.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Staging GoogleService-Info.plist\"\n        ;;\n    *)\n        echo \"WARNING: CONFIGURATION not recognized: ${CONFIGURATION}\"\n        exit 1\n        ;;\nesac\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -457,7 +457,7 @@
 				CODE_SIGN_ENTITLEMENTS = App/SupportingFiles/BetssonCM.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3112;
+				CURRENT_PROJECT_VERSION = 3121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -472,8 +472,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.prod";
@@ -502,7 +503,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
 			};
 			name = "Debug-Production";
 		};
@@ -590,7 +591,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3112;
+				CURRENT_PROJECT_VERSION = 3121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -605,8 +606,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.prod";
@@ -635,7 +637,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
 			};
 			name = "Release-Production";
 		};
@@ -665,7 +667,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3112;
+				CURRENT_PROJECT_VERSION = 3121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -680,8 +682,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.stg";
@@ -705,7 +708,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3112;
+				CURRENT_PROJECT_VERSION = 3121;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -720,8 +723,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
+				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AdHoc com.gomagaming.betssoncm.stg";
@@ -872,7 +876,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Stg.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Stg";
 			};
 			name = "Debug-Staging";
 		};
@@ -891,7 +895,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetssonCameroonApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetssonCameroonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Stg.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Stg";
 			};
 			name = "Release-Staging";
 		};

@@ -141,3 +141,4 @@ BetssonCameroonApp/fastlane/logs
 git-worktrees/*
 !git-worktrees/.gitkeep
 compare_services_provider.py
+.claude/skills
