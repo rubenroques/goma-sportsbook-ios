@@ -223,7 +223,7 @@ extension LanguageSelectorView {
 
         // Component name label
         let titleLabel = UILabel()
-        titleLabel.text = "LanguageSelectorView"
+        titleLabel.text = ""
         titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
         titleLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.textAlignment = .center

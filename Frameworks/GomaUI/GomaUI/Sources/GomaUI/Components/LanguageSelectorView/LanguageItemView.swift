@@ -256,19 +256,6 @@ extension LanguageItemView {
     private func setupActions() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         containerView.addGestureRecognizer(tapGesture)
-        
-        // Add accessibility
-        containerView.isAccessibilityElement = true
-        containerView.accessibilityTraits = [.button]
-        updateAccessibilityLabel()
-    }
-    
-    private func updateAccessibilityLabel() {
-        guard let language = language else { return }
-        
-        let selectionState = language.isSelected ? "selected" : "not selected"
-        containerView.accessibilityLabel = "\(language.displayName) language option, \(selectionState)"
-        containerView.accessibilityHint = "Tap to select this language"
     }
     
     @objc private func handleTap() {
