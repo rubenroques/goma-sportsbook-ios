@@ -28,10 +28,27 @@ class StayInControlViewModel {
     }()
     
     let sosLink: String = "https://www.sosjoueurs.org/"
-    let gamersInfo: String = "https://www.joueurs-info-service.fr/?at_medium=sl&at_campaign=2024-07-01-Changer-SEA-SPF-Joueur_info_service_MCJoueursInfoService_Textuelle"
+    let gamersInfoLink: String = "https://www.joueurs-info-service.fr/?at_medium=sl&at_campaign=2024-07-01-Changer-SEA-SPF-Joueur_info_service_MCJoueursInfoService_Textuelle"
+    let requestsLink: String = "https://support.betsson.fr/hc/fr/requests/new"
+    
+    // MARK: - Callbacks
+    var onInternalLinkTapped: ((InternalLinkType) -> Void)?
     
     // MARK: - Lifecycle
     init() {
     }
+    
+    // MARK: - Methods
+    func handleInternalLink(_ linkType: InternalLinkType) {
+        self.onInternalLinkTapped?(linkType)
+    }
+    
+    func requiresLogin(for linkType: InternalLinkType) -> Bool {
+        switch linkType {
+        case .history, .limits, .selfExclusion:
+            return true
+        case .responsibleGaming:
+            return false
+        }
+    }
 }
-

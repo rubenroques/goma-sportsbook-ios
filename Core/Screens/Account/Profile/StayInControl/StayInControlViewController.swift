@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Combine
 
 class StayInControlViewController: UIViewController {
 
     // MARK: - Private Properties
+    private var cancellables = Set<AnyCancellable>()
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
@@ -27,13 +29,13 @@ class StayInControlViewController: UIViewController {
     private lazy var advicesImageView: UIImageView = Self.createAdvicesImageView()
     
     private lazy var highlightTextSection2View: HighlightTextSectionView = {
-        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSection2ViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var sosButton: UIButton = Self.createSOSButton()
-    private lazy var gamersInfoButton: UIButton = Self.creategamersInfoButton()
+    private lazy var gamersInfoButton: UIButton = Self.createGamersInfoButton()
         
     private lazy var budgetImageView: UIImageView = Self.createBudgetImageView()
     private lazy var section1TitleLabel: UILabel = Self.createSection1TitleLabel()
@@ -61,7 +63,8 @@ class StayInControlViewController: UIViewController {
     private lazy var section5TitleLabel: UILabel = Self.createSection5TitleLabel()
     private lazy var section5DescriptionLabel: UILabel = Self.createSection5DescriptionLabel()
     private lazy var section5Description2Label: UILabel = Self.createSection5Description2Label()
-        
+    private lazy var requestsButton: UIButton = Self.createRequestsButton()
+
     // Constraints
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
@@ -91,8 +94,26 @@ class StayInControlViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
+        self.setupViewModel()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        
+        let historyTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHistoryLink))
+        self.section1TitleLabel.isUserInteractionEnabled = true
+        self.section1TitleLabel.addGestureRecognizer(historyTapGesture)
+        
+        let limitsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLimitsLink))
+        self.section2TitleLabel.isUserInteractionEnabled = true
+        self.section2TitleLabel.addGestureRecognizer(limitsTapGesture)
+        
+        let selfExclusionTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSelfExclusionLink))
+        self.section3Title2Label.isUserInteractionEnabled = true
+        self.section3Title2Label.addGestureRecognizer(selfExclusionTapGesture)
+        
+        self.sosButton.addTarget(self, action: #selector(didTapSosButton), for: .touchUpInside)
+        self.gamersInfoButton.addTarget(self, action: #selector(didTapGamersInfoButton), for: .touchUpInside)
+        self.needSupportButton.addTarget(self, action: #selector(didTapNeedSupportButton), for: .touchUpInside)
+        self.requestsButton.addTarget(self, action: #selector(didTapRequestsButton), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -150,9 +171,75 @@ class StayInControlViewController: UIViewController {
         self.gameModeratorsImageView.backgroundColor = .clear
         
         self.actsImageView.backgroundColor = .clear
+        
+        StyleHelper.styleButton(button: self.needSupportButton)
+        StyleHelper.styleButton(button: self.requestsButton)
+
+    }
+    
+    func setupViewModel() {
+        self.viewModel.onInternalLinkTapped = { [weak self] linkType in
+            self?.handleInternalLink(linkType)
+        }
     }
     
     // MARK: - Functions
+    private func handleInternalLink(_ linkType: InternalLinkType) {
+        if self.viewModel.requiresLogin(for: linkType) {
+            self.handleInternalLinkWithLoginCheck(linkType)
+        } else {
+            self.navigateToInternalLink(linkType)
+        }
+    }
+    
+    private func handleInternalLinkWithLoginCheck(_ linkType: InternalLinkType) {
+        Env.userSessionStore.isLoadingUserSessionPublisher
+            .filter({ $0 == false })
+            .receive(on: DispatchQueue.main)
+            .first()
+            .sink(receiveValue: { [weak self] _ in
+                
+                if Env.userSessionStore.isUserLogged() {
+                    self?.navigateToInternalLink(linkType)
+                }
+                else {
+                    let loginViewController = LoginViewController()
+                    let navigationViewController = Router.navigationController(with: loginViewController)
+                    
+                    loginViewController.hasPendingRedirect = true
+                    
+                    loginViewController.needsRedirect = { [weak self] in
+                        self?.viewModel.handleInternalLink(linkType)
+                    }
+                    
+                    self?.present(navigationViewController, animated: true, completion: nil)
+                }
+                
+            })
+            .store(in: &self.cancellables)
+    }
+    
+    private func navigateToInternalLink(_ linkType: InternalLinkType) {
+        switch linkType {
+        case .history:
+            let historyViewController = HistoryRootViewController()
+            self.navigationController?.pushViewController(historyViewController, animated: true)
+            
+        case .responsibleGaming:
+            let responsibleGameViewController = ResponsibleGameInfoViewController()
+            self.navigationController?.pushViewController(responsibleGameViewController, animated: true)
+            
+        case .limits:
+            let limitsViewController = ProfileLimitsManagementViewController()
+            self.navigationController?.pushViewController(limitsViewController, animated: true)
+            
+        case .selfExclusion:
+            let selfExclusionViewModel = SelfExclusionViewModel()
+            let selfExclusionViewController = SelfExclusionViewController(viewModel: selfExclusionViewModel)
+            self.navigationController?.pushViewController(selfExclusionViewController, animated: true)
+        }
+    }
+    
     private func resizeImageView(
         imageView: UIImageView,
         fixedHeightConstraint: inout NSLayoutConstraint,
@@ -180,6 +267,41 @@ class StayInControlViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func didTapHistoryLink() {
+        self.viewModel.handleInternalLink(.history)
+    }
+    
+    @objc private func didTapLimitsLink() {
+        self.viewModel.handleInternalLink(.limits)
+    }
+    
+    @objc private func didTapSelfExclusionLink() {
+        self.viewModel.handleInternalLink(.selfExclusion)
+    }
+    
+    @objc private func didTapSosButton() {
+        if let url = URL(string: self.viewModel.sosLink) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapGamersInfoButton() {
+        if let url = URL(string: self.viewModel.gamersInfoLink) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapNeedSupportButton() {
+        let needSupportViewController = NeedSupportViewController()
+        self.navigationController?.pushViewController(needSupportViewController, animated: true)
+    }
+    
+    @objc private func didTapRequestsButton() {
+        if let url = URL(string: self.viewModel.requestsLink) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
@@ -244,13 +366,15 @@ extension StayInControlViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "sos_logo"), for: .normal)
+        button.contentMode = .scaleAspectFit
         return button
     }
     
-    private static func creategamersInfoButton() -> UIButton {
+    private static func createGamersInfoButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "player_info_logo"), for: .normal)
+        button.contentMode = .scaleAspectFit
         return button
     }
     
@@ -265,8 +389,13 @@ extension StayInControlViewController {
     private static func createSection1TitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("stay_in_control_page_title_3")
-        label.font = AppFont.with(type: .bold, size: 14)
+        let text = localized("stay_in_control_page_title_3")
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: AppFont.with(type: .bold, size: 14),
+            .foregroundColor: UIColor.App.highlightPrimary,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        label.attributedText = NSAttributedString(string: text, attributes: attributes)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -293,8 +422,13 @@ extension StayInControlViewController {
     private static func createSection2TitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("stay_in_control_page_title_5")
-        label.font = AppFont.with(type: .bold, size: 14)
+        let text = localized("stay_in_control_page_title_5")
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: AppFont.with(type: .bold, size: 14),
+            .foregroundColor: UIColor.App.highlightPrimary,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        label.attributedText = NSAttributedString(string: text, attributes: attributes)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -335,14 +469,20 @@ extension StayInControlViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = UIColor.App.highlightPrimary
         return label
     }
     
     private static func createSection3Title2Label() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("stay_in_control_page_title_4")
-        label.font = AppFont.with(type: .bold, size: 14)
+        let text = localized("stay_in_control_page_title_4")
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: AppFont.with(type: .bold, size: 14),
+            .foregroundColor: UIColor.App.highlightPrimary,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        label.attributedText = NSAttributedString(string: text, attributes: attributes)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -362,6 +502,8 @@ extension StayInControlViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("need_support"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return button
     }
     
@@ -380,6 +522,7 @@ extension StayInControlViewController {
         label.font = AppFont.with(type: .bold, size: 14)
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = UIColor.App.highlightPrimary
         return label
     }
     
@@ -404,8 +547,8 @@ extension StayInControlViewController {
     private static func createSection5TitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("stay_in_control_page_description_6")
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.text = localized("stay_in_control_page_title_7")
+        label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -429,6 +572,15 @@ extension StayInControlViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
+    }
+    
+    private static func createRequestsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("contact_us"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        return button
     }
     
     // Constraints
@@ -495,6 +647,7 @@ extension StayInControlViewController {
         self.scrollContainerView.addSubview(self.section5TitleLabel)
         self.scrollContainerView.addSubview(self.section5DescriptionLabel)
         self.scrollContainerView.addSubview(self.section5Description2Label)
+        self.scrollContainerView.addSubview(self.requestsButton)
 
         self.initConstraints()
     }
@@ -552,11 +705,13 @@ extension StayInControlViewController {
             
             self.sosButton.trailingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: -10),
             self.sosButton.topAnchor.constraint(equalTo: self.highlightTextSection2View.bottomAnchor, constant: 10),
-            self.sosButton.heightAnchor.constraint(equalToConstant: 50),
+            self.sosButton.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 30),
+            self.sosButton.heightAnchor.constraint(equalToConstant: 100),
             
             self.gamersInfoButton.leadingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: 10),
-            self.gamersInfoButton.topAnchor.constraint(equalTo: self.highlightTextSection2View.bottomAnchor, constant: 10),
-            self.gamersInfoButton.heightAnchor.constraint(equalToConstant: 50),
+            self.gamersInfoButton.centerYAnchor.constraint(equalTo: self.sosButton.centerYAnchor),
+            self.gamersInfoButton.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -30),
+            self.gamersInfoButton.heightAnchor.constraint(equalToConstant: 70),
             
             self.budgetImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
             self.budgetImageView.topAnchor.constraint(equalTo: self.sosButton.bottomAnchor, constant: 20),
@@ -637,8 +792,12 @@ extension StayInControlViewController {
             self.section5Description2Label.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.section5Description2Label.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
             self.section5Description2Label.topAnchor.constraint(equalTo: self.section5DescriptionLabel.bottomAnchor, constant: 10),
-            self.section5Description2Label.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
             
+            self.requestsButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.requestsButton.topAnchor.constraint(equalTo: self.section5Description2Label.bottomAnchor, constant: 10),
+            self.requestsButton.heightAnchor.constraint(equalToConstant: 50),
+            self.requestsButton.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
+
         ])
         
         self.bannerImageViewFixedHeightConstraint =
