@@ -39,9 +39,11 @@ jobs:
 
           # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
           # model: "claude-opus-4-20250514"
-          
+           
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
+            Review this iOS Swift pull request. Prioritize issues by severity:
+
             ## CRITICAL (must fix before merge):
             - **Hardcoded user-facing strings**: Text displayed to users in production UI that is NOT localized.
               - CHECK: Labels, buttons, alerts, error messages, placeholders, navigation titles, toast messages
@@ -64,12 +66,13 @@ jobs:
             ## MINOR (suggestions):
             - Code style improvements
             - Leftover debug code (TODO comments, commented-out code blocks, breakpoints)
+            
             Focus on production readiness. Be concise and actionable.
             
             
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
-          use_sticky_comment: true
+          # use_sticky_comment: true
           
           # Optional: Customize review based on file types
           # direct_prompt: |

@@ -6,7 +6,7 @@ releases:
 
   - version: "0.3.3" # not released yet, add changes here.
     build: 3304
-    date: "TBD"
+    date: "2025-12-04"
     notes:
       - "fix(banners): Add language parameter to sport and casino banner CMS endpoints - banners now display in correct language after language switch"
       - "fix(wallet): Re-enable SSE for wallet updates (session expiration ignored) and add REST fallback refresh when closing casino game"
