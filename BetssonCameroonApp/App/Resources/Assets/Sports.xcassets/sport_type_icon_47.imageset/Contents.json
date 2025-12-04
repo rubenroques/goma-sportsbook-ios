@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "virtual-sports-table-tennis.png",
+      "filename" : "gaelic-sports.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "virtual-sports-table-tennis@2x.png",
+      "filename" : "gaelic-sports@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "virtual-sports-table-tennis@3x.png",
+      "filename" : "gaelic-sports@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
