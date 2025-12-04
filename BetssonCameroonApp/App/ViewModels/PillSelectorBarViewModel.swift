@@ -54,14 +54,14 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
             ),
             PillData(
                 id: "popular",
-                title: "Popular",
+                title: localized("popular"),
                 leftIconName: "flame_bar_icon",
                 showExpandIcon: false,
                 isSelected: false
             ),
             PillData(
                 id: "all_popular",
-                title: "All Popular Leagues",
+                title: localized("all_popular_leagues"),
                 leftIconName: "trophy_winners_icon",
                 showExpandIcon: false,
                 isSelected: false,
