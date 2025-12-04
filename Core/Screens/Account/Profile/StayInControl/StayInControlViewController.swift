@@ -25,18 +25,49 @@ class StayInControlViewController: UIViewController {
     }()
     
     private lazy var advicesImageView: UIImageView = Self.createAdvicesImageView()
+    
+    private lazy var highlightTextSection2View: HighlightTextSectionView = {
+        let view = HighlightTextSectionView(viewModel: self.viewModel.highlightTextSectionViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var sosButton: UIButton = Self.createSOSButton()
+    private lazy var gamersInfoButton: UIButton = Self.creategamersInfoButton()
+        
+    private lazy var budgetImageView: UIImageView = Self.createBudgetImageView()
+    private lazy var section1TitleLabel: UILabel = Self.createSection1TitleLabel()
+    private lazy var section1DescriptionLabel: UILabel = Self.createSection1DescriptionLabel()
+    
     private lazy var gameModeratorsImageView: UIImageView = Self.createGameModeratorsImageView()
+    private lazy var section2TitleLabel: UILabel = Self.createSection2TitleLabel()
+    private lazy var section2DescriptionLabel: UILabel = Self.createSection2DescriptionLabel()
+
+    private lazy var bellImageView: UIImageView = Self.createBellImageView()
+    private lazy var section3TitleLabel: UILabel = Self.createSection3TitleLabel()
+    private lazy var section3SubtitleLabel: UILabel = Self.createSection3SubtitleLabel()
+    
+    private lazy var section3Title2Label: UILabel = Self.createSection3Title2Label()
+    private lazy var section3DescriptionLabel: UILabel = Self.createSection3DescriptionLabel()
+    
+    private lazy var needSupportButton: UIButton = Self.createNeedSupportButton()
+    
+    private lazy var helpImageView: UIImageView = Self.createHelpImageView()
+    private lazy var section4TitleLabel: UILabel = Self.createSection4TitleLabel()
+    private lazy var section4DescriptionLabel: UILabel = Self.createSection4DescriptionLabel()
+
     private lazy var actsImageView: UIImageView = Self.createActsImageView()
     
+    private lazy var section5TitleLabel: UILabel = Self.createSection5TitleLabel()
+    private lazy var section5DescriptionLabel: UILabel = Self.createSection5DescriptionLabel()
+    private lazy var section5Description2Label: UILabel = Self.createSection5Description2Label()
+        
     // Constraints
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createBannerImageViewDynamicHeightConstraint()
     
     private lazy var advicesImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
     private lazy var advicesImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
-    
-    private lazy var gameModeratorsImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
-    private lazy var gameModeratorsImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
     
     private lazy var actsImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createImageViewFixedHeightConstraint()
     private lazy var actsImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createImageViewDynamicHeightConstraint()
@@ -81,12 +112,6 @@ class StayInControlViewController: UIViewController {
             imageView: self.advicesImageView,
             fixedHeightConstraint: &self.advicesImageViewFixedHeightConstraint,
             dynamicHeightConstraint: &self.advicesImageViewDynamicHeightConstraint
-        )
-        
-        self.resizeImageView(
-            imageView: self.gameModeratorsImageView,
-            fixedHeightConstraint: &self.gameModeratorsImageViewFixedHeightConstraint,
-            dynamicHeightConstraint: &self.gameModeratorsImageViewDynamicHeightConstraint
         )
         
         self.resizeImageView(
@@ -214,13 +239,158 @@ extension StayInControlViewController {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }
+    
+    private static func createSOSButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "sos_logo"), for: .normal)
+        return button
+    }
+    
+    private static func creategamersInfoButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "player_info_logo"), for: .normal)
+        return button
+    }
+    
+    private static func createBudgetImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "budget_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createSection1TitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_title_3")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection1DescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_3")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
 
     private static func createGameModeratorsImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "game_moderators_image")
+        imageView.image = UIImage(named: "game_moderators_banner")
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }
+    
+    private static func createSection2TitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_title_5")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection2DescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_5")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createBellImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "bell_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createSection3TitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_5_subtitle_1")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection3SubtitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_5_subtitle_2")
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection3Title2Label() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_title_4")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection3DescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_4")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createNeedSupportButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("need_support"), for: .normal)
+        return button
+    }
+    
+    private static func createHelpImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "help_banner")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+    
+    private static func createSection4TitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_6")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection4DescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_6_part_2")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
     }
 
     private static func createActsImageView() -> UIImageView {
@@ -229,6 +399,36 @@ extension StayInControlViewController {
         imageView.image = UIImage(named: "acts_image")
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }
+    
+    private static func createSection5TitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_6")
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection5DescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_7_part_1")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
+    private static func createSection5Description2Label() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("stay_in_control_page_description_7_part_2")
+        label.font = AppFont.with(type: .regular, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
     }
     
     // Constraints
@@ -266,8 +466,35 @@ extension StayInControlViewController {
         self.scrollContainerView.addSubview(self.highlightTextSectionView)
         
         self.scrollContainerView.addSubview(self.advicesImageView)
-        self.scrollContainerView.addSubview(self.actsImageView)
+        
+        self.scrollContainerView.addSubview(self.highlightTextSection2View)
+        
+        self.scrollContainerView.addSubview(self.sosButton)
+        self.scrollContainerView.addSubview(self.gamersInfoButton)
+
+        self.scrollContainerView.addSubview(self.budgetImageView)
+        self.scrollContainerView.addSubview(self.section1TitleLabel)
+        self.scrollContainerView.addSubview(self.section1DescriptionLabel)
+
         self.scrollContainerView.addSubview(self.gameModeratorsImageView)
+        self.scrollContainerView.addSubview(self.section2TitleLabel)
+        self.scrollContainerView.addSubview(self.section2DescriptionLabel)
+        
+        self.scrollContainerView.addSubview(self.bellImageView)
+        self.scrollContainerView.addSubview(self.section3TitleLabel)
+        self.scrollContainerView.addSubview(self.section3SubtitleLabel)
+        self.scrollContainerView.addSubview(self.section3Title2Label)
+        self.scrollContainerView.addSubview(self.section3DescriptionLabel)
+        self.scrollContainerView.addSubview(self.needSupportButton)
+
+        self.scrollContainerView.addSubview(self.helpImageView)
+        self.scrollContainerView.addSubview(self.section4TitleLabel)
+        self.scrollContainerView.addSubview(self.section4DescriptionLabel)
+        
+        self.scrollContainerView.addSubview(self.actsImageView)
+        self.scrollContainerView.addSubview(self.section5TitleLabel)
+        self.scrollContainerView.addSubview(self.section5DescriptionLabel)
+        self.scrollContainerView.addSubview(self.section5Description2Label)
 
         self.initConstraints()
     }
@@ -319,14 +546,98 @@ extension StayInControlViewController {
             self.advicesImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
             self.advicesImageView.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
             
+            self.highlightTextSection2View.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.highlightTextSection2View.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.highlightTextSection2View.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 20),
+            
+            self.sosButton.trailingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: -10),
+            self.sosButton.topAnchor.constraint(equalTo: self.highlightTextSection2View.bottomAnchor, constant: 10),
+            self.sosButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.gamersInfoButton.leadingAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor, constant: 10),
+            self.gamersInfoButton.topAnchor.constraint(equalTo: self.highlightTextSection2View.bottomAnchor, constant: 10),
+            self.gamersInfoButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.budgetImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.budgetImageView.topAnchor.constraint(equalTo: self.sosButton.bottomAnchor, constant: 20),
+            self.budgetImageView.heightAnchor.constraint(equalToConstant: 150),
+            self.budgetImageView.widthAnchor.constraint(equalToConstant: 150),
+
+            self.section1TitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section1TitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section1TitleLabel.topAnchor.constraint(equalTo: self.budgetImageView.bottomAnchor, constant: 20),
+            
+            self.section1DescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section1DescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section1DescriptionLabel.topAnchor.constraint(equalTo: self.section1TitleLabel.bottomAnchor, constant: 10),
+            
+            self.gameModeratorsImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.section1DescriptionLabel.bottomAnchor, constant: 20),
+            self.gameModeratorsImageView.heightAnchor.constraint(equalToConstant: 100),
+            self.gameModeratorsImageView.widthAnchor.constraint(equalToConstant: 250),
+            
+            self.section2TitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section2TitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section2TitleLabel.topAnchor.constraint(equalTo: self.gameModeratorsImageView.bottomAnchor, constant: 20),
+            
+            self.section2DescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section2DescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section2DescriptionLabel.topAnchor.constraint(equalTo: self.section2TitleLabel.bottomAnchor, constant: 10),
+            
+            self.bellImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.bellImageView.topAnchor.constraint(equalTo: self.section2DescriptionLabel.bottomAnchor, constant: 20),
+            self.bellImageView.heightAnchor.constraint(equalToConstant: 150),
+            self.bellImageView.widthAnchor.constraint(equalToConstant: 150),
+            
+            self.section3TitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section3TitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section3TitleLabel.topAnchor.constraint(equalTo: self.bellImageView.bottomAnchor, constant: 20),
+            
+            self.section3SubtitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section3SubtitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section3SubtitleLabel.topAnchor.constraint(equalTo: self.section3TitleLabel.bottomAnchor, constant: 10),
+            
+            self.section3Title2Label.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section3Title2Label.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section3Title2Label.topAnchor.constraint(equalTo: self.section3SubtitleLabel.bottomAnchor, constant: 10),
+            
+            self.section3DescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section3DescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section3DescriptionLabel.topAnchor.constraint(equalTo: self.section3Title2Label.bottomAnchor, constant: 10),
+            
+            self.needSupportButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.needSupportButton.topAnchor.constraint(equalTo: self.section3DescriptionLabel.bottomAnchor, constant: 10),
+            self.needSupportButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            self.helpImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.helpImageView.topAnchor.constraint(equalTo: self.needSupportButton.bottomAnchor, constant: 20),
+            self.helpImageView.heightAnchor.constraint(equalToConstant: 100),
+            self.helpImageView.widthAnchor.constraint(equalToConstant: 250),
+            
+            self.section4TitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section4TitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section4TitleLabel.topAnchor.constraint(equalTo: self.helpImageView.bottomAnchor, constant: 20),
+            
+            self.section4DescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section4DescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section4DescriptionLabel.topAnchor.constraint(equalTo: self.section4TitleLabel.bottomAnchor, constant: 10),
+            
             self.actsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.actsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.actsImageView.topAnchor.constraint(equalTo: self.advicesImageView.bottomAnchor, constant: 30),
-
-            self.gameModeratorsImageView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
-            self.gameModeratorsImageView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.gameModeratorsImageView.topAnchor.constraint(equalTo: self.actsImageView.bottomAnchor, constant: 30),
-            self.gameModeratorsImageView.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
+            self.actsImageView.topAnchor.constraint(equalTo: self.section4DescriptionLabel.bottomAnchor, constant: 20),
+            
+            self.section5TitleLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section5TitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section5TitleLabel.topAnchor.constraint(equalTo: self.actsImageView.bottomAnchor, constant: 20),
+            
+            self.section5DescriptionLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section5DescriptionLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section5DescriptionLabel.topAnchor.constraint(equalTo: self.section5TitleLabel.bottomAnchor, constant: 10),
+            
+            self.section5Description2Label.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.section5Description2Label.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.section5Description2Label.topAnchor.constraint(equalTo: self.section5DescriptionLabel.bottomAnchor, constant: 10),
+            self.section5Description2Label.bottomAnchor.constraint(equalTo: self.scrollContainerView.bottomAnchor, constant: -30)
             
         ])
         
@@ -370,27 +681,6 @@ extension StayInControlViewController {
                            multiplier: 1,
                            constant: 0)
         self.advicesImageViewDynamicHeightConstraint.isActive = false
-        
-        // Game Moderators ImageView constraints
-        self.gameModeratorsImageViewFixedHeightConstraint =
-        NSLayoutConstraint(item: self.gameModeratorsImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: nil,
-                           attribute: .notAnAttribute,
-                           multiplier: 1,
-                           constant: 165)
-        self.gameModeratorsImageViewFixedHeightConstraint.isActive = true
-        
-        self.gameModeratorsImageViewDynamicHeightConstraint =
-        NSLayoutConstraint(item: self.gameModeratorsImageView,
-                           attribute: .height,
-                           relatedBy: .equal,
-                           toItem: self.gameModeratorsImageView,
-                           attribute: .width,
-                           multiplier: 1,
-                           constant: 0)
-        self.gameModeratorsImageViewDynamicHeightConstraint.isActive = false
         
         // Acts ImageView constraints
         self.actsImageViewFixedHeightConstraint =

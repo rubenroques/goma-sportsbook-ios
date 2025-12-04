@@ -20,6 +20,16 @@ class StayInControlViewModel {
         )
     }()
     
+    lazy var highlightTextSection2ViewModel: HighlightTextSectionViewModelProtocol = {
+        return HighlightTextSectionViewModel(
+            title: localized("stay_in_control_page_title_2"),
+            description: localized("stay_in_control_page_description_2")
+        )
+    }()
+    
+    let sosLink: String = "https://www.sosjoueurs.org/"
+    let gamersInfo: String = "https://www.joueurs-info-service.fr/?at_medium=sl&at_campaign=2024-07-01-Changer-SEA-SPF-Joueur_info_service_MCJoueursInfoService_Textuelle"
+    
     // MARK: - Lifecycle
     init() {
     }
