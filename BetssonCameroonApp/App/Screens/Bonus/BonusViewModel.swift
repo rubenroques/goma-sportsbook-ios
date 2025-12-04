@@ -8,7 +8,7 @@ class BonusViewModel {
     
     var bonuses: [AvailableBonus] = []
     var grantedBonuses: [GrantedBonus] = []
-    var bonusesCacheCardViewModel: [Int: BonusCardViewModelProtocol] = [:]
+    var bonusesCacheCardViewModel: [String: BonusCardViewModelProtocol] = [:]
     var grantedBonusesCacheCardViewModel: [String: BonusInfoCardViewModelProtocol] = [:]
     
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -202,9 +202,8 @@ class BonusViewModel {
             return nil
         }
 
-        // Check cache first
-        if let cachedCardViewModel = self.bonusesCacheCardViewModel[bonus.bonusPlanId] {
-            // Setup callbacks for cached view model
+        // Check cache first (use bonus.id as key since bonusPlanId is not unique)
+        if let cachedCardViewModel = self.bonusesCacheCardViewModel[bonus.id] {
             return cachedCardViewModel
         }
         else {
@@ -231,7 +230,7 @@ class BonusViewModel {
                 self?.onBonusURLOpened?(termsString)
             }
             
-            self.bonusesCacheCardViewModel[bonus.bonusPlanId] = cardViewModel
+            self.bonusesCacheCardViewModel[bonus.id] = cardViewModel
             return cardViewModel
         }
     }

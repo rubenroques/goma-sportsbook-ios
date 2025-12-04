@@ -49,6 +49,7 @@ public class Client {
                 EveryMatrixUnifiedConfiguration.shared.environment = .development
             }
 
+            EveryMatrixUnifiedConfiguration.shared.defaultLanguage = self.configuration.language
         }
     }
 
@@ -68,6 +69,7 @@ public class Client {
             EveryMatrixUnifiedConfiguration.shared.environment = .development
         }
 
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = configuration.language
     }
 
     public func connect() {
@@ -262,7 +264,19 @@ public class Client {
     }
 
     public func disconnect() {
+        // Disconnect socket connections
+        if let everyMatrixProvider = eventsProvider as? EveryMatrixEventsProvider {
+            everyMatrixProvider.socketConnector.disconnect()
+        }
 
+        // Cancel all active subscriptions
+        cancellables.removeAll()
+    }
+
+    /// Sets the language for all API requests.
+    /// Note: Call disconnect() and reconnect services after changing language for full effect.
+    public func setLanguage(_ language: String) {
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = language
     }
 
     public func reconnectIfNeeded() {

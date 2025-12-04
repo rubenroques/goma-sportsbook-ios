@@ -100,6 +100,16 @@ private extension CasinoSearchCoordinator {
             
             let viewModel = CasinoGamePlayViewModel(casinoGame: casinoGame, mode: mode, servicesProvider: self.servicesProvider)
             
+            
+            // Setup navigation closures
+            viewModel.onNavigateBack = { [weak self] in
+                self?.navigationController.popViewController(animated: true)
+            }
+
+            viewModel.onDepositRequested = { [weak self] in
+                self?.onDepositRequested?()
+            }
+            
             let viewController = CasinoGamePlayViewController(viewModel: viewModel)
             self.navigationController.pushViewController(viewController, animated: true)
         }

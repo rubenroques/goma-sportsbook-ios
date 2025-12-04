@@ -11,7 +11,7 @@ extension SportRadarModels {
 
     struct AvailableBonus: Codable {
         var id: String
-        var bonusPlanId: Int
+        var bonusPlanId: String
         var name: String
         var description: String?
         var type: String

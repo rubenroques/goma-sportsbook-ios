@@ -73,13 +73,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
 
         // External Localization tool (Phrase SDK)
-        #if DEBUG
+        // Set locale override based on user preference (like BetssonFrance pattern)
         let phraseConfiguration = PhraseConfiguration()
+        phraseConfiguration.localeOverride = LanguageManager.shared.phraseLocaleString
+
+        #if DEBUG
         phraseConfiguration.debugMode = false
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "6d295e019be829c18ca3c20fa1acddf1", environmentSecret: "uO7ZSRelqmnwrbB1sjl6SrAMHKSwGhtKDD-xcGWnmxY")
         #else
-        let phraseConfiguration = PhraseConfiguration()
         Phrase.shared.configuration = phraseConfiguration
         Phrase.shared.setup(distributionID: "6d295e019be829c18ca3c20fa1acddf1", environmentSecret: "rExUgxvoqyX6AQJ9UBiK2DN9t02tsF_P-i0HEXvc-yg")
         #endif

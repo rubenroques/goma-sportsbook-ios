@@ -70,15 +70,21 @@ final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
         languages = updatedLanguages
         selectedLanguage = language.withSelection(true)
 
-        // Emit change event
+        // Emit change event (triggers overlay dismiss)
         languageChangedSubject.send(language)
 
-        // Notify callback for future language switching logic
+        // Notify callback
         onLanguageSelected?(language)
+
+        // Trigger actual language change if different from current
+        // This will post a notification that triggers app restart
+        if language.id != LanguageManager.shared.currentLanguageCode {
+            LanguageManager.shared.setLanguage(language.id)
+        }
     }
 
     func loadLanguages() {
-        let currentLanguageCode = localized("current_language_code")
+        let currentLanguageCode = LanguageManager.shared.currentLanguageCode
 
         // Set up languages with current selection
         languages = supportedLanguages.map { lang in

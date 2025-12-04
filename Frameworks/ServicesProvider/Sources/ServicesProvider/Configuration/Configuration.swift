@@ -30,6 +30,9 @@ public struct Configuration {
     /// Client business unit identifier for CMS configuration
     private(set) var clientBusinessUnit: ClientBusinessUnit?
 
+    /// Language code for API requests (e.g., "en", "fr")
+    private(set) var language: String
+
     /// Credentials for a specific provider
     public struct ProviderCredentials {
         let name: String
@@ -40,12 +43,14 @@ public struct Configuration {
         environment: Environment,
         deviceUUID: String?,
         clientBusinessUnit: ClientBusinessUnit?,
+        language: String,
         providerMapping: [Domain: Provider],
         credentials: [Provider: ProviderCredentials]
     ) {
         self.environment = environment
         self.deviceUUID = deviceUUID
         self.clientBusinessUnit = clientBusinessUnit
+        self.language = language
         self.providerMapping = providerMapping
         self.credentials = credentials
     }
@@ -56,9 +61,10 @@ public struct Configuration {
         private var environment: Environment = .production
         private var deviceUUID: String?
         private var clientBusinessUnit: ClientBusinessUnit?
+        private var language: String = "en"
         private var providerMapping: [Domain: Provider] = [:]
         private var credentials: [Provider: ProviderCredentials] = [:]
-        
+
         public init() {}
         
         /// Sets the environment
@@ -81,7 +87,14 @@ public struct Configuration {
             self.clientBusinessUnit = businessUnit
             return self
         }
-        
+
+        /// Sets the language code for API requests
+        @discardableResult
+        public func withLanguage(_ language: String) -> Builder {
+            self.language = language
+            return self
+        }
+
         /// Assigns a provider for a specific domain
         @discardableResult
         public func useProvider(_ provider: Provider, forDomain domain: Domain) -> Builder {
@@ -115,6 +128,7 @@ public struct Configuration {
                 environment: environment,
                 deviceUUID: deviceUUID,
                 clientBusinessUnit: clientBusinessUnit,
+                language: language,
                 providerMapping: providerMapping,
                 credentials: credentials
             )
@@ -126,6 +140,7 @@ public struct Configuration {
         self.environment = environment
         self.deviceUUID = deviceUUID
         self.clientBusinessUnit = nil
+        self.language = "en"
         self.providerMapping = [:]
         self.credentials = [:]
     }
