@@ -39,24 +39,28 @@ protocol HomeContentProvider: Connector {
     // MARK: - Rich Banner Pointers
 
     /// Retrieves casino rich banner pointers (IDs + metadata only, no enriched game data)
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of rich banner pointers
-    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError>
+    func getCasinoRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError>
 
     /// Retrieves sport rich banner pointers (IDs + metadata only, no enriched event data)
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of rich banner pointers
-    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError>
+    func getSportRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError>
 
     // MARK: - Rich Banners (Casino)
 
     /// Retrieves casino rich banners supporting both info and casino game types
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of rich banners with enriched data
-    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError>
+    func getCasinoRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError>
 
     // MARK: - Rich Banners (Sport)
 
     /// Retrieves sport rich banners supporting both info and sport event types
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of rich banners with enriched data
-    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError>
+    func getSportRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError>
 
     // MARK: - Sport Banners
 
@@ -65,14 +69,16 @@ protocol HomeContentProvider: Connector {
     func getCarouselEventPointers() -> AnyPublisher<CarouselEventPointers, ServiceProviderError>
 
     /// Retrieves sport-specific promotional banners
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of sport banners wrapped with image metadata
-    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError>
+    func getCarouselEvents(language: String?) -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError>
 
     // MARK: - Casino Carousel Banners
 
     /// Retrieves casino carousel banners
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: Publisher that emits an array of casino carousel banners
-    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError>
+    func getCasinoCarouselPointers(language: String?) -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError>
 
     /// Retrieves casino carousel games with full game details and banner metadata
     /// - Returns: Publisher that emits an array of casino game banners

@@ -51,7 +51,7 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
         return gomaHomeContentProvider.getCarouselEventPointers()
     }
 
-    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
+    func getCarouselEvents(language: String?) -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         let requestPublisher = gomaHomeContentProvider.getCarouselEventPointers()
         return requestPublisher
             .flatMap({ carouselEventPointers -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> in
@@ -116,12 +116,12 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
-        return gomaHomeContentProvider.getCasinoCarouselPointers()
+    func getCasinoCarouselPointers(language: String?) -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        return gomaHomeContentProvider.getCasinoCarouselPointers(language: language)
     }
 
     func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
-        let requestPublisher = gomaHomeContentProvider.getCasinoCarouselPointers()
+        let requestPublisher = gomaHomeContentProvider.getCasinoCarouselPointers(language: nil)
         return requestPublisher
             .flatMap({ casinoCarouselPointers -> AnyPublisher<CasinoGameBanners, ServiceProviderError> in
 
@@ -191,19 +191,19 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+    func getCasinoRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
         // Proxy to Goma CMS for pointers
-        return gomaHomeContentProvider.getCasinoRichBannerPointers()
+        return gomaHomeContentProvider.getCasinoRichBannerPointers(language: language)
     }
 
-    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+    func getSportRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
         // Proxy to Goma CMS for pointers
-        return gomaHomeContentProvider.getSportRichBannerPointers()
+        return gomaHomeContentProvider.getSportRichBannerPointers(language: language)
     }
 
-    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getCasinoRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         // Get pointers from Goma CMS, then enrich with EveryMatrix casino data
-        return gomaHomeContentProvider.getCasinoRichBannerPointers()
+        return gomaHomeContentProvider.getCasinoRichBannerPointers(language: language)
             .flatMap { (pointers: RichBannerPointers) -> AnyPublisher<RichBanners, ServiceProviderError> in
 
                 // Extract casino game IDs from pointers
@@ -306,9 +306,9 @@ class EveryMatrixManagedContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getSportRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         // Get pointers from Goma CMS, then enrich with EveryMatrix events data
-        return gomaHomeContentProvider.getSportRichBannerPointers()
+        return gomaHomeContentProvider.getSportRichBannerPointers(language: language)
             .flatMap { (pointers: RichBannerPointers) -> AnyPublisher<RichBanners, ServiceProviderError> in
 
                 // Extract event IDs from pointers

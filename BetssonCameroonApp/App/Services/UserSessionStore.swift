@@ -98,7 +98,8 @@ class UserSessionStore {
             .sink { [weak self] userProfile in
                 if let userProfile = userProfile {
                     print("[UserSessionStore] User profile updated - username: \(userProfile.username)")
-                    self?.forceRefreshUserWallet()  // Fetch wallet balance via REST
+                    self?.forceRefreshUserWallet()  // Fetch wallet balance via REST (initial snapshot)
+                    self?.startUserInfoSSEStream()  // Start SSE stream for real-time wallet updates
                     self?.updateDeviceIdentifier()
                 }
             }
@@ -154,6 +155,9 @@ class UserSessionStore {
     func logout(reason: String? = nil) {
         let reasonText = reason ?? "MANUAL"
         print("[SSEDebug] 🚪 UserSessionStore: Logout triggered (reason: \(reasonText))")
+
+        // Stop SSE stream first to prevent reconnection attempts
+        self.stopUserInfoSSEStream()
 
         Env.userSessionStore.loginFlowSuccess.send(false)
 
@@ -481,29 +485,18 @@ extension UserSessionStore {
                         self.isWalletSubscriptionActive = true
 
                     case .contentUpdate(let userInfo):
-                        // Handle session expiration
+                        // Session expiration handling disabled - SSE used only for wallet updates
+                        // User logout handled separately via REST token refresh failures
                         switch userInfo.sessionState {
                         case .expired(let reason):
-                            print("[SSEDebug] ⚠️ UserSessionStore: Session expired from SSE - reason: \(reason ?? "unknown")")
-                            print("[SSEDebug] 📢 UserSessionStore: Publishing session expiration event")
-
-                            // Publish session expiration event BEFORE logout
-                            self.sessionExpirationPublisher.send(.sessionExpired(reason: reason ?? "unknown"))
-
-                            print("[SSEDebug] 🚪 UserSessionStore: Auto-logout will be triggered by SESSION_EXPIRATION")
-                            self.logout(reason: "SESSION_EXPIRATION")
-                            return
+                            print("[SSEDebug] ⚠️ UserSessionStore: Session expiration from SSE ignored (reason: \(reason ?? "unknown"))")
+                            // DO NOT logout or publish event - let REST token refresh handle session expiration
+                            return  // Skip wallet update for expired sessions
 
                         case .terminated:
-                            print("[SSEDebug] ⚠️ UserSessionStore: Session terminated from SSE")
-                            print("[SSEDebug] 📢 UserSessionStore: Publishing session termination event")
-
-                            // Publish session termination event BEFORE logout
-                            self.sessionExpirationPublisher.send(.sessionTerminated)
-
-                            print("[SSEDebug] 🚪 UserSessionStore: Auto-logout will be triggered by SESSION_TERMINATED")
-                            self.logout(reason: "SESSION_TERMINATED")
-                            return
+                            print("[SSEDebug] ⚠️ UserSessionStore: Session termination from SSE ignored")
+                            // DO NOT logout or publish event
+                            return  // Skip wallet update for terminated sessions
 
                         case .active:
                             // Session is active, process wallet update

@@ -63,7 +63,7 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         return self.homeContentProvider.getCarouselEventPointers()
     }
 
-    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
+    func getCarouselEvents(language: String?) -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         let requestPublisher = self.getCarouselEventPointers()
         return requestPublisher
             .flatMap({ topImageCardPointers -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> in
@@ -498,7 +498,7 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         return publisher.eraseToAnyPublisher()
     }
 
-    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+    func getCasinoCarouselPointers(language: String?) -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
         fatalError("Casino Carousel not supported for this provider")
     }
 
@@ -506,19 +506,19 @@ class SportRadarManagedContentProvider: HomeContentProvider {
         fatalError("Casino Carousel not supported for this provider")
     }
 
-    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getCasinoRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getSportRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
-    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+
+    func getCasinoRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
-    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+
+    func getSportRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 

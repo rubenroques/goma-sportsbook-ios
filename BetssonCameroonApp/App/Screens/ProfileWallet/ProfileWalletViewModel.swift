@@ -151,7 +151,7 @@ final class ProfileWalletViewModel: ObservableObject {
     }
 
     func refreshLanguageDisplay() {
-        let currentLanguageCode = localized("current_language_code")
+        let currentLanguageCode = LanguageManager.shared.currentLanguageCode
         let displayName = ProfileMenuListViewModel.displayNameForLanguageCode(currentLanguageCode)
         profileMenuListViewModel.updateCurrentLanguage(displayName)
     }

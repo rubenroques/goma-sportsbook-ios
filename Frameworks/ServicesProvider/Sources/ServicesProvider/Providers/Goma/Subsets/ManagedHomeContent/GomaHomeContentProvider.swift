@@ -99,8 +99,8 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
     
-    func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
-        return self.apiClient.carouselEvents()
+    func getCarouselEvents(language: String?) -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
+        return self.apiClient.carouselEvents(language: language)
             .map(GomaModelMapper.events(fromInternalHeroCardEvents:))
             .map { events -> ImageHighlightedContents<Event> in
                 events.map { event in
@@ -114,30 +114,30 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
-        return self.apiClient.casinoCarouselPointers()
+    func getCasinoCarouselPointers(language: String?) -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+        return self.apiClient.casinoCarouselPointers(language: language)
             .map(GomaModelMapper.casinoCarouselPointers(fromInternalCasinoCarouselPointers:))
             .eraseToAnyPublisher()
     }
 
-    func getCasinoRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
-        return self.apiClient.casinoRichBanners()
+    func getCasinoRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return self.apiClient.casinoRichBanners(language: language)
             .map(GomaModelMapper.richBannerPointers(fromInternalRichBanners:))
             .eraseToAnyPublisher()
     }
 
-    func getSportRichBannerPointers() -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
-        return self.apiClient.sportRichBanners()
+    func getSportRichBannerPointers(language: String?) -> AnyPublisher<RichBannerPointers, ServiceProviderError> {
+        return self.apiClient.sportRichBanners(language: language)
             .map(GomaModelMapper.richBannerPointers(fromInternalRichBanners:))
             .eraseToAnyPublisher()
     }
 
-    func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getCasinoRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         guard let casinoProvider = self.casinoProvider else {
             return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
         }
 
-        return self.apiClient.casinoRichBanners()
+        return self.apiClient.casinoRichBanners(language: language)
             .flatMap { (internalBanners: GomaModels.RichBanners) -> AnyPublisher<RichBanners, ServiceProviderError> in
                 // Extract casino game IDs from banners
                 let casinoGameIds = internalBanners.compactMap { banner -> String? in
@@ -185,12 +185,12 @@ class GomaHomeContentProvider: HomeContentProvider {
             .eraseToAnyPublisher()
     }
 
-    func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    func getSportRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         guard let eventsProvider = self.eventsProvider else {
             return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
         }
 
-        return self.apiClient.sportRichBanners()
+        return self.apiClient.sportRichBanners(language: language)
             .flatMap { (internalBanners: GomaModels.RichBanners) -> AnyPublisher<RichBanners, ServiceProviderError> in
                 // Extract event IDs from banners
                 let eventIds = internalBanners.compactMap { banner -> String? in
