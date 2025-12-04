@@ -27,6 +27,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.bootstrap = Bootstrap(window: window)
         self.bootstrap.boot()
 
+        // Listen for language changes
+        setupLanguageChangeObserver()
+
         // End scene boot tracking
         PerformanceTracker.shared.end(
             feature: .appBoot,
@@ -38,6 +41,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let userActivity = connectionOptions.userActivities.first {
             handleUserActivity(userActivity)
         }
+    }
+
+    // MARK: - Language Change Handling
+
+    private func setupLanguageChangeObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleLanguageChange),
+            name: .languageDidChange,
+            object: nil
+        )
+    }
+
+    @objc private func handleLanguageChange(_ notification: Notification) {
+        // Restart the app with new language configuration
+        bootstrap.restart()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

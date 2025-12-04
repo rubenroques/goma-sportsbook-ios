@@ -36,6 +36,7 @@ class CasinoCoordinator: Coordinator {
     var onShowSportsQuickLinkScreen: ((QuickLinkType) -> Void)?
     var onDepositRequested: (() -> Void)?
     var onLoginRequested: (() -> Void)?
+    var onBannerURLRequested: ((String, String?) -> Void)?
     
     // MARK: - Properties
     private let environment: Environment
@@ -196,23 +197,6 @@ class CasinoCoordinator: Coordinator {
         onShowGamePlay(gameId)
     }
 
-    private func openExternalURL(url: String) {
-        guard let url = URL(string: url) else {
-            print("CasinoCoordinator: Invalid URL: \(url)")
-            return
-        }
-
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url) { success in
-                if !success {
-                    print("CasinoCoordinator: Failed to open URL: \(url)")
-                }
-            }
-        } else {
-            print("CasinoCoordinator: Cannot open URL: \(url)")
-        }
-    }
-    
     private func checkCasinoQuickLinkSelected(quickLink: QuickLinkType) {
         
         switch quickLink {
@@ -256,7 +240,7 @@ class CasinoCoordinator: Coordinator {
         }
 
         viewModel.onBannerURLSelected = { [weak self] url in
-            self?.openExternalURL(url: url)
+            self?.onBannerURLRequested?(url, nil)
         }
         
         viewModel.onSportsQuickLinkSelected = { [weak self] quickLink in

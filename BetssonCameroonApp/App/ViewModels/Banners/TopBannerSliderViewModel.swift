@@ -85,7 +85,8 @@ final class TopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
     // MARK: - Private Methods
     private func loadSportBanners() {
         // Get sport rich banners (supports info, casino, and sport event types)
-        servicesProvider.getSportRichBanners()
+        let language = LanguageManager.shared.currentLanguageCode
+        servicesProvider.getSportRichBanners(language: language)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in

@@ -12,13 +12,26 @@ import ServicesProvider
 
 class TopBarContainerViewModel: ObservableObject {
 
-    // MARK: - Child ViewModels
+    // MARK: - Child ViewModels (Public - needed for view binding)
     let multiWidgetToolbarViewModel: MultiWidgetToolbarViewModel
     let walletStatusViewModel: WalletStatusViewModel
+
+    // MARK: - Language Selector (Encapsulated)
+    /// Protocol-typed access for LanguageSelectorView binding
+    var languageSelectorViewModelProtocol: LanguageSelectorViewModelProtocol {
+        languageSelectorViewModel
+    }
+
+    /// Publisher that emits when language selector should be dismissed (e.g., after selection)
+    var shouldDismissLanguageSelectorPublisher: AnyPublisher<Void, Never> {
+        languageSelectorDismissSubject.eraseToAnyPublisher()
+    }
 
     // MARK: - Private Properties
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
+    private let languageSelectorViewModel = LanguageSelectorViewModel()
+    private let languageSelectorDismissSubject = PassthroughSubject<Void, Never>()
 
     // MARK: - Authentication State
     @Published var isAuthenticated: Bool = false
@@ -41,6 +54,14 @@ class TopBarContainerViewModel: ObservableObject {
         self.walletStatusViewModel = WalletStatusViewModel(userSessionStore: userSessionStore)
 
         setupReactiveWalletChain()
+        setupLanguageSelectorBindings()
+    }
+
+    // MARK: - Language Selector Actions
+
+    /// Prepares and shows the language selector overlay
+    func prepareLanguageSelector() {
+        languageSelectorViewModel.loadLanguages()
     }
 
     // MARK: - Reactive Wallet Chain Setup
@@ -96,6 +117,14 @@ class TopBarContainerViewModel: ObservableObject {
                     print("💰 TopBarContainer: Toolbar wallet balance updated - total: \(walletBalance)")
                 }
             }
+            .store(in: &cancellables)
+    }
+
+    private func setupLanguageSelectorBindings() {
+        // Forward language selection to dismiss publisher
+        languageSelectorViewModel.languageChangedPublisher
+            .map { _ in () }
+            .subscribe(languageSelectorDismissSubject)
             .store(in: &cancellables)
     }
 }

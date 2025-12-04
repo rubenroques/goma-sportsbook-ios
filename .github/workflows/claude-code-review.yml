@@ -42,10 +42,16 @@ jobs:
           
           # Direct prompt for automated review (no @claude mention needed)
           direct_prompt: |
-            Review this iOS Swift pull request. Prioritize issues by severity:
-
             ## CRITICAL (must fix before merge):
-            - **Hardcoded user-facing strings**: Any text displayed to users (labels, buttons, alerts, error messages, placeholders) that is NOT using localized() / NSLocalizedString or the localization system. This is a multilingual app - all user-visible strings must be localized.
+            - **Hardcoded user-facing strings**: Text displayed to users in production UI that is NOT localized.
+              - CHECK: Labels, buttons, alerts, error messages, placeholders, navigation titles, toast messages
+              - IGNORE (not user-facing):
+                - Print statements, GomaLogger calls, debugPrint, os_log
+                - SwiftUI #Preview blocks and PreviewProvider implementations
+                - Mock/Dummy ViewModels (files prefixed with Mock* or containing "mock", "dummy", "fake", "stub")
+                - Unit test files (*Tests.swift, *Spec.swift)
+                - String identifiers, keys, API parameters, analytics event names
+                - Comments and documentation
             - Security vulnerabilities
             - Potential crashes or data loss
 
@@ -53,18 +59,17 @@ jobs:
             - Code quality and Swift best practices
             - Performance concerns (especially in UI/main thread)
             - Memory management (retain cycles, leaks)
-            - MVVM-C architecture violations
+            - MVVM-C architecture violations (ViewControllers creating Coordinators, navigation logic in VMs)
 
             ## MINOR (suggestions):
             - Code style improvements
-            - Debug prints or development comments (note: some debug logging may be intentional, only flag if clearly accidental)
-
+            - Leftover debug code (TODO comments, commented-out code blocks, breakpoints)
             Focus on production readiness. Be concise and actionable.
             
             
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
-          # use_sticky_comment: true
+          use_sticky_comment: true
           
           # Optional: Customize review based on file types
           # direct_prompt: |

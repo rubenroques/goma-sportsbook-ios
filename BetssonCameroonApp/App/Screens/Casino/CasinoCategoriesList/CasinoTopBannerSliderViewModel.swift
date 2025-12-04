@@ -81,7 +81,8 @@ final class CasinoTopBannerSliderViewModel: TopBannerSliderViewModelProtocol {
 
     // MARK: - Private Methods
     private func loadCasinoBanners() {
-        servicesProvider.getCasinoRichBanners()
+        let language = LanguageManager.shared.currentLanguageCode
+        servicesProvider.getCasinoRichBanners(language: language)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in

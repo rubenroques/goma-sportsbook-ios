@@ -4,16 +4,24 @@
 
 releases:
 
-  - version: "0.3.2"
-    build: 3201
-    date: "2025-12-02"
+  - version: "0.3.3" # not released yet, add changes here.
+    build: 3304
+    date: "TBD"
     notes:
+      - "fix(banners): Add language parameter to sport and casino banner CMS endpoints - banners now display in correct language after language switch"
+      - "fix(wallet): Re-enable SSE for wallet updates (session expiration ignored) and add REST fallback refresh when closing casino game"
+      - "fix(bonus): [SPOR-6569] Fix duplicate bonus cards in Profile > Bonuses - changed bonusPlanId from Int to String and fixed cache key collision"
+      - "refactor(services): Abstract language configuration behind ServicesProvider API - apps no longer access EveryMatrixUnifiedConfiguration directly"
+      - "feature(language): [SPOR-6730] Add language selector UI with floating overlay (top bar) and full-screen (profile) presentation modes"
+      - "fix(profile): Use LanguageManager for language subtitle - localized() uses device language, not user's in-app preference"
+      - "fix(casino): [SPOR-6733] [BC-346] Filter out sportsbook games (OddsMatrix2) from casino listings and recently played"
+      - "fix(lifecycle): Adopt UIScene lifecycle - added SceneDelegate, updated AppDelegate, and configured UIApplicationSceneManifest in Info.plist files"
+      - "fix(routing): [SPOR-6652:] Handle /casino/category/* URLs from CMS banners internally - centralized URL routing in MainTabBarCoordinator"
+      - "fix(filter): SPOR-5789 - Icons changed; Added behavior for icon that doesn't need tint coloring"
       - "ci: Optimize tag validation step from ~4min to ~10sec by using fastlane-plugin-versioning instead of xcodebuild"
       - "ci: Use generic release notes for Firebase distribution (internal changelog stays in Discord only)"
-      - "fix(lifecycle): Adopt UIScene lifecycle - added SceneDelegate, updated AppDelegate, and configured UIApplicationSceneManifest in Info.plist files"
-      - "fix(filter): SPOR-5789 - Icons changed; Added behavior for icon that doesn't need tint coloring"
 
-  - version: "0.3.2"
+  - version: "0.3.2" # last release
     build: 3121
     date: "2025-12-02"
     notes:

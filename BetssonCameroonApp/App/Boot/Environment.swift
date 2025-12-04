@@ -17,10 +17,6 @@ class Environment {
     let presentationConfigurationStore: PresentationConfigurationStore = PresentationConfigurationStore()
 
     lazy var servicesProvider: ServicesProvider.Client = {
-
-        // Configure EveryMatrix language from app localization
-        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = localized("current_language_code")
-
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
         switch TargetVariables.serviceProviderEnvironment {
         case .prod:
@@ -48,6 +44,7 @@ class Environment {
                 .withEnvironment(serviceProviderEnvironment)
                 .withDeviceUUID(Env.deviceId)
                 .withClientBusinessUnit(cmsBusinessUnit)
+                .withLanguage(LanguageManager.shared.currentLanguageCode)
                 .build()
 
             let provider = TargetVariables.serviceProviderType

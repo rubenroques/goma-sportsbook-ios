@@ -143,4 +143,16 @@ class SportTypeStore {
         return sportId
     }
 
+    /// Resets the store to initial state, cancelling any active subscriptions
+    /// Called during language change to force reload with new language
+    func reset() {
+        // Cancel active subscriptions
+        sportsSubscription = nil
+        liveSportsCountSubscription = nil
+        cancellables.removeAll()
+
+        // Reset to idle state
+        activeSportsCurrentValueSubject.send(.idle)
+    }
+
 }

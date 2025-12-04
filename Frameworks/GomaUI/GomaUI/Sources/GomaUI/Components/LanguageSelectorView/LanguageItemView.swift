@@ -3,19 +3,20 @@ import SwiftUI
 
 /// Individual language selection row with flag, name, and radio button
 internal final class LanguageItemView: UIView {
-    
+
     // MARK: Private properties
     private lazy var containerView: UIView = Self.createContainerView()
-    private lazy var flagLabel: UILabel = Self.createFlagLabel()
+    private lazy var flagImageView: UIImageView = Self.createFlagImageView()
     private lazy var nameLabel: UILabel = Self.createNameLabel()
     private lazy var radioButton: UIView = Self.createRadioButton()
     private lazy var radioButtonInnerDot: UIView = Self.createRadioButtonInnerDot()
     private lazy var leftStackView: UIStackView = Self.createLeftStackView()
     private lazy var mainStackView: UIStackView = Self.createMainStackView()
     private lazy var separatorView: UIView = Self.createSeparatorView()
-    
+
     // MARK: - Properties
     private var language: LanguageModel?
+    private var imageResolver: LanguageFlagImageResolver?
     private var onTapCallback: ((LanguageModel) -> Void)?
     private var isLastItem: Bool = false
     
@@ -60,30 +61,31 @@ internal final class LanguageItemView: UIView {
     }
     
     // MARK: Functions
-    func configure(with language: LanguageModel, isLastItem: Bool = false, onTap: @escaping (LanguageModel) -> Void) {
+    func configure(
+        with language: LanguageModel,
+        imageResolver: LanguageFlagImageResolver?,
+        isLastItem: Bool = false,
+        onTap: @escaping (LanguageModel) -> Void
+    ) {
         self.language = language
+        self.imageResolver = imageResolver
         self.isLastItem = isLastItem
         self.onTapCallback = onTap
-        
-        // Configure flag - support both emoji and asset names
-        if language.flagIcon.count <= 4 && language.flagIcon.unicodeScalars.allSatisfy({ $0.properties.isEmoji }) {
-            // It's an emoji
-            flagLabel.text = language.flagIcon
+
+        // Configure flag using imageResolver based on language id
+        if let resolver = imageResolver, let flagImage = resolver.flagImage(for: language.id) {
+            flagImageView.image = flagImage
         } else {
-            // Try as image asset, fallback to first 2 letters of language name
-            if UIImage(named: language.flagIcon) != nil {
-                flagLabel.text = "" // We would need UIImageView for assets, using emoji for now
-            } else {
-                // Fallback to abbreviated name
-                flagLabel.text = String(language.name.prefix(2)).uppercased()
-            }
+            // Fallback to globe SF Symbol
+            flagImageView.image = UIImage(systemName: "globe")
+            flagImageView.tintColor = StyleProvider.Color.iconSecondary
         }
-        
+
         nameLabel.text = language.displayName
-        
+
         // Update selection state
         updateSelectionState(language.isSelected)
-        
+
         // Hide separator for last item
         separatorView.isHidden = isLastItem
     }
@@ -139,12 +141,12 @@ extension LanguageItemView {
         return view
     }
     
-    private static func createFlagLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 18) // Good size for emoji flags
-        label.textAlignment = .center
-        return label
+    private static func createFlagImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
     }
     
     private static func createNameLabel() -> UILabel {
@@ -201,7 +203,7 @@ extension LanguageItemView {
         radioButton.addSubview(radioButtonInnerDot)
         
         // Setup left stack (flag + name)
-        leftStackView.addArrangedSubview(flagLabel)
+        leftStackView.addArrangedSubview(flagImageView)
         leftStackView.addArrangedSubview(nameLabel)
         
         // Setup main stack
@@ -229,9 +231,9 @@ extension LanguageItemView {
             mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
             mainStackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             
-            // Flag label
-            flagLabel.widthAnchor.constraint(equalToConstant: 24),
-            flagLabel.heightAnchor.constraint(equalToConstant: 24),
+            // Flag image
+            flagImageView.widthAnchor.constraint(equalToConstant: 24),
+            flagImageView.heightAnchor.constraint(equalToConstant: 24),
             
             // Radio button
             radioButton.widthAnchor.constraint(equalToConstant: 20),
@@ -254,19 +256,6 @@ extension LanguageItemView {
     private func setupActions() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         containerView.addGestureRecognizer(tapGesture)
-        
-        // Add accessibility
-        containerView.isAccessibilityElement = true
-        containerView.accessibilityTraits = [.button]
-        updateAccessibilityLabel()
-    }
-    
-    private func updateAccessibilityLabel() {
-        guard let language = language else { return }
-        
-        let selectionState = language.isSelected ? "selected" : "not selected"
-        containerView.accessibilityLabel = "\(language.displayName) language option, \(selectionState)"
-        containerView.accessibilityHint = "Tap to select this language"
     }
     
     @objc private func handleTap() {
@@ -294,20 +283,24 @@ extension LanguageItemView {
         let vc = UIViewController()
         let selectedLanguage = LanguageModel.english.withSelection(true)
         let itemView = LanguageItemView()
-        itemView.configure(with: selectedLanguage, isLastItem: false) { language in
+        itemView.configure(
+            with: selectedLanguage,
+            imageResolver: nil,
+            isLastItem: false
+        ) { language in
             print("Selected: \(language.displayName)")
         }
         itemView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         vc.view.backgroundColor = StyleProvider.Color.backgroundPrimary
         vc.view.addSubview(itemView)
-        
+
         NSLayoutConstraint.activate([
             itemView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
             itemView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
             itemView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
         ])
-        
+
         return vc
     }
 }
@@ -318,7 +311,11 @@ extension LanguageItemView {
         let vc = UIViewController()
         let unselectedLanguage = LanguageModel.french.withSelection(false)
         let itemView = LanguageItemView()
-        itemView.configure(with: unselectedLanguage, isLastItem: true) { language in
+        itemView.configure(
+            with: unselectedLanguage,
+            imageResolver: nil,
+            isLastItem: true
+        ) { language in
             print("Selected: \(language.displayName)")
         }
         itemView.translatesAutoresizingMaskIntoConstraints = false

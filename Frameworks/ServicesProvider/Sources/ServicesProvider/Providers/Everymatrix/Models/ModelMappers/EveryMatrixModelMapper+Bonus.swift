@@ -13,7 +13,7 @@ extension EveryMatrixModelMapper {
         return response.bonuses.map { bonusItem in
             AvailableBonus(
                 id: bonusItem.id,
-                bonusPlanId: bonusItem.domainID,
+                bonusPlanId: bonusItem.id,
                 name: bonusItem.presentation.name.content,
                 description: bonusItem.presentation.description.content,
                 type: bonusItem.type,

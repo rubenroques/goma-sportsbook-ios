@@ -36,7 +36,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
     // MARK: - Initialization
     public init(onItemSelected: ((ActionRowItem) -> Void)? = nil) {
         self.onItemSelectedCallback = onItemSelected
-        self.currentLanguage = Self.displayNameForLanguageCode(localized("current_language_code"))
+        self.currentLanguage = Self.displayNameForLanguageCode(LanguageManager.shared.currentLanguageCode)
         loadMenuConfiguration()
     }
 

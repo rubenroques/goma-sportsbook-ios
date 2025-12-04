@@ -125,6 +125,9 @@ class CasinoGamePlayViewController: UIViewController {
         super.viewWillDisappear(animated)
         NotificationCenter.default.post(name: .portraitOrientationRequested, object: nil)
         stopSessionTimer()
+
+        // Force wallet refresh when leaving casino game (backup to SSE real-time updates)
+        Env.userSessionStore.forceRefreshUserWallet()
     }
 
     override var prefersStatusBarHidden: Bool {

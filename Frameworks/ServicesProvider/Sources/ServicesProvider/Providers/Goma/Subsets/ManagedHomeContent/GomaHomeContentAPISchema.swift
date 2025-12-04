@@ -18,8 +18,8 @@ enum GomaHomeContentAPISchema {
     // Home widgets contents
     case alertBanner
     case banners
-    case sportBanners
-    case casinoCarouselBanners
+    case sportBanners(language: String?)
+    case casinoCarouselBanners(language: String?)
     case boostedOdds
     case topImageCards
     case heroCards
@@ -103,6 +103,18 @@ extension GomaHomeContentAPISchema: Endpoint {
             }
             queryItems.append(URLQueryItem(name: "platform", value: "ios"))
         case .footerSocialMedia(let language):
+            if let language {
+                queryItems.append(URLQueryItem(name: "language", value: language))
+            }
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+
+        case .sportBanners(let language):
+            if let language {
+                queryItems.append(URLQueryItem(name: "language", value: language))
+            }
+            queryItems.append(URLQueryItem(name: "platform", value: "ios"))
+
+        case .casinoCarouselBanners(let language):
             if let language {
                 queryItems.append(URLQueryItem(name: "language", value: language))
             }

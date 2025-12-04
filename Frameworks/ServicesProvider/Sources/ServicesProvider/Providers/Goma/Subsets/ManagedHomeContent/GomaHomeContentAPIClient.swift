@@ -144,29 +144,32 @@ class GomaHomeContentAPIClient {
         // return self.connector.request(endpoint)
     }
     
-    func carouselEvents() -> AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> {
-        let endpoint = GomaHomeContentAPISchema.sportBanners
+    func carouselEvents(language: String?) -> AnyPublisher<GomaModels.HeroCardEvents, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.sportBanners(language: language)
         return self.connector.request(endpoint)
     }
 
     /// Get casino rich banners (unified casino + info banners)
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: A publisher with the decoded response or error
-    func casinoRichBanners() -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
-        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners
+    func casinoRichBanners(language: String?) -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners(language: language)
         return self.connector.request(endpoint)
     }
 
     /// Get sport rich banners (unified sport event + info banners)
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: A publisher with the decoded response or error
-    func sportRichBanners() -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
-        let endpoint = GomaHomeContentAPISchema.sportBanners
+    func sportRichBanners(language: String?) -> AnyPublisher<GomaModels.RichBanners, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.sportBanners(language: language)
         return self.connector.request(endpoint)
     }
 
     /// Get casino carousel banners
+    /// - Parameter language: Optional language code for localized content
     /// - Returns: A publisher with the decoded response or error
-    func casinoCarouselPointers() -> AnyPublisher<GomaModels.CasinoCarouselPointers, ServiceProviderError> {
-        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners
+    func casinoCarouselPointers(language: String?) -> AnyPublisher<GomaModels.CasinoCarouselPointers, ServiceProviderError> {
+        let endpoint = GomaHomeContentAPISchema.casinoCarouselBanners(language: language)
         return self.connector.request(endpoint)
     }
 

@@ -49,6 +49,7 @@ public class Client {
                 EveryMatrixUnifiedConfiguration.shared.environment = .development
             }
 
+            EveryMatrixUnifiedConfiguration.shared.defaultLanguage = self.configuration.language
         }
     }
 
@@ -68,6 +69,7 @@ public class Client {
             EveryMatrixUnifiedConfiguration.shared.environment = .development
         }
 
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = configuration.language
     }
 
     public func connect() {
@@ -262,7 +264,19 @@ public class Client {
     }
 
     public func disconnect() {
+        // Disconnect socket connections
+        if let everyMatrixProvider = eventsProvider as? EveryMatrixEventsProvider {
+            everyMatrixProvider.socketConnector.disconnect()
+        }
 
+        // Cancel all active subscriptions
+        cancellables.removeAll()
+    }
+
+    /// Sets the language for all API requests.
+    /// Note: Call disconnect() and reconnect services after changing language for full effect.
+    public func setLanguage(_ language: String) {
+        EveryMatrixUnifiedConfiguration.shared.defaultLanguage = language
     }
 
     public func reconnectIfNeeded() {
@@ -2179,24 +2193,24 @@ extension Client {
         return homeContentProvider.getCarouselEventPointers()
     }
 
-    public func getCarouselEvents() -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
+    public func getCarouselEvents(language: String?) -> AnyPublisher<ImageHighlightedContents<Event>, ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider
         else {
             return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return homeContentProvider.getCarouselEvents()
+        return homeContentProvider.getCarouselEvents(language: language)
     }
 
-    public func getCasinoCarouselPointers() -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
+    public func getCasinoCarouselPointers(language: String?) -> AnyPublisher<CasinoCarouselPointers, ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider
         else {
             return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return homeContentProvider.getCasinoCarouselPointers()
+        return homeContentProvider.getCasinoCarouselPointers(language: language)
     }
 
     public func getCasinoCarouselGames() -> AnyPublisher<CasinoGameBanners, ServiceProviderError> {
@@ -2209,24 +2223,24 @@ extension Client {
         return homeContentProvider.getCasinoCarouselGames()
     }
 
-    public func getCasinoRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    public func getCasinoRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider
         else {
             return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return homeContentProvider.getCasinoRichBanners()
+        return homeContentProvider.getCasinoRichBanners(language: language)
     }
 
-    public func getSportRichBanners() -> AnyPublisher<RichBanners, ServiceProviderError> {
+    public func getSportRichBanners(language: String?) -> AnyPublisher<RichBanners, ServiceProviderError> {
         guard
             let homeContentProvider = self.homeContentProvider
         else {
             return Fail(error: ServiceProviderError.homeContentProviderNotFound).eraseToAnyPublisher()
         }
 
-        return homeContentProvider.getSportRichBanners()
+        return homeContentProvider.getSportRichBanners(language: language)
     }
 
     public func getBoostedOddsBanners() -> AnyPublisher<[BoostedOddsPointer], ServiceProviderError> {

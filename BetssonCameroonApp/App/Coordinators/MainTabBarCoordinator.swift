@@ -10,6 +10,7 @@ import Combine
 import ServicesProvider
 import GomaUI
 import SharedModels
+import GomaLogger
 
 class MainTabBarCoordinator: Coordinator {
     
@@ -698,6 +699,9 @@ class MainTabBarCoordinator: Coordinator {
         case "live":
             return .liveGames
         case "casino":
+            if components.count > 2 && components[1].lowercased() == "category" {
+                return .casinoCategory(slug: components[2])
+            }
             if components.count > 1 && components[1].lowercased() == "virtuals" {
                 return .casinoVirtuals
             }
@@ -737,6 +741,8 @@ class MainTabBarCoordinator: Coordinator {
             showCasinoHomeScreen()
         case .casinoVirtuals:
             showCasinoVirtualSportsScreen()
+        case .casinoCategory(let slug):
+            showCasinoCategoryBySlug(slug)
         case .casinoGame(let gameId):
             showCasinoGameScreen(gameId: gameId)
         case .casinoSearch, .sportsSearch:
@@ -1053,6 +1059,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showLogin()
             }
 
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -1066,7 +1076,56 @@ class MainTabBarCoordinator: Coordinator {
         // Refresh if needed
         traditionalCasinoCoordinator?.refresh()
     }
-    
+
+    private func showCasinoCategoryBySlug(_ slug: String) {
+        // Map URL slug to category ID (add Lobby1$ prefix)
+        let categoryId = "Lobby1$\(slug)"
+
+        // Ensure casino coordinator exists
+        if traditionalCasinoCoordinator == nil {
+            let coordinator = CasinoCoordinator(
+                navigationController: self.navigationController,
+                environment: self.environment,
+                lobbyType: .casino
+            )
+
+            coordinator.onShowGamePlay = { [weak self] gameId in
+
+            }
+
+            coordinator.onShowSportsQuickLinkScreen = { [weak self] quickLinkType in
+                self?.navigateToSportsFromQuickLinkType(quickLinkType: quickLinkType)
+            }
+
+            coordinator.onDepositRequested = { [weak self] in
+                self?.presentDepositFlow()
+            }
+
+            coordinator.onLoginRequested = { [weak self] in
+                self?.showLogin()
+            }
+
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
+            traditionalCasinoCoordinator = coordinator
+            addChildCoordinator(coordinator)
+            coordinator.start()
+        }
+
+        // Navigate to the category
+        traditionalCasinoCoordinator?.showCategoryGamesList(
+            categoryId: categoryId,
+            categoryTitle: slug.capitalized
+        )
+
+        // Show the screen through MainTabBarViewController
+        if let viewController = traditionalCasinoCoordinator?.viewController {
+            mainTabBarViewController?.showCasinoHomeScreen(with: viewController)
+        }
+    }
+
     func showCasinoVirtualSportsScreen() {
         // Lazy loading: only create coordinator when needed
         if virtualSportsCasinoCoordinator == nil {
@@ -1094,6 +1153,10 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showLogin()
             }
 
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             virtualSportsCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
@@ -1101,12 +1164,12 @@ class MainTabBarCoordinator: Coordinator {
 
         // Get the view controller from coordinator
         guard let viewController = virtualSportsCasinoCoordinator?.viewController else {
-            print("⚠️ MainTabBarCoordinator: Virtual Sports Casino Coordinator view controller is nil")
+            GomaLogger.info("MainTabBarCoordinator: Virtual Sports Casino Coordinator view controller is nil")
             return
         }
 
         mainTabBarViewController?.showCasinoVirtualSportsScreen(with: viewController)
-        print("🎯 MainTabBarCoordinator: Showed virtual sports screen")
+        GomaLogger.debug("MainTabBarCoordinator: Showed virtual sports screen")
     }
     
     func showCasinoAviatorGameScreen() {
@@ -1134,6 +1197,10 @@ class MainTabBarCoordinator: Coordinator {
 
             coordinator.onLoginRequested = { [weak self] in
                 self?.showLogin()
+            }
+
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
             }
 
             traditionalCasinoCoordinator = coordinator
@@ -1210,10 +1277,13 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showLogin()
             }
 
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
-//            coordinator.showCategoryGamesList(categoryId: "Lobby1$videoslots", categoryTitle: "videoslots")
             coordinator.showSlotsGames()
         }
         else {
@@ -1228,7 +1298,7 @@ class MainTabBarCoordinator: Coordinator {
         // Refresh if needed
         traditionalCasinoCoordinator?.refresh()
     }
-    
+
     private func showCasinoCrashGamesScreen() {
 
         if traditionalCasinoCoordinator == nil {
@@ -1256,10 +1326,13 @@ class MainTabBarCoordinator: Coordinator {
                 self?.showLogin()
             }
 
+            coordinator.onBannerURLRequested = { [weak self] url, target in
+                self?.openBannerURL(url, target: target)
+            }
+
             traditionalCasinoCoordinator = coordinator
             addChildCoordinator(coordinator)
             coordinator.start()
-//            coordinator.showCategoryGamesList(categoryId: "Lobby1$crashgames", categoryTitle: "CRASHGAMES")
             coordinator.showCrashGames()
         }
         else {
@@ -1274,7 +1347,7 @@ class MainTabBarCoordinator: Coordinator {
         // Refresh if needed
         traditionalCasinoCoordinator?.refresh()
     }
-    
+
     // MARK: - Banking Flow Methods
     
     func presentDepositFlow(bonusCode: String? = nil) {

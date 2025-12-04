@@ -11,13 +11,15 @@ public final class LanguageSelectorView: UIView {
     
     // MARK: - Properties
     private let viewModel: LanguageSelectorViewModelProtocol
+    private let imageResolver: LanguageFlagImageResolver?
     private var cancellables = Set<AnyCancellable>()
     private var languageItemViews: [(view: LanguageItemView, language: LanguageModel)] = []
     private var currentLanguages: [LanguageModel] = []
-    
+
     // MARK: - Lifetime and Cycle
-    public init(viewModel: LanguageSelectorViewModelProtocol) {
+    public init(viewModel: LanguageSelectorViewModelProtocol, imageResolver: LanguageFlagImageResolver? = nil) {
         self.viewModel = viewModel
+        self.imageResolver = imageResolver
         super.init(frame: .zero)
         commonInit()
         setupWithTheme()
@@ -70,27 +72,31 @@ public final class LanguageSelectorView: UIView {
     private func updateLanguages(_ languages: [LanguageModel]) {
         // Store current languages
         currentLanguages = languages
-        
+
         // Clear existing views
         clearLanguageItemViews()
-        
+
         // Create new views with language references
-        languageItemViews = languages.enumerated().map { (index, language) in
+        languageItemViews = languages.enumerated().map { [weak self] (index, language) in
             let itemView = LanguageItemView()
             let isLastItem = index == languages.count - 1
-            
-            itemView.configure(with: language, isLastItem: isLastItem) { [weak self] selectedLanguage in
+
+            itemView.configure(
+                with: language,
+                imageResolver: self?.imageResolver,
+                isLastItem: isLastItem
+            ) { [weak self] selectedLanguage in
                 self?.viewModel.selectLanguage(selectedLanguage)
             }
-            
+
             return (view: itemView, language: language)
         }
-        
+
         // Add views to stack
         languageItemViews.forEach { item in
             stackView.addArrangedSubview(item.view)
         }
-        
+
         // Update corner radius for new items
         updateItemCornerRadius()
     }
@@ -100,8 +106,12 @@ public final class LanguageSelectorView: UIView {
         for (itemView, language) in languageItemViews {
             let updatedLanguage = language.withSelection(language.id == selectedLanguage?.id)
             let isLastItem = languageItemViews.last?.language.id == language.id
-            
-            itemView.configure(with: updatedLanguage, isLastItem: isLastItem) { [weak self] selectedLang in
+
+            itemView.configure(
+                with: updatedLanguage,
+                imageResolver: imageResolver,
+                isLastItem: isLastItem
+            ) { [weak self] selectedLang in
                 self?.viewModel.selectLanguage(selectedLang)
             }
         }
@@ -213,7 +223,7 @@ extension LanguageSelectorView {
 
         // Component name label
         let titleLabel = UILabel()
-        titleLabel.text = "LanguageSelectorView"
+        titleLabel.text = ""
         titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
         titleLabel.textColor = StyleProvider.Color.textPrimary
         titleLabel.textAlignment = .center

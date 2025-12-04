@@ -382,10 +382,26 @@ class AppStateManager {
     }
     
     // MARK: - Cleanup
-    
-    deinit {
+
+    /// Cancels all active subscriptions and stops network monitoring
+    /// Called during app restart for language change
+    func cancelAllSubscriptions() {
         bootTriggerCancellable?.cancel()
+        bootTriggerCancellable = nil
+
         themeCancellable?.cancel()
+        themeCancellable = nil
+
+        sportsDataCancellable?.cancel()
+        sportsDataCancellable = nil
+
         cancellables.removeAll()
+
+        reachability?.stopNotifier()
+        reachability = nil
+    }
+
+    deinit {
+        cancelAllSubscriptions()
     }
 }

@@ -177,28 +177,28 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     private func showLanguageSelection() {
-        let title = localized("set_your_app_language")
-        let message = localized("language_settings_message")
-
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-
-        let openAction = UIAlertAction(title: localized("open_settings"), style: .default) { _ in
-            DispatchQueue.main.async {
-                guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
-                      UIApplication.shared.canOpenURL(settingsURL) else {
-                    return
-                }
-                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-            }
+        guard let profileNavigationController = profileNavigationController else {
+            print("ProfileWalletCoordinator: Profile navigation controller not available")
+            return
         }
 
-        let cancelAction = UIAlertAction(title: localized("cancel"), style: .cancel)
+        // Create LanguageSelectorCoordinator using profile's NavigationController
+        let languageSelectorCoordinator = LanguageSelectorCoordinator(
+            navigationController: profileNavigationController
+        )
 
-        alertController.addAction(openAction)
-        alertController.addAction(cancelAction)
+        // Setup closure-based callbacks
+        languageSelectorCoordinator.onDismiss = { [weak self] in
+            self?.removeChildCoordinator(languageSelectorCoordinator)
+        }
 
-        // Present from profile navigation controller (modal context)
-        profileNavigationController?.present(alertController, animated: true)
+        languageSelectorCoordinator.onLanguageSelected = { language in
+            // Future: Handle language switching logic
+            print("ProfileWalletCoordinator: Language selected - \(language.displayName)")
+        }
+
+        addChildCoordinator(languageSelectorCoordinator)
+        languageSelectorCoordinator.start()
     }
 
     private func openSupportURL() {

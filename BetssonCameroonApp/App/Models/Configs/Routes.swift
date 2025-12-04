@@ -16,6 +16,7 @@ enum Route {
     case sportsSearch
     case casinoHome
     case casinoVirtuals
+    case casinoCategory(slug: String)
     case casinoGame(gameId: String)
     case casinoSearch
     case deposit

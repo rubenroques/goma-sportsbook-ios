@@ -9,7 +9,7 @@ import Foundation
 
 public struct AvailableBonus: Codable {
     public var id: String
-    public var bonusPlanId: Int
+    public var bonusPlanId: String
     public var name: String
     public var description: String?
     public var type: String
@@ -36,7 +36,7 @@ public struct AvailableBonus: Codable {
     
     public init(
         id: String,
-        bonusPlanId: Int,
+        bonusPlanId: String,
         name: String,
         description: String? = nil,
         type: String,

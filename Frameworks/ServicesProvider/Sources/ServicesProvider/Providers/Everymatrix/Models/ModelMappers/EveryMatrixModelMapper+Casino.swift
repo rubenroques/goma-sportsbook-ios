@@ -38,17 +38,20 @@ extension EveryMatrixModelMapper {
     // MARK: - Casino Game Mapping
     
     /// Maps EveryMatrix casino games response to public model
+    /// Filters out sportsbook games (vendor: OddsMatrix2) from casino listings
     static func casinoGames(from dto: EveryMatrix.CasinoGamesResponse) -> CasinoGamesResponse {
-        let games = (dto.items ?? []).compactMap { failableGameDTO in
-            failableGameDTO.content.map { gameDTO in
-                casinoGame(from: gameDTO)
+        let games = (dto.items ?? []).compactMap { failableGameDTO -> CasinoGame? in
+            guard let gameDTO = failableGameDTO.content,
+                  !isSportsbookGame(gameDTO) else {
+                return nil
             }
+            return casinoGame(from: gameDTO)
         }
-        
+
         let pagination = dto.pages.map { pagesDTO in
             casinoPaginationInfo(from: pagesDTO)
         }
-        
+
         return CasinoGamesResponse(
             count: games.count,
             total: dto.total,
@@ -118,18 +121,21 @@ extension EveryMatrixModelMapper {
     // MARK: - Recently Played Mapping
     
     /// Maps EveryMatrix recently played response to public model
+    /// Filters out sportsbook games (vendor: OddsMatrix2) from casino listings
     static func casinoRecentlyPlayed(from dto: EveryMatrix.CasinoRecentlyPlayedResponse) -> CasinoGamesResponse {
-        let games = dto.items.compactMap { failableItem in
+        let games = dto.items.compactMap { failableItem -> CasinoGame? in
             // Extract game from nested FailableDecodable structure
-            failableItem.content?.gameModel?.content.map { gameDTO in
-                casinoGame(from: gameDTO)
+            guard let gameDTO = failableItem.content?.gameModel?.content,
+                  !isSportsbookGame(gameDTO) else {
+                return nil
             }
+            return casinoGame(from: gameDTO)
         }
-        
+
         let pagination = dto.pages.map { pagesDTO in
             casinoPaginationInfo(from: pagesDTO)
         }
-        
+
         return CasinoGamesResponse(
             count: games.count,
             total: dto.total ?? 0,
@@ -151,7 +157,16 @@ extension EveryMatrixModelMapper {
     }
     
     // MARK: - Helper Methods
-    
+
+    /// Vendor identifier for sportsbook games that should be filtered from casino listings
+    private static let sportsbookVendorIdentifier = "OddsMatrix2"
+
+    /// Checks if a casino game is actually a sportsbook game based on vendor
+    /// Sportsbook games have subVendor == "OddsMatrix2" and should not appear in casino listings
+    private static func isSportsbookGame(_ dto: EveryMatrix.CasinoGame) -> Bool {
+        return dto.subVendor == sportsbookVendorIdentifier
+    }
+
     /// Extracts tag name from href URL
     /// Example: "https://betsson-api.stage.norway.everymatrix.com/v1/casino/tags/Free%20Spins" -> "Free Spins"
     private static func extractTagNameFromHref(_ href: String) -> String? {
