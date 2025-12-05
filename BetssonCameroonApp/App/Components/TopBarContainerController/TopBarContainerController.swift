@@ -190,9 +190,9 @@ class TopBarContainerController: UIViewController {
             walletStatusOverlayView.bottomAnchor.constraint(equalTo: overlayContainerView.bottomAnchor),
 
             // Wallet Status View (positioned below top bar)
-            walletStatusView.leadingAnchor.constraint(equalTo: overlayContainerView.leadingAnchor, constant: 50),
-            walletStatusView.trailingAnchor.constraint(equalTo: overlayContainerView.trailingAnchor, constant: -32),
-            walletStatusView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: 16),
+            walletStatusView.leadingAnchor.constraint(equalTo: overlayContainerView.leadingAnchor, constant: 115),
+            walletStatusView.trailingAnchor.constraint(equalTo: overlayContainerView.trailingAnchor, constant: -28),
+            walletStatusView.topAnchor.constraint(equalTo: topBarContainerBaseView.bottomAnchor, constant: -9),
 
             // Language Selector Overlay (covers entire screen)
             languageSelectorOverlayView.topAnchor.constraint(equalTo: overlayContainerView.topAnchor),
