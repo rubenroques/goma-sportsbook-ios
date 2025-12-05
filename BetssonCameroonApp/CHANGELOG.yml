@@ -20,6 +20,7 @@ releases:
       - "fix(filter): SPOR-5789 - Icons changed; Added behavior for icon that doesn't need tint coloring"
       - "ci: Optimize tag validation step from ~4min to ~10sec by using fastlane-plugin-versioning instead of xcodebuild"
       - "ci: Use generic release notes for Firebase distribution (internal changelog stays in Discord only)"
+      - "fix(wallet): SPOR-5803 - Wallet status view now has constraints that matches design."
 
   - version: "0.3.2" # last release
     build: 3121
