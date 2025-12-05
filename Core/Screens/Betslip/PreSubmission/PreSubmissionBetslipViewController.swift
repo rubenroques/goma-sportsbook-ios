@@ -2892,7 +2892,8 @@ extension PreSubmissionBetslipViewController {
             .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+//                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+                    ()
                 default: ()
                 }
             } receiveValue: { [weak self] rejectedBetSucceeded in
