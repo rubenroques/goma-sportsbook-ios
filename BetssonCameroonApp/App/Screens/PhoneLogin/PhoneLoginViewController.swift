@@ -233,9 +233,12 @@ class PhoneLoginViewController: UIViewController {
     
     func showLoginErrorAlert(errorMessage: String) {
         
+        let mappedError = ServiceProviderModelMapper.mappedErrorKey(from: errorMessage)
+        let localizedMessage = localized(mappedError)
+        
         let alert = UIAlertController(
             title: localized("login_error_title"),
-            message: localized(ServiceProviderModelMapper.mappedErrorKey(from: errorMessage)),
+            message: localizedMessage,
             preferredStyle: .alert
         )
         

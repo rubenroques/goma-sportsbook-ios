@@ -121,8 +121,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // XtremePush Configuration
-        // TODO: Replace with actual app key from client
-        XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
+        switch TargetVariables.BuildEnvironment.current {
+        case .production:
+            XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
+        case .staging:
+            XPush.setAppKey("OOCkZRKh35Kf3Xrv4Zw--rJ4Q1BFZJ2p")
+        }
+        
         
         // Enable debug logs for development builds
         #if DEBUG

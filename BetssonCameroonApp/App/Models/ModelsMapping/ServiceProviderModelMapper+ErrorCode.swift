@@ -8,30 +8,36 @@
 import Foundation
 
 enum APIErrorCode: String, Decodable {
-    case user4TSCheckExists = "GmErr_USER_4TS_CHECK_EXISTS"
-    case usernameAlreadyExists = "GmErr_USERNAME_ALREADY_EXISTS"
-    case usernameRequired = "GmErr_USERNAME_REQUIRED"
-    case userAccountBlocked = "GmErr_USER_ACCOUNT_BLOCKED"
-    case userAuthFailed = "GmErr_USER_AUTH_FAILED"
-    case userAuthFailedTooManyAttempts = "GmErr_USER_AUTH_FAILED_TOO_MANY_ATTEMPTS"
-    case userEmailNotVerified = "GmErr_USER_EMAIL_NOT_VERIFIED"
-    case userNotActivated = "GmErr_USER_NOT_ACTIVATED"
-    case userNotVerified = "GmErr_USER_NOT_VERIFIED"
-    case expiredToken = "GmErr_EXPIRED_TOKEN"
-    case invalidCode = "GmErr_INVALID_CODE"
-    case attemptsToValidateCodeExceeded = "GmErr_ATTEMPTS_TO_VALIDATE_CODE_EXCEEDED"
-    case attemptsToGenerateCodeExceeded = "GmErr_ATTEMPTS_TO_GENERATE_CODE_EXCEEDED"
-    case blockUserIncorrectCode = "GmErr_BLOCK_USER_INCORRECT_CODE"
-    case tokenNotFound = "GmErr_TOKEN_NOT_FOUND"
-    case codeMissing = "GmErr_CODE_MISSING"
-    case unregisteredUser = "GmErr_UNREGISTERED_USER"
-    case invalidPhoneNumber = "GmErr_INVALID_PHONE_NUMBER"
-    case invalidUserId = "GmErr_INVALID_USER_ID"
-    case unexpectedException = "GmErr_UNEXPECTED_EXCEPTION"
-    case invalidUserDocument = "GmErr_INVALID_USER_DOCUMENT"
-    case registerUnderage = "GmErr_REGISTER_UNDERAGE"
-    case loginDenied = "GmErr_LOGIN_DENIED"
-    case unauthorized = "Unauthorized"
+    case user4TSCheckExists = "gmerruser4tscheckexists"
+    case usernameAlreadyExists = "gmerrusernamealreadyexists"
+    case usernameRequired = "gmerrusernamerequired"
+    case userAccountBlocked = "gmerruseraccountblocked"
+    case userAuthFailed = "gmerruserauthfailed"
+    case userAuthFailedTooManyAttempts = "gmerruserauthfailedtoomanyattempts"
+    case userEmailNotVerified = "gmerruseremailnotverified"
+    case userNotActivated = "gmerrusernotactivated"
+    case userNotVerified = "gmerrusernotverified"
+    case expiredToken = "gmerrexpiredtoken"
+    case invalidCode = "gmerrinvalidcode"
+    case attemptsToValidateCodeExceeded = "gmerrattemptstovalidatecodeexceeded"
+    case attemptsToGenerateCodeExceeded = "gmerrattemptstogeneratecodeexceeded"
+    case blockUserIncorrectCode = "gmerrblockuserincorrectcode"
+    case tokenNotFound = "gmerrtokennotfound"
+    case codeMissing = "gmerrcodemissing"
+    case unregisteredUser = "gmerrunregistereduser"
+    case invalidPhoneNumber = "gmerrinvalidphonenumber"
+    case invalidUserId = "gmerrinvaliduserid"
+    case unexpectedException = "gmerrunexpectedexception"
+    case invalidUserDocument = "gmerrinvaliduserdocument"
+    case registerUnderage = "gmerrregisterunderage"
+    case loginDenied = "gmerrlogindenied"
+    case unauthorized = "unauthorized"
+
+    init?(caseInsensitive rawValue: String) {
+        let caseInsensitive = rawValue.lowercased()
+        let simplifiedCaseInsensitive = caseInsensitive.replacingOccurrences(of: "_", with: "")
+        self.init(rawValue: simplifiedCaseInsensitive)
+    }
 }
 
 enum APIErrorKey: String {
@@ -63,7 +69,12 @@ enum APIErrorKey: String {
 
 extension ServiceProviderModelMapper {
     static func mappedErrorKey(from errorCode: String) -> String {
-        guard let apiErrorCode = APIErrorCode(rawValue: errorCode) else { return "Server Error" }
+        guard
+            let apiErrorCode = APIErrorCode(caseInsensitive: errorCode)
+        else {
+            return "server_error_message"
+        }
+        
         let mappedErrorCode: APIErrorKey = switch apiErrorCode {
         case .user4TSCheckExists:
                 .mobileNumberAlreadyInUse
