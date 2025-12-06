@@ -9,9 +9,10 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 default_platform(:ios)
 
 # Simple mapping between Xcode schemes and internal IDs
+# Note: PROD (com.betsson.cameroon) is NOT in Fastlane - uses client's Apple account
 SCHEME_MAPPING = {
   "BetssonCM Staging" => "BETSSONCM_STG",
-  "BetssonCM Prod" => "BETSSONCM_PROD"
+  "BetssonCM UAT" => "BETSSONCM_UAT"
 }
 
 # Bundle ID mappings
@@ -19,7 +20,7 @@ BUNDLE_ID_MAPPING = {
   "BETSSONCM_STG" => {
     "main_app" => "com.gomagaming.betssoncm.stg"
   },
-  "BETSSONCM_PROD" => {
+  "BETSSONCM_UAT" => {
     "main_app" => "com.gomagaming.betssoncm.prod"
   }
 }
@@ -29,7 +30,7 @@ PROVISIONING_PROFILE_MAPPING = {
   "BETSSONCM_STG" => {
     "com.gomagaming.betssoncm.stg" => "match AdHoc com.gomagaming.betssoncm.stg"
   },
-  "BETSSONCM_PROD" => {
+  "BETSSONCM_UAT" => {
     "com.gomagaming.betssoncm.prod" => "match AdHoc com.gomagaming.betssoncm.prod"
   }
 }
@@ -89,7 +90,7 @@ platform :ios do
       "FIREBASE_PROJECT_NUMBER",
       "GOMA_TEAM_ID",
       "BETSSONCM_STG_FIREBASE_APP_ID",
-      "BETSSONCM_PROD_FIREBASE_APP_ID"
+      "BETSSONCM_UAT_FIREBASE_APP_ID"
     ]
 
     UI.message "\n📝 Fastfile Constants:"
@@ -187,8 +188,8 @@ platform :ios do
     internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : app_scheme
 
     # Validate scheme
-    unless ["BETSSONCM_STG", "BETSSONCM_PROD"].include?(internal_id)
-      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM Prod'")
+    unless ["BETSSONCM_STG", "BETSSONCM_UAT"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM UAT'")
     end
 
     # Set Match parameters - API Key authentication via lane context
@@ -328,8 +329,8 @@ platform :ios do
     gsp_path = case internal_id
                when "BETSSONCM_STG"
                  "./App/SupportingFiles/Firebase/GoogleService-Info-Staging.plist"
-               when "BETSSONCM_PROD"
-                 "./App/SupportingFiles/Firebase/GoogleService-Info-Production.plist"
+               when "BETSSONCM_UAT"
+                 "./App/SupportingFiles/Firebase/GoogleService-Info-UAT.plist"
                end
 
     begin
@@ -357,18 +358,18 @@ platform :ios do
     )
   end
 
-  desc "Distribute to Production (increments build, registers devices, distributes)"
-  lane :distribute_production do |options|
+  desc "Distribute to UAT (increments build, registers devices, distributes)"
+  lane :distribute_uat do |options|
     # Step 1: Increment build number (prompts user)
     version_bump unless options[:skip_version_bump]
 
     # Step 2: Register devices and distribute
-    keep_version_distribute_production(
+    keep_version_distribute_uat(
       release_notes: options[:release_notes]
     )
   end
 
-  desc "Distribute to both Staging and Production (increments build once)"
+  desc "Distribute to both Staging and UAT (increments build once)"
   lane :distribute_all do |options|
     # Step 1: Increment build number once
     version_bump
@@ -378,7 +379,7 @@ platform :ios do
       release_notes: options[:release_notes]
     )
 
-    keep_version_distribute_production(
+    keep_version_distribute_uat(
       release_notes: options[:release_notes]
     )
   end
@@ -432,8 +433,8 @@ platform :ios do
 
     # Validate scheme
     internal_id = app_scheme ? SCHEME_MAPPING[app_scheme] : nil
-    unless ["BETSSONCM_STG", "BETSSONCM_PROD"].include?(internal_id)
-      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM Prod'")
+    unless ["BETSSONCM_STG", "BETSSONCM_UAT"].include?(internal_id)
+      UI.user_error!("Please specify a valid scheme: 'BetssonCM Staging' or 'BetssonCM UAT'")
     end
 
     UI.message "🚀 Starting device registration workflow for #{app_scheme}..."
@@ -501,7 +502,7 @@ platform :ios do
 
     UI.success "🎉 Device registration completed successfully!"
     UI.success "✅ Provisioning profiles updated with new devices"
-    UI.message "🔄 You can now build and distribute with: fastlane #{app_scheme == 'BetssonCM Staging' ? 'staging' : 'production'}"
+    UI.message "🔄 You can now build and distribute with: fastlane #{app_scheme == 'BetssonCM Staging' ? 'staging' : 'uat'}"
   end
 
   desc "Keep version and distribute to Staging (SAME build, registers devices, distributes)"
@@ -527,10 +528,10 @@ platform :ios do
     UI.success "🎉 Distribution completed (same build number)!"
   end
 
-  desc "Keep version and distribute to Production (SAME build, registers devices, distributes)"
-  lane :keep_version_distribute_production do |options|
+  desc "Keep version and distribute to UAT (SAME build, registers devices, distributes)"
+  lane :keep_version_distribute_uat do |options|
     # Step 1: Register devices from devices.csv
-    register_new_devices(app_scheme: "BetssonCM Prod")
+    register_new_devices(app_scheme: "BetssonCM UAT")
 
     # Step 2: Build and distribute with updated profile
     release_notes = options[:release_notes]
@@ -543,20 +544,20 @@ platform :ios do
     end
 
     build_and_distribute_to_firebase(
-      app_scheme: "BetssonCM Prod",
+      app_scheme: "BetssonCM UAT",
       release_notes: release_notes
     )
 
     UI.success "🎉 Distribution completed (same build number)!"
   end
 
-  desc "Keep version and distribute to both Staging and Production (SAME build)"
+  desc "Keep version and distribute to both Staging and UAT (SAME build)"
   lane :keep_version_distribute_all do |options|
     keep_version_distribute_staging(
       release_notes: options[:release_notes]
     )
 
-    keep_version_distribute_production(
+    keep_version_distribute_uat(
       release_notes: options[:release_notes]
     )
   end

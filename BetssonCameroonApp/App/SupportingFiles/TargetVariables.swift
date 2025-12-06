@@ -12,6 +12,7 @@ struct TargetVariables: SportsbookTarget {
     // MARK: - Build Environment
     enum BuildEnvironment: String {
         case staging = "Staging"
+        case uat = "UAT"
         case production = "Production"
 
         /// Reads current environment from Info.plist (set by APP_ENVIRONMENT build setting)
@@ -21,6 +22,8 @@ struct TargetVariables: SportsbookTarget {
             switch envString {
             case "Staging":
                 return .staging
+            case "UAT":
+                return .uat
             case "Production":
                 return .production
             default:
@@ -36,13 +39,22 @@ struct TargetVariables: SportsbookTarget {
         switch BuildEnvironment.current {
         case .staging:
             return .dev
-        case .production:
+        case .uat, .production:
             return .prod
         }
     }
 
     static var firebaseDatabaseURL: String {
-        return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
+        switch BuildEnvironment.current {
+        case .staging:
+            return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
+        case .uat:
+            return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
+        case .production:
+            // https://betsson-cameroon-default-rtdb.europe-west1.firebasedatabase.app/boot_configurations/android_required_version
+            return "https://betsson-cameroon-default-rtdb.europe-west1.firebasedatabase.app"
+        }
+        
     }
 
     static var appStoreURL: String {
@@ -58,7 +70,7 @@ struct TargetVariables: SportsbookTarget {
         switch BuildEnvironment.current {
         case .staging:
             return .staging
-        case .production:
+        case .uat, .production:
             return .prod
         }
     }

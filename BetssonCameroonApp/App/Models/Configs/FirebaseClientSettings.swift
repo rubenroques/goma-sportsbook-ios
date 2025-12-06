@@ -11,7 +11,7 @@ struct FirebaseClientSettings: Codable {
 
     let currentAppVersion: String
     let requiredAppVersion: String
-    let lastUpdate: TimeInterval
+    let lastUpdate: TimeInterval?
     let isOnMaintenance: Bool
     let maintenanceReason: String?
 
@@ -45,12 +45,12 @@ struct FirebaseClientSettings: Codable {
 
         self.currentAppVersion = try container.decode(String.self, forKey: .currentAppVersion)
         self.requiredAppVersion = try container.decode(String.self, forKey: .requiredAppVersion)
-        self.lastUpdate = try container.decode(TimeInterval.self, forKey: .lastUpdate)
+        self.lastUpdate = try container.decodeIfPresent(TimeInterval.self, forKey: .lastUpdate)
     }
 
     init(currentAppVersion: String,
          requiredAppVersion: String,
-         lastUpdate: TimeInterval,
+         lastUpdate: TimeInterval?,
          isOnMaintenance: Bool,
          maintenanceReason: String?) {
 

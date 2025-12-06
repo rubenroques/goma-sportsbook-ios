@@ -122,9 +122,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // XtremePush Configuration
         switch TargetVariables.BuildEnvironment.current {
-        case .production:
-            XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
         case .staging:
+            XPush.setAppKey("OOCkZRKh35Kf3Xrv4Zw--rJ4Q1BFZJ2p")
+        case .uat:
+            XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
+        case .production:
             XPush.setAppKey("OOCkZRKh35Kf3Xrv4Zw--rJ4Q1BFZJ2p")
         }
         

@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-               BuildableName = "Betsson CM Stg.app"
+               BuildableName = "Betsson CM Prod.app"
                BlueprintName = "BetssonCameroonApp"
                ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
             </BuildableReference>
@@ -69,7 +69,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-            BuildableName = "Betsson CM Stg.app"
+            BuildableName = "Betsson CM Prod.app"
             BlueprintName = "BetssonCameroonApp"
             ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
          </BuildableReference>
@@ -86,7 +86,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE74A14B2E2E8D9400DDE78D"
-            BuildableName = "Betsson CM Stg.app"
+            BuildableName = "Betsson CM Prod.app"
             BlueprintName = "BetssonCameroonApp"
             ReferencedContainer = "container:BetssonCameroonApp.xcodeproj">
          </BuildableReference>

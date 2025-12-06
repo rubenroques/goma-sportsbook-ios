@@ -45,7 +45,10 @@ final class DependenciesBootstrapper {
 
     // MARK: - Initialization
 
-    private init() {}
+    private init() {
+        
+        
+    }
 
     // MARK: - Public Proxy Methods (Called from AppDelegate)
 
