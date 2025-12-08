@@ -441,8 +441,7 @@ class MatchDetailsTextualViewController: UIViewController {
     private func subscribeToMarketGroupsData() {
         // Cancel any existing subscription to avoid memory leaks
         marketGroupsSubscription?.cancel()
-        
-        
+
         // Subscribe to market groups data changes from the CURRENT view model instance
         marketGroupsSubscription = viewModel.marketGroupSelectorTabViewModel.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
@@ -453,18 +452,18 @@ class MatchDetailsTextualViewController: UIViewController {
                 let currentGroupIds = marketGroups.map { $0.id }
                 let groupsChanged = self.previousMarketGroupIds != currentGroupIds
 
-                print("BLINK_DEBUG [MatchDetailsVC] 🔔 Market Groups Update #\(self.marketGroupsUpdateCounter) | Groups changed: \(groupsChanged) | Count: \(marketGroups.count)")
+                print("[MatchDetailsVC] Market Groups Update #\(self.marketGroupsUpdateCounter) | Groups changed: \(groupsChanged) | Count: \(marketGroups.count)")
 
-                if groupsChanged {
-                    print("BLINK_DEBUG [MatchDetailsVC] ✏️  Groups CHANGED: \(currentGroupIds.joined(separator: ", "))")
-                    print("BLINK_DEBUG [MatchDetailsVC] 🔄 Triggering recreateMarketControllers()")
-                    self.previousMarketGroupIds = currentGroupIds
-                } else {
-                    print("BLINK_DEBUG [MatchDetailsVC] ⚠️  Groups UNCHANGED but update triggered - recreating controllers anyway")
+                // Only update controllers if the set of groups actually changed
+                guard groupsChanged else {
+                    print("[MatchDetailsVC] Groups unchanged - skipping controller update")
+                    return
                 }
 
-                // Recreate market controllers when market groups data changes
-                self.recreateMarketControllers()
+                self.previousMarketGroupIds = currentGroupIds
+
+                // Update controllers with diffing (only add/remove what changed)
+                self.updateMarketControllers(with: marketGroups)
 
                 // Set initial page if we have market groups and no current page
                 if let firstMarketGroupId = marketGroups.first?.id,
@@ -474,44 +473,50 @@ class MatchDetailsTextualViewController: UIViewController {
                 }
             }
     }
-    
+
     // MARK: - Helper Methods
-    private func recreateMarketControllers() {
-        print("BLINK_DEBUG [MatchDetailsVC] 🏗️  recreateMarketControllers START")
 
-        // Clear existing controllers
-        let previousControllerCount = marketControllers.count
-        marketControllers.removeAll()
+    /// Updates market controllers using diffing - only adds new controllers and removes deleted ones.
+    /// Existing controllers are preserved to maintain their state (scroll position, etc.)
+    private func updateMarketControllers(with marketGroups: [MarketGroupTabItemData]) {
+        let oldIds = Set(marketControllers.keys)
+        let newIds = Set(marketGroups.map { $0.id })
 
-        // Create new controllers for current market groups
-        let marketGroups = viewModel.marketGroupSelectorTabViewModel.currentMarketGroups
-        print("BLINK_DEBUG [MatchDetailsVC] 🗑️  Destroyed \(previousControllerCount) controllers")
-        print("BLINK_DEBUG [MatchDetailsVC] 🆕 Creating \(marketGroups.count) new controllers")
-        
-        for marketGroup in marketGroups {
-            print("[📱MTDTXT] Recreating controller for group: \(marketGroup.id) - \(marketGroup.title)")
-            
-            // Create proper view model with all required data
-            let tabViewModel = MarketsTabSimpleViewModel(
-                marketGroupId: marketGroup.id,
-                marketGroupTitle: marketGroup.title,
-                eventId: viewModel.eventId,
-                marketGroupKey: marketGroup.id // Using marketGroup.id as key for now
-            )
-            
-            tabViewModel.onOutcomeSelected = { [weak self] marketGroup, outcomeId in
-                self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: true)
-            }
-            
-            tabViewModel.onOutcomeDeselected = { [weak self] marketGroup, outcomeId in
-                self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: false)
-            }
-            
-            let controller = MarketsTabSimpleViewController(viewModel: tabViewModel)
-            marketControllers[marketGroup.id] = controller
+        let removedIds = oldIds.subtracting(newIds)
+        let addedIds = newIds.subtracting(oldIds)
+
+        print("[MatchDetailsVC] Controller diff - Removed: \(removedIds.count), Added: \(addedIds.count), Kept: \(oldIds.intersection(newIds).count)")
+
+        // Remove controllers for deleted market groups
+        for removedId in removedIds {
+            marketControllers.removeValue(forKey: removedId)
         }
 
-        print("BLINK_DEBUG [MatchDetailsVC] ✅ recreateMarketControllers COMPLETE - \(marketControllers.count) controllers created")
+        // Add controllers for new market groups only
+        for marketGroup in marketGroups where addedIds.contains(marketGroup.id) {
+            let controller = createMarketController(for: marketGroup)
+            marketControllers[marketGroup.id] = controller
+        }
+    }
+
+    /// Creates a single market tab controller for a market group
+    private func createMarketController(for marketGroup: MarketGroupTabItemData) -> MarketsTabSimpleViewController {
+        let tabViewModel = MarketsTabSimpleViewModel(
+            marketGroupId: marketGroup.id,
+            marketGroupTitle: marketGroup.title,
+            eventId: viewModel.eventId,
+            marketGroupKey: marketGroup.id
+        )
+
+        tabViewModel.onOutcomeSelected = { [weak self] marketGroup, outcomeId in
+            self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: true)
+        }
+
+        tabViewModel.onOutcomeDeselected = { [weak self] marketGroup, outcomeId in
+            self?.viewModel.handleOutcomeSelection(marketGroup: marketGroup, outcomeId: outcomeId, isSelected: false)
+        }
+
+        return MarketsTabSimpleViewController(viewModel: tabViewModel)
     }
     
     private func showError(_ message: String) {

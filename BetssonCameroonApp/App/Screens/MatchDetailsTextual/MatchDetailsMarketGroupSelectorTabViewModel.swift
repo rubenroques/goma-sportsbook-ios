@@ -19,27 +19,34 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
     private let selectionEventSubject = PassthroughSubject<MarketGroupSelectionEvent, Never>()
     private var cancellables = Set<AnyCancellable>()
 
-    // BLINK_DEBUG: Track updates
-    private var updateMatchCounter = 0
+    // Debug counters for tracking WebSocket updates
     private var marketGroupsUpdateCounter = 0
     private var webSocketUpdateCounter = 0
     
     // MARK: - Dependencies
-    private var match: Match
+    private let match: Match  // Immutable - this ViewModel is created for one match only
     private let servicesProvider: ServicesProvider.Client
     
     // MARK: - Initialization
     init(match: Match, servicesProvider: ServicesProvider.Client = Env.servicesProvider) {
         self.match = match
         self.servicesProvider = servicesProvider
-        
+
         let initialData = MarketGroupSelectorTabData(
             id: "match_details_market_groups_\(match.id)",
             marketGroups: [],
             selectedMarketGroupId: nil
         )
         self.tabDataSubject = CurrentValueSubject(initialData)
-        
+
+        // NOTE: We don't call loadMarketGroups() here because the ServicesProvider's
+        // matchDetailsManager might not exist yet. The parent ViewModel must call
+        // startLoading() after subscribeEventDetails() has been called.
+    }
+
+    /// Starts loading market groups. Must be called after ServicesProvider's
+    /// matchDetailsManager has been created (i.e., after subscribeEventDetails()).
+    func startLoading() {
         loadMarketGroups()
     }
     
@@ -161,50 +168,9 @@ class MatchDetailsMarketGroupSelectorTabViewModel: MarketGroupSelectorTabViewMod
             selectMarketGroup(id: firstGroup.id)
         }
     }
-    
-    // MARK: - App-Specific Update Methods
-    
-    /// Updates the match and reloads market groups data
-    /// Clears current market groups and restarts subscription for the new match
-    func updateMatch(_ newMatch: Match) {
-        updateMatchCounter += 1
-        let matchChanged = self.match.id != newMatch.id
 
-        print("BLINK_DEBUG [MarketGroupSelectorVM] 🔄 updateMatch #\(updateMatchCounter) | Match changed: \(matchChanged) | Old: \(self.match.id) → New: \(newMatch.id)")
-
-        if !matchChanged {
-            print("BLINK_DEBUG [MarketGroupSelectorVM] ⚠️  SAME MATCH but updateMatch called - will clear and reload anyway!")
-        }
-
-        self.match = newMatch
-
-        // Clear current market groups since they belong to the old match
-        // and update the tab data ID to reflect the new match
-        let clearedData = MarketGroupSelectorTabData(
-            id: "match_details_market_groups_\(newMatch.id)",
-            marketGroups: [], // Clear old market groups
-            selectedMarketGroupId: nil // Clear selection
-        )
-
-        print("BLINK_DEBUG [MarketGroupSelectorVM] 🗑️  Sending EMPTY market groups (clearing old data)")
-        tabDataSubject.send(clearedData)
-
-        // Restart subscription with new match data
-        print("BLINK_DEBUG [MarketGroupSelectorVM] 🔃 Calling reloadMarketGroups()")
-        reloadMarketGroups()
-    }
-    
     // MARK: - Private Methods
-    
-    /// Cancels existing subscriptions and reloads market groups for the current match
-    private func reloadMarketGroups() {
-        // Cancel existing subscriptions to prevent memory leaks
-        cancellables.removeAll()
-        
-        // Restart market groups loading
-        loadMarketGroups()
-    }
-    
+
     private func loadMarketGroups() {
         // Use new subscription-based approach
         servicesProvider.subscribeToMarketGroups(eventId: match.id)

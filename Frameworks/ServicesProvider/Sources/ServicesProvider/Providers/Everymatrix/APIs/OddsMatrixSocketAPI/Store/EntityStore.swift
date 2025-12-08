@@ -218,6 +218,8 @@ extension EveryMatrix {
                     return try decoder.decode(TournamentDTO.self, from: entityData)
                 case "EVENT_INFO":
                     return try decoder.decode(EventInfoDTO.self, from: entityData)
+                case "MARKET_GROUP":
+                    return try decoder.decode(MarketGroupDTO.self, from: entityData)
                 default:
                     print("Unknown entity type for merge: \(type(of: entity).rawType)")
                     return nil

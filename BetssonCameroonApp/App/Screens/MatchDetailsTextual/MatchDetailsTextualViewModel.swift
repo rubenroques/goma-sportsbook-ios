@@ -143,6 +143,9 @@ class MatchDetailsTextualViewModel: ObservableObject {
                 switch subscribableContent {
                 case .connected(let subscription):
                     print("✅ Connected to event details WebSocket: \(subscription.id)")
+
+                    // Now that matchDetailsManager exists, start loading market groups
+                    self?.marketGroupSelectorTabViewModel.startLoading()
                     
                 case .contentUpdate(let event):
                     guard
@@ -164,10 +167,10 @@ class MatchDetailsTextualViewModel: ObservableObject {
                     // Update header with live match data (including scores)
                     self?.matchHeaderCompactViewModel.updateMatch(match)
 
-                    // Update existing view model instead of recreating it
-                    print("BLINK_DEBUG [MatchDetailsVM] 🚨 Calling updateMatch() on MarketGroupSelectorVM")
-                    self?.marketGroupSelectorTabViewModel.updateMatch(match)
-                    
+                    // NOTE: We do NOT call marketGroupSelectorTabViewModel.updateMatch() here.
+                    // The market groups have their own WebSocket subscription that handles updates.
+                    // Calling updateMatch() was causing destructive reload cycles (flickering).
+
                     // Mark event details as loaded
                     self?.isEventDetailsLoaded = true
                     self?.checkLoadingCompletion()
@@ -195,9 +198,6 @@ class MatchDetailsTextualViewModel: ObservableObject {
 
                 case .contentUpdate(let liveData):
                     print("[LIVE_DATA] 📊 Received live data update")
-                    print("[LIVE_DATA]    Home Score: \(liveData.homeScore?.description ?? "nil")")
-                    print("[LIVE_DATA]    Away Score: \(liveData.awayScore?.description ?? "nil")")
-                    print("[LIVE_DATA]    Detailed Scores: \(liveData.detailedScores?.count ?? 0)")
 
                     // Map ServicesProvider.EventLiveData to app MatchLiveData
                     let matchLiveData = ServiceProviderModelMapper.matchLiveData(fromServiceProviderEventLiveData: liveData)
