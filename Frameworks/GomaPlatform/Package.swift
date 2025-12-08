@@ -14,11 +14,13 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../GomaUI/GomaUI"),
+        .package(path: "../GomaPerformanceKit"),
+        .package(path: "../ServicesProvider"),
     ],
     targets: [
         .target(
             name: "GomaPlatform",
-            dependencies: ["GomaUI"]
+            dependencies: ["GomaUI", "GomaPerformanceKit", "ServicesProvider"]
         ),
         .testTarget(
             name: "GomaPlatformTests",

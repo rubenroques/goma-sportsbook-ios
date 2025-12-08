@@ -22,7 +22,7 @@ Each thin app owns ONLY:
 - `Coordinators/` (navigation decisions)
 - `Theme/` (colors, fonts, styling)
 - `Assets.xcassets` (images, icons)
-- `Config/` (Info.plist, Firebase, xcconfig)
+- `Config/` (Info.plist, Firebase, xcconfig, supported languages)
 
 ---
 
@@ -44,16 +44,23 @@ Already solved via GomaUI:
 ### 3. Dependency Injection Pattern
 - Use **protocols** for client-specific services (e.g., `LanguageManagerProtocol`)
 - Client apps provide concrete implementations
-- ViewModels accept protocols via `init()` - no singletons in GomaPlatform
+- ViewModels accept protocols via `init()` - **no singletons in GomaPlatform**
+- **Client-configurable data** (like supported languages) must be injected, never hardcoded
 
 ### 4. Flow Communication
 - Use **closures** instead of delegates for navigation callbacks
+- Closures must be defined in **protocols**, not just concrete implementations
 - Example: `var onDismiss: (() -> Void)?`, `var onLanguageSelected: ((LanguageModel) -> Void)?`
 
 ### 5. Preview Helpers
 - **Public in GomaUI** at `Frameworks/GomaUI/GomaUI/Sources/GomaUI/Helpers/PreviewsHelper/`
 - `PreviewUIViewController` and `PreviewUIView` are now `public` for use in GomaPlatform
 - DELETE duplicates in BetssonCameroonApp, use `import GomaUI`
+
+### 6. Protocol-First Callbacks (Lesson Learned)
+- **All callback closures must be in the protocol definition**, not just concrete implementations
+- This prevents type downcasting (`as? ConcreteType`) which breaks mock support
+- Example: `LanguageSelectorViewModelProtocol` now includes `var onLanguageSelected: ((LanguageModel) -> Void)? { get set }`
 
 ---
 
@@ -64,23 +71,23 @@ Frameworks/GomaPlatform/
 ├── Package.swift
 ├── Sources/GomaPlatform/
 │   └── Features/
-│       └── LanguageSelector/           # ✅ COMPLETE - First feature extracted
+│       ├── LanguageSelector/           # ✅ COMPLETE
+│       │   ├── Protocols/
+│       │   │   ├── LanguageManagerProtocol.swift
+│       │   │   └── LanguageSelectorFullScreenViewModelProtocol.swift
+│       │   ├── ViewModels/
+│       │   │   ├── LanguageSelectorViewModel.swift
+│       │   │   └── LanguageSelectorFullScreenViewModel.swift
+│       │   ├── ViewControllers/
+│       │   │   └── LanguageSelectorFullScreenViewController.swift
+│       │   └── Mocks/
+│       │       └── MockLanguageSelectorFullScreenViewModel.swift
+│       │
+│       └── Casino/                     # 🔄 NEXT - In Progress
 │           ├── Protocols/
-│           │   ├── LanguageManagerProtocol.swift
-│           │   └── LanguageSelectorFullScreenViewModelProtocol.swift
 │           ├── ViewModels/
-│           │   ├── LanguageSelectorViewModel.swift
-│           │   └── LanguageSelectorFullScreenViewModel.swift
 │           ├── ViewControllers/
-│           │   └── LanguageSelectorFullScreenViewController.swift
 │           └── Mocks/
-│               └── MockLanguageSelectorFullScreenViewModel.swift
-│
-│       # Future features will follow same pattern:
-│       ├── Splash/
-│       ├── Maintenance/
-│       ├── VersionUpdate/
-│       └── ...
 │
 └── Tests/GomaPlatformTests/
     └── GomaPlatformTests.swift
@@ -110,9 +117,13 @@ init() {
     let code = LanguageManager.shared.currentLanguageCode
 }
 
-// After
-init(languageManager: LanguageManagerProtocol) {
-    let code = languageManager.currentLanguageCode
+// After - inject ALL dependencies and configurable data
+init(
+    languageManager: LanguageManagerProtocol,
+    supportedLanguages: [LanguageModel]  // Client-configurable!
+) {
+    self.languageManager = languageManager
+    self.supportedLanguages = supportedLanguages
 }
 ```
 
@@ -122,14 +133,23 @@ init(languageManager: LanguageManagerProtocol) {
 - `public` on properties exposed via protocol
 - `public` on methods exposed via protocol
 
-### Step 4: Update Coordinator (in client app)
+### Step 4: Add Callbacks to Protocols
+```swift
+// In protocol (not just concrete class!)
+public protocol SomeViewModelProtocol {
+    var onSomethingHappened: ((Result) -> Void)? { get set }  // Must be in protocol!
+}
+```
+
+### Step 5: Update Coordinator (in client app)
 ```swift
 import GomaPlatform
 import GomaUI
 
 func showScreen() {
     let viewModel = ScreenViewModel(
-        languageManager: LanguageManager.shared  // Inject concrete impl
+        languageManager: LanguageManager.shared,
+        supportedLanguages: AppSupportedLanguages.all  // Client config
     )
     let navBarVM = ClientNavigationBarViewModel(...)  // Client-specific
     let vc = ScreenViewController(
@@ -155,33 +175,43 @@ func showScreen() {
 - `Features/LanguageSelector/ViewControllers/LanguageSelectorFullScreenViewController.swift`
 - `Features/LanguageSelector/Mocks/MockLanguageSelectorFullScreenViewModel.swift`
 
-**BetssonCameroonApp modifications:**
+**BetssonCameroonApp files created/modified:**
+- `App/Config/AppSupportedLanguages.swift` - NEW: Client-specific language configuration
 - `LanguageManager.swift` - Added `extension LanguageManager: LanguageManagerProtocol {}`
 - `LanguageSelectorCoordinator.swift` - Updated to inject dependencies from GomaPlatform
+- `TopBarContainerViewModel.swift` - Updated to use new init with dependencies
 
 **GomaUI modifications:**
 - `PreviewUIViewController.swift` - Made `public` for GomaPlatform access
 - `PreviewUIView.swift` - Made `public` for GomaPlatform access
+- `LanguageSelectorViewModelProtocol.swift` - Added `onLanguageSelected` callback to protocol
+- `MockLanguageSelectorViewModel.swift` - Updated to expose `onLanguageSelected` as public property
+
+**Files deleted from BetssonCameroonApp:**
+- `App/Screens/LanguageSelector/` folder (4 files)
+- `App/ViewModels/LanguageSelectorViewModel.swift`
+
+### 🔄 Casino Feature - NEXT
+
+Priority for next extraction session.
 
 ### 📋 TODO - Cleanup
-- [ ] Delete old `BetssonCameroonApp/App/Screens/LanguageSelector/` folder
-- [ ] Delete old `BetssonCameroonApp/App/ViewModels/LanguageSelectorViewModel.swift`
 - [ ] Delete duplicate `BetssonCameroonApp/App/Tools/PreviewsHelper/PreviewUIView.swift`
 - [ ] Delete duplicate `BetssonCameroonApp/App/Tools/PreviewsHelper/PreviewUIViewController.swift`
 
 ### 📋 TODO - Future Features
 Priority order for extraction:
 1. ~~LanguageSelector~~ ✅ COMPLETE
-2. Splash
-3. Maintenance
-4. VersionUpdate
-5. ProfileWallet
-6. TransactionHistory
-7. PhoneLogin / Register / RecoverPassword
-8. InPlayEvents / NextUpEvents
-9. MatchDetailsTextual
-10. Betslip / MyBets
-11. Casino screens
+2. **Casino** ← NEXT
+3. Splash
+4. Maintenance
+5. VersionUpdate
+6. ProfileWallet
+7. TransactionHistory
+8. PhoneLogin / Register / RecoverPassword
+9. InPlayEvents / NextUpEvents
+10. MatchDetailsTextual
+11. Betslip / MyBets
 
 ---
 
@@ -191,12 +221,31 @@ These files are client-specific and should NOT be moved to GomaPlatform:
 
 | File | Reason |
 |------|--------|
+| `AppSupportedLanguages.swift` | Client-specific language configuration |
 | `BetssonCameroonNavigationBarViewModel.swift` | Client-specific navigation bar styling |
 | `AppLanguageFlagImageResolver.swift` | Client-specific flag images in Assets |
 | `LanguageManager.swift` | Client service (conforms to GomaPlatform protocol) |
 | `LanguageSelectorCoordinator.swift` | Client navigation flow |
 | `PreviewModelsHelper.swift` | App-specific mock data for previews |
 | `PreviewCollectionViewController.swift` | App-specific preview helper |
+
+---
+
+## Lessons Learned
+
+### 1. Never Hardcode Client-Configurable Data
+**Problem**: LanguageSelector hardcoded `["en", "fr"]` languages.
+**Solution**: Accept configurable data via init: `init(supportedLanguages: [LanguageModel])`
+
+### 2. Callbacks Must Be in Protocols
+**Problem**: `onLanguageSelected` was only in concrete `LanguageSelectorViewModel`, requiring type downcasting.
+**Solution**: Add callback closures to the protocol with `{ get set }` so mocks can also use them.
+
+### 3. Use `public private(set) var` for Protocol Properties That Need Internal Mutation
+When a protocol property needs to be set internally but also exposed publicly:
+```swift
+public private(set) var languageSelectorViewModel: LanguageSelectorViewModelProtocol
+```
 
 ---
 
