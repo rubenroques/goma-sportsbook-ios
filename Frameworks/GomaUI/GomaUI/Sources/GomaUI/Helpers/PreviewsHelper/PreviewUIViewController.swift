@@ -2,25 +2,25 @@ import UIKit
 import SwiftUI
 
 @available(iOS 17.0, *)
-struct PreviewUIViewController<ViewController: UIViewController>: UIViewControllerRepresentable {
+public struct PreviewUIViewController<ViewController: UIViewController>: UIViewControllerRepresentable {
     private let builder: (() -> ViewController)?
     private let viewController: ViewController?
 
-    init(_ builder: @escaping () -> ViewController) {
+    public init(_ builder: @escaping () -> ViewController) {
         self.builder = builder
         self.viewController = nil
     }
 
-    init(viewController: ViewController) {
+    public init(viewController: ViewController) {
         self.viewController = viewController
         self.builder = nil
     }
 
-    func makeUIViewController(context: Context) -> ViewController {
+    public func makeUIViewController(context: Context) -> ViewController {
         return builder?() ?? viewController!
     }
 
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
+    public func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
 }
 
 /// Represents a movie in the preview

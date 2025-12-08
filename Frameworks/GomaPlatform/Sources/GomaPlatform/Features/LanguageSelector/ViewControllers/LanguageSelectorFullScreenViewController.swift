@@ -1,29 +1,25 @@
 //
 //  LanguageSelectorFullScreenViewController.swift
-//  BetssonCameroonApp
+//  GomaPlatform
 //
 
 import UIKit
 import Combine
 import GomaUI
 
-final class LanguageSelectorFullScreenViewController: UIViewController {
+public final class LanguageSelectorFullScreenViewController: UIViewController {
 
     // MARK: - Private Properties
 
     private let viewModel: LanguageSelectorFullScreenViewModelProtocol
+    private let navigationBarViewModel: SimpleNavigationBarViewModelProtocol
+    private let flagImageResolver: LanguageFlagImageResolver
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - UI Components
 
     private lazy var navigationBarView: SimpleNavigationBarView = {
-        let navBarVM = BetssonCameroonNavigationBarViewModel(
-            title: localized("change_language"),
-            onBackTapped: { [weak self] in
-                self?.viewModel.didTapBack()
-            }
-        )
-        let navBar = SimpleNavigationBarView(viewModel: navBarVM)
+        let navBar = SimpleNavigationBarView(viewModel: navigationBarViewModel)
         navBar.translatesAutoresizingMaskIntoConstraints = false
         return navBar
     }()
@@ -38,7 +34,7 @@ final class LanguageSelectorFullScreenViewController: UIViewController {
     private lazy var languageSelectorView: LanguageSelectorView = {
         let view = LanguageSelectorView(
             viewModel: viewModel.languageSelectorViewModel,
-            imageResolver: AppLanguageFlagImageResolver()
+            imageResolver: flagImageResolver
         )
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -46,8 +42,19 @@ final class LanguageSelectorFullScreenViewController: UIViewController {
 
     // MARK: - Initialization
 
-    init(viewModel: LanguageSelectorFullScreenViewModelProtocol) {
+    /// Creates a LanguageSelectorFullScreenViewController with injected dependencies.
+    /// - Parameters:
+    ///   - viewModel: The full screen ViewModel
+    ///   - navigationBarViewModel: The navigation bar ViewModel (client-specific)
+    ///   - flagImageResolver: The flag image resolver (client-specific)
+    public init(
+        viewModel: LanguageSelectorFullScreenViewModelProtocol,
+        navigationBarViewModel: SimpleNavigationBarViewModelProtocol,
+        flagImageResolver: LanguageFlagImageResolver
+    ) {
         self.viewModel = viewModel
+        self.navigationBarViewModel = navigationBarViewModel
+        self.flagImageResolver = flagImageResolver
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -57,7 +64,7 @@ final class LanguageSelectorFullScreenViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupBindings()
@@ -66,21 +73,21 @@ final class LanguageSelectorFullScreenViewController: UIViewController {
         viewModel.languageSelectorViewModel.loadLanguages()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
     }
 
     // MARK: - Status Bar
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
         return traitCollection.userInterfaceStyle == .dark ? .lightContent : .darkContent
     }
 
     // MARK: - Setup Methods
 
     private func setupUI() {
-        view.backgroundColor = UIColor.App.backgroundTertiary
+        view.backgroundColor = StyleProvider.Color.backgroundTertiary
         setupViewHierarchy()
         setupConstraints()
     }
@@ -138,7 +145,15 @@ import SwiftUI
 #Preview("Language Selector - Default") {
     PreviewUIViewController {
         let viewModel = MockLanguageSelectorFullScreenViewModel.defaultMock
-        return LanguageSelectorFullScreenViewController(viewModel: viewModel)
+        let navBarVM = MockSimpleNavigationBarViewModel(
+            title: LocalizationProvider.string("change_language"),
+            onBackTapped: { viewModel.didTapBack() }
+        )
+        return LanguageSelectorFullScreenViewController(
+            viewModel: viewModel,
+            navigationBarViewModel: navBarVM,
+            flagImageResolver: DefaultLanguageFlagImageResolver()
+        )
     }
 }
 

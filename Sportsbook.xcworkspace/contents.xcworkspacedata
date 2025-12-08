@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "container:Frameworks/GomaPlatform">
+   </FileRef>
+   <FileRef
       location = "group:BetssonFranceApp/BetssonFranceApp.xcodeproj">
    </FileRef>
    <FileRef

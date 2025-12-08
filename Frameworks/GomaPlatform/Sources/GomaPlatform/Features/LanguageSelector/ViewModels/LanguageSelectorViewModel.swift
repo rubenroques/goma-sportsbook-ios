@@ -1,14 +1,15 @@
 //
 //  LanguageSelectorViewModel.swift
-//  BetssonCameroonApp
+//  GomaPlatform
 //
 
 import Foundation
 import Combine
 import GomaUI
 
-/// ViewModel for the language selector overlay, implementing GomaUI's LanguageSelectorViewModelProtocol
-final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
+/// ViewModel for the language selector overlay, implementing GomaUI's LanguageSelectorViewModelProtocol.
+/// Uses dependency injection for language management to enable platform-agnostic usage.
+public final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
 
     // MARK: - Publishers
 
@@ -16,52 +17,45 @@ final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
     @Published private var selectedLanguage: LanguageModel?
     private let languageChangedSubject = PassthroughSubject<LanguageModel, Never>()
 
-    var languagesPublisher: AnyPublisher<[LanguageModel], Never> {
+    public var languagesPublisher: AnyPublisher<[LanguageModel], Never> {
         $languages.eraseToAnyPublisher()
     }
 
-    var selectedLanguagePublisher: AnyPublisher<LanguageModel?, Never> {
+    public var selectedLanguagePublisher: AnyPublisher<LanguageModel?, Never> {
         $selectedLanguage.eraseToAnyPublisher()
     }
 
-    var languageChangedPublisher: AnyPublisher<LanguageModel, Never> {
+    public var languageChangedPublisher: AnyPublisher<LanguageModel, Never> {
         languageChangedSubject.eraseToAnyPublisher()
     }
 
     // MARK: - Callbacks
 
     /// Called when a language is selected - for future language switching logic
-    var onLanguageSelected: ((LanguageModel) -> Void)?
+    public var onLanguageSelected: ((LanguageModel) -> Void)?
 
     // MARK: - Private Properties
 
     private let supportedLanguages: [LanguageModel]
+    private let languageManager: LanguageManagerProtocol
 
     // MARK: - Initialization
 
-    init() {
-        // Define supported languages for Betsson Cameroon (EN/FR)
-        // Flag images are resolved via LanguageFlagImageResolver based on language id
-        // Language names are localized so they display correctly in the current app language
-        self.supportedLanguages = [
-            LanguageModel(
-                id: "en",
-                name: localized("language_english"),
-                languageCode: "en",
-                englishName: "English"
-            ),
-            LanguageModel(
-                id: "fr",
-                name: localized("language_french"),
-                languageCode: "fr",
-                englishName: "French"
-            )
-        ]
+    /// Creates a LanguageSelectorViewModel with injected dependencies.
+    /// - Parameters:
+    ///   - languageManager: The language manager protocol implementation for reading/setting language
+    ///   - supportedLanguages: Array of languages supported by the client app
+    public init(
+        languageManager: LanguageManagerProtocol,
+        supportedLanguages: [LanguageModel]
+    ) {
+        self.languageManager = languageManager
+        self.supportedLanguages = supportedLanguages
     }
 
     // MARK: - LanguageSelectorViewModelProtocol
 
-    func selectLanguage(_ language: LanguageModel) {
+    public func selectLanguage(_ language: LanguageModel) {
         // Update selection state
         let updatedLanguages = languages.map { lang in
             lang.withSelection(lang.id == language.id)
@@ -78,13 +72,13 @@ final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
 
         // Trigger actual language change if different from current
         // This will post a notification that triggers app restart
-        if language.id != LanguageManager.shared.currentLanguageCode {
-            LanguageManager.shared.setLanguage(language.id)
+        if language.id != languageManager.currentLanguageCode {
+            languageManager.setLanguage(language.id)
         }
     }
 
-    func loadLanguages() {
-        let currentLanguageCode = LanguageManager.shared.currentLanguageCode
+    public func loadLanguages() {
+        let currentLanguageCode = languageManager.currentLanguageCode
 
         // Set up languages with current selection
         languages = supportedLanguages.map { lang in
@@ -94,11 +88,11 @@ final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
         selectedLanguage = languages.first { $0.isSelected }
     }
 
-    func setLanguages(_ languages: [LanguageModel]) {
+    public func setLanguages(_ languages: [LanguageModel]) {
         self.languages = languages
     }
 
-    func setInitialSelection(_ language: LanguageModel) {
+    public func setInitialSelection(_ language: LanguageModel) {
         selectedLanguage = language
 
         let updatedLanguages = languages.map { lang in
@@ -107,7 +101,7 @@ final class LanguageSelectorViewModel: LanguageSelectorViewModelProtocol {
         languages = updatedLanguages
     }
 
-    func getCurrentSelection() -> LanguageModel? {
+    public func getCurrentSelection() -> LanguageModel? {
         return selectedLanguage
     }
 }

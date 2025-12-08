@@ -10,6 +10,7 @@ final class LanguageManager {
 
     // MARK: - Singleton
 
+    // TODO: Remove this SINGLETON messy logic ASAP
     static let shared = LanguageManager()
 
     // MARK: - Constants
@@ -76,4 +77,14 @@ final class LanguageManager {
 extension Notification.Name {
     /// Posted when the user selects a different language. Object contains the new language code string.
     static let languageDidChange = Notification.Name("app.languageDidChange")
+}
+
+// MARK: - GomaPlatform Protocol Conformance
+
+import GomaPlatform
+
+extension LanguageManager: LanguageManagerProtocol {
+    // Already implements required properties and methods:
+    // - currentLanguageCode: String { get }
+    // - setLanguage(_ languageCode: String)
 }

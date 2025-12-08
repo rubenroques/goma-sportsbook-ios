@@ -1,6 +1,6 @@
 //
 //  LanguageSelectorFullScreenViewModelProtocol.swift
-//  BetssonCameroonApp
+//  GomaPlatform
 //
 
 import Foundation
@@ -8,7 +8,7 @@ import Combine
 import GomaUI
 
 /// Protocol defining the interface for the full-screen language selector ViewModel
-protocol LanguageSelectorFullScreenViewModelProtocol {
+public protocol LanguageSelectorFullScreenViewModelProtocol {
 
     // MARK: - Publishers
 
@@ -28,12 +28,17 @@ protocol LanguageSelectorFullScreenViewModelProtocol {
 }
 
 /// Display state for the full-screen language selector
-struct LanguageSelectorFullScreenDisplayState: Equatable {
-    let title: String
-    let isLoading: Bool
+public struct LanguageSelectorFullScreenDisplayState: Equatable {
+    public let title: String
+    public let isLoading: Bool
 
-    static let initial = LanguageSelectorFullScreenDisplayState(
-        title: localized("change_language"),
+    public init(title: String, isLoading: Bool) {
+        self.title = title
+        self.isLoading = isLoading
+    }
+
+    public static let initial = LanguageSelectorFullScreenDisplayState(
+        title: LocalizationProvider.string("change_language"),
         isLoading: false
     )
 }

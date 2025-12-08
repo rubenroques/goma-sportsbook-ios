@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import GomaUI
 import ServicesProvider
+import GomaPlatform
 
 class TopBarContainerViewModel: ObservableObject {
 
@@ -30,7 +31,10 @@ class TopBarContainerViewModel: ObservableObject {
     // MARK: - Private Properties
     private let userSessionStore: UserSessionStore
     private var cancellables = Set<AnyCancellable>()
-    private let languageSelectorViewModel = LanguageSelectorViewModel()
+    private let languageSelectorViewModel = GomaPlatform.LanguageSelectorViewModel(
+        languageManager: LanguageManager.shared,
+        supportedLanguages: AppSupportedLanguages.all
+    )
     private let languageSelectorDismissSubject = PassthroughSubject<Void, Never>()
 
     // MARK: - Authentication State

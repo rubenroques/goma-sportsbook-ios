@@ -2,26 +2,26 @@ import SwiftUI
 import UIKit
 
 @available(iOS 17.0, *)
-struct PreviewUIView<View: UIView>: UIViewRepresentable {
+public struct PreviewUIView<View: UIView>: UIViewRepresentable {
     private let builder: (() -> View)?
 
     private let view: View?
 
-    init(_ builder: @escaping () -> View) {
+    public init(_ builder: @escaping () -> View) {
         self.builder = builder
         self.view = nil
     }
 
-    init(view: View) {
+    public init(view: View) {
         self.view = view
         self.builder = nil
     }
 
-    func makeUIView(context: Context) -> View {
+    public func makeUIView(context: Context) -> View {
         return builder?() ?? view!
     }
 
-    func updateUIView(_ uiView: View, context: Context) {}
+    public func updateUIView(_ uiView: View, context: Context) {}
 }
 
 ///

@@ -1,6 +1,6 @@
 //
 //  MockLanguageSelectorFullScreenViewModel.swift
-//  BetssonCameroonApp
+//  GomaPlatform
 //
 
 import Foundation
@@ -8,48 +8,49 @@ import Combine
 import GomaUI
 
 /// Mock ViewModel for previews and testing
-final class MockLanguageSelectorFullScreenViewModel: LanguageSelectorFullScreenViewModelProtocol {
+public final class MockLanguageSelectorFullScreenViewModel: LanguageSelectorFullScreenViewModelProtocol {
 
     // MARK: - Publishers
-
     private let displayStateSubject: CurrentValueSubject<LanguageSelectorFullScreenDisplayState, Never>
 
-    var displayStatePublisher: AnyPublisher<LanguageSelectorFullScreenDisplayState, Never> {
+    public var displayStatePublisher: AnyPublisher<LanguageSelectorFullScreenDisplayState, Never> {
         displayStateSubject.eraseToAnyPublisher()
     }
 
-    var currentDisplayState: LanguageSelectorFullScreenDisplayState {
+    public var currentDisplayState: LanguageSelectorFullScreenDisplayState {
         displayStateSubject.value
     }
 
     // MARK: - Language Selector ViewModel
 
-    let languageSelectorViewModel: LanguageSelectorViewModelProtocol
+    public let languageSelectorViewModel: LanguageSelectorViewModelProtocol
 
     // MARK: - Initialization
 
-    init(displayState: LanguageSelectorFullScreenDisplayState = .initial,
-         languageSelectorViewModel: LanguageSelectorViewModelProtocol = MockLanguageSelectorViewModel.twoLanguagesMock) {
+    public init(
+        displayState: LanguageSelectorFullScreenDisplayState = .initial,
+        languageSelectorViewModel: LanguageSelectorViewModelProtocol = MockLanguageSelectorViewModel.twoLanguagesMock
+    ) {
         self.displayStateSubject = CurrentValueSubject(displayState)
         self.languageSelectorViewModel = languageSelectorViewModel
     }
 
     // MARK: - LanguageSelectorFullScreenViewModelProtocol
 
-    func didTapBack() {
-        // Mock: just log
+    public func didTapBack() {
+        // Mock: no-op for previews
     }
 
     // MARK: - Static Mocks
 
-    static var defaultMock: MockLanguageSelectorFullScreenViewModel {
+    public static var defaultMock: MockLanguageSelectorFullScreenViewModel {
         MockLanguageSelectorFullScreenViewModel()
     }
 
-    static var loadingMock: MockLanguageSelectorFullScreenViewModel {
+    public static var loadingMock: MockLanguageSelectorFullScreenViewModel {
         MockLanguageSelectorFullScreenViewModel(
             displayState: LanguageSelectorFullScreenDisplayState(
-                title: localized("change_language"),
+                title: LocalizationProvider.string("change_language"),
                 isLoading: true
             )
         )

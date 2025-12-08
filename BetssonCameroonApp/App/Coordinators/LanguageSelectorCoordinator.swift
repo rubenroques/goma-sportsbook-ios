@@ -5,6 +5,7 @@
 
 import UIKit
 import GomaUI
+import GomaPlatform
 
 final class LanguageSelectorCoordinator: Coordinator {
 
@@ -45,8 +46,29 @@ final class LanguageSelectorCoordinator: Coordinator {
     // MARK: - Private Methods
 
     private func showLanguageSelector() {
-        let viewModel = LanguageSelectorFullScreenViewModel()
-        let viewController = LanguageSelectorFullScreenViewController(viewModel: viewModel)
+        // 1. Create language selector VM from GomaPlatform with injected dependencies
+        let languageSelectorVM = GomaPlatform.LanguageSelectorViewModel(
+            languageManager: LanguageManager.shared,
+            supportedLanguages: AppSupportedLanguages.all
+        )
+
+        // 2. Create full screen VM with injected language selector VM
+        let viewModel = LanguageSelectorFullScreenViewModel(
+            languageSelectorViewModel: languageSelectorVM
+        )
+
+        // 3. Create client-specific nav bar VM
+        let navBarVM = BetssonCameroonNavigationBarViewModel(
+            title: LocalizationProvider.string("change_language"),
+            onBackTapped: { [weak viewModel] in viewModel?.didTapBack() }
+        )
+
+        // 4. Create VC with all injected dependencies
+        let viewController = LanguageSelectorFullScreenViewController(
+            viewModel: viewModel,
+            navigationBarViewModel: navBarVM,
+            flagImageResolver: AppLanguageFlagImageResolver()
+        )
 
         viewModel.onDismiss = { [weak self] in
             self?.dismissLanguageSelector()

@@ -22,7 +22,9 @@ public final class MockLanguageSelectorViewModel: LanguageSelectorViewModelProto
     }
     
     // MARK: - Properties
-    private var onLanguageSelectedCallback: ((LanguageModel) -> Void)?
+
+    /// Callback closure invoked when a language is selected (protocol requirement)
+    public var onLanguageSelected: ((LanguageModel) -> Void)?
     private var initialLanguages: [LanguageModel]
     
     // MARK: - Initialization
@@ -32,8 +34,8 @@ public final class MockLanguageSelectorViewModel: LanguageSelectorViewModelProto
         onLanguageSelected: ((LanguageModel) -> Void)? = nil
     ) {
         self.initialLanguages = languages
-        self.onLanguageSelectedCallback = onLanguageSelected
-        
+        self.onLanguageSelected = onLanguageSelected
+
         // Set up initial state
         setupInitialState(initialSelection: initialSelection)
     }
@@ -71,7 +73,7 @@ public final class MockLanguageSelectorViewModel: LanguageSelectorViewModelProto
             print("🌍 Mock: Interface language changed to \(language.displayName)")
         }
         
-        onLanguageSelectedCallback?(language)
+        onLanguageSelected?(language)
     }
     
     public func loadLanguages() {
