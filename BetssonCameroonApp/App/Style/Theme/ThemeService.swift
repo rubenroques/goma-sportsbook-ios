@@ -11,7 +11,7 @@ class ThemeService {
     private let serverURL = "https://your-api.com/themes" // Replace with your actual theme server URL
 
     // Current theme publisher
-    private var themeSubject = CurrentValueSubject<Theme, Never>(Theme.defaultTheme)
+    private var themeSubject: CurrentValueSubject<Theme, Never>
     var themePublisher: AnyPublisher<Theme, Never> {
         return self.themeSubject
             .removeDuplicates()
@@ -21,13 +21,44 @@ class ThemeService {
     var currentTheme: Theme {
         return self.themeSubject.value
     }
-    
+
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        // Load cached theme on init
+        // Determine initial theme based on client/build environment
+        print("[ThemeService] Initializing...")
+        print("[ThemeService] BuildEnvironment.current = \(TargetVariables.BuildEnvironment.current.rawValue)")
+
+        let initialTheme = Self.themeForCurrentClient()
+        print("[ThemeService] Initial theme selected: id='\(initialTheme.id)', name='\(initialTheme.name)'")
+        print("[ThemeService] highlightPrimary (light): \(initialTheme.lightColors.highlightPrimary)")
+
+        self.themeSubject = CurrentValueSubject<Theme, Never>(initialTheme)
+
+        // Load cached theme if exists (allows server-provided themes to persist)
         if let cachedTheme = loadCachedTheme() {
+            print("[ThemeService] WARNING: Cached theme found and applied! id='\(cachedTheme.id)', name='\(cachedTheme.name)'")
+            print("[ThemeService] Cached highlightPrimary (light): \(cachedTheme.lightColors.highlightPrimary)")
             self.themeSubject.send(cachedTheme)
+        } else {
+            print("[ThemeService] No cached theme found, using client theme")
+        }
+    }
+
+    // MARK: - Client Theme Selection
+
+    /// Returns the appropriate theme for the current client based on BuildEnvironment
+    private static func themeForCurrentClient() -> Theme {
+        switch TargetVariables.BuildEnvironment.current {
+        case .betAtHomeProd:
+            return Theme(
+                id: "betathome",
+                name: "BetAtHome",
+                lightColors: ThemeColors.betAtHomeLight,
+                darkColors: ThemeColors.betAtHomeDark
+            )
+        case .staging, .uat, .production:
+            return Theme.defaultTheme
         }
     }
 

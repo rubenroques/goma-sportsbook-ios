@@ -128,6 +128,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             XPush.setAppKey("tymCbccp6pas_HwOgwuDRMJZ6Nn0m7Gr")
         case .production:
             XPush.setAppKey("OOCkZRKh35Kf3Xrv4Zw--rJ4Q1BFZJ2p")
+        case .betAtHomeProd:
+            break
         }
         
         

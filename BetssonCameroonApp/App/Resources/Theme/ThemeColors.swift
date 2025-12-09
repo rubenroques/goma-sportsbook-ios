@@ -402,4 +402,283 @@ extension ThemeColors {
         backgroundEmptyMessage2: "#353743",
         backgroundEmptyMessage3: "#353743"
     )
+
+    // MARK: - BetAtHome Theme
+
+    // BetAtHome light theme values (from Figma export: 5 dezembro vars.json)
+    static let betAtHomeLight = ThemeColors(
+        highlightPrimaryContrast: "#000114",
+        highlightSecondaryContrast: "#ffffff",
+        highlightPrimary: "#73bd1c",
+        highlightSecondary: "#00214a",
+        highlightTertiary: "#6595be",
+        backgroundPrimary: "#e7e7e7",
+        backgroundSecondary: "#f6f6f8",
+        backgroundTertiary: "#ffffff",
+        backgroundBorder: "#b3b3b3",
+        backgroundCards: "#ffffff",
+        appBottomMenu: "#f7f7f7",
+        separatorLine: "#d8d8d8",
+        separatorLineSecondary: "#e1e1e1",
+        separatorLineHighlightPrimary: "#73bd1c",
+        separatorLineHighlightSecondary: "#012e66",
+        textPrimary: "#1b1b1b",
+        textSecondary: "#999999",
+        textHeadlinePrimary: "#000114",
+        textDisablePrimary: "#777777",
+        textTopbar: "#ffffff",
+        backgroundOdds: "#ebebeb",
+        textOdds: "#00214a",
+        textDisabledOdds: "#b5b5b5",
+        backgroundDisabledOdds: "#ededed",
+        iconPrimary: "#000000",
+        iconSecondary: "#5b5b5b",
+        inputBackground: "#ffffff",
+        inputBackgroundSecondary: "#e2e2e2",
+        inputBorderActive: "#ff6600",
+        inputError: "#ed4f63",
+        inputBackgroundDisable: "#d3d3d3",
+        inputBorderDisabled: "#e4e4e4",
+        inputTextTitle: "#3e3e3e",
+        inputText: "#000114",
+        inputTextTitleDisable: "#919191",
+        inputTextDisable: "#919191",
+        navPills: "#eaeaea",
+        pills: "#ffffff",
+        settingPill: "#d5d5d5",
+        backgroundDrop: "#f5f5f5",
+        borderDrop: "#aaaaaa",
+        navBannerActive: "#ff8533",
+        navBanner: "#eaeaea",
+        buttonTextPrimary: "#ffffff",
+        buttonTextSecondary: "#ffffff",
+        buttonBackgroundPrimary: "#73bd1c",
+        buttonActiveHoverPrimary: "#009e27",
+        buttonDisablePrimary: "#acacac",
+        buttonTextDisablePrimary: "#f4f4f4",
+        buttonBackgroundSecondary: "#00214a",
+        buttonActiveHoverSecondary: "#2a1b8e",
+        buttonDisableSecondary: "#a4c7f1",
+        buttonTextDisableSecondary: "#ffffff",
+        buttonBackgroundTertiary: "#00214a00",  // Transparent (rgba(0, 33, 74, 0))
+        buttonTextTertiary: "#00214a",
+        buttonBorderTertiary: "#00214a",
+        buttonActiveHoverTertiary: "#00214a",
+        buttonBorderDisableTertiary: "#acacac",
+        buttonTextDisableTertiary: "#acacac",
+        alertError: "#f9554d",
+        alertSuccess: "#21ba45",
+        alertWarning: "#ea7714",
+        myTicketsLostFaded: "#ffbfb3",
+        myTicketsWon: "#3db341",
+        myTicketsWonFaded: "#c5ffa8",
+        myTicketsOther: "#d6a40e",
+        myTicketsLost: "#ab1111",
+        statsAway: "#46c1a7",
+        statsHome: "#d99f00",
+        shadow: "#ffffff",
+        shadowMedium: "#f1f1f1",
+        shadowDarker: "#ffffff",
+        scroll: "#dbdbdb",
+        bubblesPrimary: "#41a3ff",
+        menuSelector: "#73bd1c",
+        menuSelectorHover: "#ffffff",
+        allWhite: "#ffffff",
+        allDark: "#03061b",
+        favorites: "#fac125",
+        liveTag: "#e90219",
+        textHeroCard: "#ffffff",
+        textSecondaryHeroCard: "#a4a6aa",
+        iconSportsHeroCard: "#ffffff",
+        backgroundOddsHeroCard: "#353743",
+        backgroundBetslip: "#eeeeee",
+        addBetslip: "#ffffff",
+        gameHeaderTextPrimary: "#03061b",
+        gameHeaderTextSecondary: "#53545f",
+        gameHeader: "#ffffff",
+        cardBorderLineGradient1: "#ffffff",
+        cardBorderLineGradient2: "#ffffff",
+        cardBorderLineGradient3: "#ffffff",
+        boostedOddsGradient1: "#ffffff",
+        boostedOddsGradient2: "#ffffff",
+        backgroundGradientDark: "#000f22",
+        backgroundGradientLight: "#00214a",
+        backgroundGradient1: "#ffffff",
+        backgroundGradient2: "#f8f8f8",
+        topBarGradient1: "#00214a",
+        topBarGradient2: "#00214a",
+        topBarGradient3: "#00214a",
+        liveBorder1: "#e90017",
+        liveBorder2: "#ffffff",
+        liveBorder3: "#ffffff",
+        messageGradient1: "#ffffff",
+        messageGradient2: "#b2b2b2",
+        backgroundEmptySuccess1: "#2e2f3c",
+        backgroundEmptySuccess2: "#00214a",
+        backgroundEmptySuccess3: "#ffffff",
+        backgroundEmptyWinner1: "#ffffff",
+        backgroundEmptyWinner2: "#ffffff",
+        backgroundEmptyWinner3: "#ffffff",
+        backgroundEmptyMessage1: "#ffffff",
+        backgroundEmptyMessage2: "#ffffff",
+        backgroundEmptyMessage3: "#ffffff"
+    )
+
+    // BetAtHome dark theme - navy-tinted dark palette based on BetAtHome brand colors
+    static let betAtHomeDark = ThemeColors(
+        // Highlights - maintain brand identity, swap contrast for dark backgrounds
+        highlightPrimaryContrast: "#ffffff",
+        highlightSecondaryContrast: "#ffffff",
+        highlightPrimary: "#73bd1c",
+        highlightSecondary: "#00214a",
+        highlightTertiary: "#6595be",
+
+        // Backgrounds - dark navy-tinted surfaces
+        backgroundPrimary: "#1a2433",
+        backgroundSecondary: "#0f1620",
+        backgroundTertiary: "#0a0f16",
+        backgroundBorder: "#2c3a4d",
+        backgroundCards: "#0a0f16",
+        appBottomMenu: "#1a2433",
+
+        // Separators - subtle navy-tinted lines
+        separatorLine: "#2c3a4d",
+        separatorLineSecondary: "#3d4d62",
+        separatorLineHighlightPrimary: "#73bd1c",
+        separatorLineHighlightSecondary: "#4a6d99",
+
+        // Text - high contrast for dark backgrounds
+        textPrimary: "#ffffff",
+        textSecondary: "#a5b3c5",
+        textHeadlinePrimary: "#ffffff",
+        textDisablePrimary: "#5a6a7d",
+        textTopbar: "#ffffff",
+
+        // Odds - navy-tinted dark background with good contrast
+        backgroundOdds: "#1a2433",
+        textOdds: "#ffffff",
+        textDisabledOdds: "#5a6a7d",
+        backgroundDisabledOdds: "#0f1620",
+
+        // Icons - light for visibility
+        iconPrimary: "#ffffff",
+        iconSecondary: "#a5b3c5",
+
+        // Inputs - navy-tinted surfaces
+        inputBackground: "#1a2433",
+        inputBackgroundSecondary: "#0a0f16",
+        inputBorderActive: "#73bd1c",
+        inputError: "#ed4f63",
+        inputBackgroundDisable: "#0f1620",
+        inputBorderDisabled: "#3d4d62",
+        inputTextTitle: "#ffffff",
+        inputText: "#ffffff",
+        inputTextTitleDisable: "#5a6a7d",
+        inputTextDisable: "#5a6a7d",
+
+        // Nav Pills - navy-tinted dark surfaces
+        navPills: "#1a2433",
+        pills: "#0a0f16",
+        settingPill: "#0a0f16",
+
+        // Drops - dark surfaces
+        backgroundDrop: "#0a0f16",
+        borderDrop: "#0a0f16",
+
+        // Nav Banner - maintain visibility in dark mode
+        navBannerActive: "#73bd1c",
+        navBanner: "#5a6a7d",
+
+        // Buttons - maintain brand colors with dark mode adjustments
+        buttonTextPrimary: "#ffffff",
+        buttonTextSecondary: "#ffffff",
+        buttonBackgroundPrimary: "#73bd1c",
+        buttonActiveHoverPrimary: "#5a9815",
+        buttonDisablePrimary: "#3d4d62",
+        buttonTextDisablePrimary: "#8a98a8",
+        buttonBackgroundSecondary: "#00214a",
+        buttonActiveHoverSecondary: "#001a3a",
+        buttonDisableSecondary: "#2c3a4d",
+        buttonTextDisableSecondary: "#5a6a7d",
+        buttonBackgroundTertiary: "#00214a00",
+        buttonTextTertiary: "#ffffff",
+        buttonBorderTertiary: "#73bd1c",
+        buttonActiveHoverTertiary: "#5a9815",
+        buttonBorderDisableTertiary: "#3d4d62",
+        buttonTextDisableTertiary: "#5a6a7d",
+
+        // Alerts - consistent across themes
+        alertError: "#f9554d",
+        alertSuccess: "#21ba45",
+        alertWarning: "#ea7714",
+
+        // Tickets - darkened faded colors for dark mode
+        myTicketsLostFaded: "#4a1a12",
+        myTicketsWon: "#3db341",
+        myTicketsWonFaded: "#1f3318",
+        myTicketsOther: "#d6a40e",
+        myTicketsLost: "#ab1111",
+
+        // Stats - consistent accent colors
+        statsAway: "#46c1a7",
+        statsHome: "#d99f00",
+
+        // Shadows - dark for dark mode
+        shadow: "#0a0f16",
+        shadowMedium: "#0a0f16",
+        shadowDarker: "#050a0e",
+
+        // Misc - adjusted for dark mode
+        scroll: "#3d4d62",
+        bubblesPrimary: "#4a90e2",
+        menuSelector: "#0a0f16",
+        menuSelectorHover: "#73bd1c",
+        allWhite: "#ffffff",
+        allDark: "#03061b",
+        favorites: "#fac125",
+        liveTag: "#e90219",
+
+        // Hero cards - dark surfaces
+        textHeroCard: "#ffffff",
+        textSecondaryHeroCard: "#a5b3c5",
+        iconSportsHeroCard: "#ffffff",
+        backgroundOddsHeroCard: "#1a2433",
+
+        // Betslip - navy-tinted dark
+        backgroundBetslip: "#1a2433",
+        addBetslip: "#a5b3c5",
+
+        // Game Header - navy-tinted dark
+        gameHeaderTextPrimary: "#ffffff",
+        gameHeaderTextSecondary: "#a5b3c5",
+        gameHeader: "#1a2433",
+
+        // Gradients - navy-based dark gradients
+        cardBorderLineGradient1: "#1a2433",
+        cardBorderLineGradient2: "#1a2433",
+        cardBorderLineGradient3: "#1a2433",
+        boostedOddsGradient1: "#1a2433",
+        boostedOddsGradient2: "#1a2433",
+        backgroundGradientDark: "#000f22",
+        backgroundGradientLight: "#00214a",
+        backgroundGradient1: "#0a0f16",
+        backgroundGradient2: "#0f1a26",
+        topBarGradient1: "#00214a",
+        topBarGradient2: "#00214a",
+        topBarGradient3: "#00214a",
+        liveBorder1: "#e90017",
+        liveBorder2: "#1a2433",
+        liveBorder3: "#1a2433",
+        messageGradient1: "#0a0f16",
+        messageGradient2: "#3d4d62",
+        backgroundEmptySuccess1: "#1a2433",
+        backgroundEmptySuccess2: "#00214a",
+        backgroundEmptySuccess3: "#1a2433",
+        backgroundEmptyWinner1: "#1a2433",
+        backgroundEmptyWinner2: "#1a2433",
+        backgroundEmptyWinner3: "#1a2433",
+        backgroundEmptyMessage1: "#1a2433",
+        backgroundEmptyMessage2: "#1a2433",
+        backgroundEmptyMessage3: "#1a2433"
+    )
 }

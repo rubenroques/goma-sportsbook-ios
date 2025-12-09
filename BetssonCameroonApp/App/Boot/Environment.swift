@@ -26,7 +26,7 @@ class Environment {
         case .dev:
             serviceProviderEnvironment = .development
         }
-        
+
         var cmsBusinessUnit: ServicesProvider.Configuration.ClientBusinessUnit
         switch TargetVariables.cmsClientBusinessUnit {
         case .betssonFrance:
@@ -37,7 +37,7 @@ class Environment {
             cmsBusinessUnit = .gomaDemo
         }
 
-        // Use builder pattern to configure client business unit for CMS
+        // Use builder pattern to configure ServicesProvider
         let configBuilder = ServicesProvider.Configuration.Builder()
         do {
             let servicesProviderConfiguration = try configBuilder
@@ -45,6 +45,8 @@ class Environment {
                 .withDeviceUUID(Env.deviceId)
                 .withClientBusinessUnit(cmsBusinessUnit)
                 .withLanguage(LanguageManager.shared.currentLanguageCode)
+                .withOperatorId(TargetVariables.operatorId)
+                .withSocketConfiguration(TargetVariables.socketConfiguration)
                 .build()
 
             let provider = TargetVariables.serviceProviderType

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ServicesProvider
 
 struct TargetVariables: SportsbookTarget {
 
@@ -14,21 +15,39 @@ struct TargetVariables: SportsbookTarget {
         case staging = "Staging"
         case uat = "UAT"
         case production = "Production"
+        case betAtHomeProd = "BetAtHomeProd"
 
         /// Reads current environment from Info.plist (set by APP_ENVIRONMENT build setting)
         static var current: BuildEnvironment {
             let envString = Bundle.main.object(forInfoDictionaryKey: "AppEnvironment") as? String ?? ""
+            print("[BuildEnvironment] Raw AppEnvironment from plist: '\(envString)'")
 
+            let result: BuildEnvironment
             switch envString {
             case "Staging":
-                return .staging
+                result = .staging
             case "UAT":
-                return .uat
+                result = .uat
             case "Production":
-                return .production
+                result = .production
+            case "BetAtHomeProd":
+                result = .betAtHomeProd
             default:
                 // Default to production for safety if value is invalid/missing
-                return .production
+                print("[BuildEnvironment] WARNING: Unknown value, defaulting to .production")
+                result = .production
+            }
+            print("[BuildEnvironment] Resolved to: \(result.rawValue)")
+            return result
+        }
+
+        /// Returns true if this is a BetAtHome client build
+        var isBetAtHome: Bool {
+            switch self {
+            case .betAtHomeProd:
+                return true
+            default:
+                return false
             }
         }
     }
@@ -39,7 +58,7 @@ struct TargetVariables: SportsbookTarget {
         switch BuildEnvironment.current {
         case .staging:
             return .dev
-        case .uat, .production:
+        case .uat, .production, .betAtHomeProd:
             return .prod
         }
     }
@@ -51,10 +70,10 @@ struct TargetVariables: SportsbookTarget {
         case .uat:
             return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
         case .production:
-            // https://betsson-cameroon-default-rtdb.europe-west1.firebasedatabase.app/boot_configurations/android_required_version
             return "https://betsson-cameroon-default-rtdb.europe-west1.firebasedatabase.app"
+        case .betAtHomeProd:
+            return "https://goma-sportsbook-betsson-cm-prod.europe-west1.firebasedatabase.app"
         }
-        
     }
 
     static var appStoreURL: String {
@@ -70,8 +89,44 @@ struct TargetVariables: SportsbookTarget {
         switch BuildEnvironment.current {
         case .staging:
             return .staging
-        case .uat, .production:
+        case .uat, .production, .betAtHomeProd:
             return .prod
+        }
+    }
+
+    /// EveryMatrix operator ID (varies by client and environment)
+    static var operatorId: String {
+        switch BuildEnvironment.current {
+        case .staging:
+            return "4093"  // Betsson Cameroon staging
+        case .uat, .production:
+            return "4374"  // Betsson Cameroon production
+        case .betAtHomeProd:
+            return "2687"  // BetAtHome
+        }
+    }
+
+    /// EveryMatrix WebSocket configuration (varies by client and environment)
+    static var socketConfiguration: ServicesProvider.Configuration.SocketConfiguration {
+        switch BuildEnvironment.current {
+        case .staging:
+            return .init(
+                url: "wss://sportsapi-betsson-stage.everymatrix.com",
+                origin: "https://sportsbook-stage.gomagaming.com",
+                realm: "www.betsson.cm"
+            )
+        case .uat, .production:
+            return .init(
+                url: "wss://sportsapi.betssonem.com",
+                origin: "https://www.betssonem.com/",
+                realm: "www.betsson.cm"
+            )
+        case .betAtHomeProd:
+            return .init(
+                url: "wss://sportsapi.bet-at-home.de",
+                origin: "https://sports2.bet-at-home.de",
+                realm: "www.bet-at-home.de"
+            )
         }
     }
 

@@ -70,6 +70,17 @@ public class Client {
         }
 
         EveryMatrixUnifiedConfiguration.shared.defaultLanguage = configuration.language
+
+        // Apply client-specific overrides if provided
+        if let operatorId = configuration.operatorId {
+            EveryMatrixUnifiedConfiguration.shared.clientOperatorId = operatorId
+        }
+        if let socketConfig = configuration.socketConfiguration {
+            EveryMatrixUnifiedConfiguration.shared.clientWebSocketURL = socketConfig.url
+            EveryMatrixUnifiedConfiguration.shared.clientWebSocketOrigin = socketConfig.origin
+            EveryMatrixUnifiedConfiguration.shared.clientWebSocketRealm = socketConfig.realm
+            EveryMatrixUnifiedConfiguration.shared.clientWebSocketVersion = socketConfig.version
+        }
     }
 
     public func connect() {

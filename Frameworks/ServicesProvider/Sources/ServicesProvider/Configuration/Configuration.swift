@@ -33,6 +33,27 @@ public struct Configuration {
     /// Language code for API requests (e.g., "en", "fr")
     private(set) var language: String
 
+    /// Operator ID override for EveryMatrix (nil = use default for environment)
+    private(set) var operatorId: String?
+
+    /// WebSocket configuration for EveryMatrix WAMP connection (nil = use defaults)
+    private(set) var socketConfiguration: SocketConfiguration?
+
+    /// WebSocket configuration for EveryMatrix WAMP connection
+    public struct SocketConfiguration {
+        public let url: String      // e.g., "wss://sportsapi.bet-at-home.de"
+        public let origin: String   // e.g., "https://sports2.bet-at-home.de"
+        public let realm: String    // e.g., "www.bet-at-home.de"
+        public let version: String  // e.g., "v2"
+
+        public init(url: String, origin: String, realm: String, version: String = "v2") {
+            self.url = url
+            self.origin = origin
+            self.realm = realm
+            self.version = version
+        }
+    }
+
     /// Credentials for a specific provider
     public struct ProviderCredentials {
         let name: String
@@ -44,6 +65,8 @@ public struct Configuration {
         deviceUUID: String?,
         clientBusinessUnit: ClientBusinessUnit?,
         language: String,
+        operatorId: String?,
+        socketConfiguration: SocketConfiguration?,
         providerMapping: [Domain: Provider],
         credentials: [Provider: ProviderCredentials]
     ) {
@@ -51,6 +74,8 @@ public struct Configuration {
         self.deviceUUID = deviceUUID
         self.clientBusinessUnit = clientBusinessUnit
         self.language = language
+        self.operatorId = operatorId
+        self.socketConfiguration = socketConfiguration
         self.providerMapping = providerMapping
         self.credentials = credentials
     }
@@ -62,6 +87,8 @@ public struct Configuration {
         private var deviceUUID: String?
         private var clientBusinessUnit: ClientBusinessUnit?
         private var language: String = "en"
+        private var operatorId: String?
+        private var socketConfiguration: SocketConfiguration?
         private var providerMapping: [Domain: Provider] = [:]
         private var credentials: [Provider: ProviderCredentials] = [:]
 
@@ -92,6 +119,20 @@ public struct Configuration {
         @discardableResult
         public func withLanguage(_ language: String) -> Builder {
             self.language = language
+            return self
+        }
+
+        /// Sets the operator ID for EveryMatrix APIs
+        @discardableResult
+        public func withOperatorId(_ operatorId: String) -> Builder {
+            self.operatorId = operatorId
+            return self
+        }
+
+        /// Sets the WebSocket configuration for EveryMatrix WAMP connection
+        @discardableResult
+        public func withSocketConfiguration(_ config: SocketConfiguration) -> Builder {
+            self.socketConfiguration = config
             return self
         }
 
@@ -129,6 +170,8 @@ public struct Configuration {
                 deviceUUID: deviceUUID,
                 clientBusinessUnit: clientBusinessUnit,
                 language: language,
+                operatorId: operatorId,
+                socketConfiguration: socketConfiguration,
                 providerMapping: providerMapping,
                 credentials: credentials
             )
@@ -141,6 +184,8 @@ public struct Configuration {
         self.deviceUUID = deviceUUID
         self.clientBusinessUnit = nil
         self.language = "en"
+        self.operatorId = nil
+        self.socketConfiguration = nil
         self.providerMapping = [:]
         self.credentials = [:]
     }

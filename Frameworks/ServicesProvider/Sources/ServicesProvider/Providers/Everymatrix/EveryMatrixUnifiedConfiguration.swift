@@ -14,9 +14,26 @@ public final class EveryMatrixUnifiedConfiguration {
     
     /// Current environment - mutable to allow runtime configuration
     public var environment: Environment
-    
+
     /// Shared instance - mutable like SportRadarConfiguration
     public static var shared = EveryMatrixUnifiedConfiguration(environment: .staging)
+
+    // MARK: - Client Overrides (set at app startup for multi-client support)
+
+    /// Override operatorId for different clients (e.g., BetAtHome)
+    public var clientOperatorId: String?
+
+    /// Override WebSocket URL for different clients
+    public var clientWebSocketURL: String?
+
+    /// Override WebSocket origin for different clients
+    public var clientWebSocketOrigin: String?
+
+    /// Override WebSocket realm for different clients
+    public var clientWebSocketRealm: String?
+
+    /// Override WebSocket version for different clients
+    public var clientWebSocketVersion: String?
     
     /// Initialize with environment
     init(environment: Environment) {
@@ -48,35 +65,47 @@ public final class EveryMatrixUnifiedConfiguration {
     }
 
     /// WebSocket URL for OddsMatrix WAMP protocol
+    /// Uses clientWebSocketURL if set, otherwise falls back to environment defaults
     public var oddsMatrixWebSocketURL: String {
+        if let override = clientWebSocketURL {
+            return override
+        }
         switch environment {
         case .production:
-            return "wss://sportsapi.betssonem.com"  // New production WebSocket URL
+            return "wss://sportsapi.betssonem.com"
         case .staging, .development:
             return "wss://sportsapi-betsson-stage.everymatrix.com"
         }
     }
-    
+
     /// WebSocket Version for OddsMatrix WAMP protocol
+    /// Uses clientWebSocketVersion if set, otherwise falls back to environment defaults
     public var oddsMatrixWebSocketVersion: String {
+        if let override = clientWebSocketVersion {
+            return override
+        }
         switch environment {
         case .production:
-            return "v2"  // New production WebSocket URL
+            return "v2"
         case .staging, .development:
             return "v2"
         }
     }
 
-    /// WebSocket realm (same for all environments)
+    /// WebSocket realm - uses clientWebSocketRealm if set, otherwise defaults to Betsson Cameroon
     public var oddsMatrixWebSocketRealm: String {
-        return "www.betsson.cm"
+        return clientWebSocketRealm ?? "www.betsson.cm"
     }
 
     /// WebSocket origin for connection headers
+    /// Uses clientWebSocketOrigin if set, otherwise falls back to environment defaults
     public var oddsMatrixWebSocketOrigin: String {
+        if let override = clientWebSocketOrigin {
+            return override
+        }
         switch environment {
         case .production:
-            return "https://www.betssonem.com/"  // Production origin
+            return "https://www.betssonem.com/"
         case .staging, .development:
             return "https://sportsbook-stage.gomagaming.com"
         }
@@ -154,9 +183,13 @@ public final class EveryMatrixUnifiedConfiguration {
     }
     
     // MARK: - Shared Configuration
-    
-    /// Operator ID ( some apis call it Domain ID) for all APIs
+
+    /// Operator ID (some APIs call it Domain ID) for all APIs
+    /// Uses clientOperatorId if set, otherwise falls back to environment defaults
     public var operatorId: String {
+        if let override = clientOperatorId {
+            return override
+        }
         switch environment {
         case .production:
             return "4374"

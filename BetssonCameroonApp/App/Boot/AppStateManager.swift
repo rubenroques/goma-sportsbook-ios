@@ -218,6 +218,7 @@ class AppStateManager {
             .map(StyleProviderColors.create(fromTheme:))
             .receive(on: DispatchQueue.main)
             .sink { (styleProviderColors: StyleProviderColors) in
+                print("[AppStateManager] Applying StyleProviderColors to GomaUI")
                 GomaUI.StyleProvider.customize(colors: styleProviderColors)
             }
 
