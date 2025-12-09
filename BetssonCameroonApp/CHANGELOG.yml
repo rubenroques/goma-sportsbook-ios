@@ -5,7 +5,7 @@
 releases:
 
   - version: "0.3.4" # not released yet, add changes here.
-    build: 3403
+    build: 3405
     date: "2025-12-09"
     notes:
       - "fix(language): Standardize language parameter across all API calls to use LanguageManager instead of localized() - fixes casino game descriptions and other content showing wrong language"
