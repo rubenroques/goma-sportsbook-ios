@@ -10,6 +10,7 @@ import Foundation
 enum InternalLinkType {
     case history
     case responsibleGaming
+    case stayInControl
     case limits
     case selfExclusion
 }
@@ -44,7 +45,7 @@ class WarningSignsViewModel {
     var minorsProtectionLink: String = "https://anj.fr/joueurs/proteger-les-mineurs"
     var iosLink: String = "https://support.apple.com/fr-fr/105055"
     var androidLink: String = "https://play.google.com/store/apps/details?id=com.google.android.apps.kids.familylink&hl=fr"
-    var microsoftLink: String = "https://support.microsoft.com/fr-fr/account-billing/prise-en-main-de-microsoft-family-safety-b6280c9d-38d7-82ff-0e4f-a6cb7e65934"
+    var microsoftLink: String = "https://support.microsoft.com/fr-fr/account-billing/configurer-microsoft-family-safety-b6280c9d-38d7-82ff-0e4f-a6cb7e659344"
     var macLink: String = "https://www.apple.com/fr/families/"
     var orangeLink: String = "https://assistance.orange.fr/ordinateurs-peripheriques/installer-et-utiliser/la-securite/controle-parental/controle-parental-d-orange-v6-pc-installer_41743-42551"
     var bouyguesLink: String = "https://www.assistance.bouyguestelecom.fr/s/article/telecharger-logiciel-controle-parental-gratuit"
@@ -66,7 +67,7 @@ class WarningSignsViewModel {
         switch linkType {
         case .history, .limits, .selfExclusion:
             return true
-        case .responsibleGaming:
+        case .responsibleGaming, .stayInControl:
             return false
         }
     }

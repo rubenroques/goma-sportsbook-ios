@@ -229,6 +229,10 @@ class StayInControlViewController: UIViewController {
             let responsibleGameViewController = ResponsibleGameInfoViewController()
             self.navigationController?.pushViewController(responsibleGameViewController, animated: true)
             
+        case .stayInControl:
+            let stayInControlViewController = StayInControlViewController()
+            self.navigationController?.pushViewController(stayInControlViewController, animated: true)
+            
         case .limits:
             let limitsViewController = ProfileLimitsManagementViewController()
             self.navigationController?.pushViewController(limitsViewController, animated: true)

@@ -315,6 +315,7 @@ class MyTicketsViewModel: NSObject {
                 guard let self = self else { return }
 
                 let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+                
                 if let bettingHistoryEntries = bettingHistoryResponse.betList {
                     
                     if bettingHistoryEntries.count < self.recordsPerPage {

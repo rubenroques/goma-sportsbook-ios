@@ -47,7 +47,7 @@ class StayInControlViewModel {
         switch linkType {
         case .history, .limits, .selfExclusion:
             return true
-        case .responsibleGaming:
+        case .responsibleGaming, .stayInControl:
             return false
         }
     }

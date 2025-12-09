@@ -314,6 +314,10 @@ class WarningSignsViewController: UIViewController {
             let responsibleGameViewController = ResponsibleGameInfoViewController()
             self.navigationController?.pushViewController(responsibleGameViewController, animated: true)
             
+        case .stayInControl:
+            let stayInControlViewController = StayInControlViewController()
+            self.navigationController?.pushViewController(stayInControlViewController, animated: true)
+            
         case .limits:
             let limitsViewController = ProfileLimitsManagementViewController()
             self.navigationController?.pushViewController(limitsViewController, animated: true)
@@ -365,7 +369,7 @@ class WarningSignsViewController: UIViewController {
     }
     
     @objc private func didTapResponsibleGamingLink() {
-        self.viewModel.handleInternalLink(.responsibleGaming)
+        self.viewModel.handleInternalLink(.stayInControl)
     }
     
     @objc private func didTapLimitsLink() {

@@ -537,6 +537,8 @@ class MyTicketCardView: NibView {
         
         self.betCardsStackView.removeAllArrangedSubviews()
         
+        let isFreeBet = betHistoryEntry.freeBet ?? false
+        
         for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
             
             let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
@@ -578,8 +580,11 @@ class MyTicketCardView: NibView {
             let betId = String(format: "%.1f", betIdDouble)
             self.betIdLabel.text = "\(localized("bet_id")): \(betId)"
         }
+        
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddFormatter.formatOdd(withValue: oddValue)
+            
+            let calculatedOdd = isFreeBet ? (oddValue + 1.0) : oddValue
+            self.totalOddSubtitleLabel.text = oddValue == 0.0 ? "-" : OddFormatter.formatOdd(withValue: calculatedOdd)
         }
         
         if let betAmount = betHistoryEntry.totalBetAmount,
@@ -589,17 +594,22 @@ class MyTicketCardView: NibView {
         
         //
         self.winningsTitleLabel.text = localized("possible_winnings")
-        
-        let isFreeBet = betHistoryEntry.freeBet ?? false
+                
+        // Just keeping this in case API changes AGAIN
+//        if let maxWinnings = betHistoryEntry.maxWinning,
+//           let totalBetAmount = betHistoryEntry.totalBetAmount {
+//           
+//            var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+//            
+//            if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
+//                self.winningsSubtitleLabel.text = maxWinningsString
+//            }
+//        }
         
         if let maxWinnings = betHistoryEntry.maxWinning,
-           let totalBetAmount = betHistoryEntry.totalBetAmount {
-           
-            var calculatedMaxWinnings = !isFreeBet ? maxWinnings : (maxWinnings - totalBetAmount)
+           let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+            self.winningsSubtitleLabel.text = maxWinningsString
             
-            if let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedMaxWinnings)) {
-                self.winningsSubtitleLabel.text = maxWinningsString
-            }
         }
         
         if let status = betHistoryEntry.status?.uppercased() {
