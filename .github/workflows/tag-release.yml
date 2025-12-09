@@ -242,6 +242,7 @@ jobs:
           GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
           # BCM-specific
           BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
+          BETSSONCM_UAT_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_UAT_FIREBASE_APP_ID }}
           BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
           # BFR-specific
           BFR_MATCH_GIT_URL_PROD: ${{ secrets.BFR_MATCH_GIT_URL_PROD }}
@@ -260,6 +261,7 @@ jobs:
           FIREBASE_CLI_TOKEN=$FIREBASE_CLI_TOKEN
           GOMA_TEAM_ID=$GOMA_TEAM_ID
           BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
+          BETSSONCM_UAT_FIREBASE_APP_ID=$BETSSONCM_UAT_FIREBASE_APP_ID
           BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
           MATCH_GIT_URL_UAT=$MATCH_GIT_URL
           MATCH_GIT_URL_PROD=$BFR_MATCH_GIT_URL_PROD
@@ -437,7 +439,7 @@ jobs:
           MESSAGE+="**Version:** ${VERSION} (${BUILD})\n"
           MESSAGE+="**Tag:** \`${TAG}\`\n\n"
           MESSAGE+="**Release Notes:**\n${NOTES_ESCAPED}\n\n"
-          MESSAGE+="Deployed to Production${EASTER_EGG}"
+          MESSAGE+="Deployed. ${EASTER_EGG}"
 
           # Send webhook
           curl -s -X POST "$DISCORD_WEBHOOK" \

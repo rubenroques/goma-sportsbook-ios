@@ -455,7 +455,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -589,7 +589,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -730,7 +730,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -864,7 +864,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -940,7 +940,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -981,7 +981,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3405;
+				CURRENT_PROJECT_VERSION = 3406;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
