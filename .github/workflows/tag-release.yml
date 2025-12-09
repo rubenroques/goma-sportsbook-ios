@@ -350,18 +350,18 @@ jobs:
             # ╚════════════════════════════════════════════════════════════════╝
 
             # ╔════════════════════════════════════════════════════════════════╗
-            # ║ BCM PRODUCTION DISTRIBUTION                                    ║
+            # ║ BCM UAT DISTRIBUTION                                           ║
             # ╚════════════════════════════════════════════════════════════════╝
-            echo ">>> Building BCM Production..."
-            bundle exec fastlane keep_version_distribute_production release_notes:"$FIREBASE_NOTES"
+            echo ">>> Building BCM UAT..."
+            bundle exec fastlane keep_version_distribute_uat release_notes:"$FIREBASE_NOTES"
 
             if [ $? -ne 0 ]; then
-              echo "::error::BCM Production distribution failed"
+              echo "::error::BCM UAT distribution failed"
               exit 1
             fi
-            echo "BCM Production distribution complete"
+            echo "BCM UAT distribution complete"
             # ╔════════════════════════════════════════════════════════════════╗
-            # ║ END BCM PRODUCTION DISTRIBUTION                                ║
+            # ║ END BCM UAT DISTRIBUTION                                       ║
             # ╚════════════════════════════════════════════════════════════════╝
 
           elif [ "$CLIENT" = "BFR" ]; then
