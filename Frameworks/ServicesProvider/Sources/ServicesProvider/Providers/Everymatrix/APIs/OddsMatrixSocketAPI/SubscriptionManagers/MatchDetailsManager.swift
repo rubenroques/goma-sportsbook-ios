@@ -523,11 +523,14 @@ class MatchDetailsManager {
                 break
             }
         }
-        
-        // Update cached market groups
-        updateCachedMarketGroups(from: marketGroupDTOs)
+
+        // Only update from DTOs if we received full entities (INITIAL_DUMP)
+        // Change records are handled by handleMarketGroupChangeRecord() which calls rebuildCachedMarketGroups()
+        if !marketGroupDTOs.isEmpty {
+            updateCachedMarketGroups(from: marketGroupDTOs)
+        }
     }
-    
+
     private func handleMarketGroupChangeRecord(_ change: EveryMatrix.ChangeRecord) {
         switch change.changeType {
         case .create:

@@ -4,7 +4,19 @@
 
 releases:
 
-  - version: "0.3.3" # not released yet, add changes here.
+  - version: "0.3.4" # not released yet, add changes here.
+    build: 3402
+    date: "2025-12-09"
+    notes:
+      - "fix(language): Standardize language parameter across all API calls to use LanguageManager instead of localized() - fixes casino game descriptions and other content showing wrong language"
+      - "fix(language): Fix language indicator in top bar showing 'EN' instead of 'FR' when app is in French - now uses LanguageManager instead of system locale"
+      - "fix(match-details): Fix market group tabs flickering to 'All Markets' - added MARKET_GROUP case to EntityStore merge and prevented cache wipe on UPDATE messages"
+      - "fix(login): Add support for Forbidden_TooManyAttempts error code - refactored error mapper to support multiple EM error formats mapping to same Phrase key"
+      - "fix(push): [SPOR-6628] [BC-205] XtremePush - Firebase Service Account integration"
+      - "fix(push): [SPOR-6642] [BC-277] XtremePush SDK is not active for iOS push - SDK now properly initialized"
+      - "fix(appstore): Add NSBluetoothAlwaysUsageDescription to Info.plist - required by XtremePush SDK"
+
+  - version: "0.3.3" # released
     build: 3304
     date: "2025-12-04"
     notes:

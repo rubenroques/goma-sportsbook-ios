@@ -94,7 +94,7 @@ class CasinoGamePlayViewModel: ObservableObject {
             casinoGameMode = .realMoney
         }
 
-        let language = localized("current_language_code")
+        let language = LanguageManager.shared.currentLanguageCode
         
         if let urlString = servicesProvider.buildCasinoGameLaunchUrl(for: casinoGame, mode: casinoGameMode, language: language), let url = URL(string: urlString) {
             gameURL = url

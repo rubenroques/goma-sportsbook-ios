@@ -98,6 +98,13 @@ class SportTournamentsManager {
         let filteredTournaments = tournaments.filter { tournament in
             tournament.numberOfEvents ?? 0 > 0
         }
+
+        // Log tournaments with their event counts
+        for tournament in filteredTournaments {
+            print("[FILTER_DEBUG] Tournament '\(tournament.name)' (id: \(tournament.id)) - numberOfEvents: \(tournament.numberOfEvents ?? -1), numberOfLiveEvents: \(tournament.numberOfLiveEvents ?? -1)")
+        }
+        print("[FILTER_DEBUG] SportTournamentsManager.buildTournaments - total: \(tournamentsDTO.count), filtered (>0 events): \(filteredTournaments.count)")
+
         return filteredTournaments
     }
     

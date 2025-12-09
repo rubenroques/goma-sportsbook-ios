@@ -7,39 +7,8 @@
 
 import Foundation
 
-enum APIErrorCode: String, Decodable {
-    case user4TSCheckExists = "gmerruser4tscheckexists"
-    case usernameAlreadyExists = "gmerrusernamealreadyexists"
-    case usernameRequired = "gmerrusernamerequired"
-    case userAccountBlocked = "gmerruseraccountblocked"
-    case userAuthFailed = "gmerruserauthfailed"
-    case userAuthFailedTooManyAttempts = "gmerruserauthfailedtoomanyattempts"
-    case userEmailNotVerified = "gmerruseremailnotverified"
-    case userNotActivated = "gmerrusernotactivated"
-    case userNotVerified = "gmerrusernotverified"
-    case expiredToken = "gmerrexpiredtoken"
-    case invalidCode = "gmerrinvalidcode"
-    case attemptsToValidateCodeExceeded = "gmerrattemptstovalidatecodeexceeded"
-    case attemptsToGenerateCodeExceeded = "gmerrattemptstogeneratecodeexceeded"
-    case blockUserIncorrectCode = "gmerrblockuserincorrectcode"
-    case tokenNotFound = "gmerrtokennotfound"
-    case codeMissing = "gmerrcodemissing"
-    case unregisteredUser = "gmerrunregistereduser"
-    case invalidPhoneNumber = "gmerrinvalidphonenumber"
-    case invalidUserId = "gmerrinvaliduserid"
-    case unexpectedException = "gmerrunexpectedexception"
-    case invalidUserDocument = "gmerrinvaliduserdocument"
-    case registerUnderage = "gmerrregisterunderage"
-    case loginDenied = "gmerrlogindenied"
-    case unauthorized = "unauthorized"
-
-    init?(caseInsensitive rawValue: String) {
-        let caseInsensitive = rawValue.lowercased()
-        let simplifiedCaseInsensitive = caseInsensitive.replacingOccurrences(of: "_", with: "")
-        self.init(rawValue: simplifiedCaseInsensitive)
-    }
-}
-
+/// Phrase keys for EveryMatrix API errors.
+/// These keys are fetched from Phrase SDK at runtime for localized translations.
 enum APIErrorKey: String {
     case mobileNumberAlreadyInUse = "mobile_number_already_in_use"
     case usernameAlreadyExists = "gm_error_username_already_exists"
@@ -68,64 +37,82 @@ enum APIErrorKey: String {
 }
 
 extension ServiceProviderModelMapper {
+
+    /// Maps EveryMatrix API error codes to Phrase localization keys.
+    ///
+    /// EveryMatrix returns error codes in different formats (e.g., `gmerruser4tscheckexists`,
+    /// `Forbidden_TooManyAttempts`). This method normalizes the input and maps multiple
+    /// error code variants to their corresponding Phrase key.
+    ///
+    /// - Parameter errorCode: The raw error code from EveryMatrix API response
+    /// - Returns: The Phrase key for localized error message, or "server_error_message" as fallback
     static func mappedErrorKey(from errorCode: String) -> String {
-        guard
-            let apiErrorCode = APIErrorCode(caseInsensitive: errorCode)
-        else {
+        let normalized = errorCode.lowercased().replacingOccurrences(of: "_", with: "")
+
+        switch normalized {
+        // MARK: - Too many attempts (multiple EM codes → same Phrase key)
+        case "forbiddentoomanyattempts",
+             "gmerruserauthfailedtoomanyattempts":
+            return APIErrorKey.userAuthFailedTooManyAttempts.rawValue
+
+        // MARK: - Mobile/Username errors
+        case "gmerruser4tscheckexists":
+            return APIErrorKey.mobileNumberAlreadyInUse.rawValue
+        case "gmerrusernamealreadyexists":
+            return APIErrorKey.usernameAlreadyExists.rawValue
+        case "gmerrusernamerequired":
+            return APIErrorKey.usernameRequired.rawValue
+
+        // MARK: - Account status errors
+        case "gmerruseraccountblocked":
+            return APIErrorKey.userAccountBlocked.rawValue
+        case "gmerruserauthfailed":
+            return APIErrorKey.userAuthFailed.rawValue
+        case "gmerruseremailnotverified":
+            return APIErrorKey.userEmailNotVerified.rawValue
+        case "gmerrusernotactivated":
+            return APIErrorKey.userNotActivated.rawValue
+        case "gmerrusernotverified":
+            return APIErrorKey.userNotVerified.rawValue
+
+        // MARK: - Token/code errors
+        case "gmerrexpiredtoken":
+            return APIErrorKey.expiredToken.rawValue
+        case "gmerrinvalidcode":
+            return APIErrorKey.invalidCode.rawValue
+        case "gmerrattemptstovalidatecodeexceeded":
+            return APIErrorKey.attemptsToValidateCodeExceeded.rawValue
+        case "gmerrattemptstogeneratecodeexceeded":
+            return APIErrorKey.attemptsToGenerateCodeExceeded.rawValue
+        case "gmerrblockuserincorrectcode":
+            return APIErrorKey.blockUserIncorrectCode.rawValue
+        case "gmerrtokennotfound":
+            return APIErrorKey.tokenNotFound.rawValue
+        case "gmerrcodemissing":
+            return APIErrorKey.codeMissing.rawValue
+
+        // MARK: - User validation errors
+        case "gmerrunregistereduser":
+            return APIErrorKey.unregisteredUser.rawValue
+        case "gmerrinvalidphonenumber":
+            return APIErrorKey.invalidPhoneNumber.rawValue
+        case "gmerrinvaliduserid":
+            return APIErrorKey.invalidUserId.rawValue
+        case "gmerrinvaliduserdocument":
+            return APIErrorKey.invalidUserDocument.rawValue
+        case "gmerrregisterunderage":
+            return APIErrorKey.registerUnderage.rawValue
+
+        // MARK: - General errors
+        case "gmerrunexpectedexception":
+            return APIErrorKey.unexpectedException.rawValue
+        case "gmerrlogindenied":
+            return APIErrorKey.loginDenied.rawValue
+        case "unauthorized":
+            return APIErrorKey.unauthorized.rawValue
+
+        default:
             return "server_error_message"
         }
-        
-        let mappedErrorCode: APIErrorKey = switch apiErrorCode {
-        case .user4TSCheckExists:
-                .mobileNumberAlreadyInUse
-        case .usernameAlreadyExists:
-                .usernameAlreadyExists
-        case .usernameRequired:
-                .usernameRequired
-        case .userAccountBlocked:
-                .userAccountBlocked
-        case .userAuthFailed:
-                .userAuthFailed
-        case .userAuthFailedTooManyAttempts:
-                .userAuthFailedTooManyAttempts
-        case .userEmailNotVerified:
-                .userEmailNotVerified
-        case .userNotActivated:
-                .userNotActivated
-        case .userNotVerified:
-                .userNotVerified
-        case .expiredToken:
-                .expiredToken
-        case .invalidCode:
-                .invalidCode
-        case .attemptsToValidateCodeExceeded:
-                .attemptsToValidateCodeExceeded
-        case .attemptsToGenerateCodeExceeded:
-                .attemptsToGenerateCodeExceeded
-        case .blockUserIncorrectCode:
-                .blockUserIncorrectCode
-        case .tokenNotFound:
-                .tokenNotFound
-        case .codeMissing:
-                .codeMissing
-        case .unregisteredUser:
-                .unregisteredUser
-        case .invalidPhoneNumber:
-                .invalidPhoneNumber
-        case .invalidUserId:
-                .invalidUserId
-        case .unexpectedException:
-                .unexpectedException
-        case .invalidUserDocument:
-                .invalidUserDocument
-        case .registerUnderage:
-                .registerUnderage
-        case .loginDenied:
-                .loginDenied
-        case .unauthorized:
-                .unauthorized
-        }
-        
-        return mappedErrorCode.rawValue
     }
 }

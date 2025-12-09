@@ -489,7 +489,7 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
     }
     
     func getNavigationLinks() {
-        let language = localized("current_language_code")
+        let language = LanguageManager.shared.currentLanguageCode
         
         Env.servicesProvider.getFooterLinks(language: language)
             .receive(on: DispatchQueue.main)

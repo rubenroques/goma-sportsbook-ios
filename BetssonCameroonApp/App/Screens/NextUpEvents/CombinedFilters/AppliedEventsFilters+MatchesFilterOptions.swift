@@ -52,7 +52,7 @@ extension AppliedEventsFilters {
             tournament = .specific(id)
         }
 
-        return MatchesFilterOptions(
+        let filterOptions = MatchesFilterOptions(
             sportId: sportId.rawValue,
             timeRange: timeRange,
             sortBy: sortBy,
@@ -60,6 +60,10 @@ extension AppliedEventsFilters {
             tournament: tournament,
             optionalUserId: optionalUserId
         )
+
+        print("[FILTER_DEBUG] toMatchesFilterOptions - sportId: \(filterOptions.sportId), timeRange: \(filterOptions.timeRange.serverRawValue), sortBy: \(filterOptions.sortBy.serverRawValue), location: \(filterOptions.location.serverRawValue), tournament: \(filterOptions.tournament.serverRawValue)")
+
+        return filterOptions
     }
 }
 
