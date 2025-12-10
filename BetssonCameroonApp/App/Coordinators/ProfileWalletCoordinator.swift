@@ -433,7 +433,7 @@ final class ProfileWalletCoordinator: Coordinator {
     private func presentDepositFlow(bonusCode: String? = nil) {
         guard let profileNavigationController = profileNavigationController else { return }
         
-        let bankingCoordinator = BankingCoordinator.forDeposit(
+        let bankingCoordinator = BankingCoordinator.forGomaCashierDeposit(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
@@ -450,20 +450,23 @@ final class ProfileWalletCoordinator: Coordinator {
         bankingCoordinator.start()
     }
     
+    private let gomaCashierLogPrefix = "[GomaCashier]"
+
     private func presentWithdrawFlow() {
         guard let profileNavigationController = profileNavigationController else { return }
-        
-        let bankingCoordinator = BankingCoordinator.forWithdraw(
+
+        GomaLogger.info("\(gomaCashierLogPrefix) Presenting Goma withdraw flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forGomaCashierWithdraw(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
-        
+
         // Set up banking coordinator closures
         setupBankingCoordinatorCallbacks(bankingCoordinator)
-        
+
         // Add as child coordinator
         addChildCoordinator(bankingCoordinator)
-        
+
         // Start the banking flow
         bankingCoordinator.start()
     }
