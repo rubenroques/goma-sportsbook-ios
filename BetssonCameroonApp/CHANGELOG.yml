@@ -4,7 +4,14 @@
 
 releases:
 
-  - version: "0.3.4" # not released yet, add changes here.
+  - version: "0.3.5"
+    build: 3408
+    date: "2025-12-10"
+    notes:
+      - "fix(login): Add GmLegislation error code mappings for Forbidden_TooManyAttempts, Forbidden_UserAccount_Blocked, and InternalError - enables translated error messages on login/register"
+      - "feature(filters): Change default filter from 'Popular' to 'Upcoming' with 24h time period - affects both NextUp and Live events screens"
+
+  - version: "0.3.4" # released
     build: 3407
     date: "2025-12-09"
     notes:

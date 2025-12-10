@@ -34,6 +34,10 @@ enum APIErrorKey: String {
     case registerUnderage = "gm_error_register_underage"
     case loginDenied = "gm_error_login_denied"
     case unauthorized = "gm_error_unauthorized"
+    // GmLegislation error codes
+    case forbiddenTooManyAttempts = "gm_error_forbidden_too_many_attempts"
+    case forbiddenUserAccountBlocked = "gm_error_forbidden_user_account_blocked"
+    case internalError = "gm_error_internal_error"
 }
 
 extension ServiceProviderModelMapper {
@@ -50,9 +54,16 @@ extension ServiceProviderModelMapper {
         let normalized = errorCode.lowercased().replacingOccurrences(of: "_", with: "")
 
         switch normalized {
-        // MARK: - Too many attempts (multiple EM codes → same Phrase key)
-        case "forbiddentoomanyattempts",
-             "gmerruserauthfailedtoomanyattempts":
+        // MARK: - GmLegislation errors
+        case "forbiddentoomanyattempts":
+            return APIErrorKey.forbiddenTooManyAttempts.rawValue
+        case "forbiddenuseraccountblocked":
+            return APIErrorKey.forbiddenUserAccountBlocked.rawValue
+        case "internalerror":
+            return APIErrorKey.internalError.rawValue
+
+        // MARK: - Too many attempts (legacy gmerr format)
+        case "gmerruserauthfailedtoomanyattempts":
             return APIErrorKey.userAuthFailedTooManyAttempts.rawValue
 
         // MARK: - Mobile/Username errors
