@@ -206,7 +206,7 @@ final public class PromotionSelectorBarView: UIView {
         for item in items {
             let updatedItemData = PromotionItemData(
                 id: item.id,
-                title: item.title,
+                title: LocalizationProvider.string(item.title.lowercased()),
                 isSelected: item.id == selectedId,
                 category: item.category
             )
