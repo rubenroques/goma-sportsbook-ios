@@ -44,9 +44,9 @@ extension UserDefaults {
                 return AppearanceMode(rawValue: appearanceModeInt) ?? .device
             }
 
-            self.setValue(AppearanceMode.dark.rawValue, forKey: UserDefaultsKey.appearanceMode.key)
+            self.setValue(AppearanceMode.device.rawValue, forKey: UserDefaultsKey.appearanceMode.key)
             self.synchronize()
-            return .dark
+            return .device
         }
         set {
             self.set(newValue.rawValue, forKey: UserDefaultsKey.appearanceMode.key)

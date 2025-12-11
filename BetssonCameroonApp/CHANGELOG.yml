@@ -8,7 +8,7 @@ releases:
     build: 3601
     date: "2025-12-XX"
     notes:
-      - ""
+      - "fix(theme): Change default appearance mode from dark to system - new installs now respect device theme preference"
       
   - version: "0.3.5" # released
     build: 3502
