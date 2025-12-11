@@ -111,14 +111,18 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
         popularCountryLeagues.removeAll()
         otherCountryLeagues.removeAll()
 
+        print("[FILTER_DEBUG] setupAllLeagues - popularCompetitions: \(popularCompetitions.count), sportCompetitions: \(sportCompetitions.count), isLiveMode: \(isLiveMode)")
+
         // Popular Leagues
         var allLeaguesOption = SortOption(id: "all", icon: "league_icon", title: "All Popular Leagues", count: 0, iconTintChange: false)
-        
+
         // Convert competitions to SortOptions and filter out empty leagues
         let newSortOptions = popularCompetitions.compactMap { competition -> SortOption? in
             let count = isLiveMode ?
                 (competition.numberLiveEvents ?? 0) :
                 (competition.numberEvents ?? 0)
+
+            print("[FILTER_DEBUG] Competition '\(competition.name)' (id: \(competition.id)) - numberEvents: \(competition.numberEvents ?? -1), numberLiveEvents: \(competition.numberLiveEvents ?? -1), selectedCount: \(count)")
 
             // Skip leagues with no events
             guard count > 0 else { return nil }

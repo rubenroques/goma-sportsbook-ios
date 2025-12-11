@@ -22,7 +22,7 @@ public final class BetslipViewModel: BetslipViewModelProtocol {
             config: BetslipConfigMetadata(
                 name: "standard-betslip-container",
                 version: "1.0.0",
-                defaultLanguage: localized("current_language_code"),
+                defaultLanguage: LanguageManager.shared.currentLanguageCode,
                 id: "standard-betslip-container"
             ),
             settings: [

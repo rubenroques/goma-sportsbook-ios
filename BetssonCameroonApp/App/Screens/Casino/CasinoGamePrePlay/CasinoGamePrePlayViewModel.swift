@@ -164,7 +164,7 @@ class CasinoGamePlayModeSelectorViewModel: CasinoGamePlayModeSelectorViewModelPr
     
     private func loadGameDetails() {
         
-        let language = localized("current_language_code")
+        let language = LanguageManager.shared.currentLanguageCode
 
         servicesProvider.getGameDetails(
             gameId: gameId,

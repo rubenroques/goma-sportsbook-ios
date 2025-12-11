@@ -39,7 +39,7 @@ final class WithdrawWebContainerViewModel: ObservableObject {
         state = .loadingURL
 
         // Get current language from app localization
-        let language = localized("current_language_code").uppercased()
+        let language = LanguageManager.shared.currentLanguageCode.uppercased()
 
         let parameters = CashierParameters.forWithdraw(
             language: language,

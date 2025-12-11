@@ -175,11 +175,11 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 
     /// Build WAMP router with current configuration
     private func buildTopic() -> WAMPRouter {
-        
+
         let operatorId = EveryMatrixUnifiedConfiguration.shared.operatorId
-        
+
         if let filters = filters {
-            return WAMPRouter.customMatchesAggregatorPublisher(
+            let router = WAMPRouter.customMatchesAggregatorPublisher(
                 operatorId: self.operatorId,
                 language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
                 sportId: sportId,
@@ -192,13 +192,18 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
                 mainMarketsLimit: numberOfMarkets,
                 optionalUserId: filters.optionalUserId
             )
+            print("[FILTER_DEBUG] PreLiveMatchesPaginator.buildTopic - WAMP topic: \(router.procedure)")
+            print("[FILTER_DEBUG] PreLiveMatchesPaginator.buildTopic - filters: sportId=\(sportId), location=\(filters.location.serverRawValue), tournament=\(filters.tournament.serverRawValue), timeRange=\(filters.timeRange.serverRawValue), sortBy=\(filters.sortBy.serverRawValue), eventLimit=\(currentEventLimit)")
+            return router
         } else {
-            return WAMPRouter.popularMatchesPublisher(
+            let router = WAMPRouter.popularMatchesPublisher(
                 operatorId: self.operatorId,
                 language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
                 sportId: sportId,
                 matchesCount: currentEventLimit          // Use mutable currentEventLimit
             )
+            print("[FILTER_DEBUG] PreLiveMatchesPaginator.buildTopic - WAMP topic (no filters): \(router.procedure)")
+            return router
         }
     }
 
@@ -439,6 +444,8 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
             return SubscribableContent.connected(subscription: subscription)
 
         case .initialContent(let response):
+            print("[FILTER_DEBUG] PreLiveMatchesPaginator.initialContent - received \(response.records.count) records")
+
             // Parse and store the flat entities (MATCH, MARKET, OUTCOME, BETTING_OFFER, and related entities)
             parseMatchesData(from: response)
 
@@ -447,6 +454,7 @@ class PreLiveMatchesPaginator: UnsubscriptionController {
 
             // Check if we received fewer events than requested (end of data detection)
             let matchCount = store.getAll(EveryMatrix.MatchDTO.self).count
+            print("[FILTER_DEBUG] PreLiveMatchesPaginator.initialContent - matchCount: \(matchCount), eventsGroups: \(eventsGroups.count), currentEventLimit: \(currentEventLimit)")
             if matchCount < currentEventLimit {
                 hasMoreEvents = false
                 print("[PreLiveMatchesPaginator] 🏁 Received \(matchCount) events, less than requested \(currentEventLimit) - no more pages available")

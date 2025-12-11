@@ -92,7 +92,7 @@ class ExtendedListFooterViewModel: ExtendedListFooterViewModelProtocol {
             self?.handleLinkTap(linkType)
         }
         
-        let language = localized("current_language_code")
+        let language = LanguageManager.shared.currentLanguageCode
 
         self.fetchFooterLinks(language: language)
         self.fetchFooterSponsors(language: language)
