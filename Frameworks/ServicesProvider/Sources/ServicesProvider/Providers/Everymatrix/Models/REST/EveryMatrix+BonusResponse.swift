@@ -52,7 +52,7 @@ extension EveryMatrix {
     public struct Trigger: Codable {
         public let startTime: String
         public let endTime: String
-        public let timeZone: TimeZone
+        public let timeZone: TimeZone?
         public let totalGrantCountLimit: Double
         public let player: [String: AnyCodable]?
         public let method: Method
@@ -112,7 +112,7 @@ extension EveryMatrix {
         public let url: Content
         public let description: Content
         public let html: Content
-        public let assets: Content
+        public let assets: Content?
         
         enum CodingKeys: String, CodingKey {
             case name
