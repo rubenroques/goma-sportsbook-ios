@@ -8,7 +8,7 @@ releases:
     build: 3601
     date: "2025-12-XX"
     notes:
-      - ""
+      - "fix(mybets): SPOR-6122 - Added the capsule informing the game results."
       
   - version: "0.3.5" # released
     build: 3502
