@@ -483,10 +483,8 @@ extension TicketSelectionView {
         let backgroundColor = switch status.status {
             case .won:
             StyleProvider.Color.alertSuccess
-        case .lost:
+        case .lost, .draw:
             StyleProvider.Color.backgroundGradient2
-        case .draw:
-            StyleProvider.Color.buttonTextSecondary
         }
         
         let textColor = switch status.status {
@@ -495,7 +493,7 @@ extension TicketSelectionView {
         case .lost:
             StyleProvider.Color.alertError
         case .draw:
-            StyleProvider.Color.buttonTextSecondary
+            StyleProvider.Color.textPrimary
         }
         
         resultTagCapsuleViewModel.configure(with: CapsuleData(
