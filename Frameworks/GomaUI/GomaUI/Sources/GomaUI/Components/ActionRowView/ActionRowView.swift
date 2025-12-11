@@ -79,7 +79,7 @@ public final class ActionRowView: UIView {
             if let systemImage = UIImage(systemName: item.icon) {
                 iconImageView.image = systemImage
             } else if let bundleImage = UIImage(named: item.icon) {
-                iconImageView.image = bundleImage
+                iconImageView.image = bundleImage.withRenderingMode(.alwaysTemplate)
             }
         }
 
