@@ -422,7 +422,6 @@ public final class TicketSelectionView: UIView {
         } else {
             resultTagCapsuleView.isHidden = false
             liveIndicatorView.isHidden = true
-//            dateLabel.text = ticketData.matchDate
             
             // Update constraint to anchor to dateLabel
             updateLeftContentViewConstraint(to: resultTagCapsuleView.leadingAnchor)
