@@ -8,7 +8,7 @@ releases:
     build: 3601
     date: "2025-12-XX"
     notes:
-      - ""
+      - "fix(tab-bar): Fixed tab-bar animation to cancel already running animation if a new one is triggered too fast"
       
   - version: "0.3.5" # released
     build: 3502
