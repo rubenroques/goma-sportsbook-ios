@@ -4,9 +4,15 @@
 
 releases:
 
+  - version: "0.3.7"
+    build: 3701
+    date: "2025-12-XX"
+    notes:
+      - "<notes here>"
+
   - version: "0.3.6"
     build: 3601
-    date: "2025-12-XX"
+    date: "2025-12-11"
     notes:
       - "fix(theme): Change default appearance mode from dark to system - new installs now respect device theme preference"
       - "fix(mybets): SPOR-6122 - Added the capsule informing the game results."
