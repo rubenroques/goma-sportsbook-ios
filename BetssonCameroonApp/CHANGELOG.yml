@@ -8,7 +8,7 @@ releases:
     build: 3701
     date: "2025-12-XX"
     notes:
-      - "<notes here>"
+      - "fix(mybets): SPOR-6122 - Capsule now is conditioned to when there is a bet result, if not, the date is displayed without the capsule."
 
   - version: "0.3.6"
     build: 3601
