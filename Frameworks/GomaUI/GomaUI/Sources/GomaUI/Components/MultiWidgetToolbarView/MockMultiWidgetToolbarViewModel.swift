@@ -17,13 +17,21 @@ final public class MockMultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelP
     
     // Widget view models
     public var walletViewModel: WalletWidgetViewModelProtocol?
+
+    // Image resolver
+    public let brandLogoResolver: BrandLogoImageResolver
     
     // MARK: - Initialization
     
-    public init(config: MultiWidgetToolbarConfig, initialState: LayoutState = .loggedOut) {
+    public init(
+        config: MultiWidgetToolbarConfig,
+        initialState: LayoutState = .loggedOut,
+        brandLogoResolver: BrandLogoImageResolver = DefaultBrandLogoImageResolver()
+    ) {
         self.config = config
         self.currentState = initialState
-        
+        self.brandLogoResolver = brandLogoResolver
+
         // Create initial display state
         let initialDisplayState = Self.createDisplayState(from: config, for: initialState)
         self.displayStateSubject = CurrentValueSubject(initialDisplayState)

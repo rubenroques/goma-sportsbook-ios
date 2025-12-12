@@ -103,7 +103,7 @@ private extension SplashInformativeViewController {
     static func createBrandImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "brand_icon_variation_new")
+        imageView.image = UIImage(named: TargetVariables.brandLogoAssetName)
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.isUserInteractionEnabled = false

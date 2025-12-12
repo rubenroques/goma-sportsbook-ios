@@ -450,7 +450,7 @@ extension DepositWebContainerViewController {
     private static func createLogoImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_logo_orange")
+        imageView.image = UIImage(named: TargetVariables.brandLogoAssetName)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

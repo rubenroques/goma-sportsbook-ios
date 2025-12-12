@@ -459,7 +459,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -474,7 +474,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM UAT";
@@ -593,7 +593,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -608,7 +608,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM UAT";
@@ -734,7 +734,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -749,7 +749,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.betsson.cameroon;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
@@ -868,7 +868,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -883,7 +883,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.betsson.cameroon;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
@@ -944,7 +944,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -959,7 +959,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
@@ -985,7 +985,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1000,7 +1000,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
@@ -1277,7 +1277,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1292,7 +1292,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betathome.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = BetAtHome;
@@ -1418,7 +1418,7 @@
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-BetAtHome-PROD/BetAtHome.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3304;
+				CURRENT_PROJECT_VERSION = 10037;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1433,7 +1433,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.3;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betathome.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = BetAtHome;

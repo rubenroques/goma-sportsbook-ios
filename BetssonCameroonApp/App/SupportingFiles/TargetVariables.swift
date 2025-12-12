@@ -151,6 +151,16 @@ struct TargetVariables: SportsbookTarget {
         return .betssonCameroon
     }
 
+    /// Brand logo asset name (varies by client)
+    static var brandLogoAssetName: String {
+        switch BuildEnvironment.current {
+        case .betAtHomeProd:
+            return "bet_at_home_brand_horizontal"
+        case .staging, .uat, .production:
+            return "default_brand_horizontal"
+        }
+    }
+
     static var links: URLEndpoint.Links {
         return URLEndpoint.Links(
             api: URLEndpoint.APIs(

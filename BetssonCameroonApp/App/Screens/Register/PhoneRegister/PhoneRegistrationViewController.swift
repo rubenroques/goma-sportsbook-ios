@@ -38,7 +38,7 @@ class PhoneRegistrationViewController: UIViewController {
     private let logoImageView: UIImageView = {
        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "betsson_logo")?.withRenderingMode(.alwaysTemplate)
+        imageView.image = UIImage(named: TargetVariables.brandLogoAssetName)?.withRenderingMode(.alwaysTemplate)
         imageView.tintColor = StyleProvider.Color.highlightPrimary
         imageView.contentMode = .scaleAspectFit
         return imageView

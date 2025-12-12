@@ -148,15 +148,29 @@ final public class MultiWidgetToolbarView: UIView {
 
     private func createImageWidget(_ widget: Widget) -> UIView {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "default_brand_horizontal", in: Bundle.module, with: nil) ?? UIImage()
+        imageView.image = viewModel.brandLogoResolver.brandLogo() ?? UIImage()
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = StyleProvider.Color.highlightPrimaryContrast
-
-        // Set fixed height, let width grow to maintain aspect ratio
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: 32)
-        ])
+
+        // Fixed height
+        let heightConstraint = imageView.heightAnchor.constraint(equalToConstant: 32)
+
+        // Max width - cannot exceed this regardless of image size
+        let maxWidthConstraint = imageView.widthAnchor.constraint(lessThanOrEqualToConstant: 140)
+
+        // Width based on image's aspect ratio (lower priority, so max width wins if exceeded)
+        if let image = imageView.image, image.size.height > 0 {
+            let aspectRatio = image.size.width / image.size.height
+            let aspectWidthConstraint = imageView.widthAnchor.constraint(
+                equalTo: imageView.heightAnchor,
+                multiplier: aspectRatio
+            )
+            aspectWidthConstraint.priority = .defaultHigh
+            NSLayoutConstraint.activate([heightConstraint, maxWidthConstraint, aspectWidthConstraint])
+        } else {
+            NSLayoutConstraint.activate([heightConstraint, maxWidthConstraint])
+        }
 
         // Add secret tap gesture for debug screen
         imageView.isUserInteractionEnabled = true

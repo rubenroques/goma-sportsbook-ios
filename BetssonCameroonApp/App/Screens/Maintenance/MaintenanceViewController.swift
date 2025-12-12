@@ -13,7 +13,7 @@ class MaintenanceViewController: UIViewController {
 
     private lazy var brandImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "betsson_logo_orange")
+        imageView.image = UIImage(named: TargetVariables.brandLogoAssetName)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView

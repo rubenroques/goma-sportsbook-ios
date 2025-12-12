@@ -154,6 +154,9 @@ public protocol MultiWidgetToolbarViewModelProtocol {
 
     var walletViewModel: WalletWidgetViewModelProtocol? { get set }
 
+    /// Resolver for brand logo image (allows client-specific logos)
+    var brandLogoResolver: BrandLogoImageResolver { get }
+
     /// Handles widget selection
     func selectWidget(id: WidgetTypeIdentifier)
 

@@ -42,10 +42,18 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
     
     // Action callback for deposit requests from wallet widget
     var onDepositRequested: (() -> Void)?
-    
+
+    // Image resolver for brand logo
+    let brandLogoResolver: BrandLogoImageResolver
+
     // MARK: - Initialization
-    
-    init(config: MultiWidgetToolbarConfig? = nil, initialState: LayoutState = .loggedOut) {
+
+    init(
+        config: MultiWidgetToolbarConfig? = nil,
+        initialState: LayoutState = .loggedOut,
+        brandLogoResolver: BrandLogoImageResolver = AppBrandLogoImageResolver()
+    ) {
+        self.brandLogoResolver = brandLogoResolver
         // Use provided config or create default config
         self.config = config ?? Self.createDefaultConfig()
         self.currentState = initialState

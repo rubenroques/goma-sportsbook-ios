@@ -25,7 +25,7 @@ class MockDepositAlternativeStepsViewModel: DepositAlternativeStepsViewModelProt
         self.bonusDepositData = bonusDepositData
         
         navigationViewModel = MockCustomNavigationViewModel(data: CustomNavigationData(id: "deposit_alternative_steps",
-                                                                                       logoImage: "betsson_logo",
+                                                                                       logoImage: TargetVariables.brandLogoAssetName,
                                                                                        closeIcon: "close_circle_icon",
                                                                                        backgroundColor: StyleProvider.Color.highlightPrimary, closeIconTintColor: StyleProvider.Color.allWhite))
         
