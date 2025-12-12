@@ -5,6 +5,13 @@
 releases:
 
   - version: "0.3.6"
+    build: 3602
+    date: "2025-12-XX"
+    notes:
+      - "fix(bonus): Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links"
+      
+
+  - version: "0.3.6"
     build: 3601
     date: "2025-12-XX"
     notes:
