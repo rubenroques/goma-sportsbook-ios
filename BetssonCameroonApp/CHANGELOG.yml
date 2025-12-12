@@ -8,12 +8,11 @@ releases:
     build: 3701
     date: "2025-12-XX"
     notes:
-      - "fix(bonus): Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links"
-      
+      - "fix(bonus): Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links, added padding to ButtonView"
 
   - version: "0.3.6"
     build: 3601
-    date: "2025-12-XX"
+    date: "2025-12-11"
     notes:
       - "fix(theme): Change default appearance mode from dark to system - new installs now respect device theme preference"
       - "fix(mybets): SPOR-6122 - Added the capsule informing the game results."
