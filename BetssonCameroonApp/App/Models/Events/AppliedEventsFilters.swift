@@ -126,8 +126,8 @@ public struct AppliedEventsFilters: Codable, Equatable {
 
     public static let defaultFilters = AppliedEventsFilters(
         sportId: .singleSport(id: "1"),
-        timeFilter: .all,
-        sortType: .popular,
+        timeFilter: .today,
+        sortType: .upcoming,
         leagueFilter: .all
     )
 }

@@ -22,7 +22,6 @@
 		CE74A7D82E2EB0E700DDE78D /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A7D72E2EB0E700DDE78D /* ServicesProvider */; };
 		CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A81B2E2EB9C300DDE78D /* PresentationProvider */; };
 		CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A9CE2E2EFB2A00DDE78D /* SharedModels */; };
-		CE8A04C52EE71672009B4BC5 /* GomaPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = CE8A04C42EE71672009B4BC5 /* GomaPlatform */; };
 		CEC736C72E6839670084368A /* XPush in Frameworks */ = {isa = PBXBuildFile; productRef = CEC736C62E6839670084368A /* XPush */; };
 /* End PBXBuildFile section */
 
@@ -92,7 +91,6 @@
 				CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */,
 				CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */,
 				CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */,
-				CE8A04C52EE71672009B4BC5 /* GomaPlatform in Frameworks */,
 				CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */,
 				CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */,
 				CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */,
@@ -197,7 +195,6 @@
 				CEC736C62E6839670084368A /* XPush */,
 				CE04B7CA2ED59DCA000191DF /* GomaLogger */,
 				CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */,
-				CE8A04C42EE71672009B4BC5 /* GomaPlatform */,
 			);
 			productName = BetssonCameroonApp;
 			productReference = CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */;
@@ -333,7 +330,6 @@
 				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-Production.plist",
 				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-Staging.plist",
 				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-UAT.plist",
-				"$(SRCROOT)/App/SupportingFiles/Firebase/GoogleService-Info-BetAtHome.plist",
 			);
 			name = "Copy Firebase Config";
 			outputFileListPaths = (
@@ -343,7 +339,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Copy correct GoogleService-Info.plist based on CONFIGURATION\n# Configurations: Debug-Production, Release-Production, Debug-Staging, Release-Staging, Debug-UAT, Release-UAT\necho \"CONFIGURATION is: ${CONFIGURATION}\"\necho \"SRCROOT is: ${SRCROOT}\"\n\nFIREBASE_DIR=\"${SRCROOT}/App/SupportingFiles/Firebase\"\nDEST_PLIST=\"${SRCROOT}/App/SupportingFiles/GoogleService-Info.plist\"\n\ncase \"${CONFIGURATION}\" in\n    *BetAtHome*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-BetAtHome.plist\" \"${DEST_PLIST}\"\n        echo \"Copied BetAtHome GoogleService-Info.plist\"\n        ;;\n    *Production*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Production.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Production GoogleService-Info.plist\"\n        ;;\n    *UAT*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-UAT.plist\" \"${DEST_PLIST}\"\n        echo \"Copied UAT GoogleService-Info.plist\"\n        ;;\n    *Staging*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Staging.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Staging GoogleService-Info.plist\"\n        ;;\n    *)\n        echo \"WARNING: CONFIGURATION not recognized: ${CONFIGURATION}\"\n        exit 1\n        ;;\nesac\n";
+			shellScript = "# Copy correct GoogleService-Info.plist based on CONFIGURATION\n# Configurations: Debug-Production, Release-Production, Debug-Staging, Release-Staging, Debug-UAT, Release-UAT\necho \"CONFIGURATION is: ${CONFIGURATION}\"\necho \"SRCROOT is: ${SRCROOT}\"\n\nFIREBASE_DIR=\"${SRCROOT}/App/SupportingFiles/Firebase\"\nDEST_PLIST=\"${SRCROOT}/App/SupportingFiles/GoogleService-Info.plist\"\n\ncase \"${CONFIGURATION}\" in\n    *Production*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Production.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Production GoogleService-Info.plist\"\n        ;;\n    *UAT*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-UAT.plist\" \"${DEST_PLIST}\"\n        echo \"Copied UAT GoogleService-Info.plist\"\n        ;;\n    *Staging*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Staging.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Staging GoogleService-Info.plist\"\n        ;;\n    *)\n        echo \"WARNING: CONFIGURATION not recognized: ${CONFIGURATION}\"\n        exit 1\n        ;;\nesac\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -454,12 +450,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = UAT;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-UAT";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -474,7 +470,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM UAT";
@@ -587,13 +583,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = UAT;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-UAT";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -608,7 +604,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.prod;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM UAT";
@@ -729,12 +725,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Production;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-PROD";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -749,7 +745,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.betsson.cameroon;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
@@ -862,13 +858,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Production;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-PROD";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = YGR6VMTFKF;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YGR6VMTFKF;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -883,7 +879,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.betsson.cameroon;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Prod";
@@ -939,12 +935,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Staging;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-STG";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -959,7 +955,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
@@ -979,13 +975,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Staging;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-STG";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
+				CURRENT_PROJECT_VERSION = 3601;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1000,7 +996,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 0.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg;
 				PRODUCT_MODULE_NAME = BetssonCameroonApp;
 				PRODUCT_NAME = "Betsson CM Stg";
@@ -1210,281 +1206,6 @@
 			};
 			name = "Release-Staging";
 		};
-		CE8A14352EE7359D009B4BC5 /* BetAtHome-Release-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "BetAtHome-Release-Production";
-		};
-		CE8A14362EE7359D009B4BC5 /* BetAtHome-Release-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APP_ENVIRONMENT = BetAtHomeProd;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetAtHome-PROD";
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-BetAtHome-PROD/BetAtHome.entitlements";
-				CODE_SIGN_IDENTITY = "Apple Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "App/SupportingFiles/Misc-BetAtHome-PROD/BetAtHome-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "bet-at-home";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetAtHome";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betathome.prod;
-				PRODUCT_MODULE_NAME = BetssonCameroonApp;
-				PRODUCT_NAME = BetAtHome;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "GomaGaming - betathome - Ad Hoc";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "BetAtHome-Release-Production";
-		};
-		CE8A14372EE7359D009B4BC5 /* BetAtHome-Release-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betathome.prod.BetAtHomeTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BetAtHome.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BetAtHome";
-			};
-			name = "BetAtHome-Release-Production";
-		};
-		CE8A14382EE7359D009B4BC5 /* BetAtHome-Release-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = BetssonCameroonApp;
-			};
-			name = "BetAtHome-Release-Production";
-		};
-		CE8A14392EE735DC009B4BC5 /* BetAtHome-Debug-Production */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = "BetAtHome-Debug-Production";
-		};
-		CE8A143A2EE735DC009B4BC5 /* BetAtHome-Debug-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APP_ENVIRONMENT = BetAtHomeProd;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetAtHome-PROD";
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-BetAtHome-PROD/BetAtHome.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 10037;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "App/SupportingFiles/Misc-BetAtHome-PROD/BetAtHome-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "bet-at-home";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-BetAtHome";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betathome.prod;
-				PRODUCT_MODULE_NAME = BetssonCameroonApp;
-				PRODUCT_NAME = BetAtHome;
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "GomaGaming - betathome - Dev";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "BetAtHome-Debug-Production";
-		};
-		CE8A143B2EE735DC009B4BC5 /* BetAtHome-Debug-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
-			};
-			name = "BetAtHome-Debug-Production";
-		};
-		CE8A143C2EE735DC009B4BC5 /* BetAtHome-Debug-Production */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.betssoncm.stg.BetssonCameroonAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = BetssonCameroonApp;
-			};
-			name = "BetAtHome-Debug-Production";
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1493,11 +1214,9 @@
 			buildConfigurations = (
 				CE74A1782E2E8D9500DDE78D /* Debug-Staging */,
 				CE41A9292EB3478C00B2DC28 /* Debug-Production */,
-				CE8A14392EE735DC009B4BC5 /* BetAtHome-Debug-Production */,
 				CE3767A52EE3A8920007BF97 /* Debug-UAT */,
 				CE74A1792E2E8D9500DDE78D /* Release-Staging */,
 				CE41A92D2EB347B400B2DC28 /* Release-Production */,
-				CE8A14352EE7359D009B4BC5 /* BetAtHome-Release-Production */,
 				CE3767A92EE3A8A10007BF97 /* Release-UAT */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1508,11 +1227,9 @@
 			buildConfigurations = (
 				CE74A1762E2E8D9500DDE78D /* Debug-Staging */,
 				CE41A92A2EB3478C00B2DC28 /* Debug-Production */,
-				CE8A143A2EE735DC009B4BC5 /* BetAtHome-Debug-Production */,
 				CE3767A62EE3A8920007BF97 /* Debug-UAT */,
 				CE74A1772E2E8D9500DDE78D /* Release-Staging */,
 				CE41A92E2EB347B400B2DC28 /* Release-Production */,
-				CE8A14362EE7359D009B4BC5 /* BetAtHome-Release-Production */,
 				CE3767AA2EE3A8A10007BF97 /* Release-UAT */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1523,11 +1240,9 @@
 			buildConfigurations = (
 				CE74A17B2E2E8D9500DDE78D /* Debug-Staging */,
 				CE41A92B2EB3478C00B2DC28 /* Debug-Production */,
-				CE8A143B2EE735DC009B4BC5 /* BetAtHome-Debug-Production */,
 				CE3767A72EE3A8920007BF97 /* Debug-UAT */,
 				CE74A17C2E2E8D9500DDE78D /* Release-Staging */,
 				CE41A92F2EB347B400B2DC28 /* Release-Production */,
-				CE8A14372EE7359D009B4BC5 /* BetAtHome-Release-Production */,
 				CE3767AB2EE3A8A10007BF97 /* Release-UAT */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1538,11 +1253,9 @@
 			buildConfigurations = (
 				CE74A17E2E2E8D9500DDE78D /* Debug-Staging */,
 				CE41A92C2EB3478C00B2DC28 /* Debug-Production */,
-				CE8A143C2EE735DC009B4BC5 /* BetAtHome-Debug-Production */,
 				CE3767A82EE3A8920007BF97 /* Debug-UAT */,
 				CE74A17F2E2E8D9500DDE78D /* Release-Staging */,
 				CE41A9302EB347B400B2DC28 /* Release-Production */,
-				CE8A14382EE7359D009B4BC5 /* BetAtHome-Release-Production */,
 				CE3767AC2EE3A8A10007BF97 /* Release-UAT */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1657,10 +1370,6 @@
 		CE74A9CE2E2EFB2A00DDE78D /* SharedModels */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedModels;
-		};
-		CE8A04C42EE71672009B4BC5 /* GomaPlatform */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = GomaPlatform;
 		};
 		CEC736C62E6839670084368A /* XPush */ = {
 			isa = XCSwiftPackageProductDependency;

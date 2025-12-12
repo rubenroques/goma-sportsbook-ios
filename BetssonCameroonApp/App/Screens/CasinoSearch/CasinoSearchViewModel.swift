@@ -195,7 +195,7 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
             updateSearchResultsState(isLoading: true, results: 0)
         }
 
-        servicesProvider.searchGames(language: nil, name: query)
+        servicesProvider.searchGames(language: LanguageManager.shared.currentLanguageCode, name: query)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 self?.isLoadingSubject.send(false)

@@ -53,9 +53,9 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
                 isSelected: true
             ),
             PillData(
-                id: "popular",
-                title: localized("popular"),
-                leftIconName: "flame_bar_icon",
+                id: "upcoming",
+                title: localized("upcoming"),
+                leftIconName: "timelapse_icon",
                 showExpandIcon: false,
                 isSelected: false
             ),

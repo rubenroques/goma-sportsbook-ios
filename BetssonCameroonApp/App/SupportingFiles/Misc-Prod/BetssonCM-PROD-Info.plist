@@ -65,6 +65,8 @@
 	<string>This information will be used to deliver personalized ads to you.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Using Bluetooth</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This app uses Bluetooth for enhanced functionality</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ubuntu-Bold.ttf</string>

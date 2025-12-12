@@ -160,7 +160,8 @@ final class MultiWidgetToolbarViewModel: MultiWidgetToolbarViewModelProtocol {
             // Language Switcher
             Widget(
                 id: .languageSwitcher,
-                type: .languageSwitcher
+                type: .languageSwitcher,
+                label: LanguageManager.shared.currentLanguageCode.uppercased()
             ),
 
             // Login Button

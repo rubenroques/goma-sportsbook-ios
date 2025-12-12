@@ -11,7 +11,12 @@ extension EveryMatrixModelMapper {
     
     static func availableBonuses(fromInternalResponse response: EveryMatrix.BonusResponse) -> [AvailableBonus] {
         return response.bonuses.map { bonusItem in
-            AvailableBonus(
+            var imageUrl: String? = nil
+            if let assets = bonusItem.presentation.assets {
+                imageUrl = "https:\(assets.content)"
+            }
+            
+            return AvailableBonus(
                 id: bonusItem.id,
                 bonusPlanId: bonusItem.id,
                 name: bonusItem.presentation.name.content,
@@ -21,7 +26,7 @@ extension EveryMatrixModelMapper {
                 triggerDate: parseDate(from: bonusItem.trigger.startTime),
                 expiryDate: parseDate(from: bonusItem.trigger.endTime),
                 wagerRequirement: nil,
-                imageUrl: "https:\(bonusItem.presentation.assets.content)",
+                imageUrl: imageUrl,
                 actionUrl: bonusItem.presentation.url.content,
                 code: bonusItem.code
             )
@@ -37,7 +42,8 @@ extension EveryMatrixModelMapper {
             
             var imageUrl: String? = nil
             
-            if let bonusAsset = bonusItem.assets {
+            if let bonusAsset = bonusItem.assets,
+               !bonusAsset.isEmpty {
                 imageUrl = "https:\(bonusAsset)"
             }
             

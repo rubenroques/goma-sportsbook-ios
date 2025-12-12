@@ -1461,7 +1461,6 @@ class MainTabBarCoordinator: Coordinator {
                 self.showInPlayEventsScreen(withContextChange: true)
             }
         case .favourites:
-            // TODO: Show favourites when available
             if let viewController = self.nextUpEventsCoordinator?.viewController {
                 mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
             }

@@ -4,7 +4,43 @@
 
 releases:
 
-  - version: "0.3.3" # not released yet, add changes here.
+  - version: "0.3.7"
+    build: 3701
+    date: "2025-12-XX"
+    notes:
+      - "<notes here>"
+
+  - version: "0.3.6" # released
+    build: 3601
+    date: "2025-12-11"
+    notes:
+      - "fix(theme): Change default appearance mode from dark to system - new installs now respect device theme preference"
+      - "fix(mybets): SPOR-6122 - Added the capsule informing the game results."
+      - "fix(tab-bar): Fixed tab-bar animation to cancel already running animation if a new one is triggered too fast"
+      - "fix(bonus): Fixed available and granted bonus models parsing, fixed bonus cards to not display image urls if they're not available"
+      - "fix(login): Add GmLegislation error code mappings for Forbidden_TooManyAttempts, Forbidden_UserAccount_Blocked, and InternalError - enables translated error messages on login/register"
+      - "feature(filters): Change default filter from 'Popular' to 'Upcoming' with 24h time period - affects both NextUp and Live events screens"
+      
+  - version: "0.3.5" # released
+    build: 3502
+    date: "2025-12-11"
+    notes:
+      - "fix(login): Add GmLegislation error code mappings for Forbidden_TooManyAttempts, Forbidden_UserAccount_Blocked, and InternalError - enables translated error messages on login/register"
+      - "feature(filters): Change default filter from 'Popular' to 'Upcoming' with 24h time period - affects both NextUp and Live events screens"
+
+  - version: "0.3.4" # released
+    build: 3407
+    date: "2025-12-09"
+    notes:
+      - "fix(language): Standardize language parameter across all API calls to use LanguageManager instead of localized() - fixes casino game descriptions and other content showing wrong language"
+      - "fix(language): Fix language indicator in top bar showing 'EN' instead of 'FR' when app is in French - now uses LanguageManager instead of system locale"
+      - "fix(match-details): Fix market group tabs flickering to 'All Markets' - added MARKET_GROUP case to EntityStore merge and prevented cache wipe on UPDATE messages"
+      - "fix(login): Add support for Forbidden_TooManyAttempts error code - refactored error mapper to support multiple EM error formats mapping to same Phrase key"
+      - "fix(push): [SPOR-6628] [BC-205] XtremePush - Firebase Service Account integration"
+      - "fix(push): [SPOR-6642] [BC-277] XtremePush SDK is not active for iOS push - SDK now properly initialized"
+      - "fix(appstore): Add NSBluetoothAlwaysUsageDescription to Info.plist - required by XtremePush SDK"
+
+  - version: "0.3.3" # released
     build: 3304
     date: "2025-12-04"
     notes:

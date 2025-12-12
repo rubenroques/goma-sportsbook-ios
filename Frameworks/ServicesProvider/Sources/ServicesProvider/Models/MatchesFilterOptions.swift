@@ -164,8 +164,8 @@ public struct MatchesFilterOptions: Equatable {
     
     public init(
         sportId: String,
-        timeRange: TimeRange = .all,
-        sortBy: SortBy = .popular,
+        timeRange: TimeRange = .today,
+        sortBy: SortBy = .upcoming,
         location: LocationFilter = .all,
         tournament: TournamentFilter = .all,
         optionalUserId: String? = nil
@@ -187,8 +187,8 @@ public struct MatchesFilterOptions: Equatable {
     public static func noFilters(for sportId: String) -> MatchesFilterOptions {
         return MatchesFilterOptions(
             sportId: sportId,
-            timeRange: .all,
-            sortBy: .popular,
+            timeRange: .today,
+            sortBy: .upcoming,
             location: .all,
             tournament: .all,
             optionalUserId: nil

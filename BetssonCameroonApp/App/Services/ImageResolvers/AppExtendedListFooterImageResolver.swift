@@ -33,7 +33,7 @@ struct AppExtendedListFooterImageResolver: ExtendedListFooterImageResolver {
     // MARK: - Private Image Resolution Methods
 
     private func partnerLogoImage(for club: PartnerClub) -> UIImage? {
-        let languageCode = localized("current_language_code").lowercased()
+        let languageCode = LanguageManager.shared.currentLanguageCode.lowercased()
         let imageName: String
 
         switch club {
