@@ -1040,13 +1040,13 @@ extension ServicesProviderClient {
         return bettingProvider.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
     }
 
-    public func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
+    public func confirmBoostedBet(identifier: String, detailedCode: String?) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
         else {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
-        return bettingProvider.confirmBoostedBet(identifier: identifier)
+        return bettingProvider.confirmBoostedBet(identifier: identifier, detailedCode: detailedCode)
     }
 
     public func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {

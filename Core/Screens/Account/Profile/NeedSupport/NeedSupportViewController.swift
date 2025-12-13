@@ -26,8 +26,10 @@ class NeedSupportViewController: UIViewController {
         return view
     }()
     
-    private lazy var logoDescriptionView: LogoDescriptionView = {
-        let view = LogoDescriptionView(viewModel: self.viewModel.logoDescriptionViewModel)
+    private lazy var sosButton: UIButton = Self.createSOSButton()
+    
+    private lazy var arpejLogoActionDescriptionView: LogoActionDescriptionView = {
+        let view = LogoActionDescriptionView(viewModel: self.viewModel.arpejLogoActionDescriptionViewModel)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -71,6 +73,9 @@ class NeedSupportViewController: UIViewController {
     private lazy var gameInterdictionImageView: UIImageView = Self.createGameInterdictionImageView()
     private lazy var gameInterdictionDescriptionLabel: UILabel = Self.createGameInterdictionDescriptionLabel()
     private lazy var gameInterdictionStepsLabel: UILabel = Self.createGameInterdictionStepsLabel()
+    
+    private lazy var anjButton: UIButton = Self.createAnjButton()
+    
     private lazy var anjLabel: UILabel = Self.createAnjLabel()
     private lazy var anjImageView: UIImageView = Self.createAnjImageView()
     
@@ -105,8 +110,9 @@ class NeedSupportViewController: UIViewController {
         self.setupWithTheme()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+        self.sosButton.addTarget(self, action: #selector(didTapSOSButton), for: .touchUpInside)
         self.contactButton.addTarget(self, action: #selector(didTapContactButton), for: .touchUpInside)
-        
+        self.anjButton.addTarget(self, action: #selector(didTapANJButton), for: .touchUpInside)
         self.setupCallbacks()
         
         let anjTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAnjImageView))
@@ -115,6 +121,13 @@ class NeedSupportViewController: UIViewController {
     }
     
     private func setupCallbacks() {
+        
+        self.arpejLogoActionDescriptionView.didTapLogo = { [weak self] url in
+            if let url = URL(string: url) {
+                UIApplication.shared.open(url)
+            }
+        }
+        
         self.sosLogoActionDescriptionView.didTapLogo = { [weak self] url in
             if let url = URL(string: url) {
                 UIApplication.shared.open(url)
@@ -202,6 +215,8 @@ class NeedSupportViewController: UIViewController {
         
         self.gameInterdictionStepsLabel.textColor = UIColor.App.textPrimary
         
+        StyleHelper.styleButton(button: self.anjButton)
+
         self.anjLabel.textColor = UIColor.App.textPrimary
         
         self.anjImageView.backgroundColor = .clear
@@ -239,6 +254,18 @@ class NeedSupportViewController: UIViewController {
     
     @objc private func didTapContactButton() {
         if let url = URL(string: self.viewModel.contactButtonUrl) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapSOSButton() {
+        if let url = URL(string: self.viewModel.sosButtonUrl) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    @objc private func didTapANJButton() {
+        if let url = URL(string: self.viewModel.anjButtonUrl) {
             UIApplication.shared.open(url)
         }
     }
@@ -318,14 +345,21 @@ extension NeedSupportViewController {
         label.textAlignment = .center
         return label
     }
+    
+    private static func createSOSButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "sos_logo"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        return button
+    }
 
     private static func createContactButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("need_support_page_cta_1"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
-        button.layer.cornerRadius = 8
-        button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 20, bottom: 14, right: 20)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return button
     }
 
@@ -373,7 +407,7 @@ extension NeedSupportViewController {
         label.text = localized("need_support_page_description_6")
         label.font = AppFont.with(type: .regular, size: 14)
         label.numberOfLines = 0
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }
 
@@ -383,8 +417,18 @@ extension NeedSupportViewController {
         label.text = localized("need_support_page_description_6_part_2")
         label.font = AppFont.with(type: .regular, size: 14)
         label.numberOfLines = 0
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
+    }
+    
+    private static func createAnjButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("demande_interdiction"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        return button
     }
 
     private static func createAnjLabel() -> UILabel {
@@ -440,7 +484,10 @@ extension NeedSupportViewController {
         self.scrollContainerView.addSubview(self.mainTitleLabel)
         self.scrollContainerView.addSubview(self.mainDescriptionLabel)
         self.scrollContainerView.addSubview(self.highlightDescriptionView)
-        self.scrollContainerView.addSubview(self.logoDescriptionView)
+        
+        self.scrollContainerView.addSubview(self.sosButton)
+        
+        self.scrollContainerView.addSubview(self.arpejLogoActionDescriptionView)
         self.scrollContainerView.addSubview(self.highlightTextSectionView)
         
         self.scrollContainerView.addSubview(self.contactButton)
@@ -457,6 +504,9 @@ extension NeedSupportViewController {
         self.scrollContainerView.addSubview(self.gameInterdictionImageView)
         self.scrollContainerView.addSubview(self.gameInterdictionDescriptionLabel)
         self.scrollContainerView.addSubview(self.gameInterdictionStepsLabel)
+        
+        self.scrollContainerView.addSubview(self.anjButton)
+        
         self.scrollContainerView.addSubview(self.anjLabel)
         self.scrollContainerView.addSubview(self.anjImageView)
 
@@ -510,20 +560,26 @@ extension NeedSupportViewController {
             self.mainTitleLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
             self.mainTitleLabel.topAnchor.constraint(equalTo: self.mainDescriptionLabel.bottomAnchor, constant: 20),
 
-            self.logoDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
-            self.logoDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.logoDescriptionView.topAnchor.constraint(equalTo: self.mainTitleLabel.bottomAnchor, constant: 20),
+            self.arpejLogoActionDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
+            self.arpejLogoActionDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
+            self.arpejLogoActionDescriptionView.topAnchor.constraint(equalTo: self.mainTitleLabel.bottomAnchor, constant: 20),
 
             self.highlightDescriptionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.highlightDescriptionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.highlightDescriptionView.topAnchor.constraint(equalTo: self.logoDescriptionView.bottomAnchor),
+            self.highlightDescriptionView.topAnchor.constraint(equalTo: self.arpejLogoActionDescriptionView.bottomAnchor),
+            
+            self.sosButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.sosButton.topAnchor.constraint(equalTo: self.highlightDescriptionView.bottomAnchor, constant: 10),
+            self.sosButton.widthAnchor.constraint(equalToConstant: 150),
+            self.sosButton.heightAnchor.constraint(equalToConstant: 100),
 
             self.highlightTextSectionView.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor),
             self.highlightTextSectionView.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor),
-            self.highlightTextSectionView.topAnchor.constraint(equalTo: self.highlightDescriptionView.bottomAnchor),
+            self.highlightTextSectionView.topAnchor.constraint(equalTo: self.sosButton.bottomAnchor),
 
             self.contactButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
             self.contactButton.topAnchor.constraint(equalTo: self.highlightTextSectionView.bottomAnchor, constant: 10),
+            self.contactButton.heightAnchor.constraint(equalToConstant: 50),
 
             self.contactMottoLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.contactMottoLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
@@ -564,10 +620,14 @@ extension NeedSupportViewController {
             self.gameInterdictionStepsLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.gameInterdictionStepsLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
             self.gameInterdictionStepsLabel.topAnchor.constraint(equalTo: self.gameInterdictionDescriptionLabel.bottomAnchor, constant: 30),
+            
+            self.anjButton.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
+            self.anjButton.topAnchor.constraint(equalTo: self.gameInterdictionStepsLabel.bottomAnchor, constant: 10),
+            self.anjButton.heightAnchor.constraint(equalToConstant: 50),
 
             self.anjLabel.leadingAnchor.constraint(equalTo: self.scrollContainerView.leadingAnchor, constant: 20),
             self.anjLabel.trailingAnchor.constraint(equalTo: self.scrollContainerView.trailingAnchor, constant: -20),
-            self.anjLabel.topAnchor.constraint(equalTo: self.gameInterdictionStepsLabel.bottomAnchor, constant: 20),
+            self.anjLabel.topAnchor.constraint(equalTo: self.anjButton.bottomAnchor, constant: 20),
 
             self.anjImageView.centerXAnchor.constraint(equalTo: self.scrollContainerView.centerXAnchor),
             self.anjImageView.topAnchor.constraint(equalTo: self.anjLabel.bottomAnchor, constant: 20),

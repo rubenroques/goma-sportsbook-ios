@@ -203,16 +203,21 @@ extension ServiceProviderModelMapper {
     static func betPlacedDetailsArray(fromPlacedBetsResponse placedBetsResponse: PlacedBetsResponse) -> [BetPlacedDetails] {
         let betPlacedDetailsArray: [BetPlacedDetails] = placedBetsResponse.bets.map { (placedBetEntry: PlacedBetEntry) -> BetPlacedDetails in
             let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
+            let mappedSelections = placedBetEntry.betLegs.map( {
+                return self.betslipPlacedEntry(fromPlacedBetLeg: $0)
+            })
             let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,
                                                    betSucceed: true,
                                                    totalPriceValue: totalPriceValue,
-                                                   maxWinning: placedBetEntry.potentialReturn)
+                                                   amount: placedBetEntry.totalStake,
+                                                   maxWinning: placedBetEntry.potentialReturn,
+                                                   selections: mappedSelections)
             return BetPlacedDetails(response: response)
         }
         return betPlacedDetailsArray
     }
     
-    static func betlipPlacedEntry(fromPlacedBetLeg placedBetleg: ServicesProvider.PlacedBetLeg) -> BetslipPlaceEntry {
+    static func betslipPlacedEntry(fromPlacedBetLeg placedBetleg: ServicesProvider.PlacedBetLeg) -> BetslipPlaceEntry {
         
         return BetslipPlaceEntry(id: placedBetleg.identifier, outcomeId: nil, eventId: nil, priceValue: nil)
     }

@@ -213,7 +213,7 @@ class MarketGroupDetailsViewModel {
                 }
                 
                 if mappedBettingTickets.count == 3 {
-                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
+                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets, hasMatchHeader: false)
                     
                     let betbuilderLineCellViewModel = BetbuilderLineCellViewModel(betBuilderoptions: [betbuilderCellViewModel])
                     
@@ -260,7 +260,7 @@ class MarketGroupDetailsViewModel {
                 }
                 
                 if mappedBettingTickets.count == 3 {
-                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets)
+                    let betbuilderCellViewModel = BetbuilderSelectionCellViewModel(betSelections: mappedBettingTickets, hasMatchHeader: false)
                     
                     betbuilderSelectionCellViewModels.append(betbuilderCellViewModel)
                 }

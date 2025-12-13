@@ -233,7 +233,7 @@ class SharedTicketCardView: UIView {
            let wheelAwardedTier,
            let maxWinnings = betHistoryEntry.maxWinning {
             
-            let winValue = (maxWinnings * wheelAwardedTier.boostMultiplier) > 500 ? 500 : maxWinnings * wheelAwardedTier.boostMultiplier
+            let winValue = (maxWinnings * wheelAwardedTier.boostMultiplier) > 200 ? 200 : maxWinnings * wheelAwardedTier.boostMultiplier
 
             let winValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: winValue))
             

@@ -59,4 +59,16 @@ extension String {
         return removingConsecutiveDashes
     }
     
+    /// Converts a string representation of a currency value to a Double.
+    /// Handles formatting inconsistencies like thousand separators (commas) and whitespace.
+    /// Returns 0.0 if the conversion fails.
+    func toDouble() -> Double {
+        // Remove common formatting characters that interfere with Double conversion
+        let cleanedString = self
+            .replacingOccurrences(of: ",", with: "")  // Remove thousand separators
+            .replacingOccurrences(of: " ", with: "")   // Remove spaces
+            .trimmingCharacters(in: .whitespaces)      // Remove leading/trailing whitespace
+        
+        return Double(cleanedString) ?? 0.0
+    }
 }

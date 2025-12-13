@@ -231,10 +231,10 @@ class BetBuilderTransformer {
         // Count tickets that are bettable (not in invalidTicketsIds)
         let countBettableSelections = tickets.filter { !invalidTicketsIds.contains($0.id) }.count
 
-        
         let someSelectionsNotAvailable = tickets.filter { !$0.isAvailable }.count > 1
         
-        let allTicketsFromSameEvent = Set(tickets.map { $0.matchId }).count == 1
+        // BetBuilder now is available in multiple events
+//        let allTicketsFromSameEvent = Set(tickets.map { $0.matchId }).count == 1
         
         let allTicketsFromBetBuilderMarket = tickets.allSatisfy { $0.isFromBetBuilderMarket ?? false }
         
@@ -259,9 +259,6 @@ class BetBuilderTransformer {
         }
         else if someSelectionsNotCompatible {
             return BetBuilderState.MessageKey.warning(key: "mix_match_compatible_selections_warning")
-        }
-        else if !allTicketsFromSameEvent {
-            return BetBuilderState.MessageKey.error(key: "mix_match_selections_different_events_error")
         }
         else if !allTicketsFromBetBuilderMarket {
             return BetBuilderState.MessageKey.error(key: "mix_match_some_selections_not_custom_available")

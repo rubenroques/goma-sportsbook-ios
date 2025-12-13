@@ -130,6 +130,7 @@ extension SportRadarModelMapper {
     static func placedBetsResponse(fromInternalPlacedBetsResponse placedBetsResponse: SportRadarModels.PlacedBetsResponse) -> PlacedBetsResponse {
         let bets = placedBetsResponse.bets.map(Self.placedBetEntry(fromInternalPlacedBetEntry:))
         return PlacedBetsResponse(identifier: placedBetsResponse.identifier,
+                                  detailedCode: placedBetsResponse.detailedResponseCode,
                                   bets: bets,
                                   totalStake: placedBetsResponse.totalStake)
     }

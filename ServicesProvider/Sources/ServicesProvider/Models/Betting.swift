@@ -244,15 +244,18 @@ public struct BetTicketSelection: Codable {
 public struct PlacedBetsResponse: Codable {
 
     public var identifier: String
+    public var detailedCode: String?
     public var bets: [PlacedBetEntry]
     public var requiredConfirmation: Bool
     public var totalStake: Double
 
-    public init(identifier: String, 
+    public init(identifier: String,
+                detailedCode: String?,
                 bets: [PlacedBetEntry],
                 requiredConfirmation: Bool = false,
                 totalStake: Double) {
         self.identifier = identifier
+        self.detailedCode = detailedCode
         self.bets = bets
         self.requiredConfirmation = false
         self.totalStake = totalStake

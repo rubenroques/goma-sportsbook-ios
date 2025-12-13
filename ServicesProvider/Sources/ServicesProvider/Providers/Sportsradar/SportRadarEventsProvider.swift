@@ -1539,7 +1539,7 @@ extension SportRadarEventsProvider {
                 // Support multiple events
                 let publishers = uniqueMarketGroupIds.map { marketGroupId in
                     self.getEventForMarketGroup(withId: marketGroupId)
-                        .map({ event -> Event in
+                        .map({ event -> Event? in
 
                             eventMarketGroupRelations[event.id] = marketGroupId
 
@@ -1551,12 +1551,19 @@ extension SportRadarEventsProvider {
                             event.name = firstMarket?.eventName ?? ""
                             return event
                         })
+                        .catch { error -> AnyPublisher<Event?, Never> in
+                            // Log the error if needed, but continue with other requests
+                            print("Failed to fetch event for market group \(marketGroupId): \(error)")
+                            return Just(nil).eraseToAnyPublisher()
+                        }
                         .eraseToAnyPublisher()
                 }
 
                 // Combine all the publishers into a single one that emits an array of events
                 return Publishers.MergeMany(publishers)
                     .collect()
+                    .map { $0.compactMap { $0 } }
+                    .setFailureType(to: ServiceProviderError.self)
                     // Restore the original order of events
                     .map { events in
 

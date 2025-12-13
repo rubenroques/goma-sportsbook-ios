@@ -1125,22 +1125,17 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
                 
                 let ticketsMatches = bettingTickets.map(\.matchId)
-                let allBetsSameMatch = Set(ticketsMatches).count == 1
+//                let allBetsSameMatch = Set(ticketsMatches).count == 1
 
-                let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
+                let hasValidBettingValue = bettingValue > 0.0 /*&& allBetsSameMatch*/
                 if hasValidBettingValue {
                     self?.refreshBetBuilderExpectedReturn()
                     self?.requestCashbackResult()
                 }
                 else {
-                    if !allBetsSameMatch {
-                        self?.betBuilderWarningView.setDescription(localized("mix_match_selections_different_events_error"))
-                        self?.betBuilderWarningView.alpha = 1.0
-                    }
-                    else {
-                        self?.mixMatchWinningsValueLabel.text = localized("no_value")
-                        self?.secondaryMixMatchWinningsValueLabel.text = localized("no_value")
-                    }
+
+                    self?.mixMatchWinningsValueLabel.text = localized("no_value")
+                    self?.secondaryMixMatchWinningsValueLabel.text = localized("no_value")
                 }
 
             })
@@ -1154,8 +1149,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingValue, listTypePublisher, bettingTickets in
                 let ticketsMatches = bettingTickets.map(\.matchId)
-                let allBetsSameMatch = Set(ticketsMatches).count == 1
-                let hasValidBettingValue = bettingValue > 0.0 && allBetsSameMatch
+                
+                let hasValidBettingValue = bettingValue > 0.0
                 
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
@@ -2859,7 +2854,8 @@ extension PreSubmissionBetslipViewController {
     }
 
     func confirmBoostedBet(betDetails: PlacedBetsResponse) {
-        Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier)
+        
+        Env.servicesProvider.confirmBoostedBet(identifier: betDetails.identifier, detailedCode: betDetails.detailedCode)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 switch completion {
@@ -2896,7 +2892,8 @@ extension PreSubmissionBetslipViewController {
             .sink { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+//                    self?.showErrorView(errorMessage: localized("error_placing_bet"))
+                    ()
                 default: ()
                 }
             } receiveValue: { [weak self] rejectedBetSucceeded in

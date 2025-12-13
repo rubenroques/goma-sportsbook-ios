@@ -768,24 +768,25 @@ class BetSubmissionSuccessViewController: UIViewController {
                 .flatMap { attempt -> AnyPublisher<BetWheelInfo, Never> in
                     print("Attempt #\(attempt) for \(gameTransId)")
                     
+                    if attempt > 30 {
+                        return Just(BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)).eraseToAnyPublisher()
+                    }
+                    
                     return Env.servicesProvider.getWheelEligibility(gameTransId: gameTransId)
                         .map { wheelEligibility -> BetWheelInfo in
-                            if let winBoost = wheelEligibility.winBoosts.first {
-                                switch winBoost.status {
-                                case "ELIGIBLE":
-                                    print("Found eligible boost for \(gameTransId)")
-                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .eligible, winBoostId: wheelEligibility.winBoosts.first?.winBoostId)
-                                    
-                                case "NOT_ELIGIBLE":
-                                    print("Bet is not eligible for \(gameTransId)")
-                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)
-                                case "TIMED_OUT":
-                                    print("Bet timed out for \(gameTransId)")
-                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil)
-                                default:
-                                    return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
-                                }
+                            
+                            // States: ELIGIBLE, NOT_ELIGIBLE, TIMED_OUT
+                            
+                            let eligibleBoost = wheelEligibility.winBoosts.first { $0.status == "ELIGIBLE" }
+
+                            if let eligibleBoost = eligibleBoost {
+                                print("Found eligible boost for \(gameTransId)")
+                                return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .eligible, winBoostId: eligibleBoost.winBoostId)
                             }
+                            else if !wheelEligibility.winBoosts.isEmpty {
+                                return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
+                            }
+                            
                             return BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .pending, winBoostId: nil)
                         }
                         .catch { error -> AnyPublisher<BetWheelInfo, Never> in
@@ -796,9 +797,9 @@ class BetSubmissionSuccessViewController: UIViewController {
                 }
                 .timeout(.seconds(30), scheduler: DispatchQueue.main) // Total timeout for all attempts
                 .handleEvents(receiveOutput: { result in
-                    // Only continue retrying if we haven't found an eligible or not_eligible status
+                    // Only continue retrying if we haven't found an eligible status
                     if result.wheelBetStatus == .pending {
-                        // Schedule next attempt after 3 seconds if no definitive status found
+                        // Schedule next attempt after 1 second if no definitive status found
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             attempt += 1
                             retrySubject.send(attempt)
@@ -806,7 +807,7 @@ class BetSubmissionSuccessViewController: UIViewController {
                     }
                 })
                 .first(where: { result in
-                    // Stop if we found an eligible boost or if the bet is not eligible
+                    // Stop if we found an eligible boost
                     return result.wheelBetStatus != .pending
                 })
                 .replaceError(with: BetWheelInfo(betId: betId, gameTranId: gameTransId, wheelBetStatus: .notEligible, winBoostId: nil))

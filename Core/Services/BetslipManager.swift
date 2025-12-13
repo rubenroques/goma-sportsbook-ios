@@ -418,7 +418,7 @@ extension BetslipManager {
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
 
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
-                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                        ServiceProviderModelMapper.betslipPlacedEntry(fromPlacedBetLeg: $0)
                     })
 
                     var betType = localized("single")
@@ -509,7 +509,7 @@ extension BetslipManager {
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
 
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
-                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                        ServiceProviderModelMapper.betslipPlacedEntry(fromPlacedBetLeg: $0)
                     })
 
                     var betType = "Single"
@@ -610,7 +610,7 @@ extension BetslipManager {
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
 
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
-                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                        ServiceProviderModelMapper.betslipPlacedEntry(fromPlacedBetLeg: $0)
                     })
 
                     var betType = "Multiple"
@@ -702,7 +702,7 @@ extension BetslipManager {
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
 
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
-                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                        ServiceProviderModelMapper.betslipPlacedEntry(fromPlacedBetLeg: $0)
                     })
 
                     var betType = "System"
@@ -1165,7 +1165,7 @@ extension BetslipManager {
                     let totalPriceValue = placedBetEntry.betLegs.map(\.odd).reduce(1.0, *)
 
                     let betslipPlaceEntries = placedBetEntry.betLegs.map( {
-                        ServiceProviderModelMapper.betlipPlacedEntry(fromPlacedBetLeg: $0)
+                        ServiceProviderModelMapper.betslipPlacedEntry(fromPlacedBetLeg: $0)
                     })
 
                     let response = BetslipPlaceBetResponse(betId: placedBetEntry.identifier,

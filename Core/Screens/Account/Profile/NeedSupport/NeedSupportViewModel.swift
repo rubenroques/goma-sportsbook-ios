@@ -12,8 +12,10 @@ class NeedSupportViewModel {
     
     // MARK: - Properties
     var aspectRatio: CGFloat = 1.0
-    var contactButtonUrl: String = "https://support.betsson.fr/hc/fr"
-    var anjImageViewUrl: String = "https://anj.fr/"
+    var contactButtonUrl: String = "https://support.betsson.fr/hc/fr/requests/new"
+    var anjImageViewUrl: String = "https://anj.fr/foire-aux-questions/addiction-au-jeu"
+    var sosButtonUrl: String = "https://www.sosjoueurs.org/nos-outils/test-le-jeu-et-vous"
+    var anjButtonUrl: String = "https://anj.fr/ts/demande-interdiction"
     
     // Highlight Description ViewModel
     lazy var highlightDescriptionViewModel: HighlightDescriptionViewModelProtocol = {
@@ -27,13 +29,11 @@ class NeedSupportViewModel {
     }()
     
     // Logo Description ViewModel
-    lazy var logoDescriptionViewModel: LogoDescriptionViewModelProtocol = {
-        return LogoDescriptionViewModel(
+    lazy var arpejLogoActionDescriptionViewModel: LogoActionDescriptionViewModelProtocol = {
+        return LogoActionDescriptionViewModel(
             logoImageName: "arpej_logo",
-            titleText: localized("need_support_page_description_2"),
-            titleFont: AppFont.with(type: .semibold, size: 16),
-            descriptionText: localized("need_support_page_description_2_part_2"),
-            descriptionFont: AppFont.with(type: .semibold, size: 16)
+            descriptionText: localized("need_support_page_description_2"),
+            actionUrl: "https://arpej.eu/self/"
         )
     }()
     
@@ -66,7 +66,7 @@ class NeedSupportViewModel {
         return LogoActionDescriptionViewModel(
             logoImageName: "player_info_logo",
             descriptionText: localized("need_support_page_description_5_joueurs"),
-            actionUrl: "https://www.joueurs-info-service.fr/"
+            actionUrl: "https://www.joueurs-info-service.fr/Tout-savoir-sur-le-jeu/Se-faire-aider/L-aide-specialisee"
         )
     }()
     
@@ -74,7 +74,7 @@ class NeedSupportViewModel {
         return LogoActionDescriptionViewModel(
             logoImageName: "gamban_logo",
             descriptionText: localized("need_support_page_description_5_gamban"),
-            actionUrl: nil
+            actionUrl: "https://gamban.com/fr/"
         )
     }()
     

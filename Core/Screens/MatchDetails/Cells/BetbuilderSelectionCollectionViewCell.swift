@@ -17,13 +17,17 @@ class BetbuilderSelectionCellViewModel {
     
     var isBetbuilderSelectedSubject: CurrentValueSubject<Bool, Never> = .init(false)
     var fetchedBetbuilderValuePublisher: CurrentValueSubject<BetbuilderFetchedState, Never> = .init(.notFetched)
+    
+    var hasMatchHeader: Bool = false
         
     // MARK: Private properties
     private var oddUpdatesPublisher: [String: AnyCancellable] = [:]
     private var cancellables = Set<AnyCancellable>()
     
-    init(betSelections: [BettingTicket]) {
+    init(betSelections: [BettingTicket], hasMatchHeader: Bool) {
         self.betSelections = betSelections
+        
+        self.hasMatchHeader = hasMatchHeader
         
         self.subscribeOutcomes()
         
@@ -126,6 +130,11 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     private lazy var gradientContainerView: GradientView = Self.createGradientContainerView()
     private lazy var containerView: UIView = Self.createContainerView()
     
+    private lazy var headerInfoView: UIView = Self.createHeaderInfoView()
+    private lazy var matchNameLabel: UILabel = Self.createMatchNameLabel()
+    private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var timeLabel: UILabel = Self.createTimeLabel()
+    
     private lazy var firstSelectionTitleLabel: UILabel = Self.createFirstSelectionTitleLabel()
     private lazy var firstSelectionSubtitleLabel: UILabel = Self.createFirstSelectionSubtitleLabel()
     
@@ -146,6 +155,10 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     private lazy var secondStepLinkView: UIView = Self.createSecondStepLinkView()
 
     private lazy var actionButton: UIButton = Self.createActionButton()
+    
+    // Constraints
+    private lazy var firstSelectionTitleTopToContainerConstraint: NSLayoutConstraint = Self.createFirstSelectionTitleTopToContainerConstraint()
+    private lazy var firstSelectionTitleTopToHeaderConstraint: NSLayoutConstraint = Self.createFirstSelectionTitleTopToHeaderConstraint()
 
     private var stepViewSize: CGFloat = 10.0
     
@@ -225,6 +238,14 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
         
         self.containerView.backgroundColor = UIColor.App.backgroundCards
         
+        self.headerInfoView.backgroundColor = .clear
+        
+        self.matchNameLabel.textColor = UIColor.App.textPrimary
+        
+        self.dateLabel.textColor = UIColor.App.textSecondary
+        
+        self.timeLabel.textColor = UIColor.App.textPrimary
+        
         self.firstSelectionTitleLabel.textColor = UIColor.App.textPrimary
         
         self.firstSelectionSubtitleLabel.textColor = UIColor.App.textSecondary
@@ -266,6 +287,17 @@ class BetbuilderSelectionCollectionViewCell: UICollectionViewCell {
     func configure(viewModel: BetbuilderSelectionCellViewModel) {
         
         self.viewModel = viewModel
+        
+        // Show/hide header and update constraints based on hasMatchHeader
+        self.headerInfoView.isHidden = !viewModel.hasMatchHeader
+
+        if viewModel.hasMatchHeader {
+            self.firstSelectionTitleTopToContainerConstraint.isActive = false
+            self.firstSelectionTitleTopToHeaderConstraint.isActive = true
+        } else {
+            self.firstSelectionTitleTopToHeaderConstraint.isActive = false
+            self.firstSelectionTitleTopToContainerConstraint.isActive = true
+        }
         
         if let firstSelection = viewModel.betSelections[safe: 0] {
             
@@ -357,6 +389,45 @@ extension BetbuilderSelectionCollectionViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+    private static func createHeaderInfoView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+    
+    private static func createMatchNameLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Match Name"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
+    
+    private static func createDateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "01.01.2025"
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }
+    
+    private static func createTimeLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "00:00"
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
     }
     
     private static func createFirstSelectionTitleLabel() -> UILabel {
@@ -469,11 +540,28 @@ extension BetbuilderSelectionCollectionViewCell {
         return button
     }
     
+    // Constraints
+    private static func createFirstSelectionTitleTopToContainerConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createFirstSelectionTitleTopToHeaderConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+    
     private func setupSubviews() {
         
         self.contentView.addSubview(self.gradientContainerView)
         
         self.gradientContainerView.addSubview(self.containerView)
+        
+        self.containerView.addSubview(self.headerInfoView)
+        
+        self.headerInfoView.addSubview(self.matchNameLabel)
+        self.headerInfoView.addSubview(self.dateLabel)
+        self.headerInfoView.addSubview(self.timeLabel)
         
         self.containerView.addSubview(self.firstSelectionTitleLabel)
         self.containerView.addSubview(self.firstSelectionSubtitleLabel)
@@ -493,7 +581,6 @@ extension BetbuilderSelectionCollectionViewCell {
         self.containerView.addSubview(self.secondStepView)
         self.containerView.addSubview(self.secondStepLinkView)
         self.containerView.addSubview(self.thirdStepView)
-
         
         self.containerView.addSubview(self.actionButton)
         
@@ -513,7 +600,22 @@ extension BetbuilderSelectionCollectionViewCell {
             self.containerView.topAnchor.constraint(equalTo: self.gradientContainerView.topAnchor, constant: 1),
             self.containerView.bottomAnchor.constraint(equalTo: self.gradientContainerView.bottomAnchor, constant: -1),
             
-            self.firstSelectionTitleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
+            self.headerInfoView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.headerInfoView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.headerInfoView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            
+            self.matchNameLabel.leadingAnchor.constraint(equalTo: self.headerInfoView.leadingAnchor, constant: 12),
+            self.matchNameLabel.topAnchor.constraint(equalTo: self.headerInfoView.topAnchor, constant: 8),
+            
+            self.dateLabel.trailingAnchor.constraint(equalTo: self.headerInfoView.trailingAnchor, constant: -12),
+            self.dateLabel.topAnchor.constraint(equalTo: self.headerInfoView.topAnchor, constant: 8),
+            self.dateLabel.leadingAnchor.constraint(greaterThanOrEqualTo: self.matchNameLabel.trailingAnchor, constant: 4),
+            
+            self.timeLabel.trailingAnchor.constraint(equalTo: self.headerInfoView.trailingAnchor, constant: -12),
+            self.timeLabel.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 2),
+            self.timeLabel.bottomAnchor.constraint(equalTo: self.headerInfoView.bottomAnchor, constant: -4),
+            
+//            self.firstSelectionTitleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
             self.firstSelectionTitleLabel.leadingAnchor.constraint(equalTo: self.firstStepView.trailingAnchor, constant: 10),
             self.firstSelectionTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -8),
             
@@ -578,6 +680,25 @@ extension BetbuilderSelectionCollectionViewCell {
             self.secondStepLinkView.bottomAnchor.constraint(equalTo: self.thirdStepView.topAnchor),
             self.secondStepLinkView.centerXAnchor.constraint(equalTo: self.secondStepView.centerXAnchor)
         ])
+        
+        // Setup conditional constraints for firstSelectionTitleLabel
+        self.firstSelectionTitleTopToContainerConstraint = NSLayoutConstraint(item: self.firstSelectionTitleLabel,
+                                                                                attribute: .top,
+                                                                                relatedBy: .equal,
+                                                                                toItem: self.containerView,
+                                                                                attribute: .top,
+                                                                                multiplier: 1,
+                                                                                constant: 8)
+        self.firstSelectionTitleTopToContainerConstraint.isActive = true
+
+        self.firstSelectionTitleTopToHeaderConstraint = NSLayoutConstraint(item: self.firstSelectionTitleLabel,
+                                                                             attribute: .top,
+                                                                             relatedBy: .equal,
+                                                                             toItem: self.headerInfoView,
+                                                                             attribute: .bottom,
+                                                                             multiplier: 1,
+                                                                             constant: 0)
+        self.firstSelectionTitleTopToHeaderConstraint.isActive = false
         
     }
 }

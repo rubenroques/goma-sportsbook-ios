@@ -458,8 +458,13 @@ class ClientManagedHomeViewTemplateDataSource {
             .receive(on: DispatchQueue.main)
             .map(ServiceProviderModelMapper.matches(fromEvents:))
             .compactMap({ $0 })
-            .sink(receiveCompletion: { _ in
-
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let failure):
+                    print("HERO CARD FAILURE: \(failure)")
+                }
             }, receiveValue: { [weak self] heroMatches in
                 self?.heroMatches = heroMatches
                 self?.refreshPublisher.send()
