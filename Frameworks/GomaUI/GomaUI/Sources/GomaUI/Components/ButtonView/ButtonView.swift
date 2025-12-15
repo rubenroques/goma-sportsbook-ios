@@ -10,6 +10,7 @@ final public class ButtonView: UIView {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = 8
         btn.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 16)
+        btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return btn
     }()
     
