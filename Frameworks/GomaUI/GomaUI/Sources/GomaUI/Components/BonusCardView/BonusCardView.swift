@@ -25,6 +25,9 @@ public class BonusCardView: UIView {
     private let viewModel: BonusCardViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
+    // Constraint reference for dynamic updates
+    private var titleLabelTopConstraint: NSLayoutConstraint?
+    
     // MARK: - Lifetime and Cycle
     public init(viewModel: BonusCardViewModelProtocol) {
         self.viewModel = viewModel
@@ -75,19 +78,47 @@ public class BonusCardView: UIView {
     
     // MARK: - Functions
     private func configure(with displayState: BonusCardDisplayState) {
+        // Check if imageURL exists and is not empty
+        let hasImageURL = !displayState.imageURL.isEmpty && URL(string: displayState.imageURL) != nil
+        
         // Configure image
-        if let imageURL = URL(string: displayState.imageURL) {
+        if hasImageURL, let imageURL = URL(string: displayState.imageURL) {
             self.imageView.kf.setImage(with: imageURL)
+            self.imageView.isHidden = false
+        } else {
+            self.imageView.isHidden = true
         }
         
         // Configure tag
         self.tagLabel.text = displayState.tag
         self.tagView.isHidden = displayState.tag == nil
         
+        // Update constraints based on imageURL presence
+        self.updateConstraints(hasImageURL: hasImageURL)
+        
         // Configure content
         self.titleLabel.text = displayState.title
         self.descriptionLabel.text = displayState.description
+    }
+    
+    private func updateConstraints(hasImageURL: Bool) {
+        // Update titleLabel top constraint
+        if let titleLabelTopConstraint = self.titleLabelTopConstraint {
+            titleLabelTopConstraint.isActive = false
+        }
         
+        if hasImageURL {
+            // Title label below imageView
+            self.titleLabelTopConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 16)
+        } else {
+            // Title label below tagLabel (or containerView top if no tag)
+            if let tag = self.tagLabel.text, !tag.isEmpty, !self.tagView.isHidden {
+                self.titleLabelTopConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.tagLabel.bottomAnchor, constant: 16)
+            } else {
+                self.titleLabelTopConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 16)
+            }
+        }
+        self.titleLabelTopConstraint?.isActive = true
     }
 }
 
@@ -157,7 +188,7 @@ extension BonusCardView {
         self.addSubview(self.containerView)
         
         self.containerView.addSubview(self.imageView)
-        self.imageView.addSubview(self.tagView)
+        self.containerView.addSubview(self.tagView)
         self.tagView.addSubview(self.tagLabel)
         
         self.containerView.addSubview(self.titleLabel)
@@ -194,9 +225,9 @@ extension BonusCardView {
             self.imageView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
             self.imageView.heightAnchor.constraint(equalToConstant: 131),
             
-            // Tag view
-            self.tagView.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor),
-            self.tagView.topAnchor.constraint(equalTo: self.imageView.topAnchor, constant: 15),
+            // Tag view - positioned relative to containerView with same positioning
+            self.tagView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.tagView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 15),
             self.tagView.heightAnchor.constraint(equalToConstant: 20),
             
             // Tag label
@@ -205,10 +236,9 @@ extension BonusCardView {
             self.tagLabel.topAnchor.constraint(equalTo: self.tagView.topAnchor),
             self.tagLabel.bottomAnchor.constraint(equalTo: self.tagView.bottomAnchor),
             
-            // Title label
+            // Title label - constraint will be set dynamically in updateConstraints
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
-            self.titleLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 16),
             
             // Description label
             self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
@@ -226,6 +256,10 @@ extension BonusCardView {
             self.termsButton.topAnchor.constraint(equalTo: self.ctaButton.bottomAnchor, constant: 8),
             self.termsButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
         ])
+        
+        // Set initial titleLabel constraint (will be updated in configure)
+        self.titleLabelTopConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 16)
+        self.titleLabelTopConstraint?.isActive = true
     }
 }
 
@@ -290,6 +324,24 @@ extension BonusCardView {
     PreviewUIViewController {
         let vc = UIViewController()
         let cardView = BonusCardView(viewModel: MockBonusCardViewModel.noTagMock)
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(cardView)
+        
+        NSLayoutConstraint.activate([
+            cardView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            cardView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            cardView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("No Image URL") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let cardView = BonusCardView(viewModel: MockBonusCardViewModel.noImageURLMock)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(cardView)
         

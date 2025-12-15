@@ -214,13 +214,13 @@ class ResponsibleGamingViewModel {
             isEnabled: true
         ))
         
-        informationTextSectionViewModels = (1...15).map { index in
-            let isHighlightPrimary = (12...15).contains(index)
+        informationTextSectionViewModels = (1...3).map { index in
+            let isHighlightPrimary = index == 3
             let titleColor = isHighlightPrimary ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.textPrimary
             let descriptionColor = isHighlightPrimary ? StyleProvider.Color.highlightPrimary : StyleProvider.Color.textSecondary
             let content = TextSectionContent(
-                title: localized("rg_information_title_\(index)"),
-                description: localized("rg_information_description_\(index)"),
+                title: localized("responsible_gaming_information_\(index)_title"),
+                description: localized("responsible_gaming_information_\(index)_content"),
                 titleTextColor: titleColor,
                 descriptionTextColor: descriptionColor,
                 titleFont: StyleProvider.fontWith(type: .semibold, size: 14),
