@@ -46,7 +46,7 @@ extension SimpleNavigationBarStyle {
     /// Uses standard theme colors that adapt to light/dark mode.
     public static func defaultStyle() -> SimpleNavigationBarStyle {
         return SimpleNavigationBarStyle(
-            backgroundColor: StyleProvider.Color.backgroundPrimary,
+            backgroundColor: StyleProvider.Color.backgroundTertiary,
             textColor: StyleProvider.Color.textPrimary,
             iconColor: StyleProvider.Color.iconPrimary,
             separatorColor: StyleProvider.Color.separatorLine

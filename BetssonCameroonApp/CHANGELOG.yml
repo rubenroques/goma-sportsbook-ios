@@ -8,7 +8,7 @@ releases:
     build: 3701
     date: "2025-12-XX"
     notes:
-      - "<notes here>"
+      - "fix(casino): SPOR-5738 - Fixed background color on navbar; Changed position of the category title."
 
   - version: "0.3.6" # released
     build: 3601

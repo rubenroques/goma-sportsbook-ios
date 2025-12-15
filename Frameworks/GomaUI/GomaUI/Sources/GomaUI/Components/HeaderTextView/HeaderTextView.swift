@@ -113,14 +113,6 @@ import SwiftUI
         let vc = UIViewController()
         vc.view.backgroundColor = .backgroundTestColor
 
-        // Title label
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "HeaderTextView"
-        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
-        titleLabel.textColor = StyleProvider.Color.textPrimary
-        titleLabel.textAlignment = .center
-
         // Vertical stack with all states
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -138,14 +130,10 @@ import SwiftUI
         stackView.addArrangedSubview(defaultView)
 
         // Add to view hierarchy
-        vc.view.addSubview(titleLabel)
         vc.view.addSubview(stackView)
 
         // Constraints
         NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -20),
-
             stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
