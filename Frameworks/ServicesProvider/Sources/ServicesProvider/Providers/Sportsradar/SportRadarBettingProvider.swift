@@ -104,10 +104,6 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-    func getCashedOutBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
     func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError> {
         let endpoint = BettingAPIClient.getAllowedBetTypes(betTicketSelections: betTicketSelections)
         let publisher: AnyPublisher<[SportRadarModels.BetType], ServiceProviderError> = self.connector.request(endpoint)
@@ -133,22 +129,17 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     }
 
     func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, currency: String?, username: String?, userId: String?, oddsValidationType: String?, ubsWalletId: String?, betBuilderOdds: Double?) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
-        // Note: ubsWalletId is not supported by SportRadar provider (ignored)
         let endpoint = BettingAPIClient.placeBets(betTickets: betTickets, useFreebetBalance: useFreebetBalance)
         let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
             .flatMap { (internalPlacedBetsResponse: SportRadarModels.PlacedBetsResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
 
-//                if internalPlacedBetsResponse.responseCode == "1" ||
-//                    internalPlacedBetsResponse.responseCode == "2" ||
-//                    internalPlacedBetsResponse.responseCode == "3"
-
                 if internalPlacedBetsResponse.responseCode == "2" {
                     let placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     return Just( placedBetsResponse ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
                 }
-                else if internalPlacedBetsResponse.responseCode == "1" && internalPlacedBetsResponse.detailedResponseCode == "66" {
+                else if internalPlacedBetsResponse.responseCode == "1" && (internalPlacedBetsResponse.detailedResponseCode == "66" || internalPlacedBetsResponse.detailedResponseCode == "10") {
                     var placedBetsResponse = SportRadarModelMapper.placedBetsResponse(fromInternalPlacedBetsResponse: internalPlacedBetsResponse)
                     placedBetsResponse.requiredConfirmation = true
 
@@ -176,7 +167,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     }
 
     func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        let endpoint = BettingAPIClient.confirmBoostedBet(identifier: identifier)
+        let endpoint = BettingAPIClient.confirmBoostedBet(identifier: identifier, detailedCode: nil)
         let publisher: AnyPublisher<SportRadarModels.ConfirmBetPlaceResponse, ServiceProviderError> = self.connector.request(endpoint)
         return publisher
             .mapError { error in
@@ -275,10 +266,10 @@ class SportRadarBettingProvider: BettingProvider, Connector {
 
         if let oddChangeRunningOrPreMatch = betslipSettings.oddChangeRunningOrPreMatch {
             let endpointPreMatch = BettingAPIClient.updateBetslipSettingsPreMatch(oddChange: oddChangeRunningOrPreMatch)
-            let publisherPreMatch: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointPreMatch)
+            let publisherPreMatch: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointPreMatch)
 
             let endpointRunning = BettingAPIClient.updateBetslipSettingsRunning(oddChange: oddChangeRunningOrPreMatch)
-            let publisherRunning: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointRunning)
+            let publisherRunning: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointRunning)
 
             return Publishers.CombineLatest(publisherPreMatch, publisherRunning)
                 .map({ publisherPreMatchResponse, publisherRunningResponse -> Bool in
@@ -289,7 +280,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
         }
         else if let oddChangeLegacy = betslipSettings.oddChangeLegacy {
             let endpointLegacy = BettingAPIClient.updateBetslipSettings(oddChange: oddChangeLegacy)
-            let publisherLegacy: AnyPublisher<String, ServiceProviderError> = self.connector.request(endpointLegacy)
+            let publisherLegacy: AnyPublisher<Bool, ServiceProviderError> = self.connector.request(endpointLegacy)
             return publisherLegacy
                 .mapError({ error in
                     return error
@@ -388,7 +379,7 @@ class SportRadarBettingProvider: BettingProvider, Connector {
     }
 
     func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
-        let endpoint = BettingAPIClient.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+        let endpoint = BettingAPIClient.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd, useFreebetBalance: false)
         let publisher: AnyPublisher<SportRadarModels.PlacedBetsResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher
@@ -424,31 +415,15 @@ class SportRadarBettingProvider: BettingProvider, Connector {
             .eraseToAnyPublisher()
     }
 
-}
+    // MARK: - Missing Protocol Methods (Not Supported by SportRadar)
 
-extension SportRadarBettingProvider {
-
-    func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+    func getCashedOutBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    // MARK: - NEW Cashout Methods (SSE-based) - Not Supported
+    func calculateUnifiedBettingOptions(betType: BetGroupingType, selections: [BettingOptionsCalculateSelection], stakeAmount: Double?) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 
     func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
@@ -458,14 +433,24 @@ extension SportRadarBettingProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    // MARK: - Unified Betting Options - Not Supported
-
-    func calculateUnifiedBettingOptions(
-        betType: BetGroupingType,
-        selections: [BettingOptionsCalculateSelection],
-        stakeAmount: Double?
-    ) -> AnyPublisher<UnifiedBettingOptions, ServiceProviderError> {
+    func updateTicketOdds(betId: String) -> AnyPublisher<Bet, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    func getTicketQRCode(betId: String) -> AnyPublisher<BetQRCode, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getSocialSharedTicket(shareId: String) -> AnyPublisher<Bet, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func deleteTicket(betId: String) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func updateTicket(betId: String, betTicket: BetTicket) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
 }
+

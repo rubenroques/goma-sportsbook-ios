@@ -11,7 +11,7 @@ import Combine
 class BettingConnector: Connector {
 
     var token: BettingSessionAccessToken?
-
+    
     var connectionStateSubject: CurrentValueSubject<ConnectorState, Never> = .init(.connected)
     var connectionStatePublisher: AnyPublisher<ConnectorState, Never> {
         return connectionStateSubject.eraseToAnyPublisher()
@@ -21,11 +21,11 @@ class BettingConnector: Connector {
 
     private let session: URLSession
     private let decoder: JSONDecoder
-
+    
     init(session: URLSession = URLSession(configuration: URLSessionConfiguration.default), decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
         self.decoder = decoder
-
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss'.0'" // 2003-12-31 00:00:00
         self.decoder.dateDecodingStrategy = .formatted(dateFormatter)
@@ -34,17 +34,17 @@ class BettingConnector: Connector {
     func clearSessionKey() {
         return self.token = nil
     }
-
+    
     func saveSessionKey(_ sessionKey: String) {
         return self.token = BettingSessionAccessToken(hash: sessionKey)
     }
-
+    
     func retrieveSessionKey() -> String? {
         return self.token?.hash
     }
-
+    
     func request<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, ServiceProviderError> {
-
+        
         var additionalHeaders: HTTP.Headers?
         if endpoint.requireSessionKey {
             if let sessionKey = self.retrieveSessionKey() {
@@ -54,7 +54,7 @@ class BettingConnector: Connector {
                 return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
             }
         }
-
+        
         guard
             let request = endpoint.request(aditionalHeaders: additionalHeaders)
         else {
@@ -63,7 +63,7 @@ class BettingConnector: Connector {
         }
 
         // print("Betting-NetworkManager: URL Request: \n", request.cURL(pretty: true), "\n==========================================")
-
+        
         return self.session.dataTaskPublisher(for: request)
             .tryMap { result -> Data in
 
@@ -72,7 +72,7 @@ class BettingConnector: Connector {
                     responseBody = responseBody.replacingOccurrences(of: "\n", with: " ")
                     print("MixMatchDebug: | ", request, " body: ", responseBody , " | response: ", String(data: result.data, encoding: .utf8) ?? "!?" )
                 }
-
+                
                 if (request.url?.absoluteString ?? "").contains("/custom-bet/v1/calculate") {
                     if let httpResponse = result.response as? HTTPURLResponse {
                         if httpResponse.statusCode == 401 || httpResponse.statusCode == 500 || httpResponse.statusCode == 503 {
@@ -110,7 +110,7 @@ class BettingConnector: Connector {
 //                          String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "" ,
 //                          " [[ response ]] ", String(data: data, encoding: .utf8) ?? "!?" )
             })
-
+        
             .decode(type: T.self, decoder: self.decoder)
             .mapError({ error -> ServiceProviderError in
                 if let typedError = error as? ServiceProviderError {
@@ -145,7 +145,7 @@ class BettingConnector: Connector {
             })
             .eraseToAnyPublisher()
     }
-
+        
 }
 
 extension URLRequest {
@@ -153,11 +153,11 @@ extension URLRequest {
         let newLine = pretty ? "\\\n" : ""
         let method = (pretty ? "--request " : "-X ") + "\(self.httpMethod ?? "GET") \(newLine)"
         let url: String = (pretty ? "--url " : "") + "\'\(self.url?.absoluteString ?? "")\' \(newLine)"
-
+        
         var cURL = "curl "
         var header = ""
         var data: String = ""
-
+        
         if let httpHeaders = self.allHTTPHeaderFields, httpHeaders.keys.count > 0 {
             for (key,value) in httpHeaders {
                 header += (pretty ? "--header " : "-H ") + "\'\(key): \(value)\' \(newLine)"

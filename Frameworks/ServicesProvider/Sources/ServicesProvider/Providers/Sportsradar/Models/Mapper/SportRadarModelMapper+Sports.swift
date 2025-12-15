@@ -15,6 +15,13 @@ extension SportRadarModelMapper {
         // Try get the internal sport id by alpha code or name if it fails
         var sportTypeId = ""
 
+        if sportRadarSportType.numericId == "928" {
+            print("motogp")
+        }
+        if sportRadarSportType.alphaId == "928" {
+            print("motogp")
+        }
+        
         if let sportAlphaId = sportRadarSportType.alphaId {
             sportTypeId = SportTypeInfo.init(alphaCode: sportAlphaId)?.id ?? ""
         }
@@ -36,9 +43,7 @@ extension SportRadarModelMapper {
                                   numberEvents: sportRadarSportType.numberEvents,
                                   numberOutrightEvents: sportRadarSportType.numberOutrightEvents,
                                   numberOutrightMarkets: sportRadarSportType.numberOutrightMarkets,
-                                  numberLiveEvents: sportRadarSportType.numberLiveEvents,
-                                  hasMatches: sportRadarSportType.numberEvents > 0,
-                                  hasOutrights: sportRadarSportType.numberOutrightEvents > 0)
+                                  numberLiveEvents: sportRadarSportType.numberLiveEvents)
         return sportType
     }
 
@@ -125,7 +130,8 @@ extension SportRadarModelMapper {
                                                         name: sportCompetitionInfo.name,
                                                         marketGroups: marketGroups,
                                                         numberOutrightEvents: sportCompetitionInfo.numberOutrightEvents,
-                                                        numberOutrightMarkets: sportCompetitionInfo.numberOutrightMarkets)
+                                                        numberOutrightMarkets: sportCompetitionInfo.numberOutrightMarkets,
+                                                        parentId: sportCompetitionInfo.parentId)
 
         return sportCompetitionInfo
     }

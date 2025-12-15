@@ -13,6 +13,7 @@ import ServicesProvider
 import IQKeyboardManagerSwift
 import PhraseSDK
 import FirebaseCore
+import FirebaseAuth
 import GomaPerformanceKit
 import GomaLogger
 

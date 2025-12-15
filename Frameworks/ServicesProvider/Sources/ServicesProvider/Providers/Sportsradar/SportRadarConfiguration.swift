@@ -1,3 +1,9 @@
+//
+//  File.swift
+//
+//
+//  Created by Ruben Roques on 21/11/2022.
+//
 
 import Foundation
 import Extensions
@@ -71,6 +77,13 @@ public struct SportRadarConfiguration {
         switch self.environment {
         case .production: return "https://betssonfrance.zendesk.com"
         default: return "https://betssonfrance.zendesk.com"
+        }
+    }
+
+    public var sumsubHostname: String {
+        switch self.environment {
+        case .production: return "https://api.sumsub.com"
+        default: return "https://api.sumsub.com"
         }
     }
 

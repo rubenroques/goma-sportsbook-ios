@@ -110,6 +110,18 @@ extension SportRadarModelMapper {
     }
 
     static func userWallet(fromBalanceResponse playerInfoResponse: SportRadarModels.BalanceResponse) -> UserWallet {
+        
+        var mappedExternalFreeBetBalances: [ExternalFreeBetBalance]? = nil
+        
+        if let externalFreeBetBalances = playerInfoResponse.externalFreeBetBalances {
+            
+            let mappedFreebets = externalFreeBetBalances.map( {
+                return self.externalFreebetBalance(fromExternalFreeBetBalance: $0)
+            })
+            
+            mappedExternalFreeBetBalances = mappedFreebets
+        }
+        
         return UserWallet(vipStatus: playerInfoResponse.vipStatus,
                            currency: playerInfoResponse.currency,
                            loyaltyPoint: playerInfoResponse.loyaltyPoint,
@@ -132,11 +144,16 @@ extension SportRadarModelMapper {
                            withdrawRestrictionAmountString: playerInfoResponse.withdrawRestrictionAmount,
                            withdrawRestrictionAmount: playerInfoResponse.withdrawRestrictionAmountNumber,
                            totalEscrowString: playerInfoResponse.totalEscrowBalance,
-                           totalEscrow: playerInfoResponse.totalEscrowBalanceNumber)
+                           totalEscrow: playerInfoResponse.totalEscrowBalanceNumber,
+                          externalFreeBetBalances: mappedExternalFreeBetBalances)
+    }
+    
+    static func externalFreebetBalance(fromExternalFreeBetBalance externalFreeBetBalance: SportRadarModels.ExternalFreeBetBalance) -> ExternalFreeBetBalance {
+        
+        return ExternalFreeBetBalance(productCode: externalFreeBetBalance.productCode, balance: externalFreeBetBalance.balance)
     }
 
     static func cashbackBalance(fromCashbackBalance cashbackBalance: SportRadarModels.CashbackBalance) -> CashbackBalance {
-        
         return CashbackBalance(status: cashbackBalance.status,
                                balance: cashbackBalance.balance,
                                message: cashbackBalance.message)
@@ -386,18 +403,16 @@ extension SportRadarModelMapper {
     }
 
     static func responsibleGamingLimitsResponse(fromResponsibleGamingLimitsResponse internalResponsibleGamingLimitsResponse: SportRadarModels.ResponsibleGamingLimitsResponse) -> ResponsibleGamingLimitsResponse {
-        let mappedLimits = internalResponsibleGamingLimitsResponse.limits.map { internalResponsibleGamingLimit -> ResponsibleGamingLimit in
-            ResponsibleGamingLimit(
-                id: internalResponsibleGamingLimit.id,
-                partyId: internalResponsibleGamingLimit.partyId,
-                limitType: internalResponsibleGamingLimit.limitType,
-                periodType: internalResponsibleGamingLimit.periodType,
-                effectiveDate: internalResponsibleGamingLimit.effectiveDate,
-                expiryDate: internalResponsibleGamingLimit.expiryDate,
-                limit: internalResponsibleGamingLimit.limit
-            )
-        }
-        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: mappedLimits)
+
+        let responsibleGamingLimits = internalResponsibleGamingLimitsResponse.limits.map({ responsibleGamingLimit -> ResponsibleGamingLimit in
+
+            let responsibleGamingLimit = Self.responsibleGamingLimit(fromResponsibleGamingLimit: responsibleGamingLimit)
+
+            return responsibleGamingLimit
+
+        })
+
+        return ResponsibleGamingLimitsResponse(status: internalResponsibleGamingLimitsResponse.status, limits: responsibleGamingLimits)
     }
 
     static func responsibleGamingLimit(fromResponsibleGamingLimit internalResponsibleGamingLimit: SportRadarModels.ResponsibleGamingLimit) -> ResponsibleGamingLimit {
@@ -504,6 +519,13 @@ extension SportRadarModelMapper {
         let triggerDate: Date? = OmegaAPIClient.parseOmegaDateString(internalGrantedBonus.triggerDate)
         let expiryDate: Date? = OmegaAPIClient.parseOmegaDateString(internalGrantedBonus.expiryDate)
         
+        var mappedFreeBetBonus: FreeBetBonus? = nil
+        
+        if let freeBetBonus = internalGrantedBonus.freeBetBonus {
+            
+            mappedFreeBetBonus = self.freeBetBonus(fromInternalFreeBetBonus: freeBetBonus)
+        }
+        
         return GrantedBonus(id: internalGrantedBonus.id,
                             name: internalGrantedBonus.name,
                             status: internalGrantedBonus.status,
@@ -511,7 +533,13 @@ extension SportRadarModelMapper {
                             triggerDate: triggerDate,
                             expiryDate: expiryDate,
                             wagerRequirement: internalGrantedBonus.wagerRequirement,
-                            amountWagered: internalGrantedBonus.amountWagered)
+                            amountWagered: internalGrantedBonus.amountWagered,
+                            freeBetBonus: mappedFreeBetBonus)
+    }
+    
+    static func freeBetBonus(fromInternalFreeBetBonus freeBetBonus: SportRadarModels.FreeBetBonus) -> FreeBetBonus {
+        
+        return FreeBetBonus(productCode: freeBetBonus.productCode, amount: freeBetBonus.amount)
     }
 
     static func availableBonusesResponse(fromAvailableBonusesResponse internalAvailableBonusesResponse: SportRadarModels.AvailableBonusResponse) -> AvailableBonusResponse {
@@ -530,6 +558,16 @@ extension SportRadarModelMapper {
 
         let triggerDate: Date? = OmegaAPIClient.parseOmegaDateString(internalAvailableBonus.triggerDate)
         let expiryDate: Date? = OmegaAPIClient.parseOmegaDateString(internalAvailableBonus.expiryDate)
+        
+        var mappedAdditionalAwards: [AdditionalAward]? = nil
+        
+        if let additionalAwards = internalAvailableBonus.additionalAwards {
+            
+            mappedAdditionalAwards = additionalAwards.map({
+                
+                return self.additionalAward(fromInternalAdditionalAward: $0)
+            })
+        }
 
         return AvailableBonus(id: internalAvailableBonus.id,
                               bonusPlanId: internalAvailableBonus.bonusPlanId,
@@ -540,7 +578,13 @@ extension SportRadarModelMapper {
                               triggerDate: triggerDate,
                               expiryDate: expiryDate,
                               wagerRequirement: internalAvailableBonus.wagerRequirement,
-                              imageUrl: internalAvailableBonus.imageUrl)
+                              imageUrl: internalAvailableBonus.imageUrl,
+                              additionalAwards: mappedAdditionalAwards)
+    }
+    
+    static func additionalAward(fromInternalAdditionalAward additionalAward: SportRadarModels.AdditionalAward) -> AdditionalAward {
+        
+        return AdditionalAward(type: additionalAward.type, product: additionalAward.product, amount: additionalAward.amount)
     }
 
     static func redeemBonusesResponse(fromRedeemBonusesResponse internalRedeemBonusesResponse: SportRadarModels.RedeemBonusResponse) -> RedeemBonusResponse {

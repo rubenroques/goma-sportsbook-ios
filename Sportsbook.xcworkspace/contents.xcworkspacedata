@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:BetssonFranceApp/BetssonFranceApp.xcodeproj">
+      location = "group:BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj">
    </FileRef>
    <FileRef
       location = "container:BetssonCameroonApp/BetssonCameroonApp.xcodeproj">

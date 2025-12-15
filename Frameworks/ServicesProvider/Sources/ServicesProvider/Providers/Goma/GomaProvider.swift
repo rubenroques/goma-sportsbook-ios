@@ -209,7 +209,7 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
         let endpoint: GomaAPISchema = GomaAPISchema.getUserWallet
         let publisher: AnyPublisher<GomaModels.UserWallet, ServiceProviderError> = self.connector.request(endpoint)
         return publisher.map({ userWallet in
-            let wallet = CashbackBalance(status: "", balance: "\(userWallet.cashbackBalance)", message: nil)
+            let wallet = CashbackBalance(status: "", balance: userWallet.cashbackBalance, message: nil)
             return wallet
         }).eraseToAnyPublisher()
     }
@@ -383,9 +383,19 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
     func getReferees() -> AnyPublisher<[Referee], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    //
-    //
-    //
+
+    func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
 
         let endpoint: GomaAPISchema = GomaAPISchema.getFollowees
@@ -1162,7 +1172,8 @@ extension GomaProvider: EventsProvider {
                                                             name: competition.name,
                                                             marketGroups: [group],
                                                             numberOutrightEvents: "0",
-                                                            numberOutrightMarkets: "0")
+                                                            numberOutrightMarkets: "0",
+                                                            parentId: nil)
             return sportCompetitionInfo
         }).eraseToAnyPublisher()
 
@@ -1660,18 +1671,75 @@ extension GomaProvider: BettingProvider {
 
 extension GomaProvider {
     static func parseGomaDateString(_ dateString: String) -> Date? {
-        
+
         let dateFormatter = DateFormatter()
-        
+
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
-        
+
         if let date = dateFormatter.date(from: dateString) {
             return date
         }
-        
+
         dateFormatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
+
         return dateFormatter.date(from: dateString)
+    }
+}
+
+// MARK: - SportRadar-specific methods (not supported by Goma)
+// These methods return .notSupportedForProvider as they are SportRadar-specific.
+extension GomaProvider {
+
+    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 }

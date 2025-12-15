@@ -218,6 +218,49 @@ protocol EventsProvider: Connector {
     
     // Recommendations
     func getRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
-    
+
     func getComboRecommendedMatch(userId: String, isLive: Bool, limit: Int) -> AnyPublisher<[Event], ServiceProviderError>
+
+    // MARK: - SportRadar-specific methods
+    // These methods are primarily used by the SportRadar provider.
+    // Other providers return .notSupportedForProvider error.
+
+    /// Subscribe to live sport types updates
+    func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+
+    /// Subscribe to all sport types updates (both live and pre-live)
+    func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+
+    /// Subscribe to pre-live sport types updates with optional date filtering
+    func subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>
+
+    /// Get available sport types (one-time fetch) with optional date filtering
+    func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>
+
+    /// Get promotional top banners
+    func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>
+
+    /// Get promotional sliding top events
+    func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError>
+
+    /// Get promotional top stories
+    func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>
+
+    /// Get highlighted boosted events
+    func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError>
+
+    /// Get highlighted visual image events
+    func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError>
+
+    /// Get highlighted markets
+    func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError>
+
+    /// Get hero game event
+    func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError>
+
+    /// Get recommended bet builders for an event
+    func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError>
+
+    /// Get highlighted live events IDs (pointers)
+    func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>
 }

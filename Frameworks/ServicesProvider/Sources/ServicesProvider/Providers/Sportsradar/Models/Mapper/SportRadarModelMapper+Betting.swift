@@ -120,12 +120,8 @@ extension SportRadarModelMapper {
                             eventId: eventIdString,
                             eventDate: internalBet.eventDate,
                             country: country,
-                            sportType: SportType(name: internalBet.sportTypeName),
-                            tournamentName: internalBet.tournamentName ?? "",
-                            marketId: nil,
-                            outcomeId: nil,
-                            homeLogoUrl: nil,
-                            awayLogoUrl: nil)
+                            sportType: SportType(name: internalBet.sportTypeName ?? ""),
+                            tournamentName: internalBet.tournamentName ?? "")
     }
 
     //  ServiceProvider ----> SportRadar
@@ -137,8 +133,8 @@ extension SportRadarModelMapper {
         return PlacedBetsResponse(identifier: placedBetsResponse.identifier,
                                   bets: bets,
                                   detailedBets: nil,
-                                  requiredConfirmation: false,
-                                  totalStake: placedBetsResponse.totalStake)
+                                  totalStake: placedBetsResponse.totalStake,
+                                  detailedCode: placedBetsResponse.detailedResponseCode)
     }
 
     static func placedBetEntry(fromInternalPlacedBetEntry placedBetEntry: SportRadarModels.PlacedBetEntry) -> PlacedBetEntry {
