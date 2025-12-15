@@ -53,6 +53,18 @@ public final class TicketSelectionView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .semibold, size: 10)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }()
     private lazy var resultTagCapsuleViewModel: MockCapsuleViewModel = {
         return MockCapsuleViewModel.tagStyle
     }()
@@ -239,6 +251,8 @@ public final class TicketSelectionView: UIView {
         
         rightContentView.addSubview(liveIndicatorView)
         
+        rightContentView.addSubview(dateLabel)
+        
         rightContentView.addSubview(resultTagCapsuleView)
         
         liveIndicatorView.addSubview(liveLabel)
@@ -302,6 +316,10 @@ public final class TicketSelectionView: UIView {
             rightContentView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             rightContentView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             rightContentView.heightAnchor.constraint(equalToConstant: 20),
+            
+            dateLabel.leadingAnchor.constraint(equalTo: rightContentView.leadingAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: rightContentView.trailingAnchor),
+            dateLabel.centerYAnchor.constraint(equalTo: rightContentView.centerYAnchor),
             
             resultTagCapsuleView.trailingAnchor.constraint(equalTo: rightContentView.trailingAnchor),
             resultTagCapsuleView.centerYAnchor.constraint(equalTo: rightContentView.centerYAnchor),
@@ -379,7 +397,7 @@ public final class TicketSelectionView: UIView {
     
     private func setupDynamicConstraints() {
         // Initial constraint - anchor to resultTagLabel (preLive state)
-        leftContentViewTrailingConstraint = leftContentView.trailingAnchor.constraint(equalTo: resultTagCapsuleView.leadingAnchor, constant: -8)
+        leftContentViewTrailingConstraint = leftContentView.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -8)
         leftContentViewTrailingConstraint?.isActive = true
     }
     
@@ -414,17 +432,21 @@ public final class TicketSelectionView: UIView {
         
         // Update right content based on state
         if ticketData.isLive {
-            resultTagCapsuleView.isHidden = true
+            dateLabel.isHidden = true
             liveIndicatorView.isHidden = false
             
             // Update constraint to anchor to liveIndicatorView
             updateLeftContentViewConstraint(to: liveIndicatorView.leadingAnchor)
         } else {
-            resultTagCapsuleView.isHidden = false
+            // By default, we show the `dateLabel` item for a later checking if there is a bet result.
+            // If there's a result, the capsule will be set and the `dateLabel` will be hidden
+            // at `updateResultTag(with status:)` function.
+            dateLabel.isHidden = false
             liveIndicatorView.isHidden = true
+            dateLabel.text = ticketData.matchDate
             
             // Update constraint to anchor to dateLabel
-            updateLeftContentViewConstraint(to: resultTagCapsuleView.leadingAnchor)
+            updateLeftContentViewConstraint(to: dateLabel.leadingAnchor)
         }
         
         // Update sport icon and country flag if provided
@@ -469,7 +491,15 @@ public final class TicketSelectionView: UIView {
 }
 
 extension TicketSelectionView {
-    public func updateResultTag(with status: BetTicketStatusData) {
+    public func updateResultTag(with status: BetTicketStatusData?) {
+        guard let status else {
+            resultTagCapsuleView.isHidden = true
+            return
+        }
+
+        resultTagCapsuleView.isHidden = false
+        dateLabel.isHidden = true
+        
         let text = switch status.status {
         case .won:
             LocalizationProvider.string("won")
@@ -503,6 +533,8 @@ extension TicketSelectionView {
             horizontalPadding: 5.0,
             verticalPadding: 4.0
         ))
+        
+        updateLeftContentViewConstraint(to: resultTagCapsuleView.leadingAnchor)
     }
 }
 

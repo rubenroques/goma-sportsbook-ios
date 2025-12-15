@@ -469,9 +469,7 @@ public class TicketBetInfoView: UIView {
             
             let ticketView = TicketSelectionView(viewModel: mockViewModel)
             
-            if let status = betInfo.betStatus {
-                ticketView.updateResultTag(with: status)
-            }
+            ticketView.updateResultTag(with: betInfo.betStatus)
             
             ticketsStackView.addArrangedSubview(ticketView)
         }
