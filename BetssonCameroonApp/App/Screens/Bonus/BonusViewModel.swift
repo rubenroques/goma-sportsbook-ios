@@ -75,13 +75,13 @@ class BonusViewModel {
     private func setupBonusSelectorBarViewModel() {
         let availableItem = PromotionItemData(
             id: BonusTab.available.rawValue,
-            title: localized("available_bonus"),
+            title: "available",
             isSelected: true
         )
         
         let grantedItem = PromotionItemData(
             id: BonusTab.granted.rawValue,
-            title: localized("granted_bonus"),
+            title: "granted",
             isSelected: false
         )
         
