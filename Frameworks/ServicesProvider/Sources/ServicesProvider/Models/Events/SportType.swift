@@ -30,8 +30,8 @@ public struct SportType: Codable, Equatable, Hashable {
                 numberOutrightEvents: Int,
                 numberOutrightMarkets: Int,
                 numberLiveEvents: Int,
-                hasMatches: Bool,
-                hasOutrights: Bool) {
+                hasMatches: Bool = true,
+                hasOutrights: Bool = true) {
         self.name = name
         self.numericId = numericId
         self.alphaId = alphaId

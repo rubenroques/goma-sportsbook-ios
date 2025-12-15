@@ -1269,7 +1269,7 @@
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
+				minimumVersion = 12.0.0;
 			};
 		};
 		CE6014662E2FE5E400C6A9DD /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {

@@ -9,7 +9,7 @@ import Foundation
 
 public struct AvailableBonus: Codable {
     public var id: String
-    public var bonusPlanId: String
+    public var bonusPlanId: Int
     public var name: String
     public var description: String?
     public var type: String
@@ -18,6 +18,7 @@ public struct AvailableBonus: Codable {
     public var expiryDate: Date?
     public var wagerRequirement: Double?
     public var imageUrl: String?
+    public var additionalAwards: [AdditionalAward]?
     public var actionUrl: String?
     public var code: String?
 
@@ -33,10 +34,10 @@ public struct AvailableBonus: Codable {
         case wagerRequirement = "wagerReq"
         case imageUrl = "imageUrl"
     }
-    
+
     public init(
         id: String,
-        bonusPlanId: String,
+        bonusPlanId: Int,
         name: String,
         description: String? = nil,
         type: String,
@@ -45,6 +46,7 @@ public struct AvailableBonus: Codable {
         expiryDate: Date? = nil,
         wagerRequirement: Double? = nil,
         imageUrl: String? = nil,
+        additionalAwards: [AdditionalAward]? = nil,
         actionUrl: String? = nil,
         code: String? = nil
     ) {
@@ -58,7 +60,20 @@ public struct AvailableBonus: Codable {
         self.expiryDate = expiryDate
         self.wagerRequirement = wagerRequirement
         self.imageUrl = imageUrl
+        self.additionalAwards = additionalAwards
         self.actionUrl = actionUrl
         self.code = code
+    }
+}
+
+public struct AdditionalAward: Codable {
+    public var type: String
+    public var product: String
+    public var amount: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case type = "type"
+        case product = "product"
+        case amount = "amount"
     }
 }

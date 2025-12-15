@@ -36,10 +36,7 @@ extension SportRadarModelMapper {
                               numberEvents: 0,
                               numberOutrightEvents: 0,
                               numberOutrightMarkets: 0,
-                              numberLiveEvents: 0,
-                              hasMatches: true,
-                              hasOutrights: false
-        )
+                              numberLiveEvents: 0)
         
         return PromotedBetslipSelection(id: internalSelection.id ?? "",
                                         countryName: internalSelection.country ?? "international",

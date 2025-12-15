@@ -1,0 +1,3306 @@
+{
+  "class_names": ["SportRadarPrivilegedAccessManager", "SportRadarEventsProvider", "SportRadarBettingProvider", "SportRadarAnalyticsProvider"],
+  "description": "A manager class that handles privileged access operations for the Sportradar provider, including user authentication, profile management, and various account-related functionalities.",
+  "protocols": ["PrivilegedAccessManager", "EventsProvider", "BettingProvider", "AnalyticsProvider"],
+  "properties": {
+    "connector": {
+      "type": "OmegaConnector",
+      "description": "Handles API connections and requests"
+    },
+    "userSessionStatePublisher": {
+      "type": "AnyPublisher<UserSessionStatus, Error>",
+      "description": "Publishes user session state updates"
+    },
+    "userProfilePublisher": {
+      "type": "AnyPublisher<UserProfile?, Error>",
+      "description": "Publishes user profile updates"
+    },
+    "hasSecurityQuestions": {
+      "type": "Bool",
+      "description": "Indicates if the user has security questions set up"
+    },
+    "sessionCoordinator": {
+      "type": "SportRadarSessionCoordinator",
+      "description": "Coordinates session management and token handling",
+      "access": "private"
+    }
+  },
+  "api_methods": {
+    "authentication": {
+      "login": {
+        "endpoint": "/ps/ips/login",
+        "method": "POST",
+        "signature": "func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>",
+        "description": "Authenticates a user with username and password",
+        "parameters": {
+          "username": {
+            "type": "String",
+            "description": "User's login username"
+          },
+          "password": {
+            "type": "String",
+            "description": "User's login password"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UserProfile",
+            "description": "User profile information upon successful login"
+          },
+          "error_cases": [
+            {
+              "code": "FAIL_UN_PW",
+              "error": "invalidEmailPassword",
+              "description": "Invalid username or password combination"
+            },
+            {
+              "code": "FAIL_QUICK_OPEN_STATUS",
+              "error": "quickSignUpIncomplete",
+              "description": "Quick signup process is not complete"
+            }
+          ]
+        }
+      },
+      "logout": {
+        "endpoint": "/ps/ips/logout",
+        "method": "GET",
+        "signature": "func logout() -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Logs out the current user and invalidates their session",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating successful logout"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPasswordPolicy": {
+        "endpoint": "/ps/ips/getPasswordPolicy",
+        "method": "GET",
+        "signature": "func getPasswordPolicy() -> AnyPublisher<PasswordPolicy, ServiceProviderError>",
+        "description": "Retrieves the password policy requirements",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "PasswordPolicy",
+            "description": "Password policy requirements and constraints"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "profile": {
+      "getUserProfile": {
+        "endpoint": "/ps/ips/getPlayerInfo",
+        "method": "GET",
+        "signature": "func getUserProfile(withKycExpire kycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError>",
+        "description": "Retrieves the user's profile information",
+        "parameters": {
+          "kycExpire": {
+            "type": "String?",
+            "description": "Optional KYC expiration date"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UserProfile",
+            "description": "Complete user profile information"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "registration": {
+      "checkEmailRegistered": {
+        "endpoint": "/ps/ips/checkCredential",
+        "method": "GET",
+        "signature": "func checkEmailRegistered(_ email: String) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Checks if an email is already registered in the system",
+        "parameters": {
+          "email": {
+            "type": "String",
+            "description": "Email address to check"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "true if email exists, false otherwise"
+          },
+          "mapping": {
+            "exists": "true/false"
+          }
+        }
+      },
+      "validateUsername": {
+        "endpoint": "/ps/ips/getUserIdSuggestion",
+        "method": "GET",
+        "signature": "func validateUsername(_ username: String) -> AnyPublisher<UsernameValidation, ServiceProviderError>",
+        "description": "Validates a username and provides suggestions if unavailable",
+        "parameters": {
+          "username": {
+            "type": "String",
+            "description": "Username to validate"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UsernameValidation",
+            "description": "Username validation result with availability and suggestions"
+          },
+          "status_codes": [
+            {
+              "code": "SUCCESS",
+              "description": "Username is taken, suggestions provided"
+            },
+            {
+              "code": "USERNAME_AVAILABLE",
+              "description": "Username is available"
+            }
+          ]
+        }
+      },
+      "simpleSignUp": {
+        "endpoint": "/ps/ips/quickSignup",
+        "method": "POST",
+        "signature": "func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Registers a new user with basic information",
+        "parameters": {
+          "form": {
+            "type": "SimpleSignUpForm",
+            "fields": {
+              "email": "String",
+              "username": "String",
+              "password": "String",
+              "birthDate": "String",
+              "mobilePrefix": "String",
+              "mobileNumber": "String",
+              "countryIsoCode": "String",
+              "currencyCode": "String"
+            }
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Registration success status"
+          },
+          "error_cases": [
+            {
+              "field": "username",
+              "error": "invalidSignUpUsername"
+            },
+            {
+              "field": "email",
+              "error": "invalidSignUpEmail"
+            },
+            {
+              "field": "password",
+              "error": "invalidSignUpPassword"
+            }
+          ]
+        }
+      },
+      "signUp": {
+        "endpoint": "/ps/ips/signup",
+        "method": "POST",
+        "signature": "func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError>",
+        "description": "Registers a new user with complete information",
+        "parameters": {
+          "form": {
+            "type": "SignUpForm",
+            "fields": {
+              "email": "String",
+              "username": "String",
+              "password": "String",
+              "birthDate": "String",
+              "mobilePrefix": "String",
+              "mobileNumber": "String",
+              "nationalityIso2Code": "String",
+              "currencyCode": "String",
+              "firstName": "String",
+              "lastName": "String",
+              "middleName": "String?",
+              "gender": "String",
+              "address": "String",
+              "city": "String",
+              "postalCode": "String",
+              "countryIso2Code": "String",
+              "bonusCode": "String?",
+              "receiveMarketingEmails": "Bool",
+              "avatarName": "String?",
+              "godfatherCode": "String?",
+              "birthDepartment": "String?",
+              "birthCity": "String?",
+              "birthCountry": "String?",
+              "streetNumber": "String?",
+              "consentedIds": "[Int]?",
+              "unconsentedIds": "[Int]?",
+              "mobileVerificationRequestId": "String?"
+            }
+          }
+        },
+        "response": {
+          "success": {
+            "type": "SignUpResponse",
+            "description": "Detailed signup response with success status and any errors"
+          },
+          "status_codes": [
+            {
+              "code": "SUCCESS",
+              "description": "Registration successful"
+            },
+            {
+              "code": "BONUSPLAN_NOT_FOUND",
+              "description": "Registration successful but bonus not found"
+            }
+          ]
+        }
+      },
+      "signUpCompletion": {
+        "signature": "func signUpCompletion(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Completes the signup process with additional user information",
+        "parameters": "Form containing additional user information",
+        "response": "Publisher that emits completion success status"
+      },
+      "signupConfirmation": {
+        "endpoint": "/ps/ips/signupConfirmation",
+        "method": "POST",
+        "signature": "func signupConfirmation(_ email: String, confirmationCode: String) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Confirms user signup with verification code",
+        "parameters": {
+          "email": {
+            "type": "String",
+            "description": "Email address used for registration"
+          },
+          "confirmationCode": {
+            "type": "String",
+            "description": "Verification code received by user"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Confirmation success status"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "account_management": {
+      "updateUserProfile": {
+        "endpoint": "/ps/ips/updatePlayerInfo",
+        "method": "POST",
+        "signature": "func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Updates the user's profile information",
+        "parameters": {
+          "form": {
+            "type": "UpdateUserProfileForm",
+            "fields": {
+              "username": "String?",
+              "email": "String?",
+              "firstName": "String?",
+              "lastName": "String?",
+              "birthDate": "String?",
+              "gender": "String?",
+              "address": "String?",
+              "province": "String?",
+              "city": "String?",
+              "postalCode": "String?",
+              "country": "Country?",
+              "cardId": "String?"
+            }
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Update success status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "updateExtraInfo": {
+        "endpoint": "/ps/ips/updateExtraInfo",
+        "method": "POST",
+        "signature": "func updateExtraInfo(placeOfBirth: String?, address2: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Updates additional user information",
+        "parameters": {
+          "placeOfBirth": {
+            "type": "String?",
+            "description": "User's place of birth"
+          },
+          "address2": {
+            "type": "String?",
+            "description": "Secondary address"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response with success status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "updateDeviceIdentifier": {
+        "endpoint": "/ps/ips/updateExtraInfo",
+        "method": "POST",
+        "signature": "func updateDeviceIdentifier(deviceIdentifier: String, appVersion: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Updates the device identifier and app version for the user",
+        "parameters": {
+          "deviceIdentifier": {
+            "type": "String",
+            "description": "Unique device identifier"
+          },
+          "appVersion": {
+            "type": "String",
+            "description": "Current app version"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response with success status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getMobileVerificationCode": {
+        "endpoint": "/ps/ips/verify",
+        "method": "GET",
+        "signature": "func getMobileVerificationCode(forMobileNumber mobileNumber: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>",
+        "description": "Requests a verification code for a mobile number",
+        "parameters": {
+          "mobileNumber": {
+            "type": "String",
+            "description": "Mobile number to verify"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "MobileVerifyResponse",
+            "description": "Response containing verification request details"
+          }
+        }
+      },
+      "verifyMobileCode": {
+        "endpoint": "/ps/ips/verify",
+        "method": "GET",
+        "signature": "func verifyMobileCode(code: String, requestId: String) -> AnyPublisher<MobileVerifyResponse, ServiceProviderError>",
+        "description": "Verifies a mobile verification code",
+        "parameters": {
+          "code": {
+            "type": "String",
+            "description": "Verification code received by user"
+          },
+          "requestId": {
+            "type": "String",
+            "description": "ID of the verification request"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "MobileVerifyResponse",
+            "description": "Response indicating verification success or failure"
+          }
+        }
+      },
+      "forgotPassword": {
+        "endpoint": "/ps/ips/forgotPasswordStep1And2",
+        "method": "POST",
+        "signature": "func forgotPassword(email: String, secretQuestion: String?, secretAnswer: String?) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Initiates the password recovery process",
+        "parameters": {
+          "email": {
+            "type": "String",
+            "description": "Email address for password recovery"
+          },
+          "secretQuestion": {
+            "type": "String?",
+            "description": "Optional security question"
+          },
+          "secretAnswer": {
+            "type": "String?",
+            "description": "Optional answer to security question"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Password recovery initiation success status"
+          }
+        }
+      },
+      "updatePassword": {
+        "endpoint": "/ps/ips/updatePassword",
+        "method": "POST",
+        "signature": "func updatePassword(oldPassword: String, newPassword: String) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Updates the user's password",
+        "parameters": {
+          "oldPassword": {
+            "type": "String",
+            "description": "Current password for verification"
+          },
+          "newPassword": {
+            "type": "String",
+            "description": "New password to set"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Password update success status"
+          }
+        }
+      },
+      "lockPlayer": {
+        "endpoint": "/ps/ips/lockPlayer",
+        "method": "POST",
+        "signature": "func lockPlayer(isPermanent: Bool?, lockPeriodUnit: String?, lockPeriod: String?) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Locks a player's account with specified duration",
+        "parameters": {
+          "isPermanent": {
+            "type": "Bool?",
+            "description": "Whether the lock is permanent"
+          },
+          "lockPeriodUnit": {
+            "type": "String?",
+            "description": "Unit of time for the lock period"
+          },
+          "lockPeriod": {
+            "type": "String?",
+            "description": "Duration of the lock period"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response with lock status"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "responsible_gaming": {
+      "updateWeeklyDepositLimits": {
+        "endpoint": "/ps/ips/setPersonalDepositLimits",
+        "method": "GET",
+        "signature": "func updateWeeklyDepositLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Updates the user's weekly deposit limits",
+        "parameters": {
+          "newLimit": {
+            "type": "Double",
+            "description": "New weekly deposit limit amount"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Limit update success status"
+          }
+        }
+      },
+      "updateWeeklyBettingLimits": {
+        "endpoint": "/ps/ips/updateWagerLimit",
+        "method": "GET",
+        "signature": "func updateWeeklyBettingLimits(newLimit: Double) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Updates the user's weekly betting limits",
+        "parameters": {
+          "newLimit": {
+            "type": "Double",
+            "description": "New weekly betting limit amount"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Limit update success status"
+          }
+        }
+      },
+      "updateResponsibleGamingLimits": {
+        "endpoint": "/ps/ips/updateResponsibleGamingLimit",
+        "method": "GET",
+        "signature": "func updateResponsibleGamingLimits(newLimit: Double, limitType: String, hasRollingWeeklyLimits: Bool) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Updates the user's responsible gaming limits",
+        "parameters": {
+          "newLimit": {
+            "type": "Double",
+            "description": "New limit amount"
+          },
+          "limitType": {
+            "type": "String",
+            "description": "Type of limit (deposit, betting, or autoPayout)"
+          },
+          "hasRollingWeeklyLimits": {
+            "type": "Bool",
+            "description": "Whether to use rolling weekly limits instead of calendar weekly limits"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Limit update success status"
+          }
+        }
+      },
+      "getPersonalDepositLimits": {
+        "endpoint": "/ps/ips/getPersonalDepositLimits",
+        "method": "GET",
+        "signature": "func getPersonalDepositLimits() -> AnyPublisher<PersonalDepositLimitResponse, ServiceProviderError>",
+        "description": "Retrieves the user's personal deposit limits",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "PersonalDepositLimitResponse",
+            "description": "User's personal deposit limit information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getLimits": {
+        "endpoint": "/ps/ips/getLimits",
+        "method": "GET",
+        "signature": "func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>",
+        "description": "Retrieves all user limits information",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "LimitsResponse",
+            "description": "Complete user limits information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getResponsibleGamingLimits": {
+        "endpoint": "/ps/ips/getResponsibleGamingLimit",
+        "method": "GET",
+        "signature": "func getResponsibleGamingLimits(periodTypes: String?, limitTypes: String?) -> AnyPublisher<ResponsibleGamingLimitsResponse, ServiceProviderError>",
+        "description": "Retrieves responsible gaming limits for specified period and limit types",
+        "parameters": {
+          "periodTypes": {
+            "type": "String?",
+            "description": "Comma-separated list of period types (e.g., 'RollingWeekly,Permanent')"
+          },
+          "limitTypes": {
+            "type": "String?",
+            "description": "Comma-separated list of limit types (e.g., 'DEPOSIT_LIMIT,WAGER_LIMIT,BALANCE_LIMIT')"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "ResponsibleGamingLimitsResponse",
+            "description": "Responsible gaming limits information"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "documents": {
+      "getDocumentTypes": {
+        "endpoint": "/ps/ips/getDocumentTypes",
+        "method": "GET",
+        "signature": "func getDocumentTypes() -> AnyPublisher<DocumentTypesResponse, ServiceProviderError>",
+        "description": "Retrieves available document types for verification",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "DocumentTypesResponse",
+            "description": "List of available document types"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getUserDocuments": {
+        "endpoint": "/ps/ips/getUserDocuments",
+        "method": "GET",
+        "signature": "func getUserDocuments() -> AnyPublisher<UserDocumentsResponse, ServiceProviderError>",
+        "description": "Retrieves user's uploaded documents",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "UserDocumentsResponse",
+            "description": "List of user's uploaded documents"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "uploadUserDocument": {
+        "endpoint": "/ps/ips/uploadUserDocument",
+        "method": "POST",
+        "signature": "func uploadUserDocument(documentType: String, file: Data, fileName: String) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>",
+        "description": "Uploads a single user verification document",
+        "parameters": {
+          "documentType": {
+            "type": "String",
+            "description": "Type of document being uploaded"
+          },
+          "file": {
+            "type": "Data",
+            "description": "Document file data"
+          },
+          "fileName": {
+            "type": "String",
+            "description": "Name of the file being uploaded"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UploadDocumentResponse",
+            "description": "Upload response with status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "uploadMultipleUserDocuments": {
+        "endpoint": "/ps/ips/uploadMultiUserDocument",
+        "method": "POST",
+        "signature": "func uploadMultipleUserDocuments(documentType: String, files: [String: Data]) -> AnyPublisher<UploadDocumentResponse, ServiceProviderError>",
+        "description": "Uploads multiple user verification documents",
+        "parameters": {
+          "documentType": {
+            "type": "String",
+            "description": "Type of documents being uploaded"
+          },
+          "files": {
+            "type": "[String: Data]",
+            "description": "Dictionary of filename to file data pairs"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UploadDocumentResponse",
+            "description": "Upload response with status"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "wallet": {
+      "getUserBalance": {
+        "endpoint": "/ps/ips/getBalance",
+        "method": "GET",
+        "signature": "func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>",
+        "description": "Retrieves the user's wallet balance information",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "UserWallet",
+            "description": "User's wallet balance information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getUserCashbackBalance": {
+        "endpoint": "/ps/ips/getSportRadarReportedCashbackBalance",
+        "method": "GET",
+        "signature": "func getUserCashbackBalance() -> AnyPublisher<CashbackBalance, ServiceProviderError>",
+        "description": "Retrieves the user's cashback balance information",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "CashbackBalance",
+            "description": "User's cashback balance information"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "location": {
+      "getAllCountries": {
+        "signature": "func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError>",
+        "description": "Retrieves all available countries",
+        "parameters": {},
+        "response": {}
+      },
+      "getCountries": {
+        "endpoint": "/ps/ips/getCountries",
+        "method": "GET",
+        "signature": "func getCountries() -> AnyPublisher<[Country], ServiceProviderError>",
+        "description": "Retrieves list of available countries",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[Country]",
+            "description": "Array of available countries"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getCurrentCountry": {
+        "endpoint": "/ps/ips/getCountryInfo",
+        "method": "GET",
+        "signature": "func getCurrentCountry() -> AnyPublisher<Country?, ServiceProviderError>",
+        "description": "Retrieves the current country information",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "Country?",
+            "description": "Current country information if available"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "payments": {
+      "getPayments": {
+        "endpoint": "/ps/ips/getDepositMethods",
+        "method": "GET",
+        "signature": "func getPayments() -> AnyPublisher<SimplePaymentMethodsResponse, ServiceProviderError>",
+        "description": "Retrieves available payment methods for deposits",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "SimplePaymentMethodsResponse",
+            "description": "List of available payment methods"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "processDeposit": {
+        "endpoint": "/ps/ips/processDeposit",
+        "method": "POST",
+        "signature": "func processDeposit(paymentMethod: String, amount: Double, option: String) -> AnyPublisher<ProcessDepositResponse, ServiceProviderError>",
+        "description": "Processes a deposit request",
+        "parameters": {
+          "paymentMethod": {
+            "type": "String",
+            "description": "Selected payment method"
+          },
+          "amount": {
+            "type": "Double",
+            "description": "Deposit amount"
+          },
+          "option": {
+            "type": "String",
+            "description": "Payment option details"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "ProcessDepositResponse",
+            "description": "Deposit processing response"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "updatePayment": {
+        "endpoint": "/ps/ips/updatePayment",
+        "method": "POST",
+        "signature": "func updatePayment(amount: Double, paymentId: String, type: String, returnUrl: String?, nameOnCard: String?, encryptedExpiryYear: String?, encryptedExpiryMonth: String?, encryptedSecurityCode: String?, encryptedCardNumber: String?) -> AnyPublisher<UpdatePaymentResponse, ServiceProviderError>",
+        "description": "Updates payment information for an existing payment",
+        "parameters": {
+          "amount": {
+            "type": "Double",
+            "description": "Payment amount"
+          },
+          "paymentId": {
+            "type": "String",
+            "description": "ID of the payment to update"
+          },
+          "type": {
+            "type": "String",
+            "description": "Payment type"
+          },
+          "returnUrl": {
+            "type": "String?",
+            "description": "URL to return to after payment processing"
+          },
+          "nameOnCard": {
+            "type": "String?",
+            "description": "Name as it appears on the card"
+          },
+          "encryptedExpiryYear": {
+            "type": "String?",
+            "description": "Encrypted card expiry year"
+          },
+          "encryptedExpiryMonth": {
+            "type": "String?",
+            "description": "Encrypted card expiry month"
+          },
+          "encryptedSecurityCode": {
+            "type": "String?",
+            "description": "Encrypted card security code"
+          },
+          "encryptedCardNumber": {
+            "type": "String?",
+            "description": "Encrypted card number"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "UpdatePaymentResponse",
+            "description": "Payment update response"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "cancelDeposit": {
+        "endpoint": "/ps/ips/cancelDeposit",
+        "method": "GET",
+        "signature": "func cancelDeposit(paymentId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Cancels a pending deposit transaction",
+        "parameters": {
+          "paymentId": {
+            "type": "String",
+            "description": "ID of the deposit payment to cancel"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response with cancellation status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "checkPaymentStatus": {
+        "endpoint": "/ps/ips/checkPaymentStatus",
+        "method": "GET",
+        "signature": "func checkPaymentStatus(paymentMethod: String, paymentId: String) -> AnyPublisher<PaymentStatusResponse, ServiceProviderError>",
+        "description": "Checks the status of a payment transaction",
+        "parameters": {
+          "paymentMethod": {
+            "type": "String",
+            "description": "Payment method used for the transaction"
+          },
+          "paymentId": {
+            "type": "String",
+            "description": "ID of the payment to check"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "PaymentStatusResponse",
+            "description": "Payment status information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getWithdrawalMethods": {
+        "endpoint": "/ps/ips/getWithdrawalMethods",
+        "method": "GET",
+        "signature": "func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError>",
+        "description": "Retrieves available withdrawal methods",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[WithdrawalMethod]",
+            "description": "Array of available withdrawal methods"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "processWithdrawal": {
+        "endpoint": "/ps/ips/processWithdrawal",
+        "method": "POST",
+        "signature": "func processWithdrawal(paymentMethod: String, amount: Double, conversionId: String?) -> AnyPublisher<ProcessWithdrawalResponse, ServiceProviderError>",
+        "description": "Processes a withdrawal request",
+        "parameters": {
+          "paymentMethod": {
+            "type": "String",
+            "description": "Selected withdrawal method"
+          },
+          "amount": {
+            "type": "Double",
+            "description": "Withdrawal amount"
+          },
+          "conversionId": {
+            "type": "String?",
+            "description": "Optional conversion ID for currency conversion"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "ProcessWithdrawalResponse",
+            "description": "Withdrawal processing response"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "prepareWithdrawal": {
+        "endpoint": "/ps/ips/prepareWithdrawal",
+        "method": "POST",
+        "signature": "func prepareWithdrawal(paymentMethod: String) -> AnyPublisher<PrepareWithdrawalResponse, ServiceProviderError>",
+        "description": "Prepares a withdrawal request for processing",
+        "parameters": {
+          "paymentMethod": {
+            "type": "String",
+            "description": "Selected withdrawal method"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "PrepareWithdrawalResponse",
+            "description": "Withdrawal preparation response"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPendingWithdrawals": {
+        "endpoint": "/ps/ips/getPendingWithdrawals",
+        "method": "GET",
+        "signature": "func getPendingWithdrawals() -> AnyPublisher<[PendingWithdrawal], ServiceProviderError>",
+        "description": "Retrieves list of pending withdrawal transactions",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[PendingWithdrawal]",
+            "description": "Array of pending withdrawal transactions"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "cancelWithdrawal": {
+        "endpoint": "/ps/ips/cancelWithdrawal",
+        "method": "POST",
+        "signature": "func cancelWithdrawal(paymentId: Int) -> AnyPublisher<CancelWithdrawalResponse, ServiceProviderError>",
+        "description": "Cancels a pending withdrawal transaction",
+        "parameters": {
+          "paymentId": {
+            "type": "Int",
+            "description": "ID of the withdrawal payment to cancel"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "CancelWithdrawalResponse",
+            "description": "Withdrawal cancellation response"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPaymentInformation": {
+        "endpoint": "/ps/ips/getPaymentInformation",
+        "method": "GET",
+        "signature": "func getPaymentInformation() -> AnyPublisher<PaymentInformation, ServiceProviderError>",
+        "description": "Retrieves saved payment information for the user",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "PaymentInformation",
+            "description": "User's saved payment information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "addPaymentInformation": {
+        "endpoint": "/ps/ips/addPaymentInformation",
+        "method": "POST",
+        "signature": "func addPaymentInformation(type: String, fields: String) -> AnyPublisher<AddPaymentInformationResponse, ServiceProviderError>",
+        "description": "Adds new payment information for the user",
+        "parameters": {
+          "type": {
+            "type": "String",
+            "description": "Type of payment information"
+          },
+          "fields": {
+            "type": "String",
+            "description": "Payment information fields in string format"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "AddPaymentInformationResponse",
+            "description": "Response for adding payment information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getTransactionsHistory": {
+        "endpoint": "/ps/ips/getTransactionHistoryByCurrency",
+        "method": "GET",
+        "signature": "func getTransactionsHistory(startDate: String, endDate: String, transactionTypes: [TransactionType]?, pageNumber: Int?) -> AnyPublisher<[TransactionDetail], ServiceProviderError>",
+        "description": "Retrieves transaction history for a specified date range",
+        "parameters": {
+          "startDate": {
+            "type": "String",
+            "description": "Start date for transaction history"
+          },
+          "endDate": {
+            "type": "String",
+            "description": "End date for transaction history"
+          },
+          "transactionTypes": {
+            "type": "[TransactionType]?",
+            "description": "Optional array of transaction types to filter"
+          },
+          "pageNumber": {
+            "type": "Int?",
+            "description": "Optional page number for pagination"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[TransactionDetail]",
+            "description": "Array of transaction details"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "bonuses": {
+      "getGrantedBonuses": {
+        "endpoint": "/ps/ips/getBonuses",
+        "method": "GET",
+        "signature": "func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError>",
+        "description": "Retrieves the list of bonuses that have been granted to the user",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[GrantedBonus]",
+            "description": "Array of granted bonuses with their details including status, amount, and expiry"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "redeemBonus": {
+        "endpoint": "/ps/ips/redeemBonus",
+        "method": "POST",
+        "signature": "func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>",
+        "description": "Redeems a bonus using a bonus code",
+        "parameters": {
+          "code": {
+            "type": "String",
+            "description": "The bonus code to redeem"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "RedeemBonusResponse",
+            "description": "Response containing the redeemed bonus details"
+          },
+          "error_cases": [
+            {
+              "code": "BONUSPLAN_NOT_FOUND",
+              "description": "Invalid bonus code provided"
+            }
+          ]
+        }
+      },
+      "getAvailableBonuses": {
+        "endpoint": "/ps/ips/getEligibleOptInBonusPlans",
+        "method": "GET",
+        "signature": "func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError>",
+        "description": "Retrieves the list of bonuses available for the user to claim",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[AvailableBonus]",
+            "description": "Array of available bonuses that can be claimed"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "redeemAvailableBonus": {
+        "endpoint": "/ps/ips/optInBonus",
+        "method": "POST",
+        "signature": "func redeemAvailableBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Claims an available bonus for a specific user",
+        "parameters": {
+          "partyId": {
+            "type": "String",
+            "description": "User's party identifier"
+          },
+          "code": {
+            "type": "String",
+            "description": "The bonus code to redeem"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating success or failure"
+          },
+          "error_cases": [
+            {
+              "code": "BONUSPLAN_NOT_FOUND",
+              "description": "Invalid bonus code provided"
+            }
+          ]
+        }
+      },
+      "cancelBonus": {
+        "endpoint": "/ps/ips/cancelBonus",
+        "method": "POST",
+        "signature": "func cancelBonus(bonusId: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Cancels an active bonus",
+        "parameters": {
+          "bonusId": {
+            "type": "String",
+            "description": "ID of the bonus to cancel"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating success or failure of the cancellation"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "optOutBonus": {
+        "endpoint": "/ps/ips/optOutBonus",
+        "method": "POST",
+        "signature": "func optOutBonus(partyId: String, code: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Opts out from a specific bonus",
+        "parameters": {
+          "partyId": {
+            "type": "String",
+            "description": "User's party identifier"
+          },
+          "code": {
+            "type": "String",
+            "description": "The bonus code to opt out from"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating success or failure of the opt-out"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "support": {
+      "contactUs": {
+        "endpoint": "/ps/ips/contactus",
+        "method": "POST",
+        "signature": "func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Sends a contact request to customer support",
+        "parameters": {
+          "firstName": {
+            "type": "String",
+            "description": "User's first name"
+          },
+          "lastName": {
+            "type": "String",
+            "description": "User's last name"
+          },
+          "email": {
+            "type": "String",
+            "description": "User's email address"
+          },
+          "subject": {
+            "type": "String",
+            "description": "Subject of the contact request"
+          },
+          "message": {
+            "type": "String",
+            "description": "Message content"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating success or failure of the contact request"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "contactSupport": {
+        "endpoint": "/api/v2/requests",
+        "method": "POST",
+        "signature": "func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError>",
+        "description": "Sends a detailed support request with user information",
+        "parameters": {
+          "userIdentifier": {
+            "type": "String",
+            "description": "User's unique identifier"
+          },
+          "firstName": {
+            "type": "String",
+            "description": "User's first name"
+          },
+          "lastName": {
+            "type": "String",
+            "description": "User's last name"
+          },
+          "email": {
+            "type": "String",
+            "description": "User's email address"
+          },
+          "subject": {
+            "type": "String",
+            "description": "Subject of the support request"
+          },
+          "subjectType": {
+            "type": "String",
+            "description": "Category or type of the support request"
+          },
+          "message": {
+            "type": "String",
+            "description": "Detailed message content"
+          },
+          "isLogged": {
+            "type": "Bool",
+            "description": "Whether the user is currently logged in"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "SupportResponse",
+            "description": "Response containing the status of the support request submission"
+          },
+          "error_cases": [
+            {
+              "code": "errorMessage",
+              "description": "Error message if the request fails"
+            }
+          ]
+        }
+      }
+    },
+    "consent_management": {
+      "getAllConsents": {
+        "endpoint": "/ps/ips/consents",
+        "method": "GET",
+        "signature": "func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError>",
+        "description": "Retrieves all available consent types and their information",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[ConsentInfo]",
+            "description": "Array of consent information including mandatory and optional consents"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getUserConsents": {
+        "endpoint": "/ps/ips/user/consents",
+        "method": "GET",
+        "signature": "func getUserConsents() -> AnyPublisher<[UserConsent], ServiceProviderError>",
+        "description": "Retrieves the user's current consent statuses",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[UserConsent]",
+            "description": "Array of user consents with their current status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "setUserConsents": {
+        "endpoint": "/ps/ips/user/consents/save",
+        "method": "POST",
+        "signature": "func setUserConsents(consentVersionIds: [Int]?, unconsenVersionIds: [Int]?) -> AnyPublisher<BasicResponse, ServiceProviderError>",
+        "description": "Updates user consent statuses for specified consent versions",
+        "parameters": {
+          "consentVersionIds": {
+            "type": "[Int]?",
+            "description": "Array of consent version IDs to consent to"
+          },
+          "unconsenVersionIds": {
+            "type": "[Int]?",
+            "description": "Array of consent version IDs to revoke consent from"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BasicResponse",
+            "description": "Basic response indicating success or failure of consent update"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "identity_verification": {
+      "getSumsubAccessToken": {
+        "endpoint": "/resources/accessTokens",
+        "method": "POST",
+        "signature": "func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>",
+        "description": "Retrieves an access token for Sumsub identity verification service",
+        "parameters": {
+          "userId": {
+            "type": "String",
+            "description": "User's unique identifier"
+          },
+          "levelName": {
+            "type": "String",
+            "description": "Verification level name"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "AccessTokenResponse",
+            "description": "Response containing the Sumsub access token"
+          }
+        }
+      },
+      "getSumsubApplicantData": {
+        "endpoint": "/resources/applicants/-;externalUserId={userId}/one",
+        "method": "GET",
+        "signature": "func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>",
+        "description": "Retrieves applicant verification data from Sumsub",
+        "parameters": {
+          "userId": {
+            "type": "String",
+            "description": "User's unique identifier"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "ApplicantDataResponse",
+            "description": "Detailed applicant verification data"
+          }
+        }
+      },
+      "generateDocumentTypeToken": {
+        "endpoint": "/ps/ips/generateToken",
+        "method": "GET",
+        "signature": "func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError>",
+        "description": "Generates a token for uploading a specific type of document",
+        "parameters": {
+          "docType": {
+            "type": "String",
+            "description": "Type of document to generate token for"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "AccessTokenResponse",
+            "description": "Response containing the document upload token"
+          }
+        }
+      },
+      "checkDocumentationData": {
+        "endpoint": "/ps/ips/checkDocumentation",
+        "method": "GET",
+        "signature": "func checkDocumentationData() -> AnyPublisher<ApplicantDataResponse, ServiceProviderError>",
+        "description": "Checks the status of user's submitted documentation",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "ApplicantDataResponse",
+            "description": "Current status of user's documentation verification"
+          }
+        }
+      }
+    },
+    "referral": {
+      "getReferralLink": {
+        "endpoint": "/ps/ips/getReferralLinks",
+        "method": "GET",
+        "signature": "func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError>",
+        "description": "Retrieves the user's referral link",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "ReferralLink",
+            "description": "User's unique referral link information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getReferees": {
+        "endpoint": "/ps/ips/getReferees",
+        "method": "GET",
+        "signature": "func getReferees() -> AnyPublisher<[Referee], ServiceProviderError>",
+        "description": "Retrieves the list of users referred by the current user",
+        "parameters": {},
+        "response": {
+          "success": {
+            "type": "[Referee]",
+            "description": "Array of referred users and their status"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "events": {
+      "getMarketInfo": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getMarketInfo(marketId: String) -> AnyPublisher<Market, ServiceProviderError>",
+        "description": "Retrieves detailed information about a specific market",
+        "parameters": {
+          "marketId": {
+            "type": "String",
+            "description": "Unique identifier of the market to retrieve"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "market",
+            "id": "{marketId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Market",
+            "description": "Detailed market information including odds and status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventSummary": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError>",
+        "description": "Retrieves a summary of a specific event using its event ID",
+        "parameters": {
+          "eventId": {
+            "type": "String",
+            "description": "Unique identifier of the event to retrieve"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "event",
+            "id": "{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Event",
+            "description": "Detailed event information including markets and status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventSummaryByMarket": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventSummary(forMarketId: String) -> AnyPublisher<Event, ServiceProviderError>",
+        "description": "Retrieves a summary of an event using a market ID associated with the event",
+        "parameters": {
+          "forMarketId": {
+            "type": "String",
+            "description": "Market ID associated with the event to retrieve"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventForMarket",
+            "id": "{forMarketId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Event",
+            "description": "Detailed event information including markets and status"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getAvailableSportTypes": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getAvailableSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<[SportType], ServiceProviderError>",
+        "description": "Retrieves a list of available sport types within an optional date range",
+        "parameters": {
+          "initialDate": {
+            "type": "Date?",
+            "description": "Optional start date to filter sports availability",
+            "optional": true
+          },
+          "endDate": {
+            "type": "Date?",
+            "description": "Optional end date to filter sports availability",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "sportTypeByDate",
+            "id": "{dateRange}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[SportType]",
+            "description": "Array of available sport types with their details"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getSportRegions": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getSportRegions(sportId: String) -> AnyPublisher<SportNodeInfo, ServiceProviderError>",
+        "description": "Retrieves information about regions available for a specific sport",
+        "parameters": {
+          "sportId": {
+            "type": "String",
+            "description": "Unique identifier of the sport to get regions for"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "boNavigationList",
+            "id": "{frontEndCode}/{sportId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "SportNodeInfo",
+            "description": "Information about regions where the sport is available"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getRegionCompetitions": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getRegionCompetitions(regionId: String) -> AnyPublisher<SportRegionInfo, ServiceProviderError>",
+        "description": "Retrieves information about competitions available in a specific region",
+        "parameters": {
+          "regionId": {
+            "type": "String",
+            "description": "Unique identifier of the region to get competitions for"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "boNavigationList",
+            "id": "{frontEndCode}/{regionId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "SportRegionInfo",
+            "description": "Information about competitions available in the region"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getCompetitionMarketGroups": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getCompetitionMarketGroups(competitionId: String) -> AnyPublisher<SportCompetitionInfo, ServiceProviderError>",
+        "description": "Retrieves information about market groups available for a specific competition",
+        "parameters": {
+          "competitionId": {
+            "type": "String",
+            "description": "Unique identifier of the competition to get market groups for"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "boNavigationList",
+            "id": "{frontEndCode}/{competitionId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "SportCompetitionInfo",
+            "description": "Information about market groups available in the competition"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getSearchEvents": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getSearchEvents(query: String, resultLimit: String, page: String, isLive: Bool) -> AnyPublisher<EventsGroup, ServiceProviderError>",
+        "description": "Searches for events based on a query string with pagination support",
+        "parameters": {
+          "query": {
+            "type": "String",
+            "description": "Search query string to find events"
+          },
+          "resultLimit": {
+            "type": "String",
+            "description": "Maximum number of results to return per page"
+          },
+          "page": {
+            "type": "String",
+            "description": "Page number for paginated results"
+          },
+          "isLive": {
+            "type": "Bool",
+            "description": "Filter for live events only"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventSearch",
+            "id": "{query}/{resultLimit}/{page}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "EventsGroup",
+            "description": "Grouped search results containing matching events"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHomeSliders": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError>",
+        "description": "Retrieves the home page slider banners",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/HomepageSliders"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BannerResponse",
+            "description": "Collection of banner images and information for the home page slider"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPromotionalTopBanners": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError>",
+        "description": "Retrieves promotional banners for the top section",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/slidingEvent"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[PromotionalBanner]",
+            "description": "Array of promotional banners with their details"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPromotionalSlidingTopEvents": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError>",
+        "description": "Retrieves promotional sliding events for the top section",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/slidingEvent"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[Event]",
+            "description": "Array of promotional sliding events"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPromotionalTopStories": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError>",
+        "description": "Retrieves promotional top stories",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/InstaCard"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[PromotionalStory]",
+            "description": "Array of promotional stories"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHighlightedBoostedEvents": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError>",
+        "description": "Retrieves events with boosted odds that are highlighted",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/boostedOdds"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[Event]",
+            "description": "Array of events with boosted odds"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHighlightedVisualImageEvents": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError>",
+        "description": "Retrieves events with visual images that are highlighted",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/visualImage"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[Event]",
+            "description": "Array of events with visual images"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHighlightedMarkets": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError>",
+        "description": "Retrieves highlighted markets",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/altMarkets"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[HighlightMarket]",
+            "description": "Array of highlighted markets"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHeroGameEvent": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError>",
+        "description": "Retrieves the hero game event",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/HeroGameCard"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[Event]",
+            "description": "Array containing the hero game event"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getPromotedSports": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getPromotedSports() -> AnyPublisher<[PromotedSport], ServiceProviderError>",
+        "description": "Retrieves the list of promoted sports",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "boNavigationList",
+            "id": "{frontEndCode}/top"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[PromotedSport]",
+            "description": "Array of promoted sports"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getCashbackSuccessBanner": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError>",
+        "description": "Retrieves the cashback success banner",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/CashbackSuccess"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "BannerResponse",
+            "description": "Banner information for cashback success"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getTopCompetitionsPointers": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getTopCompetitionsPointers() -> AnyPublisher<[TopCompetitionPointer], ServiceProviderError>",
+        "description": "Retrieves pointers to top competitions",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/TopCompetitions"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[TopCompetitionPointer]",
+            "description": "Array of pointers to top competitions"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getTopCompetitions": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError>",
+        "description": "Retrieves the list of top competitions",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "headline",
+            "id": "{frontEndCode}/20/TopCompetitionsDetails"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[TopCompetition]",
+            "description": "Array of top competitions with their details"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventsForEventGroup": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventsForEventGroup(withId: String) -> AnyPublisher<EventsGroup, ServiceProviderError>",
+        "description": "Retrieves events associated with a specific event group",
+        "parameters": {
+          "withId": {
+            "type": "String",
+            "description": "Unique identifier of the event group"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventGroup",
+            "id": "{withId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "EventsGroup",
+            "description": "Group of events associated with the specified event group"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventForMarketGroup": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventForMarketGroup(withId: String) -> AnyPublisher<Event, ServiceProviderError>",
+        "description": "Retrieves an event associated with a specific market group",
+        "parameters": {
+          "withId": {
+            "type": "String",
+            "description": "Unique identifier of the market group"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventForMarketGroup",
+            "id": "{withId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Event",
+            "description": "Event associated with the specified market group"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventDetails": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventDetails(eventId: String) -> AnyPublisher<Event, ServiceProviderError>",
+        "description": "Retrieves detailed information about a specific event",
+        "parameters": {
+          "eventId": {
+            "type": "String",
+            "description": "Unique identifier of the event"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "event",
+            "id": "{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Event",
+            "description": "Detailed event information including all available data"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventSecundaryMarkets": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventSecundaryMarkets(eventId: String) -> AnyPublisher<Event, ServiceProviderError>",
+        "description": "Retrieves secondary markets information for a specific event",
+        "parameters": {
+          "eventId": {
+            "type": "String",
+            "description": "Unique identifier of the event"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventWithBalancedMarkets",
+            "id": "{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "Event",
+            "description": "Event information with focus on secondary markets"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getEventLiveData": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getEventLiveData(eventId: String) -> AnyPublisher<EventLiveData, ServiceProviderError>",
+        "description": "Retrieves live data and statistics for a specific event",
+        "parameters": {
+          "eventId": {
+            "type": "String",
+            "description": "Unique identifier of the event"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "eventLiveData",
+            "id": "{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "EventLiveData",
+            "description": "Live data and statistics for the event"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHighlightedLiveEventsIds": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError>",
+        "description": "Retrieves IDs of highlighted live events, optionally filtered by user",
+        "parameters": {
+          "eventCount": {
+            "type": "Int",
+            "description": "Maximum number of event IDs to retrieve"
+          },
+          "userId": {
+            "type": "String?",
+            "description": "Optional user ID for personalized highlights",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "highlightedLiveEventsIds",
+            "id": "{eventCount}/{userId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[String]",
+            "description": "Array of highlighted live event IDs"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getHighlightedLiveEvents": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getHighlightedLiveEvents(eventCount: Int, userId: String?) -> AnyPublisher<[Event], ServiceProviderError>",
+        "description": "Retrieves detailed information about highlighted live events, optionally filtered by user",
+        "parameters": {
+          "eventCount": {
+            "type": "Int",
+            "description": "Maximum number of events to retrieve"
+          },
+          "userId": {
+            "type": "String?",
+            "description": "Optional user ID for personalized highlights",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "highlightedLiveEvents",
+            "id": "{eventCount}/{userId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[Event]",
+            "description": "Array of highlighted live events with full details"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "favorites": {
+      "getPromotedBetslips": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getPromotedBetslips(userId: String?) -> AnyPublisher<[PromotedBetslip], ServiceProviderError>",
+        "description": "Retrieves promoted betslips, optionally filtered by user",
+        "parameters": {
+          "userId": {
+            "type": "String?",
+            "description": "Optional user ID for personalized betslips",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "promotedBetslips",
+            "id": "{userId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "[PromotedBetslip]",
+            "description": "Array of promoted betslips"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getFavoritesList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getFavoritesList() -> AnyPublisher<FavoritesListResponse, ServiceProviderError>",
+        "description": "Retrieves all favorite lists for the current user",
+        "parameters": {},
+        "request_body": {
+          "contentId": {
+            "type": "favoritesList",
+            "id": "all"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoritesListResponse",
+            "description": "List of all favorite lists for the user"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "addFavoritesList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func addFavoritesList(name: String) -> AnyPublisher<FavoritesListAddResponse, ServiceProviderError>",
+        "description": "Creates a new favorites list with the specified name",
+        "parameters": {
+          "name": {
+            "type": "String",
+            "description": "Name of the new favorites list"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "addFavoritesList",
+            "id": "{name}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoritesListAddResponse",
+            "description": "Response containing the newly created favorites list information"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "deleteFavoritesList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func deleteFavoritesList(listId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>",
+        "description": "Deletes a favorites list with the specified ID",
+        "parameters": {
+          "listId": {
+            "type": "Int",
+            "description": "ID of the favorites list to delete"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "deleteFavoritesList",
+            "id": "{listId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoritesListDeleteResponse",
+            "description": "Response confirming the deletion of the favorites list"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "addFavoriteToList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func addFavoriteToList(listId: Int, eventId: String) -> AnyPublisher<FavoriteAddResponse, ServiceProviderError>",
+        "description": "Adds an event to a specified favorites list",
+        "parameters": {
+          "listId": {
+            "type": "Int",
+            "description": "ID of the favorites list to add the event to"
+          },
+          "eventId": {
+            "type": "String",
+            "description": "ID of the event to add to favorites"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "addFavoriteToList",
+            "id": "{listId}/{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoriteAddResponse",
+            "description": "Response confirming the addition of the event to favorites"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getFavoritesFromList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func getFavoritesFromList(listId: Int) -> AnyPublisher<FavoriteEventResponse, ServiceProviderError>",
+        "description": "Retrieves all favorite events from a specified list",
+        "parameters": {
+          "listId": {
+            "type": "Int",
+            "description": "ID of the favorites list to get events from"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "getFavoritesFromList",
+            "id": "{listId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoriteEventResponse",
+            "description": "Response containing all favorite events in the specified list"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "deleteFavoriteFromList": {
+        "endpoint": "/services/content/get",
+        "method": "POST",
+        "signature": "func deleteFavoriteFromList(eventId: Int) -> AnyPublisher<FavoritesListDeleteResponse, ServiceProviderError>",
+        "description": "Deletes a favorite event from a list",
+        "parameters": {
+          "eventId": {
+            "type": "Int",
+            "description": "ID of the event to delete from favorites"
+          }
+        },
+        "request_body": {
+          "contentId": {
+            "type": "deleteFavoriteFromList",
+            "id": "{eventId}"
+          },
+          "clientContext": {
+            "language": "{language}",
+            "ipAddress": "127.0.0.1"
+          }
+        },
+        "response": {
+          "success": {
+            "type": "FavoritesListDeleteResponse",
+            "description": "Response confirming the deletion of the event from favorites"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    },
+    "betting": {
+      "getBetHistory": {
+        "endpoint": "/api/betting/fo/bets",
+        "method": "GET",
+        "signature": "func getBetHistory(pageIndex: Int) -> AnyPublisher<BettingHistory, ServiceProviderError>",
+        "description": "Retrieves betting history with pagination",
+        "parameters": {
+          "pageIndex": {
+            "type": "Int",
+            "description": "Page number for pagination"
+          }
+        },
+        "query_parameters": {
+          "pageNumber": "{pageIndex}",
+          "pageSize": "10",
+          "orderBy": "0",
+          "orderDesc": "true",
+          "betOutcomes": "NotSpecified"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BettingHistory",
+            "description": "List of bets in the user's history"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getBetDetails": {
+        "endpoint": "/api/betting/fo/bets/{identifier}",
+        "method": "GET",
+        "signature": "func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>",
+        "description": "Retrieves detailed information about a specific bet",
+        "parameters": {
+          "identifier": {
+            "type": "String",
+            "description": "Unique identifier of the bet to retrieve"
+          }
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "Bet",
+            "description": "Detailed information about the specified bet"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getOpenBetsHistory": {
+        "endpoint": "/api/betting/fo/bets",
+        "method": "GET",
+        "signature": "func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>",
+        "description": "Retrieves history of open bets with optional date filtering",
+        "parameters": {
+          "pageIndex": {
+            "type": "Int",
+            "description": "Page number for pagination"
+          },
+          "startDate": {
+            "type": "String?",
+            "description": "Optional start date for filtering bets",
+            "optional": true
+          },
+          "endDate": {
+            "type": "String?",
+            "description": "Optional end date for filtering bets",
+            "optional": true
+          }
+        },
+        "query_parameters": {
+          "pageNumber": "{pageIndex}",
+          "pageSize": "20",
+          "from": "{startDate}",
+          "to": "{endDate}",
+          "betStateTypes": "opened",
+          "betOutcomes": "NotSpecified",
+          "orderBy": "0",
+          "orderDesc": "true"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BettingHistory",
+            "description": "List of open bets matching the criteria"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getResolvedBetsHistory": {
+        "endpoint": "/api/betting/fo/bets",
+        "method": "GET",
+        "signature": "func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>",
+        "description": "Retrieves history of resolved bets with optional date filtering",
+        "parameters": {
+          "pageIndex": {
+            "type": "Int",
+            "description": "Page number for pagination"
+          },
+          "startDate": {
+            "type": "String?",
+            "description": "Optional start date for filtering bets",
+            "optional": true
+          },
+          "endDate": {
+            "type": "String?",
+            "description": "Optional end date for filtering bets",
+            "optional": true
+          }
+        },
+        "query_parameters": {
+          "pageNumber": "{pageIndex}",
+          "pageSize": "20",
+          "from": "{startDate}",
+          "to": "{endDate}",
+          "betStateTypes": "settled,closed,cancelled",
+          "betOutcomes": "NotSpecified",
+          "orderBy": "0",
+          "orderDesc": "true"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BettingHistory",
+            "description": "List of resolved bets matching the criteria"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getWonBetsHistory": {
+        "endpoint": "/api/betting/fo/bets",
+        "method": "GET",
+        "signature": "func getWonBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>",
+        "description": "Retrieves history of won bets with optional date filtering",
+        "parameters": {
+          "pageIndex": {
+            "type": "Int",
+            "description": "Page number for pagination"
+          },
+          "startDate": {
+            "type": "String?",
+            "description": "Optional start date for filtering bets",
+            "optional": true
+          },
+          "endDate": {
+            "type": "String?",
+            "description": "Optional end date for filtering bets",
+            "optional": true
+          }
+        },
+        "query_parameters": {
+          "pageNumber": "{pageIndex}",
+          "pageSize": "20",
+          "from": "{startDate}",
+          "to": "{endDate}",
+          "betStateTypes": "settled,closed,cancelled",
+          "betOutcomes": "NotSpecified",
+          "orderBy": "0",
+          "orderDesc": "true"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BettingHistory",
+            "description": "List of won bets matching the criteria"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getAllowedBetTypes": {
+        "endpoint": "/api/betting/fo/allowedBetTypesWithCalculation",
+        "method": "POST",
+        "signature": "func getAllowedBetTypes(withBetTicketSelections betTicketSelections: [BetTicketSelection]) -> AnyPublisher<[BetType], ServiceProviderError>",
+        "description": "Retrieves allowed bet types for given selections",
+        "parameters": {
+          "betTicketSelections": {
+            "type": "[BetTicketSelection]",
+            "description": "Array of bet ticket selections to check allowed types for"
+          }
+        },
+        "request_body": {
+          "betLegs": [
+            {
+              "eachWayPlaceTerms": "",
+              "eachWayReduction": "",
+              "handicap": "",
+              "idFOPriceType": "CP",
+              "idFOSelection": "{selection.identifier}",
+              "isTrap": "",
+              "lowerBand": "",
+              "priceDown": "{selection.odd.denominator}",
+              "priceUp": "{selection.odd.numerator}",
+              "systemTag": "",
+              "upperBand": ""
+            }
+          ],
+          "idFOBetType": "",
+          "winStake": 0,
+          "isPool": false
+        },
+        "requires_auth": false,
+        "response": {
+          "success": {
+            "type": "[BetType]",
+            "description": "Array of allowed bet types for the given selections"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "calculatePotentialReturn": {
+        "endpoint": "/api/betting/fo/calculatePotentialReturn",
+        "method": "POST",
+        "signature": "func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>",
+        "description": "Calculates potential return for a bet ticket before placing the bet",
+        "parameters": {
+          "betTicket": {
+            "type": "BetTicket",
+            "description": "The bet ticket to calculate potential returns for"
+          }
+        },
+        "request_body": {
+          "betLegs": [
+            {
+              "eachWayPlaceTerms": "",
+              "eachWayReduction": "",
+              "handicap": "",
+              "idFOPriceType": "CP",
+              "idFOSelection": "{selection.identifier}",
+              "isTrap": "",
+              "lowerBand": "",
+              "priceDown": "{selection.odd.denominator}",
+              "priceUp": "{selection.odd.numerator}",
+              "systemTag": "",
+              "upperBand": ""
+            }
+          ],
+          "idFOBetType": "{betTicket.betType}",
+          "winStake": "{betTicket.stake}",
+          "isPool": false
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BetslipPotentialReturn",
+            "description": "Calculated potential returns for the bet ticket"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "placeBets": {
+        "endpoint": "/api/betting/fo/placeBets",
+        "method": "POST",
+        "signature": "func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>",
+        "description": "Places one or more bets using the provided bet tickets",
+        "parameters": {
+          "betTickets": {
+            "type": "[BetTicket]",
+            "description": "Array of bet tickets to place"
+          },
+          "useFreebetBalance": {
+            "type": "Bool",
+            "description": "Whether to use freebet balance for placing bets"
+          }
+        },
+        "request_body": {
+          "bets": [
+            {
+              "betLegs": [
+                {
+                  "eachWayPlaceTerms": "",
+                  "eachWayReduction": "",
+                  "handicap": "",
+                  "idFOPriceType": "CP",
+                  "idFOSelection": "{selection.identifier}",
+                  "isTrap": "",
+                  "lowerBand": "",
+                  "priceDown": "{selection.odd.denominator}",
+                  "priceUp": "{selection.odd.numerator}",
+                  "systemTag": "",
+                  "upperBand": ""
+                }
+              ],
+              "idFOBetType": "{betTicket.betType}",
+              "winStake": "{betTicket.stake}",
+              "isPool": false
+            }
+          ],
+          "useFreebetBalance": "{useFreebetBalance}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "PlacedBetsResponse",
+            "description": "Response containing the results of placing the bets"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "confirmBoostedBet": {
+        "endpoint": "/api/betting/fo/confirmBoostedBet",
+        "method": "POST",
+        "signature": "func confirmBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Confirms a boosted bet offer",
+        "parameters": {
+          "identifier": {
+            "type": "String",
+            "description": "Unique identifier of the boosted bet to confirm"
+          }
+        },
+        "request_body": {
+          "betId": "{identifier}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Response confirming the boosted bet acceptance"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "rejectBoostedBet": {
+        "endpoint": "/api/betting/fo/rejectBoostedBet",
+        "method": "POST",
+        "signature": "func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError>",
+        "description": "Rejects a boosted bet offer",
+        "parameters": {
+          "identifier": {
+            "type": "String",
+            "description": "Unique identifier of the boosted bet to reject"
+          }
+        },
+        "request_body": {
+          "betId": "{identifier}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "Bool",
+            "description": "Response confirming the boosted bet rejection"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "calculateCashout": {
+        "endpoint": "/api/betting/fo/calculateCashout",
+        "method": "POST",
+        "signature": "func calculateCashout(betId: String, stakeValue: String?) -> AnyPublisher<Cashout, ServiceProviderError>",
+        "description": "Calculates the cashout value for a specific bet",
+        "parameters": {
+          "betId": {
+            "type": "String",
+            "description": "ID of the bet to calculate cashout for"
+          },
+          "stakeValue": {
+            "type": "String?",
+            "description": "Optional stake value for partial cashout",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "betId": "{betId}",
+          "stakeValue": "{stakeValue}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "Cashout",
+            "description": "Calculated cashout value for the bet"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "allowedCashoutBetIds": {
+        "endpoint": "/api/betting/fo/allowedCashoutBetIds",
+        "method": "GET",
+        "signature": "func allowedCashoutBetIds() -> AnyPublisher<[String], ServiceProviderError>",
+        "description": "Retrieves IDs of bets that are eligible for cashout",
+        "parameters": {},
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "[String]",
+            "description": "Array of bet IDs eligible for cashout"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "cashoutBet": {
+        "endpoint": "/api/betting/fo/cashoutBet",
+        "method": "POST",
+        "signature": "func cashoutBet(betId: String, cashoutValue: Double, stakeValue: Double?) -> AnyPublisher<CashoutResult, ServiceProviderError>",
+        "description": "Performs a cashout operation on a specific bet",
+        "parameters": {
+          "betId": {
+            "type": "String",
+            "description": "ID of the bet to cash out"
+          },
+          "cashoutValue": {
+            "type": "Double",
+            "description": "Value to cash out"
+          },
+          "stakeValue": {
+            "type": "Double?",
+            "description": "Optional stake value for partial cashout",
+            "optional": true
+          }
+        },
+        "request_body": {
+          "betId": "{betId}",
+          "cashoutValue": "{cashoutValue}",
+          "stakeValue": "{stakeValue}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "CashoutResult",
+            "description": "Response containing the cashout operation result"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getBetslipSettings": {
+        "endpoint": "/api/betting/fo/betslipSettings",
+        "method": "GET",
+        "signature": "func getBetslipSettings() -> AnyPublisher<BetslipSettings, ServiceProviderError>",
+        "description": "Retrieves the current betslip settings for the user",
+        "parameters": {},
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BetslipSettings",
+            "description": "Current betslip settings configuration"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "updateBetslipSettings": {
+        "endpoint": "/api/betting/fo/betslipSettings",
+        "method": "POST",
+        "signature": "func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<BetslipSettings, ServiceProviderError>",
+        "description": "Updates the user's betslip settings",
+        "parameters": {
+          "betslipSettings": {
+            "type": "BetslipSettings",
+            "description": "New betslip settings to apply"
+          }
+        },
+        "request_body": {
+          "settings": "{betslipSettings}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BetslipSettings",
+            "description": "Updated betslip settings configuration"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getFreebet": {
+        "endpoint": "/api/betting/fo/freebet",
+        "method": "GET",
+        "signature": "func getFreebet() -> AnyPublisher<FreebetResponse, ServiceProviderError>",
+        "description": "Retrieves information about available freebets for the user",
+        "parameters": {},
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "FreebetResponse",
+            "description": "Information about available freebets"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "calculateBetBuilderPotentialReturn": {
+        "endpoint": "/api/betting/fo/calculateBetBuilderPotentialReturn",
+        "method": "POST",
+        "signature": "func calculateBetBuilderPotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetBuilderPotentialReturn, ServiceProviderError>",
+        "description": "Calculates potential return for a bet builder ticket",
+        "parameters": {
+          "betTicket": {
+            "type": "BetTicket",
+            "description": "The bet builder ticket to calculate potential returns for"
+          }
+        },
+        "request_body": {
+          "betLegs": [
+            {
+              "eachWayPlaceTerms": "",
+              "eachWayReduction": "",
+              "handicap": "",
+              "idFOPriceType": "CP",
+              "idFOSelection": "{selection.identifier}",
+              "isTrap": "",
+              "lowerBand": "",
+              "priceDown": "{selection.odd.denominator}",
+              "priceUp": "{selection.odd.numerator}",
+              "systemTag": "",
+              "upperBand": ""
+            }
+          ],
+          "idFOBetType": "{betTicket.betType}",
+          "winStake": "{betTicket.stake}",
+          "isPool": false
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "BetBuilderPotentialReturn",
+            "description": "Calculated potential returns for the bet builder ticket"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "placeBetBuilderBet": {
+        "endpoint": "/api/betting/fo/placeBetBuilderBet",
+        "method": "POST",
+        "signature": "func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>",
+        "description": "Places a bet builder bet with calculated odds",
+        "parameters": {
+          "betTicket": {
+            "type": "BetTicket",
+            "description": "The bet builder ticket to place"
+          },
+          "calculatedOdd": {
+            "type": "Double",
+            "description": "Pre-calculated odds for the bet builder"
+          }
+        },
+        "request_body": {
+          "betTicket": "{betTicket}",
+          "calculatedOdd": "{calculatedOdd}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "PlacedBetsResponse",
+            "description": "Response containing the results of placing the bet builder bet"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "calculateCashback": {
+        "endpoint": "/api/betting/fo/calculateCashback",
+        "method": "POST",
+        "signature": "func calculateCashback(forBetTicket betTicket: BetTicket) -> AnyPublisher<CashbackResult, ServiceProviderError>",
+        "description": "Calculates potential cashback for a bet ticket",
+        "parameters": {
+          "betTicket": {
+            "type": "BetTicket",
+            "description": "The bet ticket to calculate cashback for"
+          }
+        },
+        "request_body": {
+          "betTicket": "{betTicket}"
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "CashbackResult",
+            "description": "Calculated cashback result for the bet ticket"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getSharedTicket": {
+        "endpoint": "/api/betting/fo/sharedTicket",
+        "method": "GET",
+        "signature": "func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError>",
+        "description": "Retrieves a shared bet ticket by its ID",
+        "parameters": {
+          "betslipId": {
+            "type": "String",
+            "description": "ID of the shared bet ticket to retrieve"
+          }
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "SharedTicketResponse",
+            "description": "Details of the shared bet ticket"
+          },
+          "status_code": "SUCCESS"
+        }
+      },
+      "getTicketSelection": {
+        "endpoint": "/api/betting/fo/ticketSelection",
+        "method": "GET",
+        "signature": "func getTicketSelection(ticketSelectionId: String) -> AnyPublisher<TicketSelection, ServiceProviderError>",
+        "description": "Retrieves a specific ticket selection by its ID",
+        "parameters": {
+          "ticketSelectionId": {
+            "type": "String",
+            "description": "ID of the ticket selection to retrieve"
+          }
+        },
+        "requires_auth": true,
+        "response": {
+          "success": {
+            "type": "TicketSelection",
+            "description": "Details of the ticket selection"
+          },
+          "status_code": "SUCCESS"
+        }
+      }
+    }
+  },
+  "websocket_methods": {
+    "subscribeLiveMatches": {
+      "description": "Subscribes to live matches updates for a specific sport type through WebSocket connection",
+      "signature": "subscribeLiveMatches(forSportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+      "parameters": {
+        "forSportType": {
+          "type": "SportType",
+          "description": "The sport type to subscribe to live matches for"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of EventsGroup containing live match updates"
+      },
+      "content_identifier": {
+        "type": "liveEvents",
+        "route": "liveEvents(sportAlphaId: String, pageIndex: Int)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time"
+      }
+    },
+    "subscribePreLiveMatches": {
+      "description": "Subscribes to pre-live (upcoming) matches for a specific sport type with optional date range and sorting parameters",
+      "signature": "subscribePreLiveMatches(forSportType: SportType, initialDate: Date?, endDate: Date?, eventCount: Int?, sortType: EventListSort) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+      "parameters": {
+        "forSportType": {
+          "type": "SportType",
+          "description": "The sport type to subscribe to pre-live matches for"
+        },
+        "initialDate": {
+          "type": "Date?",
+          "description": "Optional start date for the pre-live matches range",
+          "optional": true
+        },
+        "endDate": {
+          "type": "Date?",
+          "description": "Optional end date for the pre-live matches range",
+          "optional": true
+        },
+        "eventCount": {
+          "type": "Int?",
+          "description": "Optional limit for the number of events to receive",
+          "optional": true
+        },
+        "sortType": {
+          "type": "EventListSort",
+          "description": "Sorting criteria for the events list"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of EventsGroup containing pre-live match updates"
+      },
+      "content_identifier": {
+        "type": "preLiveEvents",
+        "route": "preLiveEvents(sportAlphaId: String, startDate: Date?, endDate: Date?, pageIndex: Int, eventCount: Int, sortType: EventListSort)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "on-change"
+      }
+    },
+    "subscribeCompetitionMatches": {
+      "description": "Subscribes to matches updates for a specific competition identified by its market group ID",
+      "signature": "subscribeCompetitionMatches(forMarketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+      "parameters": {
+        "forMarketGroupId": {
+          "type": "String",
+          "description": "The market group ID that identifies the competition to subscribe to"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of EventsGroup containing competition match updates"
+      },
+      "content_identifier": {
+        "type": "eventGroup",
+        "route": "eventGroup(marketGroupId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time"
+      }
+    },
+    "subscribeToMarketDetails": {
+      "description": "Subscribes to real-time updates for a specific market within an event",
+      "signature": "subscribeToMarketDetails(withId: String, onEventId: String) -> AnyPublisher<SubscribableContent<Market>, ServiceProviderError>",
+      "parameters": {
+        "withId": {
+          "type": "String",
+          "description": "The unique identifier of the market to subscribe to"
+        },
+        "onEventId": {
+          "type": "String",
+          "description": "The ID of the event that contains the market"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<Market>, ServiceProviderError>",
+        "description": "A publisher that emits Market updates containing odds and market status changes"
+      },
+      "content_identifier": {
+        "type": "market",
+        "route": "market(marketId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time",
+        "market_updates": {
+          "includes": [
+            "odds changes",
+            "market status",
+            "settlement information"
+          ]
+        }
+      }
+    },
+    "subscribeEventDetails": {
+      "description": "Subscribes to detailed updates for a specific event, including scores, statistics, and market information",
+      "signature": "subscribeEventDetails(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>",
+      "parameters": {
+        "eventId": {
+          "type": "String",
+          "description": "The unique identifier of the event to subscribe to"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<Event>, ServiceProviderError>",
+        "description": "A publisher that emits Event updates containing detailed event information"
+      },
+      "content_identifier": {
+        "type": "eventDetails",
+        "route": "eventDetails(eventId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time",
+        "event_updates": {
+          "includes": [
+            "score updates",
+            "match statistics",
+            "timeline events",
+            "market information",
+            "event status changes"
+          ]
+        }
+      }
+    },
+    "subscribeOutrightMarkets": {
+      "description": "Subscribes to outright market updates for a specific market group (e.g., tournament winner, top scorer)",
+      "signature": "subscribeOutrightMarkets(forMarketGroupId: String) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+      "parameters": {
+        "forMarketGroupId": {
+          "type": "String",
+          "description": "The market group ID for the outright markets to subscribe to"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of EventsGroup containing outright market updates"
+      },
+      "content_identifier": {
+        "type": "eventGroup",
+        "route": "eventGroup(marketGroupId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "on-change",
+        "market_types": {
+          "includes": [
+            "tournament winner",
+            "top scorer",
+            "relegation",
+            "qualification"
+          ]
+        }
+      }
+    },
+    "subscribePreLiveSportTypes": {
+      "description": "Subscribes to updates for available pre-live sport types within a specified date range",
+      "signature": "subscribePreLiveSportTypes(initialDate: Date?, endDate: Date?) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+      "parameters": {
+        "initialDate": {
+          "type": "Date?",
+          "description": "Optional start date for the pre-live sports range",
+          "optional": true
+        },
+        "endDate": {
+          "type": "Date?",
+          "description": "Optional end date for the pre-live sports range",
+          "optional": true
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of SportType containing available pre-live sports"
+      },
+      "content_identifier": {
+        "type": "preLiveSports",
+        "route": "preLiveSports(startDate: Date?, endDate: Date?)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "on-change"
+      }
+    },
+    "subscribeLiveSportTypes": {
+      "description": "Subscribes to updates for currently live sport types and their active events",
+      "signature": "subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+      "parameters": {},
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of SportType containing currently live sports"
+      },
+      "content_identifier": {
+        "type": "liveSports",
+        "route": "liveSports"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time",
+        "updates_include": [
+          "active sports",
+          "event counts",
+          "live status changes"
+        ]
+      }
+    },
+    "subscribeAllSportTypes": {
+      "description": "Subscribes to updates for all available sport types, including both live and pre-live sports",
+      "signature": "subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+      "parameters": {},
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError>",
+        "description": "A publisher that emits arrays of SportType containing all available sports"
+      },
+      "content_identifier": {
+        "type": "allSports",
+        "route": "allSports"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "on-change",
+        "updates_include": [
+          "all available sports",
+          "sport status changes",
+          "event availability",
+          "market coverage"
+        ]
+      }
+    },
+    "subscribeToLiveDataUpdates": {
+      "description": "Subscribes to real-time live data updates for a specific event, including detailed statistics and play-by-play information",
+      "signature": "subscribeToLiveDataUpdates(forEventWithId: String) -> AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError>",
+      "parameters": {
+        "forEventWithId": {
+          "type": "String",
+          "description": "The unique identifier of the event to receive live data updates for"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<EventLiveData>, ServiceProviderError>",
+        "description": "A publisher that emits EventLiveData updates containing detailed live event information"
+      },
+      "content_identifier": {
+        "type": "eventDetailsLiveData",
+        "route": "eventDetailsLiveData(eventId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time",
+        "live_data_updates": {
+          "includes": [
+            "play-by-play events",
+            "detailed statistics",
+            "team and player data",
+            "match incidents",
+            "live commentary",
+            "timeline events"
+          ]
+        }
+      }
+    },
+    "subscribeEventMarkets": {
+      "description": "Subscribes to all markets associated with a specific event, including odds updates and market status changes",
+      "signature": "subscribeEventMarkets(eventId: String) -> AnyPublisher<SubscribableContent<Event>, ServiceProviderError>",
+      "parameters": {
+        "eventId": {
+          "type": "String",
+          "description": "The unique identifier of the event to subscribe to markets for"
+        }
+      },
+      "response": {
+        "type": "AnyPublisher<SubscribableContent<Event>, ServiceProviderError>",
+        "description": "A publisher that emits Event updates containing all markets and their current state"
+      },
+      "content_identifier": {
+        "type": "eventSecundaryMarkets",
+        "route": "eventSecundaryMarkets(eventId: String)"
+      },
+      "subscription_details": {
+        "requires_socket_token": true,
+        "auto_unsubscribe": true,
+        "update_frequency": "real-time",
+        "market_updates": {
+          "includes": [
+            "all market types",
+            "odds changes",
+            "market status updates",
+            "market availability",
+            "settlement information"
+          ]
+        }
+      }
+    }
+  }
+}
