@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CE07675C2DDB8AD700103999"
-               BuildableName = "Demo.app"
-               BlueprintName = "Demo"
-               ReferencedContainer = "container:GomaUIDemo.xcodeproj">
+               BuildableName = "Catalog.app"
+               BlueprintName = "Catalog"
+               ReferencedContainer = "container:GomaUICatalog.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE07675C2DDB8AD700103999"
-            BuildableName = "Demo.app"
-            BlueprintName = "Demo"
-            ReferencedContainer = "container:GomaUIDemo.xcodeproj">
+            BuildableName = "Catalog.app"
+            BlueprintName = "Catalog"
+            ReferencedContainer = "container:GomaUICatalog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CE07675C2DDB8AD700103999"
-            BuildableName = "Demo.app"
-            BlueprintName = "Demo"
-            ReferencedContainer = "container:GomaUIDemo.xcodeproj">
+            BuildableName = "Catalog.app"
+            BlueprintName = "Catalog"
+            ReferencedContainer = "container:GomaUICatalog.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

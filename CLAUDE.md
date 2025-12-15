@@ -50,7 +50,7 @@ Currently the main focus of development.
 - **Complexity**: 253 directories, 646 files - streamlined and focused
 - **Key Features**: Direct Swift Package dependencies, modern project organization, GomaUI StyleProvider theming
 
-#### **3. GomaUIDemo** (`Frameworks/GomaUI/GomaUIDemo.xcodeproj`)
+#### **3. GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`)
 *Component testing and preview application*
 
 - **Purpose**: Live component gallery, development playground, integration testing
@@ -159,7 +159,7 @@ API Request → Internal Models → Model Mappers → Domain Models → UI Compo
 **GomaUI Component Testing**:
 ```bash
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
-xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUIDemo -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUICatalog -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 ```
 
 **BetssonCameroonApp (Modern Architecture)**:
@@ -190,12 +190,12 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 **BetssonCameroonApp**:
 - `BetssonCameroonApp` (Single modern target)
 
-**GomaUIDemo**:
-- `DemoGomaUI` (Demo APP for the GomaUI Swift Package, for testing and preview in the simulator the components)
+**GomaUICatalog**:
+- `GomaUICatalog` (Catalog app for the GomaUI Swift Package, for testing and preview in the simulator the components)
 
 ### Build Context Guidelines
 
-- **DemoGomaUI**: Use for testing GomaUI components in isolation
+- **GomaUICatalog**: Use for testing GomaUI components in isolation
 - **BetssonCameroonApp**: Camerron Client, use as reference for modern architecture patterns
 - **Betsson UAT**: France Client, default development scheme for legacy codebase work
 - **Demo**: Use for general development, testing on new features that no client uses, with multiple provider support
@@ -213,7 +213,7 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 1.  **Project Selection Strategy**:
     *   **New Development**: Use BetssonCameroonApp patterns and architecture
     *   **Legacy Maintenance**: Work within BetssonFranceApp while migrating to modern patterns
-    *   **Component Development**: Use GomaUIDemo for testing and validation
+    *   **Component Development**: Use GomaUICatalog for testing and validation
 
 *For a detailed explanation of the MVVM architecture, refer to [Documentation/MVVM.md](Documentation/MVVM.md).*
 
@@ -299,12 +299,12 @@ Development session journals are located in `Documentation/DevelopmentJournal/`.
 
 1. **Observe**: Document symptoms vs root causes
 2. **Isolate**: Determine if issue is in GomaUI, ServicesProvider, or app-specific code
-3. **Test**: Use appropriate project/scheme for testing (GomaUIDemo for UI, BetssonCameroonApp for modern patterns)
+3. **Test**: Use appropriate project/scheme for testing (GomaUICatalog for UI, BetssonCameroonApp for modern patterns)
 4. **Verify**: Ensure fixes work across relevant projects
 
 ### Debugging Tools by Problem Type
 
-- **UI/Layout Issues**: Test in GomaUIDemo, check StyleProvider configuration, verify constraint setup
+- **UI/Layout Issues**: Test in GomaUICatalog, check StyleProvider configuration, verify constraint setup
 - **Data Flow Issues**: Check ServicesProvider integration, verify protocol implementations, test with mocks
 - **Build Issues**: Verify workspace dependencies, check scheme configurations, ensure Swift Package integration
 - **Performance Issues**: Profile in appropriate target, check reactive binding patterns, verify memory management
@@ -312,7 +312,7 @@ Development session journals are located in `Documentation/DevelopmentJournal/`.
 ### Development Environment Setup
 
 - **Primary Development**: BetssonCameroonApp for new features
-- **Component Development**: GomaUIDemo for UI component work  
+- **Component Development**: GomaUICatalog for UI component work
 - **Legacy Maintenance**: BetssonFranceApp with gradual migration to modern patterns
 - **Testing**: Use mock implementations extensively for isolated testing
 
@@ -401,7 +401,7 @@ This workspace has two specialized MCP (Model Context Protocol) servers configur
 
 ### Project-Specific Debugging
 
-1. **GomaUI Issues**: Test in GomaUIDemo, check component protocol implementations
+1. **GomaUI Issues**: Test in GomaUICatalog, check component protocol implementations
 2. **ServicesProvider Issues**: Verify provider configurations, check protocol conformance
 3. **BetssonCameroonApp Issues**: Modern patterns - check protocol bindings, StyleProvider usage
 4. **BetssonFranceApp Issues**: Legacy patterns - check for mixed architectural approaches

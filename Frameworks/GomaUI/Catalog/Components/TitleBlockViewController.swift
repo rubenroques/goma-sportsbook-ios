@@ -1,14 +1,14 @@
 //
-//  ActionButtonBlockViewController.swift
-//  GomaUIDemo
+//  TitleBlockViewController.swift
+//  GomaUICatalog
 //
-//  Created by André Lascas on 13/03/2025.
+//  Created by André Lascas on 12/03/2025.
 //
 
 import UIKit
 import GomaUI
 
-class ActionButtonBlockViewController: UIViewController {
+class TitleBlockViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentView: UIView = Self.createContentView()
@@ -26,13 +26,15 @@ class ActionButtonBlockViewController: UIViewController {
         contentView.addSubview(stackView)
         
         // Add different states
-        let defaultView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.defaultMock)
-        let disabledView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.disabledMock)
-        let longTextView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.longTextMock)
+        let defaultView = TitleBlockView(viewModel: MockTitleBlockViewModel.defaultMock)
+        let centeredView = TitleBlockView(viewModel: MockTitleBlockViewModel.centeredMock)
+        let leftAlignedView = TitleBlockView(viewModel: MockTitleBlockViewModel.leftAlignedMock)
+        let longTitleView = TitleBlockView(viewModel: MockTitleBlockViewModel.longTitleMock)
         
         stackView.addArrangedSubview(defaultView)
-        stackView.addArrangedSubview(disabledView)
-        stackView.addArrangedSubview(longTextView)
+        stackView.addArrangedSubview(centeredView)
+        stackView.addArrangedSubview(leftAlignedView)
+        stackView.addArrangedSubview(longTitleView)
         
         initConstraints()
     }
@@ -43,7 +45,7 @@ class ActionButtonBlockViewController: UIViewController {
 }
 
 // MARK: - Subviews Initialization and Setup
-extension ActionButtonBlockViewController {
+extension TitleBlockViewController {
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()

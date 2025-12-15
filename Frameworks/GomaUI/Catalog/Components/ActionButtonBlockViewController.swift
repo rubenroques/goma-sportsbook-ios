@@ -1,14 +1,14 @@
 //
-//  GradientHeaderViewController.swift
-//  GomaUIDemo
+//  ActionButtonBlockViewController.swift
+//  GomaUICatalog
 //
-//  Created by André Lascas on 12/03/2025.
+//  Created by André Lascas on 13/03/2025.
 //
 
 import UIKit
 import GomaUI
 
-class GradientHeaderViewController: UIViewController {
+class ActionButtonBlockViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentView: UIView = Self.createContentView()
@@ -26,15 +26,13 @@ class GradientHeaderViewController: UIViewController {
         contentView.addSubview(stackView)
         
         // Add different states
-        let defaultView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.defaultMock)
-        let blueView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.blueGradientMock)
-        let purpleView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.purpleGradientMock)
-        let longTitleView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.longTitleMock)
+        let defaultView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.defaultMock)
+        let disabledView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.disabledMock)
+        let longTextView = ActionButtonBlockView(viewModel: MockActionButtonBlockViewModel.longTextMock)
         
         stackView.addArrangedSubview(defaultView)
-        stackView.addArrangedSubview(blueView)
-        stackView.addArrangedSubview(purpleView)
-        stackView.addArrangedSubview(longTitleView)
+        stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(longTextView)
         
         initConstraints()
     }
@@ -45,7 +43,7 @@ class GradientHeaderViewController: UIViewController {
 }
 
 // MARK: - Subviews Initialization and Setup
-extension GradientHeaderViewController {
+extension ActionButtonBlockViewController {
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
@@ -84,7 +82,7 @@ extension GradientHeaderViewController {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
 }

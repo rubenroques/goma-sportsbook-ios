@@ -1,6 +1,6 @@
 //
 //  PromotionCardViewController.swift
-//  GomaUIDemo
+//  GomaUICatalog
 //
 //  Created on 29/08/2025.
 //

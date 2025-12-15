@@ -1,6 +1,6 @@
 //
-//  DescriptionBlockViewController.swift
-//  GomaUIDemo
+//  GradientHeaderViewController.swift
+//  GomaUICatalog
 //
 //  Created by André Lascas on 12/03/2025.
 //
@@ -8,7 +8,7 @@
 import UIKit
 import GomaUI
 
-class DescriptionBlockViewController: UIViewController {
+class GradientHeaderViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentView: UIView = Self.createContentView()
@@ -26,13 +26,15 @@ class DescriptionBlockViewController: UIViewController {
         contentView.addSubview(stackView)
         
         // Add different states
-        let defaultView = DescriptionBlockView(viewModel: MockDescriptionBlockViewModel.defaultMock)
-        let shortView = DescriptionBlockView(viewModel: MockDescriptionBlockViewModel.shortMock)
-        let longView = DescriptionBlockView(viewModel: MockDescriptionBlockViewModel.longMock)
+        let defaultView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.defaultMock)
+        let blueView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.blueGradientMock)
+        let purpleView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.purpleGradientMock)
+        let longTitleView = GradientHeaderView(viewModel: MockGradientHeaderViewModel.longTitleMock)
         
         stackView.addArrangedSubview(defaultView)
-        stackView.addArrangedSubview(shortView)
-        stackView.addArrangedSubview(longView)
+        stackView.addArrangedSubview(blueView)
+        stackView.addArrangedSubview(purpleView)
+        stackView.addArrangedSubview(longTitleView)
         
         initConstraints()
     }
@@ -43,7 +45,7 @@ class DescriptionBlockViewController: UIViewController {
 }
 
 // MARK: - Subviews Initialization and Setup
-extension DescriptionBlockViewController {
+extension GradientHeaderViewController {
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
@@ -82,7 +84,7 @@ extension DescriptionBlockViewController {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16)
         ])
     }
 }

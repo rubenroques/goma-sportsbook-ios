@@ -1,14 +1,14 @@
 //
-//  TitleBlockViewController.swift
-//  GomaUIDemo
+//  StackViewBlockViewController.swift
+//  GomaUICatalog
 //
-//  Created by André Lascas on 12/03/2025.
+//  Created by André Lascas on 13/03/2025.
 //
 
 import UIKit
 import GomaUI
 
-class TitleBlockViewController: UIViewController {
+class StackViewBlockViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentView: UIView = Self.createContentView()
@@ -26,15 +26,13 @@ class TitleBlockViewController: UIViewController {
         contentView.addSubview(stackView)
         
         // Add different states
-        let defaultView = TitleBlockView(viewModel: MockTitleBlockViewModel.defaultMock)
-        let centeredView = TitleBlockView(viewModel: MockTitleBlockViewModel.centeredMock)
-        let leftAlignedView = TitleBlockView(viewModel: MockTitleBlockViewModel.leftAlignedMock)
-        let longTitleView = TitleBlockView(viewModel: MockTitleBlockViewModel.longTitleMock)
+        let defaultView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.defaultMock)
+        let multipleViewsView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.multipleViewsMock)
+        let singleViewView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.singleViewMock)
         
         stackView.addArrangedSubview(defaultView)
-        stackView.addArrangedSubview(centeredView)
-        stackView.addArrangedSubview(leftAlignedView)
-        stackView.addArrangedSubview(longTitleView)
+        stackView.addArrangedSubview(multipleViewsView)
+        stackView.addArrangedSubview(singleViewView)
         
         initConstraints()
     }
@@ -45,7 +43,7 @@ class TitleBlockViewController: UIViewController {
 }
 
 // MARK: - Subviews Initialization and Setup
-extension TitleBlockViewController {
+extension StackViewBlockViewController {
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()

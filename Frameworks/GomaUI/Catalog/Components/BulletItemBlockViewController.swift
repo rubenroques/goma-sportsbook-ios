@@ -1,14 +1,14 @@
 //
-//  StackViewBlockViewController.swift
-//  GomaUIDemo
+//  BulletItemBlockViewController.swift
+//  GomaUICatalog
 //
-//  Created by André Lascas on 13/03/2025.
+//  Created by André Lascas on 14/03/2025.
 //
 
 import UIKit
 import GomaUI
 
-class StackViewBlockViewController: UIViewController {
+class BulletItemBlockViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var contentView: UIView = Self.createContentView()
@@ -26,13 +26,13 @@ class StackViewBlockViewController: UIViewController {
         contentView.addSubview(stackView)
         
         // Add different states
-        let defaultView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.defaultMock)
-        let multipleViewsView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.multipleViewsMock)
-        let singleViewView = StackViewBlockView(viewModel: MockStackViewBlockViewModel.singleViewMock)
+        let defaultView = BulletItemBlockView(viewModel: MockBulletItemBlockViewModel.defaultMock)
+        let shortView = BulletItemBlockView(viewModel: MockBulletItemBlockViewModel.shortMock)
+        let longView = BulletItemBlockView(viewModel: MockBulletItemBlockViewModel.longMock)
         
         stackView.addArrangedSubview(defaultView)
-        stackView.addArrangedSubview(multipleViewsView)
-        stackView.addArrangedSubview(singleViewView)
+        stackView.addArrangedSubview(shortView)
+        stackView.addArrangedSubview(longView)
         
         initConstraints()
     }
@@ -43,7 +43,7 @@ class StackViewBlockViewController: UIViewController {
 }
 
 // MARK: - Subviews Initialization and Setup
-extension StackViewBlockViewController {
+extension BulletItemBlockViewController {
     
     private static func createScrollView() -> UIScrollView {
         let scrollView = UIScrollView()
