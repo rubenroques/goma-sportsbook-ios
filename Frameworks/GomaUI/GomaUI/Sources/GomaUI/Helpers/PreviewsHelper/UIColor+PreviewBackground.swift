@@ -6,10 +6,10 @@ extension UIColor {
 
     /// A test background color specifically designed for SwiftUI previews.
     /// Provides good contrast with most components and adapts to light/dark mode.
-    /// Has a subtle red tint to differentiate from component backgrounds.
+    /// Neutral gray to differentiate from component backgrounds.
     ///
-    /// **Light mode**: Very light gray with red tint (#F8F6F6)
-    /// **Dark mode**: Dark gray with red tint (#1E1C1C)
+    /// **Light mode**: Medium light gray (#E0E0E0)
+    /// **Dark mode**: Dark gray (#1C1C1C)
     ///
     /// **Usage in previews**:
     /// ```swift
@@ -25,13 +25,13 @@ extension UIColor {
         return UIColor { traitCollection in
             switch traitCollection.userInterfaceStyle {
             case .dark:
-                // Dark mode: Dark gray with subtle red tint
-                return UIColor(red: 0.19, green: 0.11, blue: 0.11, alpha: 1.0)
+                // Dark mode: Neutral dark gray
+                return UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1.0)
             case .light, .unspecified:
-                // Light mode: Very light gray with subtle red tint
-                return UIColor(red: 0.99, green: 0.92, blue: 0.92, alpha: 1.0)
+                // Light mode: Medium light gray
+                return UIColor(red: 0.88, green: 0.88, blue: 0.88, alpha: 1.0)
             @unknown default:
-                return UIColor(red: 0.99, green: 0.92, blue: 0.92, alpha: 1.0)
+                return UIColor(red: 0.88, green: 0.88, blue: 0.88, alpha: 1.0)
             }
         }
     }

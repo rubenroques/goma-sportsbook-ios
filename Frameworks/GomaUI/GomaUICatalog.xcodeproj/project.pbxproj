@@ -225,7 +225,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CE0767582DDB8AD700103999 /* Build configuration list for PBXProject "GomaUIDemo" */;
+			buildConfigurationList = CE0767582DDB8AD700103999 /* Build configuration list for PBXProject "GomaUICatalog" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (

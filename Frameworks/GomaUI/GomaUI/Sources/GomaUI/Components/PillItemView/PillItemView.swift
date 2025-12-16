@@ -40,7 +40,8 @@ final public class PillItemView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
-        setupBindings()
+        configureImmediately()  // Sync render first
+        setupBindings()          // Reactive updates second
         setupGestures()
     }
 
@@ -52,6 +53,39 @@ final public class PillItemView: UIView {
         super.layoutSubviews()
         
         containerView.layer.cornerRadius = containerView.frame.height / 2.0
+    }
+
+    // MARK: - Synchronous Configuration
+    private func configureImmediately() {
+        render(state: viewModel.currentDisplayState)
+    }
+
+    private func render(state: PillDisplayState) {
+        let data = state.pillData
+
+        // Title
+        titleLabel.text = data.title
+
+        // Left icon
+        if let iconName = data.leftIconName {
+            leftIconImageView.isHidden = false
+            if let image = UIImage(named: iconName)?.withRenderingMode(data.shouldApplyTintColor ? .alwaysTemplate : .alwaysOriginal) {
+                leftIconImageView.image = image
+                if data.shouldApplyTintColor {
+                    leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
+                }
+            } else {
+                leftIconImageView.image = UIImage(systemName: iconName)
+            }
+        } else {
+            leftIconImageView.isHidden = true
+        }
+
+        // Expand icon
+        expandIconImageView.isHidden = !data.showExpandIcon
+
+        // Selection state
+        updateSelectionState(isSelected: data.isSelected)
     }
 
     // MARK: - Setup
@@ -140,60 +174,14 @@ final public class PillItemView: UIView {
     }
 
     private func setupBindings() {
-        // Title binding
-        viewModel.titlePublisher
+        // Unified state binding - uses dropFirst() to skip initial emit (already rendered synchronously)
+        viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] title in
-                self?.titleLabel.text = title
+            .sink { [weak self] state in
+                self?.render(state: state)
             }
             .store(in: &cancellables)
-
-        // Left icon binding
-        Publishers.CombineLatest(viewModel.leftIconNamePublisher, viewModel.shouldApplyTintColorPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] iconName, shouldApplyTintColorPublisher in
-                if let iconName = iconName {
-                    self?.leftIconImageView.isHidden = false
-                    if let image = UIImage(named: iconName)?.withRenderingMode(shouldApplyTintColorPublisher ? .alwaysTemplate : .alwaysOriginal) {
-                        self?.leftIconImageView.image = image
-                        if shouldApplyTintColorPublisher {
-                            self?.leftIconImageView.tintColor = StyleProvider.Color.highlightPrimary
-                        }
-                    }
-                    else {
-                        self?.leftIconImageView.image = UIImage(systemName: iconName)
-                    }
-                } else {
-                    self?.leftIconImageView.isHidden = true
-                }
-            }
-            .store(in: &cancellables)
-
-        // Expand icon visibility binding
-        viewModel.showExpandIconPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] showExpandIcon in
-                self?.expandIconImageView.isHidden = !showExpandIcon
-            }
-            .store(in: &cancellables)
-
-        // Selection state binding
-        viewModel.isSelectedPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isSelected in
-                self?.updateSelectionState(isSelected: isSelected)
-            }
-            .store(in: &cancellables)
-
-        // Combined binding for icon tint colors (depends on selected state)
-//        Publishers.CombineLatest(viewModel.isSelectedPublisher, viewModel.leftIconNamePublisher)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] isSelected, _ in
-//                let tintColor = isSelected ? StyleProvider.Color.highlightPrimaryContrast : StyleProvider.Color.highlightPrimary
-//                self?.leftIconImageView.tintColor = tintColor
-//                self?.expandIconImageView.tintColor = tintColor
-//            }
-//            .store(in: &cancellables)
     }
 
     private func updateSelectionState(isSelected: Bool) {

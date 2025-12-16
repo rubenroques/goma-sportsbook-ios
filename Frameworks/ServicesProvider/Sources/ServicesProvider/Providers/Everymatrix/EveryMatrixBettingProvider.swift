@@ -181,7 +181,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
         print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
 
-        let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betId: betId)
+        let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betIds: [betId])
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
 
