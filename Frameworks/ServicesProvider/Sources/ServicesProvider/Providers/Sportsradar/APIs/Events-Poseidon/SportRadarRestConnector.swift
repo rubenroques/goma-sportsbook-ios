@@ -72,13 +72,12 @@ class SportRadarRestConnector {
 
                 //
                 // print("SportRadarRestConnector.Data: \(String(data: result.data, encoding: .utf8)!) ")
-                
                 return result.data
             }
             .decode(type: T.self, decoder: self.decoder)
             .mapError { error in
                 // Debug helper
-                // print("ServiceProvider-NetworkManager Error \(error)")
+                print("ServiceProvider-NetworkManager Error: \(error)")
                 
                 if "\(error)" == "emptyData" {
                     return ServiceProviderError.emptyData

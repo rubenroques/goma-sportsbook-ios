@@ -227,7 +227,7 @@ Different actions trigger different behaviors:
 
 ## Demo Integration
 
-The component is integrated into GomaUIDemo with:
+The component is integrated into GomaUICatalog with:
 - Interactive configuration switching
 - Real-time language updates
 - Action logging display
@@ -262,4 +262,4 @@ ProfileMenuListView/
 
 ## Example Implementation
 
-See `ProfileMenuListViewController` in the GomaUIDemo app for a complete implementation example with interactive features and real-time updates.
+See `ProfileMenuListViewController` in the GomaUICatalog app for a complete implementation example with interactive features and real-time updates.

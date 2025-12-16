@@ -21,12 +21,16 @@ class SportRadarEventDetailsCoordinator {
     weak var marketsSubscription: Subscription?
     
     var isActive: Bool {
+        var isActive = self.marketsSubscription != nil
+        
         if self.waitingSubscription {
             // We haven't tried to subscribe or the
             // subscribe request it's ongoing right now
-            return true
+            isActive = true
         }
-        return self.marketsSubscription != nil
+        
+        print("[Debug] \(self.debugMatchId) SREventDetailsC.isActive")
+        return isActive
     }
 
     var eventDetailsPublisher: AnyPublisher<SubscribableContent<Event>, ServiceProviderError> {
@@ -42,7 +46,12 @@ class SportRadarEventDetailsCoordinator {
     
     private var cancellables = Set<AnyCancellable>()
 
+    let debugMatchId: String
+    
     init(matchId: String, sessionToken: String, storage: SportRadarEventStorage, liveDataExtendedSubscription: Subscription? = nil, marketsSubscription: Subscription? = nil) {
+        
+        self.debugMatchId = matchId
+        
         self.sessionToken = sessionToken
         self.storage = storage
 
@@ -99,6 +108,7 @@ class SportRadarEventDetailsCoordinator {
     }
 
     deinit {
+        print("SportRadarEventDetailsCoordinator.deinit")
     }
     
     private func checkEventDetailsAvailable() -> AnyPublisher<Void, ServiceProviderError> {
@@ -180,7 +190,7 @@ class SportRadarEventDetailsCoordinator {
                 return
             }
             if let liveDataExtendedSubscription = self?.liveDataExtendedSubscription {
-                print("liveDataSubscription isn't managed by this class \(liveDataExtendedSubscription)")
+                // the liveDataSubscription isn't managed by this class
             }
             else if let weakSelf = self {
                 let liveDataExtendedSubscription = Subscription(contentIdentifier: weakSelf.liveDataContentIdentifier,
@@ -384,6 +394,7 @@ extension SportRadarEventDetailsCoordinator {
 extension SportRadarEventDetailsCoordinator: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {
+        print("[Debug] \(self.debugMatchId) SREventDetailsC.unsubscribe - Starting unsubscription")
         let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
         guard let request = endpoint.request() else { return }
         let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
@@ -392,10 +403,10 @@ extension SportRadarEventDetailsCoordinator: UnsubscriptionController {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("ServiceProvider.Subscription.Debug unsubscribe failed")
+                print("ServiceProvider.Subscription.Debug SREventDetailsC unsubscribe failed")
                 return
             }
-            print("ServiceProvider.Subscription.Debug unsubscribe ok")
+            print("[Debug] \(self.debugMatchId) SREventDetailsC.unsubscribed success")
         }
         sessionDataTask.resume()
     }

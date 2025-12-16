@@ -8,7 +8,7 @@ GomaUI is a **reusable UI component library** for iOS sports betting application
 
 ### Architecture
 - **Framework**: Swift Package at `GomaUI/` with protocol-driven components
-- **Demo App**: `GomaUIDemo.xcodeproj` with interactive component gallery
+- **Catalog App**: `GomaUICatalog.xcodeproj` with interactive component gallery
 - **Pattern**: MVVM + Combine + Protocol interfaces + Mock implementations
 - **Styling**: Centralized StyleProvider for theming
 
@@ -286,19 +286,19 @@ xcrun simctl list devices
 
 **Build Commands**:
 ```bash
-# Build demo app (for testing components) - replace YOUR_DEVICE_ID with actual ID
+# Build catalog app (for testing components) - replace YOUR_DEVICE_ID with actual ID
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
-xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUIDemo -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
+xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUICatalog -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 
 # Build framework only (no destination needed)
 xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUI build 2>&1 | xcbeautify --quieter
 
 # Available schemes
-# - GomaUIDemo: Demo app with component gallery
+# - GomaUICatalog: Catalog app with component gallery
 # - GomaUI: Framework only
 ```
 
-## Adding Components to Demo App
+## Adding Components to Catalog App
 
 ### 1. Create Component Files
 Follow the multi-file pattern for complex components, single file for simple ones.
@@ -316,7 +316,7 @@ UIComponent(
 )
 ```
 
-### 3. Create Demo View Controller
+### 3. Create Catalog View Controller
 ```swift
 class YourComponentViewController: UIViewController {
     override func viewDidLoad() {
@@ -369,7 +369,7 @@ label.font = UIFont.systemFont(ofSize: 14)
 ## Testing Workflow
 
 1. **SwiftUI Previews**: Use PreviewUIViewController for development
-2. **Demo App Gallery**: Run DemoGomaUI to see all components
+2. **Catalog App Gallery**: Run GomaUICatalog to see all components
 3. **Interactive Testing**: Navigate to specific component demos
 4. **Mock ViewModels**: Use different mock states for testing
 

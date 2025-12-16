@@ -1,0 +1,75 @@
+//
+//  GradientBorderView.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 19/05/2023.
+//
+
+import Foundation
+import UIKit
+
+class GradientBorderView: UIView {
+
+    var gradientBorderWidth: CGFloat = 10
+    var gradientCornerRadius: CGFloat = 0
+
+    var gradientColors: [UIColor] = [UIColor.App.liveBorderGradient3, UIColor.App.liveBorderGradient2, UIColor.App.liveBorderGradient1] {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
+    
+    // Customizable startPoint and endPoint
+        var gradientStartPoint: CGPoint = CGPoint(x: 0, y: 0.97) {
+            didSet {
+                self.setNeedsLayout()
+            }
+        }
+
+        var gradientEndPoint: CGPoint = CGPoint(x: 0.95, y: 0) {
+            didSet {
+                self.setNeedsLayout()
+            }
+        }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Remove the old gradient border if it exists
+        self.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+
+        // Add a new gradient border
+        self.addGradientBorder(to: self, borderWidth: self.gradientBorderWidth, cornerRadius: self.gradientCornerRadius)
+    }
+
+    private func gradientLayer(bounds: CGRect) -> CAGradientLayer {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+//        gradientLayer.startPoint = CGPoint(x: 0, y: 0.97) // Bottom Left
+        gradientLayer.startPoint = self.gradientStartPoint
+//        gradientLayer.endPoint = CGPoint(x: 0.95, y: 0) // Top Right
+        gradientLayer.endPoint = self.gradientEndPoint
+        gradientLayer.locations = [0.0, 0.44, 1.0]
+        gradientLayer.colors = self.gradientColors.map { $0.cgColor }
+
+        return gradientLayer
+    }
+
+    private func maskLayer(bounds: CGRect, borderWidth: CGFloat, cornerRadius: CGFloat) -> CAShapeLayer {
+        let path = UIBezierPath(roundedRect: bounds.insetBy(dx: borderWidth/2, dy: borderWidth/2), cornerRadius: cornerRadius)
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = bounds
+        maskLayer.path = path.cgPath
+        maskLayer.lineWidth = borderWidth
+        maskLayer.strokeColor = UIColor.black.cgColor
+        maskLayer.fillColor = UIColor.clear.cgColor
+        return maskLayer
+    }
+
+    private func addGradientBorder(to view: UIView, borderWidth: CGFloat, cornerRadius: CGFloat) {
+        let gradient = self.gradientLayer(bounds: view.bounds)
+        let mask = self.maskLayer(bounds: view.bounds, borderWidth: borderWidth, cornerRadius: cornerRadius)
+        gradient.mask = mask
+        view.layer.addSublayer(gradient)
+    }
+}

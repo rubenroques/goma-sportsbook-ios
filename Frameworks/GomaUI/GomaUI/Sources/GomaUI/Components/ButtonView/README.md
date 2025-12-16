@@ -252,8 +252,8 @@ viewModel.buttonDataPublisher
 
 The component includes extensive testing support:
 
-### Demo App Testing
-Run `GomaUIDemo` target to see all button variations:
+### Catalog App Testing
+Run `GomaUICatalog` target to see all button variations:
 - 6 basic style examples
 - 7 color customization examples  
 - 5 font customization examples
@@ -268,7 +268,7 @@ Use Xcode previews for rapid iteration:
 
 ## Integration
 
-### Adding to GomaUIDemo
+### Adding to GomaUICatalog
 ```swift
 // Add to ButtonViewController
 ("Your Custom Button", MockButtonViewModel.yourCustomMock)

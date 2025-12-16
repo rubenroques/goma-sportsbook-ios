@@ -431,8 +431,7 @@ extension UserSessionStore {
                     self?.userCashbackBalance.send(nil)
                     return
                 }
-                let cashbackBalance = Double(balance)
-                self?.userCashbackBalance.send(cashbackBalance)
+                self?.userCashbackBalance.send(balance)
             })
             .store(in: &self.cancellables)
     }

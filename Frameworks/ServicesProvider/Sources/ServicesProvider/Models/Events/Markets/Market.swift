@@ -81,7 +81,7 @@ public class Market: Codable, Equatable, Hashable, Identifiable {
                 outcomes: [Outcome],
 
                 marketTypeId: String?,
-                marketTypeName: String?,
+                marketTypeName: String? = nil,
 
                 marketFilterId: String?,
                 eventMarketTypeId: String?,

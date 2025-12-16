@@ -465,7 +465,7 @@ public struct UserWallet: Hashable {
     public var vipStatus: String?
     public var currency: String?
     public var loyaltyPoint: Int?
-    
+
     public var totalString: String?
     public var total: Double?
     public var totalRealAmountString: String?
@@ -488,6 +488,7 @@ public struct UserWallet: Hashable {
     public var withdrawRestrictionAmount: Double?
     public var totalEscrowString: String?
     public var totalEscrow: Double?
+    public var externalFreeBetBalances: [ExternalFreeBetBalance]?
     
     enum CodingKeys: String, CodingKey {
         case totalString = "totalBalance"
@@ -518,6 +519,16 @@ public struct UserWallet: Hashable {
     }
     
     
+}
+
+public struct ExternalFreeBetBalance: Hashable {
+    public var productCode: String
+    public var balance: String
+
+    enum CodingKeys: String, CodingKey {
+        case productCode = "productCode"
+        case balacen = "balance"
+    }
 }
 
 public struct UsernameValidation {

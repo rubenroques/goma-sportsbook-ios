@@ -5,13 +5,13 @@
       location = "container:Frameworks/GomaPlatform">
    </FileRef>
    <FileRef
-      location = "group:BetssonFranceApp/BetssonFranceApp.xcodeproj">
+      location = "group:BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj">
    </FileRef>
    <FileRef
       location = "container:BetssonCameroonApp/BetssonCameroonApp.xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:Frameworks/GomaUI/GomaUIDemo.xcodeproj">
+      location = "container:Frameworks/GomaUI/GomaUICatalog.xcodeproj">
    </FileRef>
    <FileRef
       location = "container:Frameworks/GomaUI/GomaUI">

@@ -15,9 +15,9 @@ enum BettingAPIClient {
     case placeBets(betTickets: [BetTicket], useFreebetBalance: Bool)
     
     case calculateBetBuilderReturn(betTicket: BetTicket)
-    case placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double)
+    case placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool)
     
-    case confirmBoostedBet(identifier: String)
+    case confirmBoostedBet(identifier: String, detailedCode: String?)
     case rejectBoostedBet(identifier: String)
     
     case calculateCashout(betId: String, stakeValue: String?)
@@ -57,7 +57,7 @@ extension BettingAPIClient: Endpoint {
         case .placeBetBuilderBet:
             return "/api/custom-bet/v1/placecustombet"
             
-        case .confirmBoostedBet(let identifier):
+        case .confirmBoostedBet(let identifier, _):
             return "/api/betting/fo/betslip/\(identifier)/confirm"
         case .rejectBoostedBet(let identifier):
             return "/api/betting/fo/betslip/\(identifier)/reject"
@@ -312,14 +312,14 @@ extension BettingAPIClient: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             return data
             
-        case .placeBetBuilderBet(let betTicket, let odd):
+        case .placeBetBuilderBet(let betTicket, let odd, let useFreebetBalance):
             let betAmount = (betTicket.globalStake ?? 0.0)
             let betTicketSelectionsIds = betTicket.tickets.map({ "\"" + $0.identifier + "\"" }).joined(separator: ",")
             let body = """
                        {
                          "idFOSelections": [\(betTicketSelectionsIds)],
                          "stakeAmount": \(betAmount),
-                         "free" : 0,
+                         "free" : \(useFreebetBalance),
                          "useAutoAcceptance" : true,
                          "calculatedOdds" : \(odd)
                        }
@@ -328,12 +328,22 @@ extension BettingAPIClient: Endpoint {
             return data
             
             
-        case .confirmBoostedBet:
+        case .confirmBoostedBet(_, let detailedCode):
+            
+            var detailedStateCode: Int = 66
+            
+            if let detailedCode,
+               let intDetailedCode = Int(detailedCode) {
+                detailedStateCode = intDetailedCode
+            }
+            
+            print("Detailed State Code: \(detailedStateCode)")
+            
             let body = """
                         {
                             "betStatus": {
                                 "state": 1,
-                                "detailedState": 66,
+                                "detailedState": \(detailedStateCode),
                                 "statusCode": null,
                                 "statusText": null
                             },
@@ -734,6 +744,7 @@ extension BettingAPIClient: Endpoint {
 
         var legsStringArray: [String] = []
         for selection in betTicket.tickets {
+            let sport = selection
             let priceDown: String
             let priceUp: String
 

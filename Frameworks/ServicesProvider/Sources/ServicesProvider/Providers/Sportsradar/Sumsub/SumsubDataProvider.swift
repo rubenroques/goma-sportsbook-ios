@@ -16,6 +16,10 @@ public class SumsubDataProvider {
     let sumsubSecretKey = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
     let customAllowedEncodingSet = NSCharacterSet(charactersIn:" ").inverted
 
+    init() {
+
+    }
+
     public func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
 
         let urlString = "https://api.sumsub.com/resources/accessTokens?userId=\(userId)&levelName=\(levelName)".addingPercentEncoding(withAllowedCharacters: self.customAllowedEncodingSet) ?? ""

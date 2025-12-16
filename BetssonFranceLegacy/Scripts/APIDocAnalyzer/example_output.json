@@ -1,0 +1,66 @@
+{
+  "models": {
+    "UserProfile": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User's unique identifier"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address"
+        },
+        "wallet": {
+          "type": "object",
+          "model": {
+            "properties": {
+              "balance": {
+                "type": "number",
+                "description": "Current balance"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency code"
+              }
+            }
+          }
+        }
+      }
+    },
+    "EventLiveData": {
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "description": "Event unique identifier"
+        },
+        "statistics": {
+          "type": "object",
+          "description": "Live event statistics"
+        }
+      }
+    }
+  },
+  "relationships": [
+    {
+      "source": "UserProfile",
+      "target": "UserWallet",
+      "via": "wallet"
+    },
+    {
+      "source": "EventLiveData",
+      "target": "Statistics",
+      "via": "statistics"
+    }
+  ],
+  "endpoints": {
+    "rest": [
+      "getUserProfile",
+      "updateUserProfile",
+      "getEventDetails"
+    ],
+    "websocket": [
+      "subscribeLiveMatches",
+      "subscribeToLiveDataUpdates"
+    ]
+  }
+} 

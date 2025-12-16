@@ -61,6 +61,7 @@ public enum ServiceProviderError: Error, Equatable, Hashable {
     
     case notSupportedForProvider
     case matchDetailsManagerNotFound
+    case notImplemented
     case unknown
     
     // Casino specific errors
