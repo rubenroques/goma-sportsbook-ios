@@ -50,7 +50,7 @@ class SportRadarLiveEventDataCoordinator {
         }
     }
     
-    private let eventIdObserved: String
+    private let eventId: String
     private var waitingSubscription = true
     private let decoder = JSONDecoder()
     private let session = URLSession.init(configuration: .default)
@@ -58,7 +58,7 @@ class SportRadarLiveEventDataCoordinator {
     private var cancellables = Set<AnyCancellable>()
 
     init(eventId: String, sessionToken: String, storage: SportRadarEventStorage, liveDataExtendedSubscription: Subscription? = nil) {
-        self.eventIdObserved = eventId
+        self.eventId = eventId
         
         self.liveDataExtendedSubscription = liveDataExtendedSubscription
         self.sessionToken = sessionToken
@@ -101,9 +101,8 @@ class SportRadarLiveEventDataCoordinator {
                     self.liveEventCurrentValueSubject.send(completion: .failure(error))
                 }
                 self.waitingSubscription = false
-            } receiveValue: { connected in
-                // [weak self] Publish the event live details
-                print("checkLiveEventDetailsAvailable connected \(connected)")
+            } receiveValue: { [weak self] success in
+                // Publish the event live details
             }
             .store(in: &self.cancellables)
 
@@ -266,7 +265,7 @@ extension SportRadarLiveEventDataCoordinator {
     }
     
     func containsEvent(withid id: String) -> Bool {
-        return self.eventIdObserved == id
+        return self.eventId == id
     }
     
 }
@@ -326,6 +325,8 @@ extension SportRadarLiveEventDataCoordinator {
 extension SportRadarLiveEventDataCoordinator: UnsubscriptionController {
 
     func unsubscribe(subscription: Subscription) {
+        print("[Debug] \(self.eventId) SRLiveEventDataC.unsubscribe - Starting unsubscription")
+        
         let endpoint = SportRadarRestAPIClient.unsubscribe(sessionToken: subscription.sessionToken, contentIdentifier: subscription.contentIdentifier)
         guard let request = endpoint.request() else { return }
         let sessionDataTask = self.session.dataTask(with: request) { data, response, error in
@@ -334,9 +335,10 @@ extension SportRadarLiveEventDataCoordinator: UnsubscriptionController {
                 let httpResponse = response as? HTTPURLResponse,
                 (200...299).contains(httpResponse.statusCode)
             else {
-                print("ServiceProvider.Subscription.Debug unsubscribe failed")
+                print("ServiceProvider.Subscription.Debug SRLiveEventDataC unsubscribe failed")
                 return
             }
+            print("[Debug] \(self.eventId) SRLiveEventDataC.unsubscribe - Successful")
         }
         sessionDataTask.resume()
     }

@@ -1,0 +1,2137 @@
+
+"languange_code" = "fr"; // UNUSED
+"sportradar_content_languange_code" = "FR";
+"languange_code_complete" = "fr-fr"; // UNUSED
+
+"about_us" = "À propos de nous";
+"accept" = "Accepter";
+"accept_any" = "Accepter tout";
+"accept_higher" = "Accepter supérieur";
+"accept_odds_variation" = "Accepter les variations de cotes sur les paris soumis";
+"accept_tc" = "Accepter les termes et conditions";
+"access_forbidden" = "Il semble que les paris ne sont pas autorisés dans votre pays.";
+"account_security" = "Sécurité du compte";
+"account_status" = "Statut du compte";
+"accumulated_odds_winning" = "Cote de gain cumulative";
+"activate" = "Activer";
+"activate_account" = "Activer le compte";
+"activate_info" = "Votre compte a été activé";
+"activation_error_title" = "Quelque chose s'est mal passé…";
+"activation_success_text" = "Vous avez vérifié votre compte avec succès, amusez-vous bien";
+"activation_success_title" = "Vérification réussie !";
+"active" = "Actif";
+"add" = "Ajouter";
+"add_contact" = "Ajouter le contact";
+"add_file" = "Ajouter le fichier";
+"add_friend" = "";
+"add_friends" = "";
+"add_friends_to_group" = "";
+"add_from_contact" = "";
+"add_more_friends" = "";
+"add_promo_code" = "Ajouter un code promotionnel";
+"add_some_friends_start_chatting" = "";
+"add_some_friends_start_chatting_tips" = "";
+"add_the_tournament" = "Ajouter le tournoi";
+"add_to_betslip" = "Ajouter au bulletin de paris";
+"add_to_favorites" = "Ajouter aux favoris";
+"adding_bets_to_your_betslip" = "";
+"address" = "Adresse";
+"address_1" = "Adresse 1";
+"address_2" = "Adresse 2";
+"address_country" = "Adresse et pays";
+"address_name_is_required" = "L'adresse est un champ obligatoire. Veuillez remplir ce champ.";
+"address2optional" = "Adresse 2 (facultatif)";
+"advance" = "Avance";
+"advanced" = "Avancé";
+"affiliate_system" = "Système d'affiliation";
+"age_country" = "Âge et pays";
+"agree_terms_conditions" = "En vous inscrivant, vous acceptez nos \n Conditions d'utilisation, Politique de confidentialité et CLUF";
+"agree_terms_conditions_1" = "En vous inscrivant, vous acceptez nos";
+"agree_terms_conditions_2" = "Conditions d'utilisation, politique de confidentialité et CLUF";
+"all" = "Tout";
+"all_events_unavailable" = "Ces événements ne sont plus disponibles.";
+"all_live_events" = "Tous les événements en direct";
+"all_matches" = "Tous les matchs";
+"all_sports" = "Tous les sports";
+"allow_any_odd" = "Autoriser tout changement de cote";
+"allow_contact_via" = "Autoriser Betsson à me contacter via";
+"allow_email_usage" = "Autoriser l'utilisation de mon e-mail à des fins de marketing";
+"allow_higher_odds" = "Autoriser des cotes plus élevées";
+"allow_mycompetitions_notifications" = "Autoriser les notifications sur tous les jeux dans Mes compétitions";
+"allow_mygames_notifications" = "Autoriser les notifications concernant Mes jeux";
+"allow_sportsbook_to_contact" = "Autoriser Betsson à vous contacter via :";
+"allow_tracking" = "Autoriser le suivi";
+"allowed_file_types" = "Types de fichiers autorisés : png, jpg, jpeg, pdf";
+"amount" = "Montant…";
+"anonymous" = "";
+"anonymous_tips" = "";
+"anonymous_tips_settings_title" = "";
+"anual" = "Annuel";
+"any_questions_about_payment_process" = "Pour toute question sur le processus de paiement, voir";
+"app_full_potential" = "Afin d'utiliser cette application à son plein potentiel, vous devez vérifier votre adresse e-mail.";
+"app_name_dev" = "";
+"app_name_pro" = "";
+"app_settings" = "Paramètres de l'application";
+"app_version_profile" = "Version de l'application {version_1} ({version_2})\nBetsson France® Tous droits réservés";
+"appearance" = "Apparence";
+"apply" = "Appliquer";
+"approved" = "Approuvé";
+"auto_exclusion" = "Auto Exclusion";
+"auto_exclusion_info_p_1" = "L'exclusion automatique fait partie de notre politique de jeu responsable et peut aider à contrôler les activités de jeu et de pari en ligne. L'auto-exclusion peut se faire directement sur notre Site ou sur le site de l'ANJ. Le joueur peut être volontairement assigné à l'auto-exclusion de la pratique des jeux et paris en ligne.";
+"auto_exclusion_info_title" = "Qu'est-ce que l'auto exclusion ?";
+"auto_payout" = "Seuil de retrait automatique";
+"auto_payout_limit" = "Seuil de retrait automatique";
+"auto_payout_tooltip" = "Informations sur le paiement automatique";
+"available" = "Disponible";
+"available_countries" = "Pays disponibles";
+"available_markets" = "Marchés disponibles";
+"avatar" = "Avatar";
+"away" = "À l'extérieur";
+"away_label_default" = "Équipe à l'extérieur";
+"back" = "Retour";
+"back_to_site" = "Retourner au paris";
+"bank_id" = "Coordonnées bancaires";
+"beginner" = "Débutant";
+"best_number_of_consecutive_wins" = "";
+"bet" = "Pari";
+"bet_amount" = "Montant du pari";
+"bet_now" = "Pariez maintenant";
+"bet_now_share_dynamic" = "";
+"bet_registered_success" = "Votre pari a été enregistré avec succès.";
+"bet_suffered_alterations" = "Le pari a subi des modifications en raison d'un changement dans le jeu, vérifiez les nouvelles options.";
+"bet_the_same" = "";
+"betbuilder_enabled" = "BetBuilder activé";
+"bets" = "Paris";
+"bets_made" = "Paris effectués";
+"bets2" = "Paris :";
+"betslip" = "Ticket de pari";
+"betslip_settings" = "Paramètres du ticket de pari";
+"betting" = "Paris sportifs";
+"betting_fail_to_load_competitions" = "Une erreur s'est produite lors du chargement des compétitions.";
+"betting_fail_to_load_top_competitions" = "Une erreur s'est produite lors du chargement des Top compétitions.";
+"betting_fail_to_update_betslip_live_details" = "Une erreur s'est produite lors de la mise à jour des détails en direct du ticket de pari.";
+"betting_fail_to_update_betslip_odds" = "Une erreur s'est produite lors de la mise à jour des cotes du ticket de pari.";
+"betting_fail_to_update_event" = "Une erreur s'est produite lors de la mise à jour d'un événement de pari.";
+"betting_fail_to_update_event_categories" = "Une erreur s'est produite lors de la mise à jour des catégories d'événements sportifs.";
+"betting_fail_to_update_event_infos" = "Une erreur s'est produite lors de la mise à jour des informations d'un événement de pari.";
+"betting_fail_to_update_events" = "Une erreur s'est produite lors de la mise à jour d'un événement de pari";
+"betting_fail_to_update_matches" = "Une erreur s'est produite lors de la mise à jour des matchs.";
+"betting_fail_to_update_my_bets_cashouts" = "Une erreur s'est produite lors de la mise à jour des encaissements de mes paris.";
+"betting_fail_to_update_search_results" = "Une erreur s'est produite lors de la mise à jour des résultats de recherche de paris.";
+"betting_fail_to_update_sport_banner_data" = "Une erreur s'est produite lors de la récupération des informations de la bannière sportive.";
+"betting_fail_to_update_sport_banner_matches" = "Une erreur s'est produite lors de la récupération des matchs de la bannière sportive.";
+"betting_fail_to_update_sports" = "Une erreur s'est produite lors de la mise à jour des sports.";
+"betting_fail_to_update_top_competitions" = "Une erreur s'est produite lors de la mise à jour des Top compétitions.";
+"betting_limit" = "Limite de pari";
+"betting_limit_info_p_1" = "Les limites sont facultatives mais nous vous conseillons de définir vos limites de pari.";
+"betting_limit_locked" = "La limite de mise définie pour votre compte est verrouillée. Vous pourrez à nouveau mettre à jour cette limite après : {période}";
+"betting_limit_removal_error" = "Nous ne pouvons pas supprimer votre limite de pari pour le moment. Veuillez réessayer plus tard.";
+"betting_limit_removal_success" = "Votre limite de pari a été supprimée";
+"betting_limit_set" = "Limite de mise définie pour votre compte.";
+"betting_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de pari pour le moment. Veuillez réessayer plus tard.";
+"betting_limit_update_success" = "Votre limite de pari a été mise à jour";
+"betting_notification_defaults" = "Paramètres par défaut des notifications de paris";
+"betting_notifications" = "Notifications de paris";
+"birth_date" = "Date de naissance";
+"birth_place" = "Lieu de naissance";
+"block" = "Bloc";
+"block_contact" = "";
+"block_user" = "";
+"bonus" = "Bonus";
+"bonus_added" = "Le bonus a été ajouté à votre compte";
+"bonus_amount" = "Montant du bonus";
+"bonus_applied_success" = "Bonus appliqué avec succès !";
+"bonus_code" = "Code bonus";
+"bonus_code_success" = "Votre code bonus a été appliqué !";
+"bonus_error" = "Nous ne pouvons pas appliquer votre bonus pour le moment. Veuillez réessayer plus tard.";
+"bonus_success" = "Votre bonus a été appliqué !";
+"by_competition" = "Par compétition";
+"cancel" = "Annuler";
+"cancelled" = "Annulé";
+"cards_style" = "Style de cartes";
+"cashed_out" = "Encaissé";
+"cashout" = "Cashout";
+"cashout_available" = "Cashout disponible";
+"cashout_available_for_bet" = "Cashout est disponible pour ce pari";
+"cashout_confirmation" = "Êtes-vous sûr de vouloir retirer {amount} ?";
+"cashout_info" = "Récupérez un pourcentage de votre mise avant la fin du jeu";
+"cashout_prompt_message" = "Votre remboursement sera de \"{value} €\"";
+"cashout_success_text" = "Votre pari a été encaissé avec succès !";
+"cashout_value" = "Cashout {cashoutAmount}";
+"casino" = "Casino";
+"casino_regulation" = "Règlement des casinos";
+"change_password" = "Changer le mot de passe";
+"chat" = "";
+"chat_empty_shared_ticket_others" = "";
+"chat_empty_shared_ticket_self" = "";
+"chat_empty_state_text" = "";
+"chat_group_users_details" = "";
+"check_email" = "Vérifiez votre e-mail";
+"check_email_text" = "Nous avons envoyé un code à\n{email}\n";
+"check_email_text1" = "Nous avons envoyé un code à";
+"check_email_text2" = "avec un lien pour se connecter.";
+"check_this_bet_made" = "Découvrez ce pari que j'ai fait !";
+"check_this_game" = "Hé! Vérifiez ce jeu sur Betsson.";
+"choose_avatar" = "Choisissez l'un de nos avatars standard pour votre icône.";
+"choose_competitions" = "Choisissez des compétitions";
+"choose_competitions_dynamic" = "Choisissez des compétitions ({num})";
+"choose_email" = "Choisissez E-mail";
+"choose_odds_range" = "Choisissez les cotes pour le marché {market}";
+"choose_sport" = "Choisissez Sport";
+"city" = "Ville";
+"city_is_required" = "La ville est un champ obligatoire. Veuillez remplir ce champ.";
+"clear_all" = "Tout effacer";
+"close" = "Fermer";
+"close_stats" = "Fermer les statistiques";
+"closed_market" = "Fermé";
+"code" = "Code";
+"code_sent" = "Nous avons envoyé un code à votre adresse e-mail.";
+"code_verification_error" = "Erreur de vérification du code";
+"comment" = "Commentaire";
+"competition" = "Compétition";
+"competition_details" = "Détails de la compétition";
+"competition_markets" = "Marchés de la compétition";
+"competition_no_longer" = "Cette compétition n'est plus disponible pour les paris.";
+"competitions" = "Compétitions";
+"competitions_check_limit" = "Vous pouvez sélectionner uniquement 5 compétitions";
+"competitions_filter_all_categories" = "Catégories A à Z";
+"competitions_filter_popular_competitions" = "Compétitions populaires";
+"competitions_filter_search_placeholder" = "Rechercher des compétitions...";
+"complete_profile_description" = "Pour tirer le meilleur parti de cette application, veuillez terminer la configuration de votre profil";
+"complete_profile_message" = "Pour utiliser l'application à son plein potentiel, veuillez terminer la configuration de votre profil.";
+"complete_signup" = "Terminer l'inscription";
+"complete_your_profile" = "Complétez votre profil";
+"complete_your_verification" = "Complétez votre vérification";
+"confirm" = "Confirmer";
+"confirm_password" = "Confirmez le mot de passe";
+"confirm_password_error" = "Les mots de passe doivent correspondre";
+"congratulations" = "Toutes nos félicitations!";
+"contact_list" = "Liste de contacts";
+"contact_preferences" = "Préférences de contact";
+"contact_preferences_error" = "Nous ne pouvons pas mettre à jour vos préférences de contact pour le moment. Veuillez réessayer plus tard.";
+"contact_preferences_updated" = "Vos préférences de contact ont été mises à jour";
+"contact_us" = "Service Client";
+"contacts" = "Contacts";
+"continue_" = "Continuer";
+"cookie_alert" = "En poursuivant votre navigation sur ce site, vous consentez à l'utilisation de cookies. Lisez à propos de notre";
+"cookie_policy" = "Politique relative aux cookies";
+"copied_to_clipboard" = "Copié dans le presse-papier";
+"copy_link" = "Copier le lien";
+"countries_available" = "Pays disponibles";
+"country" = "Pays";
+"country_code_format" = "";
+"country_plural_other" = "des pays";
+"create_a_new_account" = "Créer un nouveau compte";
+"current_balance" = "Solde actuel";
+"current_password_incorrect" = "Mot de passe actuel incorrect.";
+"custom" = "Personnaliser";
+"daily" = "Quotidien";
+"dark_mode" = "Mode sombre";
+"data_updated_successfully" = "Données mises à jour avec succès !";
+"date" = "Date";
+"date_of_birth" = "Date de naissance";
+"date_range" = "Période";
+"day" = "Jour";
+"days" = "Jours";
+"default_market" = "Marché par défaut";
+"default_notification_channel_id" = "";
+"default_ticket_text_received" = "{username} a partagé un ticket";
+"delete" = "Supprimer";
+"delete_all" = "Supprimer tout";
+"delete_all_bets_confirmation" = "Voulez-vous vraiment supprimer toutes vos sélections ?";
+"delete_contact" = "Effacer le contact";
+"delete_contact_message" = "";
+"deposit" = "Dépôt";
+"deposit_error" = "Erreur de dépôt";
+"deposit_error_message" = "Le dépôt n'a pas pu être traité pour le moment. Veuillez réessayer plus tard.";
+"deposit_limit" = "Limite de dépôt";
+"deposit_limit_info_p_1" = "Si vous augmentez ou supprimez une limite existante, la mise en œuvre de la nouvelle limite prendra 48 heures pour prendre effet.";
+"deposit_limit_info_p_2" = "Si vous abaissez une limite existante, la nouvelle limite prendra effet immédiatement.";
+"deposit_limit_locked" = "La limite de dépôt définie pour votre compte est verrouillée. Vous pourrez à nouveau mettre à jour cette limite après : {période}";
+"deposit_limit_removal_error" = "Nous ne pouvons pas supprimer votre limite de dépôt pour le moment. Veuillez réessayer plus tard.";
+"deposit_limit_removal_success" = "Votre limite de dépôt a été supprimée";
+"deposit_limit_set" = "Limite de dépôt fixée pour votre compte.";
+"deposit_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de dépôt pour le moment. Veuillez réessayer plus tard.";
+"deposit_limit_update_success" = "Votre limite de dépôt a été mise à jour";
+"deposit_more_funds" = "Déposez plus de fonds afin de placer ce pari.";
+"deposit_value" = "Montant du dépôt";
+"deposits" = "Dépôts";
+"description" = "Description";
+"device_settings" = "Réglages de l'appareil";
+"didnt_receive_it" = "Vous ne l'avez pas reçu ?";
+"direct_message_sent" = "Message direct envoyé.";
+"dismiss_title" = "Pas maintenant";
+"do_you_want_to_enable_touch_id" = "Voulez-vous activer Touch ID ?";
+"document_validation_required" = "Validation des documents requise";
+"document_validation_required_description" = "Pour accéder à toutes les fonctionnalités de notre plateforme, nous vous demandons de soumettre vos documents valides pour vérification.";
+"documents" = "Documents";
+"documents_id" = "Documents et pièce d'identité";
+"done" = "Fait";
+"download_app" = "Téléchargez l'application";
+"dpt_code" = "Département";
+"draw" = "Match nul";
+"draws" = "Matches nuls";
+"edit" = "Éditer";
+"edit_contact" = "Éditer Contact";
+"edit_group" = "Éditer Groupe";
+"email" = "E-mail";
+"email_address" = "Adresse e-mail";
+"email_already_registered" = "Cette adresse email est déjà enregistrée.";
+"email_already_taken" = "Adresse e-mail déjà prise";
+"email_doesnt_exist" = "L'e-mail n'existe pas";
+"email_exists" = "L'email existe déjà.";
+"email_or_username" = "E-mail ou nom d'utilisateur";
+"email_sent_reset_password" = "Nous avons envoyé un e-mail avec les instructions pour réinitialiser votre mot de passe";
+"email_unavailable" = "E-mail indisponible";
+"email_verification" = "vérification de l'E-mail";
+"empty_betslip_info_subtitle" = "Voici vos paris suggérés !";
+"empty_betslip_info_title" = "Vous n'avez encore aucune sélection.";
+"empty_betting_history_text_days" = "Vous n'avez pas fait de pari depuis {nDays} jours. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_days_cashout" = "Vous n'avez pas encaissé de pari depuis {nDays} jours. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_days_open" = "Vous n'avez pas de paris ouverts. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_days_won" = "Vous n'avez gagné aucun pari depuis {nDays} jours. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_period" = "Vous n'avez placé aucun pari dans la période sélectionnée. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_period_cashout" = "Vous n'avez encaissé aucun pari pendant la période sélectionnée. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_period_open" = "Vous n'avez pas de paris ouverts dans la période sélectionnée. Il est temps de parier sur vos favoris.";
+"empty_betting_history_text_period_won" = "Vous n'avez gagné aucun pari pendant la période sélectionnée. Il est temps de parier sur vos favoris.";
+"empty_betting_history_title" = "Il n'y a pas de paris ici !";
+"empty_chatrooms" = "";
+"empty_list_with_filters" = "Il n'y a pas de résultats pour ces filtres.";
+"empty_my_competitions" = "Vous n'avez pas de compétitions favorites pour ce sport !";
+"empty_my_games" = "Vous n'avez pas de jeux favoris pour ce sport !";
+"empty_transactions_history_text_days" = "Vous n'avez pas effectué de transaction depuis {nDays} jours. Il est temps de déposer de l'argent et de commencer à parier sur vos favoris.";
+"empty_transactions_history_text_period" = "Vous n'avez pas effectué de transaction pour la période sélectionnée. Il est temps de déposer de l'argent et de commencer à parier sur vos favoris.";
+"empty_transactions_history_title" = "Il n'y a pas de transactions ici !";
+"enable_location" = "Activer les services de localisation";
+"enter_a_valid_email_format" = "Veuillez saisir un format d'e-mail valide";
+"enter_associated_email" = "Veuillez saisir l'e-mail associé à votre compte.";
+"enter_code" = "Entrer le code";
+"enter_code_text" = "Entrez le code que nous avons envoyé à votre e-mail";
+"enter_new_pwd" = "Veuillez saisir un nouveau mot de passe.";
+"error" = "Erreur";
+"error_bonus_code" = "Votre code n'a pas pu être appliqué. Veuillez contacter notre assistance.";
+"error_edit" = "Nous ne pouvons pas mettre à jour vos informations pour le moment. Veuillez réessayer plus tard.";
+"error_edit_password" = "Nous ne pouvons pas mettre à jour votre mot de passe pour le moment. Veuillez réessayer plus tard.";
+"error_loading_profile" = "Erreur lors du chargement du profil utilisateur";
+"error_loading_session" = "Erreur lors du chargement de la session utilisateur";
+"error_login" = "Échec de la connexion. Veuillez réessayer!";
+"error_placing_bet" = "Erreur lors du placement du pari.";
+"error_profile_not_updatable" = "Nous sommes désolés, mais votre profil ne peut pas être mis à jour. Vous ne pourrez pas modifier ces informations.";
+"eula" = "CGU";
+"evens" = "";
+"event_unavailable" = "Cet événement n'est plus disponible.";
+"everyone" = "Tout le monde";
+"exclusion_date_message" = "La date doit être supérieure ou égale à aujourd'hui";
+"exclusion_period" = "Période d'exclusion";
+"expand" = "Accroître";
+"expire_date" = "Date d'expiration";
+"f_a_q_or_contact_us" = "F.A.Q ou contactez-nous.";
+"face_id_login" = "Connexion avec Face ID";
+"failed" = "Échoué";
+"faq" = "Pour toute question sur le processus de paiement, consultez la F.A.Q ou contactez-nous.";
+"faq" = "Pour toute question sur le processus de paiement, consultez la F.A.Q ou contactez-nous.";
+"faqs" = "FAQ's";
+"favourite_team_question" = "Quelle est ton équipe favorite?";
+"favourites" = "Favoris";
+"featured_tips" = "";
+"female" = "Femme";
+"filter" = "Filtre";
+"filter_by_date" = "Filtrer par date";
+"filter_markets" = "Filtrer les marchés";
+"filters" = "Filtres";
+"fingerprint_login" = "Connexion par empreinte digitale";
+"finish_up_profile" = "Terminer le profil";
+"first_deposit" = "Premier dépôt !";
+"first_deposit_subtitle" = "Effectuez votre premier dépôt maintenant!";
+"first_name" = "Prénom";
+"first_name_is_required" = "Le prénom est un champ obligatoire. Veuillez remplir ce champ.";
+"first_term" = "J'autorise l'utilisation de mon e-mail à des fins de marketing";
+"five_years" = "5 années";
+"follow" = "Suivre";
+"follow_user" = "Suivre l'utilisateur";
+"following" = "Suivant";
+"for_upcoming_matches_only" = "pour les matchs à venir uniquement";
+"forgot" = "Mot de passe oublié?";
+"forgot_password" = "Mot de passe oublié";
+"friend_added" = "Ami(s) ajouté(s)";
+"friend_added_error" = "Erreur d'ajout d'ami";
+"friend_added_message" = "La demande d'ami a été envoyée aux utilisateurs sélectionnés.";
+"friend_added_message_error" = "Une erreur s'est produite lors de la tentative d'ajout des amis sélectionnés. Réessayez plus tard.";
+"friend_code" = "Code ami";
+"friend_request_sent" = "Demande d'ami envoyée!";
+"friends" = "Amis";
+"from" = "Depuis";
+"full_sign_up_success_text" = "Votre profil est maintenant complété et vous êtes en mesure d'utiliser le site Web dans son intégralité.";
+"full_sign_up_success_title" = "Inscription terminée avec succès !";
+"full_time" = "Temps réglementaire";
+"game_stats" = "Statistiques de jeu";
+"games_notification_defaults" = "Paramètres par défaut des notifications de jeux";
+"games_notifications" = "Notifications de jeux";
+"gen_error_oops_scratching_our_heads_title" = "Oups ! On se gratte la tête...";
+"gen_error_oops_title" = "Oups…";
+"gen_error_something_wrong_text" = "Quelque chose s'est mal passé.";
+"gender" = "Genre";
+"get_a_new_code" = "Obtenez un nouveau code dans {period}";
+"get_bonus" = "Obtenez un bonus";
+"get_new_code" = "Obtenez un nouveau code dans";
+"get_started" = "Commencer";
+"go_back" = "Retour";
+"go_home" = "Retour à l'accueil";
+"go_to_list_to_mark" = "Accédez à la liste des jeux et marquez-les comme favoris.";
+"go_to_popular_games" = "Aller aux jeux populaires";
+"goals" = "Buts";
+"godfather" = "Parrain";
+"good_luck" = "Bonne chance!";
+"group_name" = "";
+"group_name_changed" = "";
+"group_name_changed_message" = "";
+"guest" = "Invité";
+"half_lost" = "À moitié perdu";
+"half_time" = "Mi-temps";
+"half_won" = "À moitié gagné";
+"havent_made_a_bet" = "Il n'y a pas de résultats pour la période sélectionnée, il est temps de commencer à parier sur vos favoris.";
+"hello_blank_fragment" = "Bonjour fragment vierge";
+"here_are_your_suggested_bets" = "Voici vos paris suggérés !";
+"hide" = "Cacher";
+"highest_odd" = "Cote la plus élevée";
+"highest_odds" = "Cotes les plus élevées";
+"history" = "Historique";
+"history_transactions" = "Historique des transactions";
+"home" = "Accueil";
+"home_label_default" = "Equipe à domicile";
+"how_much_deposit" = "Combien voulez-vous déposer sur votre compte ?";
+"how_much_withdraw" = "Combien souhaitez-vous retirer de votre compte ?";
+"id_number" = "Numéro d'identification";
+"identification" = "Pièce d'identité";
+"in_progress" = "En cours";
+"inactive_sport" = "Le sport que vous avez sélectionné n\'est pas actif pour le moment. Veuillez en choisir un autre pour l'instant.";
+"info" = "Info";
+"info_consent" = "J'accepte de recevoir des informations sur les bonus et les promotions via Betsson.";
+"info_text" = "Voici quelques informations sur cet article";
+"information_updated" = "Les informations ont été mises à jour avec succès.";
+"insert_email_code" = "Insérer le code";
+"intermediate" = "Intermédiaire";
+"internal_error_try_again" = "Erreur interne. Réessayez plus tard";
+"invalid_birthDate" = "Date de naissance invalide";
+"invalid_bonus_code" = "Code bonus invalide.";
+"invalid_code" = "Code invalide";
+"invalid_code_message" = "Le code saisi n'est pas valide.";
+"invalid_date_format" = "Veuillez insérer une date valide.";
+"invalid_email" = "Adresse e-mail invalide";
+"invalid_email" = "Adresse e-mail invalide";
+"invalid_friend_code" = "Code ami invalide";
+"invalid_gender" = "Le sexe spécifié n'est pas valide. Veuillez sélectionner l'une des suggestions.";
+"invalid_lock_period" = "La valeur doit être comprise entre {min} et {max}.";
+"invalid_nationality" = "La nationalité indiquée n'est pas valide. Veuillez sélectionner l'une des suggestions.";
+"invalid_period_value" = "Valeur de période non valide";
+"invalid_phone_number" = "S'il vous plaît entrer un numéro de téléphone valide";
+"invite" = "Inviter";
+"invite_friends_contact" = "Aucun utilisateur de votre liste de contacts n'utilise encore Betsson. Invitez-les maintenant !";
+"invite_friends_via" = "Invitez des amis via...";
+"invite_more_friends" = "Invitez plus d'amis de votre liste de contacts à rejoindre Betsson";
+"join_sportsbook" = "Rejoignez {sportsbookName} !";
+"keep_bet" = "Gardez ce pari sur le bulletin de paris";
+"kyc_account_status" = "Statut de la vérification";
+"last_name" = "Nom de famille";
+"last_name_is_required" = "Le nom de famille est un champ obligatoire. Veuillez remplir ce champ.";
+"last_x_matches" = "{totalMatches} derniers matchs";
+"later" = "Plus tard";
+"latest_tips" = "";
+"leave" = "Quitter";
+"leave_group" = "Quitter le groupe";
+"leave_group_message" = "Êtes-vous sûr de vouloir quitter le groupe ?";
+"legal_age" = "Votre pays exige que vous ayez au moins {age} ans.";
+"light_mode" = "Mode Clair";
+"light_theme" = "Light theme";
+"limited" = "Limité";
+"limited_time" = "Temps limité";
+"limits_info_title" = "Définissez vos limites";
+"limits_management" = "Gestion des limites";
+"limits_management_subtitle" = "Quel type de joueur êtes-vous ?";
+"limits_update_fail" = "Les limites suivantes n'ont pas pu être mises à jour {limits}. Veuillez réessayer plus tard.";
+"limits_update_success" = "Vos limites ont été mises à jour avec succès !";
+"link_copied_to_clipboard" = "Le lien a été copié dans le presse-papiers";
+"link_expired" = "Le lien que vous avez utilisé est expiré.";
+"live" = "Live";
+"live_betting" = "Paris en direct";
+"live_field_statistics" = "Statistiques des paris en direct";
+"live_matches" = "Matchs en direct";
+"live_number" = "Live ({num_matches})";
+"live_stats" = "Statistiques en direct";
+"loading" = "Chargement";
+"lock_account_alert_text" = "Vous êtes sur le point de verrouiller votre compte. Êtes-vous sur de vouloir continuer?";
+"lock_account_alert_title" = "Verrouillage du compte";
+"lock_my_account" = "Verrouiller mon compte";
+"login" = "Connexion";
+"login_biometrics" = "Connectez-vous avec la biométrie";
+"login_biometrics_description" = "A tout moment, vous pouvez désactiver cette option dans Paramètres > Betsson";
+"login_biometrics_subtitle" = "Voulez-vous vous connecter avec les empreintes digitales et la reconnaissance faciale ?";
+"login_error_message" = "Identifiant ou mot de passe incorrect";
+"login_error_title" = "Erreur d'identification";
+"login_fail_title" = "Échec de la connexion";
+"login_needed" = "Vous devez être connecté";
+"login_required_text" = "Vous devez être connecté pour pouvoir voir vos paris";
+"login_tc_agreement" = "En vous inscrivant, vous acceptez notre";
+"logout" = "Se déconnecter";
+
+"loss_limit" = "Limite de perte";
+"loss_limit_locked" = "La limite de perte définie pour votre compte est verrouillée. Vous pourrez à nouveau mettre à jour cette limite après : {période}";
+"loss_limit_removal_error" = "Nous ne pouvons pas supprimer votre limite de perte pour le moment. Veuillez réessayer plus tard.";
+"loss_limit_removal_success" = "Votre limite de perte a été supprimée";
+"loss_limit_set" = "Limite de perte définie pour votre compte.";
+"loss_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de perte pour le moment. Veuillez réessayer plus tard.";
+"loss_limit_update_success" = "Votre limite de perte a été mise à jour";
+"losses" = "Pertes";
+"lost" = "Perdu";
+"lowest_odds" = "Cotes les plus basses";
+"maintenance_mode" = "Temporairement indisponible pour maintenance";
+"maintenance_mode_content_fallback" = "Nous effectuons une maintenance programmée. Nous devrions être de retour en ligne sous peu.";
+"make_a_deposit" = "Faire un dépôt";
+"make_a_withdraw" = "Faire un retrait";
+"make_some_bets" = "Faites des paris !";
+"male" = "Mâle";
+"mark_all_as_read" = "Tout marquer comme lu";
+"mark_as_read" = "Marquer comme lu";
+"mark_games_favorites" = "Accédez à la liste des jeux et marquez-les comme favoris.";
+"market" = "Marché";
+"markets" = "Marchés";
+"markets_not_available" = "Marchés non disponibles.";
+"match" = "Match";
+"match_label_default" = "Jour de match";
+"match_not_available" = "Le match n'est plus disponible pour les paris";
+"match_start_label_default" = "Début du match";
+"max" = "Max";
+"max_odd_value" = "Min {maxOddValue}";
+"members" = "membres";
+"menu" = "Menu";
+"message" = "Message";
+"messages" = "Messages";
+"min_betting_value" = "Valeur minimale {minBettingValue}{currencySymbol}";
+"min_deposit_value" = "Valeur minimale {minDepositValue}{currencySymbol}";
+"min_odd_value" = "Min {minOddValue}";
+"minimum_deposit_value" = "Valeur minimale : 10 €";
+"minimum_users_message" = "";
+"minimum_withdraw_value" = "Valeur minimale : 10 €";
+"transfer_additional_info" = "90% de nos joueurs reçoivent leurs retraits sur leur compte bancaire en moins de 24 heures";
+"mobile" = "Numéro de téléphone";
+"mobile_phone_number" = "Numéro de téléphone portable";
+"mobilephone_is_required" = "Le téléphone mobile est un champ obligatoire. Veuillez remplir ce champ.";
+"month" = "Mois";
+"monthly" = "Mensuel";
+"months" = "Mois";
+"more" = "Plus";
+"more_info" = "Plus d'infos";
+"multiple" = "Multiple";
+"multiple_bet" = "Pari Multiple";
+"multiple_min_selection_total_error" = "Sélectionnez au moins 2 paris.";
+"must_accept_tc" = "Vous devez accepter les termes et conditions pour continuer.";
+"mute" = "Muet";
+"my_account" = "Mon compte";
+"my_bets" = "Mes paris";
+"my_competitions" = "Mes compétitions";
+"my_favorites" = "Mes favoris";
+"my_friends" = "";
+"my_games" = "Mes jeux";
+"my_tickets" = "Mes billets";
+"names" = "Noms";
+"names_match_id" = "Veuillez insérer tous les prénoms tels qu'ils sont enregistrés dans votre pièce d'identité.";
+"nationality" = "Nationalité";
+"nationality_optional" = "Nationalité (facultatif)";
+"need_login" = "Vous devez être connecté pour exécuter cette action.";
+"need_login_favorites" = "Vous devez être connecté pour voir vos favoris.";
+"need_login_tickets" = "Vous devez être connecté pour pouvoir voir vos billets";
+"new_create_account" = "Nouveau ici? Créer un nouveau compte";
+"new_group" = "";
+"new_here" = "Nouveau ici?";
+"new_message" = "Nouveau message";
+"new_password" = "Nouveau mot de passe";
+"new_password_error" = "Le nouveau mot de passe doit être différent";
+"new_password_must_be_different" = "Le nouveau mot de passe doit être différent";
+"next" = "Suivant";
+"nickname" = "Surnom";
+"nickname_error" = "Le surnom doit avoir une longueur minimale de 4";
+"no_bets" = "Pas de paris ici !";
+"no_bets_for_this_section" = "Vous n'avez pas de paris pour cette section";
+"no_bets_yet" = "Vous n'avez aucun pari ici.\nVérifiez tous les jeux disponibles et commencez à parier maintenant !";
+"no_bonus" = "Pas de bonus ici";
+"no_chatrooms" = "";
+"no_deposits_description" = "Il n'y a pas de transactions pour la période sélectionnée, il est temps de déposer de l'argent et de commencer à parier sur vos favoris.";
+"no_favorite_games" = "Vous n'avez pas de jeux favoris.";
+"no_favourite_games" = "Vous n'avez pas encore de jeux favoris, il est temps d'\nenregistrer vos favoris en cliquant sur l'étoile.";
+"no_friends_to_display" = "Il n'y a aucun ami à afficher";
+"no_funds" = "Vous n'avez pas assez de fonds.";
+"no_internet" = "Pas de connexion Internet";
+"no_login_rankings" = "Vous devez être connecté pour pouvoir voir les classements";
+"no_login_tips" = "";
+"no_markets" = "Il n'y a pas de marchés à afficher pour le moment";
+"no_markets_short" = "Pas de marchés pour le moment";
+"no_messages" = "Pas de messages";
+"no_messages_yet" = "Il n'y a pas encore de messages.";
+"no_notifications" = "Il n'y a aucune notification à afficher.";
+"no_other_users_registered" = "Il n'y a actuellement aucun autre utilisateur sur votre liste de contacts utilisant Betsson. Invitez plus d'amis maintenant !";
+"no_recent_searches" = "Aucune recherche récente";
+"no_results_for" = "Il n'y a pas de résultats pour {context}.";
+"no_results_for_selection" = "Il n'y a pas de résultats pour cette sélection.";
+"no_selections" = "Vous n\'avez encore aucune sélection.";
+"no_statistics" = "Aucune statistique disponible";
+"no_stats" = "Aucune stats disponible";
+"no_submitted_bets" = "Vous n'avez aucun pari soumis";
+"no_tickets_yet" = "Vous n'avez pas encore de tickets.";
+"no_user_contact_registered" = "Aucun utilisateur de votre liste de contacts n'utilise encore Betsson. Invitez-les maintenant !";
+"no_value" = "";
+"normal" = "Normal";
+"not_allow_tracking" = "Demander à l'application de ne pas suivre";
+"not_allowed" = "Interdit";
+"not_available_anymore" = "Plus disponible";
+"not_bets_tickets_section" = "Vous n'avez pas de paris pour cette section.";
+"not_bets_tickets_section_yet" = "Vous n'avez encore aucune sélection.";
+"not_excluded" = "Non exclu";
+"not_logged_in" = "Vous n'êtes pas connecté !";
+"not_now" = "Pas maintenant";
+"not_received" = "Non reçu";
+"notifications" = "Notifications";
+"notify_bets_final_result" = "M'informer des résultats finaux de mes paris";
+"notify_bets_options_results" = "M'informer des résultats de mes options de paris";
+"notify_me_about" = "Informez-moi de :";
+"now" = "Maintenant";
+"number_of_market_singular" = "{num_markets} marché";
+"number_of_markets" = "{num_markets} marchés";
+"number_of_selections" = "Nombre de sélections";
+"odd" = "Cote";
+"odds" = "Cotes";
+"odds_filter" = "Filtre de cotes";
+"odds_for_market" = "Cotes pour un marché";
+"odds_format" = "Format des cotes";
+"odds_format_eu" = "EU (1.5)";
+"odds_format_uk" = "UK (1/2)";
+"odds_format_updated" = "Le format de vos cotes a été mis à jour";
+"odds_format_us" = "US (-200)";
+"odds_variation" = "Variation des cotes";
+"odds_variation_updated" = "Variation des cotes mise à jour";
+"ok" = "OK";
+"old_password" = "Ancien mot de passe";
+"old_password_error" = "Ancien mot de passe incorrect";
+"one_year" = "1 an";
+"online" = "en ligne";
+"only_friends" = "";
+"only_people_follow" = "";
+"open" = "Ouvrir";
+"open_competition_details" = "Afficher les détails de la compétition";
+"open_email_app" = "Ouvrir l'application de messagerie";
+"open_stats" = "Ouvrir les stats";
+"opened" = "Ouvert";
+"optional_hint" = "(facultatif)";
+"or" = "ou";
+"order_by" = "Trier par";
+"ordinary_time" = "Temps réglementaire";
+"outcome" = "Résultat";
+"outright_markets" = "Marchés à long terme";
+"outrights" = "Long terme";
+"package_permission_denied" = "Nous avons besoin de cette autorisation afin de vous guider vers la meilleure voie.";
+"password" = "Mot de passe";
+"password_changed" = "Le mot de passe du compte a été modifié avec succès.";
+"password_description" = "Doit contenir au minimum 8 caractères 1 majuscule 1 minuscule et 1 symbole.";
+"password_description_2" = "Au moins 8 caractères 1 majuscule 1 minuscule 1 chiffre et 1 symbole ({symbols})";
+"password_description_v_2" = "Les mots de passe doivent contenir 8 caractères 1 majuscule 1 minuscule et 1 symbole";
+"password_does_not_match" = "Le mot de passe ne correspond pas";
+"password_not_match" = "Les mots de passe ne correspondent pas";
+"password_policy" = "Votre mot de passe doit comporter entre 8 et 16 caractères, des lettres majuscules et minuscules, un chiffre et un caractère spécial.";
+"password_rule" = "La longueur doit être supérieure à 8 caractères.";
+"password_too_weak" = "Votre mot de passe est trop simple pour être sécurisé.";
+"password_update_success" = "Votre mot de passe a été mis à jour";
+"past_30_days" = "30 derniers jours";
+"past_90_days" = "90 derniers jours";
+"past_x_days" = "{days} jours passés";
+"paste_clipboard" = "Coller depuis le Presse-papiers";
+"payments" = "Paiements";
+"payments_available" = "Paiements disponibles en utilisant :";
+"pending" = "En attente";
+"pending_approval" = "En attente de validation";
+"percentage_of_bets_per_sport" = "Pourcentage de paris par sport";
+"period_exclusion" = "Période d'exclusion";
+"period_lock" = "Période de verrouillage";
+"period_type_value" = "Type de période et valeur";
+"period_unit" = "Unité de période";
+"period_value" = "Valeur de la période";
+"permanent" = "Permanent";
+"permission_location" = "Autorisation de localisation";
+"permission_location_subtitle" = "À tout moment, vous pouvez désactiver cette option dans Paramètres > Betsson> Localisation";
+"permission_location_text" = "Nous devons vérifier si les paris sont autorisés dans votre région.";
+"personal_info" = "Infos personnelles";
+"personal_information" = "Informations personnelles";
+"phone" = "Téléphone";
+"phone_number" = "Numéro de téléphone";
+"phone_number_rule" = "Numéros autorisés 0-9 et symboles *#()/.;-+";
+"phone_placeholder" = "{prefix} +{number}";
+"phone_prefix" = "Prefix";
+"picker_available" = "{symbol} Disponible";
+"picker_default" = "{symbole} par défaut";
+"picker_title" = "Sélectionnez votre {texte}";
+"place_a_bet" = "Ajouter une sélection pour placer un pari";
+"place_bet" = "Parier";
+"place_bet_success_text" = "Votre pari a été placé avec succès";
+"place_bet_success_title" = "Pari placé avec succès";
+"place_commune" = "Lieu / Commune";
+"place_of_birth" = "Lieu de naissance";
+"please_choose_title" = "Veuillez choisir un des titres";
+"please_date_range" = "Veuillez sélectionner une plage de dates.";
+"please_login" = "Accès refusé";
+"please_login_text" = "Vous devez être connecté pour accéder à cet espace.";
+"please_select_event" = "Veuillez sélectionner au moins un événement.";
+"popular" = "Populaire";
+"popular_competitions" = "Compétitions populaires";
+"popular_games" = "Jeux populaires";
+"popular_matches" = "Matchs populaires";
+"possible_earnings" = "Gains potentiels";
+"possible_winnings" = "Gains possibles";
+"possible_winnings2" = "Gains possibles:";
+"postal_code" = "Code postal";
+"previous" = "Précédent";
+"privacy_policy" = "Politique de confidentialité";
+"proceed" = "Procéder";
+"profile" = "Profil";
+"profile_complete" = "Profil complet";
+"profile_complete_2" = "Le profil est complet. Vous pouvez continuer.";
+"profile_incomplete" = "Profil incomplet";
+"profile_incomplete_2" = "Profil incomplet. Nous aurons besoin de quelques informations supplémentaires avant que vous puissiez effectuer un dépôt.";
+"profile_incomplete_deposit" = "Veuillez compléter votre profil avant de pouvoir effectuer des dépôts.";
+"profile_incomplete_withdraw" = "Veuillez compléter votre profil avant de pouvoir effectuer des retraits.";
+"profile_update_success" = "Votre profil a été mis à jour";
+"profile_updated_success" = "Profil mis à jour avec succès !";
+"progress_will_be_lost" = "Tout progrès sera perdu";
+"promo_code" = "Code promo";
+"promo_fail_click" = "Désolé, nous n\'avons pas pu charger la promotion pour le moment.";
+"promotions" = "Promotions";
+"proof_of_address" = "Justificatif de domicile";
+"quit" = "Quitter";
+"quit_register" = "Quitter S'inscrire";
+"quit_register_message" = "Vous souhaitez quitter votre inscription? Toutes les modifications seront perdues.";
+"rankings" = "Classements";
+"reached_max_stake_allowed" = "La mise maximale autorisée est de {value}";
+"reached_minimum_stake_allowed" = "La mise minimale autorisée est de {value}";
+"read_about" = "En savoir plus";
+"read_about_our" = "En savoir plus sur notre notre";
+"read_all" = "Tout lire";
+"recent_searches" = "Recherches récentes";
+"recover_password_sent" = "Récupérer le mot de passe envoyé";
+"recover_password_sent_message" = "Si les informations fournies sont correctes, un e-mail de confirmation sera envoyé à l'adresse e-mail enregistrée. \nCliquez sur le lien ou saisissez le code de vérification dans l'e-mail pour terminer le processus de réinitialisation du mot de passe et créer un nouveau mot de passe.";
+"red_cards" = "Cartons rouges";
+"refused_location" = "Malheureusement, nous n'avons pas pu accéder à votre position cette fois-ci.";
+"refused_location_subtitle" = "À tout moment, veuillez activer cette option dans Paramètres > Betsson";
+"register" = "Inscription";
+"register_error_title" = "Erreur d'inscription";
+"reject" = "Rejeter";
+"remaining" = "Restant";
+"remaining_total_bonus" = "Bonus restant / Bonus total";
+"remaining_total_wager" = "Mise restante / Mise totale";
+"remember" = "Se souvenir";
+"remove_from_favorites" = "Retirer des favoris";
+"remove_last_user" = "";
+"remove_last_user_message" = "";
+"remove_user" = "";
+"remove_user_message" = "";
+"report" = "Rapport";
+"required_field" = "Champs requis";
+"resend_code" = "Renvoyer le code";
+"resend_email" = "Ré-envoyer l'email";
+"resend_verification_email" = "Renvoyer l'e-mail de vérification";
+"reset" = "Réinitialiser";
+"reset_pwd" = "Réinitialiser le mot de passe";
+"reset_success" = "Votre mot de passe a été mis à jour avec succès !";
+"resolved" = "Résolu";
+"responsible_gaming_title" = "Jeu responsable";
+"responsible_gaming" = "Lisez à propos du jeu responsable.";
+"result" = "Résultat";
+"results" = "Résultats";
+"results_count" = "{num} Résultats";
+"results_count_singular" = "{num} Résultat";
+"return_text" = "Retour";
+"return_money" = "Votre retour sera";
+"returnx" = "Retour : {value} €";
+"save" = "Sauvegarder";
+"save_profile" = "Enregistrer le profil";
+"score_label_default" = "";
+"search" = "Recherche";
+"search_by_contact" = "Rechercher par nom de contact...";
+"search_by_username" = "Recherche par nom d'utilisateur...";
+"search_contacts" = "Rechercher des contacts";
+"search_field" = "Recherche…";
+"search_field_competitions" = "Rechercher des compétitions...";
+"search_for_teams_or_competitions" = "Rechercher des équipes ou des compétitions...";
+"search_friend" = "Rechercher un ami";
+"search_friend_code" = "Rechercher un ami avec le code";
+"search_results" = "Résultats de recherche";
+"second_empty_my_competitions" = "Accédez à la liste des compétitions et marquez-les comme favoris.";
+"second_empty_no_bets" = "Vous n'avez pas encore fait de pari, il est temps de parier sur vos favoris.";
+"second_empty_no_login_to_bet" = "Vous devez être connecté pour pouvoir parier.";
+"second_empty_no_transactions" = "Vous n'avez pas encore effectué de transaction, il est temps de déposer de l'argent et de commencer à parier sur vos favoris.";
+"second_half_time" = "Deuxième mi-temps";
+"second_term" = "Accepter les Termes et conditions";
+"security" = "Sécurité";
+"security_answer" = "Réponse de sécurité";
+"security_question" = "Question de sécurité";
+"security_rules" = "Règles de sécurité";
+"see_all" = "Tout voir";
+"see_competition" = "Voir Compétitions";
+"see_full_tip" = "";
+"see_game_details" = "Voir les détails du jeu";
+"see_less" = "Voir moins";
+"see_outrights" = "Voir les paris à long terme";
+"see_promo" = "Voir la promo";
+"see_statistics" = "Voir les statistiques";
+"select" = "Sélectionner";
+"select_a_friend" = "Sélectionnez un ami";
+"select_at_least_2_friends" = "Sélectionnez au moins 2 amis";
+"select_country" = "Veuillez sélectionner votre nationalité";
+"select_friends_to_add" = "Sélectionnez les amis à ajouter";
+"select_profile_option" = "Sélectionnez une option de profil";
+"select_your_country" = "Sélectionnez votre pays";
+"selections_not_combinable" = "Certaines des sélections sont liées et ne peuvent pas être combinées. Veuillez en supprimer un.";
+"self_exclusion_date_limits" = "La date d'expiration doit être comprise entre 6 mois et 5 ans à compter d'aujourd'hui.";
+"self_exclusion_error" = "Nous ne pouvons pas supprimer votre compte pour le moment. Veuillez réessayer plus tard.";
+"self_exclusion_success" = "Votre compte a été exclu";
+"send" = "Envoyer";
+"send_to_chat" = "";
+"send_to_friends_and_groups" = "Envoyer à des amis et à des groupes";
+"sending_bet" = "Envoi du pari...";
+"sent_text_message" = "Nous avons envoyé un SMS à {phoneNumber} avec le code de vérification.";
+"server_error_message" = "Une erreur inattendue s'est produite lors du traitement de votre demande. Veuillez réessayer.";
+"server_error_title" = "Erreur inattendue";
+"session_expired_text" = "Veuillez vous reconnecter pour accéder à toutes les fonctionnalités.";
+"session_expired_title" = "Votre session a expiré !";
+"set_date" = "Régler la date";
+"settings" = "Paramètres";
+"share" = "Partager";
+"share_event" = "Partager l'événement";
+"share_my_tickets" = "Partager mes billets";
+"share_outside_via" = "Partagez à l'extérieur via...";
+"share_placeholder" = "Message ou URL à partager...";
+"share_ticket" = "Partager le billet";
+"share_to" = "Partager à...";
+"share_with" = "Partager avec:";
+"share_your_bet_now" = "Partagez votre pari maintenant";
+"shared_bet_unavailable" = "Le pari partagé n'est plus disponible, consultez quelques nouvelles suggestions de pari.";
+"shared_bet_unavailable_plural" = "Les paris partagés ne sont plus disponibles, consultez quelques nouvelles suggestions de paris.";
+"shared_tickets_to" = "Vous avez partagé des billets pour";
+"show" = "Afficher";
+"show_full_tip" = "Show full tip";
+"show_less" = "Afficher moins";
+"signup" = "S'inscrire";
+"single" = "Simple";
+"single_bet" = "Pari Simple";
+"singup_success_text" = "Votre compte est enregistré ! Plus qu'une étape pour définir vos limites !";
+"six_months" = "6 mois";
+"skip" = "Passer";
+"small" = "Petit";
+"small_sign_up_success_text" = "Nous avons envoyé un e-mail à {email} avec un lien pour activer votre compte.";
+"sms" = "SMS";
+"some_events_unavailable" = "Certains de ces événements ne sont plus disponibles.";
+"something_went_wrong" = "Quelque chose s'est mal passé";
+"something_went_wrong_try_again" = "Quelque chose c'est mal passé. Merci d'essayer plus tard";
+"sort_by" = "Trier par";
+"sport" = "Sport";
+"sport_betting_rules" = "Règles des paris sportifs";
+"sports" = "Sports";
+"sportsbook" = "Sportsbook";
+"start_date" = "Date de début";
+"start_group_chat" = "";
+"start_of_game" = "Début du jeu";
+"starting_from" = "A partir de";
+"starting_soon" = "Début imminent";
+"statistics" = "Statistiques";
+"subject" = "Sujet";
+"submit" = "Soumettre";
+"subtitle" = "Sous-titre";
+"success" = "Succès";
+"success_edit" = "Vos informations ont été mises à jour.";
+"success_edit_password" = "Votre mot de passe a été mis à jour.";
+"success_location" = "Services de localisation activés avec succès !";
+"success_save" = "Enregistré avec succès";
+"sucess_register" = "Votre compte est enregistré ! Il ne reste plus qu'à vérifier votre identité.";
+"suggested_bets" = "Paris suggérés";
+"suggested_country" = "Pays suggéré";
+"suggested_names" = "Noms suggérés";
+"support" = "Service Client";
+"support_error" = "Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer plus tard.";
+"support_success" = "Votre message a bien été envoyé";
+"suspended" = "Suspendu";
+"sync_with_system" = "Synchroniser avec le système";
+"system" = "Système";
+"system_bet" = "Pari système";
+"system_min_selection_total_error" = "Sélectionnez au moins 3 paris.";
+"system_options" = "Options système";
+"system_type_plural_one" = "Type de système";
+"system_type_plural_other" = "types de systèmes";
+"team_statistics" = "Statistiques des équipes";
+"terms" = "Conditions d'utilisation";
+"terms_and_conditions" = "Termes et conditions";
+"terms_conditions" = "J'ai lu et j'accepte les conditions d'utilisation, la politique de confidentialité et les cookies. Je certifie que j'ai 18 ans ou plus.";
+"theme" = "Thème";
+"theme_color" = "Couleur du thème";
+"theme_color_updated" = "La couleur de votre thème a été mise à jour";
+"there_is_no_games_here" = "Il n'y a pas de jeux ici !";
+"there_was_an_error_while_validating" = "Une erreur s'est produite lors de la validation";
+"this_selection" = "cette sélection";
+"ticket_url_pasteboard" = "Le lien du ticket a été copié.";
+"time_filter_label" = "Heure de début des événements {start} - {end}";
+"time_label_default" = "";
+"time_range" = "Intervalle de temps";
+"time_to_add_friends" = "Il est temps d'ajouter des amis !";
+"time_today_only" = "Heure (pour les matchs à venir uniquement)";
+"tips" = "";
+"title" = "Titre";
+"title_name_f" = "F";
+"title_name_m" = "H";
+"to" = "Pour";
+"today" = "Aujourd'hui";
+"tomorrow" = "Demain";
+"top_competitions" = "Paris suggérés";
+"suggested_bets" = "Suggested bets";
+"top_tips" = "";
+"top_tipsters" = "";
+"total" = "Total";
+"total_amount" = "Montant total";
+"total_balance" = "Solde total";
+"total_bet_amount" = "Montant total de mise";
+"total_bets" = "Paris totaux";
+"total_odd" = "Cote totale";
+"total_odds" = "Cotes totales";
+"total_wager" = "Mise totale";
+"totalodd" = "Cote totale:";
+"tournament" = "Tournoi";
+"transactions" = "Transactions";
+"try_later" = "Nous ne pouvons pas accéder à votre demande pour le moment. Veuillez réessayer plus tard.";
+"try_new_bet" = "Essayez de faire un nouveau pari";
+"try_something_else" = "S'il vous plaît essayez autre chose !";
+"try_to_full_register" = "Essayez de vous inscrire complètement à la place";
+"unchangeable" = "Non modifiable";
+"unfollow" = "Ne plus suivre";
+"unfriend" = "Retirer de sa liste d'amis";
+"unit_period_exclusion" = "Exclusion de période unitaire";
+"unlimited_time" = "Temps illimité";
+"unmute" = "Rétablir le son";
+"unregistered_contacts_invite" = "Vous avez des contacts qui n'ont pas encore de site de paris sportifs, invitez-les";
+"unsaved_changes_text" = "Vous avez des changements non enregistrés! Voulez-vous vraiment partir sans les sauver ?";
+"unsaved_changes_title" = "Modifications non enregistrées";
+"unsucess_register" = "Désolé, il y a eu un problème lors de la création de votre compte, contactez-nous pour obtenir de l'aide !";
+"unsucess_register_title" = "Oh non!";
+"until" = "Jusqu'à";
+"upcoming" = "A venir";
+"upcoming_highlights" = "Prochains événements à ne pas manquer";
+"update" = "Mise à jour";
+"update_app" = "Mettre à jour l'application";
+"update_available" = "Mise à jour disponible";
+"update_available_text" = "Découvrez la dernière mise à jour et améliorez votre expérience avec Betsson.";
+"update_available_title" = "Nouvelle mise à jour disponible";
+"update_password" = "Mettre à jour le mot de passe";
+"update_required_text" = "Veuillez obtenir la dernière mise à jour pour continuer à profiter de Betsson.";
+"update_required_title" = "Nouvelle mise à jour requise";
+"upload_complete" = "Téléchargement complet";
+"upload_document" = "Télécharger un document";
+"upload_documents" = "Télécharger des documents";
+"upload_failed" = "Le téléchargement a échoué ! - Votre fichier n'a pas passé la contrainte {reason}.";
+"upload_id_document" = "Télécharger une pièce d'identité";
+"upload_rejected" = "Téléchargement refusé ! - Votre fichier n'a pas passé la contrainte {reason}.";
+"use_boosted_odds" = "Utiliser les cotes boostées {pourcentage}";
+"use_freebets" = "Utilisez {amount} de freebet";
+"user_code" = "Code d'utilisateur";
+"user_code_dynamic" = "Code utilisateur : {code_str}";
+"user_code_dynamic_copied" = "Code utilisateur {code_str} copié.";
+"user_fail_to_add_payment_method" = "Nous ne pouvons pas ajouter votre mode de paiement pour le moment. Veuillez réessayer plus tard.";
+"user_fail_to_load_full_profile" = "Une erreur s'est produite lors du chargement de votre profil complet.";
+"user_fail_to_load_limits" = "Une erreur s'est produite lors du chargement de vos limites.";
+"user_fail_to_load_pending_withdrawals" = "Une erreur s'est produite lors du chargement de vos retraits en attente.";
+"user_fail_to_load_profile_status" = "Une erreur s'est produite lors du chargement de votre statut de profil.";
+"user_fail_to_logout" = "Quelque chose d'étrange s'est produit apparemment, vous ne pouvez pas vous déconnecter pour le moment.";
+"user_fail_to_register_user" = "Quelque chose s'est mal passé lors de votre processus d'inscription.";
+"user_fail_to_set_default_account_status" = "Une erreur s'est produite lors de la définition d'un statut de compte par défaut.";
+"user_fail_to_set_initial_password" = "Une erreur s'est produite lors de la définition d'un mot de passe initial.";
+"user_fail_to_update_user_profile" = "Une erreur s'est produite lors de la mise à jour de votre profil.";
+"user_is_not_logged_in" = "L'utilisateur n'est pas connecté";
+"user_not_logged_in" = "Vous devez être connecté pour télécharger des documents.";
+"user_success_add_payment_method" = "Mode de paiement ajouté avec succès.";
+"usercode" = "";
+"usercode_copied_to_clipboard" = "";
+"username" = "Nom d'utilisateur";
+"username_already_registered" = "Ce nom d'utilisateur est déjà pris.";
+"username_available" = "Nom d'utilisateur disponible";
+"username_invalid" = "Ce nom d'utilisateur est invalide.";
+"username_rule" = "Caractères acceptés chiffres (0-9) lettres (a-z A-Z) symboles (-_+.{'@'})";
+"username_unavailable" = "Ce nom d'utilisateur est déjà utilisé.";
+"users_followed_you" = "Les utilisateurs vous ont suivi";
+"validated" = "Validé";
+"verification_code" = "Le code de vérification";
+"verification_code_error" = "Ce code de vérification n'est pas valide.";
+"verification_code_success" = "Votre numéro de téléphone a été vérifié avec succès !";
+"verify_email" = "Vérifiez votre e-mail";
+"verify_email_description" = "Il semble que vous n'ayez pas encore consulté votre messagerie. Afin d'utiliser cette application à son plein potentiel, vous devez vérifier votre adresse e-mail.";
+"verify_email_message" = "Afin d'utiliser cette application à son plein potentiel, vous devez vérifier votre adresse e-mail.";
+"verify_my_account" = "Complétez votre vérification";
+"verify_my_account" = "Complétez votre vérification";
+"verify_phone_description" = "Nous avons envoyé un SMS à {email} avec le code de vérification.";
+"verify_phone_number" = "Vérifier le numéro de téléphone";
+"view" = "Voir";
+"view_competition_markets" = "Voir les compétitions de la concurrence";
+"view_stats" = "Afficher les stats";
+"wager_amount" = "Montant de la mise requise";
+"wallet" = "Portefeuille";
+"wallet_error" = "Erreur de portefeuille";
+"wallet_error_message" = "Une erreur s'est produite lors de la tentative d'obtention des paramètres de votre portefeuille. Réessayez plus tard.";
+"weak_password" = "Doit contenir : minimum 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre et 1 symbole";
+"weekly" = "Hebdomadaire";
+"weekly_betting_limit" = "Limite de pari hebdomadaire";
+"weekly_betting_limit_tooltip" = "Informations sur la limite de pari";
+"weekly_deposit_limit" = "Limite de dépôt hebdomadaire";
+"weekly_deposit_limit_tooltip" = "Informations sur la limite de dépôt";
+"weeks" = "Semaines";
+"who_add_groups" = "Qui peut m'ajouter à des groupes";
+"who_send_messages" = "Qui peut envoyer des messages";
+"winnings" = "Gains";
+"wins" = "Victoires";
+"withdraw" = "Retirer";
+"withdraw_value" = "Valeur de retrait";
+"withdraws" = "Retrait";
+"won" = "Gagné";
+"x_markets" = "Pas de marchés | 1 Marché | {count} marchés";
+"x_results" = "Aucun résultat | 1 résultat | {count} Résultats";
+"xbets" = "{num} Paris";
+"year" = "Année";
+"yes" = "Oui";
+"you_made_a_bet" = "Vous avez fait un pari !";
+"you_shared_a_bet" = "Vous avez partagé un pari";
+"you_want_to_quit" = "Êtes-vous sûr de vouloir quitter?";
+"zipcode_is_required" = "Le code postal est un champ obligatoire. Veuillez remplir ce champ.";
+
+// Added mannually to the end of the spreadsheet
+"cancel_withdraw" = "Annuler le retrait";
+"cancel_withdraw_description" = "Êtes-vous sûr de vouloir annuler votre retrait ?";
+"protect_account" = "Afin de protéger votre compte, votre mot de passe doit :";
+"first_password_requirement" = "Avoir une longueur comprise entre 8 et 16 caractères";
+"second_password_requirement" = "Contenir un caractère majuscule";
+"third_password_requirement" = "Contenir un caractère minuscule";
+"fourth_password_requirement" = "Contenir au moins un chiffre";
+"lack_requirements" = "";
+"street_number" = "Numéro de rue";
+"fifth_password_requirement" = "Être alphanumérique avec au moins 1 symbole de {symbols}";
+"iban_proof" = "Preuve IBAN";
+"iban_invalid" = "IBAN non valide. Doit commencer par 2 lettres [A à Z] suivies de 14 à 29 valeurs alphanumériques [0 à 9 ou A à Z].";
+"description_iban_request" = "Avant de poursuivre, nous devons confirmer votre IBAN.";
+"iban" = "IBAN";
+"department_of_birth_invalid" = "Ce département de naissance est invalide.";
+"department_of_birth" = "Département de naissance (numéro)";
+"country_of_birth" = "Pays de naissance";
+"street_number_invalid" = "Ce numéro de rue est invalide.";
+"postcode_invalid" = "Ce code postal n'est pas valide.";
+"street_name" = "Nom de rue";
+"withdrawal_request_sent_title" = "Votre demande de retrait a été envoyée.";
+"withdrawal_request_sent_text" = "Votre demande sera en attente jusqu'à ce que nous confirmions votre preuve IBAN, après approbation, il faudra au moins 72 heures pour apparaître sur votre relevé bancaire.";
+"withdrawal_error" = "";
+"cancel_deposit" = "";
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expirée";
+"withdrawal_message" = "";
+"casual_pathologic_gambling" = "Jeu occasionnel vs jeu pathologique";
+"tips_to_keep_control" = "Conseils pour garder le contrôle";
+"self_exclusion" = "Auto-exclusion";
+"close_account" = "Fermer le compte";
+"casual_pathologic_question" = "Jeux occasionnels vs jeux pathologiques, quelles sont les différences ?";
+"confirm_close_account_button" = "Oui, fermer mon compte";
+"no_promotions_yet" = "";
+"place_commune_invalid" = "";
+"deposit_limit_info" = "Fixez une limite hebdomadaire au montant que vous pouvez déposer sur votre compte.";
+"betting_limit_info" = "Fixez une limite hebdomadaire au montant que vous pouvez dépenser pour les paris.";
+"auto_payout_limit_info" = "Fixez un montant limite pour le retrait automatique de votre portefeuille.";
+"increasing_limit_warning_title" = "Augmenter la limite de {depositOrBetting}";
+"increasing_limit_warning_text" = "Vous êtes sur le point d'augmenter la limite de {depositOrBetting} de votre compte. Ces changements mettront 48 heures à être appliqués. Souhaitez-vous appliquer ces modifications ?";
+"close_account_alert_text" = "Vous êtes sur le point de fermer votre compte. Si vous continuez, vous ne pourrez plus accéder à votre compte. Ce processus est irréversible. Souhaitez-vous fermer définitivement votre compte ?";
+"used" = "Mise placée";
+"week" = "";
+"server_error_balance" = "Une erreur s'est produite lors du chargement de votre solde.";
+"server_error_favorites" = "Une erreur s'est produite lors du chargement de vos favoris.";
+"queued" = "En attente";
+"autopayout_limit_update_error" = "Nous ne pouvons pas mettre à jour votre limite de paiement automatique pour le moment. Veuillez réessayer plus tard.";
+"opted_in" = "Accepté";
+"no_wager_info" = "Pas d'information de mise";
+"payment_authorized_message" = "Votre paiement a été autorisé. Votre dépôt devrait être disponible sur votre compte.";
+"bet_placed" = "Pari Placé";
+"bet_settled" = "Pari Réglé";
+"withdraw_error" = "Erreur de retrait";
+"payment_authorized" = "Bonus expiré";
+"odds_variation_load_fail" = "Une erreur s'est produite lors du chargement des paramètres de variation des cotes.";
+"odds_variation_update_fail" = "Une erreur s'est produite lors de la mise à jour des paramètres de variation des cotes.";
+"block_account_info" = "Bloquer votre compte pour les paris et les dépôts pendant un certain nombre de jours, semaines ou mois";
+"close_account_success" = "Fermeture de compte réussie";
+"close_account_success_message" = "Votre compte a été fermé avec succès.";
+"close_account_error" = "Erreur de fermeture de compte";
+"close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
+"age_and_birthplace" = "Âge et Lieu de naissance";
+"max_size" = "Taille Max";
+"evalujeu" = "Evalujeu";
+"withdrawal" = "Dépôt Annulé";
+"deposit_cancel" = "Dépôt Annulation";
+"withdrawal_cancel" = "Retrait Annulé";
+"lock_account_success" = "Verrouillage de compte réussi";
+"lock_account_success_message" = "Votre compte a été verrouillé avec succès.";
+"lock_account_error" = "Erreur de verrouillage du compte";
+"lock_account_error_message" = "Une erreur s'est produite lors du verrouillage de votre compte, veuillez contacter l'assistance.";
+"pending_limit_info" = "Il y a une limite en attente de: {pendingLimit} {currency}. La limite actuelle est valable jusqu'au: {pendingLimitDate}";
+"limit_update_error_message" = "La limite de {limitType} n'a pas pu être mise à jour. Veuillez contacter le support.";
+"bonus_cancel_success" = "Bonus annulé avec succès!";
+"bonus_cancel_error" = "Le bonus n'a pas pu être annulé. Veuillez contacter le service d'assistance.";
+"cancel_withdraw_success" = "Votre retrait a été annulé.";
+"cancel_withdraw_error" = "Une erreur s'est produite lors de l'annulation de votre retrait. Veuillez contacter l'assistance.";
+"tracking_policy_title" = "Politique de suivi";
+"accept_all_cookies" = "Tout accepter";
+"settings_cookies" = "Paramétrer";
+"continue_without_accepting_cookies" = "Continuer sans accepter";
+"details_cookies_title" = "Bienvenue sur Betsson.fr";
+"details_cookies" = "Nous respectons vos données, nous souhaitons aussi vous offrir une expérience optimisée:\n\n- Au travers d'une application performante et sécurisée.\n\n- Une offre pertinente via des publicités adaptées.\n\nNos partenaires et nous même utilisons des services et cookies afin de vous fournir ses engagements en toute sécurité.\n\nIl vous ait possible de changer vos préférences.\n";
+"details_cookies_settings" = "Paramétrer la gestion de mes données.\n\nLes systèmes suivit de Betsson sont de deux types:\n\n- Essentiel: ceux-ci sont nécessaires au bon fonctionnement et à la sécurité des services proposés.\n\n- Recommandé: ceux-ci permettent une expérience optimisée.\n";
+"essential_mandatory" = "Essentiel (obligatoire)";
+"audience_measurement" = "Mesure d'audiences";
+"advertising_and_offers_optimization" = "Optimisation des publicités et des offres";
+"cashout_reoffer_warning_title" = "Avertissement de réoffre de retrait";
+"cashout_reoffer_warning_text" = "Cette valeur de réoffre de retrait de pari a changé en {cashoutReofferValue}{currencySymbol}. Voulez-vous l'accepter?";
+"cashout_error" = "Erreur de retrait";
+"cashout_no_longer_available" = "Ce retrait de pari n'est plus disponible.";
+"bet_id" = "ID de pari";
+"bonus_released" = "Bonus Libéré";
+"cancel_bonus" = "Annuler le bonus";
+"cancel_bonus_confirmation" = "Êtes-vous sûr de vouloir annuler ce bonus?";
+"freebet_balance" = "Solde des paris gratuits:";
+"freebet" = "Pari gratuit";
+"product_bonus" = "Bonus Produit";
+"refund" = "Remboursement";
+"partial_cashout_value" = "Encaissement partiel {cashoutAmount}";
+"expired" = "Expiré";
+"affiliate_system_footer_link" = "Système d'affiliation";
+"responsible_gambling_footer_link" = "Jeu responsable";
+"privacy_policy_footer_link" = "Politique de confidentialité";
+"cookie_policy_footer_link" = "Politique relative aux cookies";
+"sports_betting_rules_footer_link" = "Règles des paris sportifs";
+"terms_and_conditions_footer_link" = "Termes et conditions";
+"about_footer_link" = "À propos";
+"faqs_footer_link" = "FAQ's";
+"gambling_warning_footer_link" = "FAMILLE, VIE SOCIALE, SANTÉ FINANCIÈRE. ETES-VOUS PRÊT À TOUT MISER? POUR ÊTRE AIDÉ, APPELEZ LE 09-74-75-13-13 (APPEL NON SURTAXÉ)";
+"minors_prohibition_footer_link" = "LES JEUX D'ARGENT ET DE HASARD SONT INTERDITS AUX MINEURS";
+"partial_cashout_confirmation" = "Voulez-vous vraiment retirer partiel {amount} ?";
+"original" = "Original";
+"returned" = "Renvoyé";
+"man_adjust" = "Ajustement";
+
+"country_of_birth" = "Pays de naissance";
+"department_of_birth" = "Département de naissance";
+"street_name" = "Nom de rue";
+"street_number" = "Numéro de rue";
+"payment_authorized_message" = "Votre paiement a été autorisé. Votre dépôt devrait être disponible sur votre compte.";
+
+"no_value" = "-.--€";
+
+"light_mode" = "Mode clair";
+
+"live_stats" = "Match en direct";
+
+"bet_placed" = "Pari Placé";
+"bet_settled" = "Pari Réglé";
+
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expiré";
+"deposit_cancel" = "Annulation de Dépôt";
+
+"bonus_released" = "Bonus Libéré";
+
+"kyc_account_status" = "Statut du compte KYC";
+
+"withdraw_error" = "Erreur de retirer";
+"used" = "Utilisé";
+"queued" = "En attente";
+"no_wager_info" = "Info sans mise";
+"payment_authorized" = "Paiement Autorisé";
+
+"withdrawal" = "Retrait";
+"bonus_credit" = "Crédit Bonus";
+"bonus_expired" = "Bonus Expirée";
+"deposit_cancel" = "Dépôt Annulation";
+"withdrawal_cancel" = "Retrait Annulation";
+
+"close_account_success" = "Réussir à fermer un compte";
+"close_account_success_message" = "Votre compte a été fermé avec succès.";
+"close_account_error" = "Erreur de fermeture de compte";
+"close_account_error_message" = "Une erreur s'est produite lors de la fermeture de votre compte, veuillez contacter l'assistance.";
+
+"casual_pathologic_gambling" = "Jeu récréatif et Jeu excessif";
+"casual_pathologic_question" = "Jeu récréatif et Jeu excessif: quelles sont les différences ?";
+
+"tips_to_keep_control" = "Conseils pour garder le contrôle";
+"self_exclusion" = "Auto-exclusion";
+"close_account" = "Fermer le compte";
+
+"block_account_info" = "Bloquer les paris et les dépôts sur votre compte pendant un certain nombre de jours, de semaines ou de mois.";
+
+"confirm_close_account_button" = "Oui, fermer mon compte";
+"close_account_alert_text" = "Vous êtes sur le point de fermer votre compte. Si vous continuez, vous ne pourrez plus accéder à votre compte. Ce processus est irréversible. Souhaitez-vous fermer définitivement votre compte ?";
+
+"evalujeu" = "Evalujeu";
+
+"lock_account_success" = "Verrouiller le compte avec succès";
+"lock_account_success_message" = "Votre compte a été verrouillé avec succès.";
+"lock_account_error" = "Erreur de verrouillage du compte";
+"lock_account_error_message" = "Une erreur s'est produite lors du verrouillage de votre compte, veuillez contacter l'assistance.";
+
+"pending_limit_info" = "Il y a une limite en attente de: {pendingLimit} {currency}. La limite actuelle est valable jusqu'au: {pendingLimitDate}";
+
+"increasing_limit_warning_title" = "Augmenter la limite de {}";
+"increasing_limit_warning_text" = "Vous êtes sur le point d'augmenter la limite de {} de votre compte. Ces changements mettront 48 heures à être appliqués. Souhaitez-vous appliquer ces modifications?";
+
+"current_limit_info" = "Il s'agit de la valeur actuelle de votre {limitType}.";
+"current_limit_deposit_info" = "Montant max. déposable sur 7 jours glissants.";
+"current_limit_wager_info" = "Montant max. jouable sur 7 jours glissants.";
+
+"limit_update_error_message" = "La limite de {limitType} n'a pas pu être mise à jour. Veuillez contacter le support.";
+
+"bonus_cancel_success" = "Bonus annulé avec succès!";
+"bonus_cancel_error" = "Le bonus n'a pas pu être annulé. Veuillez contacter le service d'assistance.";
+
+"withdrawal_request_sent_title" = "Votre demande de retrait a été envoyée.";
+"withdrawal_request_sent_text" = "Votre demande sera en attente jusqu'à ce que nous confirmions votre preuve IBAN. Après approbation, il faudra au moins 72 heures pour qu'elle apparaisse sur votre relevé bancaire.";
+
+"cancel_withdraw" = "Annuler Retrait";
+"cancel_withdraw_description" = "Êtes-vous sûr de vouloir annuler votre retrait?";
+
+"cancel_withdraw_success" = "Votre retrait a été annulé.";
+"cancel_withdraw_error" = "Une erreur s'est produite lors de l'annulation de votre retrait. Veuillez contacter l'assistance.";
+
+"cashout_reoffer_warning_title" = "Avertissement de réoffre de retrait";
+"cashout_reoffer_warning_text" = "Cette valeur de réoffre de retrait de pari a changé en {cashoutReofferValue}{currencySymbol}. Voulez-vous l'accepter?";
+
+"cashout_error" = "Erreur de retrait";
+"cashout_no_longer_available" = "Ce retrait de pari n'est plus disponible.";
+
+"bet_id" = "ID de pari";
+
+"cancel_bonus" = "Annuler le bonus";
+"cancel_bonus_confirmation" = "Êtes-vous sûr de vouloir annuler ce bonus?";
+
+"tracking_policy_title" = "Politique de suivi";
+"accept_all_cookies" = "Tout accepter";
+"settings_cookies" = "Paramétrer";
+"continue_without_accepting_cookies" = "Continuer sans accepter";
+"details_cookies" = "Bienvenue sur Betsson.fr\n\n\nNous respectons vos données, nous souhaitons aussi vous offrir une expérience optimisée:\n\n- au travers d'une application performante et sécurisée.\n\n- une offre pertinente via des publicités adaptées.\n\nNos partenaires et nous même utilisons des services et cookies afin de vous fournir ses engagements en toute sécurité.\n\nIl vous ait possible de changer vos préférences.\n";
+
+"details_cookies_settings" = "Paramétrer la gestion de mes données.\n\n\nLes systèmes suivit de Betsson sont de deux types:\n\n-Essentiel: ceux-ci sont nécessaires au bon fonctionnement et à la sécurité des services proposés.\n\n-Recommandé: ceux-ci permettent une expérience optimisée.\n";
+
+"essential_mandatory" = "Essentiel (obligatoire)";
+"audience_measurement" = "Mesure d'audiences";
+"advertising_and_offers_optimization" = "Optimisation des publicités et des offres";
+
+"refund" = "Remboursement";
+"product_bonus" = "Bonus Produit";
+
+"opted_in" = "Opté";
+"expired" = "Expiré";
+
+"partial_cashout_value" = "Encaissement partiel {cashoutAmount}";
+
+"withdrawal_warning" = "Avertissement de retrait";
+"withdrawal_warning_text" = "Souhaitez-vous procéder au retrait ? Si vous disposez actuellement d'un bonus de dépôt actif, celui-ci sera annulé.";
+"understand_confirmation_withdraw" = "Je comprends";
+
+"upload_iban_success" = "Téléchargement de l'IBAN Succès";
+"upload_iban_success_message" = "Merci de nous communiquer votre IBAN et votre RIB. Le traitement des documents devrait prendre entre 1 et 2 jours ouvrables.\nVous serez notifié par email une fois le traitement effectué et vous pourrez alors effectuer votre premier retrait.";
+
+"upload_iban_error" = "Erreur de téléchargement de l'IBAN";
+"upload_iban_error_message" = "Une erreur s'est produite lors du traitement de vos documents IBAN. Veuillez contacter le support.";
+
+"withdrawal_iban_pending_approval_message" = "Vos documents IBAN et RIB sont en cours de traitement. Il faut compter entre 1 et 2 jours ouvrables pour que les documents soient traités.\nVous serez notifié par email une fois que cela sera fait et vous pourrez alors effectuer votre premier retrait.";
+
+"understood" = "Compris";
+
+"withdrawal_reject" = "Retrait Refusé";
+
+"contact_settings" = "Paramètres de contact";
+
+
+// NOT TO ADD YET
+"tip_title" = "Pointe 1";
+"tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
+"casual_pathologic_answer" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";
+
+"read_about_terms_placeholders" = "Lisez à propos de notre {terms_and_conditions}.";
+"signing_agree_terms_conditions" = "En vous inscrivant, vous acceptez nos {terms_and_conditions}, {privacy_policy}, et {sport_betting_rules}";
+
+"terms_and_conditions" = "Termes et Conditions";
+"privacy_policy" = "Politique de Confidentialité";
+"sport_betting_rules" = "Règles des Paris Sportifs";
+
+"password_tips_title" = "Pour protéger votre compte, votre mot de passe doit :";
+"password_tips_number" = "• Contenir au moins un chiffre";
+"password_tips_uppercase" = "• Contenir une lettre majuscule";
+"password_tips_lowercase" = "• Contenir une lettre minuscule";
+"password_tips_alphanumeric" = "• Être alphanumérique avec au moins 1 symbole parmi -!@^$&*+";
+"password_tips_length" = "• Avoir une longueur entre 8 et 16 caractères";
+
+"app_version_profile_1" = "Version de l'application {version_1} ({version_2})";
+"app_version_profile_2" = "Sportsbook® Tous droits réservés";
+
+"affiliate_system_footer_link" = "Système d'affiliation";
+"privacy_policy_footer_link" = "Politique de confidentialité";
+"security_rules_footer_link" = "Règles de sécurité";
+"cookie_policy_footer_link" = "Politique relative aux cookies";
+"sports_betting_rules_footer_link" = "Règles des paris sportifs";
+"terms_and_conditions_footer_link" = "Termes et conditions";
+"about_footer_link" = "À propos";
+"faqs_footer_link" = "FAQ's";
+"responsible_gambling_footer_link" = "Jeu responsable";
+
+"gambling_warning_footer_link" = "FAMILLE, VIE SOCIALE, SANTÉ FINANCIÈRE. ETES-VOUS PRÊT À TOUT MISER? POUR ÊTRE AIDÉ, APPELEZ LE 09-74-75-13-13 (APPEL NON SURTAXÉ)";
+"minors_prohibition_footer_link" = "LES JEUX D'ARGENT ET DE HASARD SONT INTERDITS AUX MINEURS";
+
+// 10 April
+"card_style_normal" = "Normal";
+"card_style_small" = "Petit";
+
+"withdrawal_status" = "Statut de retrait";
+"withdrawal_status_message" = "Votre demande de retrait a été ajoutée. Dans les prochains jours, la demande sera traitée et vous recevrez une mise à jour.";
+
+"date_range_filter" = "Plage de dates";
+
+"value_not_valid" = "Cette valeur n'est pas valide.";
+"problem_setting_value" = "Il y a eu un problème pour définir cette valeur";
+"invalid_postcode" = "Ce code postal n'est pas valide. Doit comporter 5 chiffres";
+"invalid_number" = "Le nombre n'est pas valide. Doit comporter jusqu'à 3 chiffres";
+"place_too_long" = "Le nom de la commune est trop long";
+"street_name_too_long" = "Le nom de la rue est trop long";
+"invalid_place" = "Veuillez entrer une commune valide";
+"invalid_street" = "Veuillez entrer un nom de rue valide";
+"player_not_old_enough" = "Le joueur n'est pas assez âgé pour être inscrit";
+"country_name_too_long" = "Le nom du pays est trop long";
+"invalid_birth_date" = "Veuillez entrer une date de naissance valide";
+"invalid_country" = "Veuillez entrer un pays valide";
+"invalid_email_format" = "Veuillez insérer un format d'email valide";
+"email_not_verifiable" = "Désolé, nous ne pouvons pas vérifier cet e-mail";
+"email_already_in_use" = "Cet e-mail est déjà utilisé";
+"mobile_number_already_in_use" = "Ce numéro de téléphone portable est déjà utilisé";
+"invalid_email" = "Veuillez entrer un e-mail valide";
+"invalid_phone_number" = "Veuillez entrer un numéro de téléphone valide";
+"name_invalid_length" = "La longueur de ce prénom est invalide";
+"last_name_invalid_length" = "La longueur de ce nom de famille est invalide";
+"invalid_name" = "Veuillez entrer un prénom valide";
+"invalid_last_name" = "Veuillez entrer un nom de famille valide";
+"nickname_not_validated" = "Désolé, nous n'avons pas pu valider ce pseudonyme.";
+"nickname_already_in_use" = "Ce pseudonyme est déjà utilisé.";
+"invalid_nickname" = "Veuillez insérer un pseudonyme valide.";
+"nickname_too_long" = "Le pseudonyme est trop long";
+"password_invalid_length" = "La longueur de ce mot de passe est invalide";
+"invalid_password" = "Veuillez entrer un mot de passe valide";
+"promo_code_too_long" = "Le code promotionnel est trop long";
+"invalid_promo_code" = "Veuillez entrer un code promotionnel valide";
+
+"tips_keep_control" = "Les conseils de Betsson pour garder le contrôle et faire du jeu une activité de loisir agréable et responsable. En suivant ces recommandations, vous pourrez éviter de vous mettre en difficulté financière ou émotionnelle.\n\nIl est important de se rappeler que le jeu doit être considéré comme un passe-temps, et non pas comme une source de revenus fiable. Fixer un budget raisonnable est un bon moyen de s'assurer que vous ne dépensez pas plus que vous ne pouvez-vous le permettre.\n\nConsultez régulièrement votre historique de jeu vous permettra de garder un œil sur vos dépenses et de détecter toute dérive éventuelle. Si vous commencez à ressentir des émotions négatives comme la frustration ou le stress, prenez une pause et faites autre chose pour vous détendre.\n\nEnfin, il est important de ne pas laisser le jeu prendre le pas sur vos responsabilités et obligations quotidiennes. Si vous sentez que le jeu commence à impacter négativement votre vie, n'hésitez pas à en parler à vos proches et à chercher de l'aide si nécessaire.";
+
+"kyc_message_title" = "KYC n'est past complet!";
+"kyc_message_body" = "Vos documents sont necessaire pour effectuet un retrait.";
+
+"face_id_title" = "Face ID";
+"face_id_message" = "Voulez-vous utiliser Face ID ?";
+"touch_id_title" = "Touch ID";
+"touch_id_message" = "Voulez-vous utiliser Touch ID ?";
+"no" = "Non";
+"biometric_error_title" = "Erreur biométrique";
+"biometric_error_denied_message" = "Il semble que vous ayez refusé l'utilisation de la biométrie pour cette application.";
+"biometric_error_general_message" = "Une erreur s'est produite lors de la vérification de l'authentification biométrique. Veuillez vous assurer qu'elle est activée dans les réglages de votre appareil.";
+
+"contact_support" = "Contactez le support si vous souhaitez modifier les informations de votre profil";
+
+"all_odds" = "Toutes les cotes";
+"between_2_3" = "Entre 2 et 3";
+"big_odds" = "Les grandes cotes";
+
+"filters_applied_to" = "Filtres appliqués à:";
+
+"bonus_terms_and_conditions" = "Bonus T&C";
+
+"my_documents" = "Mes Documents";
+
+"bonus_deposit_title" = "Souhaitez-vous recevoir un bonus pour ce dépôt?";
+"bonus_deposit_detail" = "Voir les détails de le bonus";
+"bonus_deposit_name" = "Bonus de dépôt: {bonusName}";
+
+"bonus_dialog_title" = "Êtes-vous sûr de ne pas vouloir le bonus?";
+"bonus_dialog_message" = "En acceptant, vous ne recevrez pas le bonus suivant: {bonusName}.";
+
+"first_deposit_success_message" = "Votre premier dépôt a été effectué avec succès!";
+
+"deposit_success_message" = "Votre dépôt a été effectué avec succès!";
+"released" = "Libéré";
+
+"bonus_dialog_error" = "Il n'a pas été possible d'activer le bonus, veuillez contacter le support";
+
+"identification_docs" = "Docs d'identification.";
+"rib" = "RiB";
+"extra_docs" = "Extra Docs.";
+
+"id_card_or_residence_id" = "Carte d'identité ou carte de séjour";
+"driving_licence_or_passport" = "Permis de conduire ou passeport";
+"add_documents" = "Add documents";
+"rib_number" = "Numéro du RIB";
+"rib_document" = "RIB Document";
+"docs_need_validation_before_rib" = "Vos documents d'identité doivent être valides pour que vous puissiez ajouter votre RiB";
+"docs_need_validation_before_others" = "Vos documents d'identification doivent être valides avant que vous puissiez ajouter d'autres documents";
+"additional_documents" = "Documents complémentaires";
+
+"choose_type_of_identification" = "Choisir le type d'identification";
+
+"identity_card" = "Carte d'identité";
+"residence_id" = "ID de résidence";
+"driving_licence" = "Permis de conduire";
+"passport" = "Passeport";
+"utility_bill" = "Facture de services publics";
+
+"upload_information" = "Télécharger les informations";
+"upload_front_and_back" = "Télécharger le recto et le verso du document";
+"upload_front_document" = "Télécharger le recto du document";
+"all_four_corners" = "Les 4 coins doivent apparaître";
+"allowed_file_types" = "Types de fichiers autorisés: {allowedFileTypes}";
+"max_size" = "Taille max. :";
+"rejected" = "Rejeté";
+"incomplete" = "Incomplet";
+"upload_complete_message" = "Vos documents ont été téléchargés avec succès!";
+"upload_error" = "Erreur de téléchargement";
+
+"requested_kyc" = "Demandé";
+"pass_conditional_kyc" = "Validation conditionnelle";
+"pass_kyc" = "Validé";
+
+"identity_docs_approved_title" = "Vos documents d'identité ont été approuvés!";
+"identity_docs_approved_text" = "Pour passer à l'étape suivante, vous devez télécharger votre document de preuve d'adresse.";
+
+"progress_not_saved" = "Votre progression ne sera pas sauvegardée.";
+"havent_send_documents" = "Vous n'avez toujours pas envoyé vos documents.";
+"stay_here" = "Restez ici";
+"yes_go_back" = "Oui, retournez-y";
+
+"oh_no" = "Oh non";
+"automated_withdrawal" = "Retrait automatique";
+
+"cashback" = "Cashback";
+"cashback_balance" = "Cashback Balance:";
+
+"replay_balance" = "Solde Replay";
+
+"used_cashback" = "Used Cashback";
+
+"first_info_title_cashback" = "What’s Replay?";
+"first_info_descrition_cashback" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
+"second_info_title_cashback" = "Are all bets available to Replay?";
+"second_info_descrition_cashback" = "Nope! To know which ones are available, check if it has this tag:";
+"third_info_title_cashback" = "Can I withdraw Replay Balance?";
+"third_info_descrition_one_cashback" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
+"third_info_descrition_two_cashback" = "By turning on, you can use your balance for the bet.";
+"fourth_info_title_cashback" = "How do I know if I used my replay balance on one bet?";
+"fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your replay balance on it.";
+"cashback_info" = "Get back some of your bet if you lose.";
+
+"learn_more" = "Learn more";
+
+"request_concerns" = "Votre demande concerne";
+"bonus_and_promotions" = "Bonus & Promotions";
+"betting_rules" = "Règles des paris";
+"other" = "Autre";
+"automated_withdrawal_threshold" = "Seuil de retrait automatique";
+
+"top_competitions" = "Compétitions de haut niveau";
+"pre_validated" = "Prévalidé";
+
+"pending_withdraws_info_message" = "Vous êtes sûr de vouloir effectuer un retrait ? Vous avez déjà un retrait en cours, que vous pouvez annuler.";
+"show_pending_withdraws" = "Afficher les retraits en cours";
+
+"referal_friend" = "Recommander un ami";
+
+"rf_first_title" = "Parraînez vos amis et touchez 20€ de bonus!";
+"rf_first_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+"rf_second_description" = "Il te reste {referrals} sur les {days} prochains. Après cette période, ton compteur repassera à 5 parrainages possibles.";
+
+"referrals_number_single" = "{number} parrainage";
+"referrals_number" = "{number} parrainages";
+
+"days_number_single" = "{number} jour";
+"days_number" = "{number} jours";
+
+"rf_third_title" = "Comment parrainer mon ami?";
+"rf_third_sub_title" = "Utilise la méthode de ton choix pour parrainner ton ami";
+
+"rf_third_fs_title" = "Partager un lien par SMS, Whatsapp, Email...";
+"rf_third_fs_description" = "Choisis la méthode de ton choix pour partager le lien de parrainage à ton ami (SMS, Whatsapp, messanger, email, etc...)";
+"rf_third_fs_bottom" = "Partager un lien";
+
+"rf_third_ss_title" = "Afficher un QR code";
+"rf_third_ss_description" = "Ton ami n’a plus qu’à scanner ce QR code pour s’inscrire et profiter du programme de parrainage.";
+"rf_third_ss_bottom" = "Voir le QR code";
+
+"rf_fourth_title" = "Mes filleuls";
+"rf_fourth_description" = "Retrouve ici la liste de tes filleuls inscrits ces 12 derniers mois";
+"rf_fourth_second_title" = "Mon parrain";
+
+"referral_bonus_won" = "Tu as touché un bonus de 20€ pour ce filleul";
+"referral_account_pending" = "Pour toucher ton bonus, ton ami doit valider son compte";
+"referral_deposit_pending" = "Pour toucher ton bonus, ton ami doit effectuer un dépôt";
+"referral_bonus_pending" = "Pour toucher ton bonus, ton ami doit valider son compte et effectuer un dépôt";
+
+"account_validated" = "Compte validé";
+"account_not_validated" = "Compte non validé";
+"rf_first_deposit" = "✓ 1er dépot";
+
+"rf_fifth_title" = "Règlement relatif à l'affiliation";
+"rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
+
+"qr_code" = "QR code";
+"qr_code_description" = "Demande à ton ami de prendre en photo ce QR code pour s'inscrire sur Betsson.fr";
+
+"rf_second_title_nv" = "Comment parrainer mes amis?";
+"rf_second_description_nv" = "Pour pouvoir parrainer tes amis, tu dois d abord valider ton compte et effectuer un premier dépot";
+
+"rf_second_first_bottom_nv" = "Valider mon compte";
+"rf_second_second_bottom_nv" = "Faire mon 1er dépot";
+
+"see" = "Voir";
+
+"this_week" = "Cette semaine";
+"next_week" = "Semaine prochaine";
+
+"time" = "Temps";
+"higher_odds" = "Plus de chances";
+
+"no_favorite_competitions" = "Vous n’avez aucune compétition préférée.";
+"add_some_favorites" = "Ajoutez-en pour un accès rapide ou consultez nos suggestions ci-dessous.";
+
+"support_success" = "Votre message a bien été envoyé";
+
+"total_balance_automated_withdrawal" = "Ce solde comprend également le retrait automatisé (ESCROW).";
+
+
+"hold_on" = "Attendez";
+
+"payment_processing_hold" = "Le paiement est en cours de traitement! En attente de la finalisation du paiement.";
+
+"deleted" = "Supprimé";
+"void" = "Annulé";
+"spent" = "Utilisé";
+
+"iban_note" = "Note: si vous souhaitez utiliser un IBAN non français, veuillez contacter le service client";
+
+/* Responsible Gaming*/
+"responsible_gaming_title" = "Savoir reconnaitre les signes avant-coureurs";
+"responsible_gaming_description" = "Le jeu responsable est un des principes fondamentaux de notre activité. Nous accordons la priorité au bien-être de nos joueurs et veillons à ce que chaque interaction avec nous reste agréable.
+
+En tant qu'opérateur qui prospère grâce à l’innovation et au divertissement, il est tout aussi crucial de veiller à ce que les expériences de jeu restent agréables, responsables et conscientes des risques.
+
+Cet engagement se traduit par la mise à disposition des joueurs des outils, des informations et des mécanismes de soutien qui leur permettent de prendre des décisions sur leurs activités de jeu. Avec ses initiatives en matière de jeu responsable, Betsson France répond aux préoccupations liées à la protection des joueurs, à la prévention du jeu des mineurs et à la maîtrise du jeu excessif.";
+
+"responsible_gaming_first_section_title" = "LE PLAISIR DOIT PRÉVALOIR DANS VOTRE EXPÉRIENCE DE JEU";
+"responsible_gaming_first_section_text" = "Betsson aborde la question du jeu responsable au sérieux et prend des mesures pour aider les joueurs à jouer de manière sûre et saine. En effet, il est crucial de reconnaître qu'il existe une différence entre le jeu récréatif et le jeu problématique.\n\nLe jeu récréatif est généralement considéré comme une activité de loisir occasionnelle qui peut être agréable et amusante, mais qui ne prend pas le dessus sur la vie de la personne. Les joueurs récréatifs sont prudents dans leurs mises et ne jouent pas de manière compulsive ou excessive.\n\nLe jeu problématique, quant à lui, peut affecter la vie quotidienne d'une personne de manière négative. Les joueurs pathologiques ont du mal à contrôler leur comportement de jeu et peuvent continuer à jouer malgré les conséquences négatives qui en résultent, telles que des problèmes financiers, des conflits familiaux ou professionnels, des problèmes de santé mentale ou physique, etc.\n\nIl est donc important de mettre en place des mesures pour aider à prévenir et à détecter le jeu excessif. Cela peut inclure des limites de dépôt et de mise, des conseils de jeu responsable, ainsi que des options pour s'auto-exclure du site pendant une période à définir.";
+
+"responsible_gaming_second_section_title" = "NOS RECOMMANDATIONS POUR GARDER LE CONTRÔLE";
+
+"responsible_gaming_second_section_text_1" = "Voici quelques conseils pour maintenir une approche récréative de votre jeu en ligne :";
+
+"responsible_gaming_second_section_list" = "\t1. Votre motivation : Jouez par plaisir et de manière récréative, ce n’est pas une source potentielle de revenus.
+    
+\t2. Établissez un budget : Définissez une limite budgétaire claire avant de commencer à parier. Assurez-vous que cet argent est quelque chose que vous pouvez vous permettre de perdre sans affecter votre vie quotidienne.
+
+\t3. Limitez le temps de jeu : Fixez-vous des limites de temps pour vos sessions de jeu. Cela peut vous aider à éviter de passer trop de temps à parier et à maintenir un équilibre sain entre le jeu et d'autres activités.
+
+\t4. Évitez de récupérer vos pertes : Ne tentez pas de récupérer l'argent que vous avez perdu en augmentant vos mises. Cela peut entraîner des pertes plus importantes et des comportements risqués.
+
+\t5. Utilisez des outils de gestion des comptes : Renseignez des limites raisonnables que vous pouvez vous permettre de perdre pour réguler vos dépenses et vos mises. Utilisez ces fonctionnalités pour rester en contrôle.
+
+\t6. Ne pariez pas sous l'influence : Évitez de parier lorsque vous êtes sous l'influence de l'alcool, de médicaments ou de toute autre substance. Cela peut altérer votre jugement et vous amener à prendre des décisions impulsives.
+
+\t7. Soyez conscient de vos émotions : Si vous commencez à ressentir des émotions négatives telles que le stress, la frustration ou l'anxiété liées au jeu, prenez une pause. Ne pariez pas lorsque vous êtes émotionnellement vulnérable.
+
+\t8. Maintenir un lien social : Ne cache pas ta pratique du jeu à tes proches. Reste conscient de ton rapport au jeu, de tes gains et pertes, et discutes-en avec ton entourage.
+
+\t9. Sécuriser votre compte : Ne partagez jamais vos identifiants avec des mineurs et assurez-vous de protéger vos accès pour éviter toute connexion non autorisée.";
+
+"responsible_gaming_second_section_text_2" = "En suivant ces conseils, vous pouvez contribuer à maintenir le plaisir dans vos paris sportifs tout en minimisant les risques associés au jeu excessif.
+
+Si vous pensez avoir des problèmes liés au jeu, n'hésitez pas à demander de l'aide. De nombreuses ressources sont à votre disposition pour aider les personnes confrontées à des problèmes de jeu compulsif tel que : SOS joueur";
+
+"responsible_gaming_third_section_title" = "AIDER UN PROCHE";
+
+"responsible_gaming_third_section_text_1" = "Si vous pensez qu'un de vos proches développe un problème de jeux, il est essentiel de l'encourager à demander de l'aide. Le jeu compulsif peut toucher des personnes de tous âges et de tous sexes. Comme toute autre dépendance, le trouble du jeu peut entraîner des difficultés considérables dans la vie d'une personne, affectant son travail, ses relations et son bien-être mental.
+
+
+Comment agir ?";
+
+"responsible_gaming_third_section_list" = "\t• leur parler
+
+\t• apportez votre soutien et non votre jugement
+
+\t• expliquer les conséquences
+
+\t• être patient avec eux
+
+\t• proposer des activités qui remplacent le jeu
+
+\t• suggérer des groupes de soutien
+
+\t• recommander une aide professionnelle";
+
+"responsible_gaming_third_section_text_2" = "Si le jeu excessif vous affecte ou affecte un de vos proches, nous vous suggérons de Consulter notre rubrique « Garder le contrôle », onglet « Besoin de soutien ». Cet onglet peut vous offrir une assistance ciblée sur le jeu responsable et fournir des conseils pour répondre aux préoccupations liées au jeu.";
+
+"responsible_gaming_fourth_section_title" = "PROTEGER LES MINEURS";
+
+"responsible_gaming_fourth_section_text" = "Les jeux en ligne sont interdits aux mineurs conformément à la législation en vigueur.
+
+Nos procédures de vérification de l'âge garantissent que les personnes n'ayant pas atteint l'âge légal ne sont pas autorisées à jouer sur notre plateforme. Nous vérifions les documents d'identité pour confirmer que le titulaire du compte est majeur. Si un mineur saisi une fausse date de naissance et serait identifié à postériori, ses avoirs seront confisqués. L’utilisateur sera exclu et son compte fermé.
+
+
+Nous investissons beaucoup de temps et de ressources pour empêcher les mineurs de jouer, et nous tenons à informer les parents et tuteurs que les mineurs, même avec leur consentement, ne sont pas autorisés à jouer sur notre site. Ne permettez pas que votre enfant joue avec votre compte en ligne.
+
+Il est conseillé d'installer un logiciel de contrôle parental pour empêcher les mineurs d'accéder aux jeux en ligne. Le lien suivant fournit des instructions d'installation : https://e-enfance.org/informer/controle-parental/";
+
+// Tips
+"tips_control_title" = "Garder le contrôle";
+"tips_control_description" = "Les paris doivent toujours être adaptés à votre situation financière et ne pas avoir d'impacts négatifs, que ce soit sur le plan financier ou social. Nous mettons à votre disposition les connaissances nécessaires pour vous guider, vous conseiller et encourager un jeu sûr. Consultez les liens ci-dessous pour accéder à nos conseils, outils et processus d'assistance.";
+
+"tips_control_first_section_title" = "RECONNAITRE UN PROBLEME DE JEU EXCESSIFS";
+
+"tips_control_first_section_text_1" = "Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_first_section_list" = "\t• Est-ce que le jeu occupe une place importante dans votre esprit ?
+
+\t• Est-ce que vous avez besoin d’augmenter le montant de vos mises pour ressentir plus d’excitation ?
+
+\t• Est-ce que vous rejouez dans l’espoir de récupérer l'argent perdu ?
+
+\t• Est-ce que vous vous sentez impatient ou nerveux lorsque vous ne pouvez pas parier ?
+
+\t• Est-ce que vous avez déjà rencontré des difficultés financières, psychologiques ou familiales suite à votre pratique de jeu ?
+\t• Est-ce que des personnes ont déjà critiqué vos habitudes de jeu ou vous ont dit que vous avez un problème dans votre rapport au jeu ?
+
+\t• Est-ce que vous avez déjà cherché à cacher vos pratiques de jeux ?";
+
+"tips_control_first_section_text_2" = "Si vous vous trouvez dans plusieurs de ces situations, il est possible que vous développiez une dépendance au jeu.
+
+Nous vous encourageons à effectuer un bilan sur Evalujeu, une plateforme d'évaluation fournissant des conseils personnalisés sur les habitudes de jeu.";
+
+"tips_control_second_section_title" = "LES MODERATEURS DE JEU";
+
+"tips_control_second_subsection_title_1" = "Les limites";
+
+"tips_control_second_section_text_1" = "Nous mettons à votre disposition des modérateurs de jeu afin de privilégier une pratique récréative en fixant des limites maximales :";
+
+"tips_control_second_section_list" = "\t• de dépôt fonctionnant sur 7 jours glissants ;
+
+\t• de mise fonctionnant sur 7 jours glissants ;";
+
+"tips_control_second_subsection_title_2" = "Auto-exclusion";
+
+"tips_control_second_section_text_2" = "Si vous craignez de développer un problème de jeu ou si vous en rencontrez actuellement un, nous vous recommandons d'envisager l'auto-exclusion. Cette fonction vous permet de restreindre vos activités de jeu de 24 heures à 1 an.
+
+Pendant la période d'auto-exclusion, votre compte sera temporairement désactivé et vous ne pourrez pas vous connecter. La réouverture d’un compte n'est pas possible pendant cette période.
+
+En plus de vous retirer de nos bases de données marketing durant cette période, nous vous recommandons de supprimer Betsson France de vos notifications, de supprimer/désinstaller toutes nos applications et téléchargements, et de bloquer/désactiver nos comptes de médias sociaux.";
+
+"tips_control_third_section_title" = "BESOIN DE SOUTIENS";
+
+"tips_control_third_section_text" = "Les conséquences négatives liées au jeu peuvent apparaitre sous diverses formes, partager cette expérience avec quelqu'un peut véritablement changer la donne.
+
+Rappelez-vous que vous n'êtes pas seul face à d'éventuels problèmes liés au jeu. Briser l'isolement en discutant de vos préoccupations avec vos proches constitue une première étape pour reprendre le contrôle.
+
+Des professionnels, des associations, des psychologues et des médecins sont également disponibles de manière gratuite pour vous écouter, vous accompagner, vous offrir un regard extérieur ainsi que des conseils personnalisés.
+
+Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_third_section_list" = "\t• https://sosjoueurs.org/
+
+\t• https://gamban.com/fr/
+
+\t• https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent
+
+\t• https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1
+
+\t• https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html
+
+\t• https://www.joueurs-info-service.fr/";
+
+"tips_control_fourth_section_title" = "INTERDICTION VOLONTAIRE DE JEU";
+
+"tips_control_fourth_section_text_1" = "Vous pouvez demander volontairement à être interdit de jeux, cela a pour conséquence de vous interdire :";
+
+"tips_control_fourth_section_list" = "\t• D’entrer dans un casino ou un club de jeux
+
+\t• D’accéder à un site de jeux en ligne agréé par l’ANJ (paris sportifs, paris hippiques et poker)
+
+\t• D’accéder aux jeux de la FDJ et du PMU réalisés avec un compte joueur";
+
+"tips_control_fourth_section_text_2" = "Cette inscription est valable pour une durée de trois ans minimums.
+
+Après cette durée, vous pouvez demander la levée de cette interdiction.
+
+Vous serez alors inscrit dans un fichier spécifique, qui est transmis aux différents organismes.
+
+Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
+
+"no_referrals" = "Pas encore de filleuls.";
+"no_godfather" = "Pas de parrain.";
+"at_" = "à";
+
+"referral_no_friends" = "Toujours pas de filleuls ? Partagez votre code et recevez des bonus.";
+
+"share_raf_link" = "Découvrez ce nouveau bookmaker, inscrivez-vous en utilisant ce lien de parrainage et recevez un bonus !";
+
+"mix-match" = "Mix Match";
+
+"mix_match_mix_string" = "Mix";
+"mix_match_match_string" = "Match";
+"mix_match_tooltip_description" = "MixMatch - allows you to customise your bet by adding multiple markets from a match into a single bet";
+"mix_match_or_bet_with_string" = "Or bet with";
+
+"deposit_error_paypal_account_already_in_use" = "Le compte Paypal que vous venez d'utiliser est déjà associé à un autre compte utilisateur. La transaction a été rejetée.";
+"deposit_refunded" = "Dépôt remboursé";
+
+/* Localizable.strings */
+"AF" = "Afghanistan";
+"AX" = "Îles Åland";
+"AL" = "Albanie";
+"DZ" = "Algérie";
+"AS" = "Samoa américaines";
+"AD" = "Andorre";
+"AO" = "Angola";
+"AI" = "Anguilla";
+"AQ" = "Antarctique";
+"AG" = "Antigua-et-Barbuda";
+"AR" = "Argentine";
+"AM" = "Arménie";
+"AW" = "Aruba";
+"AU" = "Australie";
+"AT" = "Autriche";
+"AZ" = "Azerbaïdjan";
+"BS" = "Bahamas";
+"BH" = "Bahreïn";
+"BD" = "Bangladesh";
+"BB" = "Barbade";
+"BY" = "Biélorussie";
+"BE" = "Belgique";
+"BZ" = "Belize";
+"BJ" = "Bénin";
+"BM" = "Bermudes";
+"BT" = "Bhoutan";
+"BO" = "Bolivie";
+"BQ" = "Bonaire, Saint-Eustache et Saba";
+"BA" = "Bosnie-Herzégovine";
+"BW" = "Botswana";
+"BV" = "Île Bouvet";
+"BR" = "Brésil";
+"IO" = "Territoire britannique de l'océan Indien";
+"UM" = "Îles mineures éloignées des États-Unis";
+"VG" = "Îles Vierges britanniques";
+"VI" = "Îles Vierges des États-Unis";
+"BN" = "Brunei";
+"BG" = "Bulgarie";
+"BF" = "Burkina Faso";
+"BI" = "Burundi";
+"KH" = "Cambodge";
+"CM" = "Cameroun";
+"CA" = "Canada";
+"CV" = "Cap-Vert";
+"KY" = "Îles Caïmans";
+"CF" = "République centrafricaine";
+"TD" = "Tchad";
+"CL" = "Chili";
+"CN" = "Chine";
+"CX" = "Île Christmas";
+"CC" = "Îles Cocos";
+"CO" = "Colombie";
+"KM" = "Comores";
+"CG" = "Congo";
+"CD" = "Congo (RDC)";
+"CK" = "Îles Cook";
+"CR" = "Costa Rica";
+"HR" = "Croatie";
+"CU" = "Cuba";
+"CW" = "Curaçao";
+"CY" = "Chypre";
+"CZ" = "République tchèque";
+"DK" = "Danemark";
+"DJ" = "Djibouti";
+"DM" = "Dominique";
+"DO" = "République dominicaine";
+"EC" = "Équateur";
+"EG" = "Égypte";
+"SV" = "Salvador";
+"GQ" = "Guinée équatoriale";
+"ER" = "Érythrée";
+"EE" = "Estonie";
+"ET" = "Éthiopie";
+"FK" = "Îles Malouines";
+"FO" = "Îles Féroé";
+"FJ" = "Fidji";
+"FI" = "Finlande";
+"FR" = "France";
+"GF" = "Guyane française";
+"PF" = "Polynésie française";
+"TF" = "Terres australes françaises";
+"GA" = "Gabon";
+"GM" = "Gambie";
+"GE" = "Géorgie";
+"DE" = "Allemagne";
+"GH" = "Ghana";
+"GI" = "Gibraltar";
+"GR" = "Grèce";
+"GL" = "Groenland";
+"GD" = "Grenade";
+"GP" = "Guadeloupe";
+"GU" = "Guam";
+"GT" = "Guatemala";
+"GG" = "Guernesey";
+"GN" = "Guinée";
+"GW" = "Guinée-Bissau";
+"GY" = "Guyana";
+"HT" = "Haïti";
+"HM" = "Îles Heard et McDonald";
+"VA" = "État de la Cité du Vatican";
+"HN" = "Honduras";
+"HU" = "Hongrie";
+"HK" = "Hong Kong";
+"IS" = "Islande";
+"IN" = "Inde";
+"ID" = "Indonésie";
+"CI" = "Côte d'Ivoire";
+"IR" = "Iran";
+"IQ" = "Irak";
+"IE" = "Irlande";
+"IM" = "Île de Man";
+"IL" = "Israël";
+"IT" = "Italie";
+"JM" = "Jamaïque";
+"JP" = "Japon";
+"JE" = "Jersey";
+"JO" = "Jordanie";
+"KZ" = "Kazakhstan";
+"KE" = "Kenya";
+"KI" = "Kiribati";
+"KW" = "Koweït";
+"KG" = "Kirghizistan";
+"LA" = "Laos";
+"LV" = "Lettonie";
+"LB" = "Liban";
+"LS" = "Lesotho";
+"LR" = "Libéria";
+"LY" = "Libye";
+"LI" = "Liechtenstein";
+"LT" = "Lituanie";
+"LU" = "Luxembourg";
+"MO" = "Macao";
+"MK" = "Macédoine du Nord";
+"MG" = "Madagascar";
+"MW" = "Malawi";
+"MY" = "Malaisie";
+"MV" = "Maldives";
+"ML" = "Mali";
+"MT" = "Malte";
+"MH" = "Îles Marshall";
+"MQ" = "Martinique";
+"MR" = "Mauritanie";
+"MU" = "Maurice";
+"YT" = "Mayotte";
+"MX" = "Mexique";
+"FM" = "Micronésie";
+"MD" = "Moldavie";
+"MC" = "Monaco";
+"MN" = "Mongolie";
+"ME" = "Monténégro";
+"MS" = "Montserrat";
+"MA" = "Maroc";
+"MZ" = "Mozambique";
+"MM" = "Myanmar";
+"NA" = "Namibie";
+"NR" = "Nauru";
+"NP" = "Népal";
+"NL" = "Pays-Bas";
+"NC" = "Nouvelle-Calédonie";
+"NZ" = "Nouvelle-Zélande";
+"NI" = "Nicaragua";
+"NE" = "Niger";
+"NG" = "Nigeria";
+"NU" = "Niue";
+"NF" = "Île Norfolk";
+"KP" = "Corée du Nord";
+"MP" = "Îles Mariannes du Nord";
+"NO" = "Norvège";
+"OM" = "Oman";
+"PK" = "Pakistan";
+"PW" = "Palaos";
+"PS" = "Territoires palestiniens";
+"PA" = "Panama";
+"PG" = "Papouasie-Nouvelle-Guinée";
+"PY" = "Paraguay";
+"PE" = "Pérou";
+"PH" = "Philippines";
+"PN" = "Îles Pitcairn";
+"PL" = "Pologne";
+"PT" = "Portugal";
+"PR" = "Porto Rico";
+"QA" = "Qatar";
+"XK" = "Kosovo";
+"RE" = "Réunion";
+"RO" = "Roumanie";
+"RU" = "Russie";
+"RW" = "Rwanda";
+"BL" = "Saint-Barthélemy";
+"SH" = "Sainte-Hélène, Ascension et Tristan da Cunha";
+"KN" = "Saint-Christophe-et-Niévès";
+"LC" = "Sainte-Lucie";
+"MF" = "Saint-Martin";
+"PM" = "Saint-Pierre-et-Miquelon";
+"VC" = "Saint-Vincent-et-les Grenadines";
+"WS" = "Samoa";
+"SM" = "Saint-Marin";
+"ST" = "Sao Tomé-et-Principe";
+"SA" = "Arabie saoudite";
+"SN" = "Sénégal";
+"RS" = "Serbie";
+"SC" = "Seychelles";
+"SL" = "Sierra Leone";
+"SG" = "Singapour";
+"SX" = "Saint-Martin (Pays-Bas)";
+"SK" = "Slovaquie";
+"SI" = "Slovénie";
+"SB" = "Salomon";
+"SO" = "Somalie";
+"ZA" = "Afrique du Sud";
+"GS" = "Géorgie du Sud et îles Sandwich du Sud";
+"KR" = "Corée du Sud";
+"SS" = "Soudan du Sud";
+"ES" = "Espagne";
+"LK" = "Sri Lanka";
+"SD" = "Soudan";
+"SR" = "Suriname";
+"SJ" = "Svalbard et Jan Mayen";
+"SZ" = "Swaziland";
+"SE" = "Suède";
+"CH" = "Suisse";
+"SY" = "Syrie";
+"TW" = "Taïwan";
+"TJ" = "Tadjikistan";
+"TZ" = "Tanzanie";
+"TH" = "Thaïlande";
+"TL" = "Timor oriental";
+"TG" = "Togo";
+"TK" = "Tokelau";
+"TO" = "Tonga";
+"TT" = "Trinité-et-Tobago";
+"TN" = "Tunisie";
+"TR" = "Turquie";
+"TM" = "Turkménistan";
+"TC" = "Îles Turques-et-Caïques";
+"TV" = "Tuvalu";
+"UG" = "Ouganda";
+"UA" = "Ukraine";
+"AE" = "Émirats arabes unis";
+"GB" = "Royaume-Uni";
+"US" = "États-Unis";
+"UY" = "Uruguay";
+"UZ" = "Ouzbékistan";
+"VU" = "Vanuatu";
+"VE" = "Venezuela";
+"VN" = "Viêt Nam";
+"WF" = "Wallis-et-Futuna";
+"EH" = "Sahara occidental";
+"YE" = "Yémen";
+"ZM" = "Zambie";
+"ZW" = "Zimbabwe";
+
+"allowed_bet_types_doubles" = "Doubles";
+"allowed_bet_types_patent" = "Brevet";
+"allowed_bet_types_trixie" = "Trixie";
+"allowed_bet_types_treble" = "Tripler";
+"allowed_bet_types_trebles" = "Triplers";
+"allowed_bet_types_lucky15" = "Lucky15";
+"allowed_bet_types_lucky31" = "Lucky31";
+"allowed_bet_types_lucky63" = "Lucky63";
+"allowed_bet_types_s_yankee_canadian" = "S Yankee";
+"allowed_bet_types_yankee" = "Yankee";
+"allowed_bet_types_4_folds" = "4 plis";
+"allowed_bet_types_5_folds" = "5 fois";
+"allowed_bet_types_6_folds" = "6 plis";
+"allowed_bet_types_7_folds" = "7 plis";
+"allowed_bet_types_8_folds" = "8 fois";
+"allowed_bet_types_9_folds" = "9 fois";
+"allowed_bet_types_10_folds" = "10 fois";
+"allowed_bet_types_11_folds" = "11 plis";
+"allowed_bet_types_12_folds" = "12 fois";
+"allowed_bet_types_four_folds" = "Quadruple";
+"allowed_bet_types_five_folds" = "Quintuple";
+"allowed_bet_types_six_folds" = "Six fois";
+"allowed_bet_types_seven_folds" = "Septuple";
+"allowed_bet_types_eight_folds" = "Octuple";
+"allowed_bet_types_nine_folds" = "Neuf fois";
+"allowed_bet_types_ten_folds" = "Décuple";
+"allowed_bet_types_eleven_folds" = "Onze plis";
+"allowed_bet_types_twelve_folds" = "Douze fois";
+"allowed_bet_types_goliath" = "Goliath";
+"allowed_bet_types_heinz" = "Heinz";
+"allowed_bet_types_superheinz" = "Super Heinz";
+
+"market_group_all_markets" = "Tous les marchés";
+"market_group_cards" = "Cartes";
+"market_group_corners" = "Coins";
+"market_group_games" = "Jeux";
+"market_group_goals" = "But Markets";
+"market_group_half" = "La moitié";
+"market_group_handicap" = "Marchés du handicap";
+"market_group_other_markets" = "Autres marchés";
+"market_group_period" = "Période";
+"market_group_player" = "Joueur";
+"market_group_points" = "Points";
+"market_group_popular" = "Populaire";
+"market_group_quarters" = "Quartiers";
+"market_group_sets" = "Sets";
+"market_group_totals" = "Totaux";
+
+"mix_match_min_compatible_selections" = "Pick at least 2 selections compatible between each others.";
+"mix_match_compatible_selections_warning" = "Some of the selections are not compatible with each others. You can still submit the bet with the available ones.";
+"mix_match_invalid_selection" = "Invalid selection";
+"boosted_section_header" = "Cotes Boostées";
+
+"highlights_pro_choices_section_header" = "Le Choix des Pros";
+
+//
+//
+//
+// Replay to Cashback Updates
+"betslip_replay_error" = "Le montant dépasse votre solde Replay.";
+"first_info_descrition_replay" = "Un petit revers? Pas de souci. Si votre combiné ne tourne pas comme prévu, notre Replay est là pour vous donner un second souffle ! Profitez de 10% de votre mise en retour dès la clôture de toutes les sélections de votre ticket, directement ajouté sous forme de crédit de jeu.";
+"first_info_title_replay" = "Qu’est-ce que le Replay ?";
+"fourth_info_descrition_replay" = "Les paris pour lesquels le solde Replay a été utilisé affichent l'étiquette suivante :";
+"fourth_info_title_replay" = "Comment savoir si j’ai utilisé mon solde Replay sur un pari ?";
+"promotions_replay_terms_and_conditions" = "• La promotion Replay est disponible pour tous les utilisateurs inscrits sur Betsson.fr, âgés de 18 ans et plus.\n• Le Replay est une promotion développée en exclusivité par et pour Betsson.fr.\n• Pour qu'un ticket soit éligible au Replay, il doit contenir au moins trois sélections et que toutes les sélections du combiné aient des côtes minimales par événement de 1.3.\n• Toutes les sélections de votre ticket doivent comporter le symbole distinctif Replay.\n• Pour recevoir le solde Replay, toutes les sélections du ticket doivent être clôturées.\n• Seuls les paris sur le football, le tennis et le basket sont éligibles.\n• Les paris peuvent être placé en pré-match, en live ou en combinant les deux.\n• Si une de vos sélection n'affiche pas le symbole Replay, le ticket entier ne sera pas éligible au Replay.\n• L'utilisation de CashOut+ sur un pari éligible au Replay annulera tout droit à des crédits de la fonction Replay, aussi bien pour la partie retirée que la partie laissée en jeu.\n• Le crédit gagné grâce à la promotion Replay est cumulable et s'affiche dans votre solde Replay.\n• Le crédit Replay peut être utilisé sur n'importe quel événement sportif.\n• Seuls les gains nets générés grâce au solde Replay seront crédités au solde principal, retirable. La mise sera quant à elle consommée.\n• Les paris placés avec un pari gratuit, bonus et les paris système ne sont pas éligibles au Replay.\n• Activez le bouton pour placer votre pari avec votre solde Replay.\n• En activant ce bouton, vous pouvez choisir d'utiliser ou non le solde Replay pour votre pari.\n• Les paris pour lesquels le solde Replay a été utilisé affichent l'étiquette \"Solde Replay utilisé\".\n• Betsson se réserve le droit de modifier ou d'annuler la promotion Replay à tout moment, sans préavis.";
+"replay" = "Replay";
+"replay_balance" = "Solde Replay";
+
+"replay_exceed_value_error" = "Solde Replay dépassé. Max {replayBalance}";
+"replay_info" = "Perdu ? Replay vous remet en jeu, récupérez une partie de votre mise !";
+"replay_page_section_1_description" = "Un petit revers? Pas de souci. Si votre combiné ne tourne pas comme prévu, notre Replay est là pour vous donner un second souffle ! Profitez de 10% de votre mise en retour dès la clôture de toutes les sélections de votre ticket, directement ajouté sous forme de crédit de jeu.";
+"replay_page_section_1_title" = "Le Replay : qu'est ce que c'est ?";
+"replay_page_section_2_description" = "Ajoutez au moins trois événements portant le symbole Replay à votre ticket. Pour être éligible, toutes les sélections de votre ticket doivent avoir une cote minimale de 1.30 et comporter le symbole distinctif :";
+"replay_page_section_2_title" = "Quels paris sont éligibles au Replay ?";
+"replay_page_section_3_description_1" = "Le solde Replay n'est pas retirable mais les gains, si ! Activez le bouton pour placer votre pari avec votre solde Replay ";
+"replay_page_section_3_description_2" = "En activant ce bouton, choisissez d'utiliser ou non le solde Replay pour votre pari.";
+"replay_page_section_3_title" = "Puis-je retirer mon solde Replay ?";
+"replay_page_section_4_description" = "Les paris pour lesquels le solde Replay a été utilisé affichent l'étiquette suivante :";
+"replay_page_section_4_title" = "Comment puis-je savoir si j'ai utilisé mon solde Replay pour un pari ?";
+"second_info_descrition_replay" = "Ajoutez au moins trois événements portant le symbole Replay à votre ticket. Pour être éligible, toutes les sélections de votre ticket doivent avoir une cote minimale de 1.30 et comporter le symbole distinctif :";
+"second_info_title_replay" = "Quels paris sont éligibles au Replay ?";
+"third_info_descrition_one_replay" = "Le solde Replay n'est pas retirable mais les gains, si ! Activez le bouton pour placer votre pari avec votre solde Replay";
+"third_info_descrition_two_replay" = "En activant ce bouton, choisissez d'utiliser ou non le solde Replay pour votre pari.";
+"third_info_title_replay" = "Puis-je retirer mon solde Replay ?";
+"used_replay" = "Solde Replay utilisé";
+
+// Cashback (new)
+"betslip_cashback_error" = "Le montant dépasse votre solde Cashback.";
+"cashback" = "Cashback";
+"cashback_balance" = "Solde Cashback";
+"cashback_exceed_value_error" = "Solde Cashback dépassé. Max {cashbackBalance}";
+"cashback_info" = "Perdu ? Cashback vous remet en jeu, récupérez une partie de votre mise !";
+"cashback_page_section_1_description" = "Un petit revers? Pas de souci. Si votre combiné ne tourne pas comme prévu, notre Cashback est là pour vous donner un second souffle ! Profitez de 10% de votre mise en retour dès la clôture de toutes les sélections de votre ticket, directement ajouté sous forme de crédit de jeu.";
+"cashback_page_section_1_title" = "Le Cashback : qu'est ce que c'est ?";
+"cashback_page_section_2_description" = "Ajoutez au moins trois événements portant le symbole Cashback à votre ticket. Pour être éligible, toutes les sélections de votre ticket doivent avoir une cote minimale de 1.30 et comporter le symbole distinctif :";
+"cashback_page_section_2_title" = "Quels paris sont éligibles au Cashback ?";
+"cashback_page_section_3_description_1" = "Le solde Cashback n'est pas retirable mais les gains, si ! Activez le bouton pour placer votre pari avec votre solde Cashback";
+"cashback_page_section_3_description_2" = "En activant ce bouton, choisissez d'utiliser ou non le solde Cashback pour votre pari.";
+"cashback_page_section_3_title" = "Puis-je retirer mon solde Cashback ?";
+"cashback_page_section_4_description" = "Les paris pour lesquels le solde Cashback a été utilisé affichent l'étiquette suivante :";
+"cashback_page_section_4_title" = "Comment puis-je savoir si j'ai utilisé mon solde Cashback pour un pari ?";
+"first_info_descrition_cashback" = "Un petit revers? Pas de souci. Si votre combiné ne tourne pas comme prévu, notre Cashback est là pour vous donner un second souffle ! Profitez de 10% de votre mise en retour dès la clôture de toutes les sélections de votre ticket, directement ajouté sous forme de crédit de jeu.";
+"first_info_title_cashback" = "Qu’est-ce que le Cashback ?";
+"fourth_info_descrition_cashback" = "Les paris pour lesquels le solde Cashback a été utilisé affichent l'étiquette suivante :";
+"fourth_info_title_cashback" = "Comment savoir si j’ai utilisé mon solde Cashback sur un pari ?";
+"promotions_cashback_terms_and_conditions" = "• La promotion Cashback est disponible pour tous les utilisateurs inscrits sur Betsson.fr, âgés de 18 ans et plus.\n• Le Cashback est une promotion développée en exclusivité par et pour Betsson.fr.\n• Pour qu'un ticket soit éligible au Cashback, il doit contenir au moins trois sélections et que toutes les sélections du combiné aient des côtes minimales par événement de 1.3.\n• Toutes les sélections de votre ticket doivent comporter le symbole distinctif Cashback.\n• Pour recevoir le solde Cashback, toutes les sélections du ticket doivent être clôturées.\n• Seuls les paris sur le football, le tennis et le basket sont éligibles.\n• Les paris peuvent être placé en pré-match, en live ou en combinant les deux.\n• Si une de vos sélection n'affiche pas le symbole Cashback, le ticket entier ne sera pas éligible au Cashback.\n• L'utilisation de CashOut+ sur un pari éligible au Cashback annulera tout droit à des crédits de la fonction Cashback, aussi bien pour la partie retirée que la partie laissée en jeu.\n• Le crédit gagné grâce à la promotion Cashback est cumulable et s'affiche dans votre solde Cashback.\n• Le crédit Cashback peut être utilisé sur n'importe quel événement sportif.\n• Seuls les gains nets générés grâce au solde Cashback seront crédités au solde principal, retirable. La mise sera quant à elle consommée.\n• Les paris placés avec un pari gratuit, bonus et les paris système ne sont pas éligibles au Cashback.\n• Activez le bouton pour placer votre pari avec votre solde Cashback.\n• En activant ce bouton, vous pouvez choisir d'utiliser ou non le solde Cashback pour votre pari.\n• Les paris pour lesquels le solde Cashback a été utilisé affichent l'étiquette \"Solde Cashback utilisé\".\n• Betsson se réserve le droit de modifier ou d'annuler la promotion Cashback à tout moment, sans préavis.";
+"promotions_mixmatch_terms_and_conditions" = "• Le MixMatch ne contribue pas aux exigences de mise des bonus.\n• Il n’est pas possible de parier avec le solde Cashback ni utiliser le MixMatch avec l’offre Cashback.\n•Si une sélection est annulée, tout le pari l’est aussi.";
+"second_info_descrition_cashback" = "Ajoutez au moins trois événements portant le symbole Cashback à votre ticket. Pour être éligible, toutes les sélections de votre ticket doivent avoir une cote minimale de 1.30 et comporter le symbole distinctif :";
+"second_info_title_cashback" = "Quels paris sont éligibles au Cashback ?";
+"third_info_descrition_one_cashback" = "Le solde Cashback n'est pas retirable mais les gains, si ! Activez le bouton pour placer votre pari avec votre solde Cashback";
+"third_info_descrition_two_cashback" = "En activant ce bouton, choisissez d'utiliser ou non le solde Cashback pour votre pari.";
+"third_info_title_cashback" = "Puis-je retirer mon solde Cashback ?";
+"used_cashback" = "Solde Cashback utilisé";
+
+
+"theme_short_light" = "Clair";
+"theme_short_system" = "Système";
+"theme_short_dark" = "Sombre";
+
+"cashback_video_url" = "/promotions/cashbackVideo.mp4";
+
+"administrative_costs" = "Frais administratifs";
+
+"betting_fail_to_place_bets" = "Un erreur s'est produite lors du placement de votre pari.";
+
+"betting_questionnaire" = "Betting Practices Questionnaire";
+"flat_foot_security" = "Plat du pied, sécurité !";
+"questionnaire_intro_1" = "Pour maintenir le plaisir du jeu, gardes-en sous le pied. L'équipe Betsson a mis en place un petit questionnaire pour t'aider à évaluer ta pratique de jeu.";
+"questionnaire_intro_2" = "Essaie d'y répondre le plus honnêtement possible, tu seras peut-être surpris du résultat ! ";
+"take_questionnaire" = "Take Questionnaire";
+
+"sometimes" = "Parfois";
+
+"questionnaire_question_1" = "Le jeu occupe une place importante dans mon esprit ";
+
+"questionnaire_question_2" = "J'ai déjà utilisé des méthodes pour tenter de modérer, diminuer ou arrêter ma pratique de jeu";
+
+"questionnaire_question_3" = "Il m'arrive de miser plus d'argent que prévu initialement";
+
+"questionnaire_question_4" = "Il m'arrive de rejouer dans l’espoir de récupérer l'argent que j'ai perdu";
+
+"questionnaire_question_5" = "J'ai déjà ressenti de la culpabilité à jouer";
+
+"questionnaire_question_6" = "Ne pas pouvoir jouer peut me rendre impatient ou nerveux";
+
+"questionnaire_question_7" = "J'ai déjà ressenti du stress, de l’angoisse ou rencontré des problèmes de santé provoqués par la pratique des jeux d'argent";
+
+"questionnaire_question_8" = "Ma pratique du jeu a globalement un impact négatif sur mes finances, ma santé psychologique ou mes relations familiales ";
+
+"questionnaire_question_9" = "J'ai déjà vendu quelque chose ou emprunté de l’argent pour pouvoir jouer ";
+
+"questionnaire_question_10" = "Il m'arrive de chercher à cacher ma pratique du jeu ";
+
+"questionnaire_success" = "Vos réponses ont été enregistrées, merci pour votre temps.";
+
+"leave_questionnaire" = "Êtes-vous sûr de vouloir partir ?";
+
+"back_home" = "Retour à la page d'accueil";
+"coup_boost" = "Coup de Boost";
+
+"spin_wheel_tooltip_title" = " TU VEUX TOURNER LA ROUE ?";
+"spin_wheel_tooltip_description_title" = "Il te faut :";
+"spin_wheel_tooltip_description_text" = "• Un pari live \n• Une cote minimum de 1.80 \n• Une mise minimum de 5€";
+
+"spin_wheel_tooltip_link_text" = "+ Infos";
+
+"spin_wheel_dialog_title" = " Tu es sûr ?";
+"spin_wheel_dialog_message" = "Ton pari est éligible au Coup de Boost ! Si tu cliques sur Continuer, tu ne pourras plus tourner la roue du Coup de boost de la journée.";
+"spin_wheel_tooltip_info_link_url" = "https://betsson.fr";
+"coup_de_boost" = "Coup de Boost";
+
+"pari_bonus" = "Mon pari, ton bonus";
+
+
+"share_bet_description" = "Rejoins l'équipe Betsson avec mon code parrainage: {userCode} et empoche 10€ de Bonus!";
+
+"look_bet_made" = "Je tente ce pari, et si tu veux te lancer aussi, voilà le bon plan: Inscris-toi avec mon lien et on empoche chacun 10€ de bonus!";
+
+"check_bet_result" = "J'ai tenté de pari! Si tu veux tenter ta chance toi aussi, inscris-toi avec mon lien et on empoche chacun 10€ de bonus!";
+
+"betsson_credits_mise_max" = "Mes crédits (mise max)";
+"betsson_credits_dialog_info" = "Vous ne pouvez placer un pari que jusqu’au montant disponible dans un seul portefeuille. Montant max possible: {amount}";
+"betsson_credits" = "Crédits Betsson";
+"betsson_credits_used" = "Solde Crédits Betsson Utilisé";
+"betslip_credits_error" = "Solde Crédits dépassé. Max: {amount}";
+"my_credits" = "Mes Crédits";
+"mon_solde_total" = "Mon Solde Total";
+"freebet_and_cashback" = "Freebet & Cashback";
+"free_bet_balance" = "BetBoost";
+
+"account_protection_rules_title" = "Protégez votre compte, respectez les règles du jeu :";
+"account_protection_rules_description" = "Chez Betsson, votre compte, c’est perso : ne partagez jamais votre mot de passe. Protéger votre espace de jeu, c’est essentiel pour votre sécurité.\nLes jeux, c’est pour les grands ! Les moins de 18 ans ne peuvent pas rejoindre la partie. Jouez responsable, aidez-nous à garder le terrain de jeu sûr pour tous.";

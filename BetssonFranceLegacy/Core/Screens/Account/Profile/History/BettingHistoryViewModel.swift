@@ -1,0 +1,897 @@
+//
+//  BettingHistoryViewModel.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 19/04/2022.
+//
+
+import Foundation
+import Combine
+import ServicesProvider
+import UIKit
+
+class BettingHistoryViewModel {
+
+    enum BettingTicketsType {
+        case opened
+        case resolved
+        case won
+        case cashout
+    }
+
+    enum ListState {
+        case loading
+        case serverError
+        case noUserFoundError
+        case empty
+        case loaded
+    }
+
+    // MARK: - Publishers
+    var bettingTicketsType: BettingTicketsType = .opened
+    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
+    var filterApplied: FilterHistoryViewModel.FilterValue = .past30Days
+    
+    // Shares
+    var clickedCellSnapshot: UIImage?
+    var clickedBetId: String?
+    var clickedBetStatus: String?
+    var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
+    var clickedBetHistory: BetHistoryEntry?
+
+    // MARK: - Publishers
+    var titlePublisher: CurrentValueSubject<String, Never>
+    var listStatePublisher: CurrentValueSubject<ListState, Never> = .init(.loading)
+    var bettingTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+
+    var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>?
+    var isTransactionsEmptyPublisher: AnyPublisher<Bool, Never>?
+    
+    var startDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    var endDatePublisher: CurrentValueSubject<Date, Never> = .init(Date())
+    
+    // MARK: - data
+    var resolvedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var openedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    
+    var openedGrantedWinBoosts = [GrantedWinBoosts]()
+    var resolvedGrantedWinBoosts = [GrantedWinBoosts]()
+    var wonGrantedWinBoosts = [GrantedWinBoosts]()
+    var cashoutGrantedWinBoosts = [GrantedWinBoosts]()
+
+    var requestAlertAction: ((String, String) -> Void)?
+    var showCashoutSuspendedAction: (() -> Void)?
+
+    // MARK: - Private Properties
+
+    private var recordsPerPage = 20
+    
+    private var ticketsHasNextPage = true
+
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
+    private var cashoutPage = 0
+
+    private var loadedInitialContent: Bool = false
+
+    private var cancellables = Set<AnyCancellable>()
+
+    private let dateFormatter = DateFormatter()
+
+    // MARK: - Life Cycle
+    init(bettingTicketsType: BettingTicketsType, filterApplied: FilterHistoryViewModel.FilterValue) {
+
+        self.bettingTicketsType = bettingTicketsType
+        self.filterApplied = filterApplied
+        
+        switch bettingTicketsType {
+        case .opened:
+            self.titlePublisher = .init(localized("open"))
+        case .resolved:
+            self.titlePublisher = .init(localized("resolved"))
+        case .won:
+            self.titlePublisher = .init(localized("won"))
+        case .cashout:
+            self.titlePublisher = .init(localized("cashed_out"))
+        }
+        
+        self.calculateDate(filterApplied: filterApplied)
+   
+        Env.servicesProvider.eventsConnectionStatePublisher
+            .sink { serviceStatus in
+                if serviceStatus == .connected {
+                    if !self.loadedInitialContent {
+                        self.initialContentLoad()
+                        self.loadedInitialContent = true
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
+    }
+
+    func initialContentLoad() {
+        self.listStatePublisher.send(.loading)
+
+        self.cashoutTickets.value = []
+        self.resolvedTickets.value = []
+        self.openedTickets.value = []
+        self.wonTickets.value = []
+
+        switch self.bettingTicketsType {
+        case .opened:
+            self.loadOpenedTickets(page: 0)
+        case .resolved:
+            self.loadResolvedTickets(page: 0)
+        case .won:
+            self.loadWonTickets(page: 0)
+        case .cashout:
+            self.loadCashoutTickets(page: 0)
+        }
+    }
+
+    func refreshContent() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+        self.cashoutPage = 0
+        
+        self.ticketsHasNextPage = true
+        self.calculateDate(filterApplied: filterApplied)
+        self.initialContentLoad()
+    }
+
+    func calculateDate(filterApplied: FilterHistoryViewModel.FilterValue) {
+        
+        self.endDatePublisher.send(Date())
+
+        switch filterApplied {
+        case .dateRange(let startTime, let endTime):
+            self.startDatePublisher.send(startTime)
+            self.endDatePublisher.send(endTime)
+        case .past30Days:
+            if let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        default :
+            if let startDate = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
+                self.startDatePublisher.send(startDate)
+            }
+        }
+    }
+    
+    func shouldShowLoadingCell() -> Bool {
+        switch self.bettingTicketsType {
+        case .opened:
+            return self.openedTickets.value.isNotEmpty && ticketsHasNextPage
+        case .resolved:
+            return self.resolvedTickets.value.isNotEmpty && ticketsHasNextPage
+        case .won:
+            return self.wonTickets.value.isNotEmpty && ticketsHasNextPage
+        case .cashout:
+            return self.cashoutTickets.value.isNotEmpty && ticketsHasNextPage
+        }
+        
+    }
+    func convertDateToString(date: Date) -> String {
+        let auxDate = "\(date)"
+        let dateSplited = auxDate.split(separator: " ")
+        return "\(dateSplited[0])"
+    }
+
+    func processBettingHistory(betHistoryEntries: [BetHistoryEntry]) {
+
+        switch self.bettingTicketsType {
+        case .opened:
+            if self.openedTickets.value.isEmpty {
+                self.openedTickets.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.openedTickets.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.openedTickets.send(nextTickets)
+            }
+            
+            self.processOpenGrantedWinBoosts(betEntries: betHistoryEntries)
+
+        case .resolved:
+            if self.resolvedTickets.value.isEmpty {
+                self.resolvedTickets.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.resolvedTickets.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.resolvedTickets.send(nextTickets)
+            }
+            
+            self.processResolvedGrantedWinBoosts(betEntries: betHistoryEntries)
+
+        case .won:
+            if self.wonTickets.value.isEmpty {
+                self.wonTickets.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.wonTickets.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.wonTickets.send(nextTickets)
+            }
+            
+            self.processWonGrantedWinBoosts(betEntries: betHistoryEntries)
+
+        case .cashout:
+            if self.cashoutTickets.value.isEmpty {
+                self.cashoutTickets.send(betHistoryEntries)
+            }
+            else {
+                var nextTickets = self.cashoutTickets.value
+                nextTickets.append(contentsOf: betHistoryEntries)
+                self.cashoutTickets.send(nextTickets)
+            }
+            
+            self.processCashoutGrantedWinBoosts(betEntries: betHistoryEntries)
+
+        }
+
+        self.listStatePublisher.send(.loaded)
+
+    }
+
+    func loadOpenedTickets(page: Int, isNextPage: Bool = false) {
+
+        if !isNextPage {
+            self.listStatePublisher.send(.loading)
+        }
+
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value, isEndDate: true)
+
+        Env.servicesProvider.getOpenBetsHistory(pageIndex: self.openedPage, startDate: startDate, endDate: endDate)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING OPEN HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.isNotEmpty {
+
+                        self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
+
+                    }
+                    else {
+                        self.ticketsHasNextPage = false
+                        if self.openedTickets.value.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func loadResolvedTickets(page: Int, isNextPage: Bool = false) {
+
+        if !isNextPage {
+            self.listStatePublisher.send(.loading)
+        }
+
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value, isEndDate: true)
+
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING RESOLVED HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.isNotEmpty {
+
+                        self.processBettingHistory(betHistoryEntries: bettingHistoryEntries)
+
+                    }
+                    else {
+                        self.ticketsHasNextPage = false
+                        if self.resolvedTickets.value.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    func loadWonTickets(page: Int, isNextPage: Bool = false) {
+
+        if !isNextPage {
+            self.listStatePublisher.send(.loading)
+        }
+
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value, isEndDate: true)
+
+        Env.servicesProvider.getWonBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING WON HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.isNotEmpty {
+
+                        let filteredWonBettingHistoryEntries = bettingHistoryEntries.filter({
+                            $0.status == "won"
+                        })
+
+                        if filteredWonBettingHistoryEntries.isNotEmpty {
+                            self.processBettingHistory(betHistoryEntries: filteredWonBettingHistoryEntries)
+                        }
+                        else {
+                            self.requestNextPage()
+                        }
+
+                    }
+                    else {
+                        self.ticketsHasNextPage = false
+                        if self.wonTickets.value.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+    func loadCashoutTickets(page: Int, isNextPage: Bool = false) {
+
+        if !isNextPage {
+            self.listStatePublisher.send(.loading)
+        }
+
+        let startDate = self.getDateString(date: self.startDatePublisher.value)
+
+        let endDate = self.getDateString(date: self.endDatePublisher.value, isEndDate: true)
+
+        Env.servicesProvider.getResolvedBetsHistory(pageIndex: page, startDate: startDate, endDate: endDate)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    print("BETTING CASHOUT HISTORY ERROR: \(error)")
+                    self?.listStatePublisher.send(.serverError)
+                }
+            }, receiveValue: { [weak self] bettingHistory in
+
+                guard let self = self else { return }
+
+                let bettingHistoryResponse = ServiceProviderModelMapper.bettingHistory(fromServiceProviderBettingHistory: bettingHistory)
+
+                if let bettingHistoryEntries = bettingHistoryResponse.betList {
+
+                    if bettingHistoryEntries.isNotEmpty {
+
+                        let filteredWonBettingHistoryEntries = bettingHistoryEntries.filter({
+                            $0.status == "cashedOut"
+                        })
+
+                        if filteredWonBettingHistoryEntries.isNotEmpty {
+                            self.processBettingHistory(betHistoryEntries: filteredWonBettingHistoryEntries)
+                        }
+                        else {
+                            self.requestNextPage()
+                        }
+
+                    }
+                    else {
+                        self.ticketsHasNextPage = false
+                        if self.cashoutTickets.value.isEmpty {
+                            self.listStatePublisher.send(.empty)
+                        }
+                        else {
+                            self.listStatePublisher.send(.loaded)
+                        }
+                    }
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+    
+    private func processOpenGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+                
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED OPEN GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.openedGrantedWinBoosts.isEmpty {
+                    self.openedGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.openedGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.openedGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processResolvedGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+                
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED RESOLVED GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.resolvedGrantedWinBoosts.isEmpty {
+                    self.resolvedGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.resolvedGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.resolvedGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processWonGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED WON GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.wonGrantedWinBoosts.isEmpty {
+                    self.wonGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.wonGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.wonGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    private func processCashoutGrantedWinBoosts(betEntries: [BetHistoryEntry]) {
+        
+        var openGameTranIds = [String]()
+        
+        for betEntry in betEntries {
+            
+            let betslipId = "\(betEntry.betslipId ?? 0)"
+            let betId = betEntry.betId
+            
+            let gameTransId = self.getGameTransId(betId: betId, betslipId: betslipId)
+            
+            if !openGameTranIds.contains(gameTransId) {
+                openGameTranIds.append(gameTransId)
+            }
+        }
+        
+        // Split the array into chunks of 10 elements
+        let chunkedGameTransIds = stride(from: 0, to: openGameTranIds.count, by: 10).map {
+            Array(openGameTranIds[$0..<min($0 + 10, openGameTranIds.count)])
+        }
+        
+        // Create a publisher for each chunk that handles errors
+        let publishers = chunkedGameTransIds.map { chunk -> AnyPublisher<[GrantedWinBoosts], Never> in
+            print("Getting win boosts from chunk: \(chunk)")
+            
+            return Env.servicesProvider.getGrantedWinBoosts(gameTransIds: chunk)
+                .catch { error -> AnyPublisher<[GrantedWinBoosts], Never> in
+                    // Log the error but continue with empty results
+                    print("Error fetching win boosts for chunk: \(error)")
+                    return Just([]).eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
+        }
+        
+        // Merge all publishers and collect results
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allResults in
+                guard let self = self else { return }
+
+                let mergedResults = allResults.flatMap { $0 }
+                
+                print("COMBINED CASHOUT GRANTED WIN BOOSTS: \(mergedResults.count) results")
+                
+                if self.cashoutGrantedWinBoosts.isEmpty {
+                    self.cashoutGrantedWinBoosts = mergedResults
+                }
+                else {
+                    var newWinBoosts = self.cashoutGrantedWinBoosts
+                    newWinBoosts.append(contentsOf: mergedResults)
+                    self.cashoutGrantedWinBoosts = newWinBoosts
+                }
+                
+                self.listStatePublisher.send(.loaded)
+
+            }
+            .store(in: &cancellables)
+        
+    }
+    
+    func getGameTransId(betId: String, betslipId: String) -> String {
+        
+        let betIdComponents = betId.split(separator: ".")
+        let betIdBase = betIdComponents[0]
+        let betIdDecimal = betIdComponents.count > 1 ? betIdComponents[1] : ""
+        
+        let trimmedDecimal = betIdDecimal.replacingOccurrences(of: "0+$", with: "", options: .regularExpression)
+        
+        let gameTransId: String
+        
+        if trimmedDecimal.isEmpty {
+            gameTransId = "\(betslipId)_\(betIdBase)"
+        }
+        else {
+            gameTransId = "\(betslipId)_\(betIdBase).\(trimmedDecimal)"
+        }
+        
+        return gameTransId
+    }
+    
+    func storeSharedBetData(snapshot: UIImage, ticket: BetHistoryEntry) {
+        self.clickedCellSnapshot = snapshot
+        self.clickedBetId = ticket.betId
+        self.clickedBetStatus = ticket.status ?? ""
+        self.clickedBetHistory = ticket
+        self.getSharedBetTokens()
+    }
+    
+    func getSharedBetTokens() {
+
+        if let betslipId = self.clickedBetId {
+            self.clickedBetTokenPublisher.send(betslipId)
+        }
+
+    }
+    
+    func refresh() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+        self.cashoutPage = 0
+
+        self.initialLoadMyTickets()
+    }
+
+    func initialLoadMyTickets() {
+        self.cashoutTickets.value = []
+        self.resolvedTickets.value = []
+        self.openedTickets.value = []
+        self.wonTickets.value = []
+
+        switch self.bettingTicketsType {
+        case .opened:
+            self.loadOpenedTickets(page: 0)
+        case .resolved:
+            self.loadResolvedTickets(page: 0)
+        case .won:
+            self.loadWonTickets(page: 0)
+        case .cashout:
+            self.loadCashoutTickets(page: 0)
+        }
+    }
+    
+    func requestNextPage() {
+        
+        switch bettingTicketsType {
+        case .opened:
+            openedPage += 1
+            self.loadOpenedTickets(page: openedPage, isNextPage: true)
+        case .resolved:
+            resolvedPage += 1
+            self.loadResolvedTickets(page: resolvedPage, isNextPage: true)
+        case .won:
+            wonPage += 1
+            self.loadWonTickets(page: wonPage, isNextPage: true)
+        case .cashout:
+            cashoutPage += 1
+            self.loadCashoutTickets(page: cashoutPage, isNextPage: true)
+        }
+    }
+
+    private func getDateString(date: Date, isEndDate: Bool = false) -> String {
+
+        // Set initial and end date hours
+        var calendar = Calendar.current
+        let components: Set<Calendar.Component> = [.year, .month, .day]
+
+        var finalDate = date
+
+        if !isEndDate {
+            // Get the date with time components reset to 00:00:00
+            if let resetDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date) {
+                finalDate = resetDate
+
+            } else {
+                print("Failed to reset to start date.")
+            }
+        }
+        else {
+            if let resetDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: date) {
+                finalDate = resetDate
+
+            } else {
+                print("Failed to reset to end date.")
+            }
+        }
+
+        self.dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        let dateString = self.dateFormatter.string(from: finalDate).appending(".000")
+
+        return dateString
+    }
+    
+    private func resetPageCount() {
+        self.recordsPerPage = 20
+        self.ticketsHasNextPage = true
+    }
+
+    func viewModel(forIndex index: Int) -> MyTicketCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        switch bettingTicketsType {
+        case .resolved:
+            ticket = resolvedTickets.value[safe: index] ?? nil
+        case .opened:
+            ticket = openedTickets.value[safe: index] ?? nil
+        case .won:
+            ticket = wonTickets.value[safe: index] ?? nil
+        case .cashout:
+            ticket = cashoutTickets.value[safe: index] ?? nil
+        }
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            
+            return viewModel
+        }
+        else {
+            let viewModel =  MyTicketCellViewModel(ticket: ticket, allowedCashback: false)
+
+            viewModel.requestDataRefreshAction = { [weak self] in
+                Env.userSessionStore.refreshUserWalletAfterDelay()
+                self?.refresh()
+            }
+
+            viewModel.requestAlertAction = { [weak self] cashoutReoffer, betId in
+                self?.requestAlertAction?(cashoutReoffer, betId)
+            }
+
+            viewModel.showCashoutSuspendedAction = { [weak self] in
+                self?.showCashoutSuspendedAction?()
+            }
+
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+
+    }
+
+}
+
+extension BettingHistoryViewModel {
+
+    func numberOfSections() -> Int {
+        return 2
+    }
+
+    func numberOfRows() -> Int {
+        switch self.bettingTicketsType {
+        case .resolved:
+            return resolvedTickets.value.count
+        case .opened:
+            return openedTickets.value.count
+        case .won:
+            return wonTickets.value.count
+        case .cashout:
+            return cashoutTickets.value.count
+        }
+    }
+
+    func bettingTicketForRow(atIndex index: Int) -> BetHistoryEntry? {
+        switch self.bettingTicketsType {
+        case .resolved:
+            return self.resolvedTickets.value[safe: index]
+        case .opened:
+            return self.openedTickets.value[safe: index]
+        case .won:
+            return self.wonTickets.value[safe: index]
+        case .cashout:
+            return self.cashoutTickets.value[safe: index]
+        }
+    }
+
+}

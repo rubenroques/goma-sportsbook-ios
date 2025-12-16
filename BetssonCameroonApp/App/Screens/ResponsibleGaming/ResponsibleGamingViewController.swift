@@ -234,13 +234,6 @@ class ResponsibleGamingViewController: UIViewController {
     }
     
     private func setupInformationExpandableSectionContent() {
-        // Add subtitle
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = localized("rg_information_subtitle")
-        subtitleLabel.font = StyleProvider.fontWith(type: .semibold, size: 12)
-        subtitleLabel.textColor = StyleProvider.Color.textPrimary
-        informationSection.contentContainer.addArrangedSubview(subtitleLabel)
-        
         informationTextSections.forEach { sectionView in
             informationSection.contentContainer.addArrangedSubview(sectionView)
         }

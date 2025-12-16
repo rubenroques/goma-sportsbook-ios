@@ -206,5 +206,19 @@ extension MockBonusCardViewModel {
             termsURL: "https://example.com/reload-terms"
         ))
     }
+    
+    public static var noImageURLMock: MockBonusCardViewModel {
+        return MockBonusCardViewModel(cardData: BonusCardData(
+            id: "7",
+            title: "Weekly Cashback Bonus",
+            description: "Get 15% cashback on all your losses this week. No wagering requirements, withdraw anytime.",
+            imageURL: "",
+            tag: "Cashback",
+            ctaText: "Claim Cashback",
+            ctaURL: "https://example.com/cashback",
+            termsText: "Terms & Conditions Apply",
+            termsURL: "https://example.com/cashback-terms"
+        ))
+    }
 }
 

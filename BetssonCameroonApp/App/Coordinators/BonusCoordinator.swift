@@ -30,6 +30,9 @@ final class BonusCoordinator: Coordinator {
     /// Called when a terms URL needs to be opened
     var onTermsURLRequested: ((String) -> Void)?
     
+    /// Called when an internal link needs to be handled
+    var onInternalLinkRequested: ((String) -> Void)?
+    
     /// Called when deposit transaction completes
     var onDepositComplete: (() -> Void)?
     
@@ -56,6 +59,11 @@ final class BonusCoordinator: Coordinator {
         bonusViewModel = nil
         onBonusDismiss?()
         childCoordinators.removeAll()
+    }
+    
+    /// Dismisses the bonus screen and cleans up
+    func dismiss() {
+        handleBackNavigation()
     }
     
     // MARK: - Private Navigation Methods
@@ -191,7 +199,20 @@ final class BonusCoordinator: Coordinator {
     }
     
     private func handleBonusURLOpen(urlString: String?) {
-        guard let urlString = urlString, let url = URL(string: urlString) else {
+        guard let urlString = urlString else {
+            print("⚠️ BonusCoordinator: Invalid bonus URL")
+            return
+        }
+        
+        // Check if it's an internal link (betssonem.com)
+        if urlString.contains("betssonem.com") {
+            print("🔗 BonusCoordinator: Internal link detected: \(urlString)")
+            onInternalLinkRequested?(urlString)
+            return
+        }
+        
+        // Otherwise, treat as external URL
+        guard let url = URL(string: urlString) else {
             print("⚠️ BonusCoordinator: Invalid bonus URL")
             return
         }

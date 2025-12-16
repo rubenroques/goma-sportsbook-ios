@@ -4,11 +4,24 @@
 
 releases:
 
-  - version: "0.3.6"
-    build: 3601
+  - version: "0.3.7"
+    build: 3701
     date: "2025-12-XX"
     notes:
-      - ""
+      - "fix(mybets): [SPOR-6122] - Capsule now is conditioned to when there is a bet result, if not, the date is displayed without the capsule."
+      - "fix(bonus): [SPOR-6672] [BC-296] - Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links, added padding to ButtonView"
+      - "fix(casino): [SPOR-5738] - Fixed background color on navbar; Changed position of the category title."
+
+  - version: "0.3.6" # released
+    build: 3601
+    date: "2025-12-11"
+    notes:
+      - "fix(theme): Change default appearance mode from dark to system - new installs now respect device theme preference"
+      - "fix(mybets): SPOR-6122 - Added the capsule informing the game results."
+      - "fix(tab-bar): Fixed tab-bar animation to cancel already running animation if a new one is triggered too fast"
+      - "fix(bonus): Fixed available and granted bonus models parsing, fixed bonus cards to not display image urls if they're not available"
+      - "fix(login): Add GmLegislation error code mappings for Forbidden_TooManyAttempts, Forbidden_UserAccount_Blocked, and InternalError - enables translated error messages on login/register"
+      - "feature(filters): Change default filter from 'Popular' to 'Upcoming' with 24h time period - affects both NextUp and Live events screens"
       
   - version: "0.3.5" # released
     build: 3502

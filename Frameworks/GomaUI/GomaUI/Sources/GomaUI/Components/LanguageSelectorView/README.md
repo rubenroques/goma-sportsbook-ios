@@ -362,13 +362,13 @@ LanguageSelectorView/
 
 ## Demo Integration
 
-The component is fully integrated into GomaUIDemo with:
+The component is fully integrated into GomaUICatalog with:
 - **Interactive Demo**: Switch between different language configurations
 - **Real-time Selection**: See immediate feedback on language selection
 - **Action Logging**: Track all language selection events
 - **Multiple Scenarios**: Test two languages, default set, and many languages
 
-Access through: *GomaUIDemo → Language Selector*
+Access through: *GomaUICatalog → Language Selector*
 
 ---
 

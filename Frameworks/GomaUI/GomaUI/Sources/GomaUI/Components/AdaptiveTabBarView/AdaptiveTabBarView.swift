@@ -37,6 +37,8 @@ final public class AdaptiveTabBarView: UIView {
     private var tabBarHistory: [TabBarIdentifier] = [] // Track navigation history
     private var currentActiveTabBarID: TabBarIdentifier?
     private var blurEffectView: UIVisualEffectView?
+    private var activeAnimationToken = UUID()
+    private var activeAnimator: UIViewPropertyAnimator?
 
     private let viewModel: AdaptiveTabBarViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -76,10 +78,8 @@ final public class AdaptiveTabBarView: UIView {
     }
 
     private func render(state: AdaptiveTabBarDisplayState) {
-        // Store the previous active tab bar ID for animation
-        let previousActiveTabBarID = stackViewMap.keys.first { stackView in
-            stackViewMap[stackView]?.isHidden == false
-        }
+        // Store the previous active tab bar ID for animation using tracked state (not view visibility)
+        let previousActiveTabBarID = currentActiveTabBarID ?? state.activeTabBarID
 
         // 1. Synchronize TabBar StackViews
         let incomingTabBarIDs = Set(state.tabBars.map { $0.id })
@@ -128,7 +128,7 @@ final public class AdaptiveTabBarView: UIView {
             }
         }
 
-        // 3. Update navigation history and animate tab bar switch
+        // 3. Update navigation history (sets currentActiveTabBarID) and animate tab bar switch
         updateNavigationHistory(newActiveTabBarID: state.activeTabBarID)
         animateTabBarSwitch(
             from: previousActiveTabBarID,
@@ -172,18 +172,57 @@ final public class AdaptiveTabBarView: UIView {
         }
     }
 
-        // MARK: - Animation Methods
+    // MARK: - Animation Methods
     private func animateTabBarSwitch(from previousTabBarID: TabBarIdentifier?, to newTabBarID: TabBarIdentifier) {
+        
+        print("TAB BAR ANIMATION SWITCHING: Previous ID: \(previousTabBarID) - New ID: \(newTabBarID)")
+
+        guard let newStackView = stackViewMap[newTabBarID] else {
+            print("STACK VIEW FOR \(newTabBarID) NOT FOUND; keeping current state to avoid blank bar")
+            return
+        }
+
+        // Always ensure the target stack view is visible and reset before proceeding
+        newStackView.isHidden = false
+        newStackView.alpha = 1
+        newStackView.layer.transform = CATransform3DIdentity
+        newStackView.transform = .identity
+
+        // If we don't have a valid previous stack (or the IDs match), just show the target stack directly
         guard let previousTabBarID = previousTabBarID,
               previousTabBarID != newTabBarID,
-              let previousStackView = stackViewMap[previousTabBarID],
-              let newStackView = stackViewMap[newTabBarID] else {
-            // No animation needed, just show/hide directly
+              let previousStackView = stackViewMap[previousTabBarID] else {
             for (id, stackView) in stackViewMap {
                 stackView.isHidden = (id != newTabBarID)
             }
+            newStackView.isHidden = false
+            newStackView.layer.transform = CATransform3DIdentity
+            newStackView.alpha = 1
             return
         }
+
+        // If a slide animation is already running, stop it and optionally fall back to an instant switch
+        if activeAnimator != nil && animationType == .slideLeftToRight {
+            activeAnimator?.stopAnimation(true)
+            activeAnimator?.finishAnimation(at: .current)
+            normalizeAllStackViews()
+
+            // Fast-path: show immediately, skip animation to avoid empty bar
+            for (id, stackView) in stackViewMap {
+                stackView.isHidden = (id != newTabBarID)
+                stackView.layer.transform = CATransform3DIdentity
+                stackView.alpha = 1
+            }
+
+            activeAnimator = nil
+            return
+        }
+
+        // Clear any lingering animations/transforms before starting new one
+        activeAnimator?.stopAnimation(true)
+        activeAnimator?.finishAnimation(at: .current)
+        normalizeAllStackViews()
+        activeAnimationToken = UUID()
 
         switch animationType {
         case .horizontalFlip:
@@ -203,8 +242,16 @@ final public class AdaptiveTabBarView: UIView {
         }
     }
 
+    private func normalizeAllStackViews() {
+        for stackView in stackViewMap.values {
+            stackView.layer.removeAllAnimations()
+            stackView.layer.transform = CATransform3DIdentity
+            stackView.transform = .identity
+            stackView.alpha = 1
+        }
+    }
+
     private func animateHorizontalFlip(from previousStackView: UIStackView, to newStackView: UIStackView, newTabBarID: TabBarIdentifier) {
-        // Prepare for animation
         newStackView.isHidden = false
         newStackView.alpha = 0
 
@@ -296,9 +343,13 @@ final public class AdaptiveTabBarView: UIView {
     }
 
         private func animateSlideWithDirection(from previousStackView: UIStackView, to newStackView: UIStackView, direction: SlideDirection, newTabBarID: TabBarIdentifier) {
-        // Prepare for animation
+        let token = activeAnimationToken
+
+        // Prepare for animation and ensure visibility
         newStackView.isHidden = false
         newStackView.alpha = 1
+        newStackView.layer.removeAllAnimations()
+        previousStackView.layer.removeAllAnimations()
 
         let duration: TimeInterval = 0.9
         let tabBarWidth = self.frame.width
@@ -321,20 +372,19 @@ final public class AdaptiveTabBarView: UIView {
         newStackView.transform = CGAffineTransform(translationX: newStackStartX, y: 0)
 
         // Animate both stack views simultaneously
-        UIView.animate(
-            withDuration: duration,
-            delay: 0,
-            usingSpringWithDamping: 0.9,  // Very subtle spring effect
-            initialSpringVelocity: 0.3,   // Low velocity for gentle bounce
-            options: [.curveEaseInOut],
-            animations: {
-                // Slide current tab bar off-screen in appropriate direction
-                previousStackView.transform = CGAffineTransform(translationX: previousStackEndX, y: 0)
+        let animator = UIViewPropertyAnimator(
+            duration: duration,
+            dampingRatio: 0.9
+        ) {
+            // Slide current tab bar off-screen in appropriate direction
+            previousStackView.transform = CGAffineTransform(translationX: previousStackEndX, y: 0)
 
-                // Slide new tab bar to center
-                newStackView.transform = CGAffineTransform.identity
-            }
-        ) { _ in
+            // Slide new tab bar to center
+            newStackView.transform = CGAffineTransform.identity
+        }
+
+        animator.addCompletion { [weak self] _ in
+            guard let self, self.activeAnimationToken == token else { return }
             // Clean up
             previousStackView.isHidden = true
             previousStackView.transform = CGAffineTransform.identity
@@ -346,7 +396,11 @@ final public class AdaptiveTabBarView: UIView {
                     stackView.transform = CGAffineTransform.identity
                 }
             }
+            self.activeAnimator = nil
         }
+
+        activeAnimator = animator
+        animator.startAnimation()
     }
 
     private func animateModernMorphSlide(from previousStackView: UIStackView, to newStackView: UIStackView, newTabBarID: TabBarIdentifier) {

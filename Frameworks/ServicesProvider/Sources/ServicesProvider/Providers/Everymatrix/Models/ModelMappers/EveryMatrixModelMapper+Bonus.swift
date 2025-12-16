@@ -11,9 +11,14 @@ extension EveryMatrixModelMapper {
     
     static func availableBonuses(fromInternalResponse response: EveryMatrix.BonusResponse) -> [AvailableBonus] {
         return response.bonuses.map { bonusItem in
-            AvailableBonus(
+            var imageUrl: String? = nil
+            if let assets = bonusItem.presentation.assets {
+                imageUrl = "https:\(assets.content)"
+            }
+            
+            return AvailableBonus(
                 id: bonusItem.id,
-                bonusPlanId: bonusItem.id,
+                bonusPlanId: Int(bonusItem.id) ?? 0,
                 name: bonusItem.presentation.name.content,
                 description: bonusItem.presentation.description.content,
                 type: bonusItem.type,
@@ -21,9 +26,8 @@ extension EveryMatrixModelMapper {
                 triggerDate: parseDate(from: bonusItem.trigger.startTime),
                 expiryDate: parseDate(from: bonusItem.trigger.endTime),
                 wagerRequirement: nil,
-                imageUrl: "https:\(bonusItem.presentation.assets.content)",
-                actionUrl: bonusItem.presentation.url.content,
-                code: bonusItem.code
+                imageUrl: imageUrl,
+                additionalAwards: nil
             )
         }
     }
@@ -37,7 +41,8 @@ extension EveryMatrixModelMapper {
             
             var imageUrl: String? = nil
             
-            if let bonusAsset = bonusItem.assets {
+            if let bonusAsset = bonusItem.assets,
+               !bonusAsset.isEmpty {
                 imageUrl = "https:\(bonusAsset)"
             }
             
@@ -47,16 +52,12 @@ extension EveryMatrixModelMapper {
                 id: Int(bonusItem.id) ?? 0,
                 name: bonusItem.name,
                 status: bonusItem.status,
-                type: bonusItem.type,
                 amount: "\(bonusItem.remainingAmount)",
-                remainingAmount: "\(bonusItem.remainingAmount)",
                 triggerDate: triggerDate,
                 expiryDate: expiryDate,
                 wagerRequirement: "\(bonusItem.initialWagerRequirementAmount)",
                 amountWagered: "\(remainingWagerRequirementAmount)",
-                currency: bonusItem.currency,
-                imageUrl: imageUrl,
-                linkUrl: bonusItem.url
+                freeBetBonus: nil
             )
         }
     }

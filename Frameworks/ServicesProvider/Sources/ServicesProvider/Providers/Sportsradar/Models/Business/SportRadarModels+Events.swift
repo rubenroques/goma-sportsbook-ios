@@ -21,7 +21,7 @@ extension SportRadarModels {
 
 
     struct EventsGroup: Codable {
-        var events: Events
+        var events: [Event]
         var marketGroupId: String?
 
         enum CodingKeys: String, CodingKey {
@@ -29,7 +29,7 @@ extension SportRadarModels {
             case marketGroupId = "idfwmarketgroup"
         }
 
-        init(events: Events, marketGroupId: String?) {
+        init(events: [Event], marketGroupId: String?) {
             self.events = events
             self.marketGroupId = marketGroupId
         }
@@ -74,7 +74,6 @@ extension SportRadarModels {
         }
     }
     
-    typealias Events = [Event]
     struct Event: Codable {
         
         var id: String
@@ -143,6 +142,11 @@ extension SportRadarModels {
             }
 
             self.homeName = try container.decodeIfPresent(String.self, forKey: .homeName)
+            
+//            #if DEBUG
+//            self.homeName = self.id + "-" + (try container.decodeIfPresent(String.self, forKey: .homeName) ?? "")
+//            #endif
+
             self.awayName = try container.decodeIfPresent(String.self, forKey: .awayName)
             self.competitionId = try container.decodeIfPresent(String.self, forKey: .competitionId)
             self.competitionName = try container.decodeIfPresent(String.self, forKey: .competitionName)
@@ -240,7 +244,11 @@ extension SportRadarModels {
                     let container = try completeContainer.nestedContainer(keyedBy: Score.CompetitorCodingKeys.self, forKey: key)
                     return try Score(from: container, key: key)
                 }
-                self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+//                self.scores = Dictionary(uniqueKeysWithValues: scoresArray.map { ($0.key, $0) })
+                self.scores = scoresArray.reduce(into: [:]) { dict, score in
+                    
+                    dict[score.key] = score   
+                }
                 //
                 
                 //

@@ -34,6 +34,7 @@ final class ProfileWalletCoordinator: Coordinator {
     var onProfileDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
+    var onInternalLinkRequested: ((String) -> Void)?
     
     var cancellables = Set<AnyCancellable>()
     
@@ -60,6 +61,11 @@ final class ProfileWalletCoordinator: Coordinator {
         profileNavigationController = nil
         onProfileDismiss?()
         childCoordinators.removeAll()
+    }
+    
+    /// Dismisses the profile screen and cleans up
+    func dismiss() {
+        dismissProfileWallet()
     }
     
     // MARK: - Private Methods
@@ -351,6 +357,18 @@ final class ProfileWalletCoordinator: Coordinator {
         bonusCoordinator.onTermsURLRequested = { urlString in
             print("📄 ProfileWalletCoordinator: Terms URL requested: \(urlString)")
             // URL is already opened in the coordinator
+        }
+        
+        bonusCoordinator.onInternalLinkRequested = { [weak self] urlString in
+            print("🔗 ProfileWalletCoordinator: Internal link requested from bonus: \(urlString)")
+            guard let self = self else { return }
+            
+            // Remove bonus coordinator first
+            bonusCoordinator.dismiss()
+            
+            // Forward to parent coordinator (MainTabBarCoordinator) - it will handle navigation
+            self.onInternalLinkRequested?(urlString)
+            
         }
         
         bonusCoordinator.onBonusDismiss = { [weak self] in

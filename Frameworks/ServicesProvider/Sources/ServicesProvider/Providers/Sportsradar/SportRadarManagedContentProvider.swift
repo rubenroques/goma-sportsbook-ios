@@ -399,33 +399,29 @@ class SportRadarManagedContentProvider: HomeContentProvider {
     }
 
     func getTopCompetitions() -> AnyPublisher<[TopCompetition], ServiceProviderError> {
-        
+
         let publisher = self.getTopCompetitionsPointers()
             .flatMap({ (topCompetitionPointers: [TopCompetitionPointer]) -> AnyPublisher<[TopCompetition], ServiceProviderError> in
 
-                let getCompetitonNodesRequests: [AnyPublisher<SportRadarModels.SportCompetitionInfo?, ServiceProviderError>] = topCompetitionPointers
+                let getCompetitonNodesRequests: [AnyPublisher<SportCompetitionInfo?, ServiceProviderError>] = topCompetitionPointers
                     .map { topCompetitionPointer in
                         let competitionIdComponents = topCompetitionPointer.competitionId.components(separatedBy: "/")
                         let competitionId: String = (competitionIdComponents.last ?? "").lowercased()
 
                         if !competitionId.hasSuffix(".1") {
-                            return Just(Optional<SportRadarModels.SportCompetitionInfo>.none)
+                            return Just(Optional<SportCompetitionInfo>.none)
                                 .setFailureType(to: ServiceProviderError.self)
                                 .eraseToAnyPublisher()
                         }
 
-                        let endpoint = SportRadarRestAPIClient.competitionMarketGroups(competitionId: competitionId)
-                        let requestPublisher: AnyPublisher<SportRadarModels.SportRadarResponse<SportRadarModels.SportCompetitionInfo>, ServiceProviderError> = self.eventsProvider.customRequest(endpoint: endpoint)
-                        
-                        return requestPublisher.map({ response in
-                            return response.data
-                        })
-                        .catch({ (error: ServiceProviderError) -> AnyPublisher<SportRadarModels.SportCompetitionInfo?, ServiceProviderError> in
-                            return Just(Optional<SportRadarModels.SportCompetitionInfo>.none)
-                                .setFailureType(to: ServiceProviderError.self)
-                                .eraseToAnyPublisher()
-                        })
-                        .eraseToAnyPublisher()
+                        return self.eventsProvider.getCompetitionMarketGroups(competitionId: competitionId)
+                            .map { Optional($0) }
+                            .catch { _ -> AnyPublisher<SportCompetitionInfo?, ServiceProviderError> in
+                                Just(Optional<SportCompetitionInfo>.none)
+                                    .setFailureType(to: ServiceProviderError.self)
+                                    .eraseToAnyPublisher()
+                            }
+                            .eraseToAnyPublisher()
                     }
 
                 let mergedPublishers = Publishers.MergeMany(getCompetitonNodesRequests)

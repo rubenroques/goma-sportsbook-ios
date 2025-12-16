@@ -540,6 +540,20 @@ class MainTabBarCoordinator: Coordinator {
             self?.presentWithdrawFlow()
         }
         
+        profileCoordinator.onInternalLinkRequested = { [weak self] urlString in
+            guard let self = self else { return }
+            print("🔗 MainTabBarCoordinator: Internal link requested from profile: \(urlString)")
+            
+            profileCoordinator.dismiss()
+            
+            if let route = self.parseURLToRoute(urlString) {
+                // ProfileWalletCoordinator handles dismissal, we just navigate
+                self.handleRoute(route)
+            } else {
+                print("⚠️ MainTabBarCoordinator: Could not parse internal link: \(urlString)")
+            }
+        }
+        
         addChildCoordinator(profileCoordinator)
         profileCoordinator.start()
     }
@@ -640,6 +654,15 @@ class MainTabBarCoordinator: Coordinator {
             let path = Self.stripLanguagePrefix(from: url.path)
             return parseDeepLinkPath(path)
         }
+        
+        // Handle URLs without scheme (internal links)
+        if url.host == nil,
+           Self.isInternalWebDomain(urlString) {
+            // Extract path from URL string manually since host is nil
+            let path = extractPathFromURLString(urlString)
+            let strippedPath = Self.stripLanguagePrefix(from: path)
+            return parseDeepLinkPath(strippedPath)
+        }
 
         // Not an internal deep link
         return nil
@@ -669,11 +692,70 @@ class MainTabBarCoordinator: Coordinator {
         let stripped = regex.stringByReplacingMatches(in: path, options: [], range: range, withTemplate: "/")
         return stripped.isEmpty ? "/" : stripped
     }
+    
+    /// Extracts the host/domain portion from a URL string that may not have a proper scheme
+    /// Examples: "www.betssonem.com/path" -> "www.betssonem.com"
+    ///           "betssonem.com/path" -> "betssonem.com"
+    private func extractHostFromURLString(_ urlString: String) -> String? {
+        // Remove scheme if present (http://, https://, etc.)
+        let cleaned = urlString.replacingOccurrences(of: #"^https?://"#, with: "", options: .regularExpression)
+        
+        // Find where the path starts (first /, ?, or #)
+        let pathStartPattern = #"[\/\?#]"#
+        if let range = cleaned.range(of: pathStartPattern, options: .regularExpression) {
+            return String(cleaned[..<range.lowerBound])
+        }
+        
+        // No path found, entire string is the host
+        return cleaned.isEmpty ? nil : cleaned
+    }
+    
+    /// Extracts the path portion from a URL string that may not have a proper scheme
+    /// Examples: "www.betssonem.com/path/to/page" -> "/path/to/page"
+    ///           "betssonem.com/path" -> "/path"
+    private func extractPathFromURLString(_ urlString: String) -> String {
+        // Remove scheme if present
+        let cleaned = urlString.replacingOccurrences(of: #"^https?://"#, with: "", options: .regularExpression)
+        
+        // Extract host first
+        guard let host = extractHostFromURLString(cleaned) else {
+            return "/"
+        }
+        
+        // Find where the host ends in the cleaned string
+        guard let hostRange = cleaned.range(of: host, options: .caseInsensitive) else {
+            return "/"
+        }
+        
+        // Get everything after the host
+        let afterHost = cleaned[hostRange.upperBound...]
+        
+        // If there's nothing after the host, return "/"
+        if afterHost.isEmpty {
+            return "/"
+        }
+        
+        // Ensure path starts with "/" and remove query/fragment
+        var path = afterHost.hasPrefix("/") ? String(afterHost) : "/\(afterHost)"
+        if let queryRange = path.range(of: "?") {
+            path = String(path[..<queryRange.lowerBound])
+        }
+        if let fragmentRange = path.range(of: "#") {
+            path = String(path[..<fragmentRange.lowerBound])
+        }
+        
+        return path
+    }
 
     private func parseDeepLinkPath(_ path: String) -> Route? {
         let components = path.components(separatedBy: "/").filter { !$0.isEmpty }
 
-        guard !components.isEmpty else { return nil }
+//        guard !components.isEmpty else { return nil }
+        
+        //If no components, redirect to home page
+        if components.isEmpty {
+            return .sportsHome
+        }
 
         switch components[0].lowercased() {
         case "deposit":
@@ -732,9 +814,9 @@ class MainTabBarCoordinator: Coordinator {
         case .login:
             showLogin()
         case .sportsHome:
-            showNextUpEventsScreen()
+            showNextUpEventsScreen(withContextChange: true)
         case .liveGames:
-            showInPlayEventsScreen()
+            showInPlayEventsScreen(withContextChange: true)
         case .myBets:
             showMyBetsScreen()
         case .casinoHome:
@@ -837,6 +919,18 @@ class MainTabBarCoordinator: Coordinator {
         bonusCoordinator.onTermsURLRequested = { urlString in
             print("📄 ProfileWalletCoordinator: Terms URL requested: \(urlString)")
             // URL is already opened in the coordinator
+        }
+        
+        bonusCoordinator.onInternalLinkRequested = { [weak self] urlString in
+            guard let self = self else { return }
+            print("🔗 MainTabBarCoordinator: Internal link requested from bonus: \(urlString)")
+            if let route = self.parseURLToRoute(urlString) {
+                // Dismiss bonus screen before navigating
+                bonusCoordinator.dismiss()
+                self.handleRoute(route)
+            } else {
+                print("⚠️ MainTabBarCoordinator: Could not parse internal link: \(urlString)")
+            }
         }
         
         bonusCoordinator.onBonusDismiss = { [weak self] in
@@ -1465,7 +1559,6 @@ class MainTabBarCoordinator: Coordinator {
                 self.showInPlayEventsScreen(withContextChange: true)
             }
         case .favourites:
-            // TODO: Show favourites when available
             if let viewController = self.nextUpEventsCoordinator?.viewController {
                 mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
             }

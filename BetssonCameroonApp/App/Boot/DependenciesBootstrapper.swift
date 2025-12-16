@@ -16,6 +16,7 @@ import Firebase
 import XPush
 import PhraseSDK
 import FirebaseCore
+import FirebaseAuth
 import GomaPerformanceKit
 
 /// Manages lazy initialization of external SDKs and third-party dependencies.

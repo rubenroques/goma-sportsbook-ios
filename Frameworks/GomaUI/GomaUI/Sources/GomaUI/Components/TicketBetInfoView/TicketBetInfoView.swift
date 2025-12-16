@@ -453,21 +453,24 @@ public class TicketBetInfoView: UIView {
         betAmountValueLabel.text = betInfo.betAmount
         possibleWinningsValueLabel.text = betInfo.possibleWinnings
         
-        updateTickets(with: betInfo.tickets)
+        updateTickets(with: betInfo)
         updateBottomComponents(with: betInfo)
         updateBetStatus(with: betInfo)
     }
     
-    private func updateTickets(with tickets: [TicketSelectionData]) {
+    private func updateTickets(with betInfo: TicketBetInfoData) {
         // Remove existing ticket views
         ticketsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         // Add new ticket views
-        for ticketData in tickets {
+        for ticketData in betInfo.tickets {
             let mockViewModel = MockTicketSelectionViewModel.preLiveMock
             mockViewModel.updateTicketData(ticketData)
             
             let ticketView = TicketSelectionView(viewModel: mockViewModel)
+            
+            ticketView.updateResultTag(with: betInfo.betStatus)
+            
             ticketsStackView.addArrangedSubview(ticketView)
         }
         
