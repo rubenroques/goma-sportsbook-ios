@@ -688,7 +688,12 @@ extension GomaProvider: PrivilegedAccessManagerProvider {
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
+    func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        // Goma provider doesn't support Widget Cashier - use EveryMatrix provider
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

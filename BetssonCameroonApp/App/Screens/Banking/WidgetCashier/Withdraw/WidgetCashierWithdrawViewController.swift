@@ -1,8 +1,8 @@
 //
-//  GomaCashierDepositViewController.swift
+//  WidgetCashierWithdrawViewController.swift
 //  BetssonCameroonApp
 //
-//  Created by Goma Cashier Implementation on 10/12/2025.
+//  Created by Widget Cashier Implementation on 10/12/2025.
 //
 
 import UIKit
@@ -11,22 +11,20 @@ import Combine
 import GomaUI
 import GomaLogger
 
-/// WebView container for Goma-hosted deposit operations
-final class GomaCashierDepositViewController: UIViewController {
+/// WebView container for Widget Cashier withdraw operations
+final class WidgetCashierWithdrawViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let logPrefix = "[GomaCashier][Deposit]"
-    private let viewModel: GomaCashierDepositViewModel
+    private let logCategory = "WidgetCashier"
+    private let viewModel: WidgetCashierWithdrawViewModel
     private let webView: WKWebView
     private let loadingView: UIActivityIndicatorView
-    private let gomaBridge: GomaCashierBridge
+    private let bridge: WidgetCashierBridge
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Timing Properties
+    // MARK: - Private Properties
 
-    private var timingMetrics: BankingTimingMetrics?
-    private var timerOverlay: LoadingTimerOverlayView?
     private var cashierURL: String?
 
     // MARK: - UI Components
@@ -46,14 +44,14 @@ final class GomaCashierDepositViewController: UIViewController {
 
     // MARK: - Initialization
 
-    /// Initialize Goma cashier deposit WebView container
-    /// - Parameter viewModel: ViewModel for deposit operations
-    init(viewModel: GomaCashierDepositViewModel) {
+    /// Initialize Widget Cashier withdraw WebView container
+    /// - Parameter viewModel: ViewModel for withdraw operations
+    init(viewModel: WidgetCashierWithdrawViewModel) {
         self.viewModel = viewModel
-        self.gomaBridge = GomaCashierBridge()
+        self.bridge = WidgetCashierBridge()
 
-        // Create WebView with Goma cashier configuration
-        let configuration = GomaCashierWebViewConfiguration.forGomaCashier(with: gomaBridge)
+        // Create WebView with Widget Cashier configuration
+        let configuration = WidgetCashierWebViewConfiguration.forWidgetCashier(with: bridge)
         self.webView = WKWebView(frame: .zero, configuration: configuration)
 
         // Create loading indicator
@@ -62,7 +60,7 @@ final class GomaCashierDepositViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         // Set up JavaScript bridge
-        gomaBridge.delegate = self
+        bridge.delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -75,10 +73,9 @@ final class GomaCashierDepositViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
-        setupTimingOverlay()
 
-        // Start loading deposit
-        viewModel.loadDeposit()
+        // Start loading withdraw
+        viewModel.loadWithdraw()
     }
 
     // MARK: - Private Setup
@@ -102,7 +99,7 @@ final class GomaCashierDepositViewController: UIViewController {
         webView.uiDelegate = self
 
         // Configure WebView appearance
-        GomaCashierWebViewConfiguration.configureAppearance(for: webView)
+        WidgetCashierWebViewConfiguration.configureAppearance(for: webView)
 
         // Add loading view
         view.addSubview(loadingView)
@@ -148,31 +145,6 @@ final class GomaCashierDepositViewController: UIViewController {
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
     }
 
-    private func setupTimingOverlay() {
-        // Initialize timing metrics and start app phase
-        var metrics = BankingTimingMetrics()
-        metrics.startAppInitialization()
-        timingMetrics = metrics
-
-        // Create and add timer overlay
-        let overlay = LoadingTimerOverlayView(metrics: metrics)
-
-        // Set up URL callback for copy functionality
-        overlay.onCopyRequested = { [weak self] in
-            return self?.cashierURL
-        }
-
-        view.addSubview(overlay)
-
-        NSLayoutConstraint.activate([
-            overlay.topAnchor.constraint(equalTo: customNavigationView.bottomAnchor),
-            overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-
-        timerOverlay = overlay
-    }
-
     private func bindViewModel() {
         viewModel.$state
             .receive(on: DispatchQueue.main)
@@ -189,7 +161,6 @@ final class GomaCashierDepositViewController: UIViewController {
             loadingView.stopAnimating()
 
         case .loadingURL:
-            // This state is not used in Goma cashier (no API call)
             webView.isHidden = true
             loadingView.startAnimating()
 
@@ -198,7 +169,7 @@ final class GomaCashierDepositViewController: UIViewController {
             cashierURL = url.absoluteString
 
             // Log URL to console for analysis
-            GomaLogger.info("\(logPrefix) Loading cashier URL: \(url.absoluteString)")
+            GomaLogger.info(.payments, category: logCategory, "Loading cashier URL: \(url.absoluteString)")
 
             // Keep loading indicator while WebView loads
             loadingView.startAnimating()
@@ -208,7 +179,7 @@ final class GomaCashierDepositViewController: UIViewController {
             request.timeoutInterval = 30.0
 
             // Add security headers
-            for (key, value) in GomaCashierWebViewConfiguration.securityHeaders() {
+            for (key, value) in WidgetCashierWebViewConfiguration.securityHeaders() {
                 request.setValue(value, forHTTPHeaderField: key)
             }
 
@@ -219,20 +190,11 @@ final class GomaCashierDepositViewController: UIViewController {
             webView.isHidden = false
             loadingView.stopAnimating()
 
-            // Mark timing as complete
-            timingMetrics?.complete()
-            updateTimerOverlay()
-
         case .error(let message):
             webView.isHidden = true
             loadingView.stopAnimating()
             showErrorAlert(message: message)
         }
-    }
-
-    private func updateTimerOverlay() {
-        guard let metrics = timingMetrics else { return }
-        timerOverlay?.updateMetrics(metrics)
     }
 
     // MARK: - Actions
@@ -245,13 +207,13 @@ final class GomaCashierDepositViewController: UIViewController {
 
     private func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: localized("deposit_error"),
+            title: localized("withdraw_error"),
             message: message,
             preferredStyle: .alert
         )
 
         alert.addAction(UIAlertAction(title: localized("retry"), style: .default) { [weak self] _ in
-            self?.viewModel.loadDeposit()
+            self?.viewModel.loadWithdraw()
         })
 
         alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel) { [weak self] _ in
@@ -264,34 +226,18 @@ final class GomaCashierDepositViewController: UIViewController {
 
 // MARK: - WKNavigationDelegate
 
-extension GomaCashierDepositViewController: WKNavigationDelegate {
+extension WidgetCashierWithdrawViewController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        // Track WebView provisional load start
-        timingMetrics?.startWebViewProvisionalLoad()
-        updateTimerOverlay()
-        GomaLogger.debug("\(logPrefix) WebView started provisional navigation")
+        GomaLogger.debug(.payments, category: logCategory, "WebView started provisional navigation")
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        // Track WebView commit phase
-        timingMetrics?.commitWebViewLoad()
-        updateTimerOverlay()
-        GomaLogger.debug("\(logPrefix) WebView committed navigation")
+        GomaLogger.debug(.payments, category: logCategory, "WebView committed navigation")
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // Track WebView DOM loaded
-        timingMetrics?.finishWebViewDOMLoad()
-        timingMetrics?.markWebViewFullyReady()
-        updateTimerOverlay()
-        GomaLogger.info("\(logPrefix) WebView finished loading")
-
-        // Log final timing breakdown
-        if let metrics = timingMetrics {
-            GomaLogger.info("\(logPrefix) Timing - APP: \(metrics.formattedAppDuration), API: \(metrics.formattedApiDuration), WEB: \(metrics.formattedWebDuration), TOTAL: \(metrics.formattedTotalDuration)")
-        }
-
+        GomaLogger.info(.payments, category: logCategory, "WebView finished loading")
         viewModel.webViewDidFinishLoading()
     }
 
@@ -311,7 +257,7 @@ extension GomaCashierDepositViewController: WKNavigationDelegate {
 
 // MARK: - WKUIDelegate
 
-extension GomaCashierDepositViewController: WKUIDelegate {
+extension WidgetCashierWithdrawViewController: WKUIDelegate {
 
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         // Prevent popup windows
@@ -319,9 +265,9 @@ extension GomaCashierDepositViewController: WKUIDelegate {
     }
 }
 
-// MARK: - GomaCashierBridgeDelegate
+// MARK: - WidgetCashierBridgeDelegate
 
-extension GomaCashierDepositViewController: GomaCashierBridgeDelegate {
+extension WidgetCashierWithdrawViewController: WidgetCashierBridgeDelegate {
 
     func didReceiveTransactionSuccess(message: String, navigationAction: BankingNavigationAction) {
         DispatchQueue.main.async { [weak self] in
@@ -344,7 +290,7 @@ extension GomaCashierDepositViewController: GomaCashierBridgeDelegate {
 
 // MARK: - UI Factory Methods
 
-extension GomaCashierDepositViewController {
+extension WidgetCashierWithdrawViewController {
 
     private static func createCustomNavigationView() -> UIView {
         let view = UIView()
@@ -355,7 +301,7 @@ extension GomaCashierDepositViewController {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("deposit")
+        label.text = localized("withdraw")
         label.font = AppFont.with(type: .semibold, size: 18)
         label.textColor = UIColor.App.textPrimary
         label.textAlignment = .center

@@ -11,7 +11,7 @@ import ServicesProvider
 /// Generic coordinator for banking operations following MVVM-C pattern
 /// Coordinator's role: Navigation and presentation logic only
 final class BankingCoordinator: Coordinator {
-    
+
     // MARK: - Transaction Type
 
     enum TransactionType {
@@ -19,45 +19,45 @@ final class BankingCoordinator: Coordinator {
         case deposit
         /// EveryMatrix-hosted withdraw (legacy)
         case withdraw
-        /// Goma-hosted deposit (new)
-        case gomaCashierDeposit
-        /// Goma-hosted withdraw (new)
-        case gomaCashierWithdraw
+        /// Widget Cashier deposit (new)
+        case widgetCashierDeposit
+        /// Widget Cashier withdraw (new)
+        case widgetCashierWithdraw
 
         var title: String {
             switch self {
-            case .deposit, .gomaCashierDeposit:
+            case .deposit, .widgetCashierDeposit:
                 return "Deposit"
-            case .withdraw, .gomaCashierWithdraw:
+            case .withdraw, .widgetCashierWithdraw:
                 return "Withdraw"
             }
         }
     }
-    
+
     // MARK: - Coordinator Properties
-    
+
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var bonusCode: String?
-    
+
     // MARK: - Private Properties
-    
+
     private let transactionType: TransactionType
     private let client: ServicesProvider.Client
-    
+
     // MARK: - Callbacks
-    
+
     /// Called when banking transaction completes successfully
     var onTransactionComplete: (() -> Void)?
-    
+
     /// Called when banking transaction is cancelled
     var onTransactionCancel: (() -> Void)?
-    
+
     /// Called when banking transaction fails
     var onTransactionError: ((String) -> Void)?
-    
+
     // MARK: - Initialization
-    
+
     /// Initialize banking coordinator
     /// - Parameters:
     ///   - transactionType: Type of transaction (deposit or withdraw)
@@ -71,11 +71,11 @@ final class BankingCoordinator: Coordinator {
         self.transactionType = transactionType
         self.client = client
         self.navigationController = navigationController
-        
+
     }
-    
+
     // MARK: - Coordinator Implementation
-    
+
     func start() {
         // Coordinator decides which flow to present based on transaction type
         switch transactionType {
@@ -83,28 +83,28 @@ final class BankingCoordinator: Coordinator {
             presentDepositFlow()
         case .withdraw:
             presentWithdrawFlow()
-        case .gomaCashierDeposit:
-            presentGomaCashierDepositFlow()
-        case .gomaCashierWithdraw:
-            presentGomaCashierWithdrawFlow()
+        case .widgetCashierDeposit:
+            presentWidgetCashierDepositFlow()
+        case .widgetCashierWithdraw:
+            presentWidgetCashierWithdrawFlow()
         }
     }
-    
+
     func finish() {
         dismissBankingFlow()
         childCoordinators.removeAll()
     }
-    
+
     // MARK: - Navigation Logic (Coordinator's responsibility)
-    
+
     private func presentDepositFlow() {
         let viewModel = DepositWebContainerViewModel(client: client, bonusCode: bonusCode)
         let viewController = DepositWebContainerViewController(viewModel: viewModel)
-        
+
         setupDepositCallbacks(viewController)
         presentViewController(viewController)
     }
-    
+
     private func presentWithdrawFlow() {
         let viewModel = WithdrawWebContainerViewModel(client: client)
         let viewController = WithdrawWebContainerViewController(viewModel: viewModel)
@@ -113,38 +113,38 @@ final class BankingCoordinator: Coordinator {
         presentViewController(viewController)
     }
 
-    private func presentGomaCashierDepositFlow() {
-        let viewModel = GomaCashierDepositViewModel()
-        let viewController = GomaCashierDepositViewController(viewModel: viewModel)
+    private func presentWidgetCashierDepositFlow() {
+        let viewModel = WidgetCashierDepositViewModel()
+        let viewController = WidgetCashierDepositViewController(viewModel: viewModel)
 
-        setupGomaCashierDepositCallbacks(viewController)
+        setupWidgetCashierDepositCallbacks(viewController)
         presentViewController(viewController)
     }
 
-    private func presentGomaCashierWithdrawFlow() {
-        let viewModel = GomaCashierWithdrawViewModel()
-        let viewController = GomaCashierWithdrawViewController(viewModel: viewModel)
+    private func presentWidgetCashierWithdrawFlow() {
+        let viewModel = WidgetCashierWithdrawViewModel()
+        let viewController = WidgetCashierWithdrawViewController(viewModel: viewModel)
 
-        setupGomaCashierWithdrawCallbacks(viewController)
+        setupWidgetCashierWithdrawCallbacks(viewController)
         presentViewController(viewController)
     }
 
     private func presentViewController(_ viewController: UIViewController) {
         navigationController.present(viewController, animated: true)
     }
-    
+
     // MARK: - Callback Setup
-    
+
     private func setupDepositCallbacks(_ viewController: DepositWebContainerViewController) {
         viewController.onTransactionComplete = { [weak self] navigationAction in
             self?.handleTransactionComplete(navigationAction: navigationAction)
         }
-        
+
         viewController.onTransactionCancel = { [weak self] in
             self?.handleTransactionCancel()
         }
     }
-    
+
     private func setupWithdrawCallbacks(_ viewController: WithdrawWebContainerViewController) {
         viewController.onTransactionComplete = { [weak self] navigationAction in
             self?.handleTransactionComplete(navigationAction: navigationAction)
@@ -155,7 +155,7 @@ final class BankingCoordinator: Coordinator {
         }
     }
 
-    private func setupGomaCashierDepositCallbacks(_ viewController: GomaCashierDepositViewController) {
+    private func setupWidgetCashierDepositCallbacks(_ viewController: WidgetCashierDepositViewController) {
         viewController.onTransactionComplete = { [weak self] navigationAction in
             self?.handleTransactionComplete(navigationAction: navigationAction)
         }
@@ -165,7 +165,7 @@ final class BankingCoordinator: Coordinator {
         }
     }
 
-    private func setupGomaCashierWithdrawCallbacks(_ viewController: GomaCashierWithdrawViewController) {
+    private func setupWidgetCashierWithdrawCallbacks(_ viewController: WidgetCashierWithdrawViewController) {
         viewController.onTransactionComplete = { [weak self] navigationAction in
             self?.handleTransactionComplete(navigationAction: navigationAction)
         }
@@ -174,9 +174,9 @@ final class BankingCoordinator: Coordinator {
             self?.handleTransactionCancel()
         }
     }
-    
+
     // MARK: - Event Handlers
-    
+
     private func handleTransactionComplete(navigationAction: BankingNavigationAction) {
         switch navigationAction {
         case .goToSports, .goToCasino, .closeModal, .none:
@@ -185,14 +185,14 @@ final class BankingCoordinator: Coordinator {
             onTransactionComplete?()
         }
     }
-    
+
     private func handleTransactionCancel() {
         finish()
         onTransactionCancel?()
     }
-    
+
     // MARK: - UI Helpers
-    
+
     private func dismissBankingFlow() {
         if navigationController.presentedViewController != nil {
             navigationController.dismiss(animated: true)
@@ -203,7 +203,7 @@ final class BankingCoordinator: Coordinator {
 // MARK: - Factory Methods
 
 extension BankingCoordinator {
-    
+
     static func forDeposit(
         navigationController: UINavigationController,
         client: ServicesProvider.Client
@@ -226,25 +226,25 @@ extension BankingCoordinator {
         )
     }
 
-    // MARK: - Goma Cashier Factory Methods
+    // MARK: - Widget Cashier Factory Methods
 
-    static func forGomaCashierDeposit(
+    static func forWidgetCashierDeposit(
         navigationController: UINavigationController,
         client: ServicesProvider.Client
     ) -> BankingCoordinator {
         return BankingCoordinator(
-            transactionType: .gomaCashierDeposit,
+            transactionType: .widgetCashierDeposit,
             navigationController: navigationController,
             client: client
         )
     }
 
-    static func forGomaCashierWithdraw(
+    static func forWidgetCashierWithdraw(
         navigationController: UINavigationController,
         client: ServicesProvider.Client
     ) -> BankingCoordinator {
         return BankingCoordinator(
-            transactionType: .gomaCashierWithdraw,
+            transactionType: .widgetCashierWithdraw,
             navigationController: navigationController,
             client: client
         )

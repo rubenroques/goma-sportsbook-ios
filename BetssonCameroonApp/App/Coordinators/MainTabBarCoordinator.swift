@@ -1444,11 +1444,11 @@ class MainTabBarCoordinator: Coordinator {
 
     // MARK: - Banking Flow Methods
 
-    private let gomaCashierLogPrefix = "[GomaCashier]"
+    private let widgetCashierLogCategory = "WidgetCashier"
 
     func presentDepositFlow(bonusCode: String? = nil) {
-        GomaLogger.info("\(gomaCashierLogPrefix) Presenting Goma deposit flow")
-        let bankingCoordinator = BankingCoordinator.forGomaCashierDeposit(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier deposit flow")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierDeposit(
             navigationController: navigationController,
             client: environment.servicesProvider
         )
@@ -1461,8 +1461,8 @@ class MainTabBarCoordinator: Coordinator {
     }
 
     private func presentWithdrawFlow() {
-        GomaLogger.info("\(gomaCashierLogPrefix) Presenting Goma withdraw flow")
-        let bankingCoordinator = BankingCoordinator.forGomaCashierWithdraw(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier withdraw flow")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierWithdraw(
             navigationController: navigationController,
             client: environment.servicesProvider
         )

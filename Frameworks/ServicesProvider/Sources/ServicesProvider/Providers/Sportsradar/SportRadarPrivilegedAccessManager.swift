@@ -1623,6 +1623,11 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
+    func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        // SportRadar provider doesn't support Widget Cashier - use EveryMatrix provider
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
     func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
         return getGrantedBonuses()
     }

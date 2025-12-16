@@ -1,16 +1,16 @@
 //
-//  GomaCashierBridge.swift
+//  WidgetCashierBridge.swift
 //  BetssonCameroonApp
 //
-//  Created by Goma Cashier Implementation on 10/12/2025.
+//  Created by Widget Cashier Implementation on 10/12/2025.
 //
 
 import Foundation
 import WebKit
 import GomaLogger
 
-/// Protocol for handling JavaScript messages from the Goma cashier WebView
-protocol GomaCashierBridgeDelegate: AnyObject {
+/// Protocol for handling JavaScript messages from the Widget Cashier WebView
+protocol WidgetCashierBridgeDelegate: AnyObject {
     /// Called when a transaction success is detected
     /// - Parameters:
     ///   - message: The complete message data
@@ -26,16 +26,16 @@ protocol GomaCashierBridgeDelegate: AnyObject {
     func didReceiveTransactionCancellation(message: String)
 }
 
-/// JavaScript bridge for handling Goma cashier WebView communication
+/// JavaScript bridge for handling Widget Cashier WebView communication
 /// Uses "cashierHandler" as the message handler name
-final class GomaCashierBridge: NSObject {
+final class WidgetCashierBridge: NSObject {
 
     // MARK: - Properties
 
-    private let logPrefix = "[GomaCashier][Bridge]"
-    weak var delegate: GomaCashierBridgeDelegate?
+    private let logCategory = "WidgetCashier"
+    weak var delegate: WidgetCashierBridgeDelegate?
 
-    /// The handler name registered with WKWebView - must match what the Goma cashier page expects
+    /// The handler name registered with WKWebView - must match what the cashier page expects
     static let handlerName = "cashierHandler"
 
     // MARK: - Constants
@@ -56,11 +56,11 @@ final class GomaCashierBridge: NSObject {
     // MARK: - JavaScript Injection
 
     /// Get the JavaScript code to inject into the WebView
-    /// The Goma cashier page already forwards postMessage events to native handlers,
+    /// The cashier page already forwards postMessage events to native handlers,
     /// but we include this script as a fallback for consistency
     static var injectionScript: String {
         return """
-        // Goma Cashier Bridge - forwards postMessage events to iOS native code
+        // Widget Cashier Bridge - forwards postMessage events to iOS native code
         window.addEventListener('message', function(event) {
             let messageData = event.data;
 
@@ -87,7 +87,7 @@ final class GomaCashierBridge: NSObject {
             }
         });
 
-        console.log('Goma Cashier JavaScript bridge initialized');
+        console.log('Widget Cashier JavaScript bridge initialized');
         """
     }
 
@@ -97,36 +97,100 @@ final class GomaCashierBridge: NSObject {
     /// - Parameter messageData: Raw message data from JavaScript
     func processMessage(_ messageData: Any) {
         guard let messageString = convertToString(messageData) else {
-            GomaLogger.error("\(logPrefix) Failed to convert message to string: \(messageData)")
+            GomaLogger.error(.payments, category: logCategory, "Failed to convert message to string: \(messageData)")
             return
         }
 
-        GomaLogger.debug("\(logPrefix) Received message: \(messageString)")
+        GomaLogger.debug(.payments, category: logCategory, "Received message: \(messageString)")
 
+        // Try to parse as JSON to check message type
+        if let jsonDict = parseJSON(messageString) {
+            if handleTypedMessage(jsonDict, rawMessage: messageString) {
+                return
+            }
+        }
+
+        // Fallback to string pattern matching for non-JSON or unhandled types
+        handleStringPatternMessage(messageString)
+    }
+
+    /// Handle typed JSON messages from the cashier
+    /// - Returns: true if message was handled, false otherwise
+    private func handleTypedMessage(_ json: [String: Any], rawMessage: String) -> Bool {
+        guard let messageType = json["type"] as? String else {
+            return false
+        }
+
+        switch messageType {
+        case "ErrorResponseCode":
+            // Only treat as error if errorResponseCode is non-empty
+            if let errorCode = json["errorResponseCode"] as? String, !errorCode.isEmpty {
+                GomaLogger.error(.payments, category: logCategory, "Transaction error: \(errorCode)")
+                delegate?.didReceiveTransactionFailure(message: rawMessage)
+                return true
+            }
+            // Empty errorResponseCode is just a status message, ignore it
+            GomaLogger.debug(.payments, category: logCategory, "ErrorResponseCode with empty code (status message)")
+            return true
+
+        case "TransactionComplete", "TransactionSuccess":
+            GomaLogger.info(.payments, category: logCategory, "Transaction success: \(messageType)")
+            handleRedirectMessage(rawMessage)
+            return true
+
+        case "TransactionFailed", "TransactionError":
+            GomaLogger.error(.payments, category: logCategory, "Transaction failed: \(messageType)")
+            delegate?.didReceiveTransactionFailure(message: rawMessage)
+            return true
+
+        case "TransactionCancelled":
+            GomaLogger.info(.payments, category: logCategory, "Transaction cancelled")
+            delegate?.didReceiveTransactionCancellation(message: rawMessage)
+            return true
+
+        case "DataLoading", "CashierMethodsListReady", "PrecisionCurrenciesMap",
+             "PromotedPaymentMethods", "StartSessionCountdown", "SelectPayMeth":
+            // Status/info messages - log but don't take action
+            GomaLogger.debug(.payments, category: logCategory, "Status message: \(messageType)")
+            return true
+
+        default:
+            // Unknown type - fall through to string pattern matching
+            return false
+        }
+    }
+
+    /// Handle messages using string pattern matching (legacy/fallback)
+    private func handleStringPatternMessage(_ messageString: String) {
         // Check for redirect pattern (main success indicator)
         if messageString.contains(MessagePatterns.redirect) {
-            GomaLogger.info("\(logPrefix) Transaction redirect detected")
+            GomaLogger.info(.payments, category: logCategory, "Transaction redirect detected")
             handleRedirectMessage(messageString)
         }
         // Check for explicit success
         else if messageString.contains(MessagePatterns.success) {
-            GomaLogger.info("\(logPrefix) Transaction success detected")
+            GomaLogger.info(.payments, category: logCategory, "Transaction success detected")
             handleRedirectMessage(messageString)
         }
-        // Check for explicit error patterns
-        else if messageString.contains(MessagePatterns.error) || messageString.contains(MessagePatterns.fail) {
-            GomaLogger.error("\(logPrefix) Transaction failure detected: \(messageString)")
+        // Check for explicit fail (not "error" to avoid false positives like "ErrorResponseCode")
+        else if messageString.contains(MessagePatterns.fail) {
+            GomaLogger.error(.payments, category: logCategory, "Transaction failure detected: \(messageString)")
             delegate?.didReceiveTransactionFailure(message: messageString)
         }
         // Check for cancellation
         else if messageString.contains(MessagePatterns.cancel) {
-            GomaLogger.info("\(logPrefix) Transaction cancellation detected")
+            GomaLogger.info(.payments, category: logCategory, "Transaction cancellation detected")
             delegate?.didReceiveTransactionCancellation(message: messageString)
         }
         // Log other messages for debugging
         else {
-            GomaLogger.debug("\(logPrefix) Unhandled message pattern: \(messageString)")
+            GomaLogger.debug(.payments, category: logCategory, "Unhandled message: \(messageString)")
         }
+    }
+
+    private func parseJSON(_ string: String) -> [String: Any]? {
+        guard let data = string.data(using: .utf8) else { return nil }
+        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
     }
 
     // MARK: - Private Methods
@@ -151,11 +215,11 @@ final class GomaCashierBridge: NSObject {
 
 // MARK: - WKScriptMessageHandler
 
-extension GomaCashierBridge: WKScriptMessageHandler {
+extension WidgetCashierBridge: WKScriptMessageHandler {
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.name == Self.handlerName else {
-            GomaLogger.debug("\(logPrefix) Unexpected message handler name: \(message.name)")
+            GomaLogger.debug(.payments, category: logCategory, "Unexpected message handler name: \(message.name)")
             return
         }
 

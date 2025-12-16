@@ -187,9 +187,31 @@ public final class EveryMatrixUnifiedConfiguration {
     public var defaultPlatform: String {
         return "iPhone"
     }
-    
+
     public var defaultCasinoPlatform: String {
         return "iPhone"
     }
-    
+
+    // MARK: - Widget Cashier Configuration
+
+    /// Base URL for Widget Cashier (hosted cashier page)
+    public var widgetCashierBaseURL: String {
+        switch environment {
+        case .production:
+            return "https://www.betssonem.com"
+        case .staging, .development:
+            return "https://sportsbook-stage.gomagaming.com"
+        }
+    }
+
+    /// API endpoint URL passed to Widget Cashier (for its internal API calls)
+    public var widgetCashierAPIEndpoint: String {
+        switch environment {
+        case .production:
+            return "https://betsson.nwacdn.com"
+        case .staging, .development:
+            return "https://betsson-api.stage.norway.everymatrix.com"
+        }
+    }
+
 }

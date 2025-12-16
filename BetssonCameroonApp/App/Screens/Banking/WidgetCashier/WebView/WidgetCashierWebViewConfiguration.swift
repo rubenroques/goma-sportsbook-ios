@@ -1,22 +1,22 @@
 //
-//  GomaCashierWebViewConfiguration.swift
+//  WidgetCashierWebViewConfiguration.swift
 //  BetssonCameroonApp
 //
-//  Created by Goma Cashier Implementation on 10/12/2025.
+//  Created by Widget Cashier Implementation on 10/12/2025.
 //
 
 import Foundation
 import WebKit
 
-/// Configuration helper for Goma cashier WebView setup
-struct GomaCashierWebViewConfiguration {
+/// Configuration helper for Widget Cashier WebView setup
+struct WidgetCashierWebViewConfiguration {
 
     // MARK: - WebView Configuration
 
-    /// Create a configured WKWebViewConfiguration for Goma cashier operations
-    /// - Parameter bridge: The Goma cashier JavaScript bridge handler
+    /// Create a configured WKWebViewConfiguration for Widget Cashier operations
+    /// - Parameter bridge: The Widget Cashier JavaScript bridge handler
     /// - Returns: Configured WKWebViewConfiguration
-    static func forGomaCashier(with bridge: GomaCashierBridge) -> WKWebViewConfiguration {
+    static func forWidgetCashier(with bridge: WidgetCashierBridge) -> WKWebViewConfiguration {
         let configuration = WKWebViewConfiguration()
 
         // Enable JavaScript
@@ -27,13 +27,13 @@ struct GomaCashierWebViewConfiguration {
 
         // Add JavaScript bridge
         let userScript = WKUserScript(
-            source: GomaCashierBridge.injectionScript,
+            source: WidgetCashierBridge.injectionScript,
             injectionTime: .atDocumentEnd,
             forMainFrameOnly: false
         )
 
         configuration.userContentController.addUserScript(userScript)
-        configuration.userContentController.add(bridge, name: GomaCashierBridge.handlerName)
+        configuration.userContentController.add(bridge, name: WidgetCashierBridge.handlerName)
 
         // Configure for mobile
         configuration.allowsInlineMediaPlayback = true
