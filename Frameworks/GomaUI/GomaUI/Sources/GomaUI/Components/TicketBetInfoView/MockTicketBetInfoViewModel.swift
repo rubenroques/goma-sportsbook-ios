@@ -17,9 +17,13 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     // MARK: - Button View Models
     public var rebetButtonViewModel: ButtonIconViewModelProtocol
-    
+
     public var cashoutButtonViewModel: ButtonIconViewModelProtocol
-    
+
+    // MARK: - Cashout Component ViewModels
+    public var cashoutSliderViewModel: CashoutSliderViewModelProtocol?
+    public var cashoutAmountViewModel: CashoutAmountViewModelProtocol?
+
     // MARK: - Callbacks
     public var onNavigationTap: (() -> Void)?
     public var onRebetTap: (() -> Void)?
@@ -199,6 +203,14 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
     public static func pendingMockWithCashout() -> MockTicketBetInfoViewModel {
         let viewModel = MockTicketBetInfoViewModel()
+
+        // Create mock cashout amount ViewModel
+        viewModel.cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
+            title: "Partial Cashout",
+            currency: "XAF",
+            amount: "32.00"
+        )
+
         let betInfo = TicketBetInfoData(
             id: "BET002",
             title: "Single Bet - Pending",
@@ -234,6 +246,16 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     public static func pendingMockWithSlider() -> MockTicketBetInfoViewModel {
         let viewModel = MockTicketBetInfoViewModel()
+
+        // Create mock slider ViewModel
+        viewModel.cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
+            title: LocalizationProvider.string("mybets_choose_cashout_amount"),
+            minimumValue: 0.1,
+            maximumValue: 200.0,
+            currentValue: 160.0,  // 80% of max
+            currency: "XAF"
+        )
+
         let betInfo = TicketBetInfoData(
             id: "BET003",
             title: "Single Bet - Pending",
@@ -269,6 +291,23 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     public static func pendingMockWithBoth() -> MockTicketBetInfoViewModel {
         let viewModel = MockTicketBetInfoViewModel()
+
+        // Create mock cashout amount ViewModel
+        viewModel.cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
+            title: "Partial Cashout",
+            currency: "XAF",
+            amount: "32.00"
+        )
+
+        // Create mock slider ViewModel
+        viewModel.cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
+            title: LocalizationProvider.string("mybets_choose_cashout_amount"),
+            minimumValue: 0.1,
+            maximumValue: 200.0,
+            currentValue: 160.0,  // 80% of max
+            currency: "XAF"
+        )
+
         let betInfo = TicketBetInfoData(
             id: "BET004",
             title: "Single Bet - Pending",

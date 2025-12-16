@@ -485,42 +485,30 @@ public class TicketBetInfoView: UIView {
     private func updateBottomComponents(with betInfo: TicketBetInfoData) {
         // Remove existing components
         bottomComponentsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
+
         // Deactivate current constraints
         financialSummaryBottomConstraint?.isActive = false
         bottomComponentsTopConstraint?.isActive = false
-        
+
         var hasComponents = false
-        
+
         // Handle cashout components for open bets only (not settled bets)
         if !betInfo.isSettled {
-            // Add CashoutAmountView if partialCashoutValue is provided
-            if let partialCashoutValue = betInfo.partialCashoutValue {
-                let cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
-                    title: "Partial Cashout",
-                    currency: "XAF",
-                    amount: partialCashoutValue
-                )
-                let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountViewModel)
+            // Add CashoutAmountView if ViewModel is provided
+            if let cashoutAmountVM = viewModel.cashoutAmountViewModel {
+                let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountVM)
                 bottomComponentsStackView.addArrangedSubview(cashoutAmountView)
                 hasComponents = true
             }
-            
-            // Add CashoutSliderView if cashoutTotalAmount is provided
-            if let cashoutTotalAmount = betInfo.cashoutTotalAmount {
-                let cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
-                    title: "Cash out amount",
-                    minimumValue: 0.1,
-                    maximumValue: Float(cashoutTotalAmount) ?? 200.0,
-                    currentValue: Float(cashoutTotalAmount) ?? 200.0,
-                    currency: "XAF"
-                )
-                let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderViewModel)
+
+            // Add CashoutSliderView if ViewModel is provided
+            if let cashoutSliderVM = viewModel.cashoutSliderViewModel {
+                let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderVM)
                 bottomComponentsStackView.addArrangedSubview(cashoutSliderView)
                 hasComponents = true
             }
         }
-        
+
         // Activate appropriate constraints based on whether components are present
         if hasComponents {
             bottomComponentsTopConstraint?.isActive = true

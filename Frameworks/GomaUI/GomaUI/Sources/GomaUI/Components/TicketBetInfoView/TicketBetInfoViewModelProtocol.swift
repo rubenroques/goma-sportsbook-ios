@@ -53,7 +53,13 @@ public protocol TicketBetInfoViewModelProtocol {
     /// Button view models
     var rebetButtonViewModel: ButtonIconViewModelProtocol { get }
     var cashoutButtonViewModel: ButtonIconViewModelProtocol { get }
-    
+
+    /// ViewModel for cashout slider. When nil, slider is not shown.
+    var cashoutSliderViewModel: CashoutSliderViewModelProtocol? { get }
+
+    /// ViewModel for cashout amount display. When nil, amount view is not shown.
+    var cashoutAmountViewModel: CashoutAmountViewModelProtocol? { get }
+
     /// Handle navigation button tap
     func handleNavigationTap()
     
