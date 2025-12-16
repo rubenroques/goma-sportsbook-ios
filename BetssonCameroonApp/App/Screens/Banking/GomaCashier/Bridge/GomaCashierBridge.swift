@@ -7,6 +7,7 @@
 
 import Foundation
 import WebKit
+import GomaLogger
 
 /// Protocol for handling JavaScript messages from the Goma cashier WebView
 protocol GomaCashierBridgeDelegate: AnyObject {

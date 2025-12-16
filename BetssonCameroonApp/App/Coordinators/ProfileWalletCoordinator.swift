@@ -10,6 +10,7 @@ import ServicesProvider
 import GomaUI
 import XPush
 import Combine
+import GomaLogger
 
 // Removed ProfileWalletCoordinatorDelegate - using closure-based pattern for consistency with other coordinators
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaLogger
 
 /// ViewModel for Goma cashier withdraw operations
 /// Builds cashier URL client-side without API call

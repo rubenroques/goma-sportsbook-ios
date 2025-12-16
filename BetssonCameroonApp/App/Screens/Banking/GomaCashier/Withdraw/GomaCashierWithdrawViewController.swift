@@ -9,6 +9,7 @@ import UIKit
 import WebKit
 import Combine
 import GomaUI
+import GomaLogger
 
 /// WebView container for Goma-hosted withdraw operations
 final class GomaCashierWithdrawViewController: UIViewController {
