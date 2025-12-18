@@ -29,9 +29,9 @@ extension UIColor {
                 return UIColor(red: 0.19, green: 0.11, blue: 0.11, alpha: 1.0)
             case .light, .unspecified:
                 // Light mode: Very light gray with subtle red tint
-                return UIColor(red: 0.99, green: 0.96, blue: 0.96, alpha: 1.0)
+                return UIColor(red: 0.99, green: 0.92, blue: 0.92, alpha: 1.0)
             @unknown default:
-                return UIColor(red: 0.99, green: 0.96, blue: 0.96, alpha: 1.0)
+                return UIColor(red: 0.99, green: 0.92, blue: 0.92, alpha: 1.0)
             }
         }
     }
