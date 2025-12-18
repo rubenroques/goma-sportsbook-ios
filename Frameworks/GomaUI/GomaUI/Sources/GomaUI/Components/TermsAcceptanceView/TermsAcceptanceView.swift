@@ -109,7 +109,7 @@ public final class TermsAcceptanceView: UIView {
             containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
             errorLabel.topAnchor.constraint(equalTo: containerStackView.bottomAnchor, constant: 4),
-            errorLabel.leadingAnchor.constraint(equalTo: containerStackView.leadingAnchor),
+            errorLabel.leadingAnchor.constraint(equalTo: containerStackView.leadingAnchor, constant: 40),
             errorLabel.trailingAnchor.constraint(equalTo: containerStackView.trailingAnchor),
             errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             
