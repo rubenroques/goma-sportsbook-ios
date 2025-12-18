@@ -1443,22 +1443,26 @@ class MainTabBarCoordinator: Coordinator {
     }
 
     // MARK: - Banking Flow Methods
-    
+
+    private let widgetCashierLogCategory = "WidgetCashier"
+
     func presentDepositFlow(bonusCode: String? = nil) {
-        let bankingCoordinator = BankingCoordinator.forDeposit(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier deposit flow")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierDeposit(
             navigationController: navigationController,
             client: environment.servicesProvider
         )
-        
+
         bankingCoordinator.bonusCode = bonusCode
-        
+
         setupBankingCoordinatorCallbacks(bankingCoordinator)
         addChildCoordinator(bankingCoordinator)
         bankingCoordinator.start()
     }
-    
+
     private func presentWithdrawFlow() {
-        let bankingCoordinator = BankingCoordinator.forWithdraw(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier withdraw flow")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierWithdraw(
             navigationController: navigationController,
             client: environment.servicesProvider
         )

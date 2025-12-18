@@ -1434,6 +1434,21 @@ extension Client {
         return privilegedAccessManager.getBankingWebView(parameters: parameters)
     }
 
+    /// Build Widget Cashier URL client-side (no API call)
+    /// - Parameters:
+    ///   - type: Transaction type (.deposit or .withdraw)
+    ///   - language: Language code (e.g., "en", "fr")
+    ///   - theme: Theme string ("dark" or "light")
+    /// - Returns: Publisher emitting the constructed URL or error
+    public func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getWidgetCashierURL(type: type, language: language, theme: theme)
+    }
+
     // MARK: - Transaction History Methods
 
     public func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
