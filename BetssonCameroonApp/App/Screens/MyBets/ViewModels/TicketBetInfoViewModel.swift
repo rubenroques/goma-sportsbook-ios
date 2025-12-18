@@ -312,8 +312,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             betId: myBet.identifier,
             cashoutValue: cashoutValue,
             cashoutType: isFullCashoutRequest ? .full : .partial,
-            partialCashoutStake: isFullCashoutRequest ? nil : Double(stakeValue),
-            cashoutChangeAcceptanceType: "ACCEPT_ANY"
+            partialCashoutStake: isFullCashoutRequest ? nil : Double(stakeValue)
         )
 
         lastCashoutRequest = request

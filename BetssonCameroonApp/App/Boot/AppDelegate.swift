@@ -104,6 +104,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 } else {
                     print("PhraseSDK - Translations remain unchanged")
                 }
+
+                // Debug: Check if terms_and_conditions key is synced from Phrase
+                let termsKey = "terms_and_conditions_register_checkbox_display_name"
+                let termsTranslation = localized(termsKey)
+                let isSynced = termsTranslation != termsKey
+                print("PhraseSDK - '\(termsKey)' synced: \(isSynced)")
+                print("PhraseSDK - '\(termsKey)' value: \(termsTranslation)")
             } catch {
                 print("PhraseSDK - An error occurred: \(error)")
             }

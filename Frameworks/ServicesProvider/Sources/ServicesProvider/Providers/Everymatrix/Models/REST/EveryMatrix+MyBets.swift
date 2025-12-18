@@ -14,12 +14,21 @@ extension EveryMatrix {
     struct EarlySettlementOption: Codable {
         let scoreDifference: Double?
     }
-    
+
+    struct PartialCashOut: Codable {
+        let requestId: String?
+        let usedStake: Double?
+        let cashOutAmount: Double?
+        let status: String?
+        let extraInfo: String?
+        let cashOutDate: String?
+    }
+
     // MARK: - MyBets Response Models
     
     struct Bet: Codable {
         let id: String?
-        let selections: [BetSelection]?
+        let selections: [FailableDecodable<BetSelection>]?
         let type: String?
         let systemBetType: String?
         let amount: Double?
@@ -54,7 +63,7 @@ extension EveryMatrix {
         let totalPayoutTax: Double?
         let betStakeNet: Double?
         let betStakeNetEur: Double?
-        let partialCashOuts: [String]? // Array type may need adjustment based on actual structure
+        let partialCashOuts: [FailableDecodable<PartialCashOut>]?
         let betRemainingStake: Double?
         let overallBetReturns: Double?
         let overallCashoutAmount: Double?
