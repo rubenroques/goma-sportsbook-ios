@@ -32,6 +32,10 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // SSE subscription for real-time cashout value updates
     private var sseSubscription: AnyCancellable?
 
+    // MARK: - Cashout Execution State Machine
+    private let cashoutStateSubject = CurrentValueSubject<CashoutExecutionState, Never>(.idle)
+    private var lastCashoutRequest: CashoutRequest?
+
     // MARK: - Publishers
     
     var currentBetInfo: TicketBetInfoData {
@@ -41,13 +45,34 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     var betInfoPublisher: AnyPublisher<TicketBetInfoData, Never> {
         betInfoSubject.eraseToAnyPublisher()
     }
-    
+
+    var isCashoutLoading: Bool {
+        cashoutStateSubject.value.isLoading
+    }
+
+    var isCashoutLoadingPublisher: AnyPublisher<Bool, Never> {
+        cashoutStateSubject
+            .map { $0.isLoading }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    var cashoutStatePublisher: AnyPublisher<CashoutExecutionState, Never> {
+        cashoutStateSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Callbacks
     
     var onNavigationTap: ((MyBet) -> Void)?
     var onRebetTap: ((MyBet) -> Void)?
     var onCashoutTap: ((MyBet) -> Void)?
-    
+
+    /// Called when cashout completes: (betId, isFullCashout, error?)
+    var onCashoutCompleted: ((String, Bool, CashoutExecutionError?) -> Void)?
+
+    /// Called to show error alert: (message, retryAction)
+    var onCashoutError: ((String, @escaping () -> Void) -> Void)?
+
     // MARK: - Initialization
     
     init(myBet: MyBet, servicesProvider: ServicesProvider.Client) {
@@ -275,70 +300,88 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         amountVM.updateAmount(formattedAmount)
     }
 
+    // MARK: - Cashout Execution State Machine
+
     private func handleCashoutRequest(forStakeValue stakeValue: Float) {
-        // This triggers the existing cashout flow
-        onCashoutTap?(myBet)
+        guard case .idle = cashoutStateSubject.value else { return }
+
+        let isFullCashoutRequest = isFullCashout(forStakeValue: stakeValue)
+        let cashoutValue = calculatePartialCashout(forStakeValue: stakeValue)
+
+        let request = CashoutRequest(
+            betId: myBet.identifier,
+            cashoutValue: cashoutValue,
+            cashoutType: isFullCashoutRequest ? .full : .partial,
+            partialCashoutStake: isFullCashoutRequest ? nil : Double(stakeValue),
+            cashoutChangeAcceptanceType: "ACCEPT_ANY"
+        )
+
+        lastCashoutRequest = request
+        executeCashoutRequest(request)
     }
 
-    // MARK: - Action Implementations
-    
-    private func executeCashout() {
-        guard myBet.canCashOut else {
-            return
-        }
-        
-        // Disable cashout button during request
-        cashoutButtonViewModel.setEnabled(false)
-        
-        servicesProvider.calculateCashout(betId: myBet.identifier, stakeValue: nil)
+    private func executeCashoutRequest(_ request: CashoutRequest) {
+        cashoutStateSubject.send(.loading)
+        _cashoutSliderVM?.setEnabled(false)
+
+        servicesProvider.executeCashout(request: request)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("❌ TicketBetInfoViewModel: Cashout calculation failed: \(error)")
-                        // Re-enable button on error
-                        self?.cashoutButtonViewModel.setEnabled(true)
+                        self?.handleCashoutFailure(error)
                     }
                 },
-                receiveValue: { [weak self] cashoutResult in
-                    print("✅ TicketBetInfoViewModel: Cashout calculated: \(cashoutResult.cashoutValue)")
-                    // Handle successful cashout calculation
-                    // This would typically trigger a cashout confirmation flow
-                    self?.handleCashoutConfirmation(cashoutResult)
+                receiveValue: { [weak self] response in
+                    self?.handleCashoutSuccess(response)
                 }
             )
             .store(in: &cancellables)
     }
-    
-    private func handleCashoutConfirmation(_ cashoutResult: Cashout) {
-        // In a real implementation, this would show a confirmation dialog
-        // For now, we'll execute the cashout directly
-        
-        servicesProvider.cashoutBet(
-            betId: myBet.identifier,
-            cashoutValue: cashoutResult.cashoutValue,
-            stakeValue: nil
-        )
-        .receive(on: DispatchQueue.main)
-        .sink(
-            receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    print("❌ TicketBetInfoViewModel: Cashout execution failed: \(error)")
-                    // Re-enable button on error
-                    self?.cashoutButtonViewModel.setEnabled(true)
-                }
-            },
-            receiveValue: { [weak self] cashoutExecutionResult in
-                print("✅ TicketBetInfoViewModel: Cashout executed successfully")
-                // Update button state - cashout is no longer available
-                self?.cashoutButtonViewModel.setEnabled(false)
-                // Notify parent about bet state change
-                self?.onCashoutTap?(self?.myBet ?? self!.myBet)
+
+    private func handleCashoutSuccess(_ response: CashoutResponse) {
+        if response.isFullCashout {
+            cashoutStateSubject.send(.fullCashoutSuccess(payout: response.cashoutPayout))
+            onCashoutCompleted?(myBet.identifier, true, nil)
+        } else {
+            let newRemainingStake = remainingStake - (response.partialCashoutStake ?? 0)
+            cashoutStateSubject.send(.partialCashoutSuccess(payout: response.cashoutPayout, remainingStake: newRemainingStake))
+            onCashoutCompleted?(myBet.identifier, false, nil)
+            _cashoutSliderVM?.setEnabled(true)
+
+            // Reset to idle after brief delay for partial cashout
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.cashoutStateSubject.send(.idle)
             }
-        )
-        .store(in: &cancellables)
+        }
     }
-    
+
+    private func handleCashoutFailure(_ error: ServiceProviderError) {
+        let cashoutError = CashoutExecutionError.fromServiceError(error)
+        cashoutStateSubject.send(.failed(cashoutError))
+        _cashoutSliderVM?.setEnabled(true)
+
+        onCashoutError?(cashoutError.message) { [weak self] in
+            self?.retryCashout()
+        }
+    }
+
+    func retryCashout() {
+        guard let request = lastCashoutRequest else {
+            cashoutStateSubject.send(.idle)
+            return
+        }
+        executeCashoutRequest(request)
+    }
+
+    func cancelCashout() {
+        cashoutStateSubject.send(.idle)
+        _cashoutSliderVM?.setEnabled(true)
+        lastCashoutRequest = nil
+    }
+
+    // MARK: - Action Implementations
+
     private func executeRebet() {
         guard myBet.isSettled else {
             print("⚠️ TicketBetInfoViewModel: Bet is not settled, cannot rebet")

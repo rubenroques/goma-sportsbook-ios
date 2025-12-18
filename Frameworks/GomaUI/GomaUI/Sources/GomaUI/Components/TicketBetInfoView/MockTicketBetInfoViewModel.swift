@@ -24,6 +24,17 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     public var cashoutSliderViewModel: CashoutSliderViewModelProtocol?
     public var cashoutAmountViewModel: CashoutAmountViewModelProtocol?
 
+    // MARK: - Loading State
+    private let cashoutLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+
+    public var isCashoutLoading: Bool {
+        cashoutLoadingSubject.value
+    }
+
+    public var isCashoutLoadingPublisher: AnyPublisher<Bool, Never> {
+        cashoutLoadingSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Callbacks
     public var onNavigationTap: (() -> Void)?
     public var onRebetTap: (() -> Void)?

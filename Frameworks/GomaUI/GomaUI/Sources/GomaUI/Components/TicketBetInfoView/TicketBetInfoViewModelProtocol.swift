@@ -60,6 +60,12 @@ public protocol TicketBetInfoViewModelProtocol {
     /// ViewModel for cashout amount display. When nil, amount view is not shown.
     var cashoutAmountViewModel: CashoutAmountViewModelProtocol? { get }
 
+    /// Whether cashout is currently executing (for loading overlay)
+    var isCashoutLoading: Bool { get }
+
+    /// Publisher for cashout loading state changes
+    var isCashoutLoadingPublisher: AnyPublisher<Bool, Never> { get }
+
     /// Handle navigation button tap
     func handleNavigationTap()
     
