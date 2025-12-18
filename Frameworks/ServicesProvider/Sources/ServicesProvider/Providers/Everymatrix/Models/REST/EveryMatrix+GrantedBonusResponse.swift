@@ -38,8 +38,8 @@ extension EveryMatrix {
         public let localizedType: String
         public let status: String
         public let localizedStatus: String
-        public let url: String
-        public let description: String
+        public let url: String?
+        public let description: String?
         public let html: String
         public let vendor: String
         public let products: [String]

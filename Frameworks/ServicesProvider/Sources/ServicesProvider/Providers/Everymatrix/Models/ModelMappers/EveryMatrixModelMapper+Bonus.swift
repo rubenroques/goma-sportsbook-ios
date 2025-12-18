@@ -57,7 +57,8 @@ extension EveryMatrixModelMapper {
                 expiryDate: expiryDate,
                 wagerRequirement: "\(bonusItem.initialWagerRequirementAmount)",
                 amountWagered: "\(remainingWagerRequirementAmount)",
-                freeBetBonus: nil
+                freeBetBonus: nil,
+                imageUrl: imageUrl
             )
         }
     }
