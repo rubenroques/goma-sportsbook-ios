@@ -301,13 +301,14 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         
         // Phone field text subscription
         phoneFieldViewModel.textPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phoneText in
                 guard let self = self else { return }
                 
                 let isValidPhoneNumberData = RegisterConfigHelper.isValidPhoneNumber(phoneText: phoneText, registrationConfig: registrationConfig)
                 
-                if !isValidPhoneNumberData.0 && !phoneText.isEmpty {
+                if !isValidPhoneNumberData.0 {
                     let error = isValidPhoneNumberData.1
                     let translatedError = localized(error)
                     phoneFieldViewModel.setError(translatedError)
@@ -321,12 +322,13 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         
         // Password field text subscription
         passwordFieldViewModel.textPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] passwordText in
                 
                 let isValidPasswordData = RegisterConfigHelper.isValidPassword(passwordText: passwordText, registrationConfig: registrationConfig)
                 
-                if !isValidPasswordData.0 && !passwordText.isEmpty {
+                if !isValidPasswordData.0 {
                     let error = isValidPasswordData.1
                     let translatedError = localized(error)
                     passwordFieldViewModel.setError(translatedError)
@@ -342,13 +344,14 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         // First name field text subscription (if exists)
         if let firstNameFieldViewModel = firstNameFieldViewModel {
             firstNameFieldViewModel.textPublisher
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] firstNameText in
                     guard let self = self else { return }
                     
                     let isValidFirstNameData = RegisterConfigHelper.isValidFirstName(text: firstNameText, registrationConfig: registrationConfig)
                     
-                    if !isValidFirstNameData.0 && !firstNameText.isEmpty {
+                    if !isValidFirstNameData.0 {
                         let error = isValidFirstNameData.1
                         let translatedError = localized(error)
                         firstNameFieldViewModel.setError(translatedError)
@@ -364,13 +367,14 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         // Last name field text subscription (if exists)
         if let lastNameFieldViewModel = lastNameFieldViewModel {
             lastNameFieldViewModel.textPublisher
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] lastNameText in
                     guard let self = self else { return }
                     
                     let isValidLastNameData = RegisterConfigHelper.isValidLastName(text: lastNameText, registrationConfig: registrationConfig)
                     
-                    if !isValidLastNameData.0 && !lastNameText.isEmpty {
+                    if !isValidLastNameData.0 {
                         let error = isValidLastNameData.1
                         let translatedError = localized(error)
                         lastNameFieldViewModel.setError(translatedError)
@@ -386,13 +390,14 @@ class PhoneRegistrationViewModel: PhoneRegistrationViewModelProtocol {
         // Birth date field text subscription (if exists)
         if let birthDateFieldViewModel = birthDateFieldViewModel {
             birthDateFieldViewModel.textPublisher
+                .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] birthDateText in
                     guard let self = self else { return }
                     
                     let isValidBirthDateData = RegisterConfigHelper.isValidBirthDate(dateText: birthDateText, registrationConfig: registrationConfig)
                     
-                    if !isValidBirthDateData.0 && !birthDateText.isEmpty {
+                    if !isValidBirthDateData.0 {
                         let error = isValidBirthDateData.1
                         let translatedError = localized(error)
                         birthDateFieldViewModel.setError(translatedError)
@@ -675,6 +680,27 @@ class RegisterConfigHelper {
         if let phoneRules = registrationConfig.fields.first(where: {
             $0.name == "Mobile"
         }) {
+            guard !phoneText.isEmpty else {
+                return (false, LocalizationProvider.string("required_field"))
+            }
+            
+            if let phoneMinLengthRule = phoneRules.validate.minLength,
+               let phoneMaxLengthRule = phoneRules.validate.maxLength {
+                
+                let lessThanMin = phoneText.count <= phoneMinLengthRule
+                let moreThanMax = phoneText.count >= phoneMaxLengthRule
+                
+                if lessThanMin {
+                    return (false, localized("validation_error_message_at_least_x_characters")
+                        .replacingOccurrences(of: "{x}", with: "\(phoneMinLengthRule)"))
+                }
+                
+                if moreThanMax {
+                    return (false, localized("phone_number_length_error")
+                        .replacingOccurrences(of: "{min}", with: "\(phoneMinLengthRule)")
+                        .replacingOccurrences(of: "{max}", with: "\(phoneMaxLengthRule)"))
+                }
+            }
             
             // Check regex rule from registration config
             if let regexRule = phoneRules.validate.custom.first(where: {
@@ -690,18 +716,6 @@ class RegisterConfigHelper {
                 }
             }
             
-            if let phoneMinLengthRule = phoneRules.validate.minLength,
-               let phoneMaxLengthRule = phoneRules.validate.maxLength {
-                
-                let isValid = (phoneText.count >= phoneMinLengthRule) && (phoneText.count <= phoneMaxLengthRule)
-                
-                if !isValid {
-                    return (false, localized("phone_number_length_error")
-                        .replacingOccurrences(of: "{min}", with: "\(phoneMinLengthRule)")
-                        .replacingOccurrences(of: "{max}", with: "\(phoneMaxLengthRule)"))
-                }
-            }
-            
         }
         
         return (true, "")
@@ -711,6 +725,10 @@ class RegisterConfigHelper {
         if let passwordRules = registrationConfig.fields.first(where: {
             $0.name == "Password"
         }) {
+            
+            guard !passwordText.isEmpty else {
+                return (false, LocalizationProvider.string("required_field"))
+            }
             
             if let passwordMinLengthRule = passwordRules.validate.minLength {
                 
@@ -758,6 +776,10 @@ class RegisterConfigHelper {
             $0.name == "FirstnameOnDocument"
         }) {
             
+            guard !text.isEmpty else {
+                return (false, LocalizationProvider.string("required_field"))
+            }
+            
             // Check regex rule from registration config
             if let regexRule = firstNameRules.validate.custom.first(where: {
                 $0.rule == "regex"
@@ -792,6 +814,9 @@ class RegisterConfigHelper {
         if let lastNameRules = registrationConfig.fields.first(where: {
             $0.name == "LastNameOnDocument"
         }) {
+            guard !text.isEmpty else {
+                return (false, LocalizationProvider.string("required_field"))
+            }
             
             // Check regex rule from registration config
             if let regexRule = lastNameRules.validate.custom.first(where: {
@@ -825,6 +850,9 @@ class RegisterConfigHelper {
         if let birthDateRules = registrationConfig.fields.first(where: {
             $0.name == "BirthDate"
         }) {
+            guard !dateText.isEmpty else {
+                return (false, LocalizationProvider.string("required_field"))
+            }
             
             // Date format validation (yyyy-MM-dd)
             let dateFormatter = DateFormatter()
