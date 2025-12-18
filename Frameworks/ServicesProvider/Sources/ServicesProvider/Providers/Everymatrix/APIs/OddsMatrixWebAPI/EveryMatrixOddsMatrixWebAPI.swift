@@ -39,7 +39,7 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
         case .getCashoutValueSSE:
             return "/bets-api/v1/\(domainId)/cashout-value-updates"
         case .executeCashoutV2:
-            return "/cashout/v1/cashout"
+            return "/bets-api/v1/\(domainId)/cashout"
             
         case .getFavorites(let userId):
             return "/user-data-service/v1/favorite/events/\(domainId)/\(userId)"
@@ -107,11 +107,12 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             ]
             return headers
         case .executeCashoutV2:
-            // New cashout execution API
+            // New cashout execution API (uses bets-api pattern)
             let headers = [
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "X-OperatorId": operatorId
+                "x-operator-id": operatorId,
+                "x-language": EveryMatrixUnifiedConfiguration.shared.defaultLanguage
             ]
             return headers
         }
@@ -212,12 +213,12 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
                 return "x-user-id"
             }
         case .executeCashoutV2:
-            // Cashout execution API uses capitalized headers
+            // Cashout execution API uses bets-api lowercase format
             switch type {
             case .sessionId:
-                return "X-SessionId"
+                return "x-session-id"
             case .userId:
-                return "userId"
+                return "x-user-id"
             }
         }
     }

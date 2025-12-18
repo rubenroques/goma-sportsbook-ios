@@ -27,23 +27,23 @@ public struct CashoutRequest: Codable, Equatable {
     public let partialCashoutStake: Double?
 
     /// How to handle odds changes
-    /// - "ACCEPT_ANY": Accept execution even if odds change
+    /// - "WITHIN_THRESHOLD": Accept if change is within acceptable threshold
     /// - "ACCEPT_HIGHER": Only accept if odds improve
     /// - "NONE": Reject if odds change
-    public let cashoutChangeAcceptanceType: String
+    public let cashoutChangeAcceptance: String
 
     public init(
         betId: String,
         cashoutValue: Double,
         cashoutType: CashoutType,
         partialCashoutStake: Double? = nil,
-        cashoutChangeAcceptanceType: String = "ACCEPT_ANY"
+        cashoutChangeAcceptance: String = "WITHIN_THRESHOLD"
     ) {
         self.betId = betId
         self.cashoutValue = cashoutValue
         self.cashoutType = cashoutType
         self.partialCashoutStake = partialCashoutStake
-        self.cashoutChangeAcceptanceType = cashoutChangeAcceptanceType
+        self.cashoutChangeAcceptance = cashoutChangeAcceptance
     }
 
     /// Type of cashout operation

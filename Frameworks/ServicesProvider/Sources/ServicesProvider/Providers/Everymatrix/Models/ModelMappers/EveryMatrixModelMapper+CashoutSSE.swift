@@ -41,8 +41,10 @@ extension EveryMatrixModelMapper {
             betId: publicRequest.betId,
             cashoutValue: publicRequest.cashoutValue,
             cashoutType: publicRequest.cashoutType.rawValue,
-            partialCashoutStake: publicRequest.partialCashoutStake,
-            cashoutChangeAcceptanceType: publicRequest.cashoutChangeAcceptanceType
+            cashoutChangeAcceptance: publicRequest.cashoutChangeAcceptance,
+            operatorId: EveryMatrixUnifiedConfiguration.shared.operatorId,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
+            partialCashoutStake: publicRequest.partialCashoutStake
         )
     }
 

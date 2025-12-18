@@ -6,11 +6,22 @@ releases:
 
   - version: "0.3.7"
     build: 3701
-    date: "2025-12-XX"
+    date: "2025-12-18"
     notes:
+      - "fix(localization): Implement hybrid Phrase OTA + local bundle approach - fixes registration checkbox and other Phrase-managed strings not displaying while preserving in-app language switching. Needs extensive tests."
+      - "feat(cashout): Complete partial cashout implementation with state machine, slider calculations, and real-time SSE value updates - includes loading overlay, error retry, and LRU cache"
+      - "feat(banking): Add Goma-hosted cashier deposit/withdraw screens with client-side URL construction"
+      - "feat(banking): Add Widget cashier deposit/withdraw screens with WebView bridge implementation"
       - "fix(mybets): [SPOR-6122] - Capsule now is conditioned to when there is a bet result, if not, the date is displayed without the capsule."
       - "fix(bonus): [SPOR-6672] [BC-296] - Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links, added padding to ButtonView"
+      - "fix(bonus): Fixed granted bonus not displaying, tweaked granted bonus cards UI"
       - "fix(casino): [SPOR-5738] - Fixed background color on navbar; Changed position of the category title."
+      - "fix(translations): [SPOR-6895] Fixed missing translations at Wallet/Promo responsible gaming screens"
+      - "fix(register): [SPOR-6637] Added missing error strings for empty fields and unchecked Terms & Conditions validation"
+      - "feat(icons): Add per-environment app icons with visual badges for STG/UAT/PROD builds"
+      - "feature(testing): Add snapshot testing infrastructure for GomaUI components with light/dark mode support"
+      - "chore: Rename GomaUIDemo to GomaUICatalog for consistency with package naming"
+      - "feat(architecture): Merge BetssonFrance into unified single codebase - Firebase SDK 10.0.0→12.0.0, ServicesProvider backward compatibility additions"
 
   - version: "0.3.6" # released
     build: 3601
