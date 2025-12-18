@@ -196,14 +196,7 @@ class NextUpEventsViewController: UIViewController {
         filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         // Create filter pill button
-        let filterPillData = PillData(
-            id: "filter",
-            title: "Filter",
-            leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: true,
-            isSelected: false
-        )
-        let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
+        let filterPillViewModel = FilterPillViewModel()
         let filterPillView = PillItemView(viewModel: filterPillViewModel)
         filterPillView.translatesAutoresizingMaskIntoConstraints = false
 

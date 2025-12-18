@@ -27,8 +27,14 @@ final public class ButtonView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
+        configureImmediately()
         setupBindings()
         setupActions()
+    }
+
+    // MARK: - Synchronous Configuration
+    private func configureImmediately() {
+        configure(buttonData: viewModel.currentButtonData)
     }
     
     required init?(coder: NSCoder) {
@@ -52,6 +58,7 @@ final public class ButtonView: UIView {
     
     private func setupBindings() {
         viewModel.buttonDataPublisher
+            .dropFirst() // Skip first - already rendered synchronously in configureImmediately()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] buttonData in
                 self?.configure(buttonData: buttonData)

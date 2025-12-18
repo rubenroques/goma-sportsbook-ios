@@ -10,6 +10,7 @@ import ServicesProvider
 import GomaUI
 import XPush
 import Combine
+import GomaLogger
 
 // Removed ProfileWalletCoordinatorDelegate - using closure-based pattern for consistency with other coordinators
 
@@ -447,41 +448,45 @@ final class ProfileWalletCoordinator: Coordinator {
     }
     
     // MARK: - Banking Flow Methods
-    
+
+    private let widgetCashierLogCategory = "WidgetCashier"
+
     private func presentDepositFlow(bonusCode: String? = nil) {
         guard let profileNavigationController = profileNavigationController else { return }
-        
-        let bankingCoordinator = BankingCoordinator.forDeposit(
+
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier deposit flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierDeposit(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
-        
+
         bankingCoordinator.bonusCode = bonusCode
-        
+
         // Set up banking coordinator closures
         setupBankingCoordinatorCallbacks(bankingCoordinator)
-        
+
         // Add as child coordinator
         addChildCoordinator(bankingCoordinator)
-        
+
         // Start the banking flow
         bankingCoordinator.start()
     }
-    
+
     private func presentWithdrawFlow() {
         guard let profileNavigationController = profileNavigationController else { return }
-        
-        let bankingCoordinator = BankingCoordinator.forWithdraw(
+
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier withdraw flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierWithdraw(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
-        
+
         // Set up banking coordinator closures
         setupBankingCoordinatorCallbacks(bankingCoordinator)
-        
+
         // Add as child coordinator
         addChildCoordinator(bankingCoordinator)
-        
+
         // Start the banking flow
         bankingCoordinator.start()
     }

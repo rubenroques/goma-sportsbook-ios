@@ -389,21 +389,61 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
         let currentUserId = sessionCoordinator.currentUserId ?? ""
-        
+
         // Map domain model to EveryMatrix internal request model
         let request = EveryMatrixModelMapper.getPaymentSessionRequest(from: parameters)
         let endpoint = EveryMatrixPlayerAPI.getBankingWebView(userId: currentUserId, parameters: request)
-        
+
         // Make request and map internal response to domain model
         let publisher: AnyPublisher<EveryMatrix.GetPaymentSessionResponse, ServiceProviderError> = self.restConnector.request(endpoint)
-        
+
         return publisher
             .map { response in
                 EveryMatrixModelMapper.cashierWebViewResponse(from: response)
             }
             .eraseToAnyPublisher()
     }
-    
+
+    func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        // Get session token from coordinator (no API call)
+        guard let sessionToken = sessionCoordinator.getSessionToken(), !sessionToken.isEmpty else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        guard let userId = sessionCoordinator.currentUserId else {
+            return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
+        }
+
+        // Get currency from user profile (falls back to XAF)
+        let currency = userProfileSubject.value?.currency ?? "XAF"
+
+        // Build URL with query parameters
+        let config = EveryMatrixUnifiedConfiguration.shared
+        let baseURL = config.widgetCashierBaseURL
+        let apiEndpoint = config.widgetCashierAPIEndpoint
+
+        var components = URLComponents(string: "\(baseURL)/cashier-page/index.html")
+        components?.queryItems = [
+            URLQueryItem(name: "sessionId", value: sessionToken),
+            URLQueryItem(name: "userId", value: userId),
+            URLQueryItem(name: "currency", value: currency),
+            URLQueryItem(name: "lang", value: language.lowercased()),
+            URLQueryItem(name: "theme", value: theme),
+            URLQueryItem(name: "type", value: type.rawValue),
+            URLQueryItem(name: "showheader", value: "false"),
+            URLQueryItem(name: "numberofmethodsshown", value: "3"),
+            URLQueryItem(name: "endpoint", value: apiEndpoint),
+        ]
+
+        guard let url = components?.url else {
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
+        return Just(url)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
     func getWithdrawalMethods() -> AnyPublisher<[WithdrawalMethod], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }

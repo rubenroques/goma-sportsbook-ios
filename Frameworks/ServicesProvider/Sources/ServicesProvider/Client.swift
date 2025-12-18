@@ -1445,6 +1445,21 @@ extension Client {
         return privilegedAccessManager.getBankingWebView(parameters: parameters)
     }
 
+    /// Build Widget Cashier URL client-side (no API call)
+    /// - Parameters:
+    ///   - type: Transaction type (.deposit or .withdraw)
+    ///   - language: Language code (e.g., "en", "fr")
+    ///   - theme: Theme string ("dark" or "light")
+    /// - Returns: Publisher emitting the constructed URL or error
+    public func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getWidgetCashierURL(type: type, language: language, theme: theme)
+    }
+
     // MARK: - Transaction History Methods
 
     public func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
@@ -2072,6 +2087,29 @@ extension Client {
         }
 
         return bettingProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
+    }
+
+    /// Subscribe to real-time cashout value updates via SSE
+    /// - Parameter betId: Bet identifier to subscribe to
+    /// - Returns: Publisher emitting cashout value updates
+    public func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.subscribeToCashoutValue(betId: betId)
+    }
+
+    /// Execute cashout (full or partial)
+    /// - Parameter request: Cashout execution request containing betId, value, type, and optional partial stake
+    /// - Returns: Publisher emitting cashout response or error
+    public func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
+        guard let bettingProvider = self.bettingProvider else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.executeCashout(request: request)
     }
 
     public func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
