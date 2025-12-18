@@ -122,8 +122,20 @@ class BonusViewModel {
         
         let language = LanguageManager.shared.currentLanguageCode
         
+        // Use catch to handle errors independently - if one fails, return empty array
         let availableBonusesPublisher = servicesProvider.getAvailableBonuses(language: language)
+            .catch { error -> Just<[AvailableBonus]> in
+                print("ERROR GET AVAILABLE BONUSES: \(error)")
+                return Just([])
+            }
+            .eraseToAnyPublisher()
+        
         let grantedBonusesPublisher = servicesProvider.getGrantedBonuses(language: language)
+            .catch { error -> Just<[GrantedBonus]> in
+                print("ERROR GET GRANTED BONUSES: \(error)")
+                return Just([])
+            }
+            .eraseToAnyPublisher()
         
         Publishers.Zip(availableBonusesPublisher, grantedBonusesPublisher)
             .receive(on: DispatchQueue.main)

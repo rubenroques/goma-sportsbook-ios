@@ -530,6 +530,8 @@ extension BonusInfoCardView {
             self.containerStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             
             // Header Image (height only, width managed by stack view)
+            self.headerImageView.leadingAnchor.constraint(equalTo: self.containerStackView.leadingAnchor),
+            self.headerImageView.trailingAnchor.constraint(equalTo: self.containerStackView.trailingAnchor),
             self.headerImageView.heightAnchor.constraint(equalToConstant: 160),
             
             // Title Container (horizontal margins only)
