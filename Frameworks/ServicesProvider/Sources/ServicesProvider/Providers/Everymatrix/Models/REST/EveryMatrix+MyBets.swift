@@ -175,7 +175,7 @@ extension EveryMatrix {
         let cashOutBetBuilderOdds: Double?
         let priceValueByStatus: Double?
         let eachWay: String?
-        let earlySettlement: String?
+        let earlySettlement: Bool?
         let earlySettlementDate: String?
         let earlySettlementOption: EarlySettlementOption?
         let eventTemplateName: String?

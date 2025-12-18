@@ -310,6 +310,11 @@ class MyBetsViewController: UIViewController {
         viewModel.onShowRebetAllFailedError = { [weak self] in
             self?.showRebetAllFailedAlert()
         }
+
+        // Setup cashout error handling
+        viewModel.onShowCashoutError = { [weak self] message, retryAction, cancelAction in
+            self?.showCashoutErrorAlert(message: message, retryAction: retryAction, cancelAction: cancelAction)
+        }
     }
     
     private func handleBetsStateChange(_ state: MyBetsState) {
@@ -410,10 +415,35 @@ class MyBetsViewController: UIViewController {
             message: localized("rebet_failed_description"),
             preferredStyle: .alert
         )
-        
+
         let okAction = UIAlertAction(title: localized("ok"), style: .default)
         alert.addAction(okAction)
-        
+
+        present(alert, animated: true)
+    }
+
+    private func showCashoutErrorAlert(
+        message: String,
+        retryAction: @escaping () -> Void,
+        cancelAction: @escaping () -> Void
+    ) {
+        let alert = UIAlertController(
+            title: localized("cashout_error"),
+            message: message,
+            preferredStyle: .alert
+        )
+
+        let cancel = UIAlertAction(title: localized("cancel"), style: .cancel) { _ in
+            cancelAction()
+        }
+
+        let retry = UIAlertAction(title: localized("retry"), style: .default) { _ in
+            retryAction()
+        }
+
+        alert.addAction(cancel)
+        alert.addAction(retry)
+
         present(alert, animated: true)
     }
 }

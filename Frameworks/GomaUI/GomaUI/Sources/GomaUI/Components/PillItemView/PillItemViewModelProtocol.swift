@@ -31,14 +31,20 @@ public struct PillDisplayState: Equatable {
 
 // MARK: - View Model Protocol
 public protocol PillItemViewModelProtocol {
-    // Individual publishers for each state property
+    // Synchronous state access (for immediate rendering)
+    var currentDisplayState: PillDisplayState { get }
+
+    // Reactive state publisher (for updates)
+    var displayStatePublisher: AnyPublisher<PillDisplayState, Never> { get }
+
+    // Individual publishers for each state property (legacy - kept for backward compatibility)
     var idPublisher: AnyPublisher<String, Never> { get }
     var titlePublisher: AnyPublisher<String, Never> { get }
     var leftIconNamePublisher: AnyPublisher<String?, Never> { get }
     var showExpandIconPublisher: AnyPublisher<Bool, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
     var shouldApplyTintColorPublisher: AnyPublisher<Bool, Never> { get }
-    
+
     // Read-only state - when true, selectPill() should not change the selection state
     var isReadOnly: Bool { get }
 

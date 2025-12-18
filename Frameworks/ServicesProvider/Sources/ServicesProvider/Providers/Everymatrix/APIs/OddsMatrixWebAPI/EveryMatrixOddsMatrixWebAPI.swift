@@ -11,7 +11,7 @@ enum EveryMatrixOddsMatrixWebAPI {
     case calculateCashout(betId: String, stakeValue: String?)
     
     // New Cashout API (SSE + execution)
-    case getCashoutValueSSE(betId: String)
+    case getCashoutValueSSE(betIds: [String])
     case executeCashoutV2(request: EveryMatrix.CashoutRequest)
     
     // Favorites
@@ -36,8 +36,8 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             return "/bets-api/v1/\(domainId)/settled-bets"
         case .calculateCashout:
             return "/bets-api/v1/\(domainId)/cashout-amount"
-        case .getCashoutValueSSE(let betId):
-            return "/cashout/v1/cashout-value/\(betId)"
+        case .getCashoutValueSSE:
+            return "/bets-api/v1/\(domainId)/cashout-value-updates"
         case .executeCashoutV2:
             return "/cashout/v1/cashout"
             
@@ -98,10 +98,12 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             ]
             return headers
         case .getCashoutValueSSE:
-            // SSE cashout value requires text/event-stream
+            // SSE cashout value requires text/event-stream with POST body
             let headers = [
+                "Content-Type": "application/json",
                 "Accept": "text/event-stream",
-                "X-OperatorId": operatorId
+                "x-operator-id": operatorId,
+                "x-language": EveryMatrixUnifiedConfiguration.shared.defaultLanguage
             ]
             return headers
         case .executeCashoutV2:
@@ -121,9 +123,9 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
     
     var method: HTTP.Method {
         switch self {
-        case .placeBet, .executeCashoutV2, .addFavorite:
+        case .placeBet, .executeCashoutV2, .addFavorite, .getCashoutValueSSE:
             return .post
-        case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .getFavorites:
+        case .getOpenBets, .getSettledBets, .calculateCashout, .getFavorites:
             return .get
         case .removeFavorite:
             return .delete
@@ -160,7 +162,10 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             let data = body.data(using: String.Encoding.utf8)!
             
             return data
-        case .getOpenBets, .getSettledBets, .calculateCashout, .getCashoutValueSSE, .getFavorites:
+        case .getCashoutValueSSE(let betIds):
+            struct CashoutValueRequest: Encodable { let betIds: [String] }
+            return try? JSONEncoder().encode(CashoutValueRequest(betIds: betIds))
+        case .getOpenBets, .getSettledBets, .calculateCashout, .getFavorites:
             return nil
         }
     }
@@ -198,13 +203,21 @@ extension EveryMatrixOddsMatrixWebAPI: Endpoint {
             case .userId:
                 return "x-user-id"     // MyBets APIs need user ID
             }
-        case .getCashoutValueSSE, .executeCashoutV2:
-            // New Cashout API uses capitalized headers
+        case .getCashoutValueSSE:
+            // SSE Cashout API uses lowercase hyphenated headers (same as bets-api)
             switch type {
             case .sessionId:
-                return "X-SessionId"   // Capitalized for new cashout API
+                return "x-session-id"
             case .userId:
-                return "userId"        // No x- prefix for new cashout API
+                return "x-user-id"
+            }
+        case .executeCashoutV2:
+            // Cashout execution API uses capitalized headers
+            switch type {
+            case .sessionId:
+                return "X-SessionId"
+            case .userId:
+                return "userId"
             }
         }
     }

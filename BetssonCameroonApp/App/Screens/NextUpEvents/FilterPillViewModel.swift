@@ -10,6 +10,22 @@ import GomaUI
 /// This is an action button that opens the filters screen - it never toggles selection state.
 final class FilterPillViewModel: PillItemViewModelProtocol {
 
+    // MARK: - Synchronous State Access
+    var currentDisplayState: PillDisplayState {
+        PillDisplayState(pillData: PillData(
+            id: "filter",
+            title: "Filter",
+            leftIconName: "line.3.horizontal.decrease",
+            showExpandIcon: true,
+            isSelected: false,
+            shouldApplyTintColor: true
+        ))
+    }
+
+    var displayStatePublisher: AnyPublisher<PillDisplayState, Never> {
+        Just(currentDisplayState).eraseToAnyPublisher()
+    }
+
     // MARK: - Publishers (static, never change)
     var idPublisher: AnyPublisher<String, Never> {
         Just("filter").eraseToAnyPublisher()

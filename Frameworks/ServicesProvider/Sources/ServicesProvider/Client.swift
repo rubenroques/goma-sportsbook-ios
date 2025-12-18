@@ -2063,6 +2063,29 @@ extension Client {
         return bettingProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
     }
 
+    /// Subscribe to real-time cashout value updates via SSE
+    /// - Parameter betId: Bet identifier to subscribe to
+    /// - Returns: Publisher emitting cashout value updates
+    public func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.subscribeToCashoutValue(betId: betId)
+    }
+
+    /// Execute cashout (full or partial)
+    /// - Parameter request: Cashout execution request containing betId, value, type, and optional partial stake
+    /// - Returns: Publisher emitting cashout response or error
+    public func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
+        guard let bettingProvider = self.bettingProvider else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.executeCashout(request: request)
+    }
+
     public func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
