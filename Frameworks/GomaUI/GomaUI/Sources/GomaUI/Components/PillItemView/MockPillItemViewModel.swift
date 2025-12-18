@@ -39,6 +39,39 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         return shouldApplyTintColorSubject.eraseToAnyPublisher()
     }
 
+    // MARK: - Synchronous State Access
+    public var currentDisplayState: PillDisplayState {
+        PillDisplayState(pillData: PillData(
+            id: idSubject.value,
+            title: titleSubject.value,
+            leftIconName: leftIconNameSubject.value,
+            showExpandIcon: showExpandIconSubject.value,
+            isSelected: isSelectedSubject.value,
+            shouldApplyTintColor: shouldApplyTintColorSubject.value
+        ))
+    }
+
+    public var displayStatePublisher: AnyPublisher<PillDisplayState, Never> {
+        Publishers.CombineLatest3(
+            Publishers.CombineLatest3(idSubject, titleSubject, leftIconNameSubject),
+            Publishers.CombineLatest(showExpandIconSubject, isSelectedSubject),
+            shouldApplyTintColorSubject
+        )
+        .map { first, second, applyTint in
+            let (id, title, icon) = first
+            let (showExpand, isSelected) = second
+            return PillDisplayState(pillData: PillData(
+                id: id,
+                title: title,
+                leftIconName: icon,
+                showExpandIcon: showExpand,
+                isSelected: isSelected,
+                shouldApplyTintColor: applyTint
+            ))
+        }
+        .eraseToAnyPublisher()
+    }
+
     // MARK: - Initialization
     public init(pillData: PillData, isReadOnly: Bool = false) {
         self.idSubject = CurrentValueSubject(pillData.id)

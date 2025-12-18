@@ -683,7 +683,28 @@ extension Client {
         }
         return eventsProvider.getMarketGroups(forEvent: event, includeMixMatchGroup: hasMixMatchGroup, includeAllMarketsGroup: hasAllMarketsGroup)
     }
-    
+
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy) - pre-live events
+    public func getMarketGroups(forPreLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        return getMarketGroups(forEvent: event, includeMixMatchGroup: false, includeAllMarketsGroup: true)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy) - live events
+    public func getMarketGroups(forLiveEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        return getMarketGroups(forEvent: event, includeMixMatchGroup: true, includeAllMarketsGroup: true)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy) - single param fallback
+    public func getMarketGroups(forEvent event: Event) -> AnyPublisher<[MarketGroup], ServiceProviderError> {
+        return getMarketGroups(forEvent: event, includeMixMatchGroup: false, includeAllMarketsGroup: true)
+            .setFailureType(to: ServiceProviderError.self)
+            .eraseToAnyPublisher()
+    }
+
     public func getFieldWidgetId(eventId: String) -> AnyPublisher<FieldWidget, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -796,16 +817,26 @@ extension Client {
         return eventsProvider.getPromotedSports()
     }
     
+    public func getHomeSliders() -> AnyPublisher<BannerResponse, ServiceProviderError> {
+        guard
+            let eventsProvider = self.eventsProvider
+        else {
+            return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return eventsProvider.getHomeSliders()
+    }
+
     public func getCashbackSuccessBanner() -> AnyPublisher<BannerResponse, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-        
-        return eventsProvider.getHomeSliders()
+
+        return eventsProvider.getCashbackSuccessBanner()
     }
-    
+
     public func getEventForMarketGroup(withId marketGroupId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -835,10 +866,15 @@ extension Client {
         else {
             return Fail(error: .eventsProviderNotFound).eraseToAnyPublisher()
         }
-        
+
         return eventsProvider.getEventSummary(eventId: eventId, marketLimit: marketLimit)
     }
-    
+
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy)
+    public func getEventSummary(eventId: String) -> AnyPublisher<Event, ServiceProviderError> {
+        return getEventSummary(eventId: eventId, marketLimit: nil)
+    }
+
     public func getEventSummary(forMarketId marketId: String) -> AnyPublisher<Event, ServiceProviderError> {
         guard
             let eventsProvider = self.eventsProvider
@@ -1398,6 +1434,21 @@ extension Client {
         return privilegedAccessManager.getBankingWebView(parameters: parameters)
     }
 
+    /// Build Widget Cashier URL client-side (no API call)
+    /// - Parameters:
+    ///   - type: Transaction type (.deposit or .withdraw)
+    ///   - language: Language code (e.g., "en", "fr")
+    ///   - theme: Theme string ("dark" or "light")
+    /// - Returns: Publisher emitting the constructed URL or error
+    public func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+        return privilegedAccessManager.getWidgetCashierURL(type: type, language: language, theme: theme)
+    }
+
     // MARK: - Transaction History Methods
 
     public func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String? = nil, states: [String]? = nil) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
@@ -1523,6 +1574,12 @@ extension Client {
         return bettingProvider.confirmBoostedBet(identifier: identifier)
     }
 
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy)
+    public func confirmBoostedBet(identifier: String, detailedCode: String?) -> AnyPublisher<Bool, ServiceProviderError> {
+        // detailedCode is not used in the current implementation
+        return confirmBoostedBet(identifier: identifier)
+    }
+
     public func rejectBoostedBet(identifier: String) -> AnyPublisher<Bool, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -1548,6 +1605,12 @@ extension Client {
             return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
         }
         return bettingProvider.placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
+    }
+
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy)
+    public func placeBetBuilderBet(betTicket: BetTicket, calculatedOdd: Double, useFreebetBalance: Bool) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> {
+        // useFreebetBalance is not used in the current bet builder implementation
+        return placeBetBuilderBet(betTicket: betTicket, calculatedOdd: calculatedOdd)
     }
 
     //
@@ -2015,6 +2078,29 @@ extension Client {
         return bettingProvider.cashoutBet(betId: betId, cashoutValue: cashoutValue, stakeValue: stakeValue)
     }
 
+    /// Subscribe to real-time cashout value updates via SSE
+    /// - Parameter betId: Bet identifier to subscribe to
+    /// - Returns: Publisher emitting cashout value updates
+    public func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
+        guard
+            let bettingProvider = self.bettingProvider
+        else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+
+        return bettingProvider.subscribeToCashoutValue(betId: betId)
+    }
+
+    /// Execute cashout (full or partial)
+    /// - Parameter request: Cashout execution request containing betId, value, type, and optional partial stake
+    /// - Returns: Publisher emitting cashout response or error
+    public func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
+        guard let bettingProvider = self.bettingProvider else {
+            return Fail(error: ServiceProviderError.bettingProviderNotFound).eraseToAnyPublisher()
+        }
+        return bettingProvider.executeCashout(request: request)
+    }
+
     public func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError> {
         guard
             let bettingProvider = self.bettingProvider
@@ -2120,6 +2206,36 @@ extension Client {
         }
 
         return privilegedAccessManager.getReferees()
+    }
+
+    public func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getWheelEligibility(gameTransId: gameTransId)
+    }
+
+    public func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.wheelOptIn(winBoostId: winBoostId, optInOption: optInOption)
+    }
+
+    public func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> {
+        guard
+            let privilegedAccessManager = self.privilegedAccessManager
+        else {
+            return Fail(error: ServiceProviderError.privilegedAccessManagerNotFound).eraseToAnyPublisher()
+        }
+
+        return privilegedAccessManager.getGrantedWinBoosts(gameTransIds: gameTransIds)
     }
 }
 
@@ -2630,6 +2746,30 @@ extension Client {
         return customerSupportProvider.contactSupport(form: form)
     }
 
+    /// Convenience overload for backward compatibility (BetssonFranceLegacy)
+    public func contactSupport(
+        userIdentifier: String,
+        firstName: String,
+        lastName: String,
+        email: String,
+        subject: String,
+        subjectType: String,
+        message: String,
+        isLogged: Bool
+    ) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+        let form = ContactSupportForm(
+            userIdentifier: userIdentifier,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            subject: subject,
+            subjectType: subjectType,
+            message: message,
+            isLogged: isLogged
+        )
+        return contactSupport(form: form)
+    }
+
 }
 
 extension Client {
@@ -2727,5 +2867,115 @@ extension Client {
         }
         return eventsProvider.getDatesFilter(timeRange: timeRange)
     }
-    
+
+}
+
+// MARK: - SportRadar-specific methods
+// These methods are primarily used by the SportRadar provider.
+// Other providers (EveryMatrix, Goma) return .notSupportedForProvider error.
+extension Client {
+
+    /// Subscribe to live sport types updates
+    public func subscribeLiveSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeLiveSportTypes()
+    }
+
+    /// Subscribe to all sport types updates (both live and pre-live)
+    public func subscribeAllSportTypes() -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribeAllSportTypes()
+    }
+
+    /// Subscribe to pre-live sport types updates with optional date filtering
+    public func subscribePreLiveSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<SubscribableContent<[SportType]>, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.subscribePreLiveSportTypes(initialDate: initialDate, endDate: endDate)
+    }
+
+    /// Get available sport types (one-time fetch) with optional date filtering
+    public func getAvailableSportTypes(initialDate: Date? = nil, endDate: Date? = nil) -> AnyPublisher<[SportType], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getAvailableSportTypes(initialDate: initialDate, endDate: endDate)
+    }
+
+    /// Get promotional top banners
+    public func getPromotionalTopBanners() -> AnyPublisher<[PromotionalBanner], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getPromotionalTopBanners()
+    }
+
+    /// Get promotional sliding top events
+    public func getPromotionalSlidingTopEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getPromotionalSlidingTopEvents()
+    }
+
+    /// Get promotional top stories
+    public func getPromotionalTopStories() -> AnyPublisher<[PromotionalStory], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getPromotionalTopStories()
+    }
+
+    /// Get highlighted boosted events
+    public func getHighlightedBoostedEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHighlightedBoostedEvents()
+    }
+
+    /// Get highlighted visual image events
+    public func getHighlightedVisualImageEvents() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHighlightedVisualImageEvents()
+    }
+
+    /// Get highlighted markets
+    public func getHighlightedMarkets() -> AnyPublisher<[HighlightMarket], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHighlightedMarkets()
+    }
+
+    /// Get hero game event
+    public func getHeroGameEvent() -> AnyPublisher<[Event], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHeroGameEvent()
+    }
+
+    /// Get recommended bet builders for an event
+    public func getRecommendedBetBuilders(eventId: String, multibetsCount: Int, selectionsCount: Int, userId: String?) -> AnyPublisher<RecommendedBetBuilders, ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getRecommendedBetBuilders(eventId: eventId, multibetsCount: multibetsCount, selectionsCount: selectionsCount, userId: userId)
+    }
+
+    /// Get highlighted live events IDs (pointers)
+    public func getHighlightedLiveEventsIds(eventCount: Int, userId: String?) -> AnyPublisher<[String], ServiceProviderError> {
+        guard let eventsProvider = self.eventsProvider else {
+            return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+        }
+        return eventsProvider.getHighlightedLiveEventsIds(eventCount: eventCount, userId: userId)
+    }
 }

@@ -215,7 +215,28 @@ public class TicketBetInfoView: UIView {
         label.textColor = StyleProvider.Color.textPrimary
         return label
     }()
-    
+
+    // MARK: - Loading Overlay
+    private lazy var loadingOverlayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = StyleProvider.Color.backgroundPrimary.withAlphaComponent(0.7)
+        view.isHidden = true
+
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.color = StyleProvider.Color.highlightPrimary
+        spinner.startAnimating()
+        view.addSubview(spinner)
+
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+
+        return view
+    }()
+
     // MARK: - Initialization
     public init(viewModel: TicketBetInfoViewModelProtocol,
                 cornerRadiusStyle: CornerRadiusStyle = .all) {
@@ -319,7 +340,10 @@ public class TicketBetInfoView: UIView {
         
         // Bottom components setup
         containerView.addSubview(bottomComponentsStackView)
-        
+
+        // Loading overlay (must be added last to appear on top)
+        containerView.addSubview(loadingOverlayView)
+
         // Add labels to stack view
         labelsStackView.addArrangedSubview(totalOddsLabel)
         labelsStackView.addArrangedSubview(betAmountLabel)
@@ -411,7 +435,13 @@ public class TicketBetInfoView: UIView {
             // Bottom components stack view constraints (horizontal only, vertical will be dynamic)
             bottomComponentsStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             bottomComponentsStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-            bottomComponentsStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
+            bottomComponentsStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+
+            // Loading overlay constraints (covers entire containerView)
+            loadingOverlayView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            loadingOverlayView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            loadingOverlayView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            loadingOverlayView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
         // Initially activate the financial summary bottom constraint (empty state)
@@ -442,6 +472,19 @@ public class TicketBetInfoView: UIView {
                 self?.updateUI(with: betInfo)
             }
             .store(in: &cancellables)
+
+        // Bind loading state
+        viewModel.isCashoutLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.setLoadingOverlayVisible(isLoading)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func setLoadingOverlayVisible(_ visible: Bool) {
+        loadingOverlayView.isHidden = !visible
+        containerView.isUserInteractionEnabled = !visible
     }
     
     // MARK: - UI Updates
@@ -469,9 +512,7 @@ public class TicketBetInfoView: UIView {
             
             let ticketView = TicketSelectionView(viewModel: mockViewModel)
             
-            if let status = betInfo.betStatus {
-                ticketView.updateResultTag(with: status)
-            }
+            ticketView.updateResultTag(with: betInfo.betStatus)
             
             ticketsStackView.addArrangedSubview(ticketView)
         }
@@ -485,42 +526,30 @@ public class TicketBetInfoView: UIView {
     private func updateBottomComponents(with betInfo: TicketBetInfoData) {
         // Remove existing components
         bottomComponentsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
+
         // Deactivate current constraints
         financialSummaryBottomConstraint?.isActive = false
         bottomComponentsTopConstraint?.isActive = false
-        
+
         var hasComponents = false
-        
+
         // Handle cashout components for open bets only (not settled bets)
         if !betInfo.isSettled {
-            // Add CashoutAmountView if partialCashoutValue is provided
-            if let partialCashoutValue = betInfo.partialCashoutValue {
-                let cashoutAmountViewModel = MockCashoutAmountViewModel.customMock(
-                    title: "Partial Cashout",
-                    currency: "XAF",
-                    amount: partialCashoutValue
-                )
-                let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountViewModel)
+            // Add CashoutAmountView if ViewModel is provided
+            if let cashoutAmountVM = viewModel.cashoutAmountViewModel {
+                let cashoutAmountView = CashoutAmountView(viewModel: cashoutAmountVM)
                 bottomComponentsStackView.addArrangedSubview(cashoutAmountView)
                 hasComponents = true
             }
-            
-            // Add CashoutSliderView if cashoutTotalAmount is provided
-            if let cashoutTotalAmount = betInfo.cashoutTotalAmount {
-                let cashoutSliderViewModel = MockCashoutSliderViewModel.customMock(
-                    title: "Cash out amount",
-                    minimumValue: 0.1,
-                    maximumValue: Float(cashoutTotalAmount) ?? 200.0,
-                    currentValue: Float(cashoutTotalAmount) ?? 200.0,
-                    currency: "XAF"
-                )
-                let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderViewModel)
+
+            // Add CashoutSliderView if ViewModel is provided
+            if let cashoutSliderVM = viewModel.cashoutSliderViewModel {
+                let cashoutSliderView = CashoutSliderView(viewModel: cashoutSliderVM)
                 bottomComponentsStackView.addArrangedSubview(cashoutSliderView)
                 hasComponents = true
             }
         }
-        
+
         // Activate appropriate constraints based on whether components are present
         if hasComponents {
             bottomComponentsTopConstraint?.isActive = true

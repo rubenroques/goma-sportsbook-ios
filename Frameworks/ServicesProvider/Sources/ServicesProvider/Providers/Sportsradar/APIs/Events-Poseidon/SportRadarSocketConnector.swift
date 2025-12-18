@@ -164,6 +164,11 @@ extension SportRadarSocketConnector: Starscream.WebSocketDelegate {
 
         case .text(let string):
             // print("\n▶️ServiceProvider - ↔️ Ⓜ️ SportRadarSocketConnector received text: \(string)◀️\n")
+            
+            if string.contains("liveDataSummaryEventSummary") {
+                print("[Debug-WScli] liveDataSummaryEventSummary: \(string)")
+            }
+            
             if let data = string.data(using: .utf8),
                let sportRadarSocketResponse = try? decoder.decode(SportRadarModels.NotificationType.self, from: data) {
                 self.handleContentMessage(sportRadarSocketResponse, messageData: data)

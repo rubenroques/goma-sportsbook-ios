@@ -5,16 +5,21 @@ import UIKit
 
 /// Mock implementation of `ButtonViewModelProtocol` for testing.
 final public class MockButtonViewModel: ButtonViewModelProtocol {
-    
+
     // MARK: - Properties
     private let buttonDataSubject: CurrentValueSubject<ButtonData, Never>
-    public var buttonDataPublisher: AnyPublisher<ButtonData, Never> {
-        return buttonDataSubject.eraseToAnyPublisher()
+
+    public var currentButtonData: ButtonData {
+        buttonDataSubject.value
     }
-    
+
+    public var buttonDataPublisher: AnyPublisher<ButtonData, Never> {
+        buttonDataSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Callback
     public var onButtonTapped: (() -> Void)?
-    
+
     // MARK: - Initialization
     public init(buttonData: ButtonData) {
         self.buttonDataSubject = CurrentValueSubject(buttonData)

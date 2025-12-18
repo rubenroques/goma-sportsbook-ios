@@ -133,6 +133,13 @@ public struct BetSelection: Codable, Equatable, Hashable {
     /// Migration: When converting from Sportsbook, use SportType(fromString:) to convert
     public var sportType: SportType
 
+    /// Sport type name as a string
+    /// Note: SportRadar provider uses string-based sport types
+    /// This is computed from sportType.name for EveryMatrix compatibility
+    public var sportTypeName: String {
+        return sportType.name
+    }
+
     // MARK: - Market and Outcome Properties (Multibet specific)
     /// Unique identifier for the market
     /// Note: Only present in Multibet implementation
@@ -342,17 +349,23 @@ public struct PlacedBetsResponse: Codable, Equatable, Hashable {
     public var requiredConfirmation: Bool
     public var totalStake: Double
 
+    /// Detailed response code from SportRadar provider
+    /// Note: SportRadar uses this for error/success response codes
+    public var detailedCode: String?
+
     public init(identifier: String,
                 bets: [PlacedBetEntry],
                 detailedBets: [Bet]?,
                 requiredConfirmation: Bool = false,
-                totalStake: Double) {
+                totalStake: Double,
+                detailedCode: String? = nil) {
 
         self.identifier = identifier
         self.bets = bets
         self.detailedBets = detailedBets
         self.requiredConfirmation = requiredConfirmation
         self.totalStake = totalStake
+        self.detailedCode = detailedCode
     }
 
 }

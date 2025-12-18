@@ -275,7 +275,7 @@ extension MockOutcomeItemViewModel {
         let outcomeData = OutcomeItemData(
             id: "loading",
             bettingOfferId: nil,
-            title: LocalizationProvider.string("loading_payment_form"),
+            title: LocalizationProvider.string("loading_odd"),
             value: "",
             displayState: .loading
         )

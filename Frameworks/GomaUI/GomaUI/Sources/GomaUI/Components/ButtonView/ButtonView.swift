@@ -10,6 +10,7 @@ final public class ButtonView: UIView {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = 8
         btn.titleLabel?.font = StyleProvider.fontWith(type: .bold, size: 16)
+        btn.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         return btn
     }()
     
@@ -26,8 +27,14 @@ final public class ButtonView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
+        configureImmediately()
         setupBindings()
         setupActions()
+    }
+
+    // MARK: - Synchronous Configuration
+    private func configureImmediately() {
+        configure(buttonData: viewModel.currentButtonData)
     }
     
     required init?(coder: NSCoder) {
@@ -51,6 +58,7 @@ final public class ButtonView: UIView {
     
     private func setupBindings() {
         viewModel.buttonDataPublisher
+            .dropFirst() // Skip first - already rendered synchronously in configureImmediately()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] buttonData in
                 self?.configure(buttonData: buttonData)

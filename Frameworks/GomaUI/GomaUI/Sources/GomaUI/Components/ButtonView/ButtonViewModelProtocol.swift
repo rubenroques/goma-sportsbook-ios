@@ -38,19 +38,22 @@ public struct ButtonData: Equatable, Hashable {
 
 // MARK: - View Model Protocol
 public protocol ButtonViewModelProtocol {
+    /// Synchronous state access (for immediate rendering in snapshot tests and cell reuse)
+    var currentButtonData: ButtonData { get }
+
     /// Publisher for reactive updates
     var buttonDataPublisher: AnyPublisher<ButtonData, Never> { get }
-    
+
     /// Button action
     func buttonTapped()
-    
+
     /// Update button state
     func setEnabled(_ isEnabled: Bool)
-    
+
     /// Update button title
     func updateTitle(_ title: String)
-    
+
     /// Callback closure for button tap
     var onButtonTapped: (() -> Void)? { get set }
-    
+
 }

@@ -18,7 +18,7 @@ extension EveryMatrixModelMapper {
             
             return AvailableBonus(
                 id: bonusItem.id,
-                bonusPlanId: bonusItem.id,
+                bonusPlanId: Int(bonusItem.id) ?? 0,
                 name: bonusItem.presentation.name.content,
                 description: bonusItem.presentation.description.content,
                 type: bonusItem.type,
@@ -27,8 +27,7 @@ extension EveryMatrixModelMapper {
                 expiryDate: parseDate(from: bonusItem.trigger.endTime),
                 wagerRequirement: nil,
                 imageUrl: imageUrl,
-                actionUrl: bonusItem.presentation.url.content,
-                code: bonusItem.code
+                additionalAwards: nil
             )
         }
     }
@@ -53,16 +52,13 @@ extension EveryMatrixModelMapper {
                 id: Int(bonusItem.id) ?? 0,
                 name: bonusItem.name,
                 status: bonusItem.status,
-                type: bonusItem.type,
                 amount: "\(bonusItem.remainingAmount)",
-                remainingAmount: "\(bonusItem.remainingAmount)",
                 triggerDate: triggerDate,
                 expiryDate: expiryDate,
                 wagerRequirement: "\(bonusItem.initialWagerRequirementAmount)",
                 amountWagered: "\(remainingWagerRequirementAmount)",
-                currency: bonusItem.currency,
-                imageUrl: imageUrl,
-                linkUrl: bonusItem.url
+                freeBetBonus: nil,
+                imageUrl: imageUrl
             )
         }
     }

@@ -15,7 +15,7 @@ final class PlaceBetButtonViewModel: ButtonViewModelProtocol {
 
     var onButtonTapped: (() -> Void)?
 
-    private var currentButtonData: ButtonData {
+    var currentButtonData: ButtonData {
         dataSubject.value
     }
 

@@ -16,9 +16,16 @@ class CasinoCategoryGamesListViewController: UIViewController {
     private let quickLinksTabBarView: QuickLinksTabBarView
     private let collectionView: UICollectionView
     
+    private lazy var headerTextViewModel = MockHeaderTextViewModel()
+    
+    private lazy var headerTextView: HeaderTextView = {
+        let headerTextView = HeaderTextView(viewModel: headerTextViewModel)
+        headerTextView.translatesAutoresizingMaskIntoConstraints = false
+        return headerTextView
+    }()
+    
     private lazy var navigationBarView: SimpleNavigationBarView = {
         let navViewModel = BetssonCameroonNavigationBarViewModel(
-            title: viewModel.categoryTitle,
             onBackTapped: { [weak self] in
                 self?.viewModel.navigateBack()
             }
@@ -93,6 +100,8 @@ class CasinoCategoryGamesListViewController: UIViewController {
 
         setupViews()
         setupBindings()
+        
+        headerTextViewModel.updateTitle(viewModel.categoryTitle)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -108,6 +117,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
         view.backgroundColor = StyleProvider.Color.backgroundPrimary
 
         view.addSubview(navigationBarView)
+        view.addSubview(headerTextView)
         setupQuickLinksTabBar()
         setupCollectionView()
         setupLoadingIndicator()
@@ -121,7 +131,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
     
     private func setupCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = StyleProvider.Color.backgroundTertiary
         collectionView.showsVerticalScrollIndicator = true
         collectionView.showsHorizontalScrollIndicator = false
         
@@ -151,9 +161,14 @@ class CasinoCategoryGamesListViewController: UIViewController {
             navigationBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             navigationBarView.topAnchor.constraint(equalTo: quickLinksTabBarView.bottomAnchor),
+            
+            headerTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerTextView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
+            headerTextView.heightAnchor.constraint(equalToConstant: 48),
 
             // Collection View
-            collectionView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: headerTextView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -191,7 +206,7 @@ class CasinoCategoryGamesListViewController: UIViewController {
             .dropFirst()  // Skip initial value - already set during init
             .receive(on: DispatchQueue.main)
             .sink { [weak self] title in
-                self?.navigationBarView.updateTitle(title)
+                self?.headerTextViewModel.updateTitle(title)
             }
             .store(in: &cancellables)
 

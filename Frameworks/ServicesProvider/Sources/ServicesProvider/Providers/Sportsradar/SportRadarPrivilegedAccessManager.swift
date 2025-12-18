@@ -11,25 +11,31 @@ import SharedModels
 import CryptoKit
 
 class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
-    
+
     var connector: OmegaConnector
     var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> {
-        return self.sessionStateSubject.eraseToAnyPublisher()
+        return userSessionStateSubject.eraseToAnyPublisher()
     }
     var userProfilePublisher: AnyPublisher<UserProfile?, Error> {
-        return self.userProfileSubject.eraseToAnyPublisher()
+        return userProfileSubject.eraseToAnyPublisher()
     }
 
-    var accessToken: String? = nil
+    var accessToken: String? {
+        return nil
+    }
 
     var hasSecurityQuestions: Bool = false
 
     private var sessionCoordinator: SportRadarSessionCoordinator
 
-    private let sessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
+    private let userSessionStateSubject: CurrentValueSubject<UserSessionStatus, Error> = .init(.anonymous)
     private let userProfileSubject: CurrentValueSubject<UserProfile?, Error> = .init(nil)
 
     private var cancellables: Set<AnyCancellable> = []
+
+    //Sumsub
+    private let sumsubAppToken = "sbx:yjCFqKsuTX6mTY7XMFFPe6hR.v9i5YpFrNND0CeLcZiHeJnnejrCUDZKT"
+    private let sumsubSecretKey = "4PH7gdufQfrFpFS35gJiwz9d2NFZs4kM"
 
     init(sessionCoordinator: SportRadarSessionCoordinator, connector: OmegaConnector = OmegaConnector()) {
 
@@ -87,19 +93,14 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         return self.connector.logout()
     }
 
-    // TODO: SP Migration 
-    func depositOnWallet(amount: Double) -> AnyPublisher<Bool, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
     func getUserProfile(withKycExpire kycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.playerInfo
         let publisher: AnyPublisher<SportRadarModels.PlayerInfoResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ playerInfoResponse -> AnyPublisher<UserProfile, ServiceProviderError> in
-            if playerInfoResponse.status == "SUCCESS", let userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
-                print("getUserProfile(withKycExpire \(userOverview))")
+            if playerInfoResponse.status == "SUCCESS", var userOverview = SportRadarModelMapper.userProfile(fromPlayerInfoResponse: playerInfoResponse, withKycExpire: kycExpire) {
+
                 return Just(userOverview).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
             }
             return Fail(outputType: UserProfile.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
@@ -174,93 +175,95 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
 
     func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
         switch formType {
-        case .simple(let form):
-            // Handle simple sign up form
-            let endpoint = OmegaAPIClient.quickSignup(email: form.email,
-                                                      username: form.username,
-                                                      password: form.password,
-                                                      birthDate: form.birthDate,
-                                                      mobilePrefix: form.mobilePrefix,
-                                                      mobileNumber: form.mobileNumber,
-                                                      countryIsoCode: form.countryIsoCode,
-                                                      currencyCode: form.currencyCode)
-
-            let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-            return publisher.flatMap({ statusResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
-                if statusResponse.status == "SUCCESS" {
-                    let response = SignUpResponse(successful: true)
-                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-                else if let errors = statusResponse.errors {
-                    var signUpErrors: [SignUpResponse.SignUpError] = []
-                    
-                    for error in errors {
-                        let signUpError = SignUpResponse.SignUpError(field: error.field, error: error.error)
-                        signUpErrors.append(signUpError)
-                    }
-                    
-                    let response = SignUpResponse(successful: false, errors: signUpErrors)
-                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-                return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
-            
-        case .full(let form):
-            // Handle full sign up form
-            let endpoint = OmegaAPIClient.signUp(email: form.email,
-                                                 username: form.username,
-                                                 password: form.password,
-                                                 birthDate: form.birthDate,
-                                                 mobilePrefix: form.mobilePrefix,
-                                                 mobileNumber: form.mobileNumber,
-                                                 nationalityIso2Code: form.nationalityIsoCode,
-                                                 currencyCode: form.currencyCode,
-                                                 firstName: form.firstName,
-                                                 lastName: form.lastName,
-                                                 middleName: form.middleName,
-                                                 gender: form.gender,
-                                                 address: form.address,
-                                                 city: form.city,
-                                                 postalCode: form.postCode,
-                                                 countryIso2Code: form.countryIsoCode,
-                                                 bonusCode: form.bonusCode,
-                                                 receiveMarketingEmails: form.receiveMarketingEmails,
-                                                 avatarName: form.avatarName,
-                                                 godfatherCode: form.godfatherCode,
-                                                 birthDepartment: form.birthDepartment,
-                                                 birthCity: form.birthCity,
-                                                 birthCountry: form.birthCountry,
-                                                 streetNumber: form.streetNumber,
-                                                 consentedIds: form.consentedIds,
-                                                 unconsentedIds: form.unConsentedIds,
-                                                 mobileVerificationRequestId: form.mobileVerificationRequestId)
-
-            let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
-
-            return publisher.flatMap({ statusResponse -> AnyPublisher<SignUpResponse, ServiceProviderError> in
-                if statusResponse.status == "SUCCESS" {
-                    let response = SignUpResponse(successful: true)
-                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-                else if let errors = statusResponse.errors {
-                    var signUpErrors: [SignUpResponse.SignUpError] = []
-                    
-                    for error in errors {
-                        let signUpError = SignUpResponse.SignUpError(field: error.field, error: error.error)
-                        signUpErrors.append(signUpError)
-                    }
-                    
-                    let response = SignUpResponse(successful: false, errors: signUpErrors)
-                    return Just(response).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
-                }
-                return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
-            })
-            .eraseToAnyPublisher()
-        case .phone(_):
-            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        case .simple(let simpleForm):
+            return simpleSignUp(form: simpleForm).map { success in
+                SignUpResponse(successful: success)
+            }.eraseToAnyPublisher()
+        case .full(let fullForm):
+            return signUp(form: fullForm)
+        case .phone:
+            return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
         }
+    }
+
+    func simpleSignUp(form: SimpleSignUpForm) -> AnyPublisher<Bool, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.quickSignup(email: form.email,
+                                                  username: form.username,
+                                                  password: form.password,
+                                                  birthDate: form.birthDate,
+                                                  mobilePrefix: form.mobilePrefix,
+                                                  mobileNumber: form.mobileNumber,
+                                                  countryIsoCode: form.countryIsoCode,
+                                                  currencyCode: form.currencyCode)
+
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ statusResponse -> AnyPublisher<Bool, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" {
+                return Just(true).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else if let errors = statusResponse.errors {
+                if errors.contains(where: { $0.field == "username" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpUsername).eraseToAnyPublisher()
+                }
+                else if errors.contains(where: { $0.field == "email" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpEmail).eraseToAnyPublisher()
+                }
+                else if errors.contains(where: { $0.field == "password" }) {
+                    return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidSignUpPassword).eraseToAnyPublisher()
+                }
+            }
+            return Fail(outputType: Bool.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
+    }
+
+    func signUp(form: SignUpForm) -> AnyPublisher<SignUpResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.signUp(email: form.email,
+                                             username: form.username,
+                                             password: form.password,
+                                             birthDate: form.birthDate,
+                                             mobilePrefix: form.mobilePrefix,
+                                             mobileNumber: form.mobileNumber,
+                                             nationalityIso2Code: form.nationalityIsoCode,
+                                             currencyCode: form.currencyCode,
+                                             firstName: form.firstName,
+                                             lastName: form.lastName,
+                                             middleName: form.middleName,
+                                             gender: form.gender,
+                                             address: form.address,
+                                             city: form.city,
+                                             postalCode: form.postCode,
+                                             countryIso2Code: form.countryIsoCode,
+                                             bonusCode: form.bonusCode,
+                                             receiveMarketingEmails: form.receiveMarketingEmails,
+                                             avatarName: form.avatarName,
+                                             godfatherCode: form.godfatherCode,
+                                             birthDepartment: form.birthDepartment,
+                                             birthCity: form.birthCity,
+                                             birthCountry: form.birthCountry,
+                                             streetNumber: form.streetNumber,
+                                             consentedIds: form.consentedIds,
+                                             unconsentedIds: form.unConsentedIds,
+                                             mobileVerificationRequestId: form.mobileVerificationRequestId)
+
+        let publisher: AnyPublisher<SportRadarModels.StatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ (statusResponse: SportRadarModels.StatusResponse) -> AnyPublisher<SignUpResponse, ServiceProviderError> in
+            if statusResponse.status == "SUCCESS" || statusResponse.status == "BONUSPLAN_NOT_FOUND" {
+                return Just( SignUpResponse(successful: true) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else if let errors = statusResponse.errors {
+                let mappedErrors = errors.map { error -> SignUpResponse.SignUpError in
+                    return SignUpResponse.SignUpError(field: error.field, error: error.error)
+                }
+                return Just( SignUpResponse(successful: false, errors: mappedErrors) ).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            return Fail(outputType: SignUpResponse.self, failure: ServiceProviderError.invalidResponse).eraseToAnyPublisher()
+        })
+        .eraseToAnyPublisher()
     }
 
     func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError> {
@@ -324,7 +327,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         .eraseToAnyPublisher()
     }
 
-    public func getAllCountries() -> AnyPublisher<[SharedModels.Country], ServiceProviderError> {
+    public func getAllCountries() -> AnyPublisher<[Country], ServiceProviderError> {
         let allCountries = Country.allCountries
         return Just(allCountries).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
     }
@@ -572,20 +575,6 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         .eraseToAnyPublisher()
     }
 
-    //
-    //
-    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-    
-    func stopUserInfoStream() {
-        // notSupportedForProvider
-    }
-    
-    func refreshUserBalance() {
-        // notSupportedForProvider
-    }
-    
     func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError> {
         let endpoint = OmegaAPIClient.getBalance
         let publisher: AnyPublisher<SportRadarModels.BalanceResponse, ServiceProviderError> = self.connector.request(endpoint)
@@ -1124,7 +1113,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+    func getGrantedBonuses() -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getGrantedBonuses
 
@@ -1167,7 +1156,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
-    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+    func getAvailableBonuses() -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.getAvailableBonuses
 
@@ -1249,6 +1238,46 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
 
+    func contactUs(firstName: String, lastName: String, email: String, subject: String, message: String) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.contactUs(firstName: firstName, lastName: lastName, email: email, subject: subject, message: message)
+
+        let publisher: AnyPublisher<SportRadarModels.BasicResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ basicResponse -> AnyPublisher<BasicResponse, ServiceProviderError> in
+            if basicResponse.status == "SUCCESS" {
+
+                let basicResponse = SportRadarModelMapper.basicResponse(fromInternalBasicResponse: basicResponse)
+
+                return Just(basicResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: BasicResponse.self, failure: ServiceProviderError.errorMessage(message: basicResponse.message ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func contactSupport(userIdentifier: String, firstName: String, lastName: String, email: String, subject: String, subjectType: String, message: String, isLogged: Bool) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.contactSupport(userIdentifier: userIdentifier, firstName: firstName, lastName: lastName, email: email, subject: subject, subjectType: subjectType, message: message, isLogged: isLogged)
+
+        let publisher: AnyPublisher<SportRadarModels.SupportResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ supportResponse -> AnyPublisher<SupportResponse, ServiceProviderError> in
+
+            if supportResponse.request != nil {
+
+                let supportResponse = SportRadarModelMapper.supportResponse(fromInternalSupportResponse: supportResponse)
+
+                return Just(supportResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: SupportResponse.self, failure: ServiceProviderError.errorMessage(message: supportResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
 
     func getAllConsents() -> AnyPublisher<[ConsentInfo], ServiceProviderError> {
         let endpoint = OmegaAPIClient.getAllConsents
@@ -1307,6 +1336,64 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         .eraseToAnyPublisher()
     }
 
+    func getSumsubAccessToken(userId: String, levelName: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
+
+        // let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)&ttlInSecs=600".replacingOccurrences(of: " ", with: "%20")
+        var customAllowedSet =  NSCharacterSet(charactersIn:"; ").inverted
+
+        let url = "/resources/accessTokens?userId=\(userId)&levelName=\(levelName)".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
+
+        let method = "post"
+
+        let secretKeyData = self.sumsubSecretKey.data(using: String.Encoding.utf8) ?? Data()
+
+        let signatureHeaders = self.generateSignatureHeaders(url: url, method: method, secretKeyData: secretKeyData, appToken: self.sumsubAppToken)
+
+        let endpoint = OmegaAPIClient.getSumsubAccessToken(userId: userId, levelName: levelName, body: nil, header: signatureHeaders)
+
+        let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
+            if let acessToken = accessTokenResponse.token {
+                let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
+
+                return Just(mappedAccessTokenResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: AccessTokenResponse.self, failure: ServiceProviderError.errorMessage(message: accessTokenResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func getSumsubApplicantData(userId: String) -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> {
+
+        //let url = "/resources/applicants/-;externalUserId=\(userId)/one".replacingOccurrences(of: " ", with: "%20")
+        var customAllowedSet =  NSCharacterSet(charactersIn:" ").inverted
+
+        let url = "/resources/applicants/-;externalUserId=\(userId)/one".addingPercentEncoding(withAllowedCharacters: customAllowedSet) ?? ""
+
+        let method = "get"
+
+        let secretKeyData = self.sumsubSecretKey.data(using: String.Encoding.utf8) ?? Data()
+
+        let signatureHeaders = self.generateSignatureHeaders(url: url, method: method, secretKeyData: secretKeyData, appToken: self.sumsubAppToken)
+
+        let endpoint = OmegaAPIClient.getSumsubApplicantData(userId: userId, header: signatureHeaders)
+
+        let publisher: AnyPublisher<SportRadarModels.ApplicantDataResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ applicantDataResponse -> AnyPublisher<ApplicantDataResponse, ServiceProviderError> in
+            if let acessToken = applicantDataResponse.info {
+                let mappedApplicantDataResponse = SportRadarModelMapper.applicantDataResponse(fromInternalApplicantDataResponse: applicantDataResponse)
+
+                return Just(mappedApplicantDataResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+            }
+            else {
+                return Fail(outputType: ApplicantDataResponse.self, failure: ServiceProviderError.errorMessage(message: applicantDataResponse.description ?? "Error")).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
     func generateDocumentTypeToken(docType: String) -> AnyPublisher<AccessTokenResponse, ServiceProviderError> {
 
         let endpoint = OmegaAPIClient.generateDocumentTypeToken(docType: docType)
@@ -1314,7 +1401,7 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         let publisher: AnyPublisher<SportRadarModels.AccessTokenResponse, ServiceProviderError> = self.connector.request(endpoint)
 
         return publisher.flatMap({ accessTokenResponse -> AnyPublisher<AccessTokenResponse, ServiceProviderError> in
-            if accessTokenResponse.token != nil {
+            if let acessToken = accessTokenResponse.token {
 
                 let mappedAccessTokenResponse = SportRadarModelMapper.accessTokenResponse(fromInternalAccessTokenResponse: accessTokenResponse)
 
@@ -1428,13 +1515,127 @@ class SportRadarPrivilegedAccessManager: PrivilegedAccessManagerProvider {
         }).eraseToAnyPublisher()
     }
     
-    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
+    func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getWheelEligibility(gameTransId: gameTransId)
+
+        let publisher: AnyPublisher<SportRadarModels.WheelStatusResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ wheelStatusResponse -> AnyPublisher<WheelEligibility, ServiceProviderError> in
+
+            if wheelStatusResponse.status == "SUCCESS",
+               let wheelEligibility = wheelStatusResponse.data {
+
+                let mappedWheelEligibility = SportRadarModelMapper.wheelEligibility(fromInternalWheelEligibility: wheelEligibility)
+
+                return Just(mappedWheelEligibility).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: WheelEligibility.self, failure: ServiceProviderError.errorMessage(message: wheelStatusResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.wheelOptIn(winBoostId: winBoostId, optInOption: optInOption)
+
+        let publisher: AnyPublisher<SportRadarModels.WheelOptInData, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ wheelOptInData -> AnyPublisher<WheelOptInData, ServiceProviderError> in
+
+            if wheelOptInData.status == "ACCEPTED" || wheelOptInData.status == "REJECTED" {
+
+                let mappedWheelOptInData = SportRadarModelMapper.wheelOptInData(fromInternalWheelOptInData: wheelOptInData)
+                    
+                return Just(mappedWheelOptInData).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: WheelOptInData.self, failure: ServiceProviderError.errorMessage(message: wheelOptInData.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+    
+    func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> {
+
+        let endpoint = OmegaAPIClient.getGrantedWinBoosts(gameTransIds: gameTransIds)
+
+        let publisher: AnyPublisher<SportRadarModels.GrantedWinBoostsResponse, ServiceProviderError> = self.connector.request(endpoint)
+
+        return publisher.flatMap({ grantedWinBoostsResponse -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError> in
+
+            if grantedWinBoostsResponse.status == "SUCCESS",
+               let grantedWinBoosts = grantedWinBoostsResponse.data{
+
+                let mappedGrantedWinBoosts = grantedWinBoosts.map({
+                    return SportRadarModelMapper.grantedWinBoosts(fromInternalGrantedWinBoosts: $0)
+                })
+                
+                // Filter the mapped win boosts to only include those with status "ACCEPTED" or "AWARDED"
+                let filteredWinBoosts = mappedGrantedWinBoosts.filter { grantedWinBoost in
+                    return grantedWinBoost.winBoosts.contains { winBoost in
+                        return winBoost.status == "ACCEPTED" || winBoost.status == "AWARDED"
+                    }
+                }
+                    
+                return Just(filteredWinBoosts).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
+
+            }
+            else {
+                return Fail(outputType: [GrantedWinBoosts].self, failure: ServiceProviderError.errorMessage(message: grantedWinBoostsResponse.status)).eraseToAnyPublisher()
+            }
+        }).eraseToAnyPublisher()
+    }
+
+    func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-}
 
-extension SportRadarPrivilegedAccessManager {
-        
+    func stopUserInfoStream() {
+    }
+
+    func refreshUserBalance() {
+    }
+
+    func depositOnWallet(amount: Double) -> AnyPublisher<Bool, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notImplemented).eraseToAnyPublisher()
+    }
+
+    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        // SportRadar provider doesn't support Widget Cashier - use EveryMatrix provider
+        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
+    }
+
+    func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError> {
+        return getGrantedBonuses()
+    }
+
+    func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError> {
+        return getAvailableBonuses()
+    }
+
     func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
@@ -1492,7 +1693,6 @@ extension SportRadarPrivilegedAccessManager {
     }
 
     func getChatrooms() -> AnyPublisher<[ChatroomData], ServiceProviderError> {
-        
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
@@ -1524,41 +1724,17 @@ extension SportRadarPrivilegedAccessManager {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError> {
+    func getRegistrationConfig() -> AnyPublisher<RegistrationConfigResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getRecentlyPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getMostPlayedGames(playerId: String, language: String?, platform: String?, pagination: CasinoPaginationParams) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-
-    func getRecommendedGames(language: String?, platform: String?) -> AnyPublisher<CasinoGamesResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    // MARK: - Transaction History Methods (Not Supported for SportRadar)
-
-    func getBankingTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getWageringTransactionsHistory(startDate: String, endDate: String, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getBankingTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?, types: String?, states: [String]?) -> AnyPublisher<BankingTransactionsResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    func getWageringTransactionsHistory(filter: TransactionDateFilter, pageNumber: Int?) -> AnyPublisher<WageringTransactionsResponse, ServiceProviderError> {
-        return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
-    }
-
-    // Betting Offer Booking (Not Supported)
 
     func createBookingCode(bettingOfferIds: [String], originalSelectionsLength: Int) -> AnyPublisher<BookingCodeResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
@@ -1567,25 +1743,32 @@ extension SportRadarPrivilegedAccessManager {
     func getBettingOfferIds(bookingCode: String) -> AnyPublisher<[String], ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func getResetPasswordTokenId(mobileNumber: String, mobilePrefix: String) -> AnyPublisher<ResetPasswordTokenResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func validateResetPasswordCode(tokenId: String, validationCode: String) -> AnyPublisher<ValidateResetPasswordCodeResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+
     func resetPasswordWithHashKey(hashKey: String, plainTextPassword: String, isUserHash: Bool) -> AnyPublisher<ResetPasswordByHashKeyResponse, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
 
-    // Bonus stair
-    func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection])
-    -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
+    func getOddsBoostStairs(currency: String, stakeAmount: Double?, selections: [OddsBoostStairsSelection]) -> AnyPublisher<OddsBoostStairsResponse?, ServiceProviderError> {
         return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
     }
-    
+}
+
+extension SportRadarPrivilegedAccessManager: CustomerSupportProvider {
+    func contactUs(form: ContactUsForm) -> AnyPublisher<BasicResponse, ServiceProviderError> {
+        return contactUs(firstName: form.firstName, lastName: form.lastName, email: form.email, subject: form.subject, message: form.message)
+    }
+
+    func contactSupport(form: ContactSupportForm) -> AnyPublisher<SupportResponse, ServiceProviderError> {
+        return contactSupport(userIdentifier: form.userIdentifier, firstName: form.firstName, lastName: form.lastName, email: form.email, subject: form.subject, subjectType: form.subjectType, message: form.message, isLogged: form.isLogged)
+    }
 }
 
 extension SportRadarPrivilegedAccessManager: SportRadarSessionTokenUpdater {

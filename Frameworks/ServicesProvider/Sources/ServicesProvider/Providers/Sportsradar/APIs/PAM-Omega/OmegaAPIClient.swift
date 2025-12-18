@@ -24,6 +24,15 @@ import Foundation
  https://ps.omegasys.eu/ps/ips/updatePassword
  */
 
+// MARK: - Multipart Boundary
+// Hardcoded boundary for multipart/form-data requests (used for login endpoint)
+// See body and headers properties for login case - temporary workaround for server bug
+private let omegaLoginBoundary = "iOSFormBoundary7MA4YWxkTrZu0gW"
+
+// Hardcoded boundary for multipart/form-data requests (used for signUp endpoint)
+// See body and headers properties for signUp case - temporary workaround for server bug
+private let omegaSignUpBoundary = "iOSFormBoundary8NB5ZXylUsH1vX"
+
 enum OmegaAPIClient {
     case login(username: String, password: String)
     case openSession
@@ -160,6 +169,9 @@ enum OmegaAPIClient {
     case getUserConsents
     case setUserConsents(consentVersionIds: [Int]? = nil, unconsentVersionIds: [Int]? = nil)
 
+    case getSumsubAccessToken(userId: String, levelName: String, body: Data? = nil, header: [String: String])
+    case getSumsubApplicantData(userId: String, body: Data? = nil, header: [String: String])
+
     case generateDocumentTypeToken(docType: String)
     case checkDocumentationData
 
@@ -168,6 +180,10 @@ enum OmegaAPIClient {
     
     case getReferralLink
     case getReferees
+    
+    case getWheelEligibility(gameTransId: String)
+    case wheelOptIn(winBoostId: String, optInOption: String)
+    case getGrantedWinBoosts(gameTransIds: [String])
 }
 
 extension OmegaAPIClient: Endpoint {
@@ -294,6 +310,11 @@ extension OmegaAPIClient: Endpoint {
         case .setUserConsents:
             return "/ps/ips/user/consents/save"
 
+        case .getSumsubAccessToken:
+            return "/resources/accessTokens"
+        case .getSumsubApplicantData(let userId, _, _):
+            return "/resources/applicants/-;externalUserId=\(userId)/one"
+
         case .generateDocumentTypeToken:
             return "/ps/ips/generateToken"
 
@@ -309,14 +330,19 @@ extension OmegaAPIClient: Endpoint {
             return "/ps/ips/getReferralLinks"
         case .getReferees:
             return "/ps/ips/getReferees"
+        
+        case .getWheelEligibility:
+            return "/ps/ips/winboost/eligibility"
+        case .wheelOptIn:
+            return "/ps/ips/winboost/accept"
+        case .getGrantedWinBoosts:
+            return "/ps/ips/winboost/granted"
         }
     }
     
     var query: [URLQueryItem]? {
         switch self {
         case .login:
-//            return [URLQueryItem(name: "username", value: username),
-//                    URLQueryItem(name: "password", value: password)]
             return nil
         case .openSession:
             return [URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
@@ -325,13 +351,13 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .playerInfo:
             return nil
-
+            
         case .checkCredentialEmail(let email):
             return [URLQueryItem(name: "field", value: "email"),
                     URLQueryItem(name: "value", value: email)]
         case .checkUsername(let username):
             return [URLQueryItem(name: "userId", value: username)]
-
+            
         case .quickSignup(let email, let username, let password, let birthDate,
                           let mobilePrefix, let mobileNumber, let countryIsoCode, let currencyCode):
             let dateFormatter = DateFormatter()
@@ -350,35 +376,15 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "birthDate", value: birthDateString),
                 URLQueryItem(name: "mobile", value: phoneNumber)
             ]
+            
+        case .signUp:
+            // TODO: TEMPORARY WORKAROUND - All parameters moved to multipart body
+            // The Omega server fails to properly decode percent-encoded special characters
+            // in query parameters. Using multipart/form-data which works correctly.
+            // REVERT TO QUERY PARAMETERS when server decoding is fixed (see commented code below).
+            return nil
 
-        case .signUp(let email,
-                     let username,
-                     let password,
-                     let birthDate,
-                     let mobilePrefix,
-                     let mobileNumber,
-                     _,
-                     let currencyCode,
-                     let firstName,
-                     let lastName,
-                     let middleName,
-                     let gender,
-                     let address,
-                     let city,
-                     let postalCode,
-                     let countryIso2Code,
-                     let bonusCode,
-                     let receiveMarketingEmails,
-                     let avatarName,
-                     let godfatherCode,
-                     let birthDepartment,
-                     let birthCity,
-                     let birthCountry,
-                     let streetNumber,
-                     let consentedIds,
-                     let unconsentedIds,
-                     let mobileVerificationRequestId):
-
+            /* ORIGINAL QUERY PARAMETER CODE
             let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
 
             var query: [URLQueryItem] = []
@@ -394,11 +400,11 @@ extension OmegaAPIClient: Endpoint {
 
             query.append(URLQueryItem(name: "firstName", value: firstName))
             query.append(URLQueryItem(name: "lastName", value: lastName))
-            
+
             if let middleName = middleName {
                 query.append(URLQueryItem(name: "middleName", value: middleName))
             }
-            
+
             query.append(URLQueryItem(name: "gender", value: gender))
             query.append(URLQueryItem(name: "address", value: address))
 
@@ -422,7 +428,7 @@ extension OmegaAPIClient: Endpoint {
             if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
                 query.append(URLQueryItem(name: "verificationRequestId", value: mobileVerificationRequestIdValue))
             }
-            
+
             let extraInfo = """
                             {
                             "avatar":"\(avatarName ?? "")",
@@ -430,9 +436,9 @@ extension OmegaAPIClient: Endpoint {
                             "godfatherCode":"\(godfatherCode ?? "")"
                             }
                             """
-            
+
             query.append(URLQueryItem(name: "extraInfo", value: extraInfo))
-            
+
             if let godfatherCode {
                 query.append(URLQueryItem(name: "referralCode", value: "\(godfatherCode)"))
             }
@@ -440,14 +446,15 @@ extension OmegaAPIClient: Endpoint {
             for consentedId in consentedIds {
                 query.append(URLQueryItem(name: "consentedVersions[]", value: consentedId))
             }
-            
+
             for unconsentedId in unconsentedIds {
                 query.append(URLQueryItem(name: "unConsentedversions[]", value: unconsentedId))
             }
-            
-            
-            return query
 
+
+            return query
+            */
+            
         case .updateExtraInfo(let placeOfBirth, let address2):
             var query: [URLQueryItem] = []
             let extraInfo = """
@@ -517,26 +524,26 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .forgotPassword(let email, let secretQuestion, let secretAnswer):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             let queryItem = URLQueryItem(name: "email", value: email)
             queryItemsURL.append(queryItem)
-
+            
             if secretQuestion != nil {
                 let queryItem = URLQueryItem(name: "secretQuestion", value: secretQuestion)
                 queryItemsURL.append(queryItem)
             }
-
+            
             if secretAnswer != nil {
                 let queryItem = URLQueryItem(name: "secretAnswer", value: secretAnswer)
                 queryItemsURL.append(queryItem)
             }
-
+            
             return queryItemsURL
         case .updatePassword(let oldPassword, let newPassword):
             return [URLQueryItem(name: "oldPassword", value: oldPassword),
                     URLQueryItem(name: "newPassword", value: newPassword)
             ]
-
+            
         case .updateWeeklyDepositLimits(let newLimit):
             let limitFormated = String(format: "%.2f", newLimit)
             return [URLQueryItem(name: "weeklyLimit", value: limitFormated)]
@@ -551,27 +558,27 @@ extension OmegaAPIClient: Endpoint {
             ]
         case .lockPlayer(let isPermanent, let lockPeriodUnit, let lockPeriod):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             if isPermanent != nil {
                 let queryItem = URLQueryItem(name: "isPermanent", value: "true")
                 queryItemsURL.append(queryItem)
             }
-
+            
             if lockPeriodUnit != nil {
                 let queryItem = URLQueryItem(name: "lockPeriodUnit", value: lockPeriodUnit)
                 queryItemsURL.append(queryItem)
             }
-
+            
             if lockPeriod != nil {
                 let queryItem = URLQueryItem(name: "lockPeriod", value: lockPeriod)
                 queryItemsURL.append(queryItem)
             }
-
+            
             let queryItem = URLQueryItem(name: "lockType", value: "TIMEOUT")
             queryItemsURL.append(queryItem)
-
+            
             return queryItemsURL
-
+            
         case .getPersonalDepositLimits:
             return nil
         case .getLimits:
@@ -580,12 +587,15 @@ extension OmegaAPIClient: Endpoint {
             return [URLQueryItem(name: "limitTypes", value: limitType),
                     URLQueryItem(name: "periodTypes", value: periodType)
             ]
-
+            
         case .getBalance:
-            return nil
+            return [
+                URLQueryItem(name: "includeExternalFreeBetBalances", value: "true")
+            ]
+//            return nil
         case .getCashbackBalance:
             return nil
-
+            
         case .quickSignupCompletion(let firstName, let lastName, let birthDate, let gender, let mobileNumber,
                                     let address, let province, let city, let postalCode, let country, let cardId, let securityQuestion, let securityAnswer):
             var query: [URLQueryItem] = []
@@ -621,17 +631,17 @@ extension OmegaAPIClient: Endpoint {
             return nil
         case .uploadMultipleUserDocuments:
             return nil
-
+            
         case .getPayments:
-
+            
             return nil
         case .processDeposit(let paymentMethod, let amount, let option):
             let localeCode = Locale.current.languageCode
             let localeRegion = Locale.current.regionCode
             let locale = "\(localeCode ?? "fr")-\(localeRegion ?? "FR")"
-
+            
             return [
-
+                
                 URLQueryItem(name: "paymentMethod", value: paymentMethod),
                 URLQueryItem(name: "amount", value: "\(amount)"),
                 URLQueryItem(name: "option", value: option),
@@ -640,7 +650,7 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "channel", value: "iOS"),
                 URLQueryItem(name: "threeDSNative", value: "true")
             ]
-
+            
         case .processWithdrawal(let withdrawalMethod, let amount, let conversionId):
             var query = [
                 
@@ -655,7 +665,7 @@ extension OmegaAPIClient: Endpoint {
             return query
         case .prepareWithdrawal(let withdrawalMethod):
             return [
-
+                
                 URLQueryItem(name: "paymentMethod", value: withdrawalMethod),
                 URLQueryItem(name: "action", value: "GET_EXCHANGE_INFO")
             ]
@@ -691,7 +701,7 @@ extension OmegaAPIClient: Endpoint {
                 query.append(URLQueryItem(name: "encryptedCardNumber", value: encryptedCardNumberValue))
             }
             return query
-
+            
         case .cancelDeposit(let paymentId):
             return [
                 URLQueryItem(name: "paymentId", value: paymentId)
@@ -704,73 +714,73 @@ extension OmegaAPIClient: Endpoint {
             
         case .getWithdrawalsMethods:
             return nil
-
+            
         case .getPaymentInformation:
             return nil
-
+            
         case .addPaymentInformation(let type, let fields):
             return [
-
+                
                 URLQueryItem(name: "type", value: type),
                 URLQueryItem(name: "fields", value: fields)
             ]
-
+            
         case .getTransactionsHistory(let startDate, let endDate, let transactionType, let pageNumber, let pageSize):
             var queryItemsURL: [URLQueryItem] = []
-
+            
             let startDateQueryItem = URLQueryItem(name: "startDateTime", value: startDate)
             queryItemsURL.append(startDateQueryItem)
-
+            
             let endDateQueryItem = URLQueryItem(name: "endDateTime", value: endDate)
             queryItemsURL.append(endDateQueryItem)
-
+            
             if let transactionType {
                 for tranType in transactionType {
                     let queryItem = URLQueryItem(name: "tranType", value: tranType)
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             if let pageNumber {
                 let queryItem = URLQueryItem(name: "pageNum", value: "\(pageNumber)")
                 queryItemsURL.append(queryItem)
             }
-
+            
             if let pageSize {
                 let queryItem = URLQueryItem(name: "pageSize", value: "\(pageSize)")
                 queryItemsURL.append(queryItem)
             }
-
+            
             return queryItemsURL
-
+            
         case .getGrantedBonuses:
             return nil
-
+            
         case .redeemBonus(let code):
             return [
                 URLQueryItem(name: "bonusCode", value: code)
             ]
-
+            
         case .getAvailableBonuses:
             return nil
-
+            
         case .redeemAvailableBonuses(let partyId, let bonusId):
             return [
                 URLQueryItem(name: "partyId", value: partyId),
                 URLQueryItem(name: "optInId", value: bonusId),
             ]
-
+            
         case .cancelBonus(let bonusId):
             return [
                 URLQueryItem(name: "bonusId", value: bonusId)
             ]
-
+            
         case .optOutBonus(let partyId, let bonusId):
             return [
                 URLQueryItem(name: "partyId", value: partyId),
                 URLQueryItem(name: "bonusId", value: bonusId),
             ]
-
+            
         case .contactUs(let firstName, let lastName, let email, let subject, let message):
             return [
                 URLQueryItem(name: "firstName", value: firstName),
@@ -779,44 +789,56 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "subject", value: subject),
                 URLQueryItem(name: "message", value: message)
             ]
-
+            
         case .contactSupport:
             return nil
-
+            
         case .getAllConsents:
             return nil
         case .getUserConsents:
             return nil
-
+            
         case .setUserConsents(let consentVersionIds, let unconsentVersionIds):
-
+            
             var queryItemsURL: [URLQueryItem] = []
-
-
+            
+            
             if let consentVersionIds {
                 for consentId in consentVersionIds {
                     let queryItem = URLQueryItem(name: "consentedVersions", value: "\(consentId)")
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             if let unconsentVersionIds {
                 for unconsentId in unconsentVersionIds {
                     let queryItem = URLQueryItem(name: "unConsentedVersions", value: "\(unconsentId)")
                     queryItemsURL.append(queryItem)
                 }
             }
-
+            
             return queryItemsURL
-
+            
+        case .getSumsubAccessToken(let userId, let levelName, _, _):
+            return [
+                
+                URLQueryItem(name: "userId", value: userId),
+                URLQueryItem(name: "levelName", value: levelName)
+                //                URLQueryItem(name: "ttlInSecs", value: "600")
+                
+            ]
+            
+        case .getSumsubApplicantData:
+            return nil
+            
         case .generateDocumentTypeToken(let docType):
             return [
-
+                
                 URLQueryItem(name: "target", value: "SUMSUB"),
                 URLQueryItem(name: "docType", value: docType)
-
+                
             ]
-
+            
         case .checkDocumentationData:
             return [
                 URLQueryItem(name: "target", value: "SUMSUB"),
@@ -828,20 +850,38 @@ extension OmegaAPIClient: Endpoint {
                 URLQueryItem(name: "verificationType", value: "MOBILE"),
                 URLQueryItem(name: "verificationValue", value: mobileNumber)
             ]
-        
+            
         case .verifyMobileCode(let code, let requestId):
             return [
                 URLQueryItem(name: "verificationRequestId", value: requestId),
                 URLQueryItem(name: "verificationCode", value: code)
             ]
-
+            
         case .getReferralLink:
             return nil
         case .getReferees:
             return nil
+            
+        case .getWheelEligibility(let gameTransId):
+            return [
+                URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
+                URLQueryItem(name: "gameTranId", value: gameTransId)
+            ]
+        case .wheelOptIn(let winBoostId, let optInOption):
+            return [
+                URLQueryItem(name: "winBoostId", value: winBoostId),
+                URLQueryItem(name: "accepted", value: optInOption)
+            ]
+        case .getGrantedWinBoosts(let gameTransIds):
+            
+            let gameTransIdsString = gameTransIds.joined(separator: ",")
+            
+            return [
+                URLQueryItem(name: "productCode", value: "SPORT_RADAR"),
+                URLQueryItem(name: "gameTranIds", value: gameTransIdsString)
+            ]
         }
     }
-    
     
     var method: HTTP.Method {
         switch self {
@@ -853,7 +893,7 @@ extension OmegaAPIClient: Endpoint {
         case .checkCredentialEmail: return .get
         case .checkUsername: return .get
         case .quickSignup: return .get
-        case .signUp: return .get
+        case .signUp: return .post
         case .resendVerificationCode: return .get
         case .signupConfirmation: return .get
         case .getCountries: return .get
@@ -909,6 +949,9 @@ extension OmegaAPIClient: Endpoint {
         case .getUserConsents: return .get
         case .setUserConsents: return .post
 
+        case .getSumsubAccessToken: return .post
+        case .getSumsubApplicantData: return .get
+
         case .generateDocumentTypeToken: return .get
         case .checkDocumentationData: return .get
             
@@ -917,6 +960,10 @@ extension OmegaAPIClient: Endpoint {
             
         case .getReferralLink: return .get
         case .getReferees: return .get
+            
+        case .getWheelEligibility: return .get
+        case .wheelOptIn: return .get
+        case .getGrantedWinBoosts: return .get
         }
     }
     
@@ -924,6 +971,30 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .login(let username, let password):
 
+            // The Omega server fails to properly decode percent-encoded special characters
+            // (e.g., & becomes %26, @ becomes %40) in application/x-www-form-urlencoded format.
+            // Browser uses multipart/form-data which works correctly.
+            // REVERT TO URL-ENCODED when server decoding is fixed (see commented code below).
+            // Tested working: ivotestsrna1065 / testes&doIvo1@
+
+            var body = Data()
+
+            // Username field
+            body.append("--\(omegaLoginBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"username\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(username)\r\n".data(using: .utf8)!)
+
+            // Password field
+            body.append("--\(omegaLoginBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(password)\r\n".data(using: .utf8)!)
+
+            // Closing boundary
+            body.append("--\(omegaLoginBoundary)--\r\n".data(using: .utf8)!)
+
+            return body
+
+            /* ORIGINAL URL-ENCODED CODE
             let parameters = [
                 "username": username,
                 "password": password
@@ -937,6 +1008,7 @@ extension OmegaAPIClient: Endpoint {
                 return "\(encodedKey)=\(encodedValue)"
             }.joined(separator: "&")
             return formBodyString.data(using: String.Encoding.utf8)
+            */
 
         case .uploadUserDocument( _, _, let body, _):
             return body
@@ -970,6 +1042,205 @@ extension OmegaAPIClient: Endpoint {
             }
             """
             return bodyString.data(using: String.Encoding.utf8) ?? Data()
+
+        case .getSumsubAccessToken( _, _, let body, _):
+            return body
+
+        case .signUp(let email,
+                     let username,
+                     let password,
+                     let birthDate,
+                     let mobilePrefix,
+                     let mobileNumber,
+                     _,
+                     let currencyCode,
+                     let firstName,
+                     let lastName,
+                     let middleName,
+                     let gender,
+                     let address,
+                     let city,
+                     let postalCode,
+                     let countryIso2Code,
+                     let bonusCode,
+                     let receiveMarketingEmails,
+                     let avatarName,
+                     let godfatherCode,
+                     let birthDepartment,
+                     let birthCity,
+                     let birthCountry,
+                     let streetNumber,
+                     let consentedIds,
+                     let unconsentedIds,
+                     let mobileVerificationRequestId):
+
+            // TODO: TEMPORARY WORKAROUND - Server Bug with URL-encoded parameters
+            // The Omega server fails to properly decode percent-encoded special characters
+            // (e.g., & becomes %26, @ becomes %40) in query parameters.
+            // Using multipart/form-data which works correctly.
+            // REVERT TO QUERY PARAMETERS when server decoding is fixed.
+
+            var body = Data()
+
+            // Format phone number
+            let phoneNumber = "\(mobilePrefix)\(mobileNumber)".replacingOccurrences(of: "+", with: "")
+
+            // Format birthDate
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let birthDateString = dateFormatter.string(from: birthDate)
+
+            // Username field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"username\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(username)\r\n".data(using: .utf8)!)
+
+            // Password field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"password\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(password)\r\n".data(using: .utf8)!)
+
+            // Email field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"email\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(email)\r\n".data(using: .utf8)!)
+
+            // Currency field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"currency\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(currencyCode)\r\n".data(using: .utf8)!)
+
+            // Mobile field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"mobile\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(phoneNumber)\r\n".data(using: .utf8)!)
+
+            // City field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"city\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(city)\r\n".data(using: .utf8)!)
+
+            // Country field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"country\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(countryIso2Code)\r\n".data(using: .utf8)!)
+
+            // FirstName field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"firstName\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(firstName)\r\n".data(using: .utf8)!)
+
+            // LastName field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"lastName\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(lastName)\r\n".data(using: .utf8)!)
+
+            // MiddleName field (optional)
+            if let middleName = middleName {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"middleName\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(middleName)\r\n".data(using: .utf8)!)
+            }
+
+            // Gender field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"gender\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(gender)\r\n".data(using: .utf8)!)
+
+            // Address field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"address\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(address)\r\n".data(using: .utf8)!)
+
+            // PostalCode field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"postalCode\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(postalCode)\r\n".data(using: .utf8)!)
+
+            // StreetNumber field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"streetNumber\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(streetNumber)\r\n".data(using: .utf8)!)
+
+            // BirthDepartment field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthDepartment\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthDepartment)\r\n".data(using: .utf8)!)
+
+            // BirthCity field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthCity\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthCity)\r\n".data(using: .utf8)!)
+
+            // BirthCountry field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthCountry\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthCountry)\r\n".data(using: .utf8)!)
+
+            // BirthDate field
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"birthDate\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(birthDateString)\r\n".data(using: .utf8)!)
+
+            // BonusCode field (optional)
+            if let bonusCode = bonusCode {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"bonusCode\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(bonusCode)\r\n".data(using: .utf8)!)
+            }
+
+            // ReceiveEmail field (optional)
+            if let receiveMarketingEmails = receiveMarketingEmails {
+                let receiveEmailValue = receiveMarketingEmails ? "true" : "false"
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"receiveEmail\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(receiveEmailValue)\r\n".data(using: .utf8)!)
+            }
+
+            // VerificationRequestId field (optional)
+            if let mobileVerificationRequestIdValue = mobileVerificationRequestId {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"verificationRequestId\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(mobileVerificationRequestIdValue)\r\n".data(using: .utf8)!)
+            }
+
+            // ExtraInfo field (JSON)
+            let extraInfo = """
+            {
+            "avatar":"\(avatarName ?? "")",
+            "device_os": "iOS",
+            "godfatherCode":"\(godfatherCode ?? "")"
+            }
+            """
+            body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"extraInfo\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(extraInfo)\r\n".data(using: .utf8)!)
+
+            // ReferralCode field (optional)
+            if let godfatherCode = godfatherCode {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"referralCode\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(godfatherCode)\r\n".data(using: .utf8)!)
+            }
+
+            // ConsentedVersions array (multiple fields with bracket notation)
+            for consentedId in consentedIds {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"consentedVersions[]\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(consentedId)\r\n".data(using: .utf8)!)
+            }
+
+            // UnConsentedversions array (multiple fields with bracket notation)
+            for unconsentedId in unconsentedIds {
+                body.append("--\(omegaSignUpBoundary)\r\n".data(using: .utf8)!)
+                body.append("Content-Disposition: form-data; name=\"unConsentedversions[]\"\r\n\r\n".data(using: .utf8)!)
+                body.append("\(unconsentedId)\r\n".data(using: .utf8)!)
+            }
+
+            // Closing boundary
+            body.append("--\(omegaSignUpBoundary)--\r\n".data(using: .utf8)!)
+
+            return body
 
         default:
             return nil
@@ -1042,6 +1313,9 @@ extension OmegaAPIClient: Endpoint {
         case .getUserConsents: return true
         case .setUserConsents: return true
 
+        case .getSumsubAccessToken: return false
+        case .getSumsubApplicantData: return false
+
         case .generateDocumentTypeToken: return true
         case .checkDocumentationData: return true
             
@@ -1050,6 +1324,10 @@ extension OmegaAPIClient: Endpoint {
             
         case .getReferralLink: return true
         case .getReferees: return true
+            
+        case .getWheelEligibility: return true
+        case .wheelOptIn: return true
+        case .getGrantedWinBoosts: return true
         }
     }
     
@@ -1058,6 +1336,10 @@ extension OmegaAPIClient: Endpoint {
         switch self {
         case .contactSupport:
             return SportRadarConfiguration.shared.supportHostname
+        case .getSumsubAccessToken:
+            return SportRadarConfiguration.shared.sumsubHostname
+        case .getSumsubApplicantData:
+            return SportRadarConfiguration.shared.sumsubHostname
         default:
             return SportRadarConfiguration.shared.pamHostname
         }
@@ -1068,13 +1350,17 @@ extension OmegaAPIClient: Endpoint {
     var headers: HTTP.Headers? {
         switch self {
         case .login:
+            // TODO: TEMPORARY WORKAROUND - See body property for full explanation
+            // Using multipart/form-data due to server bug with URL-encoded password decoding
+            // REVERT TO URL-ENCODED when server is fixed (see commented code below)
             let headers = [
                 "Accept-Encoding": "gzip, deflate",
-                "Content-Type": "application/x-www-form-urlencoded",
+                "Content-Type": "multipart/form-data; boundary=\(omegaLoginBoundary)",
                 "Accept": "*/*",
                 "app-origin": "ios",
             ]
             return headers
+
         case .uploadUserDocument( _, _, _, let header):
             let customHeaders = [
                 "Content-Type": header,
@@ -1087,7 +1373,10 @@ extension OmegaAPIClient: Endpoint {
                 "app-origin": "ios",
             ]
             return customHeaders
-
+        case .getSumsubAccessToken(_ , _, _, let header):
+            return header
+        case .getSumsubApplicantData( _, _,  let header):
+            return header
         case .contactSupport(_, _, _, let email, _, _, _, let isLogged):
 
             if isLogged {
@@ -1110,6 +1399,18 @@ extension OmegaAPIClient: Endpoint {
                 "Accept-Encoding": "gzip, deflate",
                 "Content-Type": "application/json; charset=UTF-8",
                 "Accept": "application/json",
+                "app-origin": "ios",
+            ]
+            return headers
+
+        case .signUp:
+            // TODO: TEMPORARY WORKAROUND - See body property for full explanation
+            // Using multipart/form-data due to server bug with URL-encoded parameter decoding
+            // REVERT TO DEFAULT HEADERS when server is fixed
+            let headers = [
+                "Accept-Encoding": "gzip, deflate",
+                "Content-Type": "multipart/form-data; boundary=\(omegaSignUpBoundary)",
+                "Accept": "*/*",
                 "app-origin": "ios",
             ]
             return headers
@@ -1191,12 +1492,17 @@ extension OmegaAPIClient: Endpoint {
         case .getAllConsents: return "getAllConsents"
         case .getUserConsents: return "getUserConsents"
         case .setUserConsents: return "setUserConsents"
+        case .getSumsubAccessToken: return "getSumsubAccessToken"
+        case .getSumsubApplicantData: return "getSumsubApplicantData"
         case .generateDocumentTypeToken: return "generateDocumentTypeToken"
         case .checkDocumentationData: return "checkDocumentationData"
         case .getMobileVerificationCode: return "getMobileVerificationCode"
         case .verifyMobileCode: return "verifyMobileCode"
         case .getReferralLink: return "getReferralLink"
         case .getReferees: return "getReferees"
+        case .getWheelEligibility: return "getWheelEligibility"
+        case .wheelOptIn: return "wheelOptIn"
+        case .getGrantedWinBoosts: return "getGrantedWinBoosts"
         }
     }
 }

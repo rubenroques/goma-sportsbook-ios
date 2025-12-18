@@ -1,0 +1,19 @@
+upload dsyms script
+
+
+ruben at Macbook-Air-M1 in ~/Library/Developer/Xcode/Archives/2022-06-18/GOMASports 18-06-2022, 00.33.xcarchive
+$ /Users/ruben/Library/Developer/Xcode/Archives/2022-06-20/GOMASports\ 20-06-2022,\ 16.50.xcarchive
+
+ruben at Macbook-Air-M1 in ~/Library/Developer/Xcode/Archives/2022-06-20/GOMASports 20-06-2022, 16.50.xcarchive
+$ dsymutil -symbol-map ./BCSymbolMaps/3CBA1253-214F-3159-9926-8D5D752304DE.bcsymbolmap ./dSYMs/GOMASports.app.dSYM
+
+ruben at Macbook-Air-M1 in ~/Library/Developer/Xcode/Archives/2022-06-20/GOMASports 20-06-2022, 16.50.xcarchive
+$ cd ~/Desktop/GOMA/iOS/Sportsbook/sportsbook-ios/dSYMs
+
+ruben at Macbook-Air-M1 in ~/Desktop/GOMA/iOS/Sportsbook/sportsbook-ios/dSYMs on develop!
+$ ./upload-symbols -gsp ../Clients/GOMASports/Misc/GoogleService-Info.plist -p ios ./GomaSports/*
+Successfully submitted symbols for architecture arm64 with UUID cf662a1b3bcc31b4b79f0a7f59a661e6 in dSYM: /Users/ruben/Desktop/GOMA/iOS/Sportsbook/sportsbook-ios/dSYMs/GomaSports/CF662A1B-3BCC-31B4-B79F-0A7F59A661E6.dSYM
+Successfully submitted symbols for architecture arm64 with UUID 3cba1253214f315999268d5d752304de in dSYM: /Users/ruben/Desktop/GOMA/iOS/Sportsbook/sportsbook-ios/dSYMs/GomaSports/GOMASports.app.dSYM
+Successfully uploaded Crashlytics symbols
+
+ruben at Macbook-Air-M1 in ~/Desktop/GOMA/iOS/Sportsbook/sportsbook-ios/dSYMs on develop!

@@ -76,6 +76,8 @@ class EveryMatrixSSEConnector: Connector {
                     // Create EventSource with LDSwiftEventSource
                     return self.createEventSource(
                         url: url,
+                        method: endpoint.method.value(),
+                        body: endpoint.body,
                         headers: authenticatedHeaders,
                         timeout: endpoint.timeout,
                         decodingType: decodingType
@@ -98,6 +100,8 @@ class EveryMatrixSSEConnector: Connector {
 
             return createEventSource(
                 url: url,
+                method: endpoint.method.value(),
+                body: endpoint.body,
                 headers: headers,
                 timeout: endpoint.timeout,
                 decodingType: decodingType
@@ -117,6 +121,8 @@ class EveryMatrixSSEConnector: Connector {
     /// Create and configure LDSwiftEventSource EventSource
     private func createEventSource<T: Decodable>(
         url: URL,
+        method: String,
+        body: Data?,
         headers: [String: String],
         timeout: TimeInterval,
         decodingType: T.Type
@@ -128,7 +134,8 @@ class EveryMatrixSSEConnector: Connector {
         // Configure EventSource WITHOUT auto-reconnection
         // Reconnection is handled manually in UserInfoStreamManager (matches Web implementation)
         var config = EventSource.Config(handler: adapter, url: url)
-        config.method = "GET"
+        config.method = method
+        config.body = body
         config.headers = headers
         config.idleTimeout = timeout
 

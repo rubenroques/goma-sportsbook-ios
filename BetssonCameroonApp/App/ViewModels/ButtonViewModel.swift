@@ -11,16 +11,21 @@ import GomaUI
 import UIKit
 
 final class ButtonViewModel: ButtonViewModelProtocol {
-    
+
     // MARK: - Properties
-    
+
     private let buttonDataSubject: CurrentValueSubject<ButtonData, Never>
+
+    var currentButtonData: ButtonData {
+        buttonDataSubject.value
+    }
+
     var buttonDataPublisher: AnyPublisher<ButtonData, Never> {
         buttonDataSubject.eraseToAnyPublisher()
     }
-    
+
     // MARK: - Callback
-    
+
     var onButtonTapped: (() -> Void)?
     
     // MARK: - Initialization

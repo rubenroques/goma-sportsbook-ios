@@ -18,6 +18,7 @@ extension SportRadarModels {
         var expiryDate: String
         var wagerRequirement: String?
         var amountWagered: String?
+        var freeBetBonus: FreeBetBonus?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -28,6 +29,7 @@ extension SportRadarModels {
             case expiryDate = "expiryDate"
             case wagerRequirement = "wagerRequirement"
             case amountWagered = "amountWagered"
+            case freeBetBonus = "externalFreeBet"
         }
         
         init(from decoder: any Decoder) throws {
@@ -40,6 +42,18 @@ extension SportRadarModels {
             self.expiryDate = try container.decode(String.self, forKey: SportRadarModels.GrantedBonus.CodingKeys.expiryDate)
             self.wagerRequirement = try container.decodeIfPresent(String.self, forKey: SportRadarModels.GrantedBonus.CodingKeys.wagerRequirement)
             self.amountWagered = try container.decodeIfPresent(String.self, forKey: SportRadarModels.GrantedBonus.CodingKeys.amountWagered)
+            
+            self.freeBetBonus = try container.decodeIfPresent(FreeBetBonus.self, forKey: SportRadarModels.GrantedBonus.CodingKeys.freeBetBonus)
+        }
+    }
+    
+    struct FreeBetBonus: Codable {
+        var productCode: String
+        var amount: Double
+        
+        enum CodingKeys: String, CodingKey {
+            case productCode = "productCode"
+            case amount = "amount"
         }
     }
 }

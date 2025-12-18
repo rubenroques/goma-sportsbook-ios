@@ -37,22 +37,9 @@
 		CE07677D2DDB8AD900103999 /* DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CE0767852DDB8AD900103999 /* Exceptions for "Demo" folder in "Demo" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Assets/Info.plist,
-			);
-			target = CE07675C2DDB8AD700103999 /* Demo */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CE07675F2DDB8AD700103999 /* Demo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				CE0767852DDB8AD900103999 /* Exceptions for "Demo" folder in "Demo" target */,
-			);
 			path = Demo;
 			sourceTree = "<group>";
 		};

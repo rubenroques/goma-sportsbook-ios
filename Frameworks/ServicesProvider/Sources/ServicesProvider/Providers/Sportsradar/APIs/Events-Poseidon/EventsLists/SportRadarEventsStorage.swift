@@ -11,11 +11,11 @@ import Combine
 
 class SportRadarEventsStorage {
 
-    var eventsPublisher: AnyPublisher<Events?, Never> {
+    var eventsPublisher: AnyPublisher<[Event]?, Never> {
         return self.eventsSubject.eraseToAnyPublisher()
     }
 
-    private var eventsSubject: CurrentValueSubject<Events?, Never> = .init(nil)
+    private var eventsSubject: CurrentValueSubject<[Event]?, Never> = .init(nil)
 
     private var eventsDictionary: OrderedDictionary<String, CurrentValueSubject<Event, Never>>
     private var marketsDictionary: OrderedDictionary<String, CurrentValueSubject<Market, Never>>
@@ -37,7 +37,7 @@ class SportRadarEventsStorage {
         self.outcomesDictionary = [:]
     }
 
-    func storeEvents(_ events: Events) {
+    func storeEvents(_ events: [Event]) {
 
         for event in events {
             for market in event.markets {

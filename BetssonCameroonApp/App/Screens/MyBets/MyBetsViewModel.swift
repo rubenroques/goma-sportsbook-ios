@@ -95,9 +95,10 @@ final class MyBetsViewModel {
     private let servicesProvider: ServicesProvider.Client
     
     // MARK: - Private Properties
-    
+
     private var cancellables = Set<AnyCancellable>()
     private var currentBetsRequest: AnyCancellable?
+    private let viewModelCache = TicketBetInfoViewModelCache(maxSize: 20)
     
     // MARK: - Publishers
     
@@ -139,8 +140,9 @@ final class MyBetsViewModel {
                 switch status {
                 case .anonymous:
                     // User logged out - clear data and show empty state
-                    print("[SECURITY] MyBetsViewModel: User logged out, clearing cached bets")
+                    print("[SECURITY] MyBetsViewModel: User logged out, clearing cached bets and ViewModels")
                     self.betListDataCache.removeAll()
+                    self.viewModelCache.invalidateAll()
                     self.betsStateSubject.send(.loaded([]))
                 case .logged:
                     // User logged in - refresh data for new user
@@ -361,28 +363,57 @@ final class MyBetsViewModel {
     }
     
     // MARK: - Ticket View Models Creation
-    
+
     private func createTicketViewModels(from bets: [MyBet]) -> [TicketBetInfoViewModel] {
-        let viewModels = bets.map { bet in
+        var cacheHits = 0
+        var cacheMisses = 0
+
+        let viewModels = bets.map { bet -> TicketBetInfoViewModel in
+            // Check cache first
+            if let cachedViewModel = viewModelCache.get(forBetId: bet.identifier) {
+                cacheHits += 1
+                // Update with fresh bet data (preserves SSE subscription)
+                cachedViewModel.updateBetInfo(bet)
+                return cachedViewModel
+            }
+
+            cacheMisses += 1
+
+            // Create new ViewModel
             let viewModel = TicketBetInfoViewModel(myBet: bet, servicesProvider: servicesProvider)
-            
+
             // Wire up actions
             viewModel.onNavigationTap = { [weak self] bet in
                 self?.handleNavigationTap(bet)
             }
-            
+
             viewModel.onRebetTap = { [weak self] bet in
                 self?.handleRebetTap(bet)
             }
-            
+
             viewModel.onCashoutTap = { [weak self] bet in
                 self?.handleCashoutTap(bet)
             }
-            
+
+            // Wire cashout completion callback
+            viewModel.onCashoutCompleted = { [weak self] betId, isFullCashout, error in
+                self?.handleCashoutCompleted(betId: betId, isFullCashout: isFullCashout)
+            }
+
+            // Wire cashout error callback
+            viewModel.onCashoutError = { [weak self] message, retryAction in
+                self?.onShowCashoutError?(message, retryAction, {
+                    // Cancel action - ViewModel handles state reset
+                })
+            }
+
+            // Cache the new ViewModel
+            viewModelCache.set(viewModel, forBetId: bet.identifier)
+
             return viewModel
         }
-        
-        print("✅ MyBetsViewModel: Created \(viewModels.count) ticket view models")
+
+        print("✅ MyBetsViewModel: Created \(viewModels.count) ticket view models (cache hits: \(cacheHits), misses: \(cacheMisses))")
         return viewModels
     }
     
@@ -392,6 +423,7 @@ final class MyBetsViewModel {
     var onRequestRebetConfirmation: ((@escaping (Bool) -> Void) -> Void)?
     var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?) - nil if no partial failure
     var onShowRebetAllFailedError: (() -> Void)?
+    var onShowCashoutError: ((String, @escaping () -> Void, @escaping () -> Void) -> Void)?
     
     // MARK: - Action Handlers
     
@@ -578,8 +610,36 @@ final class MyBetsViewModel {
     
     private func handleCashoutTap(_ bet: MyBet) {
         print("💰 MyBetsViewModel: Cashout tapped for bet: \(bet.identifier)")
-        // TODO: Handle cashout flow
-        // This would typically refresh the bet list to reflect the cashed out state
-        refreshBets()
+        // Cashout execution is now handled by TicketBetInfoViewModel's state machine
+        // This callback is kept for legacy compatibility but the actual execution
+        // flows through onCashoutCompleted and onCashoutError
+    }
+
+    private func handleCashoutCompleted(betId: String, isFullCashout: Bool) {
+        if isFullCashout {
+            // Full cashout: Remove bet from list
+            print("✅ MyBetsViewModel: Full cashout completed for bet: \(betId)")
+            viewModelCache.invalidate(forBetId: betId)
+
+            // Filter bet from current list
+            let cacheKey = "\(selectedTabType.rawValue)_\(selectedStatusType.rawValue)"
+            if let currentData = betListDataCache[cacheKey] {
+                let filteredViewModels = currentData.viewModels.filter { $0.currentBetInfo.id != betId }
+                let updatedData = BetListData(
+                    viewModels: filteredViewModels,
+                    hasMore: currentData.hasMore,
+                    currentPage: currentData.currentPage
+                )
+                betListDataCache[cacheKey] = updatedData
+                betsStateSubject.send(.loaded(filteredViewModels))
+            } else {
+                // Fallback: refresh bets
+                refreshBets()
+            }
+        } else {
+            // Partial cashout: Reload bets to get updated data
+            print("✅ MyBetsViewModel: Partial cashout completed for bet: \(betId)")
+            loadBets(forced: true)
+        }
     }
 }

@@ -105,6 +105,15 @@ protocol PrivilegedAccessManagerProvider {
 
     func getBankingWebView(parameters: CashierParameters) -> AnyPublisher<CashierWebViewResponse, ServiceProviderError>
 
+    /// Build Widget Cashier URL client-side (no API call)
+    /// Uses internal session token from session coordinator
+    /// - Parameters:
+    ///   - type: Transaction type (.deposit or .withdraw)
+    ///   - language: Language code (e.g., "en", "fr")
+    ///   - theme: Theme string ("dark" or "light")
+    /// - Returns: Publisher emitting the constructed URL or error
+    func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError>
+
     func getGrantedBonuses(language: String?) -> AnyPublisher<[GrantedBonus], ServiceProviderError>
     func redeemBonus(code: String) -> AnyPublisher<RedeemBonusResponse, ServiceProviderError>
     func getAvailableBonuses(language: String?) -> AnyPublisher<[AvailableBonus], ServiceProviderError>
@@ -128,6 +137,10 @@ protocol PrivilegedAccessManagerProvider {
 
     func getReferralLink() -> AnyPublisher<ReferralLink, ServiceProviderError>
     func getReferees() -> AnyPublisher<[Referee], ServiceProviderError>
+
+    func getWheelEligibility(gameTransId: String) -> AnyPublisher<WheelEligibility, ServiceProviderError>
+    func wheelOptIn(winBoostId: String, optInOption: String) -> AnyPublisher<WheelOptInData, ServiceProviderError>
+    func getGrantedWinBoosts(gameTransIds: [String]) -> AnyPublisher<[GrantedWinBoosts], ServiceProviderError>
 
     func getFollowees() -> AnyPublisher<[Follower], ServiceProviderError>
     func getTotalFollowees() -> AnyPublisher<Int, ServiceProviderError>

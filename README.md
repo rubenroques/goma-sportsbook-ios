@@ -64,7 +64,7 @@ This workspace contains **three main projects** and **ten Swift packages**, orga
 **Available Schemes:**
 - `BetssonCameroonApp`
 
-#### 3. **GomaUIDemo** (`Frameworks/GomaUI/GomaUIDemo.xcodeproj`)
+#### 3. **GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`)
 *Component testing and preview application*
 
 **Purpose:**
@@ -74,7 +74,7 @@ This workspace contains **three main projects** and **ten Swift packages**, orga
 - Integration testing environment
 
 **Available Schemes:**
-- `DemoGomaUI`, `GomaUIDemo`
+- `GomaUICatalog`
 
 ### Swift Package Ecosystem
 
@@ -153,7 +153,7 @@ Legacy theming system (superseded by GomaUI StyleProvider).
 
 **GomaUI Component Testing:**
 ```bash
-xcodebuild -workspace Sportsbook.xcworkspace -scheme DemoGomaUI -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -workspace Sportsbook.xcworkspace -scheme GomaUICatalog -destination 'platform=iOS Simulator,name=iPhone 16' build
 ```
 
 **BetssonCameroonApp (Modern Architecture):**
@@ -182,7 +182,7 @@ This project follows a strict set of architectural and UI development guidelines
 **For New Feature Development:**
 1. Use **BetssonCameroonApp** as the reference architecture
 2. Leverage **GomaUI** components for consistent UI
-3. Test components in **GomaUIDemo** before integration
+3. Test components in **GomaUICatalog** before integration
 4. Follow protocol-driven MVVM patterns
 
 **For Legacy Maintenance:**
@@ -245,8 +245,8 @@ All projects use Swift Package Manager for internal dependencies, with clear sep
 - Mock implementations provided for all protocols
 - Test coverage focuses on business logic and data transformations
 
-### Integration Testing  
-- GomaUIDemo provides visual testing for components
+### Integration Testing
+- GomaUICatalog provides visual testing for components
 - Real device testing recommended for performance validation
 - Network layer testing with mock responses
 
