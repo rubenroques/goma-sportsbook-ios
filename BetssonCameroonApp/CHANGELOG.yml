@@ -3,6 +3,11 @@
 # Used by tag-release.yml workflow to generate Firebase release notes
 
 releases:
+  - version: "0.3.8"
+    build:
+    date:
+    notes:
+    - "fix(betslip): A `BetslipError` error response object was created to get the `errorCode` and `errorMessage`; The `EveryMatrixRESTConnector` response code mapper for `409` now checks for the new object decoding; Keys for hard coded strings were added."
 
   - version: "0.3.7"
     build: 3701
