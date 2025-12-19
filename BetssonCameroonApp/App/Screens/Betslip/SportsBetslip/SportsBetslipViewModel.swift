@@ -487,7 +487,13 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         // Show loading state
         self.isLoadingSubject.send(true)
 
-        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType, betBuilderOdds: betBuilderOdds)
+        environment.betslipManager
+            .placeBet(
+                withStake: stake,
+                useFreebetBalance: false,
+                oddsValidationType: oddsValidationType,
+                betBuilderOdds: betBuilderOdds
+            )
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
@@ -496,7 +502,14 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     print("[BET_PLACEMENT] ✅ Placement request completed")
                 case .failure(let error):
                     print("[BET_PLACEMENT] ❌ Placement failed: \(error)")
-                    self?.showPlacedBetState?(.error(message: "Bet couldn't be placed. Please try again later!"))
+                    let message = switch error {
+                    case .betPlacementDetailedError(message: let message):
+                        message
+                    default:
+                        "Bet couldn't be placed. Please try again later!"
+                    }
+                    
+                    self?.showPlacedBetState?(.error(message: message))
                 }
 
                 self?.isLoadingSubject.send(false)
