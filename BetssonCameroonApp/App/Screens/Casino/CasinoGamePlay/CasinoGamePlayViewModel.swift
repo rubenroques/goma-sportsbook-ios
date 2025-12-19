@@ -150,6 +150,7 @@ class CasinoGamePlayViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        
     }
     
 }

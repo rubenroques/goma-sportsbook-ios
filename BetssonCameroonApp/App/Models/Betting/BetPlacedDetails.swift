@@ -33,7 +33,7 @@ struct BetslipError {
     
 }
 
-struct BetPlacedDetails {
+public struct BetPlacedDetails {
     var response: BetslipPlaceBetResponse
 }
 
@@ -55,7 +55,7 @@ struct BetslipTicketSelection: Decodable {
     }
 }
 
-struct BetslipPlaceBetResponse: Decodable {
+public struct BetslipPlaceBetResponse: Decodable {
 
     var betId: String?
     var betSucceed: Bool?
