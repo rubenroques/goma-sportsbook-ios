@@ -33,6 +33,9 @@ extension ServiceProviderModelMapper {
         // Use currency from ServicesProvider.Bet (now includes currency field from API)
         let currency = servicesProviderBet.currency
 
+        // Map partial cashouts history
+        let mappedPartialCashOuts = servicesProviderBet.partialCashOuts?.map { partialCashOut($0) }
+
         return MyBet(
             identifier: servicesProviderBet.identifier,
             type: servicesProviderBet.type,
@@ -49,7 +52,20 @@ extension ServiceProviderModelMapper {
             freebet: servicesProviderBet.freebet,
             partialCashoutReturn: servicesProviderBet.partialCashoutReturn,
             partialCashoutStake: servicesProviderBet.partialCashoutStake,
-            ticketCode: servicesProviderBet.ticketCode
+            ticketCode: servicesProviderBet.ticketCode,
+            partialCashOuts: mappedPartialCashOuts
+        )
+    }
+
+    // MARK: - PartialCashOut Mapping
+
+    static func partialCashOut(_ servicesProviderPartialCashOut: ServicesProvider.PartialCashOut) -> PartialCashOut {
+        return PartialCashOut(
+            requestId: servicesProviderPartialCashOut.requestId,
+            usedStake: servicesProviderPartialCashOut.usedStake,
+            cashOutAmount: servicesProviderPartialCashOut.cashOutAmount,
+            status: servicesProviderPartialCashOut.status,
+            cashOutDate: servicesProviderPartialCashOut.cashOutDate
         )
     }
     

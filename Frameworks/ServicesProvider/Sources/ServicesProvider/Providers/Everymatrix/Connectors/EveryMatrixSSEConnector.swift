@@ -190,6 +190,10 @@ class EveryMatrixSSEConnector: Connector {
             print("[SSEDebug] 👤 EveryMatrixSSEConnector: Added user ID with key: \(userIdKey)")
         }
 
+        // Add userId header for backward compatibility (matches Web implementation)
+        // Web sends both X-user-id AND userId headers
+        updatedHeaders["userId"] = session.userId
+
         print("[SSEDebug] \(dump(updatedHeaders))")
         return updatedHeaders
     }

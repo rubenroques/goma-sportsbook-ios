@@ -121,10 +121,25 @@ public class BetTicketStatusView: UIView {
                 iconImageView.image = UIImage(systemName: "minus")
             }
             iconImageView.tintColor = StyleProvider.Color.allWhite
-            
+
             iconImageView.isHidden = true
-            
+
             statusLabel.text = LocalizationProvider.string("draw")
+
+        case .cashedOut:
+            containerStackView.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary
+            if let customImage = UIImage(named: "success_circle_icon") {
+                iconImageView.image = customImage
+            }
+            else {
+                iconImageView.image = UIImage(systemName: "checkmark.circle.fill")
+            }
+            iconImageView.tintColor = StyleProvider.Color.allWhite
+
+            iconImageView.isHidden = true
+
+            statusLabel.text = LocalizationProvider.string("cashed_out")
+            statusLabel.textColor = StyleProvider.Color.allWhite
         }
     }
 }
@@ -181,6 +196,15 @@ struct BetTicketStatusView_Previews: PreviewProvider {
             .padding()
             .background(Color.gray.opacity(0.1))
             .previewDisplayName("Draw State")
+
+            // Cashed Out state
+            BetTicketStatusPreviewView(
+                viewModel: MockBetTicketStatusViewModel.cashedOutMock()
+            )
+            .frame(height: 48)
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .previewDisplayName("Cashed Out State")
         }
     }
 }

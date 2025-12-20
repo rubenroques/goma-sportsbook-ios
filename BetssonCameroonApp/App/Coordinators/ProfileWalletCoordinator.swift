@@ -454,8 +454,8 @@ final class ProfileWalletCoordinator: Coordinator {
     private func presentDepositFlow(bonusCode: String? = nil) {
         guard let profileNavigationController = profileNavigationController else { return }
 
-        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier deposit flow from ProfileWallet")
-        let bankingCoordinator = BankingCoordinator.forWidgetCashierDeposit(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix deposit flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forDeposit(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
@@ -475,8 +475,8 @@ final class ProfileWalletCoordinator: Coordinator {
     private func presentWithdrawFlow() {
         guard let profileNavigationController = profileNavigationController else { return }
 
-        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier withdraw flow from ProfileWallet")
-        let bankingCoordinator = BankingCoordinator.forWidgetCashierWithdraw(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix withdraw flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forWithdraw(
             navigationController: profileNavigationController,
             client: servicesProvider
         )

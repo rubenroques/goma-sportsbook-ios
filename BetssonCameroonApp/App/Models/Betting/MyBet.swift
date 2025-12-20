@@ -33,6 +33,7 @@ struct MyBet: Codable, Equatable, Hashable {
     let partialCashoutReturn: Double?
     let partialCashoutStake: Double?
     let ticketCode: String?
+    let partialCashOuts: [PartialCashOut]?
 
     // MARK: - Initialization
     
@@ -52,7 +53,8 @@ struct MyBet: Codable, Equatable, Hashable {
         freebet: Bool = false,
         partialCashoutReturn: Double? = nil,
         partialCashoutStake: Double? = nil,
-        ticketCode: String? = nil
+        ticketCode: String? = nil,
+        partialCashOuts: [PartialCashOut]? = nil
     ) {
         self.identifier = identifier
         self.type = type
@@ -70,6 +72,7 @@ struct MyBet: Codable, Equatable, Hashable {
         self.partialCashoutReturn = partialCashoutReturn
         self.partialCashoutStake = partialCashoutStake
         self.ticketCode = ticketCode
+        self.partialCashOuts = partialCashOuts
     }
 
     // MARK: - Convenience Properties
@@ -149,5 +152,17 @@ struct MyBet: Codable, Equatable, Hashable {
         }
         return totalReturn - stake
     }
-    
+
+    // MARK: - Cashout History
+
+    /// Returns the total amount already cashed out from previous partial cashouts
+    var totalCashedOut: Double {
+        partialCashOuts?.compactMap { $0.cashOutAmount }.reduce(0, +) ?? 0
+    }
+
+    /// Returns true if this bet has any previous partial cashouts
+    var hasPreviousCashouts: Bool {
+        totalCashedOut > 0
+    }
+
 }
