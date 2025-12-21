@@ -106,16 +106,28 @@ final class ProfileWalletCoordinator: Coordinator {
             self?.dismissProfileWallet()
         }
         
-        // Deposit callback
+        // Deposit callback (normal tap - Widget Cashier)
         viewModel.onDepositRequested = { [weak self] in
             self?.presentDepositFlow()
         }
-        
-        // Withdraw callback
+
+        // Withdraw callback (normal tap - Widget Cashier)
         viewModel.onWithdrawRequested = { [weak self] in
             self?.presentWithdrawFlow()
         }
-        
+
+        #if DEBUG
+        // Legacy deposit callback (long press - EveryMatrix) - DEBUG only
+        viewModel.onDepositLegacyRequested = { [weak self] in
+            self?.presentDepositLegacyFlow()
+        }
+
+        // Legacy withdraw callback (long press - EveryMatrix) - DEBUG only
+        viewModel.onWithdrawLegacyRequested = { [weak self] in
+            self?.presentWithdrawLegacyFlow()
+        }
+        #endif
+
         // Menu item selection callback
         viewModel.onMenuItemSelected = { [weak self] menuItem, actionResponse in
             guard let self = self else { return }
@@ -454,8 +466,8 @@ final class ProfileWalletCoordinator: Coordinator {
     private func presentDepositFlow(bonusCode: String? = nil) {
         guard let profileNavigationController = profileNavigationController else { return }
 
-        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix deposit flow from ProfileWallet")
-        let bankingCoordinator = BankingCoordinator.forDeposit(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier deposit flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierDeposit(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
@@ -475,8 +487,8 @@ final class ProfileWalletCoordinator: Coordinator {
     private func presentWithdrawFlow() {
         guard let profileNavigationController = profileNavigationController else { return }
 
-        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix withdraw flow from ProfileWallet")
-        let bankingCoordinator = BankingCoordinator.forWithdraw(
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting Widget Cashier withdraw flow from ProfileWallet")
+        let bankingCoordinator = BankingCoordinator.forWidgetCashierWithdraw(
             navigationController: profileNavigationController,
             client: servicesProvider
         )
@@ -490,6 +502,40 @@ final class ProfileWalletCoordinator: Coordinator {
         // Start the banking flow
         bankingCoordinator.start()
     }
+
+    #if DEBUG
+    // MARK: - Legacy Banking Flow Methods (Long Press) - DEBUG only
+
+    private func presentDepositLegacyFlow(bonusCode: String? = nil) {
+        guard let profileNavigationController = profileNavigationController else { return }
+
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix deposit flow from ProfileWallet (legacy)")
+        let bankingCoordinator = BankingCoordinator.forDeposit(
+            navigationController: profileNavigationController,
+            client: servicesProvider
+        )
+
+        bankingCoordinator.bonusCode = bonusCode
+
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        addChildCoordinator(bankingCoordinator)
+        bankingCoordinator.start()
+    }
+
+    private func presentWithdrawLegacyFlow() {
+        guard let profileNavigationController = profileNavigationController else { return }
+
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Presenting EveryMatrix withdraw flow from ProfileWallet (legacy)")
+        let bankingCoordinator = BankingCoordinator.forWithdraw(
+            navigationController: profileNavigationController,
+            client: servicesProvider
+        )
+
+        setupBankingCoordinatorCallbacks(bankingCoordinator)
+        addChildCoordinator(bankingCoordinator)
+        bankingCoordinator.start()
+    }
+    #endif
     
     
     // MARK: - Banking Coordinator Setup

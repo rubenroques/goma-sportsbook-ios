@@ -169,11 +169,31 @@ final class MyBetsViewModel {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statusType in
+                guard let self = self else { return }
                 print("📡 MyBetsViewModel: Status publisher fired with: \(statusType.title)")
-                self?.onTabOrStatusChanged()
+
+                // Reset open pill to show base title when switching to other tabs
+                if statusType != .open {
+                    self.myBetsStatusBarViewModel.updateOpenBetsCount(nil)
+                }
+
+                self.onTabOrStatusChanged()
             }
             .store(in: &cancellables)
-        
+
+        // Update "Open" pill count when bets are loaded for open status
+        betsStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                guard self.selectedStatusType == .open else { return }
+
+                if case .loaded(let viewModels) = state {
+                    self.myBetsStatusBarViewModel.updateOpenBetsCount(viewModels.count)
+                }
+            }
+            .store(in: &cancellables)
+
         print("📡 MyBetsViewModel: Bindings setup complete")
     }
     
@@ -401,10 +421,8 @@ final class MyBetsViewModel {
             }
 
             // Wire cashout error callback
-            viewModel.onCashoutError = { [weak self] message, retryAction in
-                self?.onShowCashoutError?(message, retryAction, {
-                    // Cancel action - ViewModel handles state reset
-                })
+            viewModel.onCashoutError = { [weak self] message, retryAction, cancelAction in
+                self?.onShowCashoutError?(message, retryAction, cancelAction)
             }
 
             // Cache the new ViewModel
