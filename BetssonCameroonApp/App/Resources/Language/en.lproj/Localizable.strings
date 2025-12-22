@@ -2737,9 +2737,7 @@
 
 "practice_play" = "Practice Play";
 
-"practice_mode" = "Practice Play";
-
-"play_now" = "Play";
+"play" = "Play";
 
 "exit" = "Exit";
 
@@ -4171,3 +4169,7 @@
 // Win Boost
 "win_boost_format" = "WIN BOOST (%d%%)";
 "win_boost_none" = "WIN BOOST (NONE)";
+
+"bet_placement_error" = "Bet Placement Error";
+"booking_code_failed_message" = "Failed to create booking code";
+"booking_code_failed" = "Booking Code Failed";

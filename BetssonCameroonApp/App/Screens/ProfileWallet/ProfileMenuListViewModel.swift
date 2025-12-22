@@ -96,7 +96,7 @@ final class ProfileMenuListViewModel: ProfileMenuListViewModelProtocol {
             ActionRowItem(
                 id: "notifications",
                 icon: "bell_icon",
-                title: localized("view_notifications"),
+                title: localized("notifications"),
                 subtitle: nil,
                 type: .navigation,
                 action: .notifications
