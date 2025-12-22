@@ -19,17 +19,36 @@ struct FilteredMatchData: Hashable {
 struct MatchCardData: Hashable {
     let filteredData: FilteredMatchData
     let tallOddsViewModel: TallOddsMatchCardViewModelProtocol
-    
+
     init(filteredData: FilteredMatchData, tallOddsViewModel: TallOddsMatchCardViewModelProtocol) {
         self.filteredData = filteredData
         self.tallOddsViewModel = tallOddsViewModel
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(filteredData)
     }
-    
+
     static func == (lhs: MatchCardData, rhs: MatchCardData) -> Bool {
+        return lhs.filteredData == rhs.filteredData
+    }
+}
+
+// MARK: - InlineMatchCardData
+struct InlineMatchCardData: Hashable {
+    let filteredData: FilteredMatchData
+    let inlineViewModel: InlineMatchCardViewModelProtocol
+
+    init(filteredData: FilteredMatchData, inlineViewModel: InlineMatchCardViewModelProtocol) {
+        self.filteredData = filteredData
+        self.inlineViewModel = inlineViewModel
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(filteredData)
+    }
+
+    static func == (lhs: InlineMatchCardData, rhs: InlineMatchCardData) -> Bool {
         return lhs.filteredData == rhs.filteredData
     }
 }
@@ -38,6 +57,7 @@ struct MatchCardData: Hashable {
 class MarketGroupCardsViewModel: ObservableObject {
     @Published var filteredMatches: [FilteredMatchData] = []
     @Published var matchCardsData: [MatchCardData] = []
+    @Published var inlineMatchCardsData: [InlineMatchCardData] = []
 
     // MARK: - Pagination State (NEW)
     @Published var hasMoreEvents: Bool = true
@@ -95,8 +115,9 @@ class MarketGroupCardsViewModel: ObservableObject {
         let filtered = filterMatches()
 
         self.filteredMatches = filtered
-        
+
         self.matchCardsData = self.createMatchCardsData(from: filtered)
+        self.inlineMatchCardsData = self.createInlineMatchCardsData(from: filtered)
     }
 
     // MARK: - Private Methods
@@ -130,7 +151,34 @@ class MarketGroupCardsViewModel: ObservableObject {
             matchCardContext: self.matchCardContext
         )
     }
+
+    // MARK: - Inline Match Card Support
+
+    private func createInlineMatchCardsData(from filteredMatches: [FilteredMatchData]) -> [InlineMatchCardData] {
+        return filteredMatches.compactMap { filteredData in
+            guard let inlineViewModel = createInlineMatchCardViewModel(from: filteredData) else {
+                return nil
+            }
+            return InlineMatchCardData(
+                filteredData: filteredData,
+                inlineViewModel: inlineViewModel
+            )
+        }
+    }
+
+    private func createInlineMatchCardViewModel(from filteredData: FilteredMatchData) -> InlineMatchCardViewModel? {
+        guard let firstMarket = filteredData.relevantMarkets.first else {
+            return nil
+        }
+
+        return InlineMatchCardViewModel(
+            match: filteredData.match,
+            market: firstMarket,
+            marketTypeId: marketTypeId
+        )
+    }
 }
+
 enum MatchCardContext {
     case lists
     case search
