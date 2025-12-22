@@ -101,10 +101,13 @@ public class BonusCardView: UIView {
         self.titleLabel.text = displayState.title
         self.descriptionLabel.text = displayState.description
         
-        // Configure CTA button visibility based on ctaURL
-        let hasCTAURL = displayState.ctaURL != nil
-        self.ctaButton.isHidden = !hasCTAURL
-        self.updateTermsButtonConstraint(hasCTAButton: hasCTAURL)
+        // CTA button is always visible (not hidden)
+        self.ctaButton.isHidden = false
+        
+        // Configure terms button visibility based on termsURL
+        let hasTermsURL = displayState.hasTermsURL
+        self.termsButton.isHidden = !hasTermsURL
+        self.updateTermsButtonConstraint(hasTermsButton: hasTermsURL)
     }
     
     private func updateConstraints(hasImageURL: Bool) {
@@ -127,17 +130,18 @@ public class BonusCardView: UIView {
         self.titleLabelTopConstraint?.isActive = true
     }
     
-    private func updateTermsButtonConstraint(hasCTAButton: Bool) {
-        // Update terms button top constraint based on CTA button visibility
+    private func updateTermsButtonConstraint(hasTermsButton: Bool) {
+        // Update terms button top constraint based on terms button visibility
+        // CTA button is always visible, so terms button is always positioned below CTA button when visible
         if let termsButtonTopConstraint = self.termsButtonTopConstraint {
             termsButtonTopConstraint.isActive = false
         }
         
-        if hasCTAButton {
-            // Terms button below CTA button
+        if hasTermsButton {
+            // Terms button is visible - position it below CTA button (which is always visible)
             self.termsButtonTopConstraint = self.termsButton.topAnchor.constraint(equalTo: self.ctaButton.bottomAnchor, constant: 8)
         } else {
-            // Terms button below description label
+            // Terms button is hidden - set constraint to description label (will be hidden anyway)
             self.termsButtonTopConstraint = self.termsButton.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16)
         }
         self.termsButtonTopConstraint?.isActive = true
@@ -381,7 +385,7 @@ extension BonusCardView {
 }
 
 @available(iOS 17.0, *)
-#Preview("CTA Button Hidden") {
+#Preview("Terms Button Hidden") {
     PreviewUIViewController {
         let vc = UIViewController()
         let cardView = BonusCardView(viewModel: MockBonusCardViewModel.noURLsMock)
