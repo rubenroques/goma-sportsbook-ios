@@ -233,13 +233,13 @@ class BetslipCoordinator: Coordinator {
     
     public func showBetslipErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Bet Placement Error",
+            title: localized("bet_placement_error"),
             message: message,
             preferredStyle: .alert
         )
         
         let okAction = UIAlertAction(
-            title: "OK",
+            title: localized("ok"),
             style: .default,
             handler: nil
         )

@@ -32,7 +32,7 @@ final class BetSuccessViewModel: BetSuccessViewModelProtocol {
         self.betPlacedDetails = betPlacedDetails
 
         // Initialize status notification view model with success state
-        let statusNotificationData = StatusNotificationData(type: .success, message: "Bet Placed", icon: "success_circle_icon")
+        let statusNotificationData = StatusNotificationData(type: .success, message: localized("bet_placed"), icon: "success_circle_icon")
 
         self.statusNotificationViewModel = MockStatusNotificationViewModel(data: statusNotificationData)
     }
