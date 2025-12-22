@@ -233,7 +233,7 @@ class BetslipCoordinator: Coordinator {
     
     public func showBetslipErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: localized("bet_placement_error"),
+            title: localized("failed_to_place_bet"),
             message: message,
             preferredStyle: .alert
         )
