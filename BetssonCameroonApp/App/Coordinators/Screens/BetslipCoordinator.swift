@@ -66,9 +66,9 @@ class BetslipCoordinator: Coordinator {
         
         viewModel.onPlaceBetTapped = { [weak self] betPlacedState in
             switch betPlacedState {
-            case .success(let betId, let betslipId, let bettingTickets):
+            case .success(let betId, let betslipId, let bettingTickets, let betPlacedDetails):
                 print("[BET_PLACEMENT] 🎯 Coordinator received success - betId: \(betId ?? "nil"), betslipId: \(betslipId ?? "nil"), tickets: \(bettingTickets.count)")
-                self?.showBetslipSuccessScreen(betId: betId, betslipId: betslipId, bettingTickets: bettingTickets)
+                self?.showBetslipSuccessScreen(betId: betId, betslipId: betslipId, bettingTickets: bettingTickets, betPlacedDetails: betPlacedDetails)
             case .error(let message):
                 print("[BET_PLACEMENT] ❌ Coordinator received error: \(message)")
                 self?.showBetslipErrorAlert(message: message)
@@ -90,7 +90,7 @@ class BetslipCoordinator: Coordinator {
     }
     
     // MARK: - Public Methods
-    public func showBetslipSuccessScreen(betId: String?, betslipId: String?, bettingTickets: [BettingTicket]) {
+    public func showBetslipSuccessScreen(betId: String?, betslipId: String?, bettingTickets: [BettingTicket], betPlacedDetails: [BetPlacedDetails]) {
         print("[BET_PLACEMENT] 🎬 Showing success screen - betId: \(betId ?? "nil"), betslipId: \(betslipId ?? "nil"), tickets: \(bettingTickets.count)")
 
         // Clear betslip
@@ -99,7 +99,8 @@ class BetslipCoordinator: Coordinator {
         let betSuccessViewModel = BetSuccessViewModel(
             betId: betId,
             betslipId: betslipId,
-            bettingTickets: bettingTickets
+            bettingTickets: bettingTickets,
+            betPlacedDetails: betPlacedDetails
         )
 
         let betSuccessViewController = BetSuccessViewController(viewModel: betSuccessViewModel)
@@ -112,14 +113,31 @@ class BetslipCoordinator: Coordinator {
             self?.onCloseBetslip?()
         }
 
-        betSuccessViewController.onOpenDetails = { [weak self] in
-            // TODO: Navigate to bet details screen
-            let displayId = betId ?? betslipId ?? "unknown"
-            print("[BET_PLACEMENT] 📋 Open Betslip Details tapped - ID: \(displayId)")
-            // For now, just dismiss the success screen
-            betSuccessViewController.dismiss(animated: true) {
-                self?.finish()
-                self?.onCloseBetslip?()
+        betSuccessViewController.onOpenDetails = { [weak self] bettingTickets, betPlacedDetails in
+            guard let self = self else { return }
+            
+            print("[BET_PLACEMENT] 📋 Open Betslip Details tapped")
+            
+            // Convert bet data to MyBet
+            guard let myBet = ServiceProviderModelMapper.myBet(from: betPlacedDetails, bettingTickets: bettingTickets) else {
+                print("[BET_PLACEMENT] ❌ Failed to convert bet data to MyBet")
+                betSuccessViewController.dismiss(animated: true) {
+                    self.finish()
+                    self.onCloseBetslip?()
+                }
+                return
+            }
+            
+            // Dismiss success screen first
+            betSuccessViewController.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                
+                // Navigate to bet detail screen
+                self.showBetDetail(for: myBet)
+                
+                // Finish betslip coordinator
+                self.finish()
+                self.onCloseBetslip?()
             }
         }
 
@@ -198,13 +216,13 @@ class BetslipCoordinator: Coordinator {
 
     private func showBookingCodeError(from viewController: UIViewController) {
         let alert = UIAlertController(
-            title: "Booking Code Error",
-            message: "Failed to create booking code",
+            title: localized("booking_code_failed"),
+            message: localized("booking_code_failed_message"),
             preferredStyle: .alert
         )
 
         let okAction = UIAlertAction(
-            title: "OK",
+            title: localized("ok"),
             style: .default,
             handler: nil
         )
@@ -215,13 +233,13 @@ class BetslipCoordinator: Coordinator {
     
     public func showBetslipErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: "Bet Placement Error",
+            title: localized("bet_placement_error"),
             message: message,
             preferredStyle: .alert
         )
         
         let okAction = UIAlertAction(
-            title: "OK",
+            title: localized("ok"),
             style: .default,
             handler: nil
         )
@@ -230,6 +248,48 @@ class BetslipCoordinator: Coordinator {
         
         // Present the alert from the betslip view controller
         betslipViewController?.present(alert, animated: true)
+    }
+    
+    // MARK: - Bet Detail Navigation
+    
+    private func showBetDetail(for bet: MyBet) {
+        let betDetailViewModel = MyBetDetailViewModel(
+            bet: bet,
+            servicesProvider: environment.servicesProvider,
+            userSessionStore: environment.userSessionStore
+        )
+        
+        // Setup back navigation
+        betDetailViewModel.onNavigateBack = { [weak self] in
+            self?.navigationController.popViewController(animated: true)
+        }
+        
+        // Create the MyBetDetailViewController
+        let betDetailViewController = MyBetDetailViewController(viewModel: betDetailViewModel)
+        
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+        
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: betDetailViewController,
+            viewModel: topBarViewModel
+        )
+        
+        // Setup navigation callbacks on container
+        container.onLoginRequested = { [weak self] in
+            self?.onShowLogin?()
+        }
+        
+        container.onRegistrationRequested = { [weak self] in
+            self?.onShowRegistration?()
+        }
+        
+        // Push the container onto navigation stack
+        navigationController.pushViewController(container, animated: true)
+        print("[BET_PLACEMENT] 🎯 Navigated to bet detail for bet: \(bet.identifier)")
     }
     
 }

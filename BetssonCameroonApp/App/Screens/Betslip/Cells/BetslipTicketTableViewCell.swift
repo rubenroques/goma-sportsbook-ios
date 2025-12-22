@@ -43,7 +43,7 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
+//            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120),
             
             ticketView.topAnchor.constraint(equalTo: contentView.topAnchor),
             ticketView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

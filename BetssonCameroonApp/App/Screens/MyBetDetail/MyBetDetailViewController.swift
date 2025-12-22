@@ -78,10 +78,6 @@ final class MyBetDetailViewController: UIViewController {
         return stackView
     }()
     
-    // Removed loading/error views - data is immediately available
-    
-    
-    
     // MARK: - Initialization
     
     init(viewModel: MyBetDetailViewModel) {
