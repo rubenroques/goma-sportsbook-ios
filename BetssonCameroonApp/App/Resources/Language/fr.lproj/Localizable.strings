@@ -2737,9 +2737,7 @@
 
 "practice_play" = "S'entrainer à jouer";
 
-"practice_mode" = "Jouer en Mode Pratique";
-
-"play_now" = "Jouer";
+"play" = "Jouer";
 
 "exit" = "Sortir";
 
@@ -4171,3 +4169,7 @@
 // Win Boost
 "win_boost_format" = "WIN BOOST (%d%%)";
 "win_boost_none" = "WIN BOOST (AUCUN)";
+
+"bet_placement_error" = "Erreur de placement de pari";
+"booking_code_failed_message" = "Impossible de créer le code de réservation";
+"booking_code_failed" = "Échec du code de réservation";

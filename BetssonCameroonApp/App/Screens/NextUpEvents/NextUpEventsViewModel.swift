@@ -134,7 +134,7 @@ class NextUpEventsViewModel {
         self.pillSelectorBarViewModel = PillSelectorBarViewModel()
         self.marketGroupSelectorViewModel = MarketGroupSelectorTabViewModel()
         
-        let mainFilter = MainFilterItem(type: .mainFilter, title: "Filter", icon: "filter_icon", actionIcon: "right_arrow_icon")
+        let mainFilter = MainFilterItem(type: .mainFilter, title: localized("filter"), icon: "filter_icon", actionIcon: "right_arrow_icon")
 
         self.generalFiltersBarViewModel = MockGeneralFilterBarViewModel(items: [], mainFilterItem: mainFilter)
         
