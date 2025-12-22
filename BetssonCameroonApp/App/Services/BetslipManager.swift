@@ -548,12 +548,6 @@ extension BetslipManager {
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .betNeedsUserConfirmation(let betDetails):
                     return BetslipErrorType.betNeedsUserConfirmation(betDetails: betDetails)
-                case .errorDetailedMessage(key: let code, message: let message):
-                    if code == "121" {
-                        return BetslipErrorType.betPlacementDetailedError(message: localized("bet_error_wager_limit"))
-                    }
-                    
-                    return BetslipErrorType.betPlacementDetailedError(message: message)
                 default:
                     return BetslipErrorType.betPlacementError
                 }
