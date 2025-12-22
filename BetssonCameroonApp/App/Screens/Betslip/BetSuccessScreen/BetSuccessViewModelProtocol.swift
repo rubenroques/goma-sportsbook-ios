@@ -22,4 +22,8 @@ public protocol BetSuccessViewModelProtocol {
 
     /// List of betting tickets that were placed
     var bettingTickets: [BettingTicket] { get }
-} 
+    
+    /// Bet placed details
+    var betPlacedDetails: [BetPlacedDetails] { get }
+
+}

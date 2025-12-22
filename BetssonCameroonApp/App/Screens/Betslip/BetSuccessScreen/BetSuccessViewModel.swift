@@ -17,19 +17,22 @@ final class BetSuccessViewModel: BetSuccessViewModelProtocol {
     public let betId: String?
     public let betslipId: String?
     public let bettingTickets: [BettingTicket]
+    public let betPlacedDetails: [BetPlacedDetails]
 
     // MARK: - Initialization
     init(
         betId: String? = nil,
         betslipId: String? = nil,
-        bettingTickets: [BettingTicket] = []
+        bettingTickets: [BettingTicket] = [],
+        betPlacedDetails: [BetPlacedDetails] = []
     ) {
         self.betId = betId
         self.betslipId = betslipId
         self.bettingTickets = bettingTickets
+        self.betPlacedDetails = betPlacedDetails
 
         // Initialize status notification view model with success state
-        let statusNotificationData = StatusNotificationData(type: .success, message: "Bet Placed", icon: "success_circle_icon")
+        let statusNotificationData = StatusNotificationData(type: .success, message: localized("bet_placed"), icon: "success_circle_icon")
 
         self.statusNotificationViewModel = MockStatusNotificationViewModel(data: statusNotificationData)
     }

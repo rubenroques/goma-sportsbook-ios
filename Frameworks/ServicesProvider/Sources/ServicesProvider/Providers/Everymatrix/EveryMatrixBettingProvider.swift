@@ -134,7 +134,9 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
 
         // Make the API call
         return restConnector.request(endpoint)
-            .flatMap { (response: EveryMatrix.PlaceBetResponse) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
+            .flatMap { (wrapper: EveryMatrix.PlaceBetResponseWrapper) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError> in
+                // Extract the inner response from the wrapper
+                let response = wrapper.response
                 // Convert the response to PlacedBetsResponse
                 let placedBetsResponse = self.convertResponseToPlacedBetsResponse(response, originalTickets: betTickets)
                 return Just(placedBetsResponse).setFailureType(to: ServiceProviderError.self).eraseToAnyPublisher()
@@ -360,22 +362,178 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     
     private func convertResponseToPlacedBetsResponse(_ response: EveryMatrix.PlaceBetResponse, originalTickets: [BetTicket]) -> PlacedBetsResponse {
         // Create a PlacedBetEntry from the response
-        let totalStake = originalTickets.reduce(0.0) { $0 + ($1.globalStake ?? 0.0) }
+        let totalStake = response.amount ?? originalTickets.reduce(0.0) { $0 + ($1.globalStake ?? 0.0) }
+        let potentialReturn = response.maxWinning ?? 0.0
 
         let placedBetEntry = PlacedBetEntry(
             identifier: response.betId ?? UUID().uuidString,
-            potentialReturn: response.potentialReturn ?? 0.0,
+            potentialReturn: potentialReturn,
             totalStake: totalStake,
             betLegs: [], // EveryMatrix doesn't provide bet legs in this format
             type: nil
         )
 
+        // Create detailed bet from response
+        let detailedBet = createDetailedBet(from: response, originalTickets: originalTickets, totalStake: totalStake, potentialReturn: potentialReturn)
+
         return PlacedBetsResponse(
             identifier: response.betId ?? UUID().uuidString,
             bets: [placedBetEntry],
-            detailedBets: nil,
+            detailedBets: detailedBet != nil ? [detailedBet!] : nil,
             requiredConfirmation: false,
             totalStake: totalStake
+        )
+    }
+    
+    private func createDetailedBet(from response: EveryMatrix.PlaceBetResponse, originalTickets: [BetTicket], totalStake: Double, potentialReturn: Double) -> Bet? {
+        guard let betId = response.betId else {
+            return nil
+        }
+        
+        // Parse placed date
+        let betDate: Date
+        if let placedDateString = response.placedDate {
+            let formatter = ISO8601DateFormatter()
+            betDate = formatter.date(from: placedDateString) ?? Date()
+        } else {
+            betDate = Date()
+        }
+        
+        // Create selections by matching response selections with original tickets
+        let selections: [BetSelection] = {
+            guard let responseSelections = response.selections else {
+                // Fallback: create selections from original tickets only
+                return originalTickets.flatMap { ticket in
+                    ticket.tickets.map { ticketSelection in
+                        createBetSelection(from: ticketSelection, priceValue: nil)
+                    }
+                }
+            }
+            
+            // Match response selections with original tickets
+            return responseSelections.compactMap { responseSelection in
+                // Find matching ticket selection by bettingOfferId
+                let matchingTicketSelection = originalTickets.flatMap { $0.tickets }.first { ticketSelection in
+                    ticketSelection.identifier == responseSelection.bettingOfferId
+                }
+                
+                if let ticketSelection = matchingTicketSelection {
+                    // Use ticket data with response priceValue
+                    return createBetSelection(
+                        from: ticketSelection,
+                        priceValue: responseSelection.priceValue
+                    )
+                } else {
+                    // If no match found, create minimal selection from response only
+                    return createBetSelectionFromResponse(responseSelection)
+                }
+            }
+        }()
+        
+        // Determine bet type from number of selections
+        let betType = selections.count > 1 ? "MULTIPLE" : "SINGLE"
+        
+        // Use totalPriceValue from response or calculate from selections
+        let totalOdd = response.totalPriceValue ?? selections.map { $0.odd.decimalOdd }.reduce(1.0, *)
+        
+        return Bet(
+            identifier: betId,
+            type: betType,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            stake: totalStake,
+            totalOdd: totalOdd,
+            currency: "XAF", // Default currency, could be extracted from response if available
+            selections: selections,
+            potentialReturn: potentialReturn,
+            totalReturn: nil,
+            date: betDate,
+            freebet: false,
+            partialCashoutReturn: nil,
+            partialCashoutStake: nil,
+            partialCashOuts: nil,
+            betslipId: nil,
+            cashbackReturn: nil,
+            freebetReturn: nil,
+            potentialCashbackReturn: nil,
+            potentialFreebetReturn: nil,
+            shareId: nil,
+            ticketCode: nil
+        )
+    }
+    
+    private func createBetSelection(from ticketSelection: BetTicketSelection, priceValue: Double?) -> BetSelection {
+        // Use priceValue from response if available, otherwise use ticket odd
+        let odd: OddFormat
+        if let priceValue = priceValue {
+            odd = .decimal(odd: priceValue)
+        } else {
+            odd = ticketSelection.odd
+        }
+        
+        // Create sport type from sportIdCode
+        let sportType: SportType
+        if let sportIdCode = ticketSelection.sportIdCode {
+            sportType = SportType(id: sportIdCode, name: "Unknown")
+        } else {
+            sportType = SportType.defaultFootball
+        }
+        
+        return BetSelection(
+            identifier: ticketSelection.identifier,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            eventName: ticketSelection.eventName,
+            homeTeamName: ticketSelection.homeTeamName,
+            awayTeamName: ticketSelection.awayTeamName,
+            marketName: ticketSelection.marketName,
+            outcomeName: ticketSelection.outcomeName,
+            odd: odd,
+            homeResult: nil,
+            awayResult: nil,
+            eventId: ticketSelection.eventId ?? ticketSelection.identifier,
+            eventDate: nil, // Not available in ticket
+            country: nil, // Not available in ticket
+            sportType: sportType,
+            tournamentName: "", // Not available in ticket
+            marketId: ticketSelection.marketId,
+            outcomeId: ticketSelection.outcomeId,
+            homeLogoUrl: nil,
+            awayLogoUrl: nil
+        )
+    }
+    
+    private func createBetSelectionFromResponse(_ responseSelection: EveryMatrix.PlaceBetSelection) -> BetSelection? {
+        // Create minimal selection when ticket data is not available
+        guard let bettingOfferId = responseSelection.bettingOfferId,
+              let priceValue = responseSelection.priceValue else {
+            return nil
+        }
+        
+        return BetSelection(
+            identifier: bettingOfferId,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            eventName: "Unknown Event",
+            homeTeamName: nil,
+            awayTeamName: nil,
+            marketName: "Unknown Market",
+            outcomeName: "Unknown Outcome",
+            odd: .decimal(odd: priceValue),
+            homeResult: nil,
+            awayResult: nil,
+            eventId: responseSelection.eventId ?? bettingOfferId,
+            eventDate: nil,
+            country: nil,
+            sportType: SportType.defaultFootball,
+            tournamentName: "",
+            marketId: responseSelection.bettingTypeId.map { String($0) },
+            outcomeId: responseSelection.outcomeId,
+            homeLogoUrl: nil,
+            awayLogoUrl: nil
         )
     }
     

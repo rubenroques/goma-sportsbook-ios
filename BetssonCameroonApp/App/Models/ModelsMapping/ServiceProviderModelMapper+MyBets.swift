@@ -155,4 +155,137 @@ extension ServiceProviderModelMapper {
             return .notSpecified
         }
     }
+    
+    // MARK: - MyBet from BetPlacedDetails Conversion
+    
+    /// Converts BetPlacedDetails and BettingTickets to MyBet
+    /// Uses the first betPlacedDetails entry and matches it with bettingTickets to create selections
+    static func myBet(from betPlacedDetails: [BetPlacedDetails], bettingTickets: [BettingTicket]) -> MyBet? {
+        guard let firstBetDetail = betPlacedDetails.first else {
+            print("[MAPPER] ❌ No bet placed details available")
+            return nil
+        }
+        
+        let response = firstBetDetail.response
+        
+        guard let betId = response.betId else {
+            print("[MAPPER] ❌ No bet ID in response")
+            return nil
+        }
+        
+        // Extract bet information from response
+        let stake = response.amount ?? 0.0
+        let totalOdd = response.totalPriceValue ?? 1.0
+        let potentialReturn = response.maxWinning
+        let betType = response.type ?? "SINGLE"
+        let date = Date() // Use current date since we don't have placedDate in BetslipPlaceBetResponse
+        
+        // Create selections by matching bettingTickets with response selections
+        let selections: [MyBetSelection] = {
+            guard let responseSelections = response.selections else {
+                // Fallback: create from bettingTickets only
+                return bettingTickets.map { ticket in
+                    myBetSelection(from: ticket, priceValue: nil)
+                }
+            }
+            
+            // Match response selections with betting tickets
+            return responseSelections.compactMap { responseSelection in
+                // Find matching ticket by identifier
+                let matchingTicket = bettingTickets.first { ticket in
+                    ticket.id == responseSelection.id
+                }
+                
+                if let ticket = matchingTicket {
+                    return myBetSelection(from: ticket, priceValue: responseSelection.priceValue)
+                } else {
+                    // Create minimal selection from response only
+                    return myBetSelection(from: responseSelection)
+                }
+            }
+        }()
+        
+        return MyBet(
+            identifier: betId,
+            type: betType,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            stake: stake,
+            totalOdd: totalOdd,
+            potentialReturn: potentialReturn,
+            totalReturn: nil,
+            currency: "XAF", // Default currency, could be extracted if available
+            selections: selections,
+            date: date,
+            freebet: response.freeBet ?? false,
+            partialCashoutReturn: nil,
+            partialCashoutStake: nil,
+            ticketCode: response.betslipId
+        )
+    }
+    
+    /// Creates MyBetSelection from BettingTicket
+    private static func myBetSelection(from ticket: BettingTicket, priceValue: Double?) -> MyBetSelection {
+        // Use priceValue from response if available, otherwise use ticket odd
+        let odd: OddFormat
+        if let priceValue = priceValue {
+            odd = .decimal(odd: priceValue)
+        } else {
+            odd = ticket.odd
+        }
+        
+        return MyBetSelection(
+            identifier: ticket.id,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            eventName: ticket.matchDescription,
+            homeTeamName: ticket.homeParticipantName,
+            awayTeamName: ticket.awayParticipantName,
+            eventDate: ticket.date,
+            tournamentName: ticket.competition ?? "",
+            sport: ticket.sport,
+            marketName: ticket.marketDescription,
+            outcomeName: ticket.outcomeDescription,
+            odd: odd,
+            marketId: ticket.marketId,
+            marketTypeId: ticket.marketTypeId,
+            outcomeId: ticket.outcomeId,
+            homeResult: nil,
+            awayResult: nil,
+            eventId: ticket.matchId,
+            country: nil
+        )
+    }
+    
+    /// Creates minimal MyBetSelection from BetslipPlaceEntry (when ticket data is not available)
+    private static func myBetSelection(from entry: BetslipPlaceEntry) -> MyBetSelection? {
+        guard let priceValue = entry.priceValue else {
+            return nil
+        }
+        
+        return MyBetSelection(
+            identifier: entry.id,
+            state: .opened,
+            result: .notSpecified,
+            globalState: .opened,
+            eventName: "Unknown Event",
+            homeTeamName: nil,
+            awayTeamName: nil,
+            eventDate: nil,
+            tournamentName: "",
+            sport: nil,
+            marketName: "Unknown Market",
+            outcomeName: "Unknown Outcome",
+            odd: .decimal(odd: priceValue),
+            marketId: nil,
+            marketTypeId: nil,
+            outcomeId: entry.outcomeId,
+            homeResult: nil,
+            awayResult: nil,
+            eventId: entry.eventId ?? entry.id,
+            country: nil
+        )
+    }
 }
