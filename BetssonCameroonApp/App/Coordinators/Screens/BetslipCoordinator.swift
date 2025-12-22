@@ -216,13 +216,13 @@ class BetslipCoordinator: Coordinator {
 
     private func showBookingCodeError(from viewController: UIViewController) {
         let alert = UIAlertController(
-            title: "Booking Code Error",
-            message: "Failed to create booking code",
+            title: localized("booking_code_failed"),
+            message: localized("booking_code_failed_message"),
             preferredStyle: .alert
         )
 
         let okAction = UIAlertAction(
-            title: "OK",
+            title: localized("ok"),
             style: .default,
             handler: nil
         )
