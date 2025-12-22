@@ -4,6 +4,12 @@
 
 releases:
 
+  - version: "0.3.8"
+    build: 3801
+    date: "2025-12-XX"
+    notes:
+      - "fix(bet-detail): Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
+
   - version: "0.3.7"
     build: 3701
     date: "2025-12-18"
