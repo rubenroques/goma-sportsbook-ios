@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GomaLogger
 
 class EveryMatrixBettingProvider: BettingProvider, Connector {
 
@@ -181,7 +182,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     // MARK: - NEW Cashout Methods (SSE-based)
 
     func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> {
-        print("💰 EveryMatrixBettingProvider: Subscribing to cashout value for bet \(betId)")
+        GomaLogger.debug(.betting, category: "CASHOUT", "Subscribing to SSE cashout value for bet \(betId)")
 
         let endpoint = EveryMatrixOddsMatrixWebAPI.getCashoutValueSSE(betIds: [betId])
         let decoder = JSONDecoder()
@@ -191,53 +192,65 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
             .compactMap { streamEvent -> SubscribableContent<CashoutValue>? in
                 switch streamEvent {
                 case .connected:
-                    print("✅ SSE Connected - waiting for cashout value...")
+                    GomaLogger.info(.betting, category: "CASHOUT", "SSE Connected for bet \(betId) - waiting for cashout value...")
                     // Create simple subscription for SSE connection
                     let subscription = Subscription(id: "sse-cashout-\(betId)")
                     return .connected(subscription: subscription)
 
                 case .message(let messageEvent):
+                    // Filter out PING/heartbeat messages early (SSE keep-alive mechanism)
+                    if messageEvent.data.contains("\"messageType\":\"PING\"") {
+                        GomaLogger.debug(.betting, category: "CASHOUT", "SSE heartbeat received (PING)")
+                        return nil
+                    }
+
                     // Decode JSON from MessageEvent.data
                     guard let jsonData = messageEvent.data.data(using: .utf8) else {
-                        print("⚠️ Failed to convert message data to UTF-8")
+                        GomaLogger.error(.betting, category: "CASHOUT", "Failed to convert SSE message data to UTF-8")
                         return nil
                     }
 
                     // Decode to CashoutValueSSEResponse
-                    guard let response = try? decoder.decode(EveryMatrix.CashoutValueSSEResponse.self, from: jsonData) else {
-                        print("❌ Failed to decode SSE message")
+                    let response: EveryMatrix.CashoutValueSSEResponse
+                    do {
+                        response = try decoder.decode(EveryMatrix.CashoutValueSSEResponse.self, from: jsonData)
+                    } catch {
+                        // Truncate raw data for logging (max 500 chars)
+                        let rawString = messageEvent.data
+                        let truncated = rawString.count > 500 ? String(rawString.prefix(500)) + "..." : rawString
+                        GomaLogger.error(.betting, category: "CASHOUT", "Failed to decode SSE message: \(error.localizedDescription)\nRaw data: \(truncated)")
                         return nil
                     }
 
-                    // Log message type
-                    print("📨 SSE Message: type=\(response.messageType), code=\(response.details.code)")
+                    // Log message type and code
+                    GomaLogger.debug(.betting, category: "CASHOUT", "SSE Message: type=\(response.messageType), code=\(response.details.code), message=\(response.details.message)")
 
                     // Filter 1: Only process CASHOUT_VALUE messages (ignore AUTOCASHOUT_RULE)
                     guard response.messageType == "CASHOUT_VALUE" else {
-                        print("⏭️ Skipping \(response.messageType) message")
+                        GomaLogger.debug(.betting, category: "CASHOUT", "Skipping \(response.messageType) message")
                         return nil
                     }
 
-                    // Filter 2: Only emit messages with code 100 (ignore code 103)
-                    guard response.details.code == 100 else {
-                        print("⏳ Code 103 - still loading odds...")
-                        return nil
+                    // Note: Web does NOT filter by code - processes all messages where cashoutValue is defined
+                    // Log non-100 codes for debugging but don't filter them out
+                    if response.details.code != 100 {
+                        GomaLogger.debug(.betting, category: "CASHOUT", "SSE code \(response.details.code): \(response.details.message)")
                     }
 
-                    // Filter 3: Ensure cashout value is present
+                    // Filter 2: Ensure cashout value is present (matches Web behavior)
                     guard response.cashoutValue != nil else {
-                        print("⚠️ Code 100 but no cashout value - skipping")
+                        GomaLogger.debug(.betting, category: "CASHOUT", "No cashout value yet - waiting...")
                         return nil
                     }
 
-                    print("✅ Cashout value ready: \(response.cashoutValue!)")
+                    GomaLogger.info(.betting, category: "CASHOUT", "Cashout value ready: \(response.cashoutValue!) (code: \(response.details.code), partialEnabled: \(response.cashoutValueSettings?.partialCashOutEnabled ?? response.partialCashOutEnabled ?? true))")
 
                     // Map to public model
                     let mappedValue = EveryMatrixModelMapper.cashoutValue(fromSSEResponse: response)
                     return .contentUpdate(content: mappedValue)
 
                 case .disconnected:
-                    print("🔌 SSE Disconnected")
+                    GomaLogger.debug(.betting, category: "CASHOUT", "SSE Disconnected for bet \(betId)")
                     return .disconnected
                 }
             }
@@ -245,8 +258,7 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
     }
 
     func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError> {
-        print("💰 EveryMatrixBettingProvider: Executing cashout for bet \(request.betId)")
-        print("💰 Type: \(request.cashoutType), Value: \(request.cashoutValue)")
+        GomaLogger.info(.betting, category: "CASHOUT", "Executing cashout for bet \(request.betId): type=\(request.cashoutType), value=\(request.cashoutValue)")
 
         // Map public request to internal DTO
         let internalRequest = EveryMatrixModelMapper.cashoutRequest(from: request)
@@ -257,13 +269,13 @@ class EveryMatrixBettingProvider: BettingProvider, Connector {
         // Execute request
         return restConnector.request(endpoint)
             .map { (response: EveryMatrix.CashoutResponse) -> CashoutResponse in
-                print("✅ Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
+                GomaLogger.info(.betting, category: "CASHOUT", "Cashout executed: success=\(response.success), payout=\(response.cashoutPayout)")
 
                 // Map internal response to public model
                 return EveryMatrixModelMapper.cashoutResponse(fromInternalResponse: response)
             }
             .mapError { error in
-                print("❌ Cashout execution failed: \(error)")
+                GomaLogger.error(.betting, category: "CASHOUT", "Cashout execution failed: \(error)")
                 return ServiceProviderError.errorMessage(message: error.localizedDescription)
             }
             .eraseToAnyPublisher()

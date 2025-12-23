@@ -66,6 +66,10 @@ public protocol TicketBetInfoViewModelProtocol {
     /// Publisher for cashout loading state changes
     var isCashoutLoadingPublisher: AnyPublisher<Bool, Never> { get }
 
+    /// Publisher that fires when cashout component ViewModels change (slider shown/hidden)
+    /// Used to trigger UI refresh when partialCashOutEnabled changes
+    var cashoutComponentsDidChangePublisher: AnyPublisher<Void, Never> { get }
+
     /// Handle navigation button tap
     func handleNavigationTap()
     

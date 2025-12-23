@@ -499,7 +499,9 @@ extension TicketSelectionView {
 
         resultTagCapsuleView.isHidden = false
         dateLabel.isHidden = true
-        
+
+        // For cashedOut tickets, individual selections weren't resolved - show "PENDING"
+        // The cashout status is shown at the ticket level (BetTicketStatusView), not per selection
         let text = switch status.status {
         case .won:
             LocalizationProvider.string("won")
@@ -507,17 +509,21 @@ extension TicketSelectionView {
             LocalizationProvider.string("lost")
         case .draw:
             LocalizationProvider.string("draw")
+        case .cashedOut:
+            LocalizationProvider.string("pending")
         }
-        
+
         let backgroundColor = switch status.status {
-            case .won:
+        case .won:
             StyleProvider.Color.alertSuccess
         case .lost, .draw:
             StyleProvider.Color.backgroundGradient2
+        case .cashedOut:
+            StyleProvider.Color.alertWarning
         }
-        
+
         let textColor = switch status.status {
-        case .won:
+        case .won, .cashedOut:
             StyleProvider.Color.allWhite
         case .lost:
             StyleProvider.Color.alertError

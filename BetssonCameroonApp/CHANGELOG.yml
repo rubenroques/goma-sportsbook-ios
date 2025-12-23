@@ -15,6 +15,8 @@ releases:
       - "feat(GomaUI): Add OutcomeItemConfiguration for font customization - supports .default and .compact presets with setCustomization() runtime changes"
       - "feat(GomaUI): Add comprehensive OutcomeItemView snapshot tests - 5 categories (basic states, display states, odds change, font customization, size variants) with light/dark mode coverage"
       - "fix(GomaUI): Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
+      - "fix(cashout): Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
+      - "fix(cashout): Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
 
   - version: "0.3.7"
     build: 3701
@@ -100,7 +102,7 @@ releases:
       
   - version: "0.3.1"
     build: 3112
-    date: "2025-12-28"
+    date: "2025-11-28"
     notes:
       - "fix(ci): Updated CI/CD branch references from betsson-cm to main"
       - "fix(ci): Improved Discord release notification formatting"
@@ -111,7 +113,7 @@ releases:
 
   - version: "0.3.1"
     build: 3101
-    date: "2025-12-28"
+    date: "2025-11-28"
     notes:
       - "fix(casino): [SPOR-6630] [BC-214] Use square icons for grid cards, separate thumbnail/background URLs"
       - "fix(betslip): [SPOR-6614] [BC-283] Stake field input validation" 

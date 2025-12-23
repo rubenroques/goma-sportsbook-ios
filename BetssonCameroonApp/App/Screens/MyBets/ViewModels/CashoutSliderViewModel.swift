@@ -90,9 +90,35 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currency: currentData.currency,
             isEnabled: isEnabled
         )
-        
+
         dataSubject.send(newData)
         _buttonViewModel.setEnabled(isEnabled)
+    }
+
+    /// Update slider bounds after partial cashout success
+    /// - Parameters:
+    ///   - newMaximumValue: New maximum stake value (remaining stake after partial cashout)
+    ///   - resetToPercentage: Percentage of new max to reset slider to (default 80%)
+    func updateBounds(newMaximumValue: Float, resetToPercentage: Float = 0.8) {
+        let currentData = dataSubject.value
+        let newCurrentValue = newMaximumValue * resetToPercentage
+
+        let newData = CashoutSliderData(
+            title: currentData.title,
+            minimumValue: currentData.minimumValue,
+            maximumValue: newMaximumValue,
+            currentValue: newCurrentValue,
+            currency: currentData.currency,
+            isEnabled: currentData.isEnabled
+        )
+
+        dataSubject.send(newData)
+
+        // Update button title with new amount
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(newCurrentValue), currency: currentData.currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        _buttonViewModel.updateTitle(buttonTitle)
     }
 }
 

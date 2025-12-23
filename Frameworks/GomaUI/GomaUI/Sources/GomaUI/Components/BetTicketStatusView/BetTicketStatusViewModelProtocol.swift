@@ -6,6 +6,7 @@ public enum BetTicketStatus: Equatable {
     case won
     case lost
     case draw
+    case cashedOut
 }
 
 /// Data model for bet ticket status information

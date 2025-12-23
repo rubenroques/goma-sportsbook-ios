@@ -37,7 +37,13 @@ public class MockBetTicketStatusViewModel: BetTicketStatusViewModelProtocol {
         let viewModel = MockBetTicketStatusViewModel(betTicketStatusData: data)
         return viewModel
     }
-    
+
+    public static func cashedOutMock() -> MockBetTicketStatusViewModel {
+        let data = BetTicketStatusData(status: .cashedOut)
+        let viewModel = MockBetTicketStatusViewModel(betTicketStatusData: data)
+        return viewModel
+    }
+
     public static func customMock(status: BetTicketStatus) -> MockBetTicketStatusViewModel {
         let data = BetTicketStatusData(status: status)
         let viewModel = MockBetTicketStatusViewModel(betTicketStatusData: data)

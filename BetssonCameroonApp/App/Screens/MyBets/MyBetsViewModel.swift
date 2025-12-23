@@ -173,7 +173,7 @@ final class MyBetsViewModel {
                 self?.onTabOrStatusChanged()
             }
             .store(in: &cancellables)
-        
+
         print("📡 MyBetsViewModel: Bindings setup complete")
     }
     
@@ -401,10 +401,8 @@ final class MyBetsViewModel {
             }
 
             // Wire cashout error callback
-            viewModel.onCashoutError = { [weak self] message, retryAction in
-                self?.onShowCashoutError?(message, retryAction, {
-                    // Cancel action - ViewModel handles state reset
-                })
+            viewModel.onCashoutError = { [weak self] message, retryAction, cancelAction in
+                self?.onShowCashoutError?(message, retryAction, cancelAction)
             }
 
             // Cache the new ViewModel
