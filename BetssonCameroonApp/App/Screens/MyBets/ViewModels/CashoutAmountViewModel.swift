@@ -53,7 +53,8 @@ final class CashoutAmountViewModel: CashoutAmountViewModelProtocol {
 extension CashoutAmountViewModel {
     
     static func create(partialCashoutValue: Double, currency: String) -> CashoutAmountViewModel {
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(partialCashoutValue, currency: currency)
+        // Use formatAmount (without currency) since CashoutAmountView adds currency separately
+        let formattedAmount = CurrencyHelper.formatAmount(partialCashoutValue)
 
         return CashoutAmountViewModel(
             title: "Partial Cashout",
@@ -63,7 +64,8 @@ extension CashoutAmountViewModel {
     }
     
     static func create(title: String, amount: Double, currency: String) -> CashoutAmountViewModel {
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(amount, currency: currency)
+        // Use formatAmount (without currency) since CashoutAmountView adds currency separately
+        let formattedAmount = CurrencyHelper.formatAmount(amount)
 
         return CashoutAmountViewModel(
             title: title,

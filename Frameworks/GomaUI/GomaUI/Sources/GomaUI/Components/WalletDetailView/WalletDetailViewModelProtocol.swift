@@ -93,10 +93,18 @@ public protocol WalletDetailViewModelProtocol {
     // MARK: - Actions
     /// Trigger withdraw action
     func performWithdraw()
-    
+
     /// Trigger deposit action
     func performDeposit()
-    
+
+    #if DEBUG
+    /// Trigger legacy withdraw action (long press) - DEBUG only
+    func performWithdrawLegacy()
+
+    /// Trigger legacy deposit action (long press) - DEBUG only
+    func performDepositLegacy()
+    #endif
+
     /// Refresh wallet data
     func refreshWalletData()
 }

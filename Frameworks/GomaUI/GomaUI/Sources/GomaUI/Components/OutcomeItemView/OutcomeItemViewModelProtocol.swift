@@ -1,6 +1,38 @@
 import Combine
 import UIKit
 
+// MARK: - Configuration
+/// Configuration structure for customizing OutcomeItemView appearance
+public struct OutcomeItemConfiguration: Equatable {
+    public let titleFontSize: CGFloat
+    public let titleFontType: StyleProvider.FontType
+    public let valueFontSize: CGFloat
+    public let valueFontType: StyleProvider.FontType
+
+    public init(
+        titleFontSize: CGFloat = 12.0,
+        titleFontType: StyleProvider.FontType = .regular,
+        valueFontSize: CGFloat = 16.0,
+        valueFontType: StyleProvider.FontType = .bold
+    ) {
+        self.titleFontSize = titleFontSize
+        self.titleFontType = titleFontType
+        self.valueFontSize = valueFontSize
+        self.valueFontType = valueFontType
+    }
+
+    /// Default configuration matching original OutcomeItemView styling
+    public static let `default` = OutcomeItemConfiguration()
+
+    /// Compact configuration with smaller fonts for inline cards
+    public static let compact = OutcomeItemConfiguration(
+        titleFontSize: 10.0,
+        titleFontType: .regular,
+        valueFontSize: 14.0,
+        valueFontType: .bold
+    )
+}
+
 // MARK: - Display State Enum
 public enum OutcomeDisplayState: Hashable {
     case loading
@@ -223,6 +255,11 @@ public struct OutcomeSelectionChangeEvent: Equatable {
 
 // MARK: - View Model Protocol
 public protocol OutcomeItemViewModelProtocol {
+    // MARK: - Synchronous State Access
+
+    /// Synchronous state access for immediate rendering (snapshot tests, cell reuse)
+    var currentOutcomeData: OutcomeItemData { get }
+
     // MARK: - Publishers
 
     /// Main data subject containing all outcome state

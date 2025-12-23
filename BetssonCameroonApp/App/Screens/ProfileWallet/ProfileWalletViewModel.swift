@@ -47,6 +47,10 @@ final class ProfileWalletViewModel: ObservableObject {
     var onDismiss: (() -> Void)?
     var onDepositRequested: (() -> Void)?
     var onWithdrawRequested: (() -> Void)?
+    #if DEBUG
+    var onDepositLegacyRequested: (() -> Void)?
+    var onWithdrawLegacyRequested: (() -> Void)?
+    #endif
     var onMenuItemSelected: ((ActionRowItem, String?) -> Void)?
     var showErrorAlert: ((String) -> Void)?
     var onTransactionIdCopied: ((String) -> Void)?
@@ -172,10 +176,21 @@ final class ProfileWalletViewModel: ObservableObject {
         walletDetailVM.onDepositRequested = { [weak self] in
             self?.onDepositRequested?()
         }
-        
+
         walletDetailVM.onWithdrawRequested = { [weak self] in
             self?.onWithdrawRequested?()
         }
+
+        #if DEBUG
+        // Legacy callbacks (long press) - DEBUG only
+        walletDetailVM.onDepositLegacyRequested = { [weak self] in
+            self?.onDepositLegacyRequested?()
+        }
+
+        walletDetailVM.onWithdrawLegacyRequested = { [weak self] in
+            self?.onWithdrawLegacyRequested?()
+        }
+        #endif
     }
     
     private func setupProfileMenuCallbacks() {

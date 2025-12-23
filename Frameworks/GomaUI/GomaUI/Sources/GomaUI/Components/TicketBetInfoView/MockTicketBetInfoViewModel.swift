@@ -26,6 +26,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
     // MARK: - Loading State
     private let cashoutLoadingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let cashoutComponentsSubject = PassthroughSubject<Void, Never>()
 
     public var isCashoutLoading: Bool {
         cashoutLoadingSubject.value
@@ -33,6 +34,10 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
     public var isCashoutLoadingPublisher: AnyPublisher<Bool, Never> {
         cashoutLoadingSubject.eraseToAnyPublisher()
+    }
+
+    public var cashoutComponentsDidChangePublisher: AnyPublisher<Void, Never> {
+        cashoutComponentsSubject.eraseToAnyPublisher()
     }
 
     // MARK: - Callbacks

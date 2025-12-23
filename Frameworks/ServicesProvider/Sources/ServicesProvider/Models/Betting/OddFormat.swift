@@ -3,7 +3,7 @@ public enum OddFormat: Codable, Equatable, Hashable {
     case fraction(numerator: Int, denominator: Int)
     case decimal(odd: Double)
 
-    var fractionOdd: (numerator: Int, denominator: Int)? {
+    public var fractionOdd: (numerator: Int, denominator: Int)? {
         switch self {
         case .fraction(let numerator, let denominator):
             return (numerator: numerator, denominator: denominator)
@@ -12,7 +12,7 @@ public enum OddFormat: Codable, Equatable, Hashable {
         }
     }
 
-    var decimalOdd: Double {
+    public var decimalOdd: Double {
         switch self {
         case .fraction(let numerator, let denominator):
             let decimal = (Double(numerator)/Double(denominator)) + 1.0

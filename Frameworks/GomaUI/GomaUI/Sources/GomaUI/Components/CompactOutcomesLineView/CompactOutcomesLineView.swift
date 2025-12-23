@@ -26,7 +26,7 @@ final public class CompactOutcomesLineView: UIView {
     // MARK: - Constants
     private enum Constants {
         static let stackSpacing: CGFloat = 4.0
-        static let outcomeHeight: CGFloat = 52.0
+        static let outcomeHeight: CGFloat = 50.0
         static let outcomeMinWidth: CGFloat = 60.0
     }
 
@@ -217,7 +217,7 @@ extension CompactOutcomesLineView {
     }
 
     private func createOutcomeView(viewModel: OutcomeItemViewModelProtocol, type: OutcomeType) -> OutcomeItemView {
-        let view = OutcomeItemView(viewModel: viewModel)
+        let view = OutcomeItemView(viewModel: viewModel, configuration: .compact)
         view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([

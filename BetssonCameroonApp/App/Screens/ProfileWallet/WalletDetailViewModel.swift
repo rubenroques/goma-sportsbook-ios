@@ -56,6 +56,10 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     // Action callbacks
     public var onWithdrawRequested: (() -> Void)?
     public var onDepositRequested: (() -> Void)?
+    #if DEBUG
+    public var onWithdrawLegacyRequested: (() -> Void)?
+    public var onDepositLegacyRequested: (() -> Void)?
+    #endif
     
     // MARK: - Initialization
     
@@ -133,11 +137,21 @@ final class WalletDetailViewModel: WalletDetailViewModelProtocol {
     public func performWithdraw() {
         onWithdrawRequested?()
     }
-    
+
     public func performDeposit() {
         onDepositRequested?()
     }
-    
+
+    #if DEBUG
+    public func performWithdrawLegacy() {
+        onWithdrawLegacyRequested?()
+    }
+
+    public func performDepositLegacy() {
+        onDepositLegacyRequested?()
+    }
+    #endif
+
     public func refreshWalletData() {
         guard userSessionStore.isUserLogged() else {
             updateWalletData(wallet: nil, userProfile: nil)

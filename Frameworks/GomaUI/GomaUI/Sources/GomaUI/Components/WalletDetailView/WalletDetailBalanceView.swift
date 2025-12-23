@@ -160,7 +160,7 @@ extension WalletDetailBalanceView {
     }
 
     private static func createBonusBalanceLine() -> WalletDetailBalanceLineView {
-        return WalletDetailBalanceLineView(title: LocalizationProvider.string("bonus_balance"), value: "1,000.24")
+        return WalletDetailBalanceLineView(title: LocalizationProvider.string("bonus"), value: "1,000.24")
     }
 
     private static func createCashbackBalanceLine() -> WalletDetailBalanceLineView {

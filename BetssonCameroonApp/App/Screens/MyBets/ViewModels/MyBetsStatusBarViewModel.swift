@@ -238,7 +238,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     }
     
     // MARK: - Public Methods for Parent ViewModel
-    
+
     /// Update the selected status based on the parent ViewModel's state
     func updateSelectedStatus(_ statusType: MyBetStatusType) {
         selectPill(id: statusType.pillId)

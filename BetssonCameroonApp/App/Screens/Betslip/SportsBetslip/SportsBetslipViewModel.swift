@@ -487,7 +487,13 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
         // Show loading state
         self.isLoadingSubject.send(true)
 
-        environment.betslipManager.placeBet(withStake: stake, useFreebetBalance: false, oddsValidationType: oddsValidationType, betBuilderOdds: betBuilderOdds)
+        environment.betslipManager
+            .placeBet(
+                withStake: stake,
+                useFreebetBalance: false,
+                oddsValidationType: oddsValidationType,
+                betBuilderOdds: betBuilderOdds
+            )
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 // Hide loading state
@@ -496,23 +502,19 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                     print("[BET_PLACEMENT] ✅ Placement request completed")
                 case .failure(let error):
                     print("[BET_PLACEMENT] ❌ Placement failed: \(error)")
-                    self?.showPlacedBetState?(.error(message: "Bet couldn't be placed. Please try again later!"))
+                    let message = switch error {
+                    case .betPlacementDetailedError(message: let message):
+                        message
+                    default:
+                        "Bet couldn't be placed. Please try again later!"
+                    }
+                    
+                    self?.showPlacedBetState?(.error(message: message))
                 }
 
                 self?.isLoadingSubject.send(false)
 
             }, receiveValue: { [weak self] betPlacedDetails in
-                print("[BET_PLACEMENT] 🎉 Received response with \(betPlacedDetails.count) items")
-
-                // Debug full response
-                betPlacedDetails.enumerated().forEach { index, detail in
-                    let response = detail.response
-                    print("[BET_PLACEMENT]   Response[\(index)]:")
-                    print("[BET_PLACEMENT]     betId: \(response.betId ?? "nil")")
-                    print("[BET_PLACEMENT]     betslipId: \(response.betslipId ?? "nil")")
-                    print("[BET_PLACEMENT]     betSucceed: \(response.betSucceed?.description ?? "nil")")
-                    print("[BET_PLACEMENT]     selections count: \(response.selections?.count ?? 0)")
-                }
 
                 let firstResponse = betPlacedDetails.first?.response
                 let betId = firstResponse?.betId
@@ -523,7 +525,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
                 self?.showPlacedBetState?(.success(
                     betId: betId,
                     betslipId: betslipId,
-                    bettingTickets: placedTickets
+                    bettingTickets: placedTickets,
+                    betPlacedDetails: betPlacedDetails
                 ))
 
             })
@@ -585,6 +588,6 @@ public enum BetslipLoggedState {
 }
 
 public enum BetPlacedState {
-    case success(betId: String?, betslipId: String?, bettingTickets: [BettingTicket])
+    case success(betId: String?, betslipId: String?, bettingTickets: [BettingTicket], betPlacedDetails: [BetPlacedDetails])
     case error(message: String)
 }

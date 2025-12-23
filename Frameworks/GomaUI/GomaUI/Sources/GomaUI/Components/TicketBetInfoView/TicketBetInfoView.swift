@@ -480,6 +480,15 @@ public class TicketBetInfoView: UIView {
                 self?.setLoadingOverlayVisible(isLoading)
             }
             .store(in: &cancellables)
+
+        // Bind cashout components changes (slider shown/hidden based on partialCashOutEnabled)
+        viewModel.cashoutComponentsDidChangePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.updateBottomComponents(with: self.viewModel.currentBetInfo)
+            }
+            .store(in: &cancellables)
     }
 
     private func setLoadingOverlayVisible(_ visible: Bool) {

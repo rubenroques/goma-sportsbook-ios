@@ -557,7 +557,64 @@ extension BetslipManager {
                 
                 print("Placed bet response: \(placedBetsResponse)")
                 
-                return Just([]).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
+                // Transform PlacedBetsResponse to [BetPlacedDetails]
+                let betPlacedDetailsArray: [BetPlacedDetails]
+                
+                // Prefer detailedBets if available (contains full Bet objects with selections)
+                if let detailedBets = placedBetsResponse.detailedBets, !detailedBets.isEmpty {
+                    betPlacedDetailsArray = detailedBets.map { bet in
+                        // Map BetSelection to BetslipPlaceEntry
+                        let selections = bet.selections.map { selection in
+                            BetslipPlaceEntry(
+                                id: selection.identifier,
+                                outcomeId: selection.outcomeId,
+                                eventId: selection.eventId,
+                                priceValue: selection.odd.decimalOdd
+                            )
+                        }
+                        
+                        let response = BetslipPlaceBetResponse(
+                            betId: bet.identifier,
+                            betSucceed: true,
+                            totalPriceValue: bet.totalOdd,
+                            amount: bet.stake,
+                            type: bet.type,
+                            maxWinning: bet.potentialReturn,
+                            selections: selections,
+                            betslipId: placedBetsResponse.identifier
+                        )
+                        
+                        return BetPlacedDetails(response: response)
+                    }
+                } else {
+                    // Fallback to bets array (PlacedBetEntry objects)
+                    betPlacedDetailsArray = placedBetsResponse.bets.map { placedBetEntry in
+                        // For PlacedBetEntry, we don't have selection details, so create minimal entries
+                        let selections: [BetslipPlaceEntry] = placedBetEntry.betLegs.map { leg in
+                            BetslipPlaceEntry(
+                                id: leg.identifier,
+                                outcomeId: nil,
+                                eventId: nil,
+                                priceValue: leg.odd
+                            )
+                        }
+                        
+                        let response = BetslipPlaceBetResponse(
+                            betId: placedBetEntry.identifier,
+                            betSucceed: true,
+                            totalPriceValue: placedBetEntry.betLegs.map { $0.odd }.reduce(1.0, *),
+                            amount: placedBetEntry.totalStake,
+                            type: placedBetEntry.type,
+                            maxWinning: placedBetEntry.potentialReturn,
+                            selections: selections,
+                            betslipId: placedBetsResponse.identifier
+                        )
+                        
+                        return BetPlacedDetails(response: response)
+                    }
+                }
+                
+                return Just(betPlacedDetailsArray).setFailureType(to: BetslipErrorType.self).eraseToAnyPublisher()
                 
             })
             .handleEvents(receiveOutput: { betPlacedDetailsArray in

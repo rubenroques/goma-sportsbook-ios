@@ -5,6 +5,11 @@ import UIKit
 /// Mock implementation of `OutcomeItemViewModelProtocol` for testing.
 final public class MockOutcomeItemViewModel: OutcomeItemViewModelProtocol {
 
+    // MARK: - Synchronous State Access
+    public var currentOutcomeData: OutcomeItemData {
+        outcomeDataSubject.value
+    }
+
     // MARK: - Subjects
     public let outcomeDataSubject: CurrentValueSubject<OutcomeItemData, Never>
     private let oddsChangeEventSubject: PassthroughSubject<OutcomeItemOddsChangeEvent, Never>

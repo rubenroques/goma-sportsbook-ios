@@ -93,11 +93,32 @@ final public class WalletDetailView: UIView {
         self.withdrawButton.onButtonTapped = { [weak self] in
             self?.viewModel.performWithdraw()
         }
-        
+
         self.depositButton.onButtonTapped = { [weak self] in
             self?.viewModel.performDeposit()
         }
+
+        #if DEBUG
+        // Long press for legacy cashier (DEBUG only)
+        let withdrawLongPress = UILongPressGestureRecognizer(target: self, action: #selector(withdrawLongPressed))
+        self.withdrawButton.addGestureRecognizer(withdrawLongPress)
+
+        let depositLongPress = UILongPressGestureRecognizer(target: self, action: #selector(depositLongPressed))
+        self.depositButton.addGestureRecognizer(depositLongPress)
+        #endif
     }
+
+    #if DEBUG
+    @objc private func withdrawLongPressed(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+        viewModel.performWithdrawLegacy()
+    }
+
+    @objc private func depositLongPressed(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+        viewModel.performDepositLegacy()
+    }
+    #endif
     
     private func updatePendingSectionViewModel(_ viewModel: CustomExpandableSectionViewModelProtocol?) {
         guard let viewModel else {

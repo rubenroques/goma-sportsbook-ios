@@ -163,7 +163,55 @@ OutcomeItemView is designed to be used within larger components like:
 
 ## Styling Customization
 
-The component uses StyleProvider for all styling:
+### Font Customization (OutcomeItemConfiguration)
+
+The component supports per-instance font customization via `OutcomeItemConfiguration`:
+
+```swift
+// Create custom configuration
+let compactConfig = OutcomeItemConfiguration(
+    titleFontSize: 10.0,
+    titleFontType: .regular,
+    valueFontSize: 14.0,
+    valueFontType: .bold
+)
+
+// Option 1: Pass configuration at initialization
+let outcomeView = OutcomeItemView(
+    viewModel: viewModel,
+    configuration: compactConfig
+)
+
+// Option 2: Apply configuration after initialization
+outcomeView.setCustomization(compactConfig)
+
+// Option 3: Use predefined configurations
+let defaultView = OutcomeItemView(viewModel: viewModel)  // Uses .default
+let compactView = OutcomeItemView(viewModel: viewModel, configuration: .compact)
+
+// Reset to default configuration
+outcomeView.setCustomization(nil)
+```
+
+#### Available Configurations
+
+| Configuration | Title Font | Value Font | Use Case |
+|--------------|------------|------------|----------|
+| `.default` | 12pt regular | 16pt bold | Standard outcome buttons |
+| `.compact` | 10pt regular | 14pt bold | Inline match cards, compact layouts |
+
+#### Custom Configuration Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `titleFontSize` | `CGFloat` | 12.0 | Font size for outcome title |
+| `titleFontType` | `StyleProvider.FontType` | `.regular` | Font weight for title |
+| `valueFontSize` | `CGFloat` | 16.0 | Font size for odds value |
+| `valueFontType` | `StyleProvider.FontType` | `.bold` | Font weight for odds value |
+
+### Global Theme Customization
+
+The component also uses StyleProvider for global theming:
 
 ```swift
 // Customize colors
@@ -175,7 +223,7 @@ StyleProvider.Color.customize(
     successColor: .systemGreen       // Odds increase color
 )
 
-// Customize fonts
+// Customize fonts globally
 StyleProvider.setFontProvider { type, size in
     switch type {
     case .regular:

@@ -14,7 +14,7 @@ final class FilterPillViewModel: PillItemViewModelProtocol {
     var currentDisplayState: PillDisplayState {
         PillDisplayState(pillData: PillData(
             id: "filter",
-            title: "Filter",
+            title: localized("filter"),
             leftIconName: "line.3.horizontal.decrease",
             type: .expansible,
             isSelected: false,
