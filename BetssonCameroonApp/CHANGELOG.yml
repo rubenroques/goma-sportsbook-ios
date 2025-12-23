@@ -6,7 +6,7 @@ releases:
 
   - version: "0.3.8"
     build: 3801
-    date: "2025-12-XX"
+    date: "2025-12-23"
     notes:
       - "fix(bet-detail): [SPOR-7010] - Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
       - "fix(bonus): [SPOR-6672] (REVIEW) - Available bonus card cta and terms button logic fixed"
