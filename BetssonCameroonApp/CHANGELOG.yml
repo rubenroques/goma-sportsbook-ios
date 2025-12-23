@@ -12,6 +12,9 @@ releases:
       - "fix(bonus): Available bonus card cta and terms button logic fixed"
       - "fix(localized): Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"
       - "fix(betslip): A `BetslipError` error response object was created to get the `errorCode` and `errorMessage`; The `EveryMatrixRESTConnector` response code mapper for `409` now checks for the new object decoding; Keys for hard coded strings were added."
+      - "feat(GomaUI): Add OutcomeItemConfiguration for font customization - supports .default and .compact presets with setCustomization() runtime changes"
+      - "feat(GomaUI): Add comprehensive OutcomeItemView snapshot tests - 5 categories (basic states, display states, odds change, font customization, size variants) with light/dark mode coverage"
+      - "fix(GomaUI): Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
 
   - version: "0.3.7"
     build: 3701

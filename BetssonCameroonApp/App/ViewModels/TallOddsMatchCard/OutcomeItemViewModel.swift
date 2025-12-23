@@ -23,7 +23,12 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let selectionDidChangeSubject: PassthroughSubject<GomaUI.OutcomeSelectionChangeEvent, Never>
 
     private var cancellables = Set<AnyCancellable>()
-    
+
+    // MARK: - Synchronous State Access
+    var currentOutcomeData: GomaUI.OutcomeItemData {
+        outcomeDataSubject.value
+    }
+
     // MARK: - Protocol Conformance
     public var displayStatePublisher: AnyPublisher<GomaUI.OutcomeDisplayState, Never> {
         return self.displayStateSubject.eraseToAnyPublisher()

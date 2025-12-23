@@ -8,10 +8,10 @@ final public class InlineMatchCardTableViewCell: UITableViewCell {
 
     // MARK: - Constants
     struct Constants {
-        static let verticalSpacing: CGFloat = 9
-        static let horizontalSpacing: CGFloat = 13
+        static let verticalSpacing: CGFloat = 0
+        static let horizontalSpacing: CGFloat = 0
         static let bottomSpacing: CGFloat = 1
-        static let cornerRadius: CGFloat = 12
+        static let cornerRadius: CGFloat = 0
     }
 
     // MARK: - Properties
