@@ -8,18 +8,18 @@ releases:
     build: 3801
     date: "2025-12-XX"
     notes:
+      - "fix(bet-detail): [SPOR-7010] - Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
+      - "fix(bonus): [SPOR-6672] (REVIEW) - Available bonus card cta and terms button logic fixed"
+      - "fix(localized): [SPOR-7006] - Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"
+      - "fix(betslip): [SPOR-7014] - A `BetslipError` error response object was created to get the `errorCode` and `errorMessage`; The `EveryMatrixRESTConnector` response code mapper for `409` now checks for the new object decoding; Keys for hard coded strings were added."
       - "fix(GomaUI): [SPOR-6076] Fix InlineMatchCard outcomes line width - fixed to 200px for consistent alignment between 2-way and 3-way markets"
       - "fix(banking): [SPOR-7001] Fix Widget Cashier URL encoding - endpoint param now properly percent-encoded as required by cashier page"
       - "fix(banking): [SPOR-7001] Fix Widget Cashier theme detection - now respects app's saved appearance mode (dark/light/system)"
-      - "fix(bet-detail): Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
-      - "fix(bonus): Available bonus card cta and terms button logic fixed"
-      - "fix(localized): Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"
-      - "fix(betslip): A `BetslipError` error response object was created to get the `errorCode` and `errorMessage`; The `EveryMatrixRESTConnector` response code mapper for `409` now checks for the new object decoding; Keys for hard coded strings were added."
-      - "feat(GomaUI): Add OutcomeItemConfiguration for font customization - supports .default and .compact presets with setCustomization() runtime changes"
-      - "feat(GomaUI): Add comprehensive OutcomeItemView snapshot tests - 5 categories (basic states, display states, odds change, font customization, size variants) with light/dark mode coverage"
-      - "fix(GomaUI): Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
-      - "fix(cashout): Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
-      - "fix(cashout): Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
+      - "feat(GomaUI): [SPOR-6076] Add OutcomeItemConfiguration for font customization - supports .default and .compact presets with setCustomization() runtime changes"
+      - "feat(GomaUI): [SPOR-6247] Add comprehensive OutcomeItemView snapshot tests - 5 categories (basic states, display states, odds change, font customization, size variants) with light/dark mode coverage"
+      - "fix(GomaUI): [SPOR-6247] Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
+      - "fix(cashout): [SPOR-6462] [bc-153] Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
+      - "fix(cashout): [SPOR-7000] [BC-342] Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
 
   - version: "0.3.7"
     build: 3701
