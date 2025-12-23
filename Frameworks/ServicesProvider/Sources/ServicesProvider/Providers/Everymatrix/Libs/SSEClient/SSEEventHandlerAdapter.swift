@@ -69,6 +69,29 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
     func onError(error: Error) {
         print("[SSEDebug] ❌ SSEEventHandlerAdapter: Error - \(error.localizedDescription)")
 
+        // Check if this is an authentication/authorization error (401/403)
+        // These errors should TERMINATE the stream, not trigger reconnection
+        // LDSwiftEventSource wraps HTTP errors in UnsuccessfulResponseError
+        if let unsuccessfulError = error as? UnsuccessfulResponseError {
+            let responseCode = unsuccessfulError.responseCode
+            print("[SSEDebug] ❌ SSEEventHandlerAdapter: HTTP error code: \(responseCode)")
+
+            if responseCode == 401 || responseCode == 403 {
+                print("[SSEDebug] 🛑 SSEEventHandlerAdapter: Auth error (\(responseCode)) - TERMINATING stream (no reconnection)")
+
+                // Stop the EventSource to prevent LDSwiftEventSource auto-reconnection
+                eventSource?.stop()
+                eventSource = nil
+
+                // Send failure completion to terminate the publisher
+                let serviceError = ServiceProviderError.errorMessage(
+                    message: "SSE authentication failed (HTTP \(responseCode))"
+                )
+                subject.send(completion: .failure(serviceError))
+                return
+            }
+        }
+
         // Network errors (timeout, connection failure) should trigger reconnection, not terminate stream
         // Send .disconnected event to let UserInfoStreamManager handle reconnection logic
         // DO NOT send completion here - only stop() should terminate the publisher

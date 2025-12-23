@@ -405,6 +405,11 @@ final class MyBetsViewModel {
                 self?.onShowCashoutError?(message, retryAction, cancelAction)
             }
 
+            // Wire cashout confirmation callback
+            viewModel.onConfirmCashout = { [weak self] isFullCashout, stake, value, remaining, currency, onConfirm in
+                self?.onShowCashoutConfirmation?(isFullCashout, stake, value, remaining, currency, onConfirm)
+            }
+
             // Cache the new ViewModel
             viewModelCache.set(viewModel, forBetId: bet.identifier)
 
@@ -422,6 +427,7 @@ final class MyBetsViewModel {
     var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?) - nil if no partial failure
     var onShowRebetAllFailedError: (() -> Void)?
     var onShowCashoutError: ((String, @escaping () -> Void, @escaping () -> Void) -> Void)?
+    var onShowCashoutConfirmation: ((Bool, Double, Double, Double?, String, @escaping () -> Void) -> Void)?
     
     // MARK: - Action Handlers
     

@@ -32,13 +32,18 @@ extension UITapGestureRecognizer {
         let textBoundingBox = layoutManager.usedRect(for: textContainer)
 
         // Text align center by default
-        var textContainerOffset = CGPoint(x: (labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x, y: (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y)
+        let offsetX = (labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x
+        let offsetY = (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y
+        var textContainerOffset = CGPoint(x: offsetX, y: offsetY)
 
         if alignment == .left {
-            textContainerOffset = CGPoint(x: (labelSize.width - textBoundingBox.size.width) * 0 - textBoundingBox.origin.x, y: (labelSize.height - textBoundingBox.size.height) * 0 - textBoundingBox.origin.y)
-        }
-        else if alignment == .right {
-            textContainerOffset = CGPoint(x: (labelSize.width - textBoundingBox.size.width) * 1 - textBoundingBox.origin.x, y: (labelSize.height - textBoundingBox.size.height) * 1 - textBoundingBox.origin.y)
+            let leftOffsetX = (labelSize.width - textBoundingBox.size.width) * 0 - textBoundingBox.origin.x
+            let leftOffsetY = (labelSize.height - textBoundingBox.size.height) * 0 - textBoundingBox.origin.y
+            textContainerOffset = CGPoint(x: leftOffsetX, y: leftOffsetY)
+        } else if alignment == .right {
+            let rightOffsetX = (labelSize.width - textBoundingBox.size.width) * 1 - textBoundingBox.origin.x
+            let rightOffsetY = (labelSize.height - textBoundingBox.size.height) * 1 - textBoundingBox.origin.y
+            textContainerOffset = CGPoint(x: rightOffsetX, y: rightOffsetY)
         }
 
         let locationOfTouchInTextContainer = CGPoint(x: locationOfTouchInLabel.x - textContainerOffset.x, y: locationOfTouchInLabel.y - textContainerOffset.y)

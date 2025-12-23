@@ -648,6 +648,15 @@
 
 "cashout_value" = "CashOut+ {cashoutAmount}";
 
+// Cashout Confirmation Popup
+"confirm_full_cashout" = "Confirmer votre cashout";
+"confirm_partial_cashout" = "Confirmation du retrait partiel";
+"you_are_about_to_cash_out_your_entire_bet" = "Vous êtes sur le point d'encaisser la totalité de votre pari";
+"you_are_about_to_cash_out_part_of_your_bet" = "Vous êtes sur le point d'encaisser une partie de votre pari";
+"stake_to_cash_out" = "Votre pari de cashout";
+"you_will_receive" = "Vous recevrez";
+"remaining_stake" = "Mise restante";
+
 "casino" = "Casino";
 
 "casino_regulation" = "Réglementation Casinos";

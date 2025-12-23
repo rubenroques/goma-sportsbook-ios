@@ -16924,7 +16924,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		457CBC4A282D27D000ED0F00 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -16941,7 +16941,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		457CBEF2282D2CD100ED0F00 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -16958,7 +16958,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		4589C9C9282024E400243547 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -16975,7 +16975,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		45A3334A298976BA008181E9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -16992,7 +16992,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		45A6BE2228246A7500D9B416 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -17009,7 +17009,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		45F6BE332AB3732C00C81DE1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -17026,7 +17026,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		A9C3437828F9A74A0055360B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -17043,7 +17043,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		CE12A4BC2D31347E0022BDF7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -17060,7 +17060,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 		CEA569982D5A58D800696793 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -17077,7 +17077,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif which swiftlint >/dev/null; then\n  swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

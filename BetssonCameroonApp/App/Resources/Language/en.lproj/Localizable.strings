@@ -648,6 +648,15 @@
 
 "cashout_value" = "Cashout {cashoutAmount}";
 
+// Cashout Confirmation Popup
+"confirm_full_cashout" = "Confirm your cashout";
+"confirm_partial_cashout" = "Confirm partial cashout";
+"you_are_about_to_cash_out_your_entire_bet" = "You are about to cash out your entire bet";
+"you_are_about_to_cash_out_part_of_your_bet" = "You are about to cash out part of your bet";
+"stake_to_cash_out" = "Your cashout bet";
+"you_will_receive" = "You will receive";
+"remaining_stake" = "Remaining stake";
+
 "casino" = "Casino";
 
 "casino_regulation" = "Casino Regulation";

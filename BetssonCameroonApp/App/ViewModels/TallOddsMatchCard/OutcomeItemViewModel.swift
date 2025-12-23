@@ -181,7 +181,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func clearOddsChangeIndicator() {
-        // Clear any pending odds change animations
+        // TODO: Clear any pending odds change animations
         // Implementation depends on the specific animation system used
     }
     

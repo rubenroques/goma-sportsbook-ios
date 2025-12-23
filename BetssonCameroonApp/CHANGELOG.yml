@@ -8,6 +8,9 @@ releases:
     build: 3801
     date: "2025-12-XX"
     notes:
+      - "fix(GomaUI): [SPOR-6076] Fix InlineMatchCard outcomes line width - fixed to 200px for consistent alignment between 2-way and 3-way markets"
+      - "fix(banking): [SPOR-7001] Fix Widget Cashier URL encoding - endpoint param now properly percent-encoded as required by cashier page"
+      - "fix(banking): [SPOR-7001] Fix Widget Cashier theme detection - now respects app's saved appearance mode (dark/light/system)"
       - "fix(bet-detail): Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
       - "fix(bonus): Available bonus card cta and terms button logic fixed"
       - "fix(localized): Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"

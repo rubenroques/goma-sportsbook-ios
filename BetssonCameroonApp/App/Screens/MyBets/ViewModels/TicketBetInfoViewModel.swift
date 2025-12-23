@@ -85,6 +85,9 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     /// Called to show error alert: (message, retryAction, cancelAction)
     var onCashoutError: ((String, @escaping () -> Void, @escaping () -> Void) -> Void)?
 
+    /// Called to request confirmation before cashout: (isFullCashout, stakeToCashOut, cashoutValue, remainingStake?, currency, onConfirm)
+    var onConfirmCashout: ((Bool, Double, Double, Double?, String, @escaping () -> Void) -> Void)?
+
     // MARK: - Initialization
     
     init(myBet: MyBet, servicesProvider: ServicesProvider.Client) {
@@ -363,16 +366,28 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
         let isFullCashoutRequest = isFullCashout(forStakeValue: stakeValue)
         let cashoutValue = calculatePartialCashout(forStakeValue: stakeValue)
+        let stakeToCashOut = Double(stakeValue)
+        let remaining = isFullCashoutRequest ? nil : (remainingStake - stakeToCashOut)
 
         let request = CashoutRequest(
             betId: myBet.identifier,
             cashoutValue: cashoutValue,
             cashoutType: isFullCashoutRequest ? .full : .partial,
-            partialCashoutStake: isFullCashoutRequest ? nil : Double(stakeValue)
+            partialCashoutStake: isFullCashoutRequest ? nil : stakeToCashOut
         )
 
         lastCashoutRequest = request
-        executeCashoutRequest(request)
+
+        // Request confirmation before executing
+        onConfirmCashout?(
+            isFullCashoutRequest,
+            stakeToCashOut,
+            cashoutValue,
+            remaining,
+            myBet.currency
+        ) { [weak self] in
+            self?.executeCashoutRequest(request)
+        }
     }
 
     private func executeCashoutRequest(_ request: CashoutRequest) {
