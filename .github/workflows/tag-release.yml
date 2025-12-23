@@ -408,6 +408,26 @@ jobs:
           echo "DUAL RELEASE COMPLETE"
           echo "=============================================="
 
+      - name: Notify Jira tickets of deployment
+        if: success()
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          VERSION: ${{ steps.parse.outputs.version }}
+          BUILD: ${{ steps.parse.outputs.build }}
+          CHANGELOG_FILE: ${{ steps.config.outputs.changelog }}
+          CLIENT_NAME: ${{ steps.config.outputs.client_name }}
+        continue-on-error: true
+        run: |
+          echo "Notifying Jira tickets of deployment..."
+
+          # Install Python dependencies (use python3 -m pip for reliability)
+          python3 -m pip install --quiet --user pyyaml requests
+
+          # Run the notifier script
+          python3 .github/scripts/jira_release_notifier.py
+
       - name: Send Discord success notification
         if: success()
         env:
