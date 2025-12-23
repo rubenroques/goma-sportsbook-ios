@@ -1,22 +1,35 @@
 import Combine
 import UIKit
 
+
+
 // MARK: - Data Models
 public struct PillData: Equatable, Hashable {
     public let id: String
     public let title: String
     public let leftIconName: String?
-    public let showExpandIcon: Bool
+    public let type: PillItemViewType
     public let isSelected: Bool
     public let shouldApplyTintColor: Bool
 
-    public init(id: String, title: String, leftIconName: String? = nil, showExpandIcon: Bool = false, isSelected: Bool = false, shouldApplyTintColor: Bool = true) {
+    public init(
+        id: String,
+        title: String,
+        leftIconName: String? = nil,
+        type: PillItemViewType = .informative,
+        isSelected: Bool = false,
+        shouldApplyTintColor: Bool = true
+    ) {
         self.id = id
         self.title = title
         self.leftIconName = leftIconName
-        self.showExpandIcon = showExpandIcon
+        self.type = type
         self.isSelected = isSelected
         self.shouldApplyTintColor = shouldApplyTintColor
+    }
+    
+    public enum PillItemViewType: Equatable, Hashable {
+        case informative, expansible, countable(count: Int)
     }
 }
 
@@ -41,7 +54,7 @@ public protocol PillItemViewModelProtocol {
     var idPublisher: AnyPublisher<String, Never> { get }
     var titlePublisher: AnyPublisher<String, Never> { get }
     var leftIconNamePublisher: AnyPublisher<String?, Never> { get }
-    var showExpandIconPublisher: AnyPublisher<Bool, Never> { get }
+    var typePublisher: AnyPublisher<PillData.PillItemViewType, Never> { get }
     var isSelectedPublisher: AnyPublisher<Bool, Never> { get }
     var shouldApplyTintColorPublisher: AnyPublisher<Bool, Never> { get }
 
@@ -52,5 +65,5 @@ public protocol PillItemViewModelProtocol {
     func selectPill()
     func updateTitle(_ title: String)
     func updateLeftIcon(_ iconName: String?)
-    func updateExpandIconVisibility(_ show: Bool)
+    func updateType(_ newType: PillData.PillItemViewType)
 }

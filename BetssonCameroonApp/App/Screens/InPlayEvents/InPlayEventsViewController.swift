@@ -174,7 +174,7 @@ class InPlayEventsViewController: UIViewController {
             id: "filter",
             title: localized("filter"),
             leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: true,
+            type: .expansible,
             isSelected: false
         )
         let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)

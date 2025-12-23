@@ -8,7 +8,7 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
     private let idSubject: CurrentValueSubject<String, Never>
     private let titleSubject: CurrentValueSubject<String, Never>
     private let leftIconNameSubject: CurrentValueSubject<String?, Never>
-    private let showExpandIconSubject: CurrentValueSubject<Bool, Never>
+    private let typeSubject: CurrentValueSubject<PillData.PillItemViewType, Never>
     private let isSelectedSubject: CurrentValueSubject<Bool, Never>
     private let shouldApplyTintColorSubject: CurrentValueSubject<Bool, Never>
     
@@ -27,8 +27,8 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         return leftIconNameSubject.eraseToAnyPublisher()
     }
 
-    public var showExpandIconPublisher: AnyPublisher<Bool, Never> {
-        return showExpandIconSubject.eraseToAnyPublisher()
+    public var typePublisher: AnyPublisher<PillData.PillItemViewType, Never> {
+        return typeSubject.eraseToAnyPublisher()
     }
 
     public var isSelectedPublisher: AnyPublisher<Bool, Never> {
@@ -45,7 +45,7 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
             id: idSubject.value,
             title: titleSubject.value,
             leftIconName: leftIconNameSubject.value,
-            showExpandIcon: showExpandIconSubject.value,
+            type: typeSubject.value,
             isSelected: isSelectedSubject.value,
             shouldApplyTintColor: shouldApplyTintColorSubject.value
         ))
@@ -54,17 +54,17 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
     public var displayStatePublisher: AnyPublisher<PillDisplayState, Never> {
         Publishers.CombineLatest3(
             Publishers.CombineLatest3(idSubject, titleSubject, leftIconNameSubject),
-            Publishers.CombineLatest(showExpandIconSubject, isSelectedSubject),
+            Publishers.CombineLatest(typeSubject, isSelectedSubject),
             shouldApplyTintColorSubject
         )
         .map { first, second, applyTint in
             let (id, title, icon) = first
-            let (showExpand, isSelected) = second
+            let (type, isSelected) = second
             return PillDisplayState(pillData: PillData(
                 id: id,
                 title: title,
                 leftIconName: icon,
-                showExpandIcon: showExpand,
+                type: type,
                 isSelected: isSelected,
                 shouldApplyTintColor: applyTint
             ))
@@ -77,7 +77,7 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         self.idSubject = CurrentValueSubject(pillData.id)
         self.titleSubject = CurrentValueSubject(pillData.title)
         self.leftIconNameSubject = CurrentValueSubject(pillData.leftIconName)
-        self.showExpandIconSubject = CurrentValueSubject(pillData.showExpandIcon)
+        self.typeSubject = CurrentValueSubject(pillData.type)
         self.isSelectedSubject = CurrentValueSubject(pillData.isSelected)
         self.shouldApplyTintColorSubject = CurrentValueSubject<Bool, Never>(pillData.shouldApplyTintColor)
         self.isReadOnly = isReadOnly
@@ -98,8 +98,8 @@ final public class MockPillItemViewModel: PillItemViewModelProtocol {
         leftIconNameSubject.send(iconName)
     }
 
-    public func updateExpandIconVisibility(_ show: Bool) {
-        showExpandIconSubject.send(show)
+    public func updateType(_ newType: PillData.PillItemViewType) {
+        typeSubject.send(newType)
     }
 }
 
@@ -111,7 +111,7 @@ extension MockPillItemViewModel {
                 id: "football",
                 title: "Football",
                 leftIconName: "sportscourt.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: true
             )
         )
@@ -123,7 +123,7 @@ extension MockPillItemViewModel {
                 id: "popular",
                 title: "Popular",
                 leftIconName: "flame.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         )
@@ -135,7 +135,7 @@ extension MockPillItemViewModel {
                 id: "all",
                 title: "All",
                 leftIconName: "trophy.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: false
             )
         )

@@ -49,21 +49,21 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
                 id: "sport_selector",
                 title: currentSport.name,
                 leftIconName: iconName,
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: true
             ),
             PillData(
                 id: "upcoming",
                 title: localized("upcoming"),
                 leftIconName: "timelapse_icon",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "all_popular",
                 title: localized("all_popular_leagues"),
                 leftIconName: "trophy_winners_icon",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false,
                 shouldApplyTintColor: false
             )
@@ -107,7 +107,7 @@ final class PillSelectorBarViewModel: PillSelectorBarViewModelProtocol {
             id: "sport_selector",
             title: sport.name,
             leftIconName: iconName,
-            showExpandIcon: true,
+            type: .expansible,
             isSelected: true
         )
         

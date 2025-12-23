@@ -79,3 +79,7 @@ public protocol PillSelectorBarViewModelProtocol {
     func setVisible(_ visible: Bool)
     func setUserInteractionEnabled(_ enabled: Bool)
 }
+
+extension PillSelectorBarViewModelProtocol {
+    func updateCounter(_ count: Int) { }
+}

@@ -236,6 +236,7 @@ final class MyBetsViewModel {
                 },
                 receiveValue: { [weak self] bettingHistory in
                     self?.handleBetsResponse(bettingHistory, cacheKey: cacheKey)
+                    self?.myBetsStatusBarViewModel.updateCounter(bettingHistory.count)
                 }
             )
     }

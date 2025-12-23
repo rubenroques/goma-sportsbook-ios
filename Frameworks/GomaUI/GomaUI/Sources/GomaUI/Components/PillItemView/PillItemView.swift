@@ -62,9 +62,21 @@ final public class PillItemView: UIView {
 
     private func render(state: PillDisplayState) {
         let data = state.pillData
+        var counter: String?
+        
+        switch data.type {
+        case .countable(count: let count):
+            counter = count > 0 ? " (\(count))" : nil
+        case .expansible:
+            // Expand icon
+            expandIconImageView.isHidden = false
+        default:
+            expandIconImageView.isHidden = true
+            break
+        }
 
         // Title
-        titleLabel.text = data.title
+        titleLabel.text = "\(data.title)\(counter, default: "")"
 
         // Left icon
         if let iconName = data.leftIconName {
@@ -80,9 +92,6 @@ final public class PillItemView: UIView {
         } else {
             leftIconImageView.isHidden = true
         }
-
-        // Expand icon
-        expandIconImageView.isHidden = !data.showExpandIcon
 
         // Selection state
         updateSelectionState(isSelected: data.isSelected)
@@ -247,7 +256,7 @@ final public class PillItemView: UIView {
                 id: "football",
                 title: "Football",
                 leftIconName: "sportscourt.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: true
             )
         )
@@ -260,7 +269,7 @@ final public class PillItemView: UIView {
                 id: "popular",
                 title: "Popular",
                 leftIconName: "flame.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         )
