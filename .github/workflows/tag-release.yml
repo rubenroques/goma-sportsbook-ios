@@ -213,6 +213,9 @@ jobs:
           echo "Release notes:"
           echo "$NOTES"
 
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
       - name: Cache SPM dependencies
         uses: actions/cache@v4
         with:
