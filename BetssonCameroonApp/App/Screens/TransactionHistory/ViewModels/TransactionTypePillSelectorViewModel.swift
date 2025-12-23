@@ -67,7 +67,7 @@ final class TransactionTypePillSelectorViewModel: PillSelectorBarViewModelProtoc
                 id: pill.id,
                 title: pill.title,
                 leftIconName: pill.leftIconName,
-                showExpandIcon: pill.showExpandIcon,
+                type: pill.type,
                 isSelected: pill.id == id
             )
         }
@@ -134,7 +134,7 @@ final class TransactionTypePillSelectorViewModel: PillSelectorBarViewModelProtoc
                 id: pill.id,
                 title: pill.title,
                 leftIconName: pill.leftIconName,
-                showExpandIcon: pill.showExpandIcon,
+                type: pill.type,
                 isSelected: false
             )
         }

@@ -161,42 +161,42 @@ extension MockPillSelectorBarViewModel {
                 id: "all",
                 title: "All",
                 leftIconName: "square.grid.3x3.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true
             ),
             PillData(
                 id: "football",
                 title: "Football",
                 leftIconName: "sportscourt.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: false
             ),
             PillData(
                 id: "basketball",
                 title: "Basketball",
                 leftIconName: "basketball.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "baseball",
                 title: "Baseball",
                 leftIconName: "baseball.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "soccer",
                 title: "Soccer",
                 leftIconName: "soccerball",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: false
             ),
             PillData(
                 id: "tennis",
                 title: "Tennis",
                 leftIconName: "tennis.racket",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         ]
@@ -219,42 +219,42 @@ extension MockPillSelectorBarViewModel {
                 id: "popular",
                 title: "Popular",
                 leftIconName: "flame.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true
             ),
             PillData(
                 id: "moneyline",
                 title: "Moneyline",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "spread",
                 title: "Spread",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "totals",
                 title: "Totals",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "props",
                 title: "Player Props",
                 leftIconName: "person.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: false
             ),
             PillData(
                 id: "live",
                 title: LocalizationProvider.string("live"),
                 leftIconName: "dot.radiowaves.left.and.right",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         ]
@@ -277,28 +277,28 @@ extension MockPillSelectorBarViewModel {
                 id: "today",
                 title: LocalizationProvider.string("today"),
                 leftIconName: "calendar",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "tomorrow",
                 title: LocalizationProvider.string("tomorrow"),
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true
             ),
             PillData(
                 id: "week",
                 title: LocalizationProvider.string("this_week"),
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "month",
                 title: "This Month",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         ]
@@ -321,14 +321,14 @@ extension MockPillSelectorBarViewModel {
                 id: "live",
                 title: LocalizationProvider.string("live"),
                 leftIconName: "dot.radiowaves.left.and.right",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true
             ),
             PillData(
                 id: "upcoming",
                 title: LocalizationProvider.string("upcoming"),
                 leftIconName: "clock",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         ]
@@ -364,28 +364,28 @@ extension MockPillSelectorBarViewModel {
                 id: "all",
                 title: LocalizationProvider.string("all_sports"),
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true
             ),
             PillData(
                 id: "favorites",
                 title: LocalizationProvider.string("my_favorites"),
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "trending",
                 title: "Trending",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             ),
             PillData(
                 id: "ending_soon",
                 title: "Ending Soon",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false
             )
         ]
@@ -408,28 +408,28 @@ extension MockPillSelectorBarViewModel {
                 id: "moneyline",
                 title: "Moneyline",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true  // This pill shows as selected
             ),
             PillData(
                 id: "spread",
                 title: "Spread",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false  // This pill shows as unselected
             ),
             PillData(
                 id: "totals",
                 title: "Totals",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: true  // This pill shows as selected
             ),
             PillData(
                 id: "props",
                 title: "Props",
                 leftIconName: "person.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false  // This pill shows as unselected
             )
         ]
@@ -452,28 +452,28 @@ extension MockPillSelectorBarViewModel {
                 id: "football",
                 title: "Football",
                 leftIconName: "soccerball",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: true  // Orange border - selected
             ),
             PillData(
                 id: "popular",
                 title: "Popular", 
                 leftIconName: "flame.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false  // Gray - unselected
             ),
             PillData(
                 id: "all",
                 title: "All",
                 leftIconName: "trophy.fill",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false  // Gray - unselected
             ),
             PillData(
                 id: "filter_leagues",
                 title: "All Popular Leagues",
                 leftIconName: "line.3.horizontal.decrease",
-                showExpandIcon: false,
+                type: .informative,
                 isSelected: false  // Gray - unselected
             )
         ]

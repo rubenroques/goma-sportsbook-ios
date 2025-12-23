@@ -20,6 +20,7 @@ releases:
       - "fix(GomaUI): [SPOR-6247] Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
       - "fix(cashout): [SPOR-6462] [bc-153] Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
       - "fix(cashout): [SPOR-7000] [BC-342] Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
+      - "fix(my-bets): [SPOR-6934] BA - BC-323 - iOS app - My bets Open/Cashout tabs missing counters"
 
   - version: "0.3.7"
     build: 3701
