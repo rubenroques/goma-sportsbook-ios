@@ -428,8 +428,12 @@ jobs:
         run: |
           echo "Notifying Jira tickets of deployment..."
 
-          # Install Python dependencies (use python3 -m pip for reliability)
-          python3 -m pip install --quiet --user pyyaml requests
+          # Create virtual environment to avoid PEP 668 externally-managed-environment error
+          python3 -m venv .venv
+          source .venv/bin/activate
+
+          # Install Python dependencies
+          pip install --quiet pyyaml requests
 
           # Run the notifier script
           python3 .github/scripts/jira_release_notifier.py
