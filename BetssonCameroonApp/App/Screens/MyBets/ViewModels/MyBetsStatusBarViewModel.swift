@@ -131,28 +131,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     }
     
     func updatePill(_ pill: PillData) {
-        let currentState = displayStateSubject.value
-        let currentBarData = currentState.barData
-
-        let updatedPills = currentBarData.pills.map { currentPill in
-            currentPill.id == pill.id ? pill : currentPill
-        }
-
-        let updatedBarData = PillSelectorBarData(
-            id: currentBarData.id,
-            pills: updatedPills,
-            selectedPillId: currentBarData.selectedPillId,
-            isScrollEnabled: currentBarData.isScrollEnabled,
-            allowsVisualStateChanges: currentBarData.allowsVisualStateChanges
-        )
-
-        let updatedDisplayState = PillSelectorBarDisplayState(
-            barData: updatedBarData,
-            isVisible: currentState.isVisible,
-            isUserInteractionEnabled: currentState.isUserInteractionEnabled
-        )
-
-        displayStateSubject.send(updatedDisplayState)
+        // Not needed for MyBets - fixed set of status pills
     }
     
     func clearSelection() {
@@ -218,27 +197,5 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     /// Update the selected status based on the parent ViewModel's state
     func updateSelectedStatus(_ statusType: MyBetStatusType) {
         selectPill(id: statusType.pillId)
-    }
-
-    /// Updates the "Open" pill title with the current count
-    /// - Parameter count: Number of open bets. Shows plain "Open" if count is 0 or nil
-    func updateOpenBetsCount(_ count: Int?) {
-        let openStatusType = MyBetStatusType.open
-        let currentPills = displayStateSubject.value.barData.pills
-
-        guard let currentOpenPill = currentPills.first(where: { $0.id == openStatusType.pillId }) else {
-            return
-        }
-
-        let updatedPill = PillData(
-            id: openStatusType.pillId,
-            title: openStatusType.title(withCount: count),
-            leftIconName: currentOpenPill.leftIconName,
-            showExpandIcon: currentOpenPill.showExpandIcon,
-            isSelected: currentOpenPill.isSelected,
-            shouldApplyTintColor: currentOpenPill.shouldApplyTintColor
-        )
-
-        updatePill(updatedPill)
     }
 }

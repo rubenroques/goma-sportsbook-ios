@@ -169,28 +169,8 @@ final class MyBetsViewModel {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statusType in
-                guard let self = self else { return }
                 print("📡 MyBetsViewModel: Status publisher fired with: \(statusType.title)")
-
-                // Reset open pill to show base title when switching to other tabs
-                if statusType != .open {
-                    self.myBetsStatusBarViewModel.updateOpenBetsCount(nil)
-                }
-
-                self.onTabOrStatusChanged()
-            }
-            .store(in: &cancellables)
-
-        // Update "Open" pill count when bets are loaded for open status
-        betsStatePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                guard let self = self else { return }
-                guard self.selectedStatusType == .open else { return }
-
-                if case .loaded(let viewModels) = state {
-                    self.myBetsStatusBarViewModel.updateOpenBetsCount(viewModels.count)
-                }
+                self?.onTabOrStatusChanged()
             }
             .store(in: &cancellables)
 

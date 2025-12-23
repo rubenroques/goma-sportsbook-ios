@@ -52,3 +52,27 @@ BetssonCameroonApp / rr/cashout_fixes
    - Verify count decrements after cashout
    - Verify plain "Open" when switching back with 0 bets
 3. Test edge cases: logout/login flow, empty state
+
+---
+
+## REVERTED - 23 December 2025
+
+**Reason**: Jira issue was picked up by another team member. Feature was reverted to avoid duplicate implementations.
+
+**Backup branch**: `rr/backup-open-bets-count-feature` (contains full implementation)
+
+### Files Reverted
+1. **MyBetStatusType.swift** - Removed `title(withCount:)` method
+2. **MyBetsStatusBarViewModel.swift** - Reverted `updatePill()` to stub, removed `updateOpenBetsCount()` method
+3. **MyBetsViewModel.swift** - Removed reactive bindings for pill count updates
+
+### To Restore
+```bash
+# Option 1: Cherry-pick from backup branch
+git cherry-pick rr/backup-open-bets-count-feature
+
+# Option 2: View the original implementation
+git show rr/backup-open-bets-count-feature:BetssonCameroonApp/App/Screens/MyBets/MyBetStatusType.swift
+git show rr/backup-open-bets-count-feature:BetssonCameroonApp/App/Screens/MyBets/ViewModels/MyBetsStatusBarViewModel.swift
+git show rr/backup-open-bets-count-feature:BetssonCameroonApp/App/Screens/MyBets/MyBetsViewModel.swift
+```

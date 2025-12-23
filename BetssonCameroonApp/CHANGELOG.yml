@@ -10,7 +10,6 @@ releases:
     notes:
       - "fix(cashout): Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
       - "fix(cashout): Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
-      - "feat(mybets): Show open bets count in 'Open' status pill - displays 'Open (X)' with reactive updates on load, refresh, and cashout"
 
   - version: "0.3.7" # released
     build: 3701
