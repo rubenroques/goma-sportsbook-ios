@@ -180,7 +180,7 @@ final public class PillSelectorBarView: UIView {
             if newPill.id != currentPill.id ||
                newPill.title != currentPill.title ||
                newPill.leftIconName != currentPill.leftIconName ||
-               newPill.showExpandIcon != currentPill.showExpandIcon {
+                newPill.type != .expansible {
                 return true
             }
             // Note: We intentionally ignore isSelected to allow selection state preservation
@@ -375,7 +375,7 @@ extension PillData {
             id: self.id,
             title: self.title,
             leftIconName: self.leftIconName,
-            showExpandIcon: self.showExpandIcon,
+            type: self.type,
             isSelected: isSelected,
             shouldApplyTintColor: self.shouldApplyTintColor
         )

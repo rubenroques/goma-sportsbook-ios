@@ -8,9 +8,9 @@
 import Foundation
 
 extension EveryMatrix {
-    
+
     /// Internal REST API model for new cashout API execution request
-    /// Matches EveryMatrix POST /cashout/v1/cashout endpoint format
+    /// Matches EveryMatrix POST /bets-api/v1/{operatorId}/cashout endpoint format
     struct CashoutRequest: Encodable {
 
         /// Bet identifier
@@ -26,21 +26,29 @@ extension EveryMatrix {
         /// - "PARTIAL": Cash out partial stake
         let cashoutType: String
 
-        /// For partial cashouts: amount of stake to cash out
-        let partialCashoutStake: Double?
-
         /// How to handle odds changes
-        /// - "ACCEPT_ANY": Accept execution even if odds change
+        /// - "WITHIN_THRESHOLD": Accept if change is within acceptable threshold
         /// - "ACCEPT_HIGHER": Only accept if odds improve
         /// - "NONE": Reject if odds change
-        let cashoutChangeAcceptanceType: String
+        let cashoutChangeAcceptance: String
+
+        /// Operator identifier
+        let operatorId: String
+
+        /// Language code (e.g., "en")
+        let language: String
+
+        /// For partial cashouts: amount of stake to cash out
+        let partialCashoutStake: Double?
 
         enum CodingKeys: String, CodingKey {
             case betId
             case cashoutValue
             case cashoutType
+            case cashoutChangeAcceptance
+            case operatorId
+            case language
             case partialCashoutStake
-            case cashoutChangeAcceptanceType
         }
     }
 }

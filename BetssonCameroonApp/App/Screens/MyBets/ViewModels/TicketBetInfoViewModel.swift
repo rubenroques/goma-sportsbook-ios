@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import GomaUI
+import GomaLogger
 import ServicesProvider
 
 final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
@@ -29,12 +30,19 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     private var fullCashoutValue: Double = 0.0
     private var remainingStake: Double = 0.0
 
+    // Track whether partial cashout is enabled (controls slider visibility)
+    // Default to true per Web behavior (partialCashOutEnabled !== false)
+    private var isPartialCashoutEnabled: Bool = true
+
     // SSE subscription for real-time cashout value updates
     private var sseSubscription: AnyCancellable?
 
     // MARK: - Cashout Execution State Machine
     private let cashoutStateSubject = CurrentValueSubject<CashoutExecutionState, Never>(.idle)
     private var lastCashoutRequest: CashoutRequest?
+
+    // Publisher for UI to know when cashout component ViewModels change
+    private let cashoutComponentsSubject = PassthroughSubject<Void, Never>()
 
     // MARK: - Publishers
     
@@ -61,6 +69,10 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         cashoutStateSubject.eraseToAnyPublisher()
     }
 
+    var cashoutComponentsDidChangePublisher: AnyPublisher<Void, Never> {
+        cashoutComponentsSubject.eraseToAnyPublisher()
+    }
+
     // MARK: - Callbacks
     
     var onNavigationTap: ((MyBet) -> Void)?
@@ -70,8 +82,11 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     /// Called when cashout completes: (betId, isFullCashout, error?)
     var onCashoutCompleted: ((String, Bool, CashoutExecutionError?) -> Void)?
 
-    /// Called to show error alert: (message, retryAction)
-    var onCashoutError: ((String, @escaping () -> Void) -> Void)?
+    /// Called to show error alert: (message, retryAction, cancelAction)
+    var onCashoutError: ((String, @escaping () -> Void, @escaping () -> Void) -> Void)?
+
+    /// Called to request confirmation before cashout: (isFullCashout, stakeToCashOut, cashoutValue, remainingStake?, currency, onConfirm)
+    var onConfirmCashout: ((Bool, Double, Double, Double?, String, @escaping () -> Void) -> Void)?
 
     // MARK: - Initialization
     
@@ -94,9 +109,13 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         setupButtonsActions(bet: myBet)
         setupCashoutViewModels(for: myBet)
 
-        // Subscribe to SSE for real-time cashout value updates
-        if myBet.canCashOut {
+        // Subscribe to SSE for real-time cashout value updates for ALL active bets
+        // Web subscribes to SSE regardless of initial API cashout value - SSE determines availability
+        if myBet.isActive {
+            GomaLogger.debug(.betting, category: "CASHOUT", "Subscribing to SSE for bet \(myBet.identifier) (isActive=true, canCashOut=\(myBet.canCashOut))")
             subscribeToCashoutUpdates()
+        } else {
+            GomaLogger.debug(.betting, category: "CASHOUT", "Skipping SSE subscription for bet \(myBet.identifier) (isActive=false)")
         }
     }
 
@@ -117,6 +136,15 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     
     func handleCashoutTap() {
         guard canCashout(myBet) else { return }
+
+        // If no slider (full cashout only mode), execute full cashout directly
+        if cashoutSliderViewModel == nil && fullCashoutValue > 0 && remainingStake > 0 {
+            GomaLogger.info(.betting, category: "CASHOUT", "Executing full cashout via button for bet \(myBet.identifier)")
+            handleCashoutRequest(forStakeValue: Float(remainingStake))
+            return
+        }
+
+        // Otherwise, existing flow via parent callback
         onCashoutTap?(myBet)
     }
     
@@ -172,46 +200,25 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             return
         }
 
-        // Store values for calculations
+        // Store values for calculations - SSE will determine slider visibility
         self.fullCashoutValue = fullCashout
         self.remainingStake = bet.partialCashoutStake ?? bet.stake
 
-        // Slider bounds (stake amount, not cashout value)
-        let minStake: Float = 0.1
-        let maxStake = Float(remainingStake)
-        let initialStake = maxStake * 0.8  // 80% per Web/Android
+        // DON'T create slider here - wait for SSE to tell us if partial is enabled
+        // Slider will be created in handleCashoutUpdate() if partialCashOutEnabled == true
+        // This matches Web behavior where SSE response controls slider visibility
 
-        // Create slider ViewModel
-        let sliderVM = CashoutSliderViewModel(
-            title: localized("mybets_choose_cashout_amount"),
-            minimumValue: minStake,
-            maximumValue: maxStake,
-            currentValue: initialStake,
-            currency: bet.currency,
-            isEnabled: true
-        )
-
-        // Wire cashout button tap
-        sliderVM.onCashoutRequested = { [weak self] stakeValue in
-            self?.handleCashoutRequest(forStakeValue: stakeValue)
+        // Create amount ViewModel only if bet has previous partial cashouts
+        // Shows historical amount already cashed out (static, not slider-linked)
+        if bet.hasPreviousCashouts {
+            let amountVM = CashoutAmountViewModel.create(
+                title: localized("partial_cashout"),
+                amount: bet.totalCashedOut,
+                currency: bet.currency
+            )
+            self._cashoutAmountVM = amountVM
+            self.cashoutAmountViewModel = amountVM
         }
-
-        self._cashoutSliderVM = sliderVM
-        self.cashoutSliderViewModel = sliderVM
-
-        // Create amount ViewModel with initial calculated value
-        let initialCashoutValue = calculatePartialCashout(forStakeValue: initialStake)
-        let amountVM = CashoutAmountViewModel.create(
-            title: localized("mybets_partial_cashout"),
-            amount: initialCashoutValue,
-            currency: bet.currency
-        )
-
-        self._cashoutAmountVM = amountVM
-        self.cashoutAmountViewModel = amountVM
-
-        // Subscribe to slider changes
-        subscribeToSliderChanges()
     }
 
     // MARK: - Cashout Calculations
@@ -226,18 +233,6 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         return Double(stakeValue) >= (remainingStake - 0.01)
     }
 
-    private func subscribeToSliderChanges() {
-        guard let sliderVM = _cashoutSliderVM else { return }
-
-        sliderVM.dataPublisher
-            .dropFirst()  // Skip initial (already set)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] sliderData in
-                self?.updateCashoutAmount(forStakeValue: sliderData.currentValue)
-            }
-            .store(in: &cancellables)
-    }
-
     // MARK: - SSE Subscription
 
     private func subscribeToCashoutUpdates() {
@@ -246,58 +241,122 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("❌ Cashout SSE error for bet \(self?.myBet.identifier ?? ""): \(error)")
+                        GomaLogger.error(.betting, category: "CASHOUT", "SSE error for bet \(self?.myBet.identifier ?? ""): \(error)")
                     }
                 },
                 receiveValue: { [weak self] content in
                     switch content {
                     case .connected:
-                        print("✅ Cashout SSE connected for bet \(self?.myBet.identifier ?? "")")
+                        GomaLogger.info(.betting, category: "CASHOUT", "SSE connected for bet \(self?.myBet.identifier ?? "")")
                     case .contentUpdate(let cashoutValue):
+                        GomaLogger.debug(.betting, category: "CASHOUT", "SSE update for bet \(self?.myBet.identifier ?? ""): value=\(cashoutValue.cashoutValue ?? 0), code=\(cashoutValue.details.code), partialEnabled=\(cashoutValue.partialCashOutEnabled)")
                         self?.handleCashoutUpdate(cashoutValue)
                     case .disconnected:
-                        print("🔌 Cashout SSE disconnected for bet \(self?.myBet.identifier ?? "")")
+                        GomaLogger.debug(.betting, category: "CASHOUT", "SSE disconnected for bet \(self?.myBet.identifier ?? "")")
                     }
                 }
             )
     }
 
     private func handleCashoutUpdate(_ cashoutValue: CashoutValue) {
-        guard let newCashoutAmount = cashoutValue.cashoutValue else { return }
-
-        // Update stored full cashout value
-        self.fullCashoutValue = newCashoutAmount
-
-        // Get current slider position to recalculate partial cashout
-        if let sliderVM = _cashoutSliderVM {
-            let currentStake = sliderVM.dataPublisher
-                .first()
-                .map { $0.currentValue }
-
-            // Recalculate and update displayed amount based on current slider position
-            currentStake
-                .sink { [weak self] stakeValue in
-                    self?.updateCashoutAmount(forStakeValue: stakeValue)
-                }
-                .store(in: &cancellables)
+        guard let newCashoutAmount = cashoutValue.cashoutValue else {
+            GomaLogger.debug(.betting, category: "CASHOUT", "SSE update has no cashout value - skipping")
+            return
         }
 
-        print("💰 Cashout value updated for bet \(myBet.identifier): \(newCashoutAmount)")
+        // Update stored values
+        self.fullCashoutValue = newCashoutAmount
+        self.isPartialCashoutEnabled = cashoutValue.partialCashOutEnabled
+
+        // Update remaining stake if SSE provides it
+        if cashoutValue.stake > 0 {
+            self.remainingStake = cashoutValue.stake
+        }
+
+        if cashoutValue.partialCashOutEnabled {
+            // Partial cashout enabled - show slider
+            if _cashoutSliderVM == nil {
+                GomaLogger.info(.betting, category: "CASHOUT", "Creating slider for bet \(myBet.identifier) (partialCashOutEnabled=true)")
+                createCashoutViewModelsFromSSE(cashoutValue: newCashoutAmount, stake: cashoutValue.stake)
+            }
+        } else {
+            // Partial cashout disabled - hide slider, enable button for full cashout only
+            GomaLogger.info(.betting, category: "CASHOUT", "Full cashout only for bet \(myBet.identifier) (partialCashOutEnabled=false)")
+            hideSliderForFullCashoutOnly()
+        }
+
+        GomaLogger.info(.betting, category: "CASHOUT", "Cashout value updated for bet \(myBet.identifier): \(newCashoutAmount), partialEnabled=\(cashoutValue.partialCashOutEnabled)")
     }
 
-    private func updateCashoutAmount(forStakeValue stakeValue: Float) {
-        guard let amountVM = _cashoutAmountVM else { return }
+    /// Hides the slider and configures for full cashout only (button-based)
+    /// Called when SSE returns partialCashOutEnabled: false
+    private func hideSliderForFullCashoutOnly() {
+        // Remove slider ViewModels
+        _cashoutSliderVM = nil
+        cashoutSliderViewModel = nil
 
-        let cashoutValue = calculatePartialCashout(forStakeValue: stakeValue)
-        let formattedAmount = Self.formatCurrency(cashoutValue, currency: myBet.currency)
+        // Keep amount VM if exists (for historical cashouts display)
 
-        // Update title based on full vs partial
-        let title = isFullCashout(forStakeValue: stakeValue)
-            ? localized("mybets_full_cashout")
-            : localized("mybets_partial_cashout")
+        // Enable cashout button for full cashout
+        if let cashoutVM = cashoutButtonViewModel as? ButtonIconViewModel {
+            cashoutVM.setEnabled(fullCashoutValue > 0)
+        }
 
-        amountVM.updateTitle(title)
-        amountVM.updateAmount(formattedAmount)
+        // Notify UI to refresh bottom components
+        cashoutComponentsSubject.send()
+    }
+
+    /// Creates cashout slider ViewModels dynamically when SSE returns cashout data
+    /// Called when API returned null cashout but SSE provides a valid value
+    private func createCashoutViewModelsFromSSE(cashoutValue: Double, stake: Double) {
+        // Store values for calculations
+        self.fullCashoutValue = cashoutValue
+        self.remainingStake = stake
+
+        // Slider bounds (stake amount, not cashout value)
+        let minStake: Float = 0.1
+        let maxStake = Float(stake)
+        let initialStake = maxStake * 0.8  // 80% per Web/Android
+
+        // Create slider ViewModel
+        let sliderVM = CashoutSliderViewModel(
+            title: localized("mybets_choose_cashout_amount"),
+            minimumValue: minStake,
+            maximumValue: maxStake,
+            currentValue: initialStake,
+            currency: myBet.currency,
+            isEnabled: true
+        )
+
+        // Wire cashout button tap
+        sliderVM.onCashoutRequested = { [weak self] stakeValue in
+            self?.handleCashoutRequest(forStakeValue: stakeValue)
+        }
+
+        self._cashoutSliderVM = sliderVM
+        self.cashoutSliderViewModel = sliderVM
+
+        // Create amount ViewModel only if bet has previous partial cashouts
+        // Shows historical amount already cashed out (static, not slider-linked)
+        if myBet.hasPreviousCashouts {
+            let amountVM = CashoutAmountViewModel.create(
+                title: localized("partial_cashout"),
+                amount: myBet.totalCashedOut,
+                currency: myBet.currency
+            )
+            self._cashoutAmountVM = amountVM
+            self.cashoutAmountViewModel = amountVM
+        }
+
+        // Enable cashout button now that we have a value
+        if let cashoutVM = cashoutButtonViewModel as? ButtonIconViewModel {
+            cashoutVM.setEnabled(true)
+        }
+
+        // Notify UI to refresh bottom components (slider now available)
+        cashoutComponentsSubject.send()
+
+        GomaLogger.info(.betting, category: "CASHOUT", "Slider ViewModels created: cashout=\(cashoutValue), stake=\(stake), initialSlider=\(initialStake)")
     }
 
     // MARK: - Cashout Execution State Machine
@@ -307,17 +366,28 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
         let isFullCashoutRequest = isFullCashout(forStakeValue: stakeValue)
         let cashoutValue = calculatePartialCashout(forStakeValue: stakeValue)
+        let stakeToCashOut = Double(stakeValue)
+        let remaining = isFullCashoutRequest ? nil : (remainingStake - stakeToCashOut)
 
         let request = CashoutRequest(
             betId: myBet.identifier,
             cashoutValue: cashoutValue,
             cashoutType: isFullCashoutRequest ? .full : .partial,
-            partialCashoutStake: isFullCashoutRequest ? nil : Double(stakeValue),
-            cashoutChangeAcceptanceType: "ACCEPT_ANY"
+            partialCashoutStake: isFullCashoutRequest ? nil : stakeToCashOut
         )
 
         lastCashoutRequest = request
-        executeCashoutRequest(request)
+
+        // Request confirmation before executing
+        onConfirmCashout?(
+            isFullCashoutRequest,
+            stakeToCashOut,
+            cashoutValue,
+            remaining,
+            myBet.currency
+        ) { [weak self] in
+            self?.executeCashoutRequest(request)
+        }
     }
 
     private func executeCashoutRequest(_ request: CashoutRequest) {
@@ -344,7 +414,32 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             cashoutStateSubject.send(.fullCashoutSuccess(payout: response.cashoutPayout))
             onCashoutCompleted?(myBet.identifier, true, nil)
         } else {
+            // Partial cashout success - update UI immediately
             let newRemainingStake = remainingStake - (response.partialCashoutStake ?? 0)
+
+            // 1. Update internal tracking
+            self.remainingStake = newRemainingStake
+
+            // 2. Update slider bounds with new remaining stake (resets to 80% of new max)
+            _cashoutSliderVM?.updateBounds(newMaximumValue: Float(newRemainingStake))
+
+            // 3. Update amount ViewModel with cumulative cashed out total
+            // myBet.totalCashedOut contains previous cashouts, add current payout
+            let newTotalCashedOut = myBet.totalCashedOut + response.cashoutPayout
+            _cashoutAmountVM?.updateAmount(CurrencyHelper.formatAmount(newTotalCashedOut))
+
+            // 4. If amount ViewModel didn't exist, create it now (first partial cashout)
+            if _cashoutAmountVM == nil {
+                let amountVM = CashoutAmountViewModel.create(
+                    title: localized("partial_cashout"),
+                    amount: response.cashoutPayout,
+                    currency: myBet.currency
+                )
+                self._cashoutAmountVM = amountVM
+                self.cashoutAmountViewModel = amountVM
+            }
+
+            // 5. Emit state and notify parent
             cashoutStateSubject.send(.partialCashoutSuccess(payout: response.cashoutPayout, remainingStake: newRemainingStake))
             onCashoutCompleted?(myBet.identifier, false, nil)
             _cashoutSliderVM?.setEnabled(true)
@@ -361,9 +456,11 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         cashoutStateSubject.send(.failed(cashoutError))
         _cashoutSliderVM?.setEnabled(true)
 
-        onCashoutError?(cashoutError.message) { [weak self] in
-            self?.retryCashout()
-        }
+        onCashoutError?(
+            cashoutError.message,
+            { [weak self] in self?.retryCashout() },
+            { [weak self] in self?.cancelCashout() }
+        )
     }
 
     func retryCashout() {
@@ -472,7 +569,12 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     private static func createBetStatus(from myBet: MyBet) -> BetTicketStatusData? {
         // Only provide status data if bet is settled
         guard myBet.isSettled else { return nil }
-        
+
+        // Check state first for cashedOut (state determines cashout action, result determines game outcome)
+        if myBet.state == .cashedOut {
+            return BetTicketStatusData(status: .cashedOut)
+        }
+
         let ticketStatus: BetTicketStatus
         switch myBet.result {
         case .won:
@@ -485,7 +587,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             // For other states like void, pending, etc., don't show status
             return nil
         }
-        
+
         return BetTicketStatusData(status: ticketStatus)
     }
     

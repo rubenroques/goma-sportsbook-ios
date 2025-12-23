@@ -77,11 +77,22 @@ final class WidgetCashierWithdrawViewModel: ObservableObject {
     // MARK: - Private Methods
 
     private static func getCurrentThemeString() -> String {
-        switch UIScreen.main.traitCollection.userInterfaceStyle {
-        case .dark: return "dark"
-        case .light: return "light"
-        case .unspecified: return "dark"
-        @unknown default: return "dark"
+        let savedMode = UserDefaults.standard.appearanceMode
+
+        switch savedMode {
+        case .dark:
+            return "dark"
+        case .light:
+            return "light"
+        case .device:
+            // When following system, check the actual resolved style from the key window
+            let resolvedStyle = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }?
+                .traitCollection.userInterfaceStyle ?? .dark
+
+            return resolvedStyle == .dark ? "dark" : "light"
         }
     }
 }

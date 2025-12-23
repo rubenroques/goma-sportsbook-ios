@@ -37,11 +37,12 @@ final public class InlineMatchCardView: UIView {
 
     // MARK: - Constants
     private enum Constants {
-        static let containerSpacing: CGFloat = 8.0
+        static let containerSpacing: CGFloat = 4.0
         static let contentSpacing: CGFloat = 4.0
-        static let participantsSpacing: CGFloat = 2.0
-        static let horizontalPadding: CGFloat = 12.0
-        static let verticalPadding: CGFloat = 10.0
+        static let participantsSpacing: CGFloat = 1.0
+        static let horizontalPadding: CGFloat = 10.0
+        static let verticalPadding: CGFloat = 6.0
+        static let outcomesLineWidth: CGFloat = 200.0
     }
 
     // MARK: - Initialization
@@ -145,15 +146,15 @@ extension InlineMatchCardView {
 
             // Participant label heights
             homeParticipantLabel.heightAnchor.constraint(equalToConstant: 20),
-            awayParticipantLabel.heightAnchor.constraint(equalToConstant: 20)
+            awayParticipantLabel.heightAnchor.constraint(equalToConstant: 20),
+
+            // Fixed width for outcomes line (consistent for 2 or 3 outcomes)
+            outcomesView.widthAnchor.constraint(equalToConstant: Constants.outcomesLineWidth)
         ])
 
         // Content hugging and compression resistance
         participantsContainer.setContentHuggingPriority(.defaultLow, for: .horizontal)
         participantsContainer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        outcomesView.setContentHuggingPriority(.required, for: .horizontal)
-        outcomesView.setContentCompressionResistancePriority(.required, for: .horizontal)
- 
     }
 
     private func setupAdditionalConfiguration() {
@@ -353,7 +354,6 @@ extension InlineMatchCardView {
         stackView.addArrangedSubview(preLiveLabel)
 
         let preLiveCard = InlineMatchCardView(viewModel: MockInlineMatchCardViewModel.preLiveFootball)
-        preLiveCard.layer.cornerRadius = 8
         stackView.addArrangedSubview(preLiveCard)
 
         // Live tennis
@@ -364,7 +364,6 @@ extension InlineMatchCardView {
         stackView.addArrangedSubview(liveLabel)
 
         let liveCard = InlineMatchCardView(viewModel: MockInlineMatchCardViewModel.liveTennis)
-        liveCard.layer.cornerRadius = 8
         stackView.addArrangedSubview(liveCard)
 
         // With selection
@@ -375,7 +374,6 @@ extension InlineMatchCardView {
         stackView.addArrangedSubview(selectedLabel)
 
         let selectedCard = InlineMatchCardView(viewModel: MockInlineMatchCardViewModel.withSelectedOutcome)
-        selectedCard.layer.cornerRadius = 8
         stackView.addArrangedSubview(selectedCard)
 
         scrollView.addSubview(stackView)

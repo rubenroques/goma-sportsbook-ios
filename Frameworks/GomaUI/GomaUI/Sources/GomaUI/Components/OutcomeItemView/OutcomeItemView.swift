@@ -52,6 +52,7 @@ final public class OutcomeItemView: UIView {
 
     private var cancellables = Set<AnyCancellable>()
     private var viewModel: OutcomeItemViewModelProtocol
+    private var configuration: OutcomeItemConfiguration = .default
 
     // MARK: - Public Properties
     public var onLongPress: (() -> Void) = { }
@@ -67,13 +68,25 @@ final public class OutcomeItemView: UIView {
     }
 
     // MARK: - Initialization
-    public init(viewModel: OutcomeItemViewModelProtocol) {
+    public init(viewModel: OutcomeItemViewModelProtocol, configuration: OutcomeItemConfiguration? = nil) {
         self.viewModel = viewModel
+        self.configuration = configuration ?? .default
         super.init(frame: .zero)
-        
+
         setupSubviews()
+        configureImmediately()
         setupBindings()
         setupGestures()
+    }
+
+    // MARK: - Synchronous Configuration
+    /// Renders initial state synchronously before async bindings are established.
+    /// This enables snapshot tests without RunLoop hacks.
+    private func configureImmediately() {
+        let data = viewModel.currentOutcomeData
+        titleLabel.text = data.title
+        valueLabel.text = data.value
+        updateDisplayState(data.displayState)
     }
 
     required init?(coder: NSCoder) {
@@ -84,16 +97,18 @@ final public class OutcomeItemView: UIView {
     public func configure(with newViewModel: OutcomeItemViewModelProtocol) {
         // Clear previous bindings
         cancellables.removeAll()
-        
+
         // Cancel any active animations
         cancelActiveAnimation()
-        
+
         // Update view model reference
         self.viewModel = newViewModel
-        
+
+        // Render initial state synchronously
+        configureImmediately()
+
         // Re-establish bindings with new view model
         setupBindings()
-
     }
 
     // MARK: - Setup
@@ -184,52 +199,67 @@ final public class OutcomeItemView: UIView {
         baseView.layer.cornerRadius = Constants.cornerRadius
         baseView.clipsToBounds = true
 
-        // Label styling
-        titleLabel.textColor = StyleProvider.Color.textPrimary
-        titleLabel.font = StyleProvider.fontWith(type: .regular, size: 12)
-
-        valueLabel.textColor = StyleProvider.Color.textPrimary
-        valueLabel.font = StyleProvider.fontWith(type: .bold, size: 16)
+        // Label styling - uses configuration
+        applyConfiguration()
 
         // Change indicator styling
         upChangeImage.tintColor = .systemGreen
         downChangeImage.tintColor = .systemRed
     }
 
+    private func applyConfiguration() {
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.font = StyleProvider.fontWith(type: configuration.titleFontType, size: configuration.titleFontSize)
+
+        valueLabel.textColor = StyleProvider.Color.textPrimary
+        valueLabel.font = StyleProvider.fontWith(type: configuration.valueFontType, size: configuration.valueFontSize)
+    }
+
+    /// Sets a custom configuration for the outcome item appearance
+    /// - Parameter customization: The configuration to apply, or nil to reset to default
+    public func setCustomization(_ customization: OutcomeItemConfiguration?) {
+        self.configuration = customization ?? .default
+        applyConfiguration()
+    }
+
     private func setupBindings() {
-        // Title binding
+        // Title binding - dropFirst() since initial value rendered in configureImmediately()
         viewModel.titlePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] title in
                  self?.titleLabel.text = title
             }
             .store(in: &cancellables)
 
-        // Value binding
+        // Value binding - dropFirst() since initial value rendered in configureImmediately()
         viewModel.valuePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 self?.valueLabel.text = value
             }
             .store(in: &cancellables)
 
-        // Selection state binding
+        // Selection state binding - dropFirst() since initial state rendered in configureImmediately()
         viewModel.isSelectedPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isSelected in
                 self?.updateSelectionState(isSelected: isSelected)
             }
             .store(in: &cancellables)
 
-        // Disabled state binding
+        // Disabled state binding - dropFirst() since initial state rendered in configureImmediately()
         viewModel.isDisabledPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isDisabled in
                 self?.updateDisabledState(isDisabled: isDisabled)
             }
             .store(in: &cancellables)
 
-        // Odds change event binding for animations
+        // Odds change event binding for animations (no dropFirst - PassthroughSubject has no initial value)
         viewModel.oddsChangeEventPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] changeEvent in
@@ -237,8 +267,9 @@ final public class OutcomeItemView: UIView {
             }
             .store(in: &cancellables)
 
-        // Display state binding
+        // Display state binding - dropFirst() since initial state rendered in configureImmediately()
         viewModel.displayStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayState in
                 self?.updateDisplayState(displayState)
@@ -246,7 +277,7 @@ final public class OutcomeItemView: UIView {
             .store(in: &cancellables)
 
         // Haptic feedback when selection changes to selected
-        // Using dropFirst() to avoid firing on initial binding
+        // Note: Already has dropFirst() - now needs second dropFirst() to skip initial AND first change
         viewModel.isSelectedPublisher
             .dropFirst()
             .filter { $0 } // Only when becoming selected
@@ -497,8 +528,7 @@ private extension OutcomeItemView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .regular, size: 12)
-        label.textColor = StyleProvider.Color.textPrimary
+        // Font is set by applyConfiguration()
         return label
     }
 
@@ -506,8 +536,7 @@ private extension OutcomeItemView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
-        label.textColor = StyleProvider.Color.textPrimary
+        // Font is set by applyConfiguration()
         return label
     }
 

@@ -25,8 +25,9 @@ public class BonusCardView: UIView {
     private let viewModel: BonusCardViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    // Constraint reference for dynamic updates
+    // Constraint references for dynamic updates
     private var titleLabelTopConstraint: NSLayoutConstraint?
+    private var termsButtonTopConstraint: NSLayoutConstraint?
     
     // MARK: - Lifetime and Cycle
     public init(viewModel: BonusCardViewModelProtocol) {
@@ -99,6 +100,14 @@ public class BonusCardView: UIView {
         // Configure content
         self.titleLabel.text = displayState.title
         self.descriptionLabel.text = displayState.description
+        
+        // CTA button is always visible (not hidden)
+        self.ctaButton.isHidden = false
+        
+        // Configure terms button visibility based on termsURL
+        let hasTermsURL = displayState.hasTermsURL
+        self.termsButton.isHidden = !hasTermsURL
+        self.updateTermsButtonConstraint(hasTermsButton: hasTermsURL)
     }
     
     private func updateConstraints(hasImageURL: Bool) {
@@ -119,6 +128,23 @@ public class BonusCardView: UIView {
             }
         }
         self.titleLabelTopConstraint?.isActive = true
+    }
+    
+    private func updateTermsButtonConstraint(hasTermsButton: Bool) {
+        // Update terms button top constraint based on terms button visibility
+        // CTA button is always visible, so terms button is always positioned below CTA button when visible
+        if let termsButtonTopConstraint = self.termsButtonTopConstraint {
+            termsButtonTopConstraint.isActive = false
+        }
+        
+        if hasTermsButton {
+            // Terms button is visible - position it below CTA button (which is always visible)
+            self.termsButtonTopConstraint = self.termsButton.topAnchor.constraint(equalTo: self.ctaButton.bottomAnchor, constant: 8)
+        } else {
+            // Terms button is hidden - set constraint to description label (will be hidden anyway)
+            self.termsButtonTopConstraint = self.termsButton.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16)
+        }
+        self.termsButtonTopConstraint?.isActive = true
     }
 }
 
@@ -250,16 +276,19 @@ extension BonusCardView {
             self.ctaButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
             self.ctaButton.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 16),
             
-            // Terms Button
+            // Terms Button - top constraint will be set dynamically in updateTermsButtonConstraint
             self.termsButton.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
             self.termsButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
-            self.termsButton.topAnchor.constraint(equalTo: self.ctaButton.bottomAnchor, constant: 8),
             self.termsButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
         ])
         
         // Set initial titleLabel constraint (will be updated in configure)
         self.titleLabelTopConstraint = self.titleLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 16)
         self.titleLabelTopConstraint?.isActive = true
+        
+        // Set initial termsButton top constraint (will be updated in configure)
+        self.termsButtonTopConstraint = self.termsButton.topAnchor.constraint(equalTo: self.ctaButton.bottomAnchor, constant: 8)
+        self.termsButtonTopConstraint?.isActive = true
     }
 }
 
@@ -342,6 +371,24 @@ extension BonusCardView {
     PreviewUIViewController {
         let vc = UIViewController()
         let cardView = BonusCardView(viewModel: MockBonusCardViewModel.noImageURLMock)
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(cardView)
+        
+        NSLayoutConstraint.activate([
+            cardView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            cardView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            cardView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Terms Button Hidden") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let cardView = BonusCardView(viewModel: MockBonusCardViewModel.noURLsMock)
         cardView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(cardView)
         

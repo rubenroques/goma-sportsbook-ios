@@ -356,11 +356,23 @@ class EveryMatrixRESTConnector: Connector {
                 case 409:
                     // 409 Conflict - usually duplicate bet or validation error
                     GomaLogger.error(.networking, category: "EM_REST", "409 Conflict - Possible duplicate bet or validation error")
-                    if let apiError = try? JSONDecoder().decode(EveryMatrix.EveryMatrixAPIError.self, from: result.data) {
-                        let errorMessage = apiError.thirdPartyResponse?.message ?? apiError.error ?? "Conflict Error"
+                    if let apiError = try? JSONDecoder().decode(
+                        EveryMatrix.EveryMatrixAPIError.self,
+                        from: result.data
+                    ) {
+                        let errorMessage = if let thirdPartyMessage = apiError.thirdPartyResponse?.message {
+                            thirdPartyMessage
+                        } else
+                        if let errorMessage = apiError.response?.message {
+                            errorMessage
+                        } else {
+                            "Conflict Error"
+                        }
+                        
                         GomaLogger.error(.networking, category: "EM_REST", "409 Error message: \(errorMessage)")
                         throw ServiceProviderError.errorMessage(message: errorMessage)
                     }
+                    
                     throw ServiceProviderError.errorMessage(message: "Bet already placed or validation error")
                 case 424:
                     // Try to decode error message

@@ -273,6 +273,8 @@ final public class BorderedTextFieldView: UIView {
     }
 
     @objc private func textFieldDidEndEditing() {
+        guard let text = textField.text else { return }
+        viewModel.updateText(text)
         viewModel.setFocused(false)
         onFocusChanged(false)
         updateLabelPosition()

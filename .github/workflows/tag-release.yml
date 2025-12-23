@@ -194,8 +194,11 @@ jobs:
               echo "No matching changelog entry found for v$VERSION ($BUILD)"
               NOTES="Build $BUILD - Version $VERSION"
             else
+              # Sanitize notes: remove backticks and other shell-dangerous characters
+              # Backticks cause command substitution, $ causes variable expansion
+              SANITIZED_NOTES=$(echo "$RAW_NOTES" | sed 's/`//g' | sed 's/\$//g')
               # Prefix each line with bullet point
-              NOTES=$(echo "$RAW_NOTES" | sed 's/^/- /')
+              NOTES=$(echo "$SANITIZED_NOTES" | sed 's/^/- /')
               echo "Found changelog entry"
             fi
           fi
@@ -209,6 +212,9 @@ jobs:
 
           echo "Release notes:"
           echo "$NOTES"
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
       - name: Cache SPM dependencies
         uses: actions/cache@v4
@@ -408,6 +414,30 @@ jobs:
           echo "DUAL RELEASE COMPLETE"
           echo "=============================================="
 
+      - name: Notify Jira tickets of deployment
+        if: success()
+        env:
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          VERSION: ${{ steps.parse.outputs.version }}
+          BUILD: ${{ steps.parse.outputs.build }}
+          CHANGELOG_FILE: ${{ steps.config.outputs.changelog }}
+          CLIENT_NAME: ${{ steps.config.outputs.client_name }}
+        continue-on-error: true
+        run: |
+          echo "Notifying Jira tickets of deployment..."
+
+          # Create virtual environment to avoid PEP 668 externally-managed-environment error
+          python3 -m venv .venv
+          source .venv/bin/activate
+
+          # Install Python dependencies
+          pip install --quiet pyyaml requests
+
+          # Run the notifier script
+          python3 .github/scripts/jira_release_notifier.py
+
       - name: Send Discord success notification
         if: success()
         env:
@@ -431,8 +461,16 @@ jobs:
             EASTER_EGG=""
           fi
 
-          # Format release notes: escape quotes and convert newlines to \n for JSON
-          NOTES_ESCAPED=$(printf '%s' "$NOTES" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
+          # Truncate each line to ~100 chars so all SPOR tickets are visible
+          # Then escape quotes and convert newlines to \n for JSON
+          NOTES_TRUNCATED=$(printf '%s' "$NOTES" | while IFS= read -r line; do
+            if [ ${#line} -gt 100 ]; then
+              echo "${line:0:97}..."
+            else
+              echo "$line"
+            fi
+          done)
+          NOTES_ESCAPED=$(printf '%s' "$NOTES_TRUNCATED" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
 
           # Build the message content
           MESSAGE="${RANDOM_EMOJI} **${CLIENT_NAME}** — PROD Release\n\n"

@@ -173,7 +173,7 @@ final class MyBetsViewModel {
                 self?.onTabOrStatusChanged()
             }
             .store(in: &cancellables)
-        
+
         print("📡 MyBetsViewModel: Bindings setup complete")
     }
     
@@ -236,6 +236,7 @@ final class MyBetsViewModel {
                 },
                 receiveValue: { [weak self] bettingHistory in
                     self?.handleBetsResponse(bettingHistory, cacheKey: cacheKey)
+                    self?.myBetsStatusBarViewModel.updateCounter(bettingHistory.count)
                 }
             )
     }
@@ -401,10 +402,13 @@ final class MyBetsViewModel {
             }
 
             // Wire cashout error callback
-            viewModel.onCashoutError = { [weak self] message, retryAction in
-                self?.onShowCashoutError?(message, retryAction, {
-                    // Cancel action - ViewModel handles state reset
-                })
+            viewModel.onCashoutError = { [weak self] message, retryAction, cancelAction in
+                self?.onShowCashoutError?(message, retryAction, cancelAction)
+            }
+
+            // Wire cashout confirmation callback
+            viewModel.onConfirmCashout = { [weak self] isFullCashout, stake, value, remaining, currency, onConfirm in
+                self?.onShowCashoutConfirmation?(isFullCashout, stake, value, remaining, currency, onConfirm)
             }
 
             // Cache the new ViewModel
@@ -424,6 +428,7 @@ final class MyBetsViewModel {
     var onNavigateToBetslip: ((Int?, Int?) -> Void)? // (successCount?, failCount?) - nil if no partial failure
     var onShowRebetAllFailedError: (() -> Void)?
     var onShowCashoutError: ((String, @escaping () -> Void, @escaping () -> Void) -> Void)?
+    var onShowCashoutConfirmation: ((Bool, Double, Double, Double?, String, @escaping () -> Void) -> Void)?
     
     // MARK: - Action Handlers
     

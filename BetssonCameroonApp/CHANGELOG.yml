@@ -4,13 +4,43 @@
 
 releases:
 
+  - version: "0.3.8"
+    build: 3802
+    date: "2025-12-23"
+    notes:
+      - "fix(bet-detail): [SPOR-7010] - Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
+      - "fix(bonus): [SPOR-6672] (REVIEW) - Available bonus card cta and terms button logic fixed"
+      - "fix(localized): [SPOR-7006] - Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"
+      - "fix(betslip): [SPOR-7014] - BetslipError response object created to get errorCode and errorMessage; EveryMatrixRESTConnector 409 response code mapper updated; Keys for hardcoded strings added"
+      - "fix(GomaUI): [SPOR-6076] Fix InlineMatchCard outcomes line width - fixed to 200px for consistent alignment between 2-way and 3-way markets"
+      - "fix(banking): [SPOR-7001] Fix Widget Cashier URL encoding - endpoint param now properly percent-encoded as required by cashier page"
+      - "fix(banking): [SPOR-7001] Fix Widget Cashier theme detection - now respects app's saved appearance mode (dark/light/system)"
+      - "feat(GomaUI): [SPOR-6076] Add OutcomeItemConfiguration for font customization - supports .default and .compact presets with setCustomization() runtime changes"
+      - "feat(GomaUI): [SPOR-6247] Add comprehensive OutcomeItemView snapshot tests - 5 categories (basic states, display states, odds change, font customization, size variants) with light/dark mode coverage"
+      - "fix(GomaUI): [SPOR-6247] Add synchronous state access to OutcomeItemView - adds currentOutcomeData property and configureImmediately() pattern, eliminates RunLoop hack in snapshot tests"
+      - "fix(cashout): [SPOR-6462] [bc-153] Refresh slider bounds and amount view immediately after partial cashout success - fixes stale UI values"
+      - "fix(cashout): [SPOR-7000] [BC-342] Fix error alert cancel action not resetting state machine - button was unresponsive after dismissing error"
+      - "fix(my-bets): [SPOR-6934] BA - BC-323 - iOS app - My bets Open/Cashout tabs missing counters"
+
   - version: "0.3.7"
     build: 3701
-    date: "2025-12-XX"
+    date: "2025-12-18"
     notes:
+      - "fix(localization): Implement hybrid Phrase OTA + local bundle approach - fixes registration checkbox and other Phrase-managed strings not displaying while preserving in-app language switching. Needs extensive tests."
+      - "feat(cashout): Complete partial cashout implementation with state machine, slider calculations, and real-time SSE value updates - includes loading overlay, error retry, and LRU cache"
+      - "feat(banking): Add Goma-hosted cashier deposit/withdraw screens with client-side URL construction"
+      - "feat(banking): Add Widget cashier deposit/withdraw screens with WebView bridge implementation"
       - "fix(mybets): [SPOR-6122] - Capsule now is conditioned to when there is a bet result, if not, the date is displayed without the capsule."
       - "fix(bonus): [SPOR-6672] [BC-296] - Fixed localized strings for bonus tabs and deposit button, fixed bonus terms links to detect if we open external url or internal app links, added close bonus screen logic on internal app links, added padding to ButtonView"
+      - "fix(bonus): Fixed granted bonus not displaying, tweaked granted bonus cards UI"
       - "fix(casino): [SPOR-5738] - Fixed background color on navbar; Changed position of the category title."
+      - "fix(translations): [SPOR-6895] Fixed missing translations at Wallet/Promo responsible gaming screens"
+      - "feat(icons): Add per-environment app icons with visual badges for STG/UAT/PROD builds"
+      - "feature(testing): Add snapshot testing infrastructure for GomaUI components with light/dark mode support"
+      - "chore: Rename GomaUIDemo to GomaUICatalog for consistency with package naming"
+      - "feat(architecture): Merge BetssonFrance into unified single codebase - Firebase SDK 10.0.0→12.0.0, ServicesProvider backward compatibility additions"
+      - "fix(bonus): [SPOR-6994] [BC-435] - Fixed granted bonus not displaying, tweaked granted bonus cards UI"
+      - "fix(registration): SPOR-6637 - Missing error for empty fields added; Missing error for unchecked ToC added"
 
   - version: "0.3.6" # released
     build: 3601
@@ -76,7 +106,7 @@ releases:
       
   - version: "0.3.1"
     build: 3112
-    date: "2025-12-28"
+    date: "2025-11-28"
     notes:
       - "fix(ci): Updated CI/CD branch references from betsson-cm to main"
       - "fix(ci): Improved Discord release notification formatting"
@@ -87,7 +117,7 @@ releases:
 
   - version: "0.3.1"
     build: 3101
-    date: "2025-12-28"
+    date: "2025-11-28"
     notes:
       - "fix(casino): [SPOR-6630] [BC-214] Use square icons for grid cards, separate thumbnail/background URLs"
       - "fix(betslip): [SPOR-6614] [BC-283] Stake field input validation" 

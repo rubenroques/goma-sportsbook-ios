@@ -20,13 +20,25 @@ public class TabularBarView: UIView {
         didSet {
             if barDistribution == .parent {
                 self.baseScrollView.removeConstraint(stackViewWithConstraint!)
-                stackViewWithConstraint = NSLayoutConstraint(item: self.stackView, attribute: .width, relatedBy: .equal, toItem: self.baseScrollView, attribute: .width, multiplier: 1, constant: 0)
+                stackViewWithConstraint = NSLayoutConstraint(item: self.stackView,
+                                                             attribute: .width,
+                                                             relatedBy: .equal,
+                                                             toItem: self.baseScrollView,
+                                                             attribute: .width,
+                                                             multiplier: 1,
+                                                             constant: 0)
                 self.baseScrollView.addConstraint(stackViewWithConstraint!)
 
             }
             else {
                 self.baseScrollView.removeConstraint(stackViewWithConstraint!)
-                stackViewWithConstraint = NSLayoutConstraint(item: self.stackView, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: self.baseScrollView, attribute: .width, multiplier: 1, constant: 0)
+                stackViewWithConstraint = NSLayoutConstraint(item: self.stackView,
+                                                             attribute: .width,
+                                                             relatedBy: .greaterThanOrEqual,
+                                                             toItem: self.baseScrollView,
+                                                             attribute: .width,
+                                                             multiplier: 1,
+                                                             constant: 0)
                 self.baseScrollView.addConstraint(stackViewWithConstraint!)
             }
 

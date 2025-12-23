@@ -2,6 +2,7 @@
 import Foundation
 import Combine
 import SharedModels
+import GomaLogger
 
 class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
 
@@ -404,13 +405,19 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             .eraseToAnyPublisher()
     }
 
+    private let widgetCashierLogCategory = "WidgetCashier"
+
     func getWidgetCashierURL(type: WidgetCashierType, language: String, theme: String) -> AnyPublisher<URL, ServiceProviderError> {
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Building Widget Cashier URL - Type: \(type) (rawValue: '\(type.rawValue)')")
+
         // Get session token from coordinator (no API call)
         guard let sessionToken = sessionCoordinator.getSessionToken(), !sessionToken.isEmpty else {
+            GomaLogger.error(.payments, category: widgetCashierLogCategory, "No session token found")
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
         guard let userId = sessionCoordinator.currentUserId else {
+            GomaLogger.error(.payments, category: widgetCashierLogCategory, "No userId found")
             return Fail(error: ServiceProviderError.userSessionNotFound).eraseToAnyPublisher()
         }
 
@@ -422,6 +429,9 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
         let baseURL = config.widgetCashierBaseURL
         let apiEndpoint = config.widgetCashierAPIEndpoint
 
+        GomaLogger.debug(.payments, category: widgetCashierLogCategory, "URL Params - baseURL: \(baseURL), userId: \(userId), currency: \(currency), lang: \(language), theme: \(theme), type: \(type.rawValue)")
+
+        // Build URL without the endpoint parameter first
         var components = URLComponents(string: "\(baseURL)/cashier-page/index.html")
         components?.queryItems = [
             URLQueryItem(name: "sessionId", value: sessionToken),
@@ -432,12 +442,24 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
             URLQueryItem(name: "type", value: type.rawValue),
             URLQueryItem(name: "showheader", value: "false"),
             URLQueryItem(name: "numberofmethodsshown", value: "3"),
-            URLQueryItem(name: "endpoint", value: apiEndpoint),
         ]
 
-        guard let url = components?.url else {
+        guard var urlString = components?.url?.absoluteString else {
+            GomaLogger.error(.payments, category: widgetCashierLogCategory, "Failed to construct URL from components")
             return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
         }
+
+        // Manually append the endpoint parameter with proper URL encoding
+        // URLQueryItem doesn't encode :// by default, but Widget Cashier requires it
+        let encodedEndpoint = apiEndpoint.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? apiEndpoint
+        urlString += "&endpoint=\(encodedEndpoint)"
+
+        guard let url = URL(string: urlString) else {
+            GomaLogger.error(.payments, category: widgetCashierLogCategory, "Failed to create final URL")
+            return Fail(error: ServiceProviderError.invalidRequestFormat).eraseToAnyPublisher()
+        }
+
+        GomaLogger.info(.payments, category: widgetCashierLogCategory, "Widget Cashier URL built successfully:\n\(url.absoluteString)")
 
         return Just(url)
             .setFailureType(to: ServiceProviderError.self)

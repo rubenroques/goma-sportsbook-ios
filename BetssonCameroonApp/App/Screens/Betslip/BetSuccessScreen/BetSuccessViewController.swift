@@ -42,7 +42,7 @@ class BetSuccessViewController: UIViewController {
     // MARK: - Navigation Closures
     // Called when success flow completes - handled by coordinator
     var onContinueRequested: (() -> Void)?
-    var onOpenDetails: (() -> Void)?
+    var onOpenDetails: (([BettingTicket], [BetPlacedDetails]) -> Void)?
     var onShareBetslip: (() -> Void)?
 
     init(viewModel: BetSuccessViewModelProtocol) {
@@ -86,7 +86,8 @@ class BetSuccessViewController: UIViewController {
             trailingIcon: "chevron.right"
         )
         openDetailsRow.configure(with: openDetailsItem) { [weak self] _ in
-            self?.onOpenDetails?()
+            guard let self = self else { return }
+            self.onOpenDetails?(self.viewModel.bettingTickets, self.viewModel.betPlacedDetails)
         }
         openDetailsRow.translatesAutoresizingMaskIntoConstraints = false
 

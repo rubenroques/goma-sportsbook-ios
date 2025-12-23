@@ -98,7 +98,7 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
         isPasswordVisibleSubject.send(!isPasswordVisibleSubject.value)
     }
 
-        public func updatePlaceholder(_ placeholder: String) {
+    public func updatePlaceholder(_ placeholder: String) {
         placeholderSubject.send(placeholder)
     }
 

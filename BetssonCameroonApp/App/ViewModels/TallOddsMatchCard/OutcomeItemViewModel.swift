@@ -23,7 +23,12 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     private let selectionDidChangeSubject: PassthroughSubject<GomaUI.OutcomeSelectionChangeEvent, Never>
 
     private var cancellables = Set<AnyCancellable>()
-    
+
+    // MARK: - Synchronous State Access
+    var currentOutcomeData: GomaUI.OutcomeItemData {
+        outcomeDataSubject.value
+    }
+
     // MARK: - Protocol Conformance
     public var displayStatePublisher: AnyPublisher<GomaUI.OutcomeDisplayState, Never> {
         return self.displayStateSubject.eraseToAnyPublisher()
@@ -176,7 +181,7 @@ final class OutcomeItemViewModel: OutcomeItemViewModelProtocol {
     }
     
     public func clearOddsChangeIndicator() {
-        // Clear any pending odds change animations
+        // TODO: Clear any pending odds change animations
         // Implementation depends on the specific animation system used
     }
     

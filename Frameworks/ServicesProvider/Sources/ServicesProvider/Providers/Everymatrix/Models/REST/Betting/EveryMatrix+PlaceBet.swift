@@ -92,17 +92,52 @@ extension EveryMatrix {
 
     // MARK: - Place Bet Response Models
 
+    struct PlaceBetSelection: Codable {
+        let bettingOfferId: String?
+        let outcomeId: String?
+        let eventId: String?
+        let bettingTypeId: Int?
+        let priceValue: Double?
+
+        enum CodingKeys: String, CodingKey {
+            case bettingOfferId
+            case outcomeId
+            case eventId
+            case bettingTypeId
+            case priceValue
+        }
+    }
+
     struct PlaceBetResponse: Codable {
         let betId: String?
-        let potentialReturn: Double?
         let status: String?
         let message: String?
+        let selections: [PlaceBetSelection]?
+        let placedDate: String?
+        let maxWinning: Double?
+        let amount: Double?
+        let totalPriceValue: Double?
 
         enum CodingKeys: String, CodingKey {
             case betId = "betId"
-            case potentialReturn = "potentialReturn"
             case status = "status"
             case message = "message"
+            case selections
+            case placedDate
+            case maxWinning
+            case amount
+            case totalPriceValue
+        }
+    }
+    
+    /// Wrapper for PlaceBetResponse that handles the API's nested response structure
+    struct PlaceBetResponseWrapper: Codable {
+        let successful: Bool?
+        let response: PlaceBetResponse
+        
+        enum CodingKeys: String, CodingKey {
+            case successful
+            case response
         }
     }
 }

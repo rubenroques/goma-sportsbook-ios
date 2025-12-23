@@ -30,9 +30,13 @@ extension EveryMatrixModelMapper {
         let betState = Self.betState(fromStatus: status)
         let betResult = Self.betResult(fromStatus: everyMatrixBet.betSettlementStatus ?? status)
 
-        let selections = everyMatrixBet.selections?.compactMap {
+        let selections = everyMatrixBet.selections?.compactMap { $0.content }.compactMap {
             Self.betSelection(fromEveryMatrixSelection: $0)
         } ?? []
+
+        let partialCashOuts = everyMatrixBet.partialCashOuts?.compactMap { $0.content }.compactMap {
+            Self.partialCashOut(fromEveryMatrixPartialCashOut: $0)
+        }
 
         // Extract currency from API response, fallback to EUR if not available
         let currency = everyMatrixBet.currency
@@ -53,6 +57,7 @@ extension EveryMatrixModelMapper {
             freebet: everyMatrixBet.freeBet ?? false,
             partialCashoutReturn: everyMatrixBet.overallCashoutAmount,
             partialCashoutStake: everyMatrixBet.betRemainingStake,
+            partialCashOuts: partialCashOuts,
             ticketCode: everyMatrixBet.ticketCode
         )
     }
@@ -144,5 +149,21 @@ extension EveryMatrixModelMapper {
         default:
             return .notSpecified
         }
+    }
+
+    static func partialCashOut(fromEveryMatrixPartialCashOut emPartialCashOut: EveryMatrix.PartialCashOut) -> PartialCashOut {
+        var cashOutDate: Date?
+        if let dateString = emPartialCashOut.cashOutDate {
+            let formatter = ISO8601DateFormatter()
+            cashOutDate = formatter.date(from: dateString)
+        }
+
+        return PartialCashOut(
+            requestId: emPartialCashOut.requestId,
+            usedStake: emPartialCashOut.usedStake,
+            cashOutAmount: emPartialCashOut.cashOutAmount,
+            status: emPartialCashOut.status,
+            cashOutDate: cashOutDate
+        )
     }
 }

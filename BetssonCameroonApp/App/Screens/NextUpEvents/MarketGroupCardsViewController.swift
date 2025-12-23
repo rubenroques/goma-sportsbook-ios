@@ -115,7 +115,7 @@ class MarketGroupCardsViewController: UIViewController {
         tableView.backgroundView?.backgroundColor = appliedColor
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 180
+        tableView.estimatedRowHeight = 80  // Inline cards are shorter
 
         view.addSubview(tableView)
 
@@ -185,8 +185,8 @@ class MarketGroupCardsViewController: UIViewController {
 
     private func configureDataSource() {
         tableView.register(
-            TallOddsMatchCardTableViewCell.self,
-            forCellReuseIdentifier: TallOddsMatchCardTableViewCell.identifier
+            InlineMatchCardTableViewCell.self,
+            forCellReuseIdentifier: InlineMatchCardTableViewCell.identifier
         )
         tableView.register(
             SeeMoreButtonTableViewCell.self,
@@ -200,14 +200,14 @@ class MarketGroupCardsViewController: UIViewController {
 
     // MARK: - ViewModel Binding
     private func bindToViewModel() {
-        viewModel.$matchCardsData
+        viewModel.$inlineMatchCardsData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] matchCardsData in
+            .sink { [weak self] inlineMatchCardsData in
                 guard let self = self else { return }
-                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED - \(matchCardsData.count) matches")
+                print("[MarketGroupCardsVC] 📥 VIEWMODEL UPDATE RECEIVED - \(inlineMatchCardsData.count) matches")
 
                 // Track first UI update
-                if !self.hasTrackedFirstUpdate && !matchCardsData.isEmpty {
+                if !self.hasTrackedFirstUpdate && !inlineMatchCardsData.isEmpty {
                     self.hasTrackedFirstUpdate = true
 
                     PerformanceTracker.shared.start(
@@ -215,7 +215,7 @@ class MarketGroupCardsViewController: UIViewController {
                         layer: .app,
                         metadata: [
                             "operation": "table_reload",
-                            "match_count": "\(matchCardsData.count)"
+                            "match_count": "\(inlineMatchCardsData.count)"
                         ]
                     )
                 }
@@ -223,7 +223,7 @@ class MarketGroupCardsViewController: UIViewController {
                 self.tableView.reloadData()
 
                 // Track completion
-                if !matchCardsData.isEmpty {
+                if !inlineMatchCardsData.isEmpty {
                     PerformanceTracker.shared.end(
                         feature: .homeScreen,
                         layer: .app,
@@ -291,9 +291,9 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
 
         switch sectionType {
         case .matchCards:
-            return viewModel.matchCardsData.count
+            return viewModel.inlineMatchCardsData.count
         case .loadMoreButton:
-            return (viewModel.hasMoreEvents && !viewModel.matchCardsData.isEmpty) ? 1 : 0
+            return (viewModel.hasMoreEvents && !viewModel.inlineMatchCardsData.isEmpty) ? 1 : 0
         case .none:
             return 0
         }
@@ -305,27 +305,22 @@ extension MarketGroupCardsViewController: UITableViewDataSource {
         switch sectionType {
         case .matchCards:
             guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: TallOddsMatchCardTableViewCell.identifier,
+                withIdentifier: InlineMatchCardTableViewCell.identifier,
                 for: indexPath
-            ) as? TallOddsMatchCardTableViewCell else {
+            ) as? InlineMatchCardTableViewCell else {
                 return UITableViewCell()
             }
 
-            let matchCardData = viewModel.matchCardsData[indexPath.row]
-            let tallOddsViewModel = matchCardData.tallOddsViewModel
+            let matchCardData = viewModel.inlineMatchCardsData[indexPath.row]
+            let inlineViewModel = matchCardData.inlineViewModel
 
-            cell.configure(
-                with: tallOddsViewModel,
-                onMatchHeaderTapped: {},
-                onFavoriteToggled: {},
-                onOutcomeSelected: { _ in },
-                onMarketInfoTapped: {},
-                onCardTapped: { [weak self] in
-                    self?.onCardTapped?(matchCardData.filteredData.match)
-                }
-            )
+            cell.configure(with: inlineViewModel)
 
-            let totalMatchCards = viewModel.matchCardsData.count
+            cell.onCardTapped = { [weak self] in
+                self?.onCardTapped?(matchCardData.filteredData.match)
+            }
+
+            let totalMatchCards = viewModel.inlineMatchCardsData.count
             let isFirst = indexPath.row == 0
             let isLast = indexPath.row == totalMatchCards - 1
             cell.configureCellPosition(isFirst: isFirst, isLast: isLast)

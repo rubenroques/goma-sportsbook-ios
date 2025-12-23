@@ -6,6 +6,17 @@ import SwiftUI
 public final class TermsAcceptanceView: UIView {
     
     // MARK: - UI Components
+    private lazy var errorLabel: UILabel = {
+        // Error label setup
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .regular, size: 12)
+        label.textColor = .systemRed
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
+    }()
+    
     private lazy var checkboxButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +95,7 @@ public final class TermsAcceptanceView: UIView {
         // Add to stack view
         containerStackView.addArrangedSubview(checkboxButton)
         containerStackView.addArrangedSubview(highlightedTextView)
-        
+        addSubview(errorLabel)
         addSubview(containerStackView)
         
         setupConstraints()
@@ -96,7 +107,11 @@ public final class TermsAcceptanceView: UIView {
             containerStackView.topAnchor.constraint(equalTo: topAnchor),
             containerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            errorLabel.topAnchor.constraint(equalTo: containerStackView.bottomAnchor, constant: 4),
+            errorLabel.leadingAnchor.constraint(equalTo: containerStackView.leadingAnchor, constant: 40),
+            errorLabel.trailingAnchor.constraint(equalTo: containerStackView.trailingAnchor),
+            errorLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             // Checkbox button
             checkboxButton.widthAnchor.constraint(equalToConstant: 24),
@@ -215,6 +230,13 @@ public final class TermsAcceptanceView: UIView {
         }
         
         return false
+    }
+}
+
+extension TermsAcceptanceView {
+    public func showError(_ hasError: Bool) {
+        errorLabel.text = hasError ? LocalizationProvider.string("required_field") : ""
+        errorLabel.isHidden = !hasError
     }
 }
 

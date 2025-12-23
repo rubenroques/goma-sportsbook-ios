@@ -1,0 +1,82 @@
+included:
+  - BetssonCameroonApp
+  - BetssonFranceLegacy/Core
+  - BetssonFranceLegacy/Clients
+
+excluded:
+  - Carthage
+  - Pods
+  - .build
+  - Frameworks
+  - git-worktrees
+  - BetssonFranceLegacy/Core/Tools/ExternalLibs
+  - BetssonCameroonApp/App/Tools/ExternalLibs
+
+# Line length
+line_length:
+  warning: 160
+  error: 200
+  ignores_urls: true
+  ignores_comments: true
+
+# Complexity rules - disabled for now due to legacy code
+# TODO: Re-enable once codebase is refactored
+# cyclomatic_complexity:
+#   warning: 15
+#   error: 25
+#
+# function_body_length:
+#   warning: 60
+#   error: 150
+
+# Identifier naming
+identifier_name:
+  excluded:
+    - id
+    - ok
+    - i
+    - j
+    - x
+    - y
+
+# Enum associated values
+enum_case_associated_values_count:
+  warning: 6
+  error: 8
+
+# Safety: force_cast and force_try as errors
+force_cast: error
+force_try: error
+
+# Disabled rules
+disabled_rules:
+  - for_where
+  - trailing_whitespace
+  - redundant_string_enum_value
+  - large_tuple
+  - type_name
+  - trailing_comma
+  - file_length
+  - type_body_length
+  - nesting
+  - opening_brace
+  - statement_position
+  - cyclomatic_complexity
+  - function_body_length
+
+# Opt-in rules
+opt_in_rules:
+  - private_outlet
+  - private_action
+  - void_return
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - empty_count
+  - discouraged_direct_init
+  - duplicate_imports
+  - empty_enum_arguments
+  - enum_case_associated_values_count
+  - redundant_optional_initialization
+  - prohibited_super_call
+  - overridden_super_call
+  - no_space_in_method_call

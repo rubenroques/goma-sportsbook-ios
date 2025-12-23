@@ -296,7 +296,12 @@ class PhoneLoginViewController: UIViewController {
                     passwordToSet = "1234"
                 }
                 else if phone == "699198923" {
-                    // Second tap: Alternative test account
+                    // Second tap: Fresh test account
+                    phoneToSet = "691234587"
+                    passwordToSet = "1234"
+                }
+                else if phone == "691234587" {
+                    // Third tap: Alternative test account
                     phoneToSet = "650888006"
                     passwordToSet = "4050"
                 }

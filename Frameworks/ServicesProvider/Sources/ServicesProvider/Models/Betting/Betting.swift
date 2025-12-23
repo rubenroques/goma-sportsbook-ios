@@ -34,6 +34,7 @@ public struct Bet: Codable, Equatable, Hashable {
     // Cashout related properties - present in both implementations
     public var partialCashoutReturn: Double?
     public var partialCashoutStake: Double?
+    public var partialCashOuts: [PartialCashOut]?
 
     // Betslip identifier - present in both implementations
     public var betslipId: Int?
@@ -69,6 +70,7 @@ public struct Bet: Codable, Equatable, Hashable {
         freebet: Bool,
         partialCashoutReturn: Double? = nil,
         partialCashoutStake: Double? = nil,
+        partialCashOuts: [PartialCashOut]? = nil,
         betslipId: Int? = nil,
         cashbackReturn: Double? = nil,
         freebetReturn: Double? = nil,
@@ -92,6 +94,7 @@ public struct Bet: Codable, Equatable, Hashable {
         self.freebet = freebet
         self.partialCashoutReturn = partialCashoutReturn
         self.partialCashoutStake = partialCashoutStake
+        self.partialCashOuts = partialCashOuts
         self.betslipId = betslipId
         self.cashbackReturn = cashbackReturn
         self.freebetReturn = freebetReturn
@@ -202,6 +205,29 @@ public struct BetSelection: Codable, Equatable, Hashable {
         self.outcomeId = outcomeId
         self.homeLogoUrl = homeLogoUrl
         self.awayLogoUrl = awayLogoUrl
+    }
+}
+
+/// Represents a partial cashout entry for a bet
+public struct PartialCashOut: Codable, Equatable, Hashable {
+    public var requestId: String?
+    public var usedStake: Double?
+    public var cashOutAmount: Double?
+    public var status: String?
+    public var cashOutDate: Date?
+
+    public init(
+        requestId: String? = nil,
+        usedStake: Double? = nil,
+        cashOutAmount: Double? = nil,
+        status: String? = nil,
+        cashOutDate: Date? = nil
+    ) {
+        self.requestId = requestId
+        self.usedStake = usedStake
+        self.cashOutAmount = cashOutAmount
+        self.status = status
+        self.cashOutDate = cashOutDate
     }
 }
 

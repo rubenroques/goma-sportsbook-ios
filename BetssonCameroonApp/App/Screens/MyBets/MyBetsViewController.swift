@@ -315,6 +315,18 @@ class MyBetsViewController: UIViewController {
         viewModel.onShowCashoutError = { [weak self] message, retryAction, cancelAction in
             self?.showCashoutErrorAlert(message: message, retryAction: retryAction, cancelAction: cancelAction)
         }
+
+        // Setup cashout confirmation
+        viewModel.onShowCashoutConfirmation = { [weak self] isFullCashout, stake, value, remaining, currency, onConfirm in
+            self?.showCashoutConfirmationAlert(
+                isFullCashout: isFullCashout,
+                stakeToCashOut: stake,
+                cashoutValue: value,
+                remainingStake: remaining,
+                currency: currency,
+                onConfirm: onConfirm
+            )
+        }
     }
     
     private func handleBetsStateChange(_ state: MyBetsState) {
@@ -443,6 +455,45 @@ class MyBetsViewController: UIViewController {
 
         alert.addAction(cancel)
         alert.addAction(retry)
+
+        present(alert, animated: true)
+    }
+
+    private func showCashoutConfirmationAlert(
+        isFullCashout: Bool,
+        stakeToCashOut: Double,
+        cashoutValue: Double,
+        remainingStake: Double?,
+        currency: String,
+        onConfirm: @escaping () -> Void
+    ) {
+        let title = isFullCashout
+            ? localized("confirm_full_cashout")
+            : localized("confirm_partial_cashout")
+
+        let description = isFullCashout
+            ? localized("you_are_about_to_cash_out_your_entire_bet")
+            : localized("you_are_about_to_cash_out_part_of_your_bet")
+
+        let stakeLabel = localized("stake_to_cash_out")
+        let receiveLabel = localized("you_will_receive")
+        let stakeFormatted = CurrencyHelper.formatAmountWithCurrency(stakeToCashOut, currency: currency)
+        let valueFormatted = CurrencyHelper.formatAmountWithCurrency(cashoutValue, currency: currency)
+
+        var message = "\(description)\n\n\(stakeLabel): \(stakeFormatted)\n\(receiveLabel): \(valueFormatted)"
+
+        if !isFullCashout, let remaining = remainingStake {
+            let remainingLabel = localized("remaining_stake")
+            let remainingFormatted = CurrencyHelper.formatAmountWithCurrency(remaining, currency: currency)
+            message += "\n\(remainingLabel): \(remainingFormatted)"
+        }
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: localized("confirm"), style: .default) { _ in
+            onConfirm()
+        })
 
         present(alert, animated: true)
     }

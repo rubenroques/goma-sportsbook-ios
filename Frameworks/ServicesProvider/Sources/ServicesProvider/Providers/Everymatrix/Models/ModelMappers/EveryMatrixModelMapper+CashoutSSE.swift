@@ -16,13 +16,19 @@ extension EveryMatrixModelMapper {
     /// - Parameter response: Internal SSE response model
     /// - Returns: SP Public CashoutValue model
     static func cashoutValue(fromSSEResponse response: EveryMatrix.CashoutValueSSEResponse) -> CashoutValue {
+        // Extract partialCashOutEnabled from cashoutValueSettings first (like Web),
+        // fall back to root level, default to true (like Web: `!== false` means nil/undefined = true)
+        let partialEnabled = response.cashoutValueSettings?.partialCashOutEnabled
+                          ?? response.partialCashOutEnabled
+                          ?? true
+
         return CashoutValue(
             betId: response.betId,
             cashoutValue: response.cashoutValue,
             currentPossibleWinning: response.currentPossibleWinning,
             stake: response.stake,
             autoCashOutEnabled: response.autoCashOutEnabled ?? false,
-            partialCashOutEnabled: response.partialCashOutEnabled ?? false,
+            partialCashOutEnabled: partialEnabled,
             details: CashoutValue.CashoutDetails(
                 code: response.details.code,
                 message: response.details.message
@@ -41,8 +47,10 @@ extension EveryMatrixModelMapper {
             betId: publicRequest.betId,
             cashoutValue: publicRequest.cashoutValue,
             cashoutType: publicRequest.cashoutType.rawValue,
-            partialCashoutStake: publicRequest.partialCashoutStake,
-            cashoutChangeAcceptanceType: publicRequest.cashoutChangeAcceptanceType
+            cashoutChangeAcceptance: publicRequest.cashoutChangeAcceptance,
+            operatorId: EveryMatrixUnifiedConfiguration.shared.operatorId,
+            language: EveryMatrixUnifiedConfiguration.shared.defaultLanguage,
+            partialCashoutStake: publicRequest.partialCashoutStake
         )
     }
 

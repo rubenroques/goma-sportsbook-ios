@@ -362,6 +362,10 @@ class PhoneRegistrationViewController: UIViewController {
                     self?.openTermsURL(urlString: cookiesData.url)
                 }
             }
+            
+            termsView.onCheckboxToggled = { isChecked in
+                termsView.showError(!isChecked)
+            }
         }
         
         viewModel.isLoadingPublisher

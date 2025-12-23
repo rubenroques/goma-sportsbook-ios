@@ -95,19 +95,29 @@ final public class MockWalletDetailViewModel: WalletDetailViewModelProtocol {
     // MARK: - Demo/Testing Support
     public var onWithdrawCallback: (() -> Void)?
     public var onDepositCallback: (() -> Void)?
-    
+    #if DEBUG
+    public var onWithdrawLegacyCallback: (() -> Void)?
+    public var onDepositLegacyCallback: (() -> Void)?
+    #endif
+
     // MARK: - WalletDetailViewModelProtocol
     public func performWithdraw() {
-        print("🏦 Withdraw action triggered")
-        // In real implementation, this would trigger navigation to withdrawal screen
         onWithdrawCallback?()
     }
-    
+
     public func performDeposit() {
-        print("💰 Deposit action triggered")
-        // In real implementation, this would trigger navigation to deposit screen
         onDepositCallback?()
     }
+
+    #if DEBUG
+    public func performWithdrawLegacy() {
+        onWithdrawLegacyCallback?()
+    }
+
+    public func performDepositLegacy() {
+        onDepositLegacyCallback?()
+    }
+    #endif
     
     public func refreshWalletData() {
         print("🔄 Refreshing wallet data...")

@@ -39,7 +39,7 @@ final class PillItemViewSnapshotViewController: UIViewController {
                 id: "1",
                 title: "Football",
                 leftIconName: "sportscourt.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: true
             )
         )
@@ -51,7 +51,7 @@ final class PillItemViewSnapshotViewController: UIViewController {
                 id: "2",
                 title: "Popular",
                 leftIconName: "flame.fill",
-                showExpandIcon: false,
+                type: .expansible,
                 isSelected: false
             )
         )
@@ -63,7 +63,7 @@ final class PillItemViewSnapshotViewController: UIViewController {
                 id: "3",
                 title: "All Sports",
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: .expansible,
                 isSelected: false
             )
         )
@@ -75,7 +75,7 @@ final class PillItemViewSnapshotViewController: UIViewController {
                 id: "4",
                 title: "International Championships",
                 leftIconName: "trophy.fill",
-                showExpandIcon: true,
+                type: .expansible,
                 isSelected: false
             )
         )

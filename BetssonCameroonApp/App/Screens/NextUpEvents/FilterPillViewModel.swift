@@ -14,9 +14,9 @@ final class FilterPillViewModel: PillItemViewModelProtocol {
     var currentDisplayState: PillDisplayState {
         PillDisplayState(pillData: PillData(
             id: "filter",
-            title: "Filter",
+            title: localized("filter"),
             leftIconName: "line.3.horizontal.decrease",
-            showExpandIcon: true,
+            type: .expansible,
             isSelected: false,
             shouldApplyTintColor: true
         ))
@@ -39,8 +39,8 @@ final class FilterPillViewModel: PillItemViewModelProtocol {
         Just("line.3.horizontal.decrease").eraseToAnyPublisher()
     }
 
-    var showExpandIconPublisher: AnyPublisher<Bool, Never> {
-        Just(true).eraseToAnyPublisher()
+    var typePublisher: AnyPublisher<PillData.PillItemViewType, Never> {
+        Just(.expansible).eraseToAnyPublisher()
     }
 
     var isSelectedPublisher: AnyPublisher<Bool, Never> {
@@ -57,5 +57,5 @@ final class FilterPillViewModel: PillItemViewModelProtocol {
     func selectPill() { }
     func updateTitle(_ title: String) { }
     func updateLeftIcon(_ iconName: String?) { }
-    func updateExpandIconVisibility(_ show: Bool) { }
+    func updateType(_ newType: PillData.PillItemViewType) { }
 }

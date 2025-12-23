@@ -28,7 +28,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
                 id: statusType.pillId,
                 title: statusType.title,
                 leftIconName: nil,
-                showExpandIcon: false,
+                type: statusType == .open || statusType == .cashOut ? .countable(count: 0) : .informative,
                 isSelected: statusType == selectedStatusType
             )
         }
@@ -87,7 +87,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
                 id: pill.id,
                 title: pill.title,
                 leftIconName: pill.leftIconName,
-                showExpandIcon: pill.showExpandIcon,
+                type: pill.type,
                 isSelected: pill.id == id
             )
         }
@@ -119,7 +119,22 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     }
     
     func updatePills(_ pills: [PillData]) {
-        // Not needed for MyBets - fixed set of status pills
+        
+        let updatedBarData = PillSelectorBarData(
+            id: displayStateSubject.value.barData.id,
+            pills: pills,
+            selectedPillId: displayStateSubject.value.barData.selectedPillId,
+            isScrollEnabled: displayStateSubject.value.barData.isScrollEnabled,
+            allowsVisualStateChanges: displayStateSubject.value.barData.allowsVisualStateChanges
+        )
+        
+        let updatedDisplayState = PillSelectorBarDisplayState(
+            barData: updatedBarData,
+            isVisible: displayStateSubject.value.isVisible,
+            isUserInteractionEnabled: displayStateSubject.value.isUserInteractionEnabled
+        )
+        
+        displayStateSubject.send(updatedDisplayState)
     }
     
     func addPill(_ pill: PillData) {
@@ -134,6 +149,36 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
         // Not needed for MyBets - fixed set of status pills
     }
     
+    func updateCounter(_ count: Int) {
+        let currentState = displayStateSubject.value
+        let isEligible = switch currentState.barData.selectedPillId {
+        case MyBetStatusType.open.rawValue, MyBetStatusType.cashOut.rawValue:
+            true
+        default:
+            false
+        }
+        
+        guard isEligible else { return }
+        
+        let currentBarData = currentState.barData
+        
+        let updatedPills = currentBarData.pills.map { pill in
+            if pill.id == currentSelectedPillId {
+                PillData(
+                    id: pill.id,
+                    title: pill.title,
+                    leftIconName: pill.leftIconName,
+                    type: .countable(count: count),
+                    isSelected: true
+                )
+            } else {
+                pill
+            }
+        }
+        
+        self.updatePills(updatedPills)
+    }
+    
     func clearSelection() {
         let currentState = displayStateSubject.value
         let currentBarData = currentState.barData
@@ -144,7 +189,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
                 id: pill.id,
                 title: pill.title,
                 leftIconName: pill.leftIconName,
-                showExpandIcon: pill.showExpandIcon,
+                type: pill.type,
                 isSelected: false
             )
         }
@@ -193,7 +238,7 @@ final class MyBetsStatusBarViewModel: PillSelectorBarViewModelProtocol {
     }
     
     // MARK: - Public Methods for Parent ViewModel
-    
+
     /// Update the selected status based on the parent ViewModel's state
     func updateSelectedStatus(_ statusType: MyBetStatusType) {
         selectPill(id: statusType.pillId)
