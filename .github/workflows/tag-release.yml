@@ -194,8 +194,11 @@ jobs:
               echo "No matching changelog entry found for v$VERSION ($BUILD)"
               NOTES="Build $BUILD - Version $VERSION"
             else
+              # Sanitize notes: remove backticks and other shell-dangerous characters
+              # Backticks cause command substitution, $ causes variable expansion
+              SANITIZED_NOTES=$(echo "$RAW_NOTES" | sed 's/`//g' | sed 's/\$//g')
               # Prefix each line with bullet point
-              NOTES=$(echo "$RAW_NOTES" | sed 's/^/- /')
+              NOTES=$(echo "$SANITIZED_NOTES" | sed 's/^/- /')
               echo "Found changelog entry"
             fi
           fi
@@ -451,8 +454,16 @@ jobs:
             EASTER_EGG=""
           fi
 
-          # Format release notes: escape quotes and convert newlines to \n for JSON
-          NOTES_ESCAPED=$(printf '%s' "$NOTES" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
+          # Truncate each line to ~100 chars so all SPOR tickets are visible
+          # Then escape quotes and convert newlines to \n for JSON
+          NOTES_TRUNCATED=$(printf '%s' "$NOTES" | while IFS= read -r line; do
+            if [ ${#line} -gt 100 ]; then
+              echo "${line:0:97}..."
+            else
+              echo "$line"
+            fi
+          done)
+          NOTES_ESCAPED=$(printf '%s' "$NOTES_TRUNCATED" | awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}' | sed 's/\\n$//')
 
           # Build the message content
           MESSAGE="${RANDOM_EMOJI} **${CLIENT_NAME}** — PROD Release\n\n"

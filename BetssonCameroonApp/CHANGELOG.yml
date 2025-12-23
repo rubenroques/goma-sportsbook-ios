@@ -11,7 +11,7 @@ releases:
       - "fix(bet-detail): [SPOR-7010] - Bet detail can now be open from bet success screen, bet detail info mapping on bet submission, fixed betslip bet card UI"
       - "fix(bonus): [SPOR-6672] (REVIEW) - Available bonus card cta and terms button logic fixed"
       - "fix(localized): [SPOR-7006] - Fixed some hardcoded strings, added missing strings to phrase, phrase and local string files must have same keys in use"
-      - "fix(betslip): [SPOR-7014] - A `BetslipError` error response object was created to get the `errorCode` and `errorMessage`; The `EveryMatrixRESTConnector` response code mapper for `409` now checks for the new object decoding; Keys for hard coded strings were added."
+      - "fix(betslip): [SPOR-7014] - BetslipError response object created to get errorCode and errorMessage; EveryMatrixRESTConnector 409 response code mapper updated; Keys for hardcoded strings added"
       - "fix(GomaUI): [SPOR-6076] Fix InlineMatchCard outcomes line width - fixed to 200px for consistent alignment between 2-way and 3-way markets"
       - "fix(banking): [SPOR-7001] Fix Widget Cashier URL encoding - endpoint param now properly percent-encoded as required by cashier page"
       - "fix(banking): [SPOR-7001] Fix Widget Cashier theme detection - now respects app's saved appearance mode (dark/light/system)"
