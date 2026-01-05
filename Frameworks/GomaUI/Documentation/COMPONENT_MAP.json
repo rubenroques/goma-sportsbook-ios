@@ -337,7 +337,8 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CompactOutcomesLineView": {
     "children": [
@@ -347,7 +348,8 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CopyableCodeView": {
     "children": [],
@@ -360,7 +362,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomExpandableSectionView": {
     "children": [],
