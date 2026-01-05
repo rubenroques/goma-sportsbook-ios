@@ -266,7 +266,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImageGridSectionView": {
     "children": [
@@ -312,7 +313,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CodeInputView": {
     "children": [
@@ -345,7 +347,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CountryLeaguesFilterView": {
     "children": [],
