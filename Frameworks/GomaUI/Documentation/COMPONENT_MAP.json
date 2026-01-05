@@ -138,7 +138,8 @@
     "parents": [
       "BetslipTypeSelectorView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BonusCardView": {
     "children": [
@@ -153,7 +154,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BorderedTextFieldView": {
     "children": [],
@@ -162,7 +164,8 @@
       "BetInfoSubmissionView",
       "CodeInputView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BulletItemBlockView": {
     "children": [],

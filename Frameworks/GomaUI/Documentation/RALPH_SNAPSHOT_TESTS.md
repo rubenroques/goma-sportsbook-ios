@@ -220,6 +220,15 @@ Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/
 
 After creating tests for each batch of 3 components, you MUST verify the code compiles.
 
+### IMPORTANT: Scheme Selection
+```
+CORRECT SCHEME: GomaUI
+WRONG SCHEME:   GomaUICatalog  ← DO NOT USE THIS
+```
+
+GomaUI is the Swift Package library with the test target.
+GomaUICatalog is a separate demo app - do NOT build or test with it.
+
 ### Simulator ID
 Use this simulator for all commands:
 ```
@@ -227,6 +236,9 @@ Use this simulator for all commands:
 ```
 
 ### Step 1: Build the GomaUI scheme (checks compilation)
+
+ALWAYS use `-scheme GomaUI` (NOT GomaUICatalog):
+
 ```bash
 xcodebuild build-for-testing -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' 2>&1 | xcbeautify --quieter
 ```
@@ -238,6 +250,9 @@ xcodebuild build-for-testing -workspace Sportsbook.xcworkspace -scheme GomaUI -d
 4. Do NOT proceed to the next batch until build succeeds
 
 ### Step 2: Run the snapshot tests for the new components
+
+ALWAYS use `-scheme GomaUI` (NOT GomaUICatalog):
+
 ```bash
 xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' -only-testing:GomaUITests/{ComponentName}SnapshotTests 2>&1 | xcbeautify --quieter
 ```
