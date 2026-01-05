@@ -75,13 +75,22 @@ extension BorderedTextFieldVisualState: Hashable {
 
 // MARK: - View Model Protocol
 public protocol BorderedTextFieldViewModelProtocol {
-    // Content publishers
+    // Content publishers (for reactive updates)
     var textPublisher: AnyPublisher<String, Never> { get }
     var placeholderPublisher: AnyPublisher<String, Never> { get }
     var isSecurePublisher: AnyPublisher<Bool, Never> { get }
     var keyboardTypePublisher: AnyPublisher<UIKeyboardType, Never> { get }
     var returnKeyTypePublisher: AnyPublisher<UIReturnKeyType, Never> { get }
     var textContentTypePublisher: AnyPublisher<UITextContentType?, Never> { get }
+
+    // Synchronous state access (for immediate rendering - required for snapshot tests)
+    var currentText: String { get }
+    var currentPlaceholder: String { get }
+    var currentIsSecure: Bool { get }
+    var currentKeyboardType: UIKeyboardType { get }
+    var currentReturnKeyType: UIReturnKeyType { get }
+    var currentTextContentType: UITextContentType? { get }
+    var currentIsPasswordVisible: Bool { get }
 
     // Unified visual state publisher and current state access
     var visualStatePublisher: AnyPublisher<BorderedTextFieldVisualState, Never> { get }

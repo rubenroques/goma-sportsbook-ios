@@ -56,6 +56,35 @@ final public class MockBorderedTextFieldViewModel: BorderedTextFieldViewModelPro
         return isPasswordVisibleSubject.eraseToAnyPublisher()
     }
 
+    // MARK: - Synchronous State Access
+    public var currentText: String {
+        return textSubject.value
+    }
+
+    public var currentPlaceholder: String {
+        return placeholderSubject.value
+    }
+
+    public var currentIsSecure: Bool {
+        return isSecureSubject.value
+    }
+
+    public var currentKeyboardType: UIKeyboardType {
+        return keyboardTypeSubject.value
+    }
+
+    public var currentReturnKeyType: UIReturnKeyType {
+        return returnKeyTypeSubject.value
+    }
+
+    public var currentTextContentType: UITextContentType? {
+        return textContentTypeSubject.value
+    }
+
+    public var currentIsPasswordVisible: Bool {
+        return isPasswordVisibleSubject.value
+    }
+
     public var prefixText: String?
     public var isRequired: Bool
     public var usesCustomInput: Bool

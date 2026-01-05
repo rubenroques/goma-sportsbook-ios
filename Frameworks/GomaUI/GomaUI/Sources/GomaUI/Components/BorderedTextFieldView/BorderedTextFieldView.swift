@@ -52,6 +52,7 @@ final public class BorderedTextFieldView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupSubviews()
+        renderInitialState()
         setupBindings()
         setupTextFieldDelegate()
     }
@@ -188,9 +189,42 @@ final public class BorderedTextFieldView: UIView {
         textField.addTarget(self, action: #selector(textFieldDidEndEditing), for: .editingDidEnd)
     }
 
+    /// Renders the initial state synchronously using current values from the view model.
+    /// This ensures snapshot tests and immediate display work correctly without waiting for Combine publishers.
+    private func renderInitialState() {
+        // Text
+        textField.text = viewModel.currentText
+
+        // Placeholder
+        updatePlaceholder(viewModel.currentPlaceholder)
+        textField.placeholder = nil
+
+        // Secure text entry
+        let isSecure = viewModel.currentIsSecure
+        let isPasswordVisible = viewModel.currentIsPasswordVisible
+        textField.isSecureTextEntry = isSecure && !isPasswordVisible
+        suffixButton.isHidden = !isSecure
+        if isSecure {
+            let iconName = isPasswordVisible ? "eye.slash" : "eye"
+            suffixButton.setImage(UIImage(systemName: iconName), for: .normal)
+        }
+
+        // Keyboard configuration
+        textField.keyboardType = viewModel.currentKeyboardType
+        textField.returnKeyType = viewModel.currentReturnKeyType
+        textField.textContentType = viewModel.currentTextContentType
+
+        // Visual state
+        updateVisualAppearance(state: viewModel.currentVisualState)
+
+        // Update label position based on text content
+        updateLabelPosition()
+    }
+
     private func setupBindings() {
-        // Text binding
+        // Text binding - dropFirst() since initial state is rendered synchronously
         viewModel.textPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] text in
                 if self?.textField.text != text {
@@ -200,19 +234,19 @@ final public class BorderedTextFieldView: UIView {
             }
             .store(in: &cancellables)
 
-        // Placeholder binding (now serves as both placeholder and label)
+        // Placeholder binding - dropFirst() since initial state is rendered synchronously
         viewModel.placeholderPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] placeholder in
                 self?.updatePlaceholder(placeholder)
-
-                // Remove textField placeholder since floatingLabel handles both states
                 self?.textField.placeholder = nil
             }
             .store(in: &cancellables)
 
-        // Secure text binding
+        // Secure text binding - dropFirst() since initial state is rendered synchronously
         Publishers.CombineLatest(viewModel.isSecurePublisher, viewModel.isPasswordVisiblePublisher)
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isSecure, isPasswordVisible in
                 self?.textField.isSecureTextEntry = isSecure && !isPasswordVisible
@@ -225,32 +259,36 @@ final public class BorderedTextFieldView: UIView {
             }
             .store(in: &cancellables)
 
-        // Keyboard type binding
+        // Keyboard type binding - dropFirst() since initial state is rendered synchronously
         viewModel.keyboardTypePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] keyboardType in
                 self?.textField.keyboardType = keyboardType
             }
             .store(in: &cancellables)
 
-        // Return key type binding
+        // Return key type binding - dropFirst() since initial state is rendered synchronously
         viewModel.returnKeyTypePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] returnKeyType in
                 self?.textField.returnKeyType = returnKeyType
             }
             .store(in: &cancellables)
 
-        // Text content type binding
+        // Text content type binding - dropFirst() since initial state is rendered synchronously
         viewModel.textContentTypePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] textContentType in
                 self?.textField.textContentType = textContentType
             }
             .store(in: &cancellables)
 
-        // Unified visual state binding - This replaces multiple individual state bindings
+        // Visual state binding - dropFirst() since initial state is rendered synchronously
         viewModel.visualStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] visualState in
                 self?.updateVisualAppearance(state: visualState)
