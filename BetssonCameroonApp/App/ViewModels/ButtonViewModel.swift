@@ -86,10 +86,10 @@ extension ButtonViewModel {
     static func cashoutButton(isEnabled: Bool = true) -> ButtonViewModel {
         let buttonData = ButtonData(
             id: "cashout",
-            title: "Cashout",
+            title: localized("cashout"),
             style: .solidBackground,
-            backgroundColor: UIColor.systemGreen,
-            disabledBackgroundColor: UIColor.systemGray,
+            backgroundColor: UIColor.App.buttonBackgroundSecondary,
+            disabledBackgroundColor: UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.7),
             isEnabled: isEnabled
         )
         return ButtonViewModel(buttonData: buttonData)
@@ -98,7 +98,7 @@ extension ButtonViewModel {
     static func confirmButton(isEnabled: Bool = true) -> ButtonViewModel {
         let buttonData = ButtonData(
             id: "confirm",
-            title: "Confirm",
+            title: localized("confirm"),
             style: .solidBackground,
             backgroundColor: UIColor.systemBlue,
             disabledBackgroundColor: UIColor.systemGray,

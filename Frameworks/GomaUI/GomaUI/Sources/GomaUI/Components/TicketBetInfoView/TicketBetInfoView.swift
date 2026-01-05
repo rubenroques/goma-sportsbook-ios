@@ -557,6 +557,13 @@ public class TicketBetInfoView: UIView {
                 bottomComponentsStackView.addArrangedSubview(cashoutSliderView)
                 hasComponents = true
             }
+
+            // Add full cashout button if ViewModel is provided (shown instead of slider for full cashout only)
+            if let fullCashoutButtonVM = viewModel.fullCashoutButtonViewModel {
+                let fullCashoutButtonView = ButtonView(viewModel: fullCashoutButtonVM)
+                bottomComponentsStackView.addArrangedSubview(fullCashoutButtonView)
+                hasComponents = true
+            }
         }
 
         // Activate appropriate constraints based on whether components are present
@@ -636,6 +643,27 @@ public class TicketBetInfoView: UIView {
     PreviewUIViewController {
         let vc = UIViewController()
         let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithSlider()
+        let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
+        ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
+        
+        vc.view.backgroundColor = StyleProvider.Color.backgroundTertiary
+        vc.view.addSubview(ticketBetInfoView)
+        
+        NSLayoutConstraint.activate([
+            ticketBetInfoView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            ticketBetInfoView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            ticketBetInfoView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor)
+        ])
+        
+        return vc
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("With Full Cashout Button") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let mockViewModel = MockTicketBetInfoViewModel.pendingMockWithFullCashoutButton()
         let ticketBetInfoView = TicketBetInfoView(viewModel: mockViewModel, cornerRadiusStyle: .all)
         ticketBetInfoView.translatesAutoresizingMaskIntoConstraints = false
         

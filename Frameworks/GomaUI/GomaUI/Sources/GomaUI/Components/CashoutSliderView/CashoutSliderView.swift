@@ -192,9 +192,7 @@ public class CashoutSliderView: UIView {
         slider.isEnabled = data.isEnabled
         
         // Update button title through the button view model
-        let cashoutAmount = String(format: "%.0f", data.currentValue)
-        let buttonTitle = "Cashout \(data.currency) \(cashoutAmount)"
-        viewModel.buttonViewModel.updateTitle(buttonTitle)
+        viewModel.buttonViewModel.updateTitle(data.selectionTitle)
         viewModel.buttonViewModel.setEnabled(data.isEnabled)
         
     }
