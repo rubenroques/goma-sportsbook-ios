@@ -268,14 +268,35 @@ xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'p
 git add -A && git commit -m "test(GomaUI): add snapshot tests for ComponentA, ComponentB, ComponentC"
 ```
 
-### Workflow Per Iteration
+### Workflow Per Iteration (ALL STEPS ARE MANDATORY)
+
+DO NOT SKIP ANY STEP. Each step MUST be executed.
+
 1. Create SnapshotViewController for 3 components
 2. Create Test files for 3 components
-3. Run build-for-testing command
-4. If build fails → fix errors → rebuild
-5. If build succeeds → run tests → commit
-6. Update COMPONENT_MAP.json with `has_snapshot_tests: true`
-7. Proceed to next iteration
+3. **RUN** build-for-testing command ← MANDATORY
+   - If build fails → fix errors → rebuild
+   - Do NOT proceed until build succeeds
+4. **RUN** test command for each new component ← MANDATORY, DO NOT SKIP
+   ```bash
+   xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' -only-testing:GomaUITests/ComponentASnapshotTests 2>&1 | xcbeautify --quieter
+   ```
+5. **VERIFY** snapshots were created ← MANDATORY, DO NOT SKIP
+   ```bash
+   ls Frameworks/GomaUI/GomaUI/Tests/GomaUITests/SnapshotTests/{ComponentName}/__Snapshots__/{ComponentName}SnapshotTests/
+   ```
+   - You MUST see .png files for each test (Light and Dark)
+   - If no .png files exist, the test did not run correctly - investigate and re-run
+6. Git commit after verification
+7. Update COMPONENT_MAP.json with `has_snapshot_tests: true`
+8. Proceed to next iteration
+
+### CRITICAL: Do Not Skip Tests
+
+You MUST run `xcodebuild test` for EVERY component you create tests for.
+You MUST verify the __Snapshots__ folder contains .png files.
+Creating files without running tests is NOT acceptable.
+If you skip running tests, the iteration is INCOMPLETE.
 
 ## Skip These Components
 Components that already have snapshot tests:
