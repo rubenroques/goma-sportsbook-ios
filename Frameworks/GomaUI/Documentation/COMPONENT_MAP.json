@@ -240,7 +240,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoCategoryBarView": {
     "children": [],
@@ -249,7 +250,8 @@
       "CasinoCategorySectionView",
       "CasinoGameImageGridSectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoCategorySectionView": {
     "children": [
@@ -257,7 +259,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameCardView": {
     "children": [],
