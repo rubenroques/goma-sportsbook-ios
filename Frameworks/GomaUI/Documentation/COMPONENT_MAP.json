@@ -276,7 +276,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImagePairView": {
     "children": [
@@ -286,7 +287,8 @@
     "parents": [
       "CasinoGameImageGridSectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImageView": {
     "children": [],
@@ -295,7 +297,8 @@
       "CasinoGameImagePairView",
       "SquareSeeMoreView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGamePlayModeSelectorView": {
     "children": [],
