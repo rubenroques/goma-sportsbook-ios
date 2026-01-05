@@ -62,7 +62,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetInfoSubmissionView": {
     "children": [
@@ -73,7 +74,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetSummaryRowView": {
     "children": [],
@@ -90,7 +92,8 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipFloatingView": {
     "children": [],
