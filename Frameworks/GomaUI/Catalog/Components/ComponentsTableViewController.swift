@@ -208,7 +208,7 @@ class ComponentsTableViewController: UITableViewController {
                         id: "football",
                         title: "Football",
                         leftIconName: "sportscourt.fill",
-                        showExpandIcon: true,
+                        type: .expansible,
                         isSelected: true
                     )
                 ))
@@ -218,7 +218,7 @@ class ComponentsTableViewController: UITableViewController {
                         id: "popular",
                         title: "Popular",
                         leftIconName: "flame.fill",
-                        showExpandIcon: false,
+                        type: .informative,
                         isSelected: false
                     )
                 ))

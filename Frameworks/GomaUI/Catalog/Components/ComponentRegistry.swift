@@ -395,7 +395,7 @@ struct ComponentRegistry {
                         id: "football",
                         title: "Football",
                         leftIconName: "sportscourt.fill",
-                        showExpandIcon: true,
+                        type: .expansible,
                         isSelected: true
                     )
                 ))
@@ -405,7 +405,7 @@ struct ComponentRegistry {
                         id: "popular",
                         title: "Popular",
                         leftIconName: "flame.fill",
-                        showExpandIcon: false,
+                        type: .informative,
                         isSelected: false
                     )
                 ))

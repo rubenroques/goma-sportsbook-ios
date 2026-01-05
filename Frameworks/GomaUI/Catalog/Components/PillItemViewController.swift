@@ -91,11 +91,11 @@ class PillItemViewController: UIViewController {
                         id: "baseball",
                         title: "Baseball",
                         leftIconName: "baseball.fill",
-                        showExpandIcon: false,
+                        type: .informative,
                         isSelected: true
                     )
                 ),
-                "Baseball unselected"
+                "Baseball selected"
             ),
             (
                 MockPillItemViewModel(
@@ -103,7 +103,7 @@ class PillItemViewController: UIViewController {
                         id: "basketball",
                         title: "Basketball",
                         leftIconName: "basketball.fill",
-                        showExpandIcon: true,
+                        type: .expansible,
                         isSelected: false
                     )
                 ),
@@ -115,7 +115,7 @@ class PillItemViewController: UIViewController {
                         id: "text-only",
                         title: "Text Only",
                         leftIconName: nil,
-                        showExpandIcon: false,
+                        type: .informative,
                         isSelected: false
                     )
                 ),
