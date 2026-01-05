@@ -28,7 +28,8 @@
     "parents": [
       "AmountPillsContainerView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AmountPillsContainerView": {
     "children": [
@@ -36,13 +37,15 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailResultSummaryView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailRowView": {
     "children": [],
