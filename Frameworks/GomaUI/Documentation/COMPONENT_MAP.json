@@ -3,7 +3,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ActionRowView": {
     "children": [],
@@ -11,13 +12,15 @@
     "parents": [
       "ProfileMenuListView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AdaptiveTabBarView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AmountPillView": {
     "children": [],
@@ -47,7 +50,8 @@
     "parents": [
       "BetDetailValuesSummaryView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailValuesSummaryView": {
     "children": [
@@ -74,7 +78,8 @@
     "parents": [
       "BetInfoSubmissionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetTicketStatusView": {
     "children": [],
@@ -179,7 +184,8 @@
       "WalletDetailView",
       "WalletStatusView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CapsuleView": {
     "children": [],
@@ -188,7 +194,8 @@
       "MatchDateNavigationBar",
       "TicketSelectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CashoutAmountView": {
     "children": [],
@@ -196,7 +203,8 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CashoutSliderView": {
     "children": [
@@ -474,7 +482,8 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "LanguageSelectorView": {
     "children": [],
@@ -638,7 +647,8 @@
       "CompactOutcomesLineView",
       "MarketOutcomesLineView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "PendingWithdrawView": {
     "children": [],
@@ -654,7 +664,8 @@
     "parents": [
       "PillSelectorBarView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "PillSelectorBarView": {
     "children": [
