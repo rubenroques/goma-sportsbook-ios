@@ -371,13 +371,15 @@
     "parents": [
       "WalletDetailView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomNavigationView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomSliderView": {
     "children": [],
@@ -482,7 +484,8 @@
       "TermsAcceptanceView",
       "TransactionVerificationView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ImageBlockView": {
     "children": [],

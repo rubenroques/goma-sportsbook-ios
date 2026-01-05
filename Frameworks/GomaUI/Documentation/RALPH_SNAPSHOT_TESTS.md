@@ -15,12 +15,12 @@ Update `Frameworks/GomaUI/Documentation/COMPONENT_MAP.json` - add `"has_snapshot
 ## Example Implementation (MUST READ FIRST)
 Study these files as the reference implementation:
 
-**SnapshotViewController** (in Sources):
+**SnapshotViewController** (in Sources, inside category folder):
 ```
-Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/OutcomeItemView/OutcomeItemViewSnapshotViewController.swift
+Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/Betting/OutcomeItemView/OutcomeItemViewSnapshotViewController.swift
 ```
 
-**Test File** (in Tests):
+**Test File** (in Tests, flat structure):
 ```
 Frameworks/GomaUI/GomaUI/Tests/GomaUITests/SnapshotTests/OutcomeItemView/OutcomeItemViewSnapshotTests.swift
 ```
@@ -32,17 +32,21 @@ Frameworks/GomaUI/GomaUI/Tests/GomaUITests/SnapshotTests/SnapshotTestConfig.swif
 
 ## File Structure to Create
 
-For each component `{ComponentName}`:
+For each component `{ComponentName}` in category `{Category}`:
 
-1. **SnapshotViewController** at:
+1. **SnapshotViewController** at (same folder as the component):
 ```
-Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{ComponentName}/{ComponentName}SnapshotViewController.swift
+Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/{ComponentName}SnapshotViewController.swift
 ```
 
-2. **Test File** at:
+Example: `Components/Betting/OutcomeItemView/OutcomeItemViewSnapshotViewController.swift`
+
+2. **Test File** at (flat structure in Tests, no category subfolder):
 ```
 Frameworks/GomaUI/GomaUI/Tests/GomaUITests/SnapshotTests/{ComponentName}/{ComponentName}SnapshotTests.swift
 ```
+
+Example: `Tests/GomaUITests/SnapshotTests/OutcomeItemView/OutcomeItemViewSnapshotTests.swift`
 
 ## How to Determine Categories
 
@@ -193,22 +197,49 @@ final class {ComponentName}SnapshotTests: XCTestCase {
 ```
 
 ## Components Location
+
+Components are organized into category folders:
 ```
 Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/
+├── Betting/          (26 components - OutcomeItemView, BetslipTicketView, etc.)
+├── Casino/           (9 components)
+├── Filters/          (14 components)
+├── Forms/            (12 components)
+├── MatchCards/       (11 components - TallOddsMatchCardView, etc.)
+├── Navigation/       (6 components)
+├── Profile/          (5 components)
+├── Promotions/       (10 + 12 ContentBlocks)
+├── Status/           (9 components)
+├── UIElements/       (15 components - ButtonView, CapsuleView, etc.)
+└── Wallet/           (9 components)
 ```
 
 ## For Each Component
 
+### Finding Components
+To locate a component, search in the category folders:
+```bash
+find Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components -type d -name "{ComponentName}"
+```
+
+Or list all components in a category:
+```bash
+ls Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/Betting/
+```
+
+### Process
 1. Check COMPONENT_MAP.json - skip if `has_snapshot_tests: true`
-2. Read the component's Swift files to understand:
+2. Find the component's category folder using the find command above
+3. Read the component's Swift files to understand:
    - Available states from MockViewModel
    - Configuration options
    - Visual variants
-3. Determine appropriate categories (1-6)
-4. Create SnapshotViewController with categories and variants
-5. Create Test file with Light/Dark tests per category
-6. Update COMPONENT_MAP.json: `has_snapshot_tests: true`
-7. Git commit every 3 components
+4. Determine appropriate snapshot categories (1-6)
+5. Create SnapshotViewController in the component's category folder
+6. Create Test file in Tests/GomaUITests/SnapshotTests/{ComponentName}/
+7. Build and run tests (see Build Verification section)
+8. Update COMPONENT_MAP.json: `has_snapshot_tests: true`
+9. Git commit every 3 components
 
 ## Iteration Strategy
 - Process 3 components per iteration

@@ -8,24 +8,24 @@ struct ComponentRegistry {
     // MARK: - Public Methods
     static func components(for category: ComponentCategory?) -> [UIComponent] {
         guard let category = category else { return allComponents }
-        
+
         switch category {
-        case .bettingSports:
-            return bettingSportsComponents
+        case .matchCards:
+            return matchCardsComponents
+        case .betting:
+            return bettingComponents
         case .casino:
             return casinoComponents
-        case .matchDisplay:
-            return matchDisplayComponents
+        case .promotional:
+            return promotionalComponents
+        case .wallet:
+            return walletComponents
         case .filters:
             return filtersComponents
         case .navigation:
             return navigationComponents
         case .forms:
             return formsComponents
-        case .wallet:
-            return walletComponents
-        case .promotional:
-            return promotionalComponents
         case .profile:
             return profileComponents
         case .status:
@@ -39,10 +39,10 @@ struct ComponentRegistry {
         return ComponentCategory.allCases.flatMap { components(for: $0) }
     }
     
-    // MARK: - Betting & Sports Components
-    private static let bettingSportsComponents: [UIComponent] = [
+    // MARK: - Match Cards Components
+    private static let matchCardsComponents: [UIComponent] = [
         UIComponent(
-            title: "Pre-Live Match Card",
+            title: "Pre-Live Match Card (Tall)",
             description: "Complete pre-live match card assembling MatchHeader, MatchParticipants, MarketInfoLine and MarketOutcomes components with proper spacing and layout",
             viewController: TallOddsMatchCardViewController.self,
             previewFactory: {
@@ -53,6 +53,135 @@ struct ComponentRegistry {
                 return matchCardView
             }
         ),
+        UIComponent(
+            title: "Inline Match Card",
+            description: "Compact match card with real-time simulation for odds, scores, and market availability. Includes 10+ cells for cell reuse testing",
+            viewController: InlineMatchCardViewController.self,
+            previewFactory: {
+                let viewModel = MockInlineMatchCardViewModel.preLiveFootball
+                let cardView = InlineMatchCardView(viewModel: viewModel)
+                cardView.backgroundColor = StyleProvider.Color.backgroundCards
+                cardView.layer.cornerRadius = 8
+                return cardView
+            }
+        ),
+        UIComponent(
+            title: "Inline Score View",
+            description: "Multi-column score display for live matches with sport-specific layouts (football, tennis, basketball)",
+            viewController: InlineScoreViewController.self,
+            previewFactory: {
+                let viewModel = MockInlineScoreViewModel.footballMatch
+                let scoreView = InlineScoreView(viewModel: viewModel)
+                return scoreView
+            }
+        ),
+        UIComponent(
+            title: "Compact Match Header",
+            description: "Pre-live date/time or LIVE badge with status, feature icons, and market count",
+            viewController: CompactMatchHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockCompactMatchHeaderViewModel.liveTennis
+                let headerView = CompactMatchHeaderView(viewModel: viewModel)
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Compact Outcomes Line",
+            description: "2-way or 3-way betting outcomes in compact horizontal layout with selection and odds updates",
+            viewController: CompactOutcomesLineViewController.self,
+            previewFactory: {
+                let viewModel = MockCompactOutcomesLineViewModel.threeWayMarket
+                let outcomesView = CompactOutcomesLineView(viewModel: viewModel)
+                return outcomesView
+            }
+        ),
+        UIComponent(
+            title: "Match Header",
+            description: "Sports competition header with country flag, sport icon, and favorite toggle functionality",
+            viewController: MatchHeaderViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchHeaderViewModel.premierLeagueHeader
+                let headerView = MatchHeaderView(viewModel: viewModel)
+                headerView.backgroundColor = StyleProvider.Color.backgroundPrimary.withAlphaComponent(0.8)
+                headerView.layer.cornerRadius = 4
+                return headerView
+            }
+        ),
+        UIComponent(
+            title: "Match Header Compact",
+            description: "Compact header displaying match teams, competition breadcrumb, and optional statistics button with tappable elements",
+            viewController: MatchHeaderCompactViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchHeaderCompactViewModel.default
+                return MatchHeaderCompactView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Match Date Navigation Bar",
+            description: "Navigation bar with match timing information, supporting both pre-match date/time display and live match status with highlighted pills",
+            viewController: MatchDateNavigationBarViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchDateNavigationBarViewModel.liveMock
+                return MatchDateNavigationBarView(viewModel: viewModel)
+            }
+        ),
+        UIComponent(
+            title: "Match Participants Info",
+            description: "Flexible match participants display with horizontal/vertical layouts, live scores, serving indicators, and detailed sport-specific scoring",
+            viewController: MatchParticipantsInfoViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchParticipantsInfoViewModel.horizontalLive
+                let matchView = MatchParticipantsInfoView(viewModel: viewModel)
+                matchView.backgroundColor = StyleProvider.Color.backgroundSecondary
+                matchView.layer.cornerRadius = 8
+                matchView.layer.borderWidth = 1
+                matchView.layer.borderColor = StyleProvider.Color.separatorLine.cgColor
+                return matchView
+            }
+        ),
+        UIComponent(
+            title: "Score View",
+            description: "Flexible sports match score display with multiple cells and visual styles",
+            viewController: ScoreViewController.self,
+            previewFactory: {
+                let viewModel = MockScoreViewModel.tennisMatch
+                let scoreView = ScoreView()
+                scoreView.configure(with: viewModel)
+                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
+                scoreView.layer.cornerRadius = 8
+                return scoreView
+            }
+        ),
+        UIComponent(
+            title: "Score View Styles & Highlighting",
+            description: "Comprehensive guide showing all combinations of ScoreCellStyle and HighlightingMode with detailed explanations",
+            viewController: ScoreStylesViewController.self,
+            previewFactory: {
+                let viewModel = MockScoreViewModel.tennisMatch
+                let scoreView = ScoreView()
+                scoreView.configure(with: viewModel)
+                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
+                scoreView.layer.cornerRadius = 8
+                return scoreView
+            }
+        ),
+        UIComponent(
+            title: "Match Banner",
+            description: "Match banner component for displaying live and prelive matches with team info, scores, and betting outcomes in TopBannerSliderView",
+            viewController: MatchBannerViewController.self,
+            previewFactory: {
+                let viewModel = MockMatchBannerViewModel.liveMatch
+                let bannerView = MatchBannerView()
+                bannerView.configure(with: viewModel)
+                bannerView.layer.cornerRadius = 8
+                bannerView.clipsToBounds = true
+                return bannerView
+            }
+        )
+    ]
+
+    // MARK: - Betting Components
+    private static let bettingComponents: [UIComponent] = [
         UIComponent(
             title: "Suggested Bets Expanded",
             description: "Expandable section with horizontal match cards and page indicators",
@@ -234,134 +363,6 @@ struct ComponentRegistry {
         )
     ]
     
-    // MARK: - Match & Sports Display Components
-    private static let matchDisplayComponents: [UIComponent] = [
-        UIComponent(
-            title: "Inline Match Card",
-            description: "Compact match card with real-time simulation for odds, scores, and market availability. Includes 10+ cells for cell reuse testing",
-            viewController: InlineMatchCardViewController.self,
-            previewFactory: {
-                let viewModel = MockInlineMatchCardViewModel.preLiveFootball
-                let cardView = InlineMatchCardView(viewModel: viewModel)
-                cardView.backgroundColor = StyleProvider.Color.backgroundCards
-                cardView.layer.cornerRadius = 8
-                return cardView
-            }
-        ),
-        UIComponent(
-            title: "Inline Score View",
-            description: "Multi-column score display for live matches with sport-specific layouts (football, tennis, basketball)",
-            viewController: InlineScoreViewController.self,
-            previewFactory: {
-                let viewModel = MockInlineScoreViewModel.footballMatch
-                let scoreView = InlineScoreView(viewModel: viewModel)
-                return scoreView
-            }
-        ),
-        UIComponent(
-            title: "Compact Match Header",
-            description: "Pre-live date/time or LIVE badge with status, feature icons, and market count",
-            viewController: CompactMatchHeaderViewController.self,
-            previewFactory: {
-                let viewModel = MockCompactMatchHeaderViewModel.liveTennis
-                let headerView = CompactMatchHeaderView(viewModel: viewModel)
-                return headerView
-            }
-        ),
-        UIComponent(
-            title: "Compact Outcomes Line",
-            description: "2-way or 3-way betting outcomes in compact horizontal layout with selection and odds updates",
-            viewController: CompactOutcomesLineViewController.self,
-            previewFactory: {
-                let viewModel = MockCompactOutcomesLineViewModel.threeWayMarket
-                let outcomesView = CompactOutcomesLineView(viewModel: viewModel)
-                return outcomesView
-            }
-        ),
-        UIComponent(
-            title: "Match Header",
-            description: "Sports competition header with country flag, sport icon, and favorite toggle functionality",
-            viewController: MatchHeaderViewController.self,
-            previewFactory: {
-                let viewModel = MockMatchHeaderViewModel.premierLeagueHeader
-                let headerView = MatchHeaderView(viewModel: viewModel)
-                headerView.backgroundColor = StyleProvider.Color.backgroundPrimary.withAlphaComponent(0.8)
-                headerView.layer.cornerRadius = 4
-                return headerView
-            }
-        ),
-        UIComponent(
-            title: "Match Header Compact",
-            description: "Compact header displaying match teams, competition breadcrumb, and optional statistics button with tappable elements",
-            viewController: MatchHeaderCompactViewController.self,
-            previewFactory: {
-                let viewModel = MockMatchHeaderCompactViewModel.default
-                return MatchHeaderCompactView(viewModel: viewModel)
-            }
-        ),
-        UIComponent(
-            title: "Match Date Navigation Bar",
-            description: "Navigation bar with match timing information, supporting both pre-match date/time display and live match status with highlighted pills",
-            viewController: MatchDateNavigationBarViewController.self,
-            previewFactory: {
-                let viewModel = MockMatchDateNavigationBarViewModel.liveMock
-                return MatchDateNavigationBarView(viewModel: viewModel)
-            }
-        ),
-        UIComponent(
-            title: "Match Participants Info",
-            description: "Flexible match participants display with horizontal/vertical layouts, live scores, serving indicators, and detailed sport-specific scoring",
-            viewController: MatchParticipantsInfoViewController.self,
-            previewFactory: {
-                let viewModel = MockMatchParticipantsInfoViewModel.horizontalLive
-                let matchView = MatchParticipantsInfoView(viewModel: viewModel)
-                matchView.backgroundColor = StyleProvider.Color.backgroundSecondary
-                matchView.layer.cornerRadius = 8
-                matchView.layer.borderWidth = 1
-                matchView.layer.borderColor = StyleProvider.Color.separatorLine.cgColor
-                return matchView
-            }
-        ),
-        UIComponent(
-            title: "Score View",
-            description: "Flexible sports match score display with multiple cells and visual styles",
-            viewController: ScoreViewController.self,
-            previewFactory: {
-                let viewModel = MockScoreViewModel.tennisMatch
-                let scoreView = ScoreView()
-                scoreView.configure(with: viewModel)
-                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
-                scoreView.layer.cornerRadius = 8
-                return scoreView
-            }
-        ),
-        UIComponent(
-            title: "Score View Styles & Highlighting",
-            description: "Comprehensive guide showing all combinations of ScoreCellStyle and HighlightingMode with detailed explanations",
-            viewController: ScoreStylesViewController.self,
-            previewFactory: {
-                let viewModel = MockScoreViewModel.tennisMatch
-                let scoreView = ScoreView()
-                scoreView.configure(with: viewModel)
-                scoreView.backgroundColor = StyleProvider.Color.backgroundPrimary
-                scoreView.layer.cornerRadius = 8
-                return scoreView
-            }
-        ),
-        UIComponent(
-            title: "Statistics Widget",
-            description: "Web-based statistics widget with paginated scroll view, tab navigation, and multiple content types for match statistics",
-            viewController: StatisticsWidgetViewController.self,
-            previewFactory: {
-                let viewModel = MockStatisticsWidgetViewModel.footballMatch
-                let statisticsWidget = StatisticsWidgetView(viewModel: viewModel)
-                statisticsWidget.backgroundColor = StyleProvider.Color.backgroundTertiary
-                statisticsWidget.layer.cornerRadius = 8
-                statisticsWidget.clipsToBounds = true
-                return statisticsWidget
-            }
-        )
-    ]
     
     // MARK: - Filters & Selection Components
     private static let filtersComponents: [UIComponent] = [
@@ -844,19 +845,6 @@ struct ComponentRegistry {
             }
         ),
         UIComponent(
-            title: "Match Banner",
-            description: "Match banner component for displaying live and prelive matches with team info, scores, and betting outcomes in TopBannerSliderView",
-            viewController: MatchBannerViewController.self,
-            previewFactory: {
-                let viewModel = MockMatchBannerViewModel.liveMatch
-                let bannerView = MatchBannerView()
-                bannerView.configure(with: viewModel)
-                bannerView.layer.cornerRadius = 8
-                bannerView.clipsToBounds = true
-                return bannerView
-            }
-        ),
-        UIComponent(
             title: "Top Banner Slider",
             description: "Horizontal collection view container for TopBannerProtocol items with page indicators, auto-scroll, and smooth transitions",
             viewController: TopBannerSliderViewController.self,
@@ -1285,6 +1273,19 @@ struct ComponentRegistry {
                 label.textColor = StyleProvider.Color.textSecondary
                 sectionView.contentContainer.addArrangedSubview(label)
                 return sectionView
+            }
+        ),
+        UIComponent(
+            title: "Statistics Widget",
+            description: "Web-based statistics widget with paginated scroll view, tab navigation, and multiple content types for match statistics",
+            viewController: StatisticsWidgetViewController.self,
+            previewFactory: {
+                let viewModel = MockStatisticsWidgetViewModel.footballMatch
+                let statisticsWidget = StatisticsWidgetView(viewModel: viewModel)
+                statisticsWidget.backgroundColor = StyleProvider.Color.backgroundTertiary
+                statisticsWidget.layer.cornerRadius = 8
+                statisticsWidget.clipsToBounds = true
+                return statisticsWidget
             }
         )
     ]
