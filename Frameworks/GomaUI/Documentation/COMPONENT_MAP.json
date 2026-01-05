@@ -1,0 +1,1081 @@
+{
+  "ActionButtonBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ActionRowView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "ProfileMenuListView"
+    ],
+    "readme_done": true
+  },
+  "AdaptiveTabBarView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "AmountPillView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "AmountPillsContainerView"
+    ],
+    "readme_done": true
+  },
+  "AmountPillsContainerView": {
+    "children": [
+      "AmountPillView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetDetailResultSummaryView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetDetailRowView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetDetailValuesSummaryView"
+    ],
+    "readme_done": true
+  },
+  "BetDetailValuesSummaryView": {
+    "children": [
+      "BetDetailRowView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetInfoSubmissionView": {
+    "children": [
+      "BetSummaryRowView",
+      "BorderedTextFieldView",
+      "ButtonView",
+      "QuickAddButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetSummaryRowView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetInfoSubmissionView"
+    ],
+    "readme_done": true
+  },
+  "BetTicketStatusView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "TicketBetInfoView"
+    ],
+    "readme_done": true
+  },
+  "BetslipFloatingView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetslipHeaderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetslipOddsBoostHeaderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetslipTicketView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetslipTypeSelectorView": {
+    "children": [
+      "BetslipTypeTabItemView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BetslipTypeTabItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetslipTypeSelectorView"
+    ],
+    "readme_done": true
+  },
+  "BonusCardView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BonusInfoCardView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "BorderedTextFieldView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetInfoSubmissionView",
+      "CodeInputView"
+    ],
+    "readme_done": true
+  },
+  "BulletItemBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "ListBlockView",
+      "StackViewBlockView"
+    ],
+    "readme_done": true
+  },
+  "ButtonIconView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "TicketBetInfoView"
+    ],
+    "readme_done": true
+  },
+  "ButtonView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetInfoSubmissionView",
+      "BonusCardView",
+      "CashoutSliderView",
+      "CashoutSubmissionInfoView",
+      "CodeInputView",
+      "PromotionCardView",
+      "PromotionalBonusCardView",
+      "UserLimitCardView",
+      "WalletDetailView",
+      "WalletStatusView"
+    ],
+    "readme_done": true
+  },
+  "CapsuleView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "MatchDateNavigationBar",
+      "TicketSelectionView"
+    ],
+    "readme_done": true
+  },
+  "CashoutAmountView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "TicketBetInfoView"
+    ],
+    "readme_done": true
+  },
+  "CashoutSliderView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "TicketBetInfoView"
+    ],
+    "readme_done": true
+  },
+  "CashoutSubmissionInfoView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CasinoCategoryBarView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "CasinoCategorySectionView",
+      "CasinoGameImageGridSectionView"
+    ],
+    "readme_done": true
+  },
+  "CasinoCategorySectionView": {
+    "children": [
+      "CasinoCategoryBarView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CasinoGameCardView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CasinoGameImageGridSectionView": {
+    "children": [
+      "CasinoCategoryBarView",
+      "CasinoGameImagePairView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CasinoGameImagePairView": {
+    "children": [
+      "CasinoGameImageView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "CasinoGameImageGridSectionView"
+    ],
+    "readme_done": true
+  },
+  "CasinoGameImageView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "CasinoGameImagePairView",
+      "SquareSeeMoreView"
+    ],
+    "readme_done": true
+  },
+  "CasinoGamePlayModeSelectorView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CasinoGameSearchedView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CodeClipboardView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CodeInputView": {
+    "children": [
+      "BorderedTextFieldView",
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CompactMatchHeaderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "InlineMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "CompactOutcomesLineView": {
+    "children": [
+      "OutcomeItemView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "InlineMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "CopyableCodeView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CountryLeaguesFilterView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CustomExpandableSectionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "WalletDetailView"
+    ],
+    "readme_done": true
+  },
+  "CustomNavigationView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "CustomSliderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "DepositBonusInfoView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "DescriptionBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "StackViewBlockView"
+    ],
+    "readme_done": true
+  },
+  "EmptyStateActionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ExpandableSectionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ExtendedListFooterView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "FilterOptionCell": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "GeneralFilterBarView"
+    ],
+    "readme_done": true
+  },
+  "FloatingOverlay": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "GeneralFilterBarView": {
+    "children": [
+      "MainFilterPillView",
+      "SportSelectorCell",
+      "FilterOptionCell"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "GradientHeaderView": {
+    "children": [
+      "GradientView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "StackViewBlockView"
+    ],
+    "readme_done": true
+  },
+  "HeaderTextView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "HelperViews": {
+    "children": [
+      "GradientView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "GradientHeaderView",
+      "ExtendedListFooterView"
+    ],
+    "readme_done": true
+  },
+  "HighlightedTextView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "StepInstructionView",
+      "TermsAcceptanceView",
+      "TransactionVerificationView"
+    ],
+    "readme_done": true
+  },
+  "ImageBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ImageSectionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "InfoRowView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "InlineMatchCardView": {
+    "children": [
+      "CompactMatchHeaderView",
+      "CompactOutcomesLineView",
+      "InlineScoreView",
+      "ScoreView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "InlineScoreView": {
+    "children": [
+      "InlineScoreColumnView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "InlineMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "LanguageSelectorView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "LeaguesFilterView": {
+    "children": [
+      "LeagueOptionRowView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ListBlockView": {
+    "children": [
+      "BulletItemBlockView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "MainFilterPillView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "GeneralFilterBarView"
+    ],
+    "readme_done": true
+  },
+  "MarketGroupSelectorTabView": {
+    "children": [
+      "MarketGroupTabItemView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "StatisticsWidgetView"
+    ],
+    "readme_done": true
+  },
+  "MarketGroupTabItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "MarketGroupSelectorTabView"
+    ],
+    "readme_done": true
+  },
+  "MarketInfoLineView": {
+    "children": [
+      "MarketNamePillLabelView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "TallOddsMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "MarketNamePillLabelView": {
+    "children": [
+      "FadingView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "MarketInfoLineView"
+    ],
+    "readme_done": true
+  },
+  "MarketOutcomesLineView": {
+    "children": [
+      "OutcomeItemView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "MarketOutcomesMultiLineView",
+      "MatchBannerView"
+    ],
+    "readme_done": true
+  },
+  "MarketOutcomesMultiLineView": {
+    "children": [
+      "MarketOutcomesLineView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "TallOddsMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "MatchBannerView": {
+    "children": [
+      "MarketOutcomesLineView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "MatchDateNavigationBar": {
+    "children": [
+      "CapsuleView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "MatchHeaderCompactView": {
+    "children": [
+      "ScoreView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "MatchHeaderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "TallOddsMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "MatchParticipantsInfoView": {
+    "children": [
+      "ScoreView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "MultiWidgetToolbarView": {
+    "children": [
+      "WalletWidgetView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "NavigationActionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "NotificationListView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "OddsAcceptanceView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "OutcomeItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "CompactOutcomesLineView",
+      "MarketOutcomesLineView"
+    ],
+    "readme_done": true
+  },
+  "PendingWithdrawView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "WalletDetailView"
+    ],
+    "readme_done": true
+  },
+  "PillItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "PillSelectorBarView"
+    ],
+    "readme_done": true
+  },
+  "PillSelectorBarView": {
+    "children": [
+      "PillItemView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "PinDigitEntryView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ProfileMenuListView": {
+    "children": [
+      "ActionRowView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ProgressInfoCheckView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ProgressSegments": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "PromotionCardView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "PromotionItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "PromotionSelectorBarView"
+    ],
+    "readme_done": true
+  },
+  "PromotionSelectorBarView": {
+    "children": [
+      "PromotionItemView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "PromotionalBonusCardView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "PromotionalBonusCardsScrollView"
+    ],
+    "readme_done": true
+  },
+  "PromotionalBonusCardsScrollView": {
+    "children": [
+      "PromotionalBonusCardView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "PromotionalHeaderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "QuickAddButtonView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "BetInfoSubmissionView"
+    ],
+    "readme_done": true
+  },
+  "QuickLinksTabBar": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "RecentSearchView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "RecentlyPlayedGamesView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ResendCodeView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ScoreView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "InlineMatchCardView",
+      "MatchHeaderCompactView",
+      "MatchParticipantsInfoView",
+      "TallOddsMatchCardView"
+    ],
+    "readme_done": true
+  },
+  "SearchHeaderInfoView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SearchView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SeeMoreButtonView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SelectOptionsView": {
+    "children": [
+      "SimpleOptionRowView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ShareChannelsGridView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "Shared": {
+    "children": [],
+    "has_readme": false,
+    "parents": [],
+    "readme_done": true
+  },
+  "SimpleNavigationBarView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SimpleOptionRowView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "SelectOptionsView"
+    ],
+    "readme_done": true
+  },
+  "SimpleSquaredFilterBar": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SingleButtonBannerView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SortFilterView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SportGamesFilterView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SportSelectorCell": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "GeneralFilterBarView"
+    ],
+    "readme_done": true
+  },
+  "SportTypeSelectorItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SportTypeSelectorView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "SquareSeeMoreView": {
+    "children": [
+      "CasinoGameImageView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StackViewBlockView": {
+    "children": [
+      "BulletItemBlockView",
+      "DescriptionBlockView",
+      "TitleBlockView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StatisticsWidgetView": {
+    "children": [
+      "MarketGroupSelectorTabView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StatusInfoView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StatusNotificationView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StepInstructionView": {
+    "children": [
+      "HighlightedTextView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "StyleProvider": {
+    "children": [],
+    "has_readme": false,
+    "parents": [],
+    "readme_done": true
+  },
+  "SuggestedBetsExpandedView": {
+    "children": [
+      "TallOddsMatchCardView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TallOddsMatchCardView": {
+    "children": [
+      "MarketInfoLineView",
+      "MarketOutcomesMultiLineView",
+      "MatchHeaderView",
+      "ScoreView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "SuggestedBetsExpandedView"
+    ],
+    "readme_done": true
+  },
+  "TermsAcceptanceView": {
+    "children": [
+      "HighlightedTextView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TextSectionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "ThemeSwitcherView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TicketBetInfoView": {
+    "children": [
+      "BetTicketStatusView",
+      "ButtonIconView",
+      "CashoutAmountView",
+      "CashoutSliderView",
+      "TicketSelectionView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TicketSelectionView": {
+    "children": [
+      "CapsuleView"
+    ],
+    "has_readme": true,
+    "parents": [
+      "TicketBetInfoView"
+    ],
+    "readme_done": true
+  },
+  "TimeSliderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TitleBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "StackViewBlockView"
+    ],
+    "readme_done": true
+  },
+  "ToasterView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TopBannerSliderView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TransactionItemView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "TransactionVerificationView": {
+    "children": [
+      "HighlightedTextView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "UserLimitCardView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "VideoBlockView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "VideoSectionView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "WalletDetailView": {
+    "children": [
+      "ButtonView",
+      "CustomExpandableSectionView",
+      "PendingWithdrawView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "WalletStatusView": {
+    "children": [
+      "ButtonView"
+    ],
+    "has_readme": true,
+    "parents": [],
+    "readme_done": true
+  },
+  "WalletWidgetView": {
+    "children": [],
+    "has_readme": true,
+    "parents": [
+      "MultiWidgetToolbarView"
+    ],
+    "readme_done": true
+  }
+}
