@@ -522,6 +522,13 @@ extension MyBetsViewController: UITableViewDataSource {
         cell.configure(with: viewModel)
         cell.configureCellPosition(isFirst: isFirst, isLast: isLast, isOnlyCell: isOnlyCell)
         
+        cell.updateLayout = { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.beginUpdates()
+                self?.tableView.endUpdates()
+            }
+        }
+        
         return cell
     }
     

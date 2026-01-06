@@ -16,6 +16,8 @@ public class TicketBetInfoView: UIView {
     private var cancellables = Set<AnyCancellable>()
     private let cornerRadiusStyle: CornerRadiusStyle
     
+    public var onBottomContentChanged: (() -> Void)?
+    
     // Dynamic constraints
     private var financialSummaryBottomConstraint: NSLayoutConstraint?
     private var bottomComponentsTopConstraint: NSLayoutConstraint?
@@ -572,6 +574,8 @@ public class TicketBetInfoView: UIView {
         } else {
             financialSummaryBottomConstraint?.isActive = true
         }
+        
+        onBottomContentChanged?()
     }
     
     private func updateBetStatus(with betInfo: TicketBetInfoData) {
