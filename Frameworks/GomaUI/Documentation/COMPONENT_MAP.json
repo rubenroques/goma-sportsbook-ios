@@ -841,7 +841,8 @@
       "MatchParticipantsInfoView",
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SearchHeaderInfoView": {
     "children": [],
@@ -853,7 +854,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SeeMoreButtonView": {
     "children": [],
@@ -1104,7 +1106,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "UserLimitCardView": {
     "children": [
