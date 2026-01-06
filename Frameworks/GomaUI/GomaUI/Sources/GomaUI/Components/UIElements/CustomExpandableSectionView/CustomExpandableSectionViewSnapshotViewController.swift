@@ -191,12 +191,10 @@ final class CustomExpandableSectionViewSnapshotViewController: UIViewController 
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CustomExpandableSectionViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CustomExpandableSectionViewSnapshotViewController(category: .contentVariants)
 }

@@ -88,7 +88,6 @@ final public class AmountPillView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()

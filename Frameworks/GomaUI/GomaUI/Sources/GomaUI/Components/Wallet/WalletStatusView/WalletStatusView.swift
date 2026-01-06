@@ -174,7 +174,6 @@ extension WalletStatusView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default Wallet Status") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -196,7 +195,6 @@ extension WalletStatusView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("All Balance States") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -265,7 +263,6 @@ extension WalletStatusView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Dialog Overlay") {
     PreviewUIViewController {
         let vc = UIViewController()

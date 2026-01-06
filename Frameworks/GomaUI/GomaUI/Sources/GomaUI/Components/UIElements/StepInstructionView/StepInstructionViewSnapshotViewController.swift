@@ -105,7 +105,6 @@ final class StepInstructionViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Instruction Variants") {
     StepInstructionViewSnapshotViewController(category: .instructionVariants)
 }

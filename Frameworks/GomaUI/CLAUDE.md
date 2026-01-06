@@ -212,21 +212,23 @@ Every GomaUI component is a complete, self-sufficient unit that works perfectly 
 ### 4. Preview Requirements
 
 **✅ PREFERRED: Use PreviewUIViewController for better rendering**
+
+Since GomaUI requires **iOS 17+**, the `#Preview` macro works without `@available` annotations:
+
 ```swift
-@available(iOS 17.0, *)
 #Preview("Component States") {
     PreviewUIViewController {
         let vc = UIViewController()
         let component = YourComponentView(viewModel: MockViewModel.default)
         component.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(component)
-        
+
         NSLayoutConstraint.activate([
             component.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
             component.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
             component.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor)
         ])
-        
+
         return vc
     }
 }
@@ -288,10 +290,7 @@ Common composite patterns:
 ```bash
 # Check existing simulators first
 xcrun simctl list devices
-# Look for iPhone simulators with iOS 18.2+ and copy the device ID
-
-# Only create if no suitable simulator exists:
-# xcrun simctl create "iPhone 16 Pro iOS 18.2" "iPhone 16 Pro" "com.apple.CoreSimulator.SimRuntime.iOS-18-2"
+# Look for iPhone simulators with iOS 17+ and copy the device ID
 ```
 
 **Build Commands**:
@@ -425,7 +424,6 @@ class ComplexComponentView: UIView {
 
 ### Preview Pattern
 ```swift
-@available(iOS 17.0, *)
 #Preview("Default State") {
     PreviewUIViewController {
         ComponentDemoViewController.makePreview(

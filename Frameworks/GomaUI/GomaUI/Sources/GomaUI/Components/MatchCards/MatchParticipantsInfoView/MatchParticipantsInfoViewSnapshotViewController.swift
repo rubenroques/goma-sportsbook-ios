@@ -154,12 +154,10 @@ final class MatchParticipantsInfoViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Horizontal Variants") {
     MatchParticipantsInfoViewSnapshotViewController(category: .horizontalVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Vertical Variants") {
     MatchParticipantsInfoViewSnapshotViewController(category: .verticalVariants)
 }

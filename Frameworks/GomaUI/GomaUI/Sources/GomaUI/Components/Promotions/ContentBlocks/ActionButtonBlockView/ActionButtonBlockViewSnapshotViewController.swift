@@ -105,12 +105,10 @@ final class ActionButtonBlockViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     ActionButtonBlockViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     ActionButtonBlockViewSnapshotViewController(category: .contentVariants)
 }

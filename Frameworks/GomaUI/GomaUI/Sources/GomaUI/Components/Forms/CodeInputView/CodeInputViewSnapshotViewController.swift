@@ -111,12 +111,10 @@ final class CodeInputViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CodeInputViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Input States") {
     CodeInputViewSnapshotViewController(category: .inputStates)
 }

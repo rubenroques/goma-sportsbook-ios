@@ -272,7 +272,6 @@ extension CompactOutcomesLineView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("CompactOutcomesLineView States") {
     PreviewUIViewController {
         let vc = UIViewController()

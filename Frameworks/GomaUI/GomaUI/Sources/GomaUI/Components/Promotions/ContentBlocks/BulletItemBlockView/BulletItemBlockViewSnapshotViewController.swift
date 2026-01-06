@@ -137,12 +137,10 @@ final class BulletItemBlockViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     BulletItemBlockViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     BulletItemBlockViewSnapshotViewController(category: .contentVariants)
 }

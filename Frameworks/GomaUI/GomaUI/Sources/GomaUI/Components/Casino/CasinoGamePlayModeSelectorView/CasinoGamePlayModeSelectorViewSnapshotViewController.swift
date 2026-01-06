@@ -134,12 +134,10 @@ final class CasinoGamePlayModeSelectorViewSnapshotViewController: UIViewControll
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CasinoGamePlayModeSelectorViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("User States") {
     CasinoGamePlayModeSelectorViewSnapshotViewController(category: .userStates)
 }

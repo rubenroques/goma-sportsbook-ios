@@ -265,7 +265,6 @@ private extension CustomExpandableSectionView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Collapsed") {
     PreviewUIViewController {
         let controller = UIViewController()
@@ -288,7 +287,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Expanded") {
     PreviewUIViewController {
         let controller = UIViewController()

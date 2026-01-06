@@ -732,7 +732,6 @@ extension CombinedFiltersDemoViewController {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 struct CombinedFiltersDemoViewController_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIViewController {

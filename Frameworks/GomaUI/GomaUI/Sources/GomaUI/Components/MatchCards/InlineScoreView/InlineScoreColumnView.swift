@@ -119,7 +119,6 @@ extension InlineScoreColumnView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("InlineScoreColumnView - All Highlighting Modes") {
     PreviewUIViewController {
         let vc = UIViewController()

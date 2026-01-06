@@ -289,7 +289,6 @@ extension CasinoGameSearchedView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("CasinoGameSearchedView - States") {
     PreviewUIViewController {
         let vc = UIViewController()

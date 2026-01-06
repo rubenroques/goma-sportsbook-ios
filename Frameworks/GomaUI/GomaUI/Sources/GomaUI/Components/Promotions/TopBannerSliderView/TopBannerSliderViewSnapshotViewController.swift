@@ -105,7 +105,6 @@ final class TopBannerSliderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Banner Variants") {
     TopBannerSliderViewSnapshotViewController(category: .bannerVariants)
 }

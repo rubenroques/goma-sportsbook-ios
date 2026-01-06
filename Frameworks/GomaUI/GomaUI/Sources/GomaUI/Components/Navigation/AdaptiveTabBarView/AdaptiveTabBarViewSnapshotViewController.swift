@@ -106,7 +106,6 @@ final class AdaptiveTabBarViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Background Modes") {
     AdaptiveTabBarViewSnapshotViewController(category: .backgroundModes)
 }

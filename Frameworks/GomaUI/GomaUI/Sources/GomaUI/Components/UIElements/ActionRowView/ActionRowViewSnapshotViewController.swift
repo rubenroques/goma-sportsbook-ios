@@ -239,17 +239,14 @@ final class ActionRowViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Row Types") {
     ActionRowViewSnapshotViewController(category: .rowTypes)
 }
 
-@available(iOS 17.0, *)
 #Preview("Icon Variants") {
     ActionRowViewSnapshotViewController(category: .iconVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Styling") {
     ActionRowViewSnapshotViewController(category: .customStyling)
 }

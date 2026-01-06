@@ -342,7 +342,6 @@ extension NotificationListView {
 
 // MARK: - SwiftUI Preview Support
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Default State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -365,7 +364,6 @@ extension NotificationListView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Empty State") {
     PreviewUIViewController {
         let vc = UIViewController()

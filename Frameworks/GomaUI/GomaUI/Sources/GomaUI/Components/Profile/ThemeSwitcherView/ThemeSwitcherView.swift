@@ -168,7 +168,6 @@ extension ThemeSwitcherView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Theme Switcher") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -188,7 +187,6 @@ extension ThemeSwitcherView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Theme Switcher - Dark") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -209,7 +207,6 @@ extension ThemeSwitcherView {
     .environment(\.colorScheme, .dark)
 }
 
-@available(iOS 17.0, *)
 #Preview("Theme Switcher - Both Modes") {
     VStack(spacing: 40) {
         VStack(spacing: 8) {

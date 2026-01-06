@@ -95,7 +95,6 @@ final class EmptyStateActionViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     EmptyStateActionViewSnapshotViewController(category: .basicStates)
 }

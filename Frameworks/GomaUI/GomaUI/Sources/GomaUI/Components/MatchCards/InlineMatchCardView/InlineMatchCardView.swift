@@ -324,7 +324,6 @@ extension InlineMatchCardView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("InlineMatchCardView States") {
     PreviewUIViewController {
         let vc = UIViewController()

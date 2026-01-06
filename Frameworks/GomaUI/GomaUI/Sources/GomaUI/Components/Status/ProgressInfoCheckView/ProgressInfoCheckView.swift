@@ -285,7 +285,6 @@ public final class ProgressInfoCheckView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("ProgressInfoCheckView") {
     PreviewUIViewController {
         let vc = UIViewController()

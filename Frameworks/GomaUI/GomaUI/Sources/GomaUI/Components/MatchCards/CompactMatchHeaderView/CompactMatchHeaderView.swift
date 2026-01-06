@@ -310,7 +310,6 @@ extension CompactMatchHeaderView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("CompactMatchHeaderView States") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -215,7 +215,6 @@ extension MarketNamePillLabelView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("MarketNamePillLabelView") {
     PreviewUIViewController {
         let vc = UIViewController()

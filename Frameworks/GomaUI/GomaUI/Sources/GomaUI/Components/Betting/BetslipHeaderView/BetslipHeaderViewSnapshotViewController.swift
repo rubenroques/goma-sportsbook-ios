@@ -106,7 +106,6 @@ final class BetslipHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Authentication States") {
     BetslipHeaderViewSnapshotViewController(category: .authStates)
 }

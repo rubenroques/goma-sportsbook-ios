@@ -230,7 +230,6 @@ public final class BetslipOddsBoostHeaderView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Header - Progress 1/3") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -256,7 +255,6 @@ public final class BetslipOddsBoostHeaderView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Header - Progress 2/3") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -282,7 +280,6 @@ public final class BetslipOddsBoostHeaderView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Header - Max Boost Reached") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -306,7 +303,6 @@ public final class BetslipOddsBoostHeaderView: UIView {
 
 // MARK: - Interactive Preview
 
-@available(iOS 17.0, *)
 #Preview("Interactive Animation") {
     PreviewUIViewController {
         BetslipOddsBoostHeaderInteractivePreviewController()
@@ -314,7 +310,6 @@ public final class BetslipOddsBoostHeaderView: UIView {
 }
 
 /// Interactive preview controller for testing segment animations
-@available(iOS 17.0, *)
 private final class BetslipOddsBoostHeaderInteractivePreviewController: UIViewController {
 
     private var currentSelections = 1

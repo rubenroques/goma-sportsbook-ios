@@ -187,7 +187,6 @@ public final class CopyableCodeView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview(LocalizationProvider.string("booking_code")) {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -208,7 +207,6 @@ public final class CopyableCodeView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Promo Code") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -229,7 +227,6 @@ public final class CopyableCodeView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Long Code") {
     PreviewUIViewController {
         let vc = UIViewController()

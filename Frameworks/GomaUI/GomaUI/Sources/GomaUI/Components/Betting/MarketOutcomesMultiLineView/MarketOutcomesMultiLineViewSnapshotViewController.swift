@@ -148,12 +148,10 @@ final class MarketOutcomesMultiLineViewSnapshotViewController: UIViewController 
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Market Group Variants") {
     MarketOutcomesMultiLineViewSnapshotViewController(category: .marketGroupVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Special States") {
     MarketOutcomesMultiLineViewSnapshotViewController(category: .specialStates)
 }

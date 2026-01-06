@@ -106,7 +106,6 @@ final class BetDetailResultSummaryViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Result States") {
     BetDetailResultSummaryViewSnapshotViewController(category: .resultStates)
 }

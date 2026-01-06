@@ -132,7 +132,6 @@ final public class PromotionalHeaderView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("PromotionalHeaderView") {
     PreviewUIViewController {
         let vc = UIViewController()

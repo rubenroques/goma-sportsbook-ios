@@ -232,7 +232,6 @@ extension WalletDetailBalanceView {
 // MARK: - Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Wallet Detail Balance View") {
     PreviewUIViewController {
         let vc = UIViewController()

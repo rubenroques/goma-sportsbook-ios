@@ -249,7 +249,6 @@ extension CasinoGameImageView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image - With Image") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -268,7 +267,6 @@ extension CasinoGameImageView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image - No Image") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -287,7 +285,6 @@ extension CasinoGameImageView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

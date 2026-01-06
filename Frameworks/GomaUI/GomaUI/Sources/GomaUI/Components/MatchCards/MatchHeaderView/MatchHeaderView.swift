@@ -424,7 +424,6 @@ extension MatchHeaderView {
 
 // MARK: - SwiftUI Previews
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("MatchHeaderView - Examples") {
     ScrollView {
         VStack(spacing: 20) {

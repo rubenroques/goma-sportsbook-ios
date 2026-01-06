@@ -139,7 +139,6 @@ final class UserLimitCardViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Limit Variants") {
     UserLimitCardViewSnapshotViewController(category: .limitVariants)
 }

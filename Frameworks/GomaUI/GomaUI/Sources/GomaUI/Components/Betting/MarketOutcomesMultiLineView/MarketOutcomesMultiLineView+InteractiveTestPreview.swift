@@ -1110,7 +1110,6 @@ extension MarketOutcomesMultiLineInteractiveTestViewController {
 
 // MARK: - SwiftUI Preview
 
-@available(iOS 17.0, *)
 #Preview("Interactive Test Suite") {
     PreviewUIViewController {
         let navController = UINavigationController(

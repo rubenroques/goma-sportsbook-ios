@@ -111,7 +111,6 @@ final class SingleButtonBannerViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Banner Variants") {
     SingleButtonBannerViewSnapshotViewController(category: .bannerVariants)
 }

@@ -112,7 +112,6 @@ final class BetslipFloatingViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Component States") {
     BetslipFloatingViewSnapshotViewController(category: .states)
 }

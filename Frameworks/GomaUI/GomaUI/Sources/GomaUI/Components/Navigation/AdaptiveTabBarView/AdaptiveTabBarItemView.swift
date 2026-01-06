@@ -132,7 +132,6 @@ private extension AdaptiveTabBarItemView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()

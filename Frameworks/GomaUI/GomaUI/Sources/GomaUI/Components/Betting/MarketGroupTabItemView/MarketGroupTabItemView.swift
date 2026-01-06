@@ -313,7 +313,6 @@ extension MarketGroupTabItemView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 #Preview("1x2 Tab - Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -332,7 +331,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Double Chance Tab - Idle") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -351,7 +349,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("BetBuilder Tab with Icon and Badge") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -370,7 +367,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Popular Tab with Icon and Badge") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -389,7 +385,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Sets Tab with Badge Only") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -408,7 +403,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Multiple Tabs Layout") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -452,7 +446,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Background Colors - Blue Tab") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -475,7 +468,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Different Idle/Selected Background Colors") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -515,7 +507,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Prefix Only Icon") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -534,7 +525,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Suffix Only Icon") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -553,7 +543,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Both Prefix and Suffix Icons") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -572,7 +561,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Icon Combinations Layout") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -277,7 +277,6 @@ extension LanguageItemView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Language Item - Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -305,7 +304,6 @@ extension LanguageItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Language Item - Unselected") {
     PreviewUIViewController {
         let vc = UIViewController()

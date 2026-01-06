@@ -194,7 +194,6 @@ public class TimeSliderView: UIView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 #Preview("TimeSliderView") {
     PreviewUIViewController {
         let vc = UIViewController()

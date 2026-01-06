@@ -395,7 +395,6 @@ final public class CasinoGameCardView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Card - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

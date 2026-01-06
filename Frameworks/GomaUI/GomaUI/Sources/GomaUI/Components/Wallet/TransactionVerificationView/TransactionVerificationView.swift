@@ -157,7 +157,6 @@ public final class TransactionVerificationView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default") {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.defaultMock)
@@ -166,7 +165,6 @@ public final class TransactionVerificationView: UIView {
     .padding()
 }
 
-@available(iOS 17.0, *)
 #Preview("Simple") {
     PreviewUIView {
         TransactionVerificationView(viewModel: MockTransactionVerificationViewModel.simpleMock)

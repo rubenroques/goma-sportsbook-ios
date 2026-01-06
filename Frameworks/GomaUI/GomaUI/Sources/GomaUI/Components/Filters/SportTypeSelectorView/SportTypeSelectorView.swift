@@ -108,7 +108,6 @@ extension SportTypeSelectorView: UICollectionViewDelegateFlowLayout {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default") {
     PreviewUIView {
         SportTypeSelectorView(viewModel: MockSportTypeSelectorViewModel.defaultMock)
@@ -117,7 +116,6 @@ extension SportTypeSelectorView: UICollectionViewDelegateFlowLayout {
     .background(Color(UIColor.red))
 }
 
-@available(iOS 17.0, *)
 #Preview("Many Sports") {
     PreviewUIView {
         SportTypeSelectorView(viewModel: MockSportTypeSelectorViewModel.manySportsMock)

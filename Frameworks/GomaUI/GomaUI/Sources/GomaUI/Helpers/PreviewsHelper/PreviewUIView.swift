@@ -1,7 +1,6 @@
 import SwiftUI
 import UIKit
 
-@available(iOS 17.0, *)
 struct PreviewUIView<View: UIView>: UIViewRepresentable {
     private let builder: (() -> View)?
 
@@ -116,7 +115,6 @@ class RetroScoreboardView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Retro Game Usage Example") {
     PreviewUIView {
         RetroScoreboardView(
@@ -125,7 +123,6 @@ class RetroScoreboardView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("All Game Usage Example ") {
     VStack {
         PreviewUIView {

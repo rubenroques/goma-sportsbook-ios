@@ -259,7 +259,6 @@ final public class PromotionSelectorBarView: UIView {
 
 // MARK: - SwiftUI Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Component States") {
     PreviewUIViewController {
         let vc = UIViewController()

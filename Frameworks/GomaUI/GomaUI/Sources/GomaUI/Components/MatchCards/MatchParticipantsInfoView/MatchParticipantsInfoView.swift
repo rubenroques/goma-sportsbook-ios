@@ -469,7 +469,6 @@ extension MatchParticipantsInfoView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("MatchParticipantsInfoView") {
     PreviewUIViewController {
         let vc = UIViewController()

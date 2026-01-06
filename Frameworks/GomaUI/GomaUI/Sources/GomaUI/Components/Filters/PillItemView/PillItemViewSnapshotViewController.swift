@@ -98,7 +98,6 @@ final class PillItemViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview {
     PillItemViewSnapshotViewController()
 }

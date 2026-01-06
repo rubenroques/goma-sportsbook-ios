@@ -645,7 +645,6 @@ extension BonusInfoCardView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 #Preview("Complete Bonus - Combo") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -665,7 +664,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Simple Bonus") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -685,7 +683,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Without Header") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -705,7 +702,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Minimal (No Optional Elements)") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -725,7 +721,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Released Status") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -745,7 +740,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Almost Complete") {
     PreviewUIViewController {
         let vc = UIViewController()

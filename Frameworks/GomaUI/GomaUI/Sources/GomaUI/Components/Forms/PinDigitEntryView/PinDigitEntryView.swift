@@ -199,7 +199,6 @@ public final class PinDigitEntryView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("PinDigitEntryView") {
     PreviewUIViewController {
         let vc = UIViewController()

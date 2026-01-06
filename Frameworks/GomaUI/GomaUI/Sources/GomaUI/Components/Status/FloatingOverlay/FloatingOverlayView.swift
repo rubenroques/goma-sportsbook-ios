@@ -212,7 +212,6 @@ extension FloatingOverlayView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("FloatingOverlayView") {
     PreviewUIViewController {
         let vc = UIViewController()

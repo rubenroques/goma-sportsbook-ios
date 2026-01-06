@@ -570,7 +570,6 @@ private extension AdaptiveTabBarView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Blur Background") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)
@@ -580,7 +579,6 @@ private extension AdaptiveTabBarView {
     .frame(height: 52)
 }
 
-@available(iOS 17.0, *)
 #Preview("Solid Background") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)
@@ -590,7 +588,6 @@ private extension AdaptiveTabBarView {
     .frame(height: 52)
 }
 
-@available(iOS 17.0, *)
 #Preview("Transparent Background") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)
@@ -600,7 +597,6 @@ private extension AdaptiveTabBarView {
     .frame(height: 52)
 }
 
-@available(iOS 17.0, *)
 #Preview("Reversible Slide") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)
@@ -610,7 +606,6 @@ private extension AdaptiveTabBarView {
     .frame(height: 52)
 }
 
-@available(iOS 17.0, *)
 #Preview("Vertical Cube Animation") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)
@@ -620,7 +615,6 @@ private extension AdaptiveTabBarView {
     .frame(height: 52)
 }
 
-@available(iOS 17.0, *)
 #Preview("No Animation") {
     PreviewUIView {
         let tabBarView = AdaptiveTabBarView(viewModel: MockAdaptiveTabBarViewModel.defaultMock)

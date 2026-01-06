@@ -242,7 +242,6 @@ extension PromotionCardView {
 
 // MARK: - SwiftUI Previews
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Single Card") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -260,7 +259,6 @@ extension PromotionCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Card") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -278,7 +276,6 @@ extension PromotionCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No CTA Card") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -296,7 +296,6 @@ extension WalletDetailView {
 // MARK: - Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("1. Default State - Normal Case") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -320,7 +319,6 @@ extension WalletDetailView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("2. Empty Wallet - Edge Case") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -368,7 +366,6 @@ extension WalletDetailView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("3. High Balance - Stress Test") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -404,7 +401,6 @@ extension WalletDetailView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("4. Bonus Only - No Withdrawable") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -455,7 +451,6 @@ extension WalletDetailView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("5. With Pending Withdraw") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -532,7 +527,6 @@ extension WalletDetailView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("6. All States Grid") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -126,7 +126,6 @@ extension WalletDetailHeaderView {
 // MARK: - Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Wallet Detail Header") {
     PreviewUIViewController {
         let vc = UIViewController()

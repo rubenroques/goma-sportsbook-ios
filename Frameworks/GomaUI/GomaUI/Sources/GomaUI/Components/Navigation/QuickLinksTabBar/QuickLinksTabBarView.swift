@@ -86,7 +86,6 @@ final public class QuickLinksTabBarView: UIView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Gaming Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -106,7 +105,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Sports Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -126,7 +124,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Account Quick Links") {
     PreviewUIViewController {
         let vc = UIViewController()

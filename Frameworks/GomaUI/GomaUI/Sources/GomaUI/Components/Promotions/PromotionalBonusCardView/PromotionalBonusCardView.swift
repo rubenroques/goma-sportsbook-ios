@@ -332,7 +332,6 @@ final public class PromotionalBonusCardView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Promotional Bonus Card") {
     PreviewUIView {
         PromotionalBonusCardView(viewModel: MockPromotionalBonusCardViewModel.defaultMock)

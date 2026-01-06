@@ -111,12 +111,10 @@ final class CasinoGameImagePairViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CasinoGameImagePairViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CasinoGameImagePairViewSnapshotViewController(category: .contentVariants)
 }

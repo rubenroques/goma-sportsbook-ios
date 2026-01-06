@@ -424,7 +424,6 @@ extension MarketOutcomesLineView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("MarketOutcomesLineView") {
     PreviewUIViewController {
         let vc = UIViewController()

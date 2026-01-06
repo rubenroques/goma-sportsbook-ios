@@ -98,7 +98,6 @@ final class BetslipOddsBoostHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Boost States") {
     BetslipOddsBoostHeaderViewSnapshotViewController(category: .boostStates)
 }

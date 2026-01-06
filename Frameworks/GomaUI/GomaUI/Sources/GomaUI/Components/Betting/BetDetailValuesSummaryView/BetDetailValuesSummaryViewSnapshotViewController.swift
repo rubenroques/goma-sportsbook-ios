@@ -98,7 +98,6 @@ final class BetDetailValuesSummaryViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Layout Variants") {
     BetDetailValuesSummaryViewSnapshotViewController(category: .layoutVariants)
 }

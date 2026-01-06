@@ -111,7 +111,6 @@ final class GradientHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Gradient Variants") {
     GradientHeaderViewSnapshotViewController(category: .gradientVariants)
 }

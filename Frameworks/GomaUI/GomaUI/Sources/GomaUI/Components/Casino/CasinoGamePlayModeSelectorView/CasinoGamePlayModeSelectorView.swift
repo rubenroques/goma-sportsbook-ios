@@ -465,7 +465,6 @@ final public class CasinoGamePlayModeSelectorView: UIView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default State") {
     PreviewUIView {
         CasinoGamePlayModeSelectorView(viewModel: MockCasinoGamePlayModeSelectorViewModel.defaultMock)
@@ -473,7 +472,6 @@ final public class CasinoGamePlayModeSelectorView: UIView {
     .frame(height: 600)
 }
 
-@available(iOS 17.0, *)
 #Preview("Loading State") {
     PreviewUIView {
         CasinoGamePlayModeSelectorView(viewModel: MockCasinoGamePlayModeSelectorViewModel.loadingMock)
@@ -481,7 +479,6 @@ final public class CasinoGamePlayModeSelectorView: UIView {
     .frame(height: 600)
 }
 
-@available(iOS 17.0, *)
 #Preview("Logged In User") {
     PreviewUIView {
         CasinoGamePlayModeSelectorView(viewModel: MockCasinoGamePlayModeSelectorViewModel.loggedInMock)

@@ -126,7 +126,6 @@ public extension HighlightedTextView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("HighlightedTextView") {
     PreviewUIViewController {
         let vc = UIViewController()

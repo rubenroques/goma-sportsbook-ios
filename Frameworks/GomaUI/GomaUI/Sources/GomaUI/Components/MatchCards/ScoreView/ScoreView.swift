@@ -237,7 +237,6 @@ extension ScoreView {
 
 // MARK: - SwiftUI Previews
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("ScoreView - All States & Variations") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -461,7 +460,6 @@ extension ScoreView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("ScoreView - Simple Test") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -490,7 +488,6 @@ extension ScoreView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("ScoreView - Tennis with Serving Indicator & Separator") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -690,7 +687,6 @@ extension ScoreView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("ScoreView - Comprehensive Style Guide") {
     PreviewUIViewController {
         let vc = UIViewController()

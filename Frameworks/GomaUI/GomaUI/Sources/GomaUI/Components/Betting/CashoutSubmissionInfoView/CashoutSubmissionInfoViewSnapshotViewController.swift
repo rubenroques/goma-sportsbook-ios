@@ -111,7 +111,6 @@ final class CashoutSubmissionInfoViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CashoutSubmissionInfoViewSnapshotViewController(category: .basicStates)
 }

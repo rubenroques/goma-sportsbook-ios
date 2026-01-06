@@ -105,7 +105,6 @@ final class ThemeSwitcherViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Theme States") {
     ThemeSwitcherViewSnapshotViewController(category: .themeStates)
 }

@@ -126,12 +126,10 @@ final class CasinoGameImageGridSectionViewSnapshotViewController: UIViewControll
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CasinoGameImageGridSectionViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CasinoGameImageGridSectionViewSnapshotViewController(category: .contentVariants)
 }

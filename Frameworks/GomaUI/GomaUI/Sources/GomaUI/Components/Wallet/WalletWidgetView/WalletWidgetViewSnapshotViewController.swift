@@ -140,7 +140,6 @@ final class WalletWidgetViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Widget Variants") {
     WalletWidgetViewSnapshotViewController(category: .widgetVariants)
 }

@@ -128,7 +128,6 @@ final class TimeSliderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Slider States") {
     TimeSliderViewSnapshotViewController(category: .sliderStates)
 }

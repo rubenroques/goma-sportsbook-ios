@@ -100,7 +100,6 @@ final class BetslipTypeSelectorViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Selection States") {
     BetslipTypeSelectorViewSnapshotViewController(category: .selectionStates)
 }

@@ -136,7 +136,6 @@ public final class SimpleSquaredFilterBarView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Simple Squared Filter Bar - Time Filters") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -170,7 +169,6 @@ public final class SimpleSquaredFilterBarView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Simple Squared Filter Bar - Status Filters") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -203,7 +201,6 @@ public final class SimpleSquaredFilterBarView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Simple Squared Filter Bar - Multiple States") {
     PreviewUIViewController {
         let vc = UIViewController()

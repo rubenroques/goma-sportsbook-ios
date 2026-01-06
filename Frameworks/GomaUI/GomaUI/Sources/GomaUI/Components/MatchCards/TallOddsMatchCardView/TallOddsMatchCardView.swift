@@ -497,7 +497,6 @@ extension TallOddsMatchCardView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Premier League Match") {
     PreviewUIView {
         let viewModel = MockTallOddsMatchCardViewModel.premierLeagueMock
@@ -507,7 +506,6 @@ extension TallOddsMatchCardView {
     .padding(.horizontal, 16)
 }
 
-@available(iOS 17.0, *)
 #Preview("Compact Match") {
     PreviewUIView {
         let viewModel = MockTallOddsMatchCardViewModel.compactMock
@@ -517,7 +515,6 @@ extension TallOddsMatchCardView {
     .padding(.horizontal, 16)
 }
 
-@available(iOS 17.0, *)
 #Preview("Live Match with Score") {
     PreviewUIView {
         let viewModel = MockTallOddsMatchCardViewModel.liveMock

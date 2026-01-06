@@ -215,7 +215,6 @@ public final class CodeInputView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("CodeInputView") {
     PreviewUIViewController {
         let vc = UIViewController()

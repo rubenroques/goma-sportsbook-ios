@@ -133,12 +133,10 @@ final class CashoutSliderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CashoutSliderViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Value Variants") {
     CashoutSliderViewSnapshotViewController(category: .valueVariants)
 }

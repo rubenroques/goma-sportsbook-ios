@@ -182,7 +182,6 @@ extension ProfileMenuListView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Profile Menu List") {
     PreviewUIViewController {
         let vc = UIViewController()

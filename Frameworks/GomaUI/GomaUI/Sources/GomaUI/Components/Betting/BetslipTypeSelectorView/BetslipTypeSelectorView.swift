@@ -140,7 +140,6 @@ public class BetslipTypeSelectorView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Sports Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -161,7 +160,6 @@ public class BetslipTypeSelectorView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Virtuals Selected") {
     PreviewUIViewController {
         let vc = UIViewController()

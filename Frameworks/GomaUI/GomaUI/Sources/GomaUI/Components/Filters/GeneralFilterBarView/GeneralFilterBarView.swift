@@ -166,7 +166,6 @@ extension GeneralFilterBarView: UICollectionViewDelegate {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("General Filter Bar") {
     PreviewUIView {
         GeneralFilterBarView(viewModel: MockGeneralFilterBarViewModel.defaultMock)

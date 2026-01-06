@@ -194,17 +194,14 @@ final class CustomSliderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CustomSliderViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Position Variants") {
     CustomSliderViewSnapshotViewController(category: .positionVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Configuration Variants") {
     CustomSliderViewSnapshotViewController(category: .configurationVariants)
 }

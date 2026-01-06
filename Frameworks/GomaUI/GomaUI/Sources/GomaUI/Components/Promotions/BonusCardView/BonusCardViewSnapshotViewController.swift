@@ -117,7 +117,6 @@ final class BonusCardViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     BonusCardViewSnapshotViewController(category: .contentVariants)
 }

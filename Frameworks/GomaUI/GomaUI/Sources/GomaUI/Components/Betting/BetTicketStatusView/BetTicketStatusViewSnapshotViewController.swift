@@ -114,7 +114,6 @@ final class BetTicketStatusViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Status States") {
     BetTicketStatusViewSnapshotViewController(category: .statusStates)
 }

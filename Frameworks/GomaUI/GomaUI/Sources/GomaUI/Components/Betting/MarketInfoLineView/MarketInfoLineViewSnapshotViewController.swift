@@ -131,7 +131,6 @@ final class MarketInfoLineViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Info Variants") {
     MarketInfoLineViewSnapshotViewController(category: .infoVariants)
 }

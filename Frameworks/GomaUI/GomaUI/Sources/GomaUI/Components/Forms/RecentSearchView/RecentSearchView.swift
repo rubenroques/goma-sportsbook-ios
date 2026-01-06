@@ -184,7 +184,6 @@ extension RecentSearchView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("RecentSearchView") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -142,12 +142,10 @@ final class PinDigitEntryViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Digit Count") {
     PinDigitEntryViewSnapshotViewController(category: .digitCount)
 }
 
-@available(iOS 17.0, *)
 #Preview("Fill States") {
     PinDigitEntryViewSnapshotViewController(category: .fillStates)
 }

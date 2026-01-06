@@ -20,7 +20,6 @@ public extension PreviewStateRepresentable {
 }
 
 /// A generic UITableViewController for use in SwiftUI previews
-@available(iOS 17.0, *)
 public class PreviewTableViewController<Cell: UITableViewCell, State: PreviewStateRepresentable>: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: - Properties
@@ -300,7 +299,6 @@ class SpaceMissionCell: UITableViewCell {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Space Missions Usage Example") {
     PreviewUIViewController {
         PreviewTableViewController(

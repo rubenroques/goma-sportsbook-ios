@@ -100,7 +100,6 @@ extension TextSectionView {
 // MARK: - Preview
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Text Section") {
     PreviewUIViewController {
         let vc = UIViewController()

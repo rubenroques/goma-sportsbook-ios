@@ -167,12 +167,10 @@ final class BetslipTypeTabItemViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     BetslipTypeTabItemViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Tab Variants") {
     BetslipTypeTabItemViewSnapshotViewController(category: .tabVariants)
 }

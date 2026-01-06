@@ -297,7 +297,6 @@ public final class SimpleNavigationBarView: UIView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All Variants") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -351,7 +350,6 @@ public final class SimpleNavigationBarView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Dark Mode") {
     PreviewUIViewController {
         let vc = UIViewController()

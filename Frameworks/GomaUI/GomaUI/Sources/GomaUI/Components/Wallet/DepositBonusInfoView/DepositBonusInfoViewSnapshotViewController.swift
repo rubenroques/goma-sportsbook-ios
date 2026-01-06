@@ -132,12 +132,10 @@ final class DepositBonusInfoViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     DepositBonusInfoViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     DepositBonusInfoViewSnapshotViewController(category: .contentVariants)
 }

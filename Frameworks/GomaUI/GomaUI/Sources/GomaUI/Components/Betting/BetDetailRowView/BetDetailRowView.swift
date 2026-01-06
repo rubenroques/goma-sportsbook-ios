@@ -145,7 +145,6 @@ public class BetDetailRowView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Bet Detail Row - Standard") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -166,7 +165,6 @@ public class BetDetailRowView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Detail Row - Top Corners") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -187,7 +185,6 @@ public class BetDetailRowView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Detail Row - Bottom Corners") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -208,7 +205,6 @@ public class BetDetailRowView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Detail Row - Header Style") {
     PreviewUIViewController {
         let vc = UIViewController()

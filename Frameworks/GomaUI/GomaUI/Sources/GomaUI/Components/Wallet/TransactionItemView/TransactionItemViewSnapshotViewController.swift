@@ -117,7 +117,6 @@ final class TransactionItemViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Transaction Types") {
     TransactionItemViewSnapshotViewController(category: .transactionTypes)
 }

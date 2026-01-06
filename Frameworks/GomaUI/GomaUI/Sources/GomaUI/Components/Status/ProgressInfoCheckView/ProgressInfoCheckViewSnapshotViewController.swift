@@ -142,12 +142,10 @@ final class ProgressInfoCheckViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Progress States") {
     ProgressInfoCheckViewSnapshotViewController(category: .progressStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Enabled States") {
     ProgressInfoCheckViewSnapshotViewController(category: .enabledStates)
 }

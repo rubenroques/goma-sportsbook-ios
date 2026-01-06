@@ -197,17 +197,14 @@ final class ScoreViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Sport Variants") {
     ScoreViewSnapshotViewController(category: .sportVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Visual States") {
     ScoreViewSnapshotViewController(category: .visualStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Style Variants") {
     ScoreViewSnapshotViewController(category: .styleVariants)
 }

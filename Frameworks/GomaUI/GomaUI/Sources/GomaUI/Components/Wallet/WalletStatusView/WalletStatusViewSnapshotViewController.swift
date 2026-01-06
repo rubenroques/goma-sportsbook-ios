@@ -111,7 +111,6 @@ final class WalletStatusViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Balance Variants") {
     WalletStatusViewSnapshotViewController(category: .balanceVariants)
 }

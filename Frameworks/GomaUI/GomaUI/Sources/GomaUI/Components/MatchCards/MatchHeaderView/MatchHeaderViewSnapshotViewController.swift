@@ -160,12 +160,10 @@ final class MatchHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Header Variants") {
     MatchHeaderViewSnapshotViewController(category: .headerVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Visibility Variants") {
     MatchHeaderViewSnapshotViewController(category: .visibilityVariants)
 }

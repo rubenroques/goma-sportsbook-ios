@@ -548,7 +548,6 @@ private extension MarketOutcomesMultiLineView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All States Comparison") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -618,7 +617,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Over/Under Market Group") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -639,7 +637,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Market Group Empty") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -660,7 +657,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Home/Draw/Away Market Group") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -681,7 +677,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Market Group with Suspended Line") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -702,7 +697,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Mixed Layout Market Group") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -723,7 +717,6 @@ private extension MarketOutcomesMultiLineView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Market Group with Odds Changes") {
     PreviewUIViewController {
         let vc = UIViewController()

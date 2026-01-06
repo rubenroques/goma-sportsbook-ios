@@ -134,7 +134,6 @@ extension CasinoGameImagePairView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Pair - Full") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -156,7 +155,6 @@ extension CasinoGameImagePairView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Pair - Top Only") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -175,7 +173,6 @@ extension CasinoGameImagePairView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Pair - No Images") {
     PreviewUIViewController {
         let vc = UIViewController()

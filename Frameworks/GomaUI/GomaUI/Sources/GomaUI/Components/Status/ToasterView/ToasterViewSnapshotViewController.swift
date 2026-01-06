@@ -149,7 +149,6 @@ final class ToasterViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Toaster Variants") {
     ToasterViewSnapshotViewController(category: .toasterVariants)
 }

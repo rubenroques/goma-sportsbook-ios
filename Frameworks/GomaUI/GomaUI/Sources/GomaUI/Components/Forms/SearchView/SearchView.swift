@@ -253,7 +253,6 @@ private extension SearchView {
 
 // MARK: - SwiftUI Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("SearchView") {
     PreviewUIViewController {
         let view = SearchView(viewModel: MockSearchViewModel.default)

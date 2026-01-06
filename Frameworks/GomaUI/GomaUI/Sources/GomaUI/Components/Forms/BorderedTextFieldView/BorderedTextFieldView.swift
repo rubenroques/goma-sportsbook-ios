@@ -641,7 +641,6 @@ private extension Optional where Wrapped == String {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("BorderedTextFieldView") {
     PreviewUIViewController {
         let vc = UIViewController()

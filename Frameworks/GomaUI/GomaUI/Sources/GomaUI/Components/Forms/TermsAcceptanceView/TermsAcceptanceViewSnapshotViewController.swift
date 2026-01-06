@@ -105,7 +105,6 @@ final class TermsAcceptanceViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Acceptance States") {
     TermsAcceptanceViewSnapshotViewController(category: .acceptanceStates)
 }

@@ -207,7 +207,6 @@ public class SortFilterView: UIView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 struct SortByView_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIView {

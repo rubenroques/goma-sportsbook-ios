@@ -506,7 +506,6 @@ extension StatisticsWidgetView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Football Match Statistics") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -526,7 +525,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tennis Match Statistics") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -546,7 +544,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Loading State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -566,7 +563,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Error State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -586,7 +582,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Empty State") {
     PreviewUIViewController {
         let vc = UIViewController()

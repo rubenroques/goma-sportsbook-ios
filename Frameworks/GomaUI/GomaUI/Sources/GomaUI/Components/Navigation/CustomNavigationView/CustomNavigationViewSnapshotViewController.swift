@@ -129,7 +129,6 @@ final class CustomNavigationViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic Styles") {
     CustomNavigationViewSnapshotViewController(category: .basicStyles)
 }

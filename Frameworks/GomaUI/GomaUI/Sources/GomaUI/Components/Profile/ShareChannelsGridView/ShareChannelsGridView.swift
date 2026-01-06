@@ -173,7 +173,6 @@ extension ShareChannelsGridView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All Channels") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -197,7 +196,6 @@ extension ShareChannelsGridView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Social Only") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -221,7 +219,6 @@ extension ShareChannelsGridView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Limited Channels") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -245,7 +242,6 @@ extension ShareChannelsGridView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("With Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -269,7 +265,6 @@ extension ShareChannelsGridView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Messaging Only") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -412,7 +412,6 @@ final public class MultiWidgetToolbarView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Logged In") {
 
     let numberOfLines: CGFloat = 1
@@ -431,7 +430,6 @@ final public class MultiWidgetToolbarView: UIView {
     .frame(height: previewHeight)
 }
 
-@available(iOS 17.0, *)
 #Preview("Logged Out") {
     let numberOfLines: CGFloat = 2
     let heightPerLine: CGFloat = 56

@@ -232,22 +232,18 @@ final class CasinoGameCardViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CasinoGameCardViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Display States") {
     CasinoGameCardViewSnapshotViewController(category: .displayStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Rating Variants") {
     CasinoGameCardViewSnapshotViewController(category: .ratingVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CasinoGameCardViewSnapshotViewController(category: .contentVariants)
 }

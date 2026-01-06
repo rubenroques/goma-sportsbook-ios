@@ -166,9 +166,9 @@ For detailed instructions on creating new components, see the [Component Creatio
 
 ## Requirements
 
-- iOS 16.0+
-- Swift 5.7+
-- Xcode 14.0+
+- iOS 17.0+
+- Swift 5.9+
+- Xcode 15.0+
 
 ## License
 

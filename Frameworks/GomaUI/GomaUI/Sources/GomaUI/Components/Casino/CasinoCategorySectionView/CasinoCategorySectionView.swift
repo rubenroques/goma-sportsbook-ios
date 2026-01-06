@@ -181,7 +181,6 @@ extension CasinoCategorySectionView: UICollectionViewDelegate {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Category Section - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

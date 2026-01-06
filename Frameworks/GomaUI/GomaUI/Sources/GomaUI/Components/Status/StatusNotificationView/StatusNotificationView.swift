@@ -108,7 +108,6 @@ public final class StatusNotificationView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview(LocalizationProvider.string("success")) {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -129,7 +128,6 @@ public final class StatusNotificationView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview(LocalizationProvider.string("omega_error_fail")) {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -150,7 +148,6 @@ public final class StatusNotificationView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Warning") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -171,7 +168,6 @@ public final class StatusNotificationView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -416,7 +416,6 @@ extension TransactionItemView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Transaction Item - Deposit") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -437,7 +436,6 @@ extension TransactionItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Transaction Item - Bet Won") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -458,7 +456,6 @@ extension TransactionItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Transaction Item - Bet Placed") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -479,7 +476,6 @@ extension TransactionItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Corner Radius Test - Three Cards") {
     PreviewUIViewController {
         let vc = UIViewController()

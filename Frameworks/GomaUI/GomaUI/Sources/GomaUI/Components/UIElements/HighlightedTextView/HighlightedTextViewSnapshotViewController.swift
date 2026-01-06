@@ -134,12 +134,10 @@ final class HighlightedTextViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Alignment States") {
     HighlightedTextViewSnapshotViewController(category: .alignmentStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Highlight Variants") {
     HighlightedTextViewSnapshotViewController(category: .highlightVariants)
 }

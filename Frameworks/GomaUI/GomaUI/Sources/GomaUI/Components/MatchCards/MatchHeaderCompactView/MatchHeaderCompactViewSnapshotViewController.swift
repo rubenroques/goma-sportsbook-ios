@@ -142,12 +142,10 @@ final class MatchHeaderCompactViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic Variants") {
     MatchHeaderCompactViewSnapshotViewController(category: .basicVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Live Match Variants") {
     MatchHeaderCompactViewSnapshotViewController(category: .liveMatchVariants)
 }

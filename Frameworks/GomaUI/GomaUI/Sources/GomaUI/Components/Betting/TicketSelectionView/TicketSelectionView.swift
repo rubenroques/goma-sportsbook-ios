@@ -547,7 +547,6 @@ extension TicketSelectionView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("PreLive State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -568,7 +567,6 @@ extension TicketSelectionView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Live State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -589,7 +587,6 @@ extension TicketSelectionView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Live Draw") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -610,7 +607,6 @@ extension TicketSelectionView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Long Team Names") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -631,7 +627,6 @@ extension TicketSelectionView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No Icons") {
     PreviewUIViewController {
         let vc = UIViewController()

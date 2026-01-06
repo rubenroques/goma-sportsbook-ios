@@ -270,7 +270,6 @@ extension TopBannerSliderView: UIScrollViewDelegate {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Banner Slider") {
     PreviewUIView {
         TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.defaultMock)
@@ -278,7 +277,6 @@ extension TopBannerSliderView: UIScrollViewDelegate {
     .frame(height: 200)
 }
 
-@available(iOS 17.0, *)
 #Preview("Single Banner") {
     PreviewUIView {
         TopBannerSliderView(viewModel: MockTopBannerSliderViewModel.singleBannerMock)

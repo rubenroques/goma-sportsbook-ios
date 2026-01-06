@@ -184,7 +184,6 @@ final public class CasinoCategoryBarView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Category Bar - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

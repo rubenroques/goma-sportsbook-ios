@@ -127,12 +127,10 @@ final class CodeClipboardViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CodeClipboardViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CodeClipboardViewSnapshotViewController(category: .contentVariants)
 }

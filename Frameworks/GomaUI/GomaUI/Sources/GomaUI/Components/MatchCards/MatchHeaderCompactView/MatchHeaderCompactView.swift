@@ -246,7 +246,6 @@ public final class MatchHeaderCompactView: UIView {
 
 // MARK: - SwiftUI Previews
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Match Header - Default") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -265,7 +264,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Match Header - Long Content") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -284,7 +282,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Match Header - Standard") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -317,7 +314,6 @@ public final class MatchHeaderCompactView: UIView {
 
 // MARK: - Live Tennis Previews
 
-@available(iOS 17.0, *)
 #Preview("Tennis - Live Match with Serving") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -336,7 +332,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tennis - Long Names Truncation") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -407,7 +402,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tennis - Final Set Tiebreak") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -478,7 +472,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tennis - Five Sets with Stats") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -565,7 +558,6 @@ public final class MatchHeaderCompactView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tennis - Extremely Long Names") {
     PreviewUIViewController {
         let vc = UIViewController()

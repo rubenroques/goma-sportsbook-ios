@@ -141,12 +141,10 @@ final class HeaderTextViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     HeaderTextViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     HeaderTextViewSnapshotViewController(category: .contentVariants)
 }

@@ -164,7 +164,6 @@ extension ShareChannelButtonView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Twitter") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -187,7 +186,6 @@ extension ShareChannelButtonView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("WhatsApp") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -210,7 +208,6 @@ extension ShareChannelButtonView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -233,7 +230,6 @@ extension ShareChannelButtonView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("All Channels") {
     PreviewUIViewController {
         let vc = UIViewController()

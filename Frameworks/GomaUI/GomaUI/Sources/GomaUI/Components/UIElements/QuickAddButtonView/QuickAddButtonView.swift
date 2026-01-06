@@ -81,7 +81,6 @@ public final class QuickAddButtonView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("QuickAddButtonView") {
     PreviewUIViewController {
         let vc = UIViewController()

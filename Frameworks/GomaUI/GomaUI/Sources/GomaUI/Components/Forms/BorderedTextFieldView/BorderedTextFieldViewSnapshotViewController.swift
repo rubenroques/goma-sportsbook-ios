@@ -167,17 +167,14 @@ final class BorderedTextFieldViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     BorderedTextFieldViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Input Types") {
     BorderedTextFieldViewSnapshotViewController(category: .inputTypes)
 }
 
-@available(iOS 17.0, *)
 #Preview("Error States") {
     BorderedTextFieldViewSnapshotViewController(category: .errorStates)
 }

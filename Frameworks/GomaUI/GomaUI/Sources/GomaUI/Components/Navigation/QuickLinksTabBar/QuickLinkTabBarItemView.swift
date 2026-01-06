@@ -116,7 +116,6 @@ private extension QuickLinkTabBarItemView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 #Preview("Quick Link Item") {
     PreviewUIViewController {
         let vc = UIViewController()

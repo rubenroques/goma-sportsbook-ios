@@ -191,7 +191,6 @@ public class LeaguesFilterView: UIView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 struct LeaguesFilterView_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIView {

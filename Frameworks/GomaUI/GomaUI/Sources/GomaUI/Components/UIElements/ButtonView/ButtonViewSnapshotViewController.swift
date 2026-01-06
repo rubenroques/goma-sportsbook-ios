@@ -208,32 +208,26 @@ final class ButtonViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic Styles") {
     ButtonViewSnapshotViewController(category: .basicStyles)
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled States") {
     ButtonViewSnapshotViewController(category: .disabledStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Common Actions") {
     ButtonViewSnapshotViewController(category: .commonActions)
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Colors") {
     ButtonViewSnapshotViewController(category: .customColors)
 }
 
-@available(iOS 17.0, *)
 #Preview("Theme Variants") {
     ButtonViewSnapshotViewController(category: .themeVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Font Customization") {
     ButtonViewSnapshotViewController(category: .fontCustomization)
 }

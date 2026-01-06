@@ -294,7 +294,6 @@ extension BonusCardView {
 
 // MARK: - SwiftUI Previews
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Default Bonus") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -312,7 +311,6 @@ extension BonusCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No URLs") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -330,7 +328,6 @@ extension BonusCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Bonus") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -348,7 +345,6 @@ extension BonusCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No Tag") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -366,7 +362,6 @@ extension BonusCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No Image URL") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -384,7 +379,6 @@ extension BonusCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Terms Button Hidden") {
     PreviewUIViewController {
         let vc = UIViewController()

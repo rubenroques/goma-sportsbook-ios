@@ -124,7 +124,6 @@ public final class NavigationActionView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("NavigationActionView") {
     PreviewUIViewController {
         let vc = UIViewController()

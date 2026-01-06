@@ -179,7 +179,6 @@ extension InlineScoreView {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("InlineScoreView - All Sports & States") {
     PreviewUIViewController {
         let vc = UIViewController()

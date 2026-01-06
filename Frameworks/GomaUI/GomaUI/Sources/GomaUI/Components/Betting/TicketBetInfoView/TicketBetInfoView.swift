@@ -610,7 +610,6 @@ public class TicketBetInfoView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("With Cashout Amount") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -631,7 +630,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("With Cashout Slider") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -652,7 +650,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("With Both Components") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -673,7 +670,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Default Empty") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -694,7 +690,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Top Corners Only") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -715,7 +710,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bottom Corners Only") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -736,7 +730,6 @@ public class TicketBetInfoView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Lost bet") {
     PreviewUIViewController {
         let vc = UIViewController()

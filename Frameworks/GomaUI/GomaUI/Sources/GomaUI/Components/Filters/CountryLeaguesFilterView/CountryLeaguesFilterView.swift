@@ -231,7 +231,6 @@ public class CountryLeaguesFilterView: UIView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 struct CountryLeaguesFilterView_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIView {

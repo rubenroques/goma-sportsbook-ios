@@ -492,7 +492,6 @@ public final class BetslipFloatingThinView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("No Tickets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -511,7 +510,6 @@ public final class BetslipFloatingThinView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("With Tickets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -531,7 +529,6 @@ public final class BetslipFloatingThinView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("With Tickets (No Boost)") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -553,7 +550,6 @@ public final class BetslipFloatingThinView: UIView {
 
 // MARK: - Interactive Preview
 
-@available(iOS 17.0, *)
 #Preview("Interactive States") {
     PreviewUIViewController {
         BetslipFloatingInteractivePreviewController()
@@ -561,7 +557,6 @@ public final class BetslipFloatingThinView: UIView {
 }
 
 /// Interactive preview controller for testing betslip state transitions
-@available(iOS 17.0, *)
 private final class BetslipFloatingInteractivePreviewController: UIViewController {
 
     private let mockViewModel = MockBetslipFloatingViewModel(state: .noTickets)

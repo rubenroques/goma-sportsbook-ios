@@ -109,7 +109,6 @@ final public class SportTypeSelectorItemView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("SportTypeSelectorItemView") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -122,12 +122,10 @@ final class CasinoCategorySectionViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CasinoCategorySectionViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CasinoCategorySectionViewSnapshotViewController(category: .contentVariants)
 }

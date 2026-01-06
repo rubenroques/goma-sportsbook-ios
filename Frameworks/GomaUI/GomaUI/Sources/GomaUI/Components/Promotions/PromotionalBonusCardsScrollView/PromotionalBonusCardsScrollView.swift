@@ -116,7 +116,6 @@ final public class PromotionalBonusCardsScrollView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("PromotionalBonusCardsScrollView") {
     PreviewUIViewController {
         let vc = UIViewController()

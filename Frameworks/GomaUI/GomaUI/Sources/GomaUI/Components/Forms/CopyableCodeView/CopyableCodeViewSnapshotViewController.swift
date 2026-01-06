@@ -129,12 +129,10 @@ final class CopyableCodeViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CopyableCodeViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     CopyableCodeViewSnapshotViewController(category: .contentVariants)
 }

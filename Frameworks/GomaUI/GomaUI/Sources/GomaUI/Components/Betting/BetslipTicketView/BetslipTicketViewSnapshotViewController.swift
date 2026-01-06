@@ -138,12 +138,10 @@ final class BetslipTicketViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Odds States") {
     BetslipTicketViewSnapshotViewController(category: .oddsStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Enabled States") {
     BetslipTicketViewSnapshotViewController(category: .enabledStates)
 }

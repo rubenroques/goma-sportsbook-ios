@@ -138,7 +138,6 @@ final public class InlineMatchCardTableViewCell: UITableViewCell {
 
 // MARK: - Preview Provider
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("InlineMatchCardTableViewCell") {
     PreviewUIViewController {
         let vc = TableViewController()
@@ -147,7 +146,6 @@ final public class InlineMatchCardTableViewCell: UITableViewCell {
 }
 
 // MARK: - Preview Table View Controller
-@available(iOS 17.0, *)
 private class TableViewController: UIViewController {
 
     private lazy var tableView: UITableView = {
@@ -192,7 +190,6 @@ private class TableViewController: UIViewController {
     }
 }
 
-@available(iOS 17.0, *)
 extension TableViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -238,7 +235,6 @@ extension TableViewController: UITableViewDataSource {
     }
 }
 
-@available(iOS 17.0, *)
 extension TableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return section == 0 ? "Single Cell (All Corners)" : "Multiple Cells (Grouped)"

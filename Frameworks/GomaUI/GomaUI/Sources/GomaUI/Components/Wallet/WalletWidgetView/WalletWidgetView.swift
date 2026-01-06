@@ -160,7 +160,6 @@ final public class WalletWidgetView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("WalletWidgetView") {
     PreviewUIViewController {
         let vc = UIViewController()

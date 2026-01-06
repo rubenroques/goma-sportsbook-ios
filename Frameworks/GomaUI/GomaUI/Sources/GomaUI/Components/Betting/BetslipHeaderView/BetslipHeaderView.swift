@@ -308,7 +308,6 @@ public final class BetslipHeaderView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Not Logged In") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -329,7 +328,6 @@ public final class BetslipHeaderView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Logged In") {
     PreviewUIViewController {
         let vc = UIViewController()

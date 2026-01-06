@@ -144,7 +144,6 @@ final public class DepositBonusInfoView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("DepositBonusInfoView") {
     PreviewUIViewController {
         let vc = UIViewController()

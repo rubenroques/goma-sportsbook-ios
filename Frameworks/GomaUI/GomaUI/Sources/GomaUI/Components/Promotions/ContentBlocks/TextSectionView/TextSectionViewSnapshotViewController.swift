@@ -126,7 +126,6 @@ final class TextSectionViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     TextSectionViewSnapshotViewController(category: .contentVariants)
 }

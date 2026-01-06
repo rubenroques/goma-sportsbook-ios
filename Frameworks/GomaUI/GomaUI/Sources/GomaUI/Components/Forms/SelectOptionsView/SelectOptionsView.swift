@@ -126,7 +126,6 @@ private extension SelectOptionsView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Select Options View") {
     PreviewUIViewController {
         let vc = UIViewController()

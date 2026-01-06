@@ -256,27 +256,22 @@ final class OutcomeItemViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     OutcomeItemViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Display States") {
     OutcomeItemViewSnapshotViewController(category: .displayStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Odds Change") {
     OutcomeItemViewSnapshotViewController(category: .oddsChange)
 }
 
-@available(iOS 17.0, *)
 #Preview("Font Customization") {
     OutcomeItemViewSnapshotViewController(category: .fontCustomization)
 }
 
-@available(iOS 17.0, *)
 #Preview("Size Variants") {
     OutcomeItemViewSnapshotViewController(category: .sizeVariants)
 }

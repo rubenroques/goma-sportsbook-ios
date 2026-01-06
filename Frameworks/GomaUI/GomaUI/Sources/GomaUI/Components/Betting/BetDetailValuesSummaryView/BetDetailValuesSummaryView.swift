@@ -219,7 +219,6 @@ public class BetDetailValuesSummaryView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Bet Values Summary - Full Details") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -240,7 +239,6 @@ public class BetDetailValuesSummaryView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Values Summary - Single Row") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -102,7 +102,6 @@ final class DescriptionBlockViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     DescriptionBlockViewSnapshotViewController(category: .contentVariants)
 }

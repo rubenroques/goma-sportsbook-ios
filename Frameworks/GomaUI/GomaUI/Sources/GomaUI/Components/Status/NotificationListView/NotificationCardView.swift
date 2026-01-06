@@ -316,7 +316,6 @@ extension NotificationCardView {
 
 // MARK: - SwiftUI Preview Support
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Unread Notification") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -348,7 +347,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Unread with Action Button") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -381,7 +379,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Read Notification") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -413,7 +410,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Read with Primary Action") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -446,7 +442,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Long Content") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -479,7 +474,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Today Timestamp") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -511,7 +505,6 @@ extension NotificationCardView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("All States Side by Side") {
     PreviewUIViewController {
         let vc = UIViewController()

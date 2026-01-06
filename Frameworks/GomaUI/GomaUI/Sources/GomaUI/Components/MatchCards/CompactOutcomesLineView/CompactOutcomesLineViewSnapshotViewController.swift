@@ -123,12 +123,10 @@ final class CompactOutcomesLineViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CompactOutcomesLineViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Special States") {
     CompactOutcomesLineViewSnapshotViewController(category: .specialStates)
 }

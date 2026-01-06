@@ -233,7 +233,6 @@ extension CasinoGameImageGridSectionView: UICollectionViewDelegate {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Grid - Lite Games") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -261,7 +260,6 @@ extension CasinoGameImageGridSectionView: UICollectionViewDelegate {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Grid - Odd Games") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -283,7 +281,6 @@ extension CasinoGameImageGridSectionView: UICollectionViewDelegate {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Casino Game Image Grid - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -106,7 +106,6 @@ final class QuickLinksTabBarSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Link Types") {
     QuickLinksTabBarSnapshotViewController(category: .linkTypes)
 }

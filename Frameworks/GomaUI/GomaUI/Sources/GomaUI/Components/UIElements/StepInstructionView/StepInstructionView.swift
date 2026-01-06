@@ -121,7 +121,6 @@ public final class StepInstructionView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()

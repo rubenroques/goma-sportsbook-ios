@@ -626,7 +626,6 @@ extension TallOddsMatchCardCellReuseTestViewController {
 
 // MARK: - SwiftUI Preview
 
-@available(iOS 17.0, *)
 #Preview("Cell Reuse Test Suite") {
     PreviewUIViewController {
         let navController = UINavigationController(

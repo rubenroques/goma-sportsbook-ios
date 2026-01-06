@@ -104,7 +104,6 @@ private extension WalletDetailBalanceLineView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("White Balance Lines on Orange") {
     PreviewUIViewController {
         let vc = UIViewController()

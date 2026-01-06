@@ -84,7 +84,6 @@ public final class BetSummaryRowView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("BetSummaryRowView") {
     PreviewUIViewController {
         let vc = UIViewController()

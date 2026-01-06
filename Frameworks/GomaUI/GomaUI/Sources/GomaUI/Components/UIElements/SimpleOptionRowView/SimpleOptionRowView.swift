@@ -119,7 +119,6 @@ private extension SimpleOptionRowView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Simple Option Row") {
     PreviewUIViewController {
         let vc = UIViewController()

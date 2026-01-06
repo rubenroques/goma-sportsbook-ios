@@ -201,7 +201,6 @@ public final class BetInfoSubmissionView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -221,7 +220,6 @@ public final class BetInfoSubmissionView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Sample Data") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -241,7 +239,6 @@ public final class BetInfoSubmissionView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()

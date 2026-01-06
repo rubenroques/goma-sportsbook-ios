@@ -107,7 +107,6 @@ extension HeaderTextView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("All States") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -105,7 +105,6 @@ final class ResendCodeViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Countdown States") {
     ResendCodeViewSnapshotViewController(category: .countdownStates)
 }

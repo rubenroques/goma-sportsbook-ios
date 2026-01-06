@@ -128,7 +128,6 @@ public final class CustomNavigationView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 struct CustomNavigationView_Previews: PreviewProvider {
     static var previews: some View {
         VStack(spacing: 20) {

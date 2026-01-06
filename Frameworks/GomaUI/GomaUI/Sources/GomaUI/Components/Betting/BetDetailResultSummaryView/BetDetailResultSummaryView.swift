@@ -207,7 +207,6 @@ public class BetDetailResultSummaryView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Bet Result Summary - Lost State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -228,7 +227,6 @@ public class BetDetailResultSummaryView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Result Summary - Won State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -249,7 +247,6 @@ public class BetDetailResultSummaryView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Bet Result Summary - Draw State") {
     PreviewUIViewController {
         let vc = UIViewController()

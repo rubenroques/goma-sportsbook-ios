@@ -150,7 +150,6 @@ private extension WalletBalanceLineView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("All Balance Line States") {
     PreviewUIViewController {
         let vc = UIViewController()

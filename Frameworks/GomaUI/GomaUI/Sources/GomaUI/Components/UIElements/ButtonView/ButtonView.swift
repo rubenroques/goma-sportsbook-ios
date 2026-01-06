@@ -220,7 +220,6 @@ final public class ButtonView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("ButtonView") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -295,7 +294,6 @@ final public class ButtonView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Color Examples") {
     VStack(spacing: 20) {
         PreviewUIView {
@@ -337,7 +335,6 @@ final public class ButtonView: UIView {
     .padding()
 }
 
-@available(iOS 17.0, *)
 #Preview("Color Themes Comparison") {
     HStack(spacing: 15) {
         VStack(spacing: 10) {
@@ -367,7 +364,6 @@ final public class ButtonView: UIView {
     .padding()
 }
 
-@available(iOS 17.0, *)
 #Preview("Font Customization Examples") {
     VStack(spacing: 15) {
         PreviewUIView {
@@ -399,7 +395,6 @@ final public class ButtonView: UIView {
     .padding()
 }
 
-@available(iOS 17.0, *)
 #Preview("Font Weight Comparison") {
     VStack(spacing: 12) {
         Text("Font Weight Showcase")

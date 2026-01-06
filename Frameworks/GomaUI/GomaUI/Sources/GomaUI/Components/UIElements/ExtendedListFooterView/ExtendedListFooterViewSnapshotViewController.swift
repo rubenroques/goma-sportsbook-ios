@@ -116,12 +116,10 @@ final class ExtendedListFooterViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     ExtendedListFooterViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Partner Variants") {
     ExtendedListFooterViewSnapshotViewController(category: .partnerVariants)
 }

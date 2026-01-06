@@ -216,7 +216,6 @@ public class SportGamesFilterView: UIView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("SportGamesFilterView") {
     PreviewUIViewController {
         let vc = UIViewController()

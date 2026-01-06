@@ -153,12 +153,10 @@ final class NavigationActionViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     NavigationActionViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     NavigationActionViewSnapshotViewController(category: .contentVariants)
 }

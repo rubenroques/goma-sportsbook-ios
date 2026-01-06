@@ -339,7 +339,6 @@ public struct PendingWithdrawStatusStyle {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Pending Withdraw View") {
     PreviewUIViewController {
         let container = UIViewController()

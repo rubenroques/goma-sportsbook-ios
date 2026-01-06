@@ -257,7 +257,6 @@ public final class BetslipFloatingTallView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Tall - With Boost Progress") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -277,7 +276,6 @@ public final class BetslipFloatingTallView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tall - Almost Complete") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -296,7 +294,6 @@ public final class BetslipFloatingTallView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tall - Max Boost Reached") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -315,7 +312,6 @@ public final class BetslipFloatingTallView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Tall - No Boost (Hidden)") {
     PreviewUIViewController {
         let vc = UIViewController()

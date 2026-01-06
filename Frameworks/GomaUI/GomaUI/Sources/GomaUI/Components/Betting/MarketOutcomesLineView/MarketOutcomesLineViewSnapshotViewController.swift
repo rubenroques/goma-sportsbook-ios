@@ -160,12 +160,10 @@ final class MarketOutcomesLineViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Market Variants") {
     MarketOutcomesLineViewSnapshotViewController(category: .marketVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("State Variants") {
     MarketOutcomesLineViewSnapshotViewController(category: .stateVariants)
 }

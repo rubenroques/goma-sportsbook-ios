@@ -243,7 +243,6 @@ public final class OddsAcceptanceView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("OddsAcceptanceView") {
     PreviewUIViewController {
         let vc = UIViewController()

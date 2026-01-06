@@ -222,7 +222,6 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("SingleButtonBannerView") {
     PreviewUIViewController {
         let vc = UIViewController()

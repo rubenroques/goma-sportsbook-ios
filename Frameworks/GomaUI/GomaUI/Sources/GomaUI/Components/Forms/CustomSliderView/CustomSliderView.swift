@@ -277,7 +277,6 @@ final public class CustomSliderView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("CustomSliderView") {
     PreviewUIViewController {
         let vc = UIViewController()

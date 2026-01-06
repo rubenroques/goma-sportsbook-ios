@@ -247,7 +247,6 @@ public final class MatchDateNavigationBarView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 public struct MatchDateNavigationBarView_Previews: PreviewProvider {
     public static var previews: some View {
         VStack(spacing: 12) {

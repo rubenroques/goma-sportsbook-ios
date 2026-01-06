@@ -898,7 +898,6 @@ extension ExtendedListFooterView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Full Cameroon Footer") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -958,7 +957,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Minimal Footer") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -989,7 +987,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("No Links Footer") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -1010,7 +1007,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Three Partners (Dynamic Grid)") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -1041,7 +1037,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Single Partner") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -1072,7 +1067,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Five Partners (3 Rows)") {
     PreviewUIViewController {
         let vc = UIViewController()

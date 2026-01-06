@@ -135,7 +135,6 @@ final class CountryLeaguesFilterViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     CountryLeaguesFilterViewSnapshotViewController(category: .basicStates)
 }

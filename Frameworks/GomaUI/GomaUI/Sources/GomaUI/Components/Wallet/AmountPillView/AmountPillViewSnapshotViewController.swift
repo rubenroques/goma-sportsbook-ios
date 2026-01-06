@@ -127,12 +127,10 @@ final class AmountPillViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Selection States") {
     AmountPillViewSnapshotViewController(category: .selectionStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Content Variants") {
     AmountPillViewSnapshotViewController(category: .contentVariants)
 }

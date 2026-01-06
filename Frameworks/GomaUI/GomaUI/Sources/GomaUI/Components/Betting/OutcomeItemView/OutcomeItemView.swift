@@ -600,7 +600,6 @@ private extension OutcomeItemView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Home Outcome - Selected") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -620,7 +619,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Draw Outcome - Unselected") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -640,7 +638,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Over Outcome - Odds Up") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -660,7 +657,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Under Outcome - Odds Down") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -680,7 +676,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled Outcome") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -700,7 +695,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Single Line Layout") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -737,7 +731,6 @@ private extension OutcomeItemView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Multi-Line Layout") {
     PreviewUIViewController {
         let vc = UIViewController()

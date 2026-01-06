@@ -351,7 +351,6 @@ extension MarketGroupSelectorTabView {
 import SwiftUI
 
 
-@available(iOS 17.0, *)
 #Preview("Standard Sports Markets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -371,7 +370,6 @@ import SwiftUI
 }
 
 
-@available(iOS 17.0, *)
 #Preview("Icon Tinting Test - With Icons") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -428,7 +426,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Stretch Layout Test - Centered Content") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -480,7 +477,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Mixed State Markets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -499,7 +495,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Limited Markets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -518,7 +513,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Loading State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -537,7 +531,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Empty State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -556,7 +549,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled Markets") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -575,7 +567,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Market Category Tabs - Light") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -596,7 +587,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Limited Markets - Stretch Mode") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -618,7 +608,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Item Colors - Blue Bar, Gray Items") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -642,7 +631,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Item Colors - Different Selected State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -667,7 +655,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Background - System Blue") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -690,7 +677,6 @@ import SwiftUI
 }
 
 
-@available(iOS 17.0, *)
 #Preview("Custom Items - System Green") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -713,7 +699,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Background - System Green") {
     PreviewUIViewController {
         let vc = UIViewController()

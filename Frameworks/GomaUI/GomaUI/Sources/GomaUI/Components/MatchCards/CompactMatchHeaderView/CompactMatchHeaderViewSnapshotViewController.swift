@@ -135,12 +135,10 @@ final class CompactMatchHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Pre-Live States") {
     CompactMatchHeaderViewSnapshotViewController(category: .preLiveStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Live States") {
     CompactMatchHeaderViewSnapshotViewController(category: .liveStates)
 }

@@ -250,7 +250,6 @@ private class RecentlyPlayedGameCollectionViewCell: UICollectionViewCell {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Recently Played Games - Placeholder") {
     PreviewUIViewController {
         let vc = UIViewController()

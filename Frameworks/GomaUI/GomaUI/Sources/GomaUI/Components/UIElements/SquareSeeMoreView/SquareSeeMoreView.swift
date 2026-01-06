@@ -150,7 +150,6 @@ extension SquareSeeMoreView {
 
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Square See More - Default") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -169,7 +168,6 @@ extension SquareSeeMoreView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Square See More - In Grid Context") {
     PreviewUIViewController {
         let vc = UIViewController()

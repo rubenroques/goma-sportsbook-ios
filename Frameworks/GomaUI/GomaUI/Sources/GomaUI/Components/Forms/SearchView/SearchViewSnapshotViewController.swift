@@ -113,7 +113,6 @@ final class SearchViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Search Variants") {
     SearchViewSnapshotViewController(category: .searchVariants)
 }

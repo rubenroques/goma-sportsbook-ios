@@ -99,7 +99,6 @@ final class PromotionalHeaderViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Header Variants") {
     PromotionalHeaderViewSnapshotViewController(category: .headerVariants)
 }

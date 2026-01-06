@@ -385,7 +385,6 @@ extension PillData {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Sports Categories") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -405,7 +404,6 @@ extension PillData {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Market Filters") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -425,7 +423,6 @@ extension PillData {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Time Periods") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -445,7 +442,6 @@ extension PillData {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Read-Only States") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -465,7 +461,6 @@ extension PillData {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Football Popular Leagues") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -485,7 +480,6 @@ extension PillData {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Custom Pill Styles") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -76,7 +76,6 @@ final class BetSummaryRowViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview {
     BetSummaryRowViewSnapshotViewController()
 }

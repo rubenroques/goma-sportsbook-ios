@@ -107,7 +107,6 @@ public final class ToasterView: UIView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Default Toaster") {
     PreviewUIViewController {
         let viewController = UIViewController()

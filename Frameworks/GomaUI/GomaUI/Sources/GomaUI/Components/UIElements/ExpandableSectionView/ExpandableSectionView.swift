@@ -314,7 +314,6 @@ extension ExpandableSectionView {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 #Preview("Collapsed State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -344,7 +343,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Expanded State") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -406,7 +404,6 @@ import SwiftUI
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Multiple Sections") {
     PreviewUIViewController {
         let vc = UIViewController()

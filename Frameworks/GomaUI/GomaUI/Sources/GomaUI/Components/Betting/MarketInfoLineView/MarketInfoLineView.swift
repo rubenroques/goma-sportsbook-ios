@@ -217,7 +217,6 @@ extension MarketInfoLineView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("MarketInfoLineView") {
     PreviewUIViewController {
         let vc = UIViewController()

@@ -309,7 +309,6 @@ extension MatchBannerView {
 // MARK: - SwiftUI Previews
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Prelive Match") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -331,7 +330,6 @@ extension MatchBannerView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Live Match") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -353,7 +351,6 @@ extension MatchBannerView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Interactive Match") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -375,7 +372,6 @@ extension MatchBannerView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Empty State") {
     PreviewUIViewController {
         let vc = UIViewController()

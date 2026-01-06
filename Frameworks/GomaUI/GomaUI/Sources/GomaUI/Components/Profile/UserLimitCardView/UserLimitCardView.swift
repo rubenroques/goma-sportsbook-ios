@@ -146,7 +146,6 @@ private extension UserLimitCardView {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("User Limit Card") {
     PreviewUIViewController {
         let viewModel = MockUserLimitCardViewModel.removalMock()

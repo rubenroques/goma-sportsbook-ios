@@ -470,7 +470,6 @@ public final class BetslipTicketView: UIView {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Typical") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -491,7 +490,6 @@ public final class BetslipTicketView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Increased Odds") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -512,7 +510,6 @@ public final class BetslipTicketView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Decreased Odds") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -533,7 +530,6 @@ public final class BetslipTicketView: UIView {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Disabled") {
     PreviewUIViewController {
         let vc = UIViewController()

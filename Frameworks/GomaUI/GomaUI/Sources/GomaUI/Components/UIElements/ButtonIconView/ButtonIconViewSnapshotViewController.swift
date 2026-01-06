@@ -167,17 +167,14 @@ final class ButtonIconViewSnapshotViewController: UIViewController {
 
 // MARK: - Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("Basic States") {
     ButtonIconViewSnapshotViewController(category: .basicStates)
 }
 
-@available(iOS 17.0, *)
 #Preview("Layout Variants") {
     ButtonIconViewSnapshotViewController(category: .layoutVariants)
 }
 
-@available(iOS 17.0, *)
 #Preview("Style Variants") {
     ButtonIconViewSnapshotViewController(category: .styleVariants)
 }

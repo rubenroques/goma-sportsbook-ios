@@ -282,7 +282,6 @@ public struct ProfileMenuItem: Codable, Identifiable {
 // MARK: - SwiftUI Preview
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Navigation Item") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -312,7 +311,6 @@ public struct ProfileMenuItem: Codable, Identifiable {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Selection Item") {
     PreviewUIViewController {
         let vc = UIViewController()
@@ -342,7 +340,6 @@ public struct ProfileMenuItem: Codable, Identifiable {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Action Item") {
     PreviewUIViewController {
         let vc = UIViewController()
