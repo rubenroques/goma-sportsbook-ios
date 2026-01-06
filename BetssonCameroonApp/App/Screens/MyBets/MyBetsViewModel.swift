@@ -380,8 +380,8 @@ final class MyBetsViewModel {
 
             cacheMisses += 1
 
-            // Create new ViewModel
-            let viewModel = TicketBetInfoViewModel(myBet: bet, servicesProvider: servicesProvider)
+            // Create new ViewModel using factory method
+            let viewModel = TicketBetInfoViewModel.create(from: bet, servicesProvider: servicesProvider)
 
             // Wire up actions
             viewModel.onNavigationTap = { [weak self] bet in

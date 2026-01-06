@@ -320,24 +320,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		CEFC00002FB5F00000000002 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
-		};
 		CEFC00002FB5F00000000001 /* Copy Firebase Config */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -359,6 +341,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Copy correct GoogleService-Info.plist based on CONFIGURATION\n# Configurations: Debug-Production, Release-Production, Debug-Staging, Release-Staging, Debug-UAT, Release-UAT\necho \"CONFIGURATION is: ${CONFIGURATION}\"\necho \"SRCROOT is: ${SRCROOT}\"\n\nFIREBASE_DIR=\"${SRCROOT}/App/SupportingFiles/Firebase\"\nDEST_PLIST=\"${SRCROOT}/App/SupportingFiles/GoogleService-Info.plist\"\n\ncase \"${CONFIGURATION}\" in\n    *Production*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Production.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Production GoogleService-Info.plist\"\n        ;;\n    *UAT*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-UAT.plist\" \"${DEST_PLIST}\"\n        echo \"Copied UAT GoogleService-Info.plist\"\n        ;;\n    *Staging*)\n        cp \"${FIREBASE_DIR}/GoogleService-Info-Staging.plist\" \"${DEST_PLIST}\"\n        echo \"Copied Staging GoogleService-Info.plist\"\n        ;;\n    *)\n        echo \"WARNING: CONFIGURATION not recognized: ${CONFIGURATION}\"\n        exit 1\n        ;;\nesac\n";
+		};
+		CEFC00002FB5F00000000002 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if test -d \"/opt/homebrew/bin/\"; then\n  PATH=\"/opt/homebrew/bin/:${PATH}\"\nfi\n\nexport PATH\n\nif ! which swiftlint >/dev/null; then\n    echo \"error: SwiftLint is not installed. Install via: brew install swiftlint\"\n    exit 1\nfi\n\nswiftlint lint --config \"${SRCROOT}/../.swiftlint.yml\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -520,7 +520,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM UAT";
 			};
 			name = "Debug-UAT";
 		};
@@ -654,7 +654,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM Prod.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM Prod";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Betsson CM UAT.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Betsson CM UAT";
 			};
 			name = "Release-UAT";
 		};
