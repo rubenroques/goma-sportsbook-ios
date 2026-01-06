@@ -795,7 +795,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "QuickAddButtonView": {
     "children": [],
@@ -828,7 +829,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ScoreView": {
     "children": [],
@@ -1021,7 +1023,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TextSectionView": {
     "children": [],
