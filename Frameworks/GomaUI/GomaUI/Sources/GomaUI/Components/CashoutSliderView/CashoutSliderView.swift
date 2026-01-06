@@ -60,16 +60,16 @@ public class CashoutSliderView: UIView {
     private let slider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.minimumTrackTintColor = StyleProvider.Color.highlightPrimary
+        slider.minimumTrackTintColor = StyleProvider.Color.alertSuccess
         slider.maximumTrackTintColor = StyleProvider.Color.backgroundSecondary
-        slider.thumbTintColor = StyleProvider.Color.highlightPrimary
+        slider.thumbTintColor = StyleProvider.Color.alertSuccess
         
         // Create a smaller thumb with highlightPrimary color
         let thumbSize: CGFloat = 16
         
         if let customThumbImage = UIImage(named: "slider_thumb_icon")?.withConfiguration(
             UIImage.SymbolConfiguration(pointSize: thumbSize, weight: .medium)
-        ).withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal) {
+        ).withTintColor(StyleProvider.Color.alertSuccess, renderingMode: .alwaysOriginal) {
             slider.setThumbImage(customThumbImage, for: .normal)
             slider.setThumbImage(customThumbImage, for: .highlighted)
             slider.setThumbImage(customThumbImage, for: .selected)
@@ -77,7 +77,7 @@ public class CashoutSliderView: UIView {
         }
         else if let thumbImage = UIImage(systemName: "circle.fill")?.withConfiguration(
             UIImage.SymbolConfiguration(pointSize: thumbSize, weight: .medium)
-        ).withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal) {
+        ).withTintColor(StyleProvider.Color.alertSuccess, renderingMode: .alwaysOriginal) {
             slider.setThumbImage(thumbImage, for: .normal)
             slider.setThumbImage(thumbImage, for: .highlighted)
             slider.setThumbImage(thumbImage, for: .selected)
