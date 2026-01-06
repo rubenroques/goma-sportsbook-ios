@@ -586,7 +586,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MarketNamePillLabelView": {
     "children": [
@@ -607,7 +608,8 @@
       "MarketOutcomesMultiLineView",
       "MatchBannerView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MarketOutcomesMultiLineView": {
     "children": [
@@ -617,7 +619,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchBannerView": {
     "children": [
