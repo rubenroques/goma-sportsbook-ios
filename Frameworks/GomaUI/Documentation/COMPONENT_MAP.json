@@ -457,7 +457,8 @@
     "parents": [
       "StackViewBlockView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "HeaderTextView": {
     "children": [],
@@ -1024,7 +1025,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ThemeSwitcherView": {
     "children": [],
@@ -1072,7 +1074,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TopBannerSliderView": {
     "children": [],
