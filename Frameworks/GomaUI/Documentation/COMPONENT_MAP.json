@@ -641,7 +641,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchHeaderView": {
     "children": [],
@@ -649,7 +650,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchParticipantsInfoView": {
     "children": [
@@ -657,7 +659,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MultiWidgetToolbarView": {
     "children": [
