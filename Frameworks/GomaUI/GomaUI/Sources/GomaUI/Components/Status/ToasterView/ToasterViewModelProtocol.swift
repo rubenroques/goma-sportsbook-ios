@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CombineSchedulers
 import UIKit
 
 public struct ToasterData: Equatable {
@@ -9,7 +10,7 @@ public struct ToasterData: Equatable {
     public let titleColor: UIColor
     public let iconColor: UIColor
     public let cornerRadius: CGFloat
-    
+
     public init(
         title: String,
         icon: String? = nil,
@@ -30,6 +31,10 @@ public struct ToasterData: Equatable {
 public protocol ToasterViewModelProtocol {
     var dataPublisher: AnyPublisher<ToasterData, Never> { get }
     var currentData: ToasterData { get }
+
+    /// Scheduler for receiving updates. Use `DispatchQueue.main.eraseToAnyScheduler()` in production,
+    /// `DispatchQueue.immediate.eraseToAnyScheduler()` in tests for synchronous execution.
+    var scheduler: AnySchedulerOf<DispatchQueue> { get }
 }
 
 

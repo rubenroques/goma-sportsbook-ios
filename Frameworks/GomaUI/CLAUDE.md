@@ -141,7 +141,11 @@ final class SomeView: UIView, ReusableView {
 
 ### 5. Synchronous State Access (Reactive Components)
 
-**Problem**: Combine publishers have a micro-delay. UITableView/UICollectionView calculate cell sizes *before* Combine emits, breaking layouts.
+**Problem**: Combine publishers have a micro-delay. `.receive(on: DispatchQueue.main)` **always schedules for the next run loop iteration**, even when already on the main thread. This breaks:
+- UITableView/UICollectionView cell sizing (cells measured before content renders)
+- Snapshot tests (snapshots capture empty/unconfigured views)
+
+**Root Cause**: Even `CurrentValueSubject` with a ready value delivers asynchronously when using `.receive(on:)`.
 
 **Solution**: Reactive ViewModel protocols must expose both:
 - `displayStatePublisher` - for reactive updates
@@ -165,6 +169,12 @@ private func setupBindings() {
         .store(in: &cancellables)
 }
 ```
+
+**Full Documentation**: See [SNAPSHOT_TESTING_GUIDE.md](GomaUI/Documentation/SNAPSHOT_TESTING_GUIDE.md#synchronous-rendering-critical-for-snapshot-tests) for:
+- Detailed root cause analysis
+- Point-Free's scheduler injection approach
+- Migration strategy for existing components
+- Test-side workarounds
 
 ## Production-Ready Component Standards
 

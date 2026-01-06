@@ -78,7 +78,7 @@ public final class ToasterView: UIView {
     
     private func setupBindings() {
         viewModel.dataPublisher
-            .receive(on: DispatchQueue.main)
+            .receive(on: viewModel.scheduler)
             .sink { [weak self] data in
                 self?.render(data: data)
             }
