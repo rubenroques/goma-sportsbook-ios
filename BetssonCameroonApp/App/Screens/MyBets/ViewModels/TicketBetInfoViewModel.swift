@@ -9,7 +9,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - Properties
     
     private let myBet: MyBet
-    private let servicesProvider: ServicesProvider.Client
+    private let cashoutService: CashoutService
     private let betInfoSubject: CurrentValueSubject<TicketBetInfoData, Never>
     private var cancellables = Set<AnyCancellable>()
     
@@ -90,9 +90,9 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
     // MARK: - Initialization
     
-    init(myBet: MyBet, servicesProvider: ServicesProvider.Client) {
+    init(myBet: MyBet, cashoutService: CashoutService) {
         self.myBet = myBet
-        self.servicesProvider = servicesProvider
+        self.cashoutService = cashoutService
         
         // Create initial ticket bet info data using proper patterns
         let initialBetInfo = Self.createTicketBetInfoData(from: myBet)
@@ -236,7 +236,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - SSE Subscription
 
     private func subscribeToCashoutUpdates() {
-        sseSubscription = servicesProvider.subscribeToCashoutValue(betId: myBet.identifier)
+        sseSubscription = cashoutService.subscribeToCashoutValue(myBet.identifier)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
@@ -394,7 +394,7 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         cashoutStateSubject.send(.loading)
         _cashoutSliderVM?.setEnabled(false)
 
-        servicesProvider.executeCashout(request: request)
+        cashoutService.executeCashout(request)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
@@ -647,8 +647,14 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 // MARK: - Factory Methods
 
 extension TicketBetInfoViewModel {
-    
+
+    /// Factory method for production use - wraps ServicesProvider.Client with CashoutService
     static func create(from myBet: MyBet, servicesProvider: ServicesProvider.Client) -> TicketBetInfoViewModel {
-        return TicketBetInfoViewModel(myBet: myBet, servicesProvider: servicesProvider)
+        return TicketBetInfoViewModel(myBet: myBet, cashoutService: .live(client: servicesProvider))
+    }
+
+    /// Factory method for testing - accepts CashoutService directly
+    static func create(from myBet: MyBet, cashoutService: CashoutService) -> TicketBetInfoViewModel {
+        return TicketBetInfoViewModel(myBet: myBet, cashoutService: cashoutService)
     }
 }
