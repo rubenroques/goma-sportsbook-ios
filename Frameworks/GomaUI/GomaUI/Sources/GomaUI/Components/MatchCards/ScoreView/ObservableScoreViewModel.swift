@@ -1,16 +1,19 @@
 import UIKit
 import Observation
 
-/// @Observable ViewModel for ScoreView - iOS 18+ automatic observation tracking.
+/// Mock @Observable ViewModel for ScoreView - used for GomaUI previews and tests.
 ///
-/// This is a proof of concept demonstrating the simpler pattern compared to Combine:
+/// This demonstrates the simpler pattern compared to Combine:
 /// - No publishers, no subscriptions, no setupBindings()
 /// - Just @Observable and direct property access in layoutSubviews()
+///
+/// Production implementations in clients (BetssonCameroon, BetssonFrance) will
+/// create their own @Observable classes conforming to ObservableScoreViewModelProtocol.
 ///
 /// Reference: https://steipete.me/posts/2025/automatic-observation-tracking-uikit-appkit
 @Observable
 @MainActor
-public final class ObservableScoreViewModel {
+public final class MockObservableScoreViewModel: ObservableScoreViewModelProtocol {
 
     // MARK: - Observable Properties
 
@@ -49,13 +52,13 @@ public final class ObservableScoreViewModel {
 
 // MARK: - Factory Methods
 
-extension ObservableScoreViewModel {
+extension MockObservableScoreViewModel {
 
     // MARK: - Sport Variants
 
     /// Tennis match with serving indicator, separator, and multiple sets
-    public static var tennisMatch: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var tennisMatch: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(
@@ -75,8 +78,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Tennis match with advantage scoring (home serving)
-    public static var tennisAdvantage: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var tennisAdvantage: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(
@@ -95,8 +98,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Basketball match with quarters and total
-    public static var basketballMatch: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var basketballMatch: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "q1", homeScore: "25", awayScore: "22", style: .simple, highlightingMode: .winnerLoser),
@@ -109,8 +112,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Simple football match
-    public static var footballMatch: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var footballMatch: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "total", homeScore: "2", awayScore: "1", style: .background, highlightingMode: .bothHighlight)
@@ -119,8 +122,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Hockey match with periods
-    public static var hockeyMatch: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var hockeyMatch: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "p1", homeScore: "1", awayScore: "0", style: .simple),
@@ -134,23 +137,23 @@ extension ObservableScoreViewModel {
     // MARK: - Visual States
 
     /// Loading state
-    public static var loading: ObservableScoreViewModel {
-        ObservableScoreViewModel(visualState: .loading, scoreCells: [])
+    public static var loading: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(visualState: .loading, scoreCells: [])
     }
 
     /// Empty state
-    public static var empty: ObservableScoreViewModel {
-        ObservableScoreViewModel(visualState: .empty, scoreCells: [])
+    public static var empty: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(visualState: .empty, scoreCells: [])
     }
 
     /// Idle state
-    public static var idle: ObservableScoreViewModel {
-        ObservableScoreViewModel(visualState: .idle, scoreCells: [])
+    public static var idle: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(visualState: .idle, scoreCells: [])
     }
 
     /// Simple example for display state
-    public static var simpleExample: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var simpleExample: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "set1", homeScore: "6", awayScore: "4", style: .simple),
@@ -164,8 +167,8 @@ extension ObservableScoreViewModel {
     // MARK: - Style Variants
 
     /// Mixed styles example
-    public static var mixedStyles: ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static var mixedStyles: MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "border1", homeScore: "25", awayScore: "23", style: .border),
@@ -177,8 +180,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Factory for simple style only
-    public static func simpleStyle() -> ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static func simpleStyle() -> MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "s1", homeScore: "6", awayScore: "4", style: .simple),
@@ -188,8 +191,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Factory for border style only
-    public static func borderStyle() -> ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static func borderStyle() -> MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "b1", homeScore: "25", awayScore: "23", style: .border),
@@ -199,8 +202,8 @@ extension ObservableScoreViewModel {
     }
 
     /// Factory for background style only
-    public static func backgroundStyle() -> ObservableScoreViewModel {
-        ObservableScoreViewModel(
+    public static func backgroundStyle() -> MockObservableScoreViewModel {
+        MockObservableScoreViewModel(
             visualState: .display,
             scoreCells: [
                 ScoreDisplayData(id: "bg1", homeScore: "100", awayScore: "98", style: .background),

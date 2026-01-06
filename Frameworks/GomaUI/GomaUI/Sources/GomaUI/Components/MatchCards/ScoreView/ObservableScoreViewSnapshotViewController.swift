@@ -154,7 +154,7 @@ public final class ObservableScoreViewSnapshotViewController: UIViewController {
 
     // MARK: - Helper Methods
 
-    private func createLabeledVariant(label: String, viewModel: ObservableScoreViewModel) -> UIStackView {
+    private func createLabeledVariant(label: String, viewModel: MockObservableScoreViewModel) -> UIStackView {
         let labelView = UILabel()
         labelView.text = label
         labelView.font = StyleProvider.fontWith(type: .medium, size: 12)

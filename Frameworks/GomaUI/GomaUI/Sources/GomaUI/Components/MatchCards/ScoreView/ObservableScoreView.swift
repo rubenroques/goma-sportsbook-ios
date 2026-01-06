@@ -2,10 +2,11 @@ import UIKit
 
 /// A score view using @Observable + layoutSubviews() instead of Combine.
 ///
-/// This is a proof of concept demonstrating Apple's automatic observation tracking:
+/// This demonstrates Apple's automatic observation tracking with protocol-based architecture:
 /// - No Combine, no publishers, no setupBindings()
 /// - Just read @Observable properties in layoutSubviews()
 /// - UIKit automatically tracks and invalidates when properties change
+/// - Protocol enables different implementations per client (GomaUI mock, BetssonCameroon production, etc.)
 ///
 /// Requires: iOS 18+ with UIObservationTrackingEnabled=true in Info.plist
 /// (or iOS 26+ for native support without Info.plist key)
@@ -15,8 +16,8 @@ public final class ObservableScoreView: UIView {
 
     // MARK: - ViewModel
 
-    /// The @Observable ViewModel - no protocol needed!
-    public var viewModel: ObservableScoreViewModel?
+    /// The @Observable ViewModel via protocol - enables dependency injection
+    public var viewModel: (any ObservableScoreViewModelProtocol)?
 
     // MARK: - UI Components (same as ScoreView)
 
@@ -77,8 +78,8 @@ public final class ObservableScoreView: UIView {
 
     // MARK: - Configuration
 
-    /// Configure with an @Observable ViewModel
-    public func configure(with viewModel: ObservableScoreViewModel) {
+    /// Configure with an @Observable ViewModel (any implementation conforming to protocol)
+    public func configure(with viewModel: any ObservableScoreViewModelProtocol) {
         self.viewModel = viewModel
         setNeedsLayout()  // Trigger initial render via layoutSubviews()
     }
@@ -220,7 +221,7 @@ import SwiftUI
         vc.view.backgroundColor = .systemGray6
 
         let scoreView = ObservableScoreView()
-        scoreView.configure(with: .tennisMatch)
+        scoreView.configure(with: MockObservableScoreViewModel.tennisMatch)
 
         vc.view.addSubview(scoreView)
 
@@ -239,7 +240,7 @@ import SwiftUI
         vc.view.backgroundColor = .systemGray6
 
         let scoreView = ObservableScoreView()
-        scoreView.configure(with: .basketballMatch)
+        scoreView.configure(with: MockObservableScoreViewModel.basketballMatch)
 
         vc.view.addSubview(scoreView)
 
@@ -249,6 +250,151 @@ import SwiftUI
         ])
 
         return vc
+    }
+}
+
+/// Interactive preview to test @Observable automatic updates
+/// Tap buttons to mutate ViewModel - view should update automatically!
+#Preview("Interactive - Test @Observable Updates") {
+    PreviewUIViewController {
+        InteractiveObservableScoreViewController()
+    }
+}
+
+private final class InteractiveObservableScoreViewController: UIViewController {
+
+    private let viewModel = MockObservableScoreViewModel.tennisMatch
+    private let scoreView = ObservableScoreView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        setupUI()
+        scoreView.configure(with: viewModel)
+    }
+
+    private func setupUI() {
+        let titleLabel = UILabel()
+        titleLabel.text = "@Observable Auto-Update Test"
+        titleLabel.font = .boldSystemFont(ofSize: 17)
+        titleLabel.textAlignment = .center
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "Tap buttons to mutate ViewModel.\nView updates automatically via layoutSubviews()!"
+        subtitleLabel.font = .systemFont(ofSize: 12)
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.textAlignment = .center
+        subtitleLabel.numberOfLines = 0
+
+        let scoreContainer = UIView()
+        scoreContainer.backgroundColor = .secondarySystemBackground
+        scoreContainer.layer.cornerRadius = 8
+
+        scoreView.translatesAutoresizingMaskIntoConstraints = false
+        scoreContainer.addSubview(scoreView)
+
+        let sportLabel = UILabel()
+        sportLabel.text = "Change Sport:"
+        sportLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        sportLabel.textColor = .secondaryLabel
+
+        let tennisButton = makeButton(title: "Tennis", action: #selector(setTennis))
+        let footballButton = makeButton(title: "Football", action: #selector(setFootball))
+        let basketballButton = makeButton(title: "Basketball", action: #selector(setBasketball))
+
+        let sportStack = UIStackView(arrangedSubviews: [tennisButton, footballButton, basketballButton])
+        sportStack.axis = .horizontal
+        sportStack.spacing = 8
+        sportStack.distribution = .fillEqually
+
+        let stateLabel = UILabel()
+        stateLabel.text = "Change State:"
+        stateLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        stateLabel.textColor = .secondaryLabel
+
+        let loadingButton = makeButton(title: "Loading", action: #selector(setLoading))
+        let emptyButton = makeButton(title: "Empty", action: #selector(setEmpty))
+        let randomButton = makeButton(title: "Random Score", action: #selector(setRandom))
+        randomButton.configuration?.baseBackgroundColor = .systemBlue
+
+        let stateStack = UIStackView(arrangedSubviews: [loadingButton, emptyButton, randomButton])
+        stateStack.axis = .horizontal
+        stateStack.spacing = 8
+        stateStack.distribution = .fillEqually
+
+        let mainStack = UIStackView(arrangedSubviews: [
+            titleLabel, subtitleLabel, scoreContainer,
+            sportLabel, sportStack, stateLabel, stateStack
+        ])
+        mainStack.axis = .vertical
+        mainStack.spacing = 16
+        mainStack.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(mainStack)
+
+        NSLayoutConstraint.activate([
+            mainStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            mainStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            scoreContainer.heightAnchor.constraint(equalToConstant: 60),
+            scoreView.centerXAnchor.constraint(equalTo: scoreContainer.centerXAnchor),
+            scoreView.centerYAnchor.constraint(equalTo: scoreContainer.centerYAnchor)
+        ])
+    }
+
+    private func makeButton(title: String, action: Selector) -> UIButton {
+        var config = UIButton.Configuration.bordered()
+        config.title = title
+        config.buttonSize = .small
+        let button = UIButton(configuration: config)
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
+    }
+
+    @objc private func setTennis() {
+        viewModel.visualState = .display
+        viewModel.scoreCells = [
+            ScoreDisplayData(id: "game", homeScore: "30", awayScore: "15", style: .background, servingPlayer: .home),
+            ScoreDisplayData(id: "set1", homeScore: "6", awayScore: "4", style: .simple),
+            ScoreDisplayData(id: "set2", homeScore: "3", awayScore: "5", style: .simple)
+        ]
+    }
+
+    @objc private func setFootball() {
+        viewModel.visualState = .display
+        viewModel.scoreCells = [
+            ScoreDisplayData(id: "score", homeScore: "2", awayScore: "1", style: .background)
+        ]
+    }
+
+    @objc private func setBasketball() {
+        viewModel.visualState = .display
+        viewModel.scoreCells = [
+            ScoreDisplayData(id: "q1", homeScore: "28", awayScore: "24", style: .simple),
+            ScoreDisplayData(id: "q2", homeScore: "31", awayScore: "29", style: .simple),
+            ScoreDisplayData(id: "total", homeScore: "59", awayScore: "53", style: .background)
+        ]
+    }
+
+    @objc private func setLoading() {
+        viewModel.setLoading()
+    }
+
+    @objc private func setEmpty() {
+        viewModel.setEmpty()
+    }
+
+    @objc private func setRandom() {
+        viewModel.visualState = .display
+        viewModel.scoreCells = [
+            ScoreDisplayData(
+                id: "score",
+                homeScore: "\(Int.random(in: 0...5))",
+                awayScore: "\(Int.random(in: 0...5))",
+                style: .background
+            )
+        ]
     }
 }
 #endif
