@@ -37,7 +37,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: value,
             currency: currentData.currency,
             isEnabled: currentData.isEnabled,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         dataSubject.send(updatedData)
         
@@ -59,7 +60,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: currentData.currentValue,
             currency: currentData.currency,
             isEnabled: isEnabled,
-            selectionTitle: currentData.selectionTitle
+            selectionTitle: currentData.selectionTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         dataSubject.send(updatedData)
     }
@@ -83,7 +85,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: 200.0,
             currentValue: 200.0,
             currency: "XAF",
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -99,7 +102,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: 200.0,
             currentValue: 200.0,
             currency: "XAF",
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -115,7 +119,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: 200.0,
             currentValue: 0.1,
             currency: "XAF",
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -137,7 +142,8 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: maximumValue,
             currentValue: currentValue,
             currency: currency,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -153,7 +159,8 @@ extension CashoutSliderData {
             maximumValue: 1.0,
             currentValue: 0.0,
             currency: "",
-            selectionTitle: ""
+            selectionTitle: "",
+            fullCashoutValue: 0.0
         )
     }
 } 

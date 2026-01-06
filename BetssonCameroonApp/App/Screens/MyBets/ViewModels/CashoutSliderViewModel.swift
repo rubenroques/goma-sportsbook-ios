@@ -5,7 +5,6 @@ import GomaUI
 final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
     
     // MARK: - Properties
-    
     private let dataSubject: CurrentValueSubject<CashoutSliderData, Never>
     private let _buttonViewModel: ButtonViewModel
     
@@ -32,7 +31,8 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
         currentValue: Float,
         currency: String,
         isEnabled: Bool = true,
-        selectionTitle: String
+        selectionTitle: String,
+        fullCashoutValue: Float
     ) {
         let sliderData = CashoutSliderData(
             title: title,
@@ -41,7 +41,8 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: currentValue,
             currency: currency,
             isEnabled: isEnabled,
-            selectionTitle: selectionTitle
+            selectionTitle: selectionTitle,
+            fullCashoutValue: fullCashoutValue
         )
         
         self.dataSubject = CurrentValueSubject(sliderData)
@@ -58,9 +59,10 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
     func updateSliderValue(_ value: Float) {
         let currentData = dataSubject.value
         let clampedValue = max(currentData.minimumValue, min(currentData.maximumValue, value))
+        let partialCashoutReturn = (currentData.fullCashoutValue * currentData.currentValue) / currentData.maximumValue
         
         // Update button title with current amount
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(clampedValue), currency: currentData.currency)
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(partialCashoutReturn), currency: currentData.currency)
         let buttonTitle = localized("mybets_cashout_amount")
             .replacingOccurrences(of: "{amount}", with: formattedAmount)
         
@@ -71,12 +73,11 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: clampedValue,
             currency: currentData.currency,
             isEnabled: currentData.isEnabled,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         
         dataSubject.send(newData)
-        
-//        _buttonViewModel.updateTitle(buttonTitle)
     }
     
     func handleCashoutTap() {
@@ -93,7 +94,8 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: currentData.currentValue,
             currency: currentData.currency,
             isEnabled: isEnabled,
-            selectionTitle: currentData.selectionTitle
+            selectionTitle: currentData.selectionTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
 
         dataSubject.send(newData)
@@ -120,7 +122,8 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             currentValue: newCurrentValue,
             currency: currentData.currency,
             isEnabled: currentData.isEnabled,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
 
         dataSubject.send(newData)
@@ -154,7 +157,8 @@ extension CashoutSliderViewModel {
             currentValue: currentValue,
             currency: currency,
             isEnabled: true,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
     }
     
@@ -177,7 +181,8 @@ extension CashoutSliderViewModel {
             currentValue: Float(currentAmount),
             currency: currency,
             isEnabled: true,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
     }
     

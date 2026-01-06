@@ -343,23 +343,25 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         fullCashoutButtonViewModel = nil
 
         // Slider bounds (stake amount, not cashout value)
-        let minStake: Float = 0.1
+        let minStake: Float = 0.01
         let maxStake = Float(stake)
         let initialStake = maxStake * 0.8  // 80% per Web/Android
+        let returnValue = calculatePartialCashout(forStakeValue: initialStake)
 
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(initialStake), currency: myBet.currency)
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(returnValue, currency: myBet.currency)
         let buttonTitle = localized("mybets_cashout_amount")
             .replacingOccurrences(of: "{amount}", with: formattedAmount)
         
         // Create slider ViewModel
         let sliderVM = CashoutSliderViewModel(
-            title: localized("mybets_choose_cashout_amount"),
+            title: localized("choose_a_cash_out_amount"),
             minimumValue: minStake,
             maximumValue: maxStake,
             currentValue: initialStake,
             currency: myBet.currency,
             isEnabled: true,
-            selectionTitle: buttonTitle
+            selectionTitle: buttonTitle,
+            fullCashoutValue: Float(fullCashoutValue),
         )
 
         // Wire cashout button tap
@@ -536,14 +538,20 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         // Format cashout values only if bet can be cashed out
         let partialCashoutValue: String? = myBet.canCashOut ? cashoutAmount.map { formatCurrency($0, currency: myBet.currency) } : nil
         let cashoutTotalAmount: String? = myBet.canCashOut ? cashoutAmount.map { formatCurrency($0, currency: myBet.currency) } : nil
-
+        
+        let partialCashoutStake: String = if let partialCashout = myBet.partialCashoutStake {
+            formatCurrency(partialCashout, currency: myBet.currency)
+        } else {
+            formatCurrency(myBet.stake, currency: myBet.currency)
+        }
+        
         return TicketBetInfoData(
             id: myBet.identifier,
             title: formatBetTitle(myBet),
             betDetails: formatBetDetails(myBet),
             tickets: ticketSelections,
             totalOdds: formatOdds(myBet.totalOdd),
-            betAmount: formatCurrency(myBet.stake, currency: myBet.currency),
+            betAmount: partialCashoutStake,
             possibleWinnings: formatPossibleWinnings(myBet),
             partialCashoutValue: partialCashoutValue,
             cashoutTotalAmount: cashoutTotalAmount,

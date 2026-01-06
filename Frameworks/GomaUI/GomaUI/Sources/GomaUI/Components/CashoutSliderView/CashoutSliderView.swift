@@ -182,8 +182,8 @@ public class CashoutSliderView: UIView {
     private func updateUI(with data: CashoutSliderData) {
         // Update header
         titleLabel.text = data.title
-        minimumValueLabel.text = String(format: "%.1f", data.minimumValue)
-        maximumValueLabel.text = String(format: "%.0f", data.maximumValue)
+        minimumValueLabel.text = String(format: "%.2f", data.minimumValue)
+        maximumValueLabel.text = String(format: "%.2f", data.maximumValue)
         
         // Update slider
         slider.minimumValue = data.minimumValue

@@ -10,6 +10,7 @@ public struct CashoutSliderData: Equatable {
     public let currency: String
     public let isEnabled: Bool
     public let selectionTitle: String
+    public let fullCashoutValue: Float
     
     public init(
         title: String,
@@ -18,7 +19,8 @@ public struct CashoutSliderData: Equatable {
         currentValue: Float,
         currency: String,
         isEnabled: Bool = true,
-        selectionTitle: String
+        selectionTitle: String,
+        fullCashoutValue: Float
     ) {
         self.title = title
         self.minimumValue = minimumValue
@@ -27,6 +29,7 @@ public struct CashoutSliderData: Equatable {
         self.currency = currency
         self.isEnabled = isEnabled
         self.selectionTitle = selectionTitle
+        self.fullCashoutValue = fullCashoutValue
     }
 }
 

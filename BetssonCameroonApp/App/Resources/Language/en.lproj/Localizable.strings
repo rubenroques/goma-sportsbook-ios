@@ -4048,8 +4048,6 @@
 
 "mybetdetail_share_no_selections" = "No selections are available to share for this bet.";
 
-"mybets_choose_cashout_amount" = "Choose a cash out amount";
-
 "mybets_cashout_amount" = "Cashout {amount}";
 
 "mybets_ticket_detail" = "Ticket: {ticket}";
