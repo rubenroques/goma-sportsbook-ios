@@ -3,7 +3,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ActionRowView": {
     "children": [],
@@ -11,13 +12,15 @@
     "parents": [
       "ProfileMenuListView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AdaptiveTabBarView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AmountPillView": {
     "children": [],
@@ -25,7 +28,8 @@
     "parents": [
       "AmountPillsContainerView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "AmountPillsContainerView": {
     "children": [
@@ -33,13 +37,15 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailResultSummaryView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailRowView": {
     "children": [],
@@ -47,7 +53,8 @@
     "parents": [
       "BetDetailValuesSummaryView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetDetailValuesSummaryView": {
     "children": [
@@ -55,7 +62,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetInfoSubmissionView": {
     "children": [
@@ -66,7 +74,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetSummaryRowView": {
     "children": [],
@@ -74,7 +83,8 @@
     "parents": [
       "BetInfoSubmissionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetTicketStatusView": {
     "children": [],
@@ -82,31 +92,36 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipFloatingView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipHeaderView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipOddsBoostHeaderView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipTicketView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipTypeSelectorView": {
     "children": [
@@ -114,7 +129,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BetslipTypeTabItemView": {
     "children": [],
@@ -122,7 +138,8 @@
     "parents": [
       "BetslipTypeSelectorView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BonusCardView": {
     "children": [
@@ -130,13 +147,15 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BonusInfoCardView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BorderedTextFieldView": {
     "children": [],
@@ -145,7 +164,8 @@
       "BetInfoSubmissionView",
       "CodeInputView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "BulletItemBlockView": {
     "children": [],
@@ -154,7 +174,8 @@
       "ListBlockView",
       "StackViewBlockView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ButtonIconView": {
     "children": [],
@@ -162,7 +183,8 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ButtonView": {
     "children": [],
@@ -179,7 +201,8 @@
       "WalletDetailView",
       "WalletStatusView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CapsuleView": {
     "children": [],
@@ -188,7 +211,8 @@
       "MatchDateNavigationBar",
       "TicketSelectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CashoutAmountView": {
     "children": [],
@@ -196,7 +220,8 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CashoutSliderView": {
     "children": [
@@ -206,7 +231,8 @@
     "parents": [
       "TicketBetInfoView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CashoutSubmissionInfoView": {
     "children": [
@@ -214,7 +240,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoCategoryBarView": {
     "children": [],
@@ -223,7 +250,8 @@
       "CasinoCategorySectionView",
       "CasinoGameImageGridSectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoCategorySectionView": {
     "children": [
@@ -231,13 +259,15 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameCardView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImageGridSectionView": {
     "children": [
@@ -246,7 +276,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImagePairView": {
     "children": [
@@ -256,7 +287,8 @@
     "parents": [
       "CasinoGameImageGridSectionView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameImageView": {
     "children": [],
@@ -265,25 +297,29 @@
       "CasinoGameImagePairView",
       "SquareSeeMoreView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGamePlayModeSelectorView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CasinoGameSearchedView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CodeClipboardView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CodeInputView": {
     "children": [
@@ -292,7 +328,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CompactMatchHeaderView": {
     "children": [],
@@ -300,7 +337,8 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CompactOutcomesLineView": {
     "children": [
@@ -310,19 +348,22 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CopyableCodeView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CountryLeaguesFilterView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomExpandableSectionView": {
     "children": [],
@@ -330,25 +371,29 @@
     "parents": [
       "WalletDetailView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomNavigationView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "CustomSliderView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "DepositBonusInfoView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "DescriptionBlockView": {
     "children": [],
@@ -356,25 +401,29 @@
     "parents": [
       "StackViewBlockView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "EmptyStateActionView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ExpandableSectionView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ExtendedListFooterView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "FilterOptionCell": {
     "children": [],
@@ -408,13 +457,15 @@
     "parents": [
       "StackViewBlockView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "HeaderTextView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "HelperViews": {
     "children": [
@@ -435,7 +486,8 @@
       "TermsAcceptanceView",
       "TransactionVerificationView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ImageBlockView": {
     "children": [],
@@ -453,7 +505,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "InlineMatchCardView": {
     "children": [
@@ -474,7 +527,8 @@
     "parents": [
       "InlineMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "LanguageSelectorView": {
     "children": [],
@@ -532,7 +586,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MarketNamePillLabelView": {
     "children": [
@@ -553,7 +608,8 @@
       "MarketOutcomesMultiLineView",
       "MatchBannerView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MarketOutcomesMultiLineView": {
     "children": [
@@ -563,7 +619,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchBannerView": {
     "children": [
@@ -587,7 +644,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchHeaderView": {
     "children": [],
@@ -595,7 +653,8 @@
     "parents": [
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MatchParticipantsInfoView": {
     "children": [
@@ -603,7 +662,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "MultiWidgetToolbarView": {
     "children": [
@@ -617,7 +677,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "NotificationListView": {
     "children": [],
@@ -638,7 +699,8 @@
       "CompactOutcomesLineView",
       "MarketOutcomesLineView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "PendingWithdrawView": {
     "children": [],
@@ -654,7 +716,8 @@
     "parents": [
       "PillSelectorBarView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "PillSelectorBarView": {
     "children": [
@@ -668,7 +731,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ProfileMenuListView": {
     "children": [
@@ -682,7 +746,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ProgressSegments": {
     "children": [],
@@ -736,7 +801,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "QuickAddButtonView": {
     "children": [],
@@ -750,7 +816,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "RecentSearchView": {
     "children": [],
@@ -768,7 +835,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ScoreView": {
     "children": [],
@@ -779,7 +847,8 @@
       "MatchParticipantsInfoView",
       "TallOddsMatchCardView"
     ],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SearchHeaderInfoView": {
     "children": [],
@@ -791,13 +860,15 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SeeMoreButtonView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SelectOptionsView": {
     "children": [
@@ -843,7 +914,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "SortFilterView": {
     "children": [],
@@ -907,13 +979,15 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "StatusNotificationView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "StepInstructionView": {
     "children": [
@@ -921,7 +995,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "StyleProvider": {
     "children": [],
@@ -956,19 +1031,22 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TextSectionView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "ThemeSwitcherView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TicketBetInfoView": {
     "children": [
@@ -996,7 +1074,8 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TitleBlockView": {
     "children": [],
@@ -1010,19 +1089,22 @@
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TopBannerSliderView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TransactionItemView": {
     "children": [],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "TransactionVerificationView": {
     "children": [
@@ -1030,7 +1112,8 @@
     ],
     "has_readme": true,
     "parents": [],
-    "readme_done": true
+    "readme_done": true,
+    "has_snapshot_tests": true
   },
   "UserLimitCardView": {
     "children": [

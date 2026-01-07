@@ -52,7 +52,35 @@ final class AmountBorderedTextFieldViewModel: BorderedTextFieldViewModelProtocol
         isPasswordVisibleSubject.eraseToAnyPublisher()
     }
 
-    // MARK: - Current Values
+    // MARK: - Synchronous State Access
+    var currentText: String {
+        textSubject.value
+    }
+
+    var currentPlaceholder: String {
+        placeholderSubject.value
+    }
+
+    var currentIsSecure: Bool {
+        isSecureSubject.value
+    }
+
+    var currentKeyboardType: UIKeyboardType {
+        keyboardTypeSubject.value
+    }
+
+    var currentReturnKeyType: UIReturnKeyType {
+        returnKeyTypeSubject.value
+    }
+
+    var currentTextContentType: UITextContentType? {
+        textContentTypeSubject.value
+    }
+
+    var currentIsPasswordVisible: Bool {
+        isPasswordVisibleSubject.value
+    }
+
     var currentVisualState: BorderedTextFieldVisualState {
         visualStateSubject.value
     }

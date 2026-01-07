@@ -361,7 +361,6 @@ extension GeneralFilterViewController: UICollectionViewDelegate {
 #if DEBUG
 import SwiftUI
 
-@available(iOS 17.0, *)
 struct GeneralFilterViewController_Preview: PreviewProvider {
     static var previews: some View {
         PreviewUIViewController {

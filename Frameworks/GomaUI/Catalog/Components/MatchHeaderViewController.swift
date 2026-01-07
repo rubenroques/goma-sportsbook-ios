@@ -274,7 +274,6 @@ class MatchHeaderViewController: UIViewController {
 }
 
 // MARK: - Preview Support
-@available(iOS 17.0, *)
 #Preview("MatchHeaderViewController") {
     let navController = UINavigationController(rootViewController: MatchHeaderViewController())
     navController.navigationBar.prefersLargeTitles = false

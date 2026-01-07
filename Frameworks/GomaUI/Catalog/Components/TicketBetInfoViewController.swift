@@ -449,7 +449,6 @@ class TicketBetInfoTableViewCell: UITableViewCell {
 
 // MARK: - SwiftUI Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("TicketBetInfo Demo") {
     PreviewUIViewController {
         let vc = TicketBetInfoViewController()
