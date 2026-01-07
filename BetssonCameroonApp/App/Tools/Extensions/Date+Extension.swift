@@ -593,7 +593,10 @@ extension Date {
             let numberFormatter = ConcurrentFormatterCache.cachedNumberFormatterQueue.sync { () -> NumberFormatter in
 
                 // Should always be NumberFormatter
-                return ConcurrentFormatterCache.cachedNumberFormatter.copy() as! NumberFormatter
+                guard let formatter = ConcurrentFormatterCache.cachedNumberFormatter.copy() as? NumberFormatter else {
+                    return NumberFormatter()
+                }
+                return formatter
             }
 
             return numberFormatter

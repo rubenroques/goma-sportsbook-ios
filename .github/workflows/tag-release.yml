@@ -463,7 +463,7 @@ jobs:
 
           # Truncate each line to ~100 chars so all SPOR tickets are visible
           # Then escape quotes and convert newlines to \n for JSON
-          NOTES_TRUNCATED=$(printf '%s' "$NOTES" | while IFS= read -r line; do
+          NOTES_TRUNCATED=$(printf '%s\n' "$NOTES" | while IFS= read -r line; do
             if [ ${#line} -gt 100 ]; then
               echo "${line:0:97}..."
             else

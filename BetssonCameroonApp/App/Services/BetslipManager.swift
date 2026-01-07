@@ -529,7 +529,16 @@ extension BetslipManager {
         // Extract ubsWalletId from odds boost state for bonus application
         let ubsWalletId: String? = oddsBoostStairsSubject.value?.ubsWalletId
 
-        let publisher =  Env.servicesProvider.placeBets(betTickets: [betTicket], useFreebetBalance: useFreebetBalance, currency: userCurrency, username: username, userId: userId, oddsValidationType: oddsValidationType, ubsWalletId: ubsWalletId, betBuilderOdds: betBuilderOdds)
+        let publisher = Env.servicesProvider.placeBets(
+            betTickets: [betTicket],
+            useFreebetBalance: useFreebetBalance,
+            currency: userCurrency,
+            username: username,
+            userId: userId,
+            oddsValidationType: oddsValidationType,
+            ubsWalletId: ubsWalletId,
+            betBuilderOdds: betBuilderOdds
+        )
             .mapError({ error in
                 switch error {
                 case .forbidden:

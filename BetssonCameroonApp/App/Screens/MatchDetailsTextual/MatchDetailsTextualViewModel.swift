@@ -258,7 +258,23 @@ class MatchDetailsTextualViewModel: ObservableObject {
         let marketId = result?.marketId ?? marketGroup.marketGroup.id
         let oddDouble = Double(outcome?.value ?? "")
                 
-        let bettingTicket = BettingTicket(id: outcome?.bettingOfferId ?? outcomeId, outcomeId: outcomeId, marketId: marketId, matchId: match.id, marketTypeId: marketGroup.marketGroup.id, decimalOdd: oddDouble ?? 0.0, isAvailable: true, matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)", marketDescription: marketGroup.groupName, outcomeDescription: outcome?.completeName ?? "", homeParticipantName: match.homeParticipant.name, awayParticipantName: match.awayParticipant.name, sportIdCode: match.sportIdCode, competition: match.competitionName, date: match.date)
+        let bettingTicket = BettingTicket(
+            id: outcome?.bettingOfferId ?? outcomeId,
+            outcomeId: outcomeId,
+            marketId: marketId,
+            matchId: match.id,
+            marketTypeId: marketGroup.marketGroup.id,
+            decimalOdd: oddDouble ?? 0.0,
+            isAvailable: true,
+            matchDescription: "\(match.homeParticipant.name) - \(match.awayParticipant.name)",
+            marketDescription: marketGroup.groupName,
+            outcomeDescription: outcome?.completeName ?? "",
+            homeParticipantName: match.homeParticipant.name,
+            awayParticipantName: match.awayParticipant.name,
+            sportIdCode: match.sportIdCode,
+            competition: match.competitionName,
+            date: match.date
+        )
         
         if isSelected {
             Env.betslipManager.addBettingTicket(bettingTicket)

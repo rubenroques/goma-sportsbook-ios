@@ -251,7 +251,12 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
                     case .connected:
                         GomaLogger.info(.betting, category: "CASHOUT", "SSE connected for bet \(self?.myBet.identifier ?? "")")
                     case .contentUpdate(let cashoutValue):
-                        GomaLogger.debug(.betting, category: "CASHOUT", "SSE update for bet \(self?.myBet.identifier ?? ""): value=\(cashoutValue.cashoutValue ?? 0), code=\(cashoutValue.details.code), partialEnabled=\(cashoutValue.partialCashOutEnabled)")
+                        let betId = self?.myBet.identifier ?? ""
+                        let value = cashoutValue.cashoutValue ?? 0
+                        let code = cashoutValue.details.code
+                        let partialEnabled = cashoutValue.partialCashOutEnabled
+                        GomaLogger.debug(.betting, category: "CASHOUT",
+                            "SSE update for bet \(betId): value=\(value), code=\(code), partialEnabled=\(partialEnabled)")
                         self?.handleCashoutUpdate(cashoutValue)
                     case .disconnected:
                         GomaLogger.debug(.betting, category: "CASHOUT", "SSE disconnected for bet \(self?.myBet.identifier ?? "")")

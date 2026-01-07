@@ -404,7 +404,7 @@ class InPlayEventsViewModel {
         // Update market group selector with new matches and main markets
         marketGroupSelectorViewModel.updateWithMatches(matches, mainMarkets: mainMarkets)
 
-        if marketGroupCardsViewModels.count == 0 {
+        if marketGroupCardsViewModels.isEmpty {
             print("Empty marketGroupCardsViewModels")
         }
         

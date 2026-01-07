@@ -398,7 +398,7 @@ extension MarketOutcomesLineViewModel {
         
         let displayMode: MarketDisplayMode = outcomes.count >= 3 ? .triple : .double
         
-        let leftOutcome = outcomes.count > 0 ? createOutcomeData(from: outcomes[0]) : nil
+        let leftOutcome = !outcomes.isEmpty ? createOutcomeData(from: outcomes[0]) : nil
         let middleOutcome = outcomes.count > 2 ? createOutcomeData(from: outcomes[1]) : nil
         let rightOutcome = outcomes.count > 1 ? createOutcomeData(from: outcomes[outcomes.count >= 3 ? 2 : 1]) : nil
         

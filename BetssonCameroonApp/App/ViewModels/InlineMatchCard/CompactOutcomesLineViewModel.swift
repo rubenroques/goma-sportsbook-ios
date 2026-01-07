@@ -180,7 +180,7 @@ final class CompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
         let displayMode: CompactOutcomesDisplayMode = outcomes.count >= 3 ? .triple : .double
 
         // Create outcome data
-        let leftOutcome = outcomes.count > 0 ? createOutcomeData(from: outcomes[0]) : nil
+        let leftOutcome = !outcomes.isEmpty ? createOutcomeData(from: outcomes[0]) : nil
         let middleOutcome = outcomes.count >= 3 ? createOutcomeData(from: outcomes[1]) : nil
         let rightOutcome: OutcomeItemData?
         if outcomes.count >= 3 {
@@ -387,7 +387,7 @@ extension CompactOutcomesLineViewModel {
         let outcomes = market.outcomes
         let displayMode: CompactOutcomesDisplayMode = outcomes.count >= 3 ? .triple : .double
 
-        let leftOutcome = outcomes.count > 0 ? createOutcomeData(from: outcomes[0]) : nil
+        let leftOutcome = !outcomes.isEmpty ? createOutcomeData(from: outcomes[0]) : nil
         let middleOutcome = outcomes.count >= 3 ? createOutcomeData(from: outcomes[1]) : nil
         let rightOutcome: OutcomeItemData?
         if outcomes.count >= 3 {

@@ -358,7 +358,7 @@ final class CasinoSearchViewController: UIViewController {
             emptyStateView.isHidden = false
             searchHeaderInfoView.isHidden = true
             resultsScrollView.isHidden = true
-            let currentSuggestedGames = suggestedStackView.arrangedSubviews.count > 0
+            let currentSuggestedGames = !suggestedStackView.arrangedSubviews.isEmpty
             suggestedScrollView.isHidden = !currentSuggestedGames
             
         } else {
