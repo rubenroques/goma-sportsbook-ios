@@ -1,7 +1,6 @@
 import UIKit
 import SwiftUI
 
-@available(iOS 17.0, *)
 struct PreviewUIViewController<ViewController: UIViewController>: UIViewControllerRepresentable {
     private let builder: (() -> ViewController)?
     private let viewController: ViewController?
@@ -108,7 +107,6 @@ class MovieDetailViewController: UIViewController {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Movie Night Usage Example") {
     PreviewUIViewController {
         MovieDetailViewController(

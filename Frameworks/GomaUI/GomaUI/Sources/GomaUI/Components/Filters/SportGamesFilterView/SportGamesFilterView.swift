@@ -1,0 +1,274 @@
+import Foundation
+import UIKit
+import Combine
+import SharedModels
+
+public class SportGamesFilterView: UIView {
+    // MARK: - Properties
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = LocalizationProvider.string("games")
+        label.font = StyleProvider.fontWith(type: .bold, size: 14)
+        label.textColor = StyleProvider.Color.textPrimary
+        return label
+    }()
+    
+    private let gridStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.spacing = 8
+        return stack
+    }()
+    
+    private let collapseButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        if let customImage = UIImage(named: "chevron_up_icon")?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(customImage, for: .normal)
+        }
+        else if let systemImage = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate) {
+            button.setImage(systemImage, for: .normal)
+        }
+        button.tintColor = StyleProvider.Color.iconPrimary
+        return button
+    }()
+    
+    // Constraints
+    private var gridStackViewBottomConstraint: NSLayoutConstraint = {
+        NSLayoutConstraint()
+    }()
+    
+    private var gridStackViewHeightConstraint: NSLayoutConstraint = {
+        NSLayoutConstraint()
+    }()
+    
+    private let viewModel: SportGamesFilterViewModelProtocol
+    private var cancellables = Set<AnyCancellable>()
+
+    private var sportCards: [SportCardView] = []
+    public var onSportSelected: ((String) -> Void)?
+    
+    private var isCollapsed: Bool = false {
+        didSet {
+            updateCollapseState()
+        }
+    }
+    
+    // MARK: - Initialization
+    public init(viewModel: SportGamesFilterViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
+        setupView()
+        setupBindings()
+        configureData()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Setup
+    private func setupView() {
+        backgroundColor = StyleProvider.Color.backgroundTertiary
+        layer.cornerRadius = 8
+        
+        addSubview(titleLabel)
+        addSubview(collapseButton)
+        addSubview(gridStackView)
+        
+        gridStackViewBottomConstraint = gridStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+        gridStackViewHeightConstraint = gridStackView.heightAnchor.constraint(equalToConstant: 0)
+        gridStackViewHeightConstraint.isActive = false
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: collapseButton.leadingAnchor, constant: -10),
+            
+            collapseButton.widthAnchor.constraint(equalToConstant: 24),
+            collapseButton.heightAnchor.constraint(equalToConstant: 24),
+            collapseButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            collapseButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            
+            gridStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            gridStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            gridStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            gridStackViewBottomConstraint
+        ])
+        
+        self.titleLabel.text = viewModel.title
+        
+        collapseButton.addTarget(self, action: #selector(toggleCollapse), for: .touchUpInside)
+
+    }
+    
+    private func setupBindings() {
+        viewModel.sportFilterState
+            .sink { [weak self] state in
+                self?.isCollapsed = state == .collapsed
+            }
+            .store(in: &cancellables)
+        
+        viewModel.selectedSport
+            .sink(receiveValue: { [weak self] selectedSport in
+                self?.updateSelection(forOptionId: selectedSport.rawValue)
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func createRowStackView() -> UIStackView {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .fillEqually
+        stack.spacing = 8
+        return stack
+    }
+    
+    // MARK: - Public Methods
+    private func configureData() {
+        // Clear existing views
+        gridStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        sportCards.removeAll()
+        
+        var currentRow: UIStackView?
+        
+        for (index, sport) in viewModel.sportFilters.enumerated() {
+            if index % 2 == 0 {
+                currentRow = createRowStackView()
+                gridStackView.addArrangedSubview(currentRow!)
+            }
+            
+            let cardViewModel = MockSportCardViewModel(sportFilter: sport)
+            let card = SportCardView(viewModel: cardViewModel)
+            card.configure()
+            card.isSelected = self.viewModel.selectedSport.value.rawValue == sport.id ? true : false
+
+            let cardIndex = index
+            card.onTap = { [weak self] selectedId in
+                self?.viewModel.selectSport(FilterIdentifier(stringValue: selectedId))
+            }
+            
+            currentRow?.addArrangedSubview(card)
+            sportCards.append(card)
+        }
+        
+        // If we have an odd number of sports, add an empty view to maintain layout
+        if viewModel.sportFilters.count % 2 != 0, let lastRow = currentRow {
+            let emptyView = UIView()
+            lastRow.addArrangedSubview(emptyView)
+        }
+    }
+    
+    @objc private func toggleCollapse() {
+        viewModel.didTapCollapseButton()
+    }
+    
+    private func updateSelection(forOptionId id: String) {
+        sportCards.forEach { row in
+            row.isSelected = row.viewModel.sportFilter.id == id
+            
+        }
+        
+        self.onSportSelected?(id)
+    }
+    
+//    private func handleCardSelection(at index: Int) {
+//        // Update selection state
+//        sportCards.enumerated().forEach { (idx, card) in
+//            card.isSelected = idx == index
+//        }
+//        viewModel.didSelectSportFilter(at: index)
+//    }
+    
+    private func updateCollapseState() {
+        // Update the grid visibility
+        self.gridStackView.alpha = self.isCollapsed ? 0 : 1
+        
+        UIView.animate(withDuration: 0.3) {
+            if self.isCollapsed {
+                // Activate height constraint when collapsing
+                self.gridStackViewHeightConstraint.isActive = true
+                self.gridStackViewBottomConstraint.constant = 0
+            } else {
+                // Deactivate height constraint when expanding
+                self.gridStackViewHeightConstraint.isActive = false
+                self.gridStackViewBottomConstraint.constant = -16
+            }
+            
+            // Update the arrow
+            let transform = self.isCollapsed ? CGAffineTransform(rotationAngle: .pi) : .identity
+            self.collapseButton.transform = transform
+            
+        } completion: { _ in
+            // Hide the grid after animation when collapsing
+            self.gridStackView.isHidden = self.isCollapsed
+            // Force layout update
+            self.layoutIfNeeded()
+            self.superview?.layoutIfNeeded()
+        }
+    }
+    
+}
+
+#if DEBUG
+import SwiftUI
+
+#Preview("SportGamesFilterView") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .backgroundTestColor
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.distribution = .equalSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Component name label
+        let titleLabel = UILabel()
+        titleLabel.text = "SportGamesFilterView"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 18)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // 2 sports (odd number)
+        let twoSportsFilters = [
+            SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
+            SportFilter(id: "2", title: "Basketball", icon: "basketball.fill")
+        ]
+        let twoSportsViewModel = MockSportGamesFilterViewModel(title: "Top Sports", sportFilters: twoSportsFilters, selectedSport: .singleSport(id: "1"))
+        let twoSportsView = SportGamesFilterView(viewModel: twoSportsViewModel)
+        twoSportsView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 4 sports (standard grid)
+        let fourSportsFilters = [
+            SportFilter(id: "1", title: "Football", icon: "sportscourt.fill"),
+            SportFilter(id: "2", title: "Basketball", icon: "basketball.fill"),
+            SportFilter(id: "3", title: "Tennis", icon: "tennis.racket"),
+            SportFilter(id: "4", title: "Cricket", icon: "figure.cricket")
+        ]
+        let fourSportsViewModel = MockSportGamesFilterViewModel(title: "Games", sportFilters: fourSportsFilters, selectedSport: .singleSport(id: "2"))
+        let fourSportsView = SportGamesFilterView(viewModel: fourSportsViewModel)
+        fourSportsView.translatesAutoresizingMaskIntoConstraints = false
+
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(twoSportsView)
+        stackView.addArrangedSubview(fourSportsView)
+
+        vc.view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+#endif

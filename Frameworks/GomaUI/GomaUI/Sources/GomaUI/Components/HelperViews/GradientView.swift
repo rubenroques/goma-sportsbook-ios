@@ -180,7 +180,6 @@ public enum GradientDirection {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("GradientView") {
     PreviewUIViewController {
         let vc = UIViewController()

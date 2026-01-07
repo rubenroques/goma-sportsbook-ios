@@ -2,7 +2,6 @@ import UIKit
 import SwiftUI
 
 /// A generic UICollectionViewController for use in SwiftUI previews
-@available(iOS 17.0, *)
 public class PreviewCollectionViewController<Cell: UICollectionViewCell, State: PreviewStateRepresentable>:
     UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
@@ -265,7 +264,6 @@ class CandyCollectionViewCell: UICollectionViewCell {
     }
 }
 
-@available(iOS 17.0, *)
 #Preview("Candy Preview Example") {
     PreviewUIViewController {
         PreviewCollectionViewController(

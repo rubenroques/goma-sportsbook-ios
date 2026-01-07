@@ -362,7 +362,6 @@ class TicketSelectionTableViewCell: UITableViewCell {
 
 // MARK: - SwiftUI Preview
 #if DEBUG
-@available(iOS 17.0, *)
 #Preview("TicketSelection Demo") {
     PreviewUIViewController {
         let vc = TicketSelectionViewController()
