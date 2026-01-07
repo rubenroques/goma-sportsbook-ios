@@ -6,6 +6,9 @@ public class CashoutSliderView: UIView {
     // MARK: - Properties
     private let viewModel: CashoutSliderViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+
+    /// Snap threshold as percentage of slider range (2.5% at each edge)
+    private let snapThresholdPercentage: Float = 0.025
     
     // MARK: - UI Components
     private let containerView: UIView = {
@@ -162,7 +165,7 @@ public class CashoutSliderView: UIView {
             slider.bottomAnchor.constraint(equalTo: sliderView.bottomAnchor),
             
             // Button constraints
-            buttonView.topAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: 18),
+            buttonView.topAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: 8),
             buttonView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             buttonView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             buttonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
@@ -199,7 +202,32 @@ public class CashoutSliderView: UIView {
     
     // MARK: - Actions
     @objc private func sliderValueChanged(_ sender: UISlider) {
+        let snapped = snappedValue(
+            for: sender.value,
+            min: sender.minimumValue,
+            max: sender.maximumValue
+        )
+
+        // Always update slider to snapped value (ensures visual matches data)
+        sender.value = snapped
         viewModel.updateSliderValue(sender.value)
+    }
+
+    // MARK: - Helpers
+    /// Snaps values within threshold percentage of min/max to the exact edge value
+    private func snappedValue(for rawValue: Float, min: Float, max: Float) -> Float {
+        let range = max - min
+        let snapThreshold = range * snapThresholdPercentage
+
+        // Snap to minimum when within threshold
+        if rawValue <= min + snapThreshold {
+            return min
+        }
+        // Snap to maximum when within threshold
+        if rawValue >= max - snapThreshold {
+            return max
+        }
+        return rawValue
     }
 }
 
