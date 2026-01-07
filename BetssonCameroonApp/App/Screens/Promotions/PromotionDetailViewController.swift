@@ -257,7 +257,11 @@ class PromotionDetailViewController: UIViewController {
                             blockViews.append(videoBlockView)
                         }
                         else if textContentBlock.blockType == .button {
-                            let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonText ?? "", actionURL: textContentBlock.buttonURL)
+                            let mockViewModel = MockActionButtonBlockViewModel(
+                                title: textContentBlock.buttonText ?? "",
+                                actionName: textContentBlock.buttonText ?? "",
+                                actionURL: textContentBlock.buttonURL
+                            )
                             mockViewModel.onActionTapped = { [weak self] actionUrl in
                                 self?.openAction(actionUrl: actionUrl ?? "")
                             }
@@ -347,7 +351,11 @@ class PromotionDetailViewController: UIViewController {
                                 listItemViews.append(videoBlockView)
                             }
                             else if textContentBlock.blockType == .button {
-                                let mockViewModel = MockActionButtonBlockViewModel(title: textContentBlock.buttonText ?? "", actionName: textContentBlock.buttonText ?? "", actionURL: textContentBlock.buttonURL)
+                                let mockViewModel = MockActionButtonBlockViewModel(
+                                    title: textContentBlock.buttonText ?? "",
+                                    actionName: textContentBlock.buttonText ?? "",
+                                    actionURL: textContentBlock.buttonURL
+                                )
                                 mockViewModel.onActionTapped = { [weak self] actionUrl in
                                     self?.openAction(actionUrl: actionUrl ?? "")
                                 }

@@ -177,8 +177,13 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         let middleSelected = isOutcomeInBetslip(currentState.middleOutcome, bettingTickets: bettingTickets)
         let rightSelected = isOutcomeInBetslip(currentState.rightOutcome, bettingTickets: bettingTickets)
 
-        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states from betslip - left: \(leftSelected), middle: \(middleSelected), right: \(rightSelected)")
-        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states in parent state - left: \(currentState.leftOutcome?.isSelected ?? false), middle: \(currentState.middleOutcome?.isSelected ?? false), right: \(currentState.rightOutcome?.isSelected ?? false)")
+        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states from betslip - " +
+              "left: \(leftSelected), middle: \(middleSelected), right: \(rightSelected)")
+        let leftState = currentState.leftOutcome?.isSelected ?? false
+        let middleState = currentState.middleOutcome?.isSelected ?? false
+        let rightState = currentState.rightOutcome?.isSelected ?? false
+        print("[BETSLIP_SYNC] MatchBannerMarketOutcomesLineViewModel: Selection states in parent state - " +
+              "left: \(leftState), middle: \(middleState), right: \(rightState)")
 
         // ALWAYS update child ViewModels to match betslip state (don't rely on parent state)
         if let leftOutcome = currentState.leftOutcome {
@@ -221,7 +226,7 @@ final class MatchBannerMarketOutcomesLineViewModel: MarketOutcomesLineViewModelP
         }
 
         // Create outcome data with correct selection state from BetslipManager
-        let leftOutcome = outcomes.count > 0 ? createOutcomeData(from: outcomes[0]) : nil
+        let leftOutcome = !outcomes.isEmpty ? createOutcomeData(from: outcomes[0]) : nil
         let middleOutcome = outcomes.count > 2 ? createOutcomeData(from: outcomes[1]) : nil
         let rightOutcome = outcomes.count > 1 ? createOutcomeData(from: outcomes[outcomes.count >= 3 ? 2 : 1]) : nil
 

@@ -175,7 +175,7 @@ class CasinoCategoriesListViewController: UIViewController {
                 self.collectionView.reloadData()
 
                 // Only end tracking when we have actual data (not the initial empty state)
-                if categorySections.count > 0 {
+                if !categorySections.isEmpty {
                     // Count games from pair ViewModels (each pair has 1-2 games)
                     let totalGames = categorySections.reduce(0) { total, section in
                         total + section.gamePairViewModels.reduce(0) { pairTotal, pair in
@@ -277,16 +277,28 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
     // MARK: - Cell Configuration Methods
 
     private func configureBannerCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TopBannerCell", for: indexPath) as! TopBannerSliderCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "TopBannerCell",
+            for: indexPath
+        ) as? TopBannerSliderCollectionViewCell else {
+            return UICollectionViewCell()
+        }
 
         // Configure with banner viewModel (guaranteed non-nil when this method is called)
-        cell.configure(with: viewModel.topBannerSliderViewModel!)
+        if let bannerViewModel = viewModel.topBannerSliderViewModel {
+            cell.configure(with: bannerViewModel)
+        }
 
         return cell
     }
 
     private func configureRecentlyPlayedCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecentlyPlayedCell", for: indexPath) as! RecentlyPlayedGamesCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "RecentlyPlayedCell",
+            for: indexPath
+        ) as? RecentlyPlayedGamesCollectionViewCell else {
+            return UICollectionViewCell()
+        }
 
         cell.configure(with: viewModel.recentlyPlayedGamesViewModel)
 
@@ -299,7 +311,12 @@ extension CasinoCategoriesListViewController: UICollectionViewDataSource {
     }
 
     private func configureCategoryCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategorySectionCell", for: indexPath) as! CasinoGameImageGridSectionCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: "CategorySectionCell",
+            for: indexPath
+        ) as? CasinoGameImageGridSectionCollectionViewCell else {
+            return UICollectionViewCell()
+        }
 
         let categorySection = categorySections[indexPath.item]
 

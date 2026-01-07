@@ -29,8 +29,22 @@ struct ResponsibleGamingConfiguration: Codable {
                 .init(label: "months_3", value: "SelfExclusionFor3Months"),
                 .init(label: "months_6", value: "SelfExclusionFor6Months"),
                 .init(label: "months_12", value: "SelfExclusionFor1Year"),
-                .init(label: "months_18", value: "SelfExclusionCustom18Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 18),
-                .init(label: "months_24", value: "SelfExclusionCustom24Months", isCustomDate: true, apiValue: "SelfExclusionUntilSelectedDate", customDatePeriodType: "months", customDatePeriodValue: 24),
+                .init(
+                    label: "months_18",
+                    value: "SelfExclusionCustom18Months",
+                    isCustomDate: true,
+                    apiValue: "SelfExclusionUntilSelectedDate",
+                    customDatePeriodType: "months",
+                    customDatePeriodValue: 18
+                ),
+                .init(
+                    label: "months_24",
+                    value: "SelfExclusionCustom24Months",
+                    isCustomDate: true,
+                    apiValue: "SelfExclusionUntilSelectedDate",
+                    customDatePeriodType: "months",
+                    customDatePeriodValue: 24
+                ),
                 .init(label: "indefinitely", value: "SelfExclusionPermanent")
             ])
         )

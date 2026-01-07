@@ -122,7 +122,9 @@ public class CombinedFiltersViewModel: CombinedFiltersViewModelProtocol {
                 (competition.numberLiveEvents ?? 0) :
                 (competition.numberEvents ?? 0)
 
-            print("[FILTER_DEBUG] Competition '\(competition.name)' (id: \(competition.id)) - numberEvents: \(competition.numberEvents ?? -1), numberLiveEvents: \(competition.numberLiveEvents ?? -1), selectedCount: \(count)")
+            print("[FILTER_DEBUG] Competition '\(competition.name)' (id: \(competition.id)) - " +
+                  "numberEvents: \(competition.numberEvents ?? -1), numberLiveEvents: \(competition.numberLiveEvents ?? -1), " +
+                  "selectedCount: \(count)")
 
             // Skip leagues with no events
             guard count > 0 else { return nil }

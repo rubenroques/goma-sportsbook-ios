@@ -143,7 +143,9 @@ class MarketsTabSimpleViewModel {
             let timeSinceLastUpdate = Date().timeIntervalSince(self.lastUpdateTime)
             self.lastUpdateTime = Date()
 
-            print("BLINK_DEBUG [MarketsTabVM] 🔄 Update #\(self.updateCounter) for '\(self.marketGroupTitle)' | Time since last: \(String(format: "%.2f", timeSinceLastUpdate))s | Raw markets: \(markets.count)")
+            let timeFormatted = String(format: "%.2f", timeSinceLastUpdate)
+            print("BLINK_DEBUG [MarketsTabVM] 🔄 Update #\(self.updateCounter) for '\(self.marketGroupTitle)' " +
+                  "| Time since last: \(timeFormatted)s | Raw markets: \(markets.count)")
 
             // Group markets by type and convert to MarketGroupData
             let mappedMarkets = ServiceProviderModelMapper.markets(fromServiceProviderMarkets: markets)

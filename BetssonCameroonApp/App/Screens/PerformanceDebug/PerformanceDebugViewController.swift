@@ -304,7 +304,12 @@ extension PerformanceDebugViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PerformanceEntryCell", for: indexPath) as! PerformanceEntryCell
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: "PerformanceEntryCell",
+            for: indexPath
+        ) as? PerformanceEntryCell else {
+            return UITableViewCell()
+        }
         let entry = groupedEntries[indexPath.section].entries[indexPath.row]
         cell.configure(with: entry)
         return cell

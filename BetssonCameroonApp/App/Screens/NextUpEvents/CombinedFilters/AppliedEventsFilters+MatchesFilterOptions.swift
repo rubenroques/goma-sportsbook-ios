@@ -61,7 +61,9 @@ extension AppliedEventsFilters {
             optionalUserId: optionalUserId
         )
 
-        print("[FILTER_DEBUG] toMatchesFilterOptions - sportId: \(filterOptions.sportId), timeRange: \(filterOptions.timeRange.serverRawValue), sortBy: \(filterOptions.sortBy.serverRawValue), location: \(filterOptions.location.serverRawValue), tournament: \(filterOptions.tournament.serverRawValue)")
+        print("[FILTER_DEBUG] toMatchesFilterOptions - sportId: \(filterOptions.sportId), " +
+              "timeRange: \(filterOptions.timeRange.serverRawValue), sortBy: \(filterOptions.sortBy.serverRawValue), " +
+              "location: \(filterOptions.location.serverRawValue), tournament: \(filterOptions.tournament.serverRawValue)")
 
         return filterOptions
     }

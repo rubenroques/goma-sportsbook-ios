@@ -42,7 +42,15 @@ final class CasinoSearchViewModel: CasinoSearchViewModelProtocol {
         self.servicesProvider = servicesProvider
         self.config = config
         self.searchComponentViewModel = SearchComponentViewModel(placeholder: localized("search_in_casino"))
-        self.searchHeaderInfoViewModel = SearchHeaderInfoViewModel(searchTerm: "", categoryString: localized("in_casino"), showResultsString: localized("showing_results_for"), noResultsString: localized("unique_no_results_for"), searchingString: localized("searching_for"), state: .loading, count: nil)
+        self.searchHeaderInfoViewModel = SearchHeaderInfoViewModel(
+            searchTerm: "",
+            categoryString: localized("in_casino"),
+            showResultsString: localized("showing_results_for"),
+            noResultsString: localized("unique_no_results_for"),
+            searchingString: localized("searching_for"),
+            state: .loading,
+            count: nil
+        )
         setupBindings()
 
     }

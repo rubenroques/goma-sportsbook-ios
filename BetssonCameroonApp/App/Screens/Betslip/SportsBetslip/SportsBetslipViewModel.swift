@@ -90,7 +90,12 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             layoutType: .iconRight
         )
         
-        self.emptyStateViewModel = MockEmptyStateActionViewModel(state: .loggedOut, title: localized("more_selections_to_bet").replacingOccurrences(of: "{selectionNumber}", with: "1"), actionButtonTitle: localized("log_in_to_bet"), image: "empty_betslip_icon")
+        self.emptyStateViewModel = MockEmptyStateActionViewModel(
+            state: .loggedOut,
+            title: localized("more_selections_to_bet").replacingOccurrences(of: "{selectionNumber}", with: "1"),
+            actionButtonTitle: localized("log_in_to_bet"),
+            image: "empty_betslip_icon"
+        )
         
         // Initialize with default currency, will be updated when user profile is available
         let currency = environment.userSessionStore.userWalletPublisher.value?.currency ?? "XAF"

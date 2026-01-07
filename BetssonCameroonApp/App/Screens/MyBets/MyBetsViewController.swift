@@ -512,13 +512,15 @@ extension MyBetsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
+        guard let cell = tableView.dequeueReusableCell(
             withIdentifier: TicketBetInfoTableViewCell.identifier,
             for: indexPath
-        ) as! TicketBetInfoTableViewCell
-        
+        ) as? TicketBetInfoTableViewCell else {
+            return UITableViewCell()
+        }
+
         let viewModel = ticketViewModels[indexPath.row]
-        
+
         // Configure cell position for corner radius
         let isFirst = indexPath.row == 0
         let isLast = indexPath.row == ticketViewModels.count - 1

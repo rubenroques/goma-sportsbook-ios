@@ -98,7 +98,9 @@ class RealtimeSocketClient {
             return
         }
 
-        GomaLogger.info(.networking, category: "FIREBASE", "Successfully parsed boot_configurations - maintenance: \(firebaseClientSettings.isOnMaintenance), requiredVersion: \(firebaseClientSettings.requiredAppVersion), currentVersion: \(firebaseClientSettings.currentAppVersion)")
+        GomaLogger.info(.networking, category: "FIREBASE",
+            "Successfully parsed boot_configurations - maintenance: \(firebaseClientSettings.isOnMaintenance), " +
+            "requiredVersion: \(firebaseClientSettings.requiredAppVersion), currentVersion: \(firebaseClientSettings.currentAppVersion)")
 
         let versions = (required: firebaseClientSettings.requiredAppVersion, current: firebaseClientSettings.currentAppVersion)
         // Send values to the private subjects

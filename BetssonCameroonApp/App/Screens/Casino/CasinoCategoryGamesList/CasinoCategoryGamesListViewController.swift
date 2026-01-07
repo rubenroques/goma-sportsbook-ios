@@ -265,15 +265,25 @@ extension CasinoCategoryGamesListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0: // Game images section
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameImageCell", for: indexPath) as! CasinoGameImageCollectionViewCell
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "GameImageCell",
+                for: indexPath
+            ) as? CasinoGameImageCollectionViewCell else {
+                return UICollectionViewCell()
+            }
 
             let gameViewModel = games[indexPath.item]
             cell.configure(with: gameViewModel)
 
             return cell
-            
+
         case 1: // See More button section
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SeeMoreButtonCell", for: indexPath) as! SeeMoreButtonCollectionViewCell
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "SeeMoreButtonCell",
+                for: indexPath
+            ) as? SeeMoreButtonCollectionViewCell else {
+                return UICollectionViewCell()
+            }
             
             // Configure See More button
             let buttonData = SeeMoreButtonData(

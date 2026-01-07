@@ -134,7 +134,15 @@ final class SportsSearchViewModel: SportsSearchViewModelProtocol {
         self.searchComponentViewModel = SearchComponentViewModel(placeholder: localized("search_in_sportsbook"))
         
         // Create the SearchHeaderInfoView's view model
-        self.searchHeaderInfoViewModel = SearchHeaderInfoViewModel(searchTerm: "", categoryString: localized("in_sports"), showResultsString: localized("showing_results_for"), noResultsString: localized("unique_no_results_for"), searchingString: localized("searching_for"), state: .loading, count: nil)
+        self.searchHeaderInfoViewModel = SearchHeaderInfoViewModel(
+            searchTerm: "",
+            categoryString: localized("in_sports"),
+            showResultsString: localized("showing_results_for"),
+            noResultsString: localized("unique_no_results_for"),
+            searchingString: localized("searching_for"),
+            state: .loading,
+            count: nil
+        )
         
         setupBindings()
         setupSearchComponentBindings()
