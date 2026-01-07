@@ -15,6 +15,13 @@ final class TicketBetInfoTableViewCell: UITableViewCell {
     private var ticketBetInfoView: TicketBetInfoView?
     private var cancellables = Set<AnyCancellable>()
     
+    // Will be called when there's a content update at the `TicketBetInfoView`
+    public var updateLayout: (() -> Void)? {
+        didSet {
+            self.ticketBetInfoView?.onBottomContentChanged = self.updateLayout
+        }
+    }
+    
     // MARK: - Cell Identifier
     
     static let identifier = "TicketBetInfoTableViewCell"

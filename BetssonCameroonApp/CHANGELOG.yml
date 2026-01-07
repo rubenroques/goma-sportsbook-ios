@@ -4,7 +4,15 @@
 
 releases:
 
-  - version: "0.3.8"
+  - version: "0.3.9"
+    build: 3901
+    date: "2026-01-07"
+    notes:
+      - "fix(cashout): [SPOR-7065] BA - Cashout UI and refresh inconsistencies - added snap-to-edge zones for slider precision"
+      - "fix(cashout): [SPOR-6462] [BC-153] BA - Cashout not working on Android & iOS UAT"
+      - "fix(cashout): [SPOR-7000] [BC-342] BA - Update new Cashout endpoints"
+
+  - version: "0.3.8" # released
     build: 3802
     date: "2025-12-23"
     notes:

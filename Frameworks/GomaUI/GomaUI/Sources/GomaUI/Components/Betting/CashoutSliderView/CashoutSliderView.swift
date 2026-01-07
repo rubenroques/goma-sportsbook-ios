@@ -6,6 +6,9 @@ public class CashoutSliderView: UIView {
     // MARK: - Properties
     private let viewModel: CashoutSliderViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
+
+    /// Snap threshold as percentage of slider range (2.5% at each edge)
+    private let snapThresholdPercentage: Float = 0.025
     
     // MARK: - UI Components
     private let containerView: UIView = {
@@ -60,16 +63,16 @@ public class CashoutSliderView: UIView {
     private let slider: UISlider = {
         let slider = UISlider()
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.minimumTrackTintColor = StyleProvider.Color.highlightPrimary
+        slider.minimumTrackTintColor = StyleProvider.Color.alertSuccess
         slider.maximumTrackTintColor = StyleProvider.Color.backgroundSecondary
-        slider.thumbTintColor = StyleProvider.Color.highlightPrimary
+        slider.thumbTintColor = StyleProvider.Color.alertSuccess
         
         // Create a smaller thumb with highlightPrimary color
         let thumbSize: CGFloat = 16
         
         if let customThumbImage = UIImage(named: "slider_thumb_icon")?.withConfiguration(
             UIImage.SymbolConfiguration(pointSize: thumbSize, weight: .medium)
-        ).withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal) {
+        ).withTintColor(StyleProvider.Color.alertSuccess, renderingMode: .alwaysOriginal) {
             slider.setThumbImage(customThumbImage, for: .normal)
             slider.setThumbImage(customThumbImage, for: .highlighted)
             slider.setThumbImage(customThumbImage, for: .selected)
@@ -77,7 +80,7 @@ public class CashoutSliderView: UIView {
         }
         else if let thumbImage = UIImage(systemName: "circle.fill")?.withConfiguration(
             UIImage.SymbolConfiguration(pointSize: thumbSize, weight: .medium)
-        ).withTintColor(StyleProvider.Color.highlightPrimary, renderingMode: .alwaysOriginal) {
+        ).withTintColor(StyleProvider.Color.alertSuccess, renderingMode: .alwaysOriginal) {
             slider.setThumbImage(thumbImage, for: .normal)
             slider.setThumbImage(thumbImage, for: .highlighted)
             slider.setThumbImage(thumbImage, for: .selected)
@@ -162,7 +165,7 @@ public class CashoutSliderView: UIView {
             slider.bottomAnchor.constraint(equalTo: sliderView.bottomAnchor),
             
             // Button constraints
-            buttonView.topAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: 18),
+            buttonView.topAnchor.constraint(equalTo: sliderView.bottomAnchor, constant: 8),
             buttonView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
             buttonView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
             buttonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8)
@@ -182,8 +185,8 @@ public class CashoutSliderView: UIView {
     private func updateUI(with data: CashoutSliderData) {
         // Update header
         titleLabel.text = data.title
-        minimumValueLabel.text = String(format: "%.1f", data.minimumValue)
-        maximumValueLabel.text = String(format: "%.0f", data.maximumValue)
+        minimumValueLabel.text = String(format: "%.2f", data.minimumValue)
+        maximumValueLabel.text = String(format: "%.2f", data.maximumValue)
         
         // Update slider
         slider.minimumValue = data.minimumValue
@@ -192,16 +195,39 @@ public class CashoutSliderView: UIView {
         slider.isEnabled = data.isEnabled
         
         // Update button title through the button view model
-        let cashoutAmount = String(format: "%.0f", data.currentValue)
-        let buttonTitle = "Cashout \(data.currency) \(cashoutAmount)"
-        viewModel.buttonViewModel.updateTitle(buttonTitle)
+        viewModel.buttonViewModel.updateTitle(data.selectionTitle)
         viewModel.buttonViewModel.setEnabled(data.isEnabled)
         
     }
     
     // MARK: - Actions
     @objc private func sliderValueChanged(_ sender: UISlider) {
+        let snapped = snappedValue(
+            for: sender.value,
+            min: sender.minimumValue,
+            max: sender.maximumValue
+        )
+
+        // Always update slider to snapped value (ensures visual matches data)
+        sender.value = snapped
         viewModel.updateSliderValue(sender.value)
+    }
+
+    // MARK: - Helpers
+    /// Snaps values within threshold percentage of min/max to the exact edge value
+    private func snappedValue(for rawValue: Float, min: Float, max: Float) -> Float {
+        let range = max - min
+        let snapThreshold = range * snapThresholdPercentage
+
+        // Snap to minimum when within threshold
+        if rawValue <= min + snapThreshold {
+            return min
+        }
+        // Snap to maximum when within threshold
+        if rawValue >= max - snapThreshold {
+            return max
+        }
+        return rawValue
     }
 }
 

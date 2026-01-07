@@ -28,19 +28,21 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     // MARK: - Public Methods
     public func updateSliderValue(_ value: Float) {
         let currentData = dataSubject.value
+        let cashoutAmount = String(format: "%.0f", value)
+        let buttonTitle = "Cashout \(currentData.currency) \(cashoutAmount)"
         let updatedData = CashoutSliderData(
             title: currentData.title,
             minimumValue: currentData.minimumValue,
             maximumValue: currentData.maximumValue,
             currentValue: value,
             currency: currentData.currency,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         dataSubject.send(updatedData)
         
         // Update button title
-        let cashoutAmount = String(format: "%.0f", value)
-        let buttonTitle = "Cashout \(currentData.currency) \(cashoutAmount)"
         buttonViewModel.updateTitle(buttonTitle)
     }
     
@@ -57,7 +59,9 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: currentData.maximumValue,
             currentValue: currentData.currentValue,
             currency: currentData.currency,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            selectionTitle: currentData.selectionTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         dataSubject.send(updatedData)
     }
@@ -66,21 +70,23 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
         dataSubject.send(data)
         
         // Update button title
-        let cashoutAmount = String(format: "%.0f", data.currentValue)
-        let buttonTitle = "Cashout \(data.currency) \(cashoutAmount)"
-        buttonViewModel.updateTitle(buttonTitle)
+        buttonViewModel.updateTitle(data.selectionTitle)
         buttonViewModel.setEnabled(data.isEnabled)
     }
     
     // MARK: - Mock Factory Methods
     public static func defaultMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
+        let cashoutAmount = String(format: "%.0f", 200.0)
+        let buttonTitle = "Cashout XAF \(cashoutAmount)"
         let data = CashoutSliderData(
             title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 200.0,
-            currency: "XAF"
+            currency: "XAF",
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -88,12 +94,16 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     
     public static func maximumMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
+        let cashoutAmount = String(format: "%.0f", 200.0)
+        let buttonTitle = "Cashout XAF \(cashoutAmount)"
         let data = CashoutSliderData(
             title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 200.0,
-            currency: "XAF"
+            currency: "XAF",
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -101,12 +111,16 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
     
     public static func minimumMock() -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
+        let cashoutAmount = String(format: "%.0f", 0.1)
+        let buttonTitle = "Cashout XAF \(cashoutAmount)"
         let data = CashoutSliderData(
             title: LocalizationProvider.string("choose_a_cash_out_amount"),
             minimumValue: 0.1,
             maximumValue: 200.0,
             currentValue: 0.1,
-            currency: "XAF"
+            currency: "XAF",
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -120,12 +134,16 @@ public class MockCashoutSliderViewModel: CashoutSliderViewModelProtocol {
         currency: String = "XAF"
     ) -> MockCashoutSliderViewModel {
         let viewModel = MockCashoutSliderViewModel()
+        let cashoutAmount = String(format: "%.0f", currentValue)
+        let buttonTitle = "Cashout \(currency) \(cashoutAmount)"
         let data = CashoutSliderData(
             title: title,
             minimumValue: minimumValue,
             maximumValue: maximumValue,
             currentValue: currentValue,
-            currency: currency
+            currency: currency,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
         viewModel.updateData(data)
         return viewModel
@@ -140,7 +158,9 @@ extension CashoutSliderData {
             minimumValue: 0.0,
             maximumValue: 1.0,
             currentValue: 0.0,
-            currency: ""
+            currency: "",
+            selectionTitle: "",
+            fullCashoutValue: 0.0
         )
     }
 } 

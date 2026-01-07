@@ -60,6 +60,10 @@ public protocol TicketBetInfoViewModelProtocol {
     /// ViewModel for cashout amount display. When nil, amount view is not shown.
     var cashoutAmountViewModel: CashoutAmountViewModelProtocol? { get }
 
+    /// ViewModel for full cashout button. When nil, button is not shown.
+    /// Used when partialCashOutEnabled is false (full cashout only, no slider).
+    var fullCashoutButtonViewModel: ButtonViewModelProtocol? { get }
+
     /// Whether cashout is currently executing (for loading overlay)
     var isCashoutLoading: Bool { get }
 

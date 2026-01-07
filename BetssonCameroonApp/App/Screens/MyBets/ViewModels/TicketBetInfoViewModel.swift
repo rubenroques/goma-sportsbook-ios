@@ -21,10 +21,12 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - Cashout Component ViewModels
     private(set) var cashoutSliderViewModel: CashoutSliderViewModelProtocol?
     private(set) var cashoutAmountViewModel: CashoutAmountViewModelProtocol?
+    private(set) var fullCashoutButtonViewModel: ButtonViewModelProtocol?
 
     // Internal references for updates
     private var _cashoutSliderVM: CashoutSliderViewModel?
     private var _cashoutAmountVM: CashoutAmountViewModel?
+    private var _fullCashoutButtonVM: ButtonViewModel?
 
     // Store values for calculations
     private var fullCashoutValue: Double = 0.0
@@ -297,6 +299,29 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
 
         // Keep amount VM if exists (for historical cashouts display)
 
+        // Create full cashout button ViewModel
+        if fullCashoutValue > 0 && remainingStake > 0 {
+            let formattedAmount = CurrencyHelper.formatAmountWithCurrency(fullCashoutValue, currency: myBet.currency)
+            let buttonTitle = localized("mybets_cashout_amount")
+                .replacingOccurrences(of: "{amount}", with: formattedAmount)
+            
+            let fullCashoutButtonVM = ButtonViewModel.cashoutButton(isEnabled: true)
+            fullCashoutButtonVM.updateTitle(buttonTitle)
+            
+            // Wire up button action to execute full cashout
+            fullCashoutButtonVM.onButtonTapped = { [weak self] in
+                guard let self = self else { return }
+                GomaLogger.info(.betting, category: "CASHOUT", "Executing full cashout via fullCashoutButton for bet \(self.myBet.identifier)")
+                self.handleCashoutRequest(forStakeValue: Float(self.remainingStake))
+            }
+            
+            self._fullCashoutButtonVM = fullCashoutButtonVM
+            self.fullCashoutButtonViewModel = fullCashoutButtonVM
+        } else {
+            _fullCashoutButtonVM = nil
+            fullCashoutButtonViewModel = nil
+        }
+
         // Enable cashout button for full cashout
         if let cashoutVM = cashoutButtonViewModel as? ButtonIconViewModel {
             cashoutVM.setEnabled(fullCashoutValue > 0)
@@ -313,19 +338,30 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         self.fullCashoutValue = cashoutValue
         self.remainingStake = stake
 
+        // Clear full cashout button (slider takes precedence)
+        _fullCashoutButtonVM = nil
+        fullCashoutButtonViewModel = nil
+
         // Slider bounds (stake amount, not cashout value)
-        let minStake: Float = 0.1
+        let minStake: Float = 0.01
         let maxStake = Float(stake)
         let initialStake = maxStake * 0.8  // 80% per Web/Android
+        let returnValue = calculatePartialCashout(forStakeValue: initialStake)
 
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(returnValue, currency: myBet.currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        
         // Create slider ViewModel
         let sliderVM = CashoutSliderViewModel(
-            title: localized("mybets_choose_cashout_amount"),
+            title: localized("choose_a_cash_out_amount"),
             minimumValue: minStake,
             maximumValue: maxStake,
             currentValue: initialStake,
             currency: myBet.currency,
-            isEnabled: true
+            isEnabled: true,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: Float(fullCashoutValue),
         )
 
         // Wire cashout button tap
@@ -502,14 +538,20 @@ final class TicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
         // Format cashout values only if bet can be cashed out
         let partialCashoutValue: String? = myBet.canCashOut ? cashoutAmount.map { formatCurrency($0, currency: myBet.currency) } : nil
         let cashoutTotalAmount: String? = myBet.canCashOut ? cashoutAmount.map { formatCurrency($0, currency: myBet.currency) } : nil
-
+        
+        let partialCashoutStake: String = if let partialCashout = myBet.partialCashoutStake {
+            formatCurrency(partialCashout, currency: myBet.currency)
+        } else {
+            formatCurrency(myBet.stake, currency: myBet.currency)
+        }
+        
         return TicketBetInfoData(
             id: myBet.identifier,
             title: formatBetTitle(myBet),
             betDetails: formatBetDetails(myBet),
             tickets: ticketSelections,
             totalOdds: formatOdds(myBet.totalOdd),
-            betAmount: formatCurrency(myBet.stake, currency: myBet.currency),
+            betAmount: partialCashoutStake,
             possibleWinnings: formatPossibleWinnings(myBet),
             partialCashoutValue: partialCashoutValue,
             cashoutTotalAmount: cashoutTotalAmount,

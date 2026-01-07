@@ -23,6 +23,7 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
     // MARK: - Cashout Component ViewModels
     public var cashoutSliderViewModel: CashoutSliderViewModelProtocol?
     public var cashoutAmountViewModel: CashoutAmountViewModelProtocol?
+    public var fullCashoutButtonViewModel: ButtonViewModelProtocol?
 
     // MARK: - Loading State
     private let cashoutLoadingSubject = CurrentValueSubject<Bool, Never>(false)
@@ -298,6 +299,57 @@ public class MockTicketBetInfoViewModel: TicketBetInfoViewModelProtocol {
             possibleWinnings: "XAF 78.85",
             partialCashoutValue: nil,
             cashoutTotalAmount: "200.0",
+            betStatus: nil,
+            isSettled: false
+        )
+        viewModel.updateBetInfo(betInfo)
+        return viewModel
+    }
+    
+    public static func pendingMockWithFullCashoutButton() -> MockTicketBetInfoViewModel {
+        let viewModel = MockTicketBetInfoViewModel()
+
+        // Create mock full cashout button ViewModel
+        let buttonData = ButtonData(
+            id: "full_cashout",
+            title: "Cashout XAF 200.00",
+            style: .solidBackground,
+            backgroundColor: StyleProvider.Color.buttonBackgroundSecondary,
+            disabledBackgroundColor: StyleProvider.Color.buttonDisableSecondary,
+            isEnabled: true
+        )
+        let fullCashoutButtonVM = MockButtonViewModel(buttonData: buttonData)
+        fullCashoutButtonVM.onButtonTapped = {
+            print("Full cashout button tapped!")
+        }
+        viewModel.fullCashoutButtonViewModel = fullCashoutButtonVM
+
+        let betInfo = TicketBetInfoData(
+            id: "BET005",
+            title: "Single Bet - Pending",
+            betDetails: "00/00/0000 00:00 | Bet ID: 00005",
+            tickets: [
+                TicketSelectionData(
+                    id: "TICKET001",
+                    competitionName: LocalizationProvider.string("competition"),
+                    homeTeamName: "Team 1",
+                    awayTeamName: "Team 2",
+                    homeScore: 0,
+                    awayScore: 0,
+                    matchDate: "Today 15:30",
+                    isLive: true,
+                    sportIcon: "soccerball",
+                    countryFlag: "flag.fill",
+                    marketName: "Market",
+                    selectionName: "Selection",
+                    oddsValue: "0.00"
+                )
+            ],
+            totalOdds: "7.84",
+            betAmount: "XAF 10.00",
+            possibleWinnings: "XAF 78.85",
+            partialCashoutValue: nil,
+            cashoutTotalAmount: "200.00",
             betStatus: nil,
             isSettled: false
         )

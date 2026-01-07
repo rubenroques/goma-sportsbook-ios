@@ -397,6 +397,11 @@ class MyBetsViewController: UIViewController {
 
     }
     
+    private func updateTableViewCellLayout() {
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
     // MARK: - Alert Methods
     private func showRebetConfirmationAlert(completion: @escaping (Bool) -> Void) {
         let alert = UIAlertController(
@@ -521,6 +526,10 @@ extension MyBetsViewController: UITableViewDataSource {
         
         cell.configure(with: viewModel)
         cell.configureCellPosition(isFirst: isFirst, isLast: isLast, isOnlyCell: isOnlyCell)
+        
+        cell.updateLayout = { [weak self] in
+            self?.updateTableViewCellLayout()
+        }
         
         return cell
     }

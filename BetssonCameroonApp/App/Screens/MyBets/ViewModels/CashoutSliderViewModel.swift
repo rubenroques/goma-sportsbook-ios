@@ -5,7 +5,6 @@ import GomaUI
 final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
     
     // MARK: - Properties
-    
     private let dataSubject: CurrentValueSubject<CashoutSliderData, Never>
     private let _buttonViewModel: ButtonViewModel
     
@@ -31,7 +30,9 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
         maximumValue: Float,
         currentValue: Float,
         currency: String,
-        isEnabled: Bool = true
+        isEnabled: Bool = true,
+        selectionTitle: String,
+        fullCashoutValue: Float
     ) {
         let sliderData = CashoutSliderData(
             title: title,
@@ -39,7 +40,9 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: maximumValue,
             currentValue: currentValue,
             currency: currency,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            selectionTitle: selectionTitle,
+            fullCashoutValue: fullCashoutValue
         )
         
         self.dataSubject = CurrentValueSubject(sliderData)
@@ -56,6 +59,12 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
     func updateSliderValue(_ value: Float) {
         let currentData = dataSubject.value
         let clampedValue = max(currentData.minimumValue, min(currentData.maximumValue, value))
+        let partialCashoutReturn = (currentData.fullCashoutValue * currentData.currentValue) / currentData.maximumValue
+        
+        // Update button title with current amount
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(partialCashoutReturn), currency: currentData.currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
         
         let newData = CashoutSliderData(
             title: currentData.title,
@@ -63,16 +72,12 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: currentData.maximumValue,
             currentValue: clampedValue,
             currency: currentData.currency,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
         
         dataSubject.send(newData)
-        
-        // Update button title with current amount
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(clampedValue), currency: currentData.currency)
-        let buttonTitle = localized("mybets_cashout_amount")
-            .replacingOccurrences(of: "{amount}", with: formattedAmount)
-        _buttonViewModel.updateTitle(buttonTitle)
     }
     
     func handleCashoutTap() {
@@ -88,11 +93,13 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
             maximumValue: currentData.maximumValue,
             currentValue: currentData.currentValue,
             currency: currentData.currency,
-            isEnabled: isEnabled
+            isEnabled: isEnabled,
+            selectionTitle: currentData.selectionTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
 
         dataSubject.send(newData)
-        _buttonViewModel.setEnabled(isEnabled)
+//        _buttonViewModel.setEnabled(isEnabled)
     }
 
     /// Update slider bounds after partial cashout success
@@ -103,22 +110,25 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
         let currentData = dataSubject.value
         let newCurrentValue = newMaximumValue * resetToPercentage
 
+        // Update button title with new amount
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(newCurrentValue), currency: currentData.currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        
         let newData = CashoutSliderData(
             title: currentData.title,
             minimumValue: currentData.minimumValue,
             maximumValue: newMaximumValue,
             currentValue: newCurrentValue,
             currency: currentData.currency,
-            isEnabled: currentData.isEnabled
+            isEnabled: currentData.isEnabled,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: currentData.fullCashoutValue
         )
 
         dataSubject.send(newData)
 
-        // Update button title with new amount
-        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(newCurrentValue), currency: currentData.currency)
-        let buttonTitle = localized("mybets_cashout_amount")
-            .replacingOccurrences(of: "{amount}", with: formattedAmount)
-        _buttonViewModel.updateTitle(buttonTitle)
+//        _buttonViewModel.updateTitle(buttonTitle)
     }
 }
 
@@ -136,13 +146,19 @@ extension CashoutSliderViewModel {
         let maximumValue = Float(totalCashoutAmount)
         let currentValue = maximumValue // Start at maximum
 
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(currentValue), currency: currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        
         return CashoutSliderViewModel(
             title: defaultTitle,
             minimumValue: minimumValue,
             maximumValue: maximumValue,
             currentValue: currentValue,
             currency: currency,
-            isEnabled: true
+            isEnabled: true,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
     }
     
@@ -154,13 +170,19 @@ extension CashoutSliderViewModel {
         title: String? = nil
     ) -> CashoutSliderViewModel {
         let defaultTitle = title ?? localized("mybets_choose_cashout_amount")
+        let formattedAmount = CurrencyHelper.formatAmountWithCurrency(currentAmount, currency: currency)
+        let buttonTitle = localized("mybets_cashout_amount")
+            .replacingOccurrences(of: "{amount}", with: formattedAmount)
+        
         return CashoutSliderViewModel(
             title: defaultTitle,
             minimumValue: Float(minimumAmount),
             maximumValue: Float(maximumAmount),
             currentValue: Float(currentAmount),
             currency: currency,
-            isEnabled: true
+            isEnabled: true,
+            selectionTitle: buttonTitle,
+            fullCashoutValue: 0.0
         )
     }
     
