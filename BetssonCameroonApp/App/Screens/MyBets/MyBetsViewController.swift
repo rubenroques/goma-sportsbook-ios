@@ -397,7 +397,7 @@ class MyBetsViewController: UIViewController {
 
     }
     
-    private func updateTableViewCellUI() {
+    private func updateTableViewCellLayout() {
         tableView.beginUpdates()
         tableView.endUpdates()
     }
@@ -528,7 +528,7 @@ extension MyBetsViewController: UITableViewDataSource {
         cell.configureCellPosition(isFirst: isFirst, isLast: isLast, isOnlyCell: isOnlyCell)
         
         cell.updateLayout = { [weak self] in
-            self?.updateTableViewCellUI()
+            self?.updateTableViewCellLayout()
         }
         
         return cell
