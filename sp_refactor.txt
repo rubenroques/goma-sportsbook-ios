@@ -1,0 +1,1626 @@
+
+ * ▐▛███▜▌ *   Claude Code v2.0.76
+* ▝▜█████▛▘ *  Opus 4.5 · Claude API
+ *  ▘▘ ▝▝  *   ~/Desktop/GOMA/iOS/sportsbook-ios
+
+> read > /Users/rroques/Desktop/GOMA/CoreMasterAggregator/Documentation/Test
+Ideas/iOS-CashOut-Testability.md 
+
+⏺ Read(~/Desktop/GOMA/CoreMasterAggregator/Documentation/TestIdeas/iOS-CashOut-T
+      estability.md)
+  ⎿  Read 693 lines
+
+⏺ This is a testability requirements document for the iOS Cash Out feature. Here's a summary:
+
+  Current Problem
+
+  TicketBetInfoViewModel has tight coupling to ServicesProvider.Client, making unit testing impossible without hitting real network/SSE.
+
+  Proposed Solution
+
+  Phase 1: Protocol Abstraction (HIGH PRIORITY)
+
+  1. Create BettingServiceProvider protocol with:
+    - subscribeToCashoutValue(betId:) → SSE subscription
+    - executeCashout(request:) → Cashout execution
+  2. Make ServicesProvider.Client conform to it
+  3. Update TicketBetInfoViewModel to depend on protocol instead of concrete type
+
+  Phase 2: Extract Logic (MEDIUM PRIORITY)
+
+  Create CashoutCalculator utility with pure functions:
+  - calculatePartialCashout(fullCashoutValue:stakeValue:totalStake:)
+  - isFullCashout(stakeValue:totalStake:)
+  - defaultSliderPosition(totalStake:)
+  - clampSliderValue(_:min:max:)
+
+  Phase 3: Mocks
+
+  - MockBettingServiceProvider with configurable responses
+  - MyBet, CashoutValue, CashoutResponse mock factories
+
+  Phase 4: Tests
+
+  - CashoutCalculatorTests - pure logic (easiest)
+  - TicketBetInfoViewModelTests - ViewModel behavior with mocks
+
+  ---
+  The document emphasizes backward compatibility - all changes are additive with convenience initializers maintaining existing production code paths.
+
+  Would you like me to implement any of these phases?
+
+> I need your help to brainstorm about this for a little bit. Where should 
+the protocol be created? Also, if services provider will be used by another 
+application, it would be cool if the protocol is already there. So I'm not 
+sure how to refactor this, but at the same time allow other clients to have 
+access to an easier way to "unit test" / "integration test" when they are 
+using services provider. 
+
+Also a side question: in iOS, what is the difference between unit tests and 
+integration tests? Should we always use mocks for the services or should we 
+use real endpoints? It will have a huge impact on continuous integration 
+servers that run the unit tests when they are created. 
+
+⏺ Great questions. Let me address both - they're actually deeply connected.
+
+  Question 1: Where Should the Protocol Live?
+
+  You're right to think about this. The document suggests modifying ServicesProvider, but let's think through the implications:
+
+  Option A: Protocol in ServicesProvider (Recommended)
+
+  ServicesProvider/
+  ├── Protocols/
+  │   ├── BettingProvider.swift      ← Already exists
+  │   └── CashoutService.swift       ← NEW focused protocol
+  ├── Mocks/                         ← NEW folder
+  │   └── MockCashoutService.swift   ← Shared mock for all clients
+  └── Client.swift                   ← Conforms to protocol
+
+  Pros:
+  - All clients (BetssonCameroonApp, BetssonFranceApp, future apps) benefit immediately
+  - Single source of truth for the protocol contract
+  - Mocks can be distributed with the framework
+  - Consistent testing patterns across the organization
+
+  Cons:
+  - Changes to ServicesProvider affect all clients
+  - Requires more careful review/versioning
+
+  Option B: Protocol in Each Client App
+
+  BetssonCameroonApp/
+  └── Services/
+      └── CashoutServiceProtocol.swift  ← App-specific
+
+  Pros:
+  - No risk to other clients
+  - Can iterate quickly
+
+  Cons:
+  - Duplicated effort when BetssonFranceApp needs the same thing
+  - Divergent implementations over time
+  - Defeats the purpose of a shared framework
+
+  My Recommendation
+
+  Option A is the right choice, but with a specific approach:
+
+  The existing BettingProvider protocol in ServicesProvider likely already declares these methods. The problem isn't the protocol - it's that:
+
+  1. ServicesProvider.Client is a concrete class, not a protocol
+  2. ViewModels depend on the concrete class, not the protocol
+
+  Let me check what actually exists in ServicesProvider to give you a more precise answer:
+
+⏺ Search(pattern: "protocol.*BettingProvider", path:
+        "Frameworks/ServicesProvider")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+⏺ Search(pattern: "func.*cashout|func.*Cashout", path:
+        "Frameworks/ServicesProvider")
+  ⎿  Found 8 files (ctrl+o to expand)
+
+⏺ Search(pattern: "**/ServicesProvider/**/Protocols/**/*.swift")
+  ⎿  Found 36 files (ctrl+o to expand)
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/BettingPro
+      vider.swift)
+  ⎿  Read 94 lines
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift)
+  ⎿  Error: File content (34636 tokens) exceeds maximum allowed tokens (25000). 
+     Please use offset and limit parameters to read specific portions of the 
+     file, or use the GrepTool to search for specific content.
+
+⏺ The BettingProvider protocol already exists with the exact methods needed (lines 69, 75):
+
+  func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
+  func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+
+  Now let me see how Client exposes this:
+
+⏺ Search(pattern: "class Client|var betting|BettingProvider", path:
+        "Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift",
+        output_mode: "content")
+  ⎿  Found 6 lines (ctrl+o to expand)
+
+⏺ Search(pattern: "servicesProvider\.|servicesProvider:", path:
+        "BetssonCameroonApp/BetssonCameroonApp/App/Screens/MyBets", output_mode:
+         "content")
+  ⎿  Error searching files
+
+⏺ Search(pattern: "**/TicketBetInfoViewModel.swift")
+  ⎿  Found 3 files (ctrl+o to expand)
+
+⏺ Read(BetssonCameroonApp/App/Screens/MyBets/ViewModels/TicketBetInfoViewModel.s
+      wift)
+  ⎿  Read 640 lines
+
+⏺ Now I have the full picture. Let me break down what I found:
+
+  Current State Analysis
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │ BettingProvider protocol EXISTS ✓                          │
+  │ Location: ServicesProvider/Protocols/BettingProvider.swift │
+  │ Methods: subscribeToCashoutValue, executeCashout           │
+  └─────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │ Client.swift (concrete class)                              │
+  │ private var bettingProvider: (any BettingProvider)?        │
+  │ Wraps the protocol, but is itself a concrete class         │
+  └─────────────────────────────────────────────────────────────┘
+                             │
+                             ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │ TicketBetInfoViewModel                                      │
+  │ private let servicesProvider: ServicesProvider.Client  ← PROBLEM │
+  │ Depends on CONCRETE class, not protocol                    │
+  └─────────────────────────────────────────────────────────────┘
+
+  The protocol already exists - the issue is that Client is a "God Object" that wraps everything (betting, events, auth, analytics), and ViewModels depend on this concrete class instead of specific protocols.
+
+  ---
+  Question 1: Refactoring Strategy
+
+  Option A: Inject BettingProvider Directly (Minimal Change)
+
+  // TicketBetInfoViewModel.swift
+  init(myBet: MyBet, bettingService: any BettingProvider) {
+      self.bettingService = bettingService
+  }
+
+  // Convenience for production
+  convenience init(myBet: MyBet, servicesProvider: ServicesProvider.Client) {
+      self.init(myBet: myBet, bettingService: servicesProvider.betting)
+  }
+
+  Problem: Client doesn't expose bettingProvider publicly - it's private.
+
+  Option B: Add Public Accessor to Client (Best for Reusability)
+
+  In ServicesProvider/Client.swift:
+  public var betting: any BettingProvider {
+      bettingProvider!  // Or handle nil gracefully
+  }
+
+  Then ALL clients can do:
+  let vm = TicketBetInfoViewModel(myBet: bet, bettingService: client.betting)
+
+  For tests:
+  let mockBetting = MockBettingProvider()
+  let vm = TicketBetInfoViewModel(myBet: bet, bettingService: mockBetting)
+
+  Option C: Create Focused Sub-Protocol (Most Flexible)
+
+  // In ServicesProvider/Protocols/
+  public protocol CashoutService {
+      func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
+      func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+  }
+
+  // BettingProvider already conforms (has these methods)
+  extension BettingProvider: CashoutService {}
+
+  My Recommendation: Option B - expose betting publicly on Client. This:
+  - Requires minimal changes to ServicesProvider
+  - Allows granular injection
+  - Keeps protocol where it belongs (ServicesProvider)
+  - Other clients benefit immediately
+
+  ---
+  Question 2: Unit Tests vs Integration Tests
+
+  Unit Tests
+
+  | Aspect       | Description                                          |
+  |--------------|------------------------------------------------------|
+  | Scope        | Single class/function in isolation                   |
+  | Dependencies | All mocked/stubbed                                   |
+  | Speed        | Milliseconds per test                                |
+  | Reliability  | 100% deterministic                                   |
+  | Network      | Never                                                |
+  | When to run  | Every commit, every PR                               |
+  | Example      | Test calculatePartialCashout() returns correct value |
+
+  func testPartialCashoutCalculation() {
+      // No network, no dependencies, just pure logic
+      let result = CashoutCalculator.calculatePartialCashout(
+          fullCashoutValue: 150.0,
+          stakeValue: 80.0,
+          totalStake: 100.0
+      )
+      XCTAssertEqual(result, 120.0)
+  }
+
+  Integration Tests
+
+  | Aspect       | Description                                |
+  |--------------|--------------------------------------------|
+  | Scope        | Multiple components working together       |
+  | Dependencies | Real (or test doubles at boundaries)       |
+  | Speed        | Seconds to minutes                         |
+  | Reliability  | May be flaky (network, timing)             |
+  | Network      | Often yes (staging/test environment)       |
+  | When to run  | Nightly, pre-release, manually             |
+  | Example      | Test full cashout flow against staging API |
+
+  func testCashoutIntegration() {
+      // Hits real staging API
+      let client = ServicesProvider.Client(environment: .staging)
+      let response = try await client.executeCashout(request: testRequest)
+      XCTAssertTrue(response.success)
+  }
+
+  Should You Use Mocks or Real Endpoints?
+
+  | Test Type         | Use Mocks?         | Use Real Endpoints? |
+  |-------------------|--------------------|---------------------|
+  | Unit Tests        | ✅ Always          | ❌ Never            |
+  | Integration Tests | ❌ Defeats purpose | ✅ Staging only     |
+  | E2E Tests         | ❌ No              | ✅ Staging only     |
+
+  CI Impact
+
+  With Real Endpoints in Unit Tests:
+  - ❌ Tests take minutes instead of seconds
+  - ❌ Network failures cause false negatives
+  - ❌ Requires auth tokens/credentials in CI
+  - ❌ May hit rate limits
+  - ❌ Tests can have side effects (actual bets?)
+  - ❌ Can't run offline/in airplane mode
+
+  With Mocks in Unit Tests:
+  - ✅ Tests run in milliseconds
+  - ✅ 100% reproducible
+  - ✅ No credentials needed
+  - ✅ Run anywhere (CI, local, offline)
+  - ✅ No side effects
+
+  Recommended Test Pyramid
+
+          ┌──────────────┐
+          │   E2E/UI     │  ← Few, slow, staging only
+          │   Tests      │
+          ├──────────────┤
+          │ Integration  │  ← Some, staging API
+          │   Tests      │     (nightly CI job)
+          ├──────────────┤
+          │    Unit      │  ← Many, fast, all mocked
+          │   Tests      │     (every PR/commit)
+          └──────────────┘
+
+  ---
+  Concrete Recommendation
+
+  1. For Unit Tests: Always mock BettingProvider. The document's MockBettingServiceProvider is exactly right.
+  2. For Integration Tests: Create a separate test target that runs against staging API, triggered on a schedule (not every PR).
+  3. For Testability: Add public var betting: any BettingProvider to Client.swift in ServicesProvider. This unlocks testing for all client apps.
+
+  Would you like me to sketch out what changes would look like in ServicesProvider?
+
+> i had feeling the need to break down the ServicesProvider.CLient in all 
+the subset of "use types" and this may be the right time. 
+let's make this our priority, and our new focus for brainstorm ideia on how 
+to improve it 
+
+⏺ This is a great architectural initiative. Breaking down the "God Object" will benefit testability, maintainability, and onboarding. Let me explore what Client currently exposes.
+
+⏺ Search(pattern: "public func|public var", path:
+        "Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift",
+        output_mode: "content")
+  ⎿  Found 274 lines (ctrl+o to expand)
+
+⏺ Search(pattern: "**/ServicesProvider/**/Protocols/*.swift", path:
+        "Frameworks/ServicesProvider/Sources")
+  ⎿  Found 12 files (ctrl+o to expand)
+
+⏺ The Client class has 200+ public methods. Let me read the existing protocols to understand what's already defined:
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/EventsProv
+      ider.swift)
+  ⎿  Read 267 lines
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/Privileged
+      AccessManager.swift)
+  ⎿  Read 265 lines
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/ManagedCon
+      tentProvider.swift)
+  ⎿  Read 161 lines
+
+⏺ This is extremely revealing. Let me synthesize what I found:
+
+  Current State: Protocols Already Exist!
+
+  ServicesProvider/Protocols/
+  ├── BettingProvider.swift         ← 30+ methods (betting, cashout, history)
+  ├── EventsProvider.swift          ← 100+ methods (matches, subscriptions)
+  ├── PrivilegedAccessManager.swift ← 80+ methods (auth, wallet, payments, limits)
+  ├── ManagedContentProvider.swift  ← 30+ methods (CMS, banners, stories)
+  ├── CasinoProvider.swift          ← Casino games
+  ├── AnalyticsProvider.swift       ← Analytics
+  └── Connector.swift               ← Base protocol
+
+  The problem isn't missing protocols - it's that:
+  1. All protocols are internal (not public)
+  2. Client wraps providers but doesn't expose them
+  3. ViewModels depend on the 200+ method Client class instead of specific protocols
+
+  ---
+  Proposed Refactoring Strategy
+
+  Phase 1: Expose Existing Protocols (Quick Win)
+
+  // ServicesProvider/Client.swift
+
+  public class Client {
+
+      // Private internal references (existing)
+      private var bettingProvider: (any BettingProvider)?
+      private var eventsProvider: (any EventsProvider)?
+      private var privilegedAccessManager: (any PrivilegedAccessManagerProvider)?
+
+      // NEW: Public accessors
+      public var betting: any BettingProvider {
+          guard let provider = bettingProvider else {
+              fatalError("BettingProvider not configured")
+          }
+          return provider
+      }
+
+      public var events: any EventsProvider {
+          guard let provider = eventsProvider else {
+              fatalError("EventsProvider not configured")
+          }
+          return provider
+      }
+
+      public var auth: any PrivilegedAccessManagerProvider {
+          guard let provider = privilegedAccessManager else {
+              fatalError("PrivilegedAccessManager not configured")
+          }
+          return provider
+      }
+
+      public var content: any HomeContentProvider {
+          // ...
+      }
+  }
+
+  Usage in ViewModels:
+  // Before
+  class TicketBetInfoViewModel {
+      init(myBet: MyBet, servicesProvider: ServicesProvider.Client)
+  }
+
+  // After
+  class TicketBetInfoViewModel {
+      init(myBet: MyBet, bettingService: any BettingProvider)
+  }
+
+  // Production wiring (in Coordinator)
+  let vm = TicketBetInfoViewModel(myBet: bet, bettingService: client.betting)
+
+  // Test wiring
+  let vm = TicketBetInfoViewModel(myBet: bet, bettingService: MockBettingProvider())
+
+  Phase 2: Split Large Protocols (Gradual)
+
+  Some protocols are still too large. For example, PrivilegedAccessManagerProvider has 80+ methods covering:
+  - Authentication
+  - Profile management
+  - Wallet/balance
+  - Limits (deposit, betting, responsible gaming)
+  - Payments (deposit, withdrawal)
+  - Bonuses
+  - Documents/KYC
+  - Social features
+  - Casino integration
+
+  Proposed sub-protocols:
+
+  // MARK: - Focused Sub-Protocols
+
+  public protocol AuthService {
+      func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
+      func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError>
+      var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
+      var accessToken: String? { get }
+  }
+
+  public protocol WalletService {
+      func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
+      func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError>
+      func refreshUserBalance()
+  }
+
+  public protocol CashoutService {
+      func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
+      func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+  }
+
+  public protocol BetHistoryService {
+      func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+      func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+      func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>
+  }
+
+  // Large protocols inherit from focused ones
+  public protocol BettingProvider: CashoutService, BetHistoryService, Connector {
+      // Bet placement methods only
+      func placeBets(...) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+      func calculatePotentialReturn(...) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
+  }
+
+  ---
+  Visual: Before vs After
+
+  ┌─────────────────────────────────────────────────────────────────────────────┐
+  │                              BEFORE                                         │
+  ├─────────────────────────────────────────────────────────────────────────────┤
+  │                                                                             │
+  │   ViewModel ──────────────────────► ServicesProvider.Client                 │
+  │                                      (200+ methods, untestable)             │
+  │                                                                             │
+  └─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────────┐
+  │                              AFTER (Phase 1)                                │
+  ├─────────────────────────────────────────────────────────────────────────────┤
+  │                                                                             │
+  │   TicketBetInfoVM ───► BettingProvider ◄──── client.betting                │
+  │                              │                                              │
+  │                              └──────────── MockBettingProvider (tests)      │
+  │                                                                             │
+  │   MyBetsVM ──────────► BettingProvider ◄──── client.betting                │
+  │                                                                             │
+  │   ProfileVM ─────────► PrivilegedAccessManagerProvider ◄── client.auth    │
+  │                                                                             │
+  └─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────────┐
+  │                              AFTER (Phase 2)                                │
+  ├─────────────────────────────────────────────────────────────────────────────┤
+  │                                                                             │
+  │   TicketBetInfoVM ───► CashoutService ◄────── client.cashout               │
+  │                              │                                              │
+  │                              └───────────── MockCashoutService (tests)      │
+  │                                                                             │
+  │   WalletDetailVM ────► WalletService ◄─────── client.wallet                │
+  │                                                                             │
+  │   MyBetsVM ──────────► BetHistoryService ◄─── client.betHistory            │
+  │                                                                             │
+  └─────────────────────────────────────────────────────────────────────────────┘
+
+  ---
+  Implementation Checklist
+
+  Phase 1: Expose Protocols (1-2 days)
+
+  | Task                                            | Impact                       |
+  |-------------------------------------------------|------------------------------|
+  | Make BettingProvider public                     | All clients can mock betting |
+  | Make EventsProvider public                      | All clients can mock events  |
+  | Make PrivilegedAccessManagerProvider public     | All clients can mock auth    |
+  | Make HomeContentProvider public                 | All clients can mock CMS     |
+  | Add public var betting to Client                | Clean accessor               |
+  | Add public var events to Client                 | Clean accessor               |
+  | Add public var auth to Client                   | Clean accessor               |
+  | Update one ViewModel (TicketBetInfoVM) as proof | Validate pattern             |
+
+  Phase 2: Split Protocols (1-2 weeks, gradual)
+
+  | Task                                               | Priority               |
+  |----------------------------------------------------|------------------------|
+  | Extract CashoutService from BettingProvider        | High (cashout testing) |
+  | Extract WalletService from PrivilegedAccessManager | High (balance testing) |
+  | Extract BetHistoryService from BettingProvider     | Medium                 |
+  | Extract AuthService from PrivilegedAccessManager   | Medium                 |
+
+  ---
+  What's your take on this approach? Should we start with Phase 1 to validate the pattern before committing to the full decomposition?
+
+> ok, but i also need to Client file to be much more small and splited, but 
+how ?! 
+
+⏺ You're right - even with exposed protocols, the Client.swift file itself is a 2000+ line monolith. Let me explore how it's structured internally:
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift)
+  ⎿  Read 150 lines
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift)
+  ⎿  Read 100 lines
+
+⏺ Bash(wc -l /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/ServicesP
+      rovider/Sources/ServicesProvider/Client.swift)
+  ⎿     2981 /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/Serv
+    icesProvider/Sources/ServicesProvider/Client.swift
+
+
+⏺ 2,981 lines! And I can see the pattern - every single method is just forwarding:
+
+  public func subscribeLiveMatches(forSportType sportType: SportType) -> ... {
+      guard let eventsProvider = self.eventsProvider else {
+          return Fail(error: ServiceProviderError.eventsProviderNotFound).eraseToAnyPublisher()
+      }
+      return eventsProvider.subscribeLiveMatches(forSportType: sportType)  // Just forwarding!
+  }
+
+  This is ~2,700 lines of pure boilerplate forwarding. Here are three strategies to shrink it:
+
+  ---
+  Strategy 1: Split into Extension Files (Quick, Non-Breaking)
+
+  Keep the same API but organize into separate files:
+
+  ServicesProvider/
+  ├── Client.swift                    (~300 lines - core only)
+  ├── Client+Events.swift             (~500 lines)
+  ├── Client+Betting.swift            (~400 lines)
+  ├── Client+Auth.swift               (~600 lines)
+  ├── Client+Content.swift            (~200 lines)
+  ├── Client+Casino.swift             (~200 lines)
+  └── Client+Analytics.swift          (~100 lines)
+
+  // Client+Events.swift
+  extension Client {
+      public func subscribeLiveMatches(...) -> ... {
+          guard let eventsProvider else { return Fail(...) }
+          return eventsProvider.subscribeLiveMatches(...)
+      }
+      // ... all events methods
+  }
+
+  Pros: No API changes, just file organization
+  Cons: Still 2,700 lines of boilerplate total
+
+  ---
+  Strategy 2: Direct Protocol Exposure (Breaking but Clean)
+
+  Expose providers directly, eliminate forwarding entirely:
+
+  // Client.swift (~150 lines total!)
+  public class Client {
+
+      private var _eventsProvider: (any EventsProvider)?
+      private var _bettingProvider: (any BettingProvider)?
+      private var _authProvider: (any PrivilegedAccessManagerProvider)?
+      private var _contentProvider: (any HomeContentProvider)?
+      private var _casinoProvider: (any CasinoProvider)?
+
+      // MARK: - Public Accessors
+
+      public var events: any EventsProvider {
+          guard let provider = _eventsProvider else {
+              fatalError("EventsProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      public var betting: any BettingProvider {
+          guard let provider = _bettingProvider else {
+              fatalError("BettingProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      public var auth: any PrivilegedAccessManagerProvider {
+          guard let provider = _authProvider else {
+              fatalError("PrivilegedAccessManager not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      public var content: any HomeContentProvider {
+          guard let provider = _contentProvider else {
+              fatalError("HomeContentProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      public var casino: any CasinoProvider {
+          guard let provider = _casinoProvider else {
+              fatalError("CasinoProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      // MARK: - Initialization & Connection
+
+      public init(providerType: ProviderType, configuration: Configuration) { ... }
+      public func connect() { ... }
+      public func disconnect() { ... }
+  }
+
+  Usage Changes:
+  // Before (200+ methods on Client)
+  client.subscribeLiveMatches(forSportType: .football)
+  client.executeCashout(request: request)
+  client.getUserBalance()
+
+  // After (access via typed providers)
+  client.events.subscribeLiveMatches(forSportType: .football)
+  client.betting.executeCashout(request: request)
+  client.auth.getUserBalance()
+
+  Pros:
+  - Client.swift shrinks from 2,981 → ~200 lines
+  - Perfect for dependency injection
+  - Trivial to mock any service
+  - Cleaner, more discoverable API
+
+  Cons:
+  - Breaking change for all call sites
+
+  ---
+  Strategy 3: Hybrid (Gradual Migration - Recommended)
+
+  Best of both worlds - backwards compatible with deprecation path:
+
+  // Client.swift
+  public class Client {
+
+      // MARK: - Private Storage
+      private var _eventsProvider: (any EventsProvider)?
+      private var _bettingProvider: (any BettingProvider)?
+      // ...
+
+      // MARK: - NEW: Direct Protocol Access
+
+      public var events: any EventsProvider {
+          guard let provider = _eventsProvider else {
+              fatalError("EventsProvider not configured")
+          }
+          return provider
+      }
+
+      public var betting: any BettingProvider {
+          guard let provider = _bettingProvider else {
+              fatalError("BettingProvider not configured")
+          }
+          return provider
+      }
+
+      // ... other accessors
+  }
+
+  // Client+Events+Deprecated.swift
+  extension Client {
+
+      @available(*, deprecated, message: "Use client.events.subscribeLiveMatches() instead")
+      public func subscribeLiveMatches(forSportType sportType: SportType) -> AnyPublisher<SubscribableContent<[EventsGroup]>, ServiceProviderError> {
+          return events.subscribeLiveMatches(forSportType: sportType)
+      }
+
+      // ... all deprecated forwarding methods
+  }
+
+  Migration Path:
+  1. Add public accessors (client.events, client.betting, etc.)
+  2. Keep old methods but deprecate them
+  3. Migrate call sites gradually (Xcode shows warnings)
+  4. After migration complete, delete deprecated files
+
+  ---
+  Visual Comparison
+
+  ┌────────────────────────────────────────────────────────────────────────────┐
+  │                         CURRENT STATE                                      │
+  ├────────────────────────────────────────────────────────────────────────────┤
+  │                                                                            │
+  │   Client.swift (2,981 lines)                                               │
+  │   ├── init/connect (~250 lines)                                            │
+  │   ├── 100+ events forwarding methods (~800 lines)                          │
+  │   ├── 30+ betting forwarding methods (~300 lines)                          │
+  │   ├── 80+ auth forwarding methods (~600 lines)                             │
+  │   ├── 30+ content forwarding methods (~300 lines)                          │
+  │   └── misc forwarding (~700 lines)                                         │
+  │                                                                            │
+  └────────────────────────────────────────────────────────────────────────────┘
+
+  ┌────────────────────────────────────────────────────────────────────────────┐
+  │                         AFTER STRATEGY 2                                   │
+  ├────────────────────────────────────────────────────────────────────────────┤
+  │                                                                            │
+  │   Client.swift (~200 lines)                                                │
+  │   ├── init/connect                                                         │
+  │   ├── public var events: any EventsProvider                                │
+  │   ├── public var betting: any BettingProvider                              │
+  │   ├── public var auth: any PrivilegedAccessManagerProvider                 │
+  │   ├── public var content: any HomeContentProvider                          │
+  │   └── public var casino: any CasinoProvider                                │
+  │                                                                            │
+  │   (Protocols already exist - no new code needed!)                          │
+  │                                                                            │
+  └────────────────────────────────────────────────────────────────────────────┘
+
+  ---
+  My Recommendation
+
+  Start with Strategy 3 (Hybrid) because:
+
+  1. Zero breaking changes initially - existing code keeps working
+  2. Immediate testability gains - new code can use client.betting directly
+  3. Clear migration path - deprecation warnings guide refactoring
+  4. Incremental work - can migrate one file at a time
+  5. Rollback-safe - if issues arise, deprecated methods still work
+
+  Immediate first step:
+  1. Add the 5 public accessors to Client.swift (~30 lines)
+  2. Make protocols public (~5 one-line changes)
+  3. Update TicketBetInfoViewModel to use any BettingProvider
+  4. Write first unit test using MockBettingProvider
+
+  This validates the pattern with minimal risk. What do you think?
+
+> love that 3th Strategy and how flexible it can be! I think we can even 
+take it a little fourther with the defenition of the "Subsets" of each API. 
+I thing i have a markdown document talking about how we could organize APIs 
+with "Subsets", can you luanch a sub agent to find it so you could read it 
+too. separated Cleint files with extensions per protocol is a great ideia 
+too and is a must have! 
+
+⏺ Explore(Find API Subsets markdown doc)
+  ⎿  Done (10 tool uses · 52.1k tokens · 27s)                              
+
+⏺ Found it! Let me read the main architecture document:
+
+⏺ Read(Documentation/architecture/SP_Architecture_V2.md)
+  ⎿  Read 486 lines
+
+⏺ This is exactly what we need! Your architecture document already describes the perfect structure. Let me synthesize everything into a unified approach:
+
+  ---
+  Combined Architecture: Client + Extensions + Domain Services + Subsets
+
+  ┌─────────────────────────────────────────────────────────────────────────────────────┐
+  │                              UNIFIED ARCHITECTURE                                   │
+  ├─────────────────────────────────────────────────────────────────────────────────────┤
+  │                                                                                     │
+  │   ┌─────────────────────────────────────────────────────────────────────────────┐  │
+  │   │                     ServicesProvider.Client (~200 lines)                     │  │
+  │   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────┐│  │
+  │   │  │  analytics  │ │   content   │ │   account   │ │        events           ││  │
+  │   │  │ (Analytics  │ │  (Content   │ │  (Account   │ │    (EventsService)      ││  │
+  │   │  │  Service)   │ │   Service)  │ │   Service)  │ │                         ││  │
+  │   │  └──────┬──────┘ └──────┬──────┘ └──────┬──────┘ └───────────┬─────────────┘│  │
+  │   │         │               │               │                     │              │  │
+  │   │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐                            │  │
+  │   │  │   betting   │ │  payments   │ │   casino    │                            │  │
+  │   │  │  (Betting   │ │  (Payments  │ │   (Casino   │                            │  │
+  │   │  │   Service)  │ │   Service)  │ │   Service)  │                            │  │
+  │   │  └──────┬──────┘ └──────┬──────┘ └──────┬──────┘                            │  │
+  │   └─────────┼───────────────┼───────────────┼───────────────────────────────────┘  │
+  │             │               │               │                                       │
+  │   ┌─────────▼───────────────▼───────────────▼───────────────────────────────────┐  │
+  │   │                         DOMAIN SERVICE PROTOCOLS                             │  │
+  │   │  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐               │  │
+  │   │  │ BettingService  │ │ CashoutService  │ │ BetHistoryService│              │  │
+  │   │  │  (full protocol)│ │   (subset)      │ │    (subset)     │               │  │
+  │   │  └────────┬────────┘ └────────┬────────┘ └────────┬────────┘               │  │
+  │   │           │                   │                   │                         │  │
+  │   │           └───────────────────┴───────────────────┘                         │  │
+  │   │                               │                                              │  │
+  │   │  ┌─────────────────┐ ┌───────▼─────────┐ ┌─────────────────┐               │  │
+  │   │  │ AccountService  │ │  WalletService  │ │  LimitsService  │               │  │
+  │   │  │  (full protocol)│ │    (subset)     │ │    (subset)     │               │  │
+  │   │  └─────────────────┘ └─────────────────┘ └─────────────────┘               │  │
+  │   └─────────────────────────────────────────────────────────────────────────────┘  │
+  │                                        │                                            │
+  │   ┌────────────────────────────────────▼────────────────────────────────────────┐  │
+  │   │                              PROVIDERS                                       │  │
+  │   │  ┌───────────────────────┐              ┌───────────────────────┐           │  │
+  │   │  │    EveryMatrixProvider │              │    SportRadarProvider │           │  │
+  │   │  │  ┌─────────────────┐  │              │  ┌─────────────────┐  │           │  │
+  │   │  │  │ BettingSubset   │  │              │  │ BettingSubset   │  │           │  │
+  │   │  │  │ EventsSubset    │  │              │  │ EventsSubset    │  │           │  │
+  │   │  │  │ PAMSubset       │  │              │  │ PAMSubset       │  │           │  │
+  │   │  │  └─────────────────┘  │              │  └─────────────────┘  │           │  │
+  │   │  └───────────────────────┘              └───────────────────────┘           │  │
+  │   └─────────────────────────────────────────────────────────────────────────────┘  │
+  │                                                                                     │
+  └─────────────────────────────────────────────────────────────────────────────────────┘
+
+  ---
+  File Structure After Refactoring
+
+  ServicesProvider/
+  ├── Sources/
+  │   └── ServicesProvider/
+  │       │
+  │       ├── Client/                              # NEW: Client split into folder
+  │       │   ├── Client.swift                     # (~150 lines) Core init, accessors
+  │       │   ├── Client+Deprecated.swift          # (~200 lines) Backwards compat
+  │       │   └── ClientConfiguration.swift        # Configuration builder
+  │       │
+  │       ├── Services/                            # NEW: Domain service protocols
+  │       │   ├── BettingService.swift             # Protocol + subsets
+  │       │   ├── EventsService.swift              # Protocol + subsets
+  │       │   ├── AccountService.swift             # Protocol + subsets
+  │       │   ├── ContentService.swift             # Protocol
+  │       │   ├── CasinoService.swift              # Protocol
+  │       │   ├── PaymentsService.swift            # Protocol + subsets
+  │       │   └── AnalyticsService.swift           # Protocol
+  │       │
+  │       ├── Protocols/                           # EXISTING: Make public
+  │       │   ├── BettingProvider.swift            # → public protocol
+  │       │   ├── EventsProvider.swift             # → public protocol
+  │       │   ├── PrivilegedAccessManager.swift    # → public protocol
+  │       │   └── ...
+  │       │
+  │       └── Providers/                           # EXISTING: Provider implementations
+  │           ├── Everymatrix/
+  │           │   ├── EveryMatrixBettingProvider.swift
+  │           │   ├── Subsets/                     # Subset implementations
+  │           │   │   ├── EveryMatrixCashoutSubset.swift
+  │           │   │   └── EveryMatrixBetHistorySubset.swift
+  │           │   └── ...
+  │           └── Sportsradar/
+  │               └── ...
+
+  ---
+  Domain Services with Subsets
+
+  BettingService Example
+
+  // Services/BettingService.swift
+
+  // MARK: - Focused Subsets (for targeted injection)
+
+  /// Cashout-specific operations
+  public protocol CashoutService {
+      func subscribeToCashoutValue(betId: String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
+      func executeCashout(request: CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+  }
+
+  /// Bet history operations
+  public protocol BetHistoryService {
+      func getOpenBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+      func getResolvedBetsHistory(pageIndex: Int, startDate: String?, endDate: String?) -> AnyPublisher<BettingHistory, ServiceProviderError>
+      func getBetDetails(identifier: String) -> AnyPublisher<Bet, ServiceProviderError>
+  }
+
+  /// Bet placement operations
+  public protocol BetPlacementService {
+      func calculatePotentialReturn(forBetTicket betTicket: BetTicket) -> AnyPublisher<BetslipPotentialReturn, ServiceProviderError>
+      func placeBets(betTickets: [BetTicket], useFreebetBalance: Bool, ...) -> AnyPublisher<PlacedBetsResponse, ServiceProviderError>
+  }
+
+  /// Betslip settings
+  public protocol BetslipSettingsService {
+      func getBetslipSettings() -> AnyPublisher<BetslipSettings?, Never>
+      func updateBetslipSettings(_ betslipSettings: BetslipSettings) -> AnyPublisher<Bool, Never>
+  }
+
+  // MARK: - Full BettingService (composes all subsets)
+
+  /// Complete betting domain service - inherits all subset protocols
+  public protocol BettingService: CashoutService, BetHistoryService, BetPlacementService, BetslipSettingsService {
+      // Additional betting-specific methods not in subsets
+      func getFreebet() -> AnyPublisher<FreebetBalance, ServiceProviderError>
+      func getSharedTicket(betslipId: String) -> AnyPublisher<SharedTicketResponse, ServiceProviderError>
+  }
+
+  AccountService Example
+
+  // Services/AccountService.swift
+
+  // MARK: - Focused Subsets
+
+  /// Authentication operations
+  public protocol AuthService {
+      func login(username: String, password: String) -> AnyPublisher<UserProfile, ServiceProviderError>
+      var sessionStatePublisher: AnyPublisher<UserSessionStatus, Error> { get }
+      var accessToken: String? { get }
+  }
+
+  /// Wallet/balance operations
+  public protocol WalletService {
+      func getUserBalance() -> AnyPublisher<UserWallet, ServiceProviderError>
+      func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError>
+      func refreshUserBalance()
+  }
+
+  /// Responsible gaming limits
+  public protocol LimitsService {
+      func getLimits() -> AnyPublisher<LimitsResponse, ServiceProviderError>
+      func getUserLimits(periodTypes: String?) -> AnyPublisher<UserLimitsResponse, ServiceProviderError>
+      func setUserLimit(period: String, type: String, amount: Double, ...) -> AnyPublisher<UserLimit, ServiceProviderError>
+  }
+
+  /// Profile management
+  public protocol ProfileService {
+      func getUserProfile(withKycExpire: String?) -> AnyPublisher<UserProfile, ServiceProviderError>
+      func updateUserProfile(form: UpdateUserProfileForm) -> AnyPublisher<Bool, ServiceProviderError>
+  }
+
+  // MARK: - Full AccountService
+
+  /// Complete account domain service
+  public protocol AccountService: AuthService, WalletService, LimitsService, ProfileService {
+      // Additional account methods
+      func signUp(with formType: SignUpFormType) -> AnyPublisher<SignUpResponse, ServiceProviderError>
+  }
+
+  ---
+  New Client.swift (~150 lines)
+
+  // Client/Client.swift
+
+  public final class Client {
+
+      public enum ProviderType {
+          case everymatrix
+          case sportradar
+          case goma
+      }
+
+      // MARK: - Connection State Publishers
+
+      public var eventsConnectionStatePublisher: AnyPublisher<ConnectorState, Never> {
+          eventsConnectionStateSubject.eraseToAnyPublisher()
+      }
+
+      // MARK: - Private Provider Storage
+
+      private var _bettingProvider: (any BettingProvider)?
+      private var _eventsProvider: (any EventsProvider)?
+      private var _accountProvider: (any PrivilegedAccessManagerProvider)?
+      private var _contentProvider: (any HomeContentProvider)?
+      private var _casinoProvider: (any CasinoProvider)?
+      private var _analyticsProvider: (any AnalyticsProvider)?
+
+      // MARK: - Domain Services (Primary API)
+
+      /// Betting operations: bet placement, cashout, history
+      public var betting: any BettingService {
+          guard let provider = _bettingProvider else {
+              fatalError("BettingProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      /// Events: live matches, pre-live, subscriptions
+      public var events: any EventsService {
+          guard let provider = _eventsProvider else {
+              fatalError("EventsProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      /// Account: auth, profile, wallet, limits
+      public var account: any AccountService {
+          guard let provider = _accountProvider else {
+              fatalError("AccountProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      /// Content: CMS, banners, stories, news
+      public var content: any ContentService {
+          guard let provider = _contentProvider else {
+              fatalError("ContentProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      /// Casino: games, categories
+      public var casino: any CasinoService {
+          guard let provider = _casinoProvider else {
+              fatalError("CasinoProvider not configured. Call connect() first.")
+          }
+          return provider
+      }
+
+      // MARK: - Focused Subset Accessors (for targeted DI)
+
+      /// Cashout-only operations (for TicketBetInfoViewModel)
+      public var cashout: any CashoutService {
+          betting
+      }
+
+      /// Wallet-only operations (for balance widgets)
+      public var wallet: any WalletService {
+          account
+      }
+
+      /// Bet history only (for MyBets screens)
+      public var betHistory: any BetHistoryService {
+          betting
+      }
+
+      // MARK: - Initialization
+
+      public init(providerType: ProviderType, configuration: Configuration) {
+          // ... existing init logic
+      }
+
+      public func connect() {
+          // ... existing connect logic (sets up providers)
+      }
+
+      public func disconnect() {
+          // ... existing disconnect logic
+      }
+  }
+
+  ---
+  Usage Examples
+
+  // MARK: - ViewModel Injection (Testable!)
+
+  // Before: Untestable - depends on concrete Client
+  class TicketBetInfoViewModel {
+      init(myBet: MyBet, servicesProvider: ServicesProvider.Client)
+  }
+
+  // After: Testable - depends on focused protocol
+  class TicketBetInfoViewModel {
+      init(myBet: MyBet, cashoutService: any CashoutService)
+  }
+
+  // Production wiring (in Coordinator)
+  let vm = TicketBetInfoViewModel(myBet: bet, cashoutService: client.cashout)
+
+  // Test wiring
+  let vm = TicketBetInfoViewModel(myBet: bet, cashoutService: MockCashoutService())
+
+  // MARK: - Accessing Services
+
+  // Full domain service
+  let history = client.betting.getOpenBetsHistory(pageIndex: 0, startDate: nil, endDate: nil)
+
+  // Focused subset (same result, different injection point)
+  let history = client.betHistory.getOpenBetsHistory(pageIndex: 0, startDate: nil, endDate: nil)
+
+  // Wallet operations
+  client.wallet.refreshUserBalance()
+
+  // Events subscription
+  client.events.subscribeLiveMatches(forSportType: .football)
+
+  ---
+  Migration Checklist
+
+  | Phase | Task                                               | Lines Saved   | Breaking?     |
+  |-------|----------------------------------------------------|---------------|---------------|
+  | 1     | Make existing protocols public                     | 0             | No            |
+  | 2     | Add domain service accessors to Client             | +50           | No            |
+  | 3     | Add subset protocol compositions                   | +100          | No            |
+  | 4     | Move deprecated methods to Client+Deprecated.swift | -2700 (moved) | No            |
+  | 5     | Update one ViewModel (TicketBetInfoVM) as proof    | 0             | No            |
+  | 6     | Gradual migration of other ViewModels              | 0             | No            |
+  | 7     | Remove deprecated methods (after full migration)   | -2700         | Yes (planned) |
+
+  ---
+  This gives you:
+  1. Tiny Client.swift (~150 lines vs 2981)
+  2. Organized domain services with Xcode autocomplete
+  3. Focused subsets for precise dependency injection
+  4. Full testability at any granularity level
+  5. Zero breaking changes until you're ready
+
+  Want me to start implementing Phase 1-3 to validate the pattern?
+
+> ok, i have done something like this for cashout with cashout srervice, is 
+it the idea ? 
+
+⏺ Let me check what you've implemented:
+
+⏺ Search(pattern: "CashoutService|protocol.*Cashout", path:
+        "Frameworks/ServicesProvider")
+  ⎿  Found 0 files 
+
+⏺ Search(pattern: "**/ServicesProvider/**/*Cashout*.swift")
+  ⎿  Found 33 files (ctrl+o to expand)
+
+⏺ Search(pattern: "**/Services/**/*.swift", path:
+        "Frameworks/ServicesProvider/Sources")
+  ⎿  Found 0 files 
+
+⏺ Search(pattern: "protocol.*Service", path:
+        "Frameworks/ServicesProvider/Sources", output_mode: "content")
+  ⎿  Found 0 lines 
+
+⏺ Bash(git status --short)
+  ⎿  M Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/MatchCards/ScoreV
+    iew/ObservableScoreView.swift
+     M Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/MatchCards/ScoreV
+    … +6 lines (ctrl+o to expand)
+
+
+  ⎿  Interrupted · What should Claude do instead?
+
+> sorry, forgot to mrge, try now 
+
+⏺ Search(pattern: "CashoutService|protocol.*Cashout", path:
+        "Frameworks/ServicesProvider")
+  ⎿  Found 0 files 
+
+⏺ Bash(git status --short)
+  ⎿  M Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/MatchCards/ScoreV
+    iew/ObservableScoreView.swift
+     M Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/MatchCards/ScoreV
+    … +6 lines (ctrl+o to expand)
+
+
+
+⏺ Bash(git branch --show-current && git log --oneline -5)
+  ⎿ rw/snapshot_tests                                                      
+    cb52a1777 Merge branch 'main' into rw/snapshot_tests
+    3b574eaeb feat(ios): migrate workspace to iOS 17 minimum, remove @avail
+    … +5 lines (ctrl+o to expand)
+
+
+⏺ Search(pattern: "**/*Service*.swift", path:
+        "Frameworks/ServicesProvider/Sources")
+  ⎿  Found 0 files 
+
+⏺ I see there's a merge from rr/cashout_service4tests. Let me check what came in:
+
+⏺ Bash(git show e6b3fbe2b --stat | head -30)
+  ⎿  commit e6b3fbe2ba7ec546d756aa6dfa3923e69189d7d2
+     Merge: 38ba37464 b3f8e7726
+     Author: Ruben Roques <ruben@gomadevelopment.pt>
+     … +16 lines (ctrl+o to expand)
+
+⏺ Search(pattern: "protocol|CashoutService", path:
+        "Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols",
+        output_mode: "content")
+  ⎿  Found 12 lines (ctrl+o to expand)
+
+⏺ Found it! The CashoutService is in BetssonCameroonApp. Let me read it:
+
+⏺ Read(BetssonCameroonApp/App/Services/Cashout/CashoutService.swift)
+  ⎿  Read 95 lines
+
+⏺ Read(BetssonCameroonApp/Tests/MyBets/TicketBetInfoViewModelTests.swift)
+  ⎿  Error reading file
+
+⏺ Search(pattern: "**/Tests/**/*.swift", path: "BetssonCameroonApp")
+  ⎿  Found 4 files (ctrl+o to expand)
+
+⏺ Read(BetssonCameroonApp/Tests/ViewModels/MyBets/TicketBetInfoViewModelTests.sw
+      ift)
+  ⎿  Read 211 lines
+
+⏺ Yes! This is exactly the idea - and you've actually gone a step further with the Protocol Witness pattern!
+
+  This is excellent work. Let me break down why this is even better than the traditional protocol approach:
+
+  What You Implemented: Protocol Witness (pointfree.co style)
+
+  // Struct with closure properties instead of protocol methods
+  struct CashoutService {
+      var subscribeToCashoutValue: (String) -> AnyPublisher<...>
+      var executeCashout: (CashoutRequest) -> AnyPublisher<...>
+  }
+
+  Why This Is Superior to Traditional Protocols
+
+  | Aspect           | Traditional Protocol                | Protocol Witness (Your Approach)     |
+  |------------------|-------------------------------------|--------------------------------------|
+  | Mock creation    | Requires a MockCashoutService class | Just swap closures inline            |
+  | Factory methods  | Need separate factory classes       | Built-in: .live(), .failing(), .noop |
+  | Partial mocking  | Hard - must implement all methods   | Easy - override only what you need   |
+  | Test boilerplate | High - class per mock               | Minimal - closures inline            |
+  | Capturing calls  | Need tracking properties            | Just append to local array           |
+
+  Your Tests Demonstrate Perfect Patterns
+
+  // Pattern 1: Track calls
+  var subscribedBetIds: [String] = []
+  let service = CashoutService(
+      subscribeToCashoutValue: { betId in
+          subscribedBetIds.append(betId)  // ← Capture!
+          return Empty().eraseToAnyPublisher()
+      },
+      ...
+  )
+
+  // Pattern 2: Control SSE stream
+  let sseSubject = PassthroughSubject<...>()
+  let service = CashoutService(
+      subscribeToCashoutValue: { _ in sseSubject.eraseToAnyPublisher() },
+      ...
+  )
+  sseSubject.send(.contentUpdate(content: mockValue))  // ← Push values!
+
+  // Pattern 3: Minimal setup
+  let viewModel = TicketBetInfoViewModel(myBet: bet, cashoutService: .noop)
+
+  ---
+  How This Fits the Larger Architecture
+
+  Now the question is: should this pattern live in ServicesProvider or stay app-specific?
+
+  Option A: App-specific (current)
+  ┌─────────────────────────────────────────────────────────────┐
+  │  BetssonCameroonApp                                         │
+  │  └── Services/                                              │
+  │      └── CashoutService.swift  ← Protocol Witness          │
+  │                                                             │
+  │  BetssonFranceApp                                           │
+  │  └── Services/                                              │
+  │      └── CashoutService.swift  ← Duplicate? Or different?  │
+  └─────────────────────────────────────────────────────────────┘
+
+  Option B: In ServicesProvider (shared)
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ServicesProvider                                           │
+  │  └── Services/                                              │
+  │      ├── CashoutService.swift  ← Shared Protocol Witness   │
+  │      ├── WalletService.swift                                │
+  │      └── BetHistoryService.swift                            │
+  │                                                             │
+  │  Both apps import and use the same structs                  │
+  └─────────────────────────────────────────────────────────────┘
+
+  My recommendation: Move CashoutService to ServicesProvider so both apps benefit, and create additional service structs following the same pattern.
+
+  ---
+  Next Steps
+
+  1. Keep what you have - it's working and well-tested
+  2. Consider moving to ServicesProvider when you want other apps to benefit
+  3. Create more service structs using the same pattern:
+    - WalletService (balance, subscriptions)
+    - BetHistoryService (open bets, resolved bets)
+    - AuthService (login, profile)
+
+  Want me to help create the next service struct following this pattern, or help move CashoutService to ServicesProvider?
+
+> move CashoutService to ServicesProvider 
+
+⏺ Read(BetssonCameroonApp/App/Services/Cashout/CashoutService.swift)
+  ⎿  Read 95 lines
+
+⏺ Bash(ls -la /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/Services
+      Provider/Sources/ServicesProvider/)
+  ⎿  total 280                                            
+     drwxr-xr-x@ 10 rroques  staff     320 Dec 18 16:23 .
+     drwxr-xr-x@  4 rroques  staff     128 Feb 12  2025 ..
+     … +8 lines (ctrl+o to expand)
+
+⏺ Bash(mkdir -p /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/Servic
+      esProvider/Sources/ServicesProvider/Services)
+  ⎿  (No content)
+
+⏺ Write(Frameworks/ServicesProvider/Sources/ServicesProvider/Services/CashoutSer
+       vice.swift)
+  ⎿  Wrote 107 lines to Frameworks/ServicesProvider/Sources/ServicesProvide
+     /Services/CashoutService.swift
+       1 //
+       2 //  CashoutService.swift
+       3 //  ServicesProvider
+       4 //
+       5 //  Protocol Witness pattern (pointfree.co style) for cashout op
+         erations.
+       6 //  Dependencies are closure properties, not protocol methods.
+       7 //
+       8 //  This struct provides a testable interface for cashout operat
+         ions
+       9 //  that can be easily mocked in unit tests.
+      10 //
+     … +97 lines (ctrl+o to expand)
+
+⏺ Bash(rm /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/BetssonCameroonApp/App/
+      Services/Cashout/CashoutService.swift && rmdir
+      /Users/rroques/Desktop/GOMA/iOS/sportsbo…)
+  ⎿  Done
+
+⏺ Search(pattern: "CashoutService.swift", path:
+        "BetssonCameroonApp/BetssonCameroonApp.xcodeproj/project.pbxproj",
+        output_mode: "content")
+  ⎿  Found 0 lines 
+
+⏺ Good - no project reference to clean up. Let me verify the build:
+
+⏺ Bash(xcrun simctl list devices available | grep -E "iPhone" | head -5)
+  ⎿  Interrupted · What should Claude do instead?
+
+> cool, now lets do the next easier one, similar 
+
+⏺ Based on our earlier discussion, here are the next candidates:
+
+  | Service           | Methods                                                      | Complexity |
+  |-------------------|--------------------------------------------------------------|------------|
+  | BetHistoryService | getOpenBetsHistory, getResolvedBetsHistory, getBetDetails    | Easy       |
+  | WalletService     | getUserBalance, subscribeUserInfoUpdates, refreshUserBalance | Easy       |
+  | AuthService       | login, getProfile, sessionStatePublisher                     | Medium     |
+
+  BetHistoryService would be the simplest - just 3 methods, all similar signatures, no SSE complexity.
+
+  Which one would you like me to create next? Or should I go with BetHistoryService?
+
+> WalletService 
+
+⏺ Search(pattern: "func.*Balance|func.*UserInfo|refreshUser", path:
+        "Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/Privileg
+        edAccessManager.swift", output_mode: "content")
+  ⎿  Found 5 lines (ctrl+o to expand)
+
+⏺ Search(pattern: "public func getUserBalance|public func
+        subscribeUserInfo|public func refreshUserBalance|public func
+        getUserCashback", path:
+        "Frameworks/ServicesProvider/Sources/ServicesProvider/Client.swift",
+        output_mode: "content")
+  ⎿  Found 4 lines (ctrl+o to expand)
+
+⏺ Write(Frameworks/ServicesProvider/Sources/ServicesProvider/Services/WalletServ
+       ice.swift)
+  ⎿  Wrote 133 lines to Frameworks/ServicesProvider/Sources/ServicesProvide
+     /Services/WalletService.swift
+       1 //
+       2 //  WalletService.swift
+       3 //  ServicesProvider
+       4 //
+       5 //  Protocol Witness pattern (pointfree.co style) for wallet ope
+         rations.
+       6 //  Dependencies are closure properties, not protocol methods.
+       7 //
+       8 //  This struct provides a testable interface for wallet/balance
+          operations
+       9 //  that can be easily mocked in unit tests.
+      10 //
+     … +123 lines (ctrl+o to expand)
+
+> we need a file to help with tracking the progress and see all of them 
+
+⏺ Good idea - let me create a README in the Services folder to track all Protocol Witness services:
+  ⎿  Interrupted · What should Claude do instead?
+
+> not a readme, we already have that, we need a markdown in the docs folderr
+ of sp, with a name easy to imediatly get what it is 
+
+⏺ Bash(ls -la /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/Services
+      Provider/)
+  ⎿  total 88                                            
+     drwxr-xr-x@ 13 rroques  staff    416 Jan  6 12:35 .
+     drwxr-xr-x  17 rroques  staff    544 Dec 13 13:04 ..
+     … +11 lines (ctrl+o to expand)
+
+⏺ Bash(ls -la /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios/Frameworks/Services
+      Provider/Documentation/)
+  ⎿  total 16                                           
+     drwxr-xr-x@  3 rroques  staff    96 Nov 27 00:57 .
+     drwxr-xr-x@ 13 rroques  staff   416 Jan  6 12:35 ..
+     … +2 lines (ctrl+o to expand)
+
+⏺ Write(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  Wrote 95 lines to                                                   
+     Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md
+      1 # Testable Services (Protocol Witness Pattern)
+      2 Struct-based dependency injection following the [pointfree.co](ht
+        tps://www.pointfree.co) Protocol Witness pattern.
+      3 ## Why Protocol Witness?
+      4 Traditional protocols require mock classes. Protocol Witness uses
+         structs with closure properties:
+      5 ```swift
+      6 // Traditional - requires MockCashoutService class
+     … +85 lines (ctrl+o to expand)
+
+⏺ Done! Created:
+
+  ServicesProvider/Documentation/TESTABLE_SERVICES.md
+
+  | Service          | Status  | Methods                                      |
+  |------------------|---------|----------------------------------------------|
+  | CashoutService   | Done    | subscribeToCashoutValue, executeCashout      |
+  | WalletService    | Done    | getUserBalance, getUserCashbackBalance, ...  |
+  | BetHistoryService| Planned | getOpenBetsHistory, getResolvedBetsHistory   |
+  | AuthService      | Planned | login, getProfile, sessionStatePublisher     |
+
+  Includes usage examples and a template for adding new services. Want me to create BetHistoryService next?
+
+> lanuch some sub agents to understand all the subsets / seervices  we need,
+ we have so many functions and gigantic potocols 
+also check Documentation/architecture/SP_Architecture_V2.md 
+
+⏺ 3 Explore agents finished (ctrl+o to expand)
+   ├─ Analyze BettingProvider protocol subsets · 1 tool use · 27.5k tokens
+   │  ⎿  Done
+   ├─ Analyze PrivilegedAccessManager subsets · 1 tool use · 27.6k tokens
+   │  ⎿  Done
+   └─ Analyze EventsProvider protocol subsets · 1 tool use · 27.5k tokens
+      ⎿  Done
+
+⏺ Excellent analysis! Let me update the tracking document with all proposed services:
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿ Tool use rejected with user message: those are a lot of new services, too 
+    much complexity, we need "more" subsets, but not 30 more lol mainly the 
+    EventsProvider, it's all "sports" related, PAM can be broken down in an 
+    easier way
+
+⏺ You're right - 46 is way overboard. Let me simplify to a practical set:
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  Added 44 lines, removed 8 lines                                     
+      24  
+      25  ---
+      26  
+      27 -## Available Services                                          
+      27 +## Services Overview                                           
+      28  
+      29 -| Service | Status | Methods | Location |                      
+      30 -|---------|--------|---------|----------|                      
+      31 -| `CashoutService` | Done | `subscribeToCashoutValue`, `execute
+         -Cashout` | `Services/CashoutService.swift` |                   
+      32 -| `WalletService` | Done | `getUserBalance`, `getUserCashbackBa
+         -lance`, `subscribeUserInfoUpdates`, `refreshUserBalance` | `Ser
+         -vices/WalletService.swift` |                                   
+      33 -| `BetHistoryService` | Planned | `getOpenBetsHistory`, `getRes
+         -olvedBetsHistory`, `getBetDetails` | - |                       
+      34 -| `AuthService` | Planned | `login`, `getProfile`, `sessionStat
+         -ePublisher` | - |                                              
+      35 -| `BetPlacementService` | Planned | `placeBets`, `calculatePote
+         -ntialReturn` | - |                                             
+      29 +**Goal**: Break down 3 giant protocols (~280 methods) into ~12 
+         +focused services.                                              
+      30  
+      31 +| Protocol | Methods | Services |                              
+      32 +|----------|---------|----------|                              
+      33 +| BettingProvider | 30 | 4 |                                   
+      34 +| PrivilegedAccessManager | 127 | 6 |                          
+      35 +| EventsProvider | 125 | 2 |                                   
+      36 +| **Total** | **282** | **12** |                               
+      37 +                                                               
+      38  ---
+      39  
+      40 +## Implementation Status                                       
+      41 +                                                               
+      42 +### BettingProvider Services                                   
+      43 +                                                               
+      44 +| Service | Status | Key Methods | Purpose |                   
+      45 +|---------|--------|-------------|---------|                   
+      46 +| `CashoutService` | **Done** | `subscribeToCashoutValue`, `exe
+         +cuteCashout` | Real-time cashout |                             
+      47 +| `BetHistoryService` | Planned | `getOpenBetsHistory`, `getRes
+         +olvedBetsHistory`, `getBetDetails` | Bet history queries |     
+      48 +| `BetPlacementService` | Planned | `placeBets`, `calculatePote
+         +ntialReturn`, `calculateUnifiedBettingOptions` | Bet validation
+         + & execution |                                                 
+      49 +| `BetslipService` | Planned | `getBetslipSettings`, `getShared
+         +Ticket`, `getFreebet` | Betslip utilities |                    
+      50 +                                                               
+      51 +### PrivilegedAccessManager Services                           
+      52 +                                                               
+      53 +| Service | Status | Key Methods | Purpose |                   
+      54 +|---------|--------|-------------|---------|                   
+      55 +| `WalletService` | **Done** | `getUserBalance`, `subscribeUser
+         +InfoUpdates`, `refreshUserBalance` | Balance & real-time update
+         +s |                                                            
+      56 +| `AuthService` | Planned | `login`, `forgotPassword`, `updateP
+         +assword`, `sessionStatePublisher` | Authentication |           
+      57 +| `ProfileService` | Planned | `getUserProfile`, `updateUserPro
+         +file`, `signUp` | Profile & registration |                     
+      58 +| `PaymentsService` | Planned | `processDeposit`, `processWithd
+         +rawal`, `getTransactionsHistory` | Deposits, withdrawals, histo
+         +ry |                                                           
+      59 +| `LimitsService` | Planned | `getLimits`, `setUserLimit`, `loc
+         +kPlayer` | Responsible gaming |                                
+      60 +| `BonusService` | Planned | `getGrantedBonuses`, `redeemBonus`
+         +, `getOddsBoostStairs` | Promotions & bonuses |                
+      61 +                                                               
+      62 +### EventsProvider Services                                    
+      63 +                                                               
+      64 +| Service | Status | Key Methods | Purpose |                   
+      65 +|---------|--------|-------------|---------|                   
+      66 +| `SportsEventsService` | Planned | `subscribeLiveMatches`, `su
+         +bscribePreLiveMatches`, `getEventDetails`, `subscribeEventMarke
+         +ts` | All sports event operations |                            
+      67 +| `FavoritesService` | Planned | `getUserFavorites`, `addUserFa
+         +vorite`, `removeUserFavorite` | User favorites |               
+      68 +                                                               
+      69 +---                                                            
+      70 +                                                               
+      71 +## Done: 2 | Planned: 10                                       
+      72 +                                                               
+      73 +---                                                            
+      74 +                                                               
+      75  ## Usage
+      76  
+      77  ### Production
+
+> ok, and one for casino too 
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  (No changes)
+
+> casino methods belong to a subset too 
+
+⏺ Read(Frameworks/ServicesProvider/Sources/ServicesProvider/Protocols/CasinoProv
+      ider.swift)
+  ⎿  Read 58 lines
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  Added 7 lines, removed 1 line                                       
+      66  | `SportsEventsService` | Planned | `subscribeLiveMatches`, `su
+          bscribePreLiveMatches`, `getEventDetails`, `subscribeEventMarke
+          ts` | All sports event operations |
+      67  | `FavoritesService` | Planned | `getUserFavorites`, `addUserFa
+          vorite`, `removeUserFavorite` | User favorites |
+      68  
+      69 +### CasinoProvider Services                                    
+      70 +                                                               
+      71 +| Service | Status | Key Methods | Purpose |                   
+      72 +|---------|--------|-------------|---------|                   
+      73 +| `CasinoService` | Planned | `getCasinoCategories`, `getGamesB
+         +yCategory`, `getGameDetails`, `searchGames`, `buildGameLaunchUr
+         +l` | Casino games & launch |                                   
+      74 +                                                               
+      75  ---
+      76  
+      71 -## Done: 2 | Planned: 10                                       
+      77 +## Done: 2 | Planned: 11                                       
+      78  
+      79  ---
+      80  
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  Added 2 lines, removed 1 line                                       
+      33  | BettingProvider | 30 | 4 |
+      34  | PrivilegedAccessManager | 127 | 6 |
+      35  | EventsProvider | 125 | 2 |
+      36 -| **Total** | **282** | **12** |                               
+      36 +| CasinoProvider | 6 | 1 |                                     
+      37 +| **Total** | **288** | **13** |                               
+      38  
+      39  ---
+      40  
+
+⏺ Update(Frameworks/ServicesProvider/Documentation/TESTABLE_SERVICES.md)
+  ⎿  Added 1 line, removed 1 line                                        
+      26  
+      27  ## Services Overview
+      28  
+      29 -**Goal**: Break down 3 giant protocols (~280 methods) into ~12 
+         -focused services.                                              
+      29 +**Goal**: Break down 4 protocols (~288 methods) into ~13 focuse
+         +d services.                                                    
+      30  
+      31  | Protocol | Methods | Services |
+      32  |----------|---------|----------|
+
+⏺ Updated! Here's the simplified plan:
+
+  13 Services from 4 Protocols (288 methods)
+
+  | Protocol                | Services                                                                                    |
+  |-------------------------|---------------------------------------------------------------------------------------------|
+  | BettingProvider         | CashoutService ✅, BetHistoryService, BetPlacementService, BetslipService                   |
+  | PrivilegedAccessManager | WalletService ✅, AuthService, ProfileService, PaymentsService, LimitsService, BonusService |
+  | EventsProvider          | SportsEventsService, FavoritesService                                                       |
+  | CasinoProvider          | CasinoService                                                                               |
+
+  Done: 2 | Planned: 11
+
+  Which one should we create next? I'd suggest BetHistoryService - it's simple and commonly needed for the MyBets screen testing.
+
+
+

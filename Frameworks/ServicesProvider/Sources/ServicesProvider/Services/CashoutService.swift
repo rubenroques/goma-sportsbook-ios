@@ -1,14 +1,16 @@
 //
 //  CashoutService.swift
-//  BetssonCameroonApp
+//  ServicesProvider
 //
 //  Protocol Witness pattern (pointfree.co style) for cashout operations.
 //  Dependencies are closure properties, not protocol methods.
 //
+//  This struct provides a testable interface for cashout operations
+//  that can be easily mocked in unit tests.
+//
 
 import Foundation
 import Combine
-import ServicesProvider
 
 /// Struct-based dependency injection for cashout operations.
 /// Each property is a closure that can be swapped for testing.
@@ -25,15 +27,25 @@ import ServicesProvider
 ///     executeCashout: { _ in Fail(error: .unknown)... }
 /// )
 /// ```
-struct CashoutService {
+public struct CashoutService {
 
     // MARK: - Dependencies as Closures
 
     /// Subscribe to real-time cashout value updates via SSE
-    var subscribeToCashoutValue: (String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
+    public var subscribeToCashoutValue: (String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>
 
     /// Execute cashout (full or partial)
-    var executeCashout: (CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+    public var executeCashout: (CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+
+    // MARK: - Initialization
+
+    public init(
+        subscribeToCashoutValue: @escaping (String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError>,
+        executeCashout: @escaping (CashoutRequest) -> AnyPublisher<CashoutResponse, ServiceProviderError>
+    ) {
+        self.subscribeToCashoutValue = subscribeToCashoutValue
+        self.executeCashout = executeCashout
+    }
 }
 
 // MARK: - Production Implementation
@@ -41,7 +53,7 @@ struct CashoutService {
 extension CashoutService {
 
     /// Production implementation wrapping ServicesProvider.Client
-    static func live(client: ServicesProvider.Client) -> Self {
+    public static func live(client: Client) -> Self {
         .init(
             subscribeToCashoutValue: client.subscribeToCashoutValue,
             executeCashout: client.executeCashout
@@ -54,7 +66,7 @@ extension CashoutService {
 extension CashoutService {
 
     /// All operations fail immediately with the given error
-    static func failing(error: ServiceProviderError = .unknown) -> Self {
+    public static func failing(error: ServiceProviderError = .unknown) -> Self {
         .init(
             subscribeToCashoutValue: { _ in
                 Fail(error: error).eraseToAnyPublisher()
@@ -66,7 +78,7 @@ extension CashoutService {
     }
 
     /// Operations never complete - useful for testing loading states
-    static var noop: Self {
+    public static var noop: Self {
         .init(
             subscribeToCashoutValue: { _ in
                 Empty(completeImmediately: false).eraseToAnyPublisher()
@@ -78,7 +90,7 @@ extension CashoutService {
     }
 
     /// Configurable mock - pass closures for any behavior needed
-    static func mock(
+    public static func mock(
         subscribeToCashoutValue: @escaping (String) -> AnyPublisher<SubscribableContent<CashoutValue>, ServiceProviderError> = { _ in
             Empty(completeImmediately: false).eraseToAnyPublisher()
         },
