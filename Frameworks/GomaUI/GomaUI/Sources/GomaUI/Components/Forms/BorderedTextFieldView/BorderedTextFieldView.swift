@@ -82,6 +82,7 @@ final public class BorderedTextFieldView: UIView {
         prefixLabel.backgroundColor = .clear
         prefixLabel.isHidden = true
         prefixLabel.isUserInteractionEnabled = false // Allow touches to pass through
+        prefixLabel.setContentHuggingPriority(.required, for: .horizontal)
         containerView.addSubview(prefixLabel)
         
         // Text field setup
