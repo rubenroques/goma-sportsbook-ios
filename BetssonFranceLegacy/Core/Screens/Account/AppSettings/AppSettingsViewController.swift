@@ -190,22 +190,6 @@ extension AppSettingsViewController {
         let cardsStyleViewController = CardsStyleViewController()
         self.navigationController?.pushViewController(cardsStyleViewController, animated: true)
     }
-
-    @objc private func didTapChatView() {
-        let chatSettingsViewModel = ChatSettingsViewModel()
-
-        let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
-
-        self.navigationController?.pushViewController(chatSettingsViewController, animated: true)
-    }
-
-    @objc private func didTapTipsView() {
-        let tipsSettingsViewModel = TipsSettingsViewModel()
-
-        let tipsSettingsViewController = TipsSettingsViewController(viewModel: tipsSettingsViewModel)
-
-        self.navigationController?.pushViewController(tipsSettingsViewController, animated: true)
-    }
 }
 
 //

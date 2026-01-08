@@ -61,7 +61,6 @@ class LiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
 
     var didChangeSport: ((Sport) -> Void)?
-    var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var viewModel: LiveEventsViewModel
@@ -262,10 +261,6 @@ class LiveEventsViewController: UIViewController {
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
-        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
-            self?.didTapChatView()
-        }
-
 
         //
         // New Footer view in snap to bottom
@@ -500,10 +495,6 @@ class LiveEventsViewController: UIViewController {
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
-    }
-
-    @objc func didTapChatView() {
-        self.didTapChatButtonAction?()
     }
 
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {

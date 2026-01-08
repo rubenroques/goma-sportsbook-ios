@@ -125,29 +125,7 @@ class MessagesViewController: UIViewController {
 
     // MARK: Functions
     private func setupPublishers() {
-
-        Env.gomaSocialClient.inAppMessagesCounter
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] unreadCounter in
-                if unreadCounter > 0 {
-
-                    let messageString = localized("messages") + " (\(unreadCounter))"
-
-                    let counterString = "(\(unreadCounter))"
-
-                    let counterRange = (messageString as NSString).range(of: counterString)
-
-                    let mutableAttributedString = NSMutableAttributedString.init(string: messageString)
-
-                    mutableAttributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightSecondary, range: counterRange)
-
-                    self?.topTitleLabel.attributedText = mutableAttributedString
-                }
-                else {
-                    self?.topTitleLabel.text = localized("promotions")
-                }
-            })
-            .store(in: &cancellables)
+        self.topTitleLabel.text = localized("promotions")
     }
 
     private func openMessageDetail(cellViewModel: InAppMessageCellViewModel) {

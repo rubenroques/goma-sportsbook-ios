@@ -100,10 +100,7 @@ class TopCompetitionDetailsViewController: UIViewController {
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
         }
-        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
-            self?.didTapChatView()
-        }
-        
+
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         self.accountValueView.addGestureRecognizer(accountValueTapGesture)
         self.accountValueView.isHidden = true
@@ -296,21 +293,6 @@ class TopCompetitionDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
-    @objc func didTapChatView() {
-        self.openChatModal()
-    }
-    
-    func openChatModal() {
-        if Env.userSessionStore.isUserLogged() {
-            let socialViewController = SocialViewController()
-            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
-        }
-        else {
-            let loginViewController = Router.navigationController(with: LoginViewController())
-            self.present(loginViewController, animated: true, completion: nil)
-        }
-    }
-    
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)

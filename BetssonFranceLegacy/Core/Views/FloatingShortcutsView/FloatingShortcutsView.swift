@@ -122,18 +122,6 @@ class FloatingShortcutsView: UIView {
             })
             .store(in: &cancellables)
 
-        Env.gomaSocialClient.unreadMessagesCountPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] unreadCounter in
-                if unreadCounter > 0 {
-                    self?.chatCountLabel.text = "\(unreadCounter)"
-                    self?.chatCountLabel.isHidden = false
-                }
-                else {
-                    self?.chatCountLabel.isHidden = true
-                }
-            })
-            .store(in: &cancellables)
     }
 
     func setupWithTheme() {

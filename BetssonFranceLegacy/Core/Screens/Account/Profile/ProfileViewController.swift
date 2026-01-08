@@ -526,12 +526,6 @@ class ProfileViewController: UIViewController {
     @objc func tapCopyCode() {
         if let userCode = Env.gomaNetworkClient.getCurrentToken()?.code {
             self.pasteboard.string = userCode
-
-            let customCodeString = localized("user_code_dynamic_copied").replacingOccurrences(of: "{code_str}", with: userCode)
-
-            let customToast = ToastCustom.text(title: customCodeString)
-
-            customToast.show()
         }
     }
 

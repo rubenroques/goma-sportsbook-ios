@@ -326,20 +326,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             routeId = String(routeIdValue)
         }
 
-        let routeLabel = userInfo["routeLabel"] as? String ?? ""
-
-        let chatroomOnForegroundID = Env.gomaSocialClient.chatroomOnForeground()
-
-        if routeLabel == "chat_message" && routeId == chatroomOnForegroundID {
-            completionHandler([])
+        if #available(iOS 14.0, *) {
+            completionHandler([.banner])
         }
         else {
-            if #available(iOS 14.0, *) {
-                completionHandler([.banner])
-            }
-            else {
-                completionHandler([.alert])
-            }
+            completionHandler([.alert])
         }
     }
 
@@ -369,13 +360,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             route = .resolvedBet(id: routeId)
         case (_, "event"):
             route = .event(id: routeId)
-        case (_, "chat"):
-            if routeId.isNotEmpty {
-                route = .chatMessage(id: routeId)
-            }
-            else {
-                route = .chatNotifications
-            }
         default:
             ()
         }
