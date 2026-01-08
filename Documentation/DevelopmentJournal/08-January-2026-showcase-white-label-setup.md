@@ -11,9 +11,8 @@ sportsbook-ios / feature/showcase-white-label
 
 ### Achievements
 - [x] Created new branch `feature/showcase-white-label`
-- [x] Created Showcase folder structure with Core, Clients, NotificationsService, Scripts
-- [x] Copied all 9 clients from BetssonFranceLegacy (ATP, Betsson, Crocobet, DAZN, EveryMatrix, GOMASportRadar, GOMASports, Showcase, SportRadar)
-- [x] Set up Showcase.xcodeproj (user created fresh project in Xcode)
+- [x] Created Showcase folder structure from BetssonFranceLegacy
+- [x] Set up Showcase.xcodeproj (fresh Xcode project with modern format)
 - [x] Added Showcase.xcodeproj to Sportsbook.xcworkspace
 - [x] Fixed duplicate file issues caused by modern Xcode auto-sync vs legacy manual group references:
   - Deleted unreferenced `Core/Screens/PreLive/Cells/EmptyCardTableViewCell.swift`
@@ -22,9 +21,29 @@ sportsbook-ios / feature/showcase-white-label
   - Deleted unreferenced `Core/Screens/PreLive/Cells/EmptyCardTableViewCell.xib`
 - [x] Removed Xcode template folder conflict (Showcase/Showcase with duplicate AppDelegate)
 - [x] Configured Info.plist and entitlements paths in build settings
-- [x] Added all external SPM packages via Xcode (Firebase, Adyen, Adjust, Phrase, Optimove, etc.)
+- [x] Added all external SPM packages (Firebase, Adyen, Adjust, Phrase, Optimove, Kingfisher, Lottie, etc.)
 - [x] Fixed Swift 6 strict concurrency settings (removed SWIFT_APPROACHABLE_CONCURRENCY and SWIFT_DEFAULT_ACTOR_ISOLATION)
 - [x] Kept SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY for better import checking
+- [x] Cleaned up structure: renamed Core → App, kept only 2 client targets (Showcase, DAZN)
+
+### Final Project Structure
+```
+Showcase/
+├── App/                    # Main app code (renamed from Core)
+│   ├── Boot/               # AppDelegate, Bootstrap, Router, Environment
+│   ├── Constants/          # Colors, Fonts, Theme, UserDefaults
+│   ├── Models/             # App, EveryMatrixAPI, GGAPI, ModelMappers
+│   ├── Protocols/          # ClientsProtocols, AggregatorRepository
+│   ├── Resources/          # Animations, Assets, Fonts, Localization
+│   ├── Screens/            # 40+ screens (Account, Betslip, Casino, etc.)
+│   ├── Services/           # AppSession, BetslipManager, Networking
+│   ├── Tools/              # Extensions, Helpers, SwiftUI utilities
+│   └── Views/              # Reusable UI components
+├── Clients/
+│   ├── DAZN/               # DAZN client configuration
+│   └── Showcase/           # Showcase (main demo) client configuration
+└── Showcase.xcodeproj
+```
 
 ### Issues / Bugs Hit
 - [x] Xcode modern project format (`PBXFileSystemSynchronizedRootGroup`) auto-includes ALL files in folders, exposing previously unreferenced duplicate files from legacy codebase
@@ -37,6 +56,8 @@ sportsbook-ios / feature/showcase-white-label
 - **Modern Xcode project**: Started with fresh Xcode project instead of copying legacy project.pbxproj
 - **Duplicate file resolution**: Use BetssonFranceLegacy's project.pbxproj as source of truth for which duplicate files to keep
 - **Swift concurrency**: Disabled strict Swift 6 actor isolation to maintain compatibility with legacy code
+- **Simplified clients**: Kept only Showcase and DAZN targets (instead of all 9 original clients)
+- **Folder rename**: Core → App for cleaner, more standard naming
 
 ### Experiments & Notes
 - BetssonFranceLegacy uses old Xcode group references (not file system synchronized) - many files in filesystem were not actually referenced in project
@@ -45,14 +66,14 @@ sportsbook-ios / feature/showcase-white-label
 - Process to identify correct file: Search project.pbxproj for file reference UUID → find parent group → trace path
 
 ### Useful Files / Links
-- [Showcase/Core/](../../Showcase/Core/) - Main app code
-- [Showcase/Clients/](../../Showcase/Clients/) - All 9 client configurations
+- [Showcase/App/](../../Showcase/App/) - Main app code
+- [Showcase/Clients/](../../Showcase/Clients/) - Showcase and DAZN client configurations
 - [BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj/project.pbxproj](../../BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj/project.pbxproj) - Reference for file membership
 
 ### Next Steps
 1. Complete Showcase build verification
 2. Add remaining missing imports (SweeterSwift where needed)
-3. Clean BetssonFranceLegacy - remove non-France client folders (ATP, Crocobet, DAZN, EveryMatrix, GOMASportRadar, GOMASports, Showcase, SportRadar)
+3. Clean BetssonFranceLegacy - remove non-France client folders
 4. Remove non-France targets from BetssonFranceLegacy project
-5. Verify BetssonFranceLegacy France targets still build (Betsson PROD, Betsson UAT, NotificationsService, SportsbookTests)
+5. Verify BetssonFranceLegacy France targets still build
 6. Add SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY to BetssonCameroonApp

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1620"
+   LastUpgradeVersion = "2620"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CEA565B92D5A58D800696793"
-               BuildableName = "ATP.app"
-               BlueprintName = "ATP"
-               ReferencedContainer = "container:Sportsbook.xcodeproj">
+               BlueprintIdentifier = "CE9FC2392F0EB7450058E311"
+               BuildableName = "Showcase.app"
+               BlueprintName = "Showcase"
+               ReferencedContainer = "container:Showcase.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -44,10 +44,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CEA565B92D5A58D800696793"
-            BuildableName = "ATP.app"
-            BlueprintName = "ATP"
-            ReferencedContainer = "container:Sportsbook.xcodeproj">
+            BlueprintIdentifier = "CE9FC2392F0EB7450058E311"
+            BuildableName = "Showcase.app"
+            BlueprintName = "Showcase"
+            ReferencedContainer = "container:Showcase.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -61,10 +61,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CEA565B92D5A58D800696793"
-            BuildableName = "ATP.app"
-            BlueprintName = "ATP"
-            ReferencedContainer = "container:Sportsbook.xcodeproj">
+            BlueprintIdentifier = "CE9FC2392F0EB7450058E311"
+            BuildableName = "Showcase.app"
+            BlueprintName = "Showcase"
+            ReferencedContainer = "container:Showcase.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

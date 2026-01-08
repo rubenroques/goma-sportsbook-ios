@@ -7,6 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE9F42CF2F0F45EF001813ED /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B62F0F45EF001813ED /* OptimoveSDK */; };
+		CE9F42D02F0F45EF001813ED /* AdyenDelegatedAuthentication in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A32F0F45EF001813ED /* AdyenDelegatedAuthentication */; };
+		CE9F42D12F0F45EF001813ED /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42992F0F45EF001813ED /* FirebaseDatabase */; };
+		CE9F42D22F0F45EF001813ED /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42BF2F0F45EF001813ED /* Collections */; };
+		CE9F42D32F0F45EF001813ED /* Adyen in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F429C2F0F45EF001813ED /* Adyen */; };
+		CE9F42D42F0F45EF001813ED /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C72F0F45EF001813ED /* SocketIO */; };
+		CE9F42D52F0F45EF001813ED /* Extensions in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42902F0F45EF001813ED /* Extensions */; };
+		CE9F42D62F0F45EF001813ED /* AdyenCard in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F429F2F0F45EF001813ED /* AdyenCard */; };
+		CE9F42D72F0F45EF001813ED /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C92F0F45EF001813ED /* Starscream */; };
+		CE9F42D82F0F45EF001813ED /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42932F0F45EF001813ED /* SharedModels */; };
+		CE9F42D92F0F45EF001813ED /* AdjustUnsigned in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B12F0F45EF001813ED /* AdjustUnsigned */; };
+		CE9F42DA2F0F45EF001813ED /* AdyenCardScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A02F0F45EF001813ED /* AdyenCardScanner */; };
+		CE9F42DB2F0F45EF001813ED /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B32F0F45EF001813ED /* OptimoveCore */; };
+		CE9F42DC2F0F45EF001813ED /* AdyenSession in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A62F0F45EF001813ED /* AdyenSession */; };
+		CE9F42DD2F0F45EF001813ED /* AdyenComponents in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A22F0F45EF001813ED /* AdyenComponents */; };
+		CE9F42DE2F0F45EF001813ED /* AdyenDropIn in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A42F0F45EF001813ED /* AdyenDropIn */; };
+		CE9F42DF2F0F45EF001813ED /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42AA2F0F45EF001813ED /* PhraseSDK */; };
+		CE9F42E02F0F45EF001813ED /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C12F0F45EF001813ED /* Lottie */; };
+		CE9F42E12F0F45EF001813ED /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F429B2F0F45EF001813ED /* FirebaseRemoteConfig */; };
+		CE9F42E22F0F45EF001813ED /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42942F0F45EF001813ED /* FirebaseAnalytics */; };
+		CE9F42E32F0F45EF001813ED /* AdyenSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A72F0F45EF001813ED /* AdyenSwiftUI */; };
+		CE9F42E42F0F45EF001813ED /* AdyenActions in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F429E2F0F45EF001813ED /* AdyenActions */; };
+		CE9F42E52F0F45EF001813ED /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42CB2F0F45EF001813ED /* SweeterSwift */; };
+		CE9F42E62F0F45EF001813ED /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42912F0F45EF001813ED /* RegisterFlow */; };
+		CE9F42E72F0F45EF001813ED /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A92F0F45EF001813ED /* AdyenWeChatPay */; };
+		CE9F42E82F0F45EF001813ED /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F428F2F0F45EF001813ED /* AdresseFrancaise */; };
+		CE9F42E92F0F45EF001813ED /* AdyenCashAppPay in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A12F0F45EF001813ED /* AdyenCashAppPay */; };
+		CE9F42EA2F0F45EF001813ED /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B92F0F45EF001813ED /* DictionaryCoding */; };
+		CE9F42EB2F0F45EF001813ED /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B72F0F45EF001813ED /* Reachability */; };
+		CE9F42EC2F0F45EF001813ED /* AdyenTwint in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A82F0F45EF001813ED /* AdyenTwint */; };
+		CE9F42ED2F0F45EF001813ED /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42BB2F0F45EF001813ED /* CombineCocoa */; };
+		CE9F42EE2F0F45EF001813ED /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C62F0F45EF001813ED /* FirebaseFirestoreCombine-Community */; };
+		CE9F42EF2F0F45EF001813ED /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42962F0F45EF001813ED /* FirebaseAuth */; };
+		CE9F42F02F0F45EF001813ED /* AdyenEncryption in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42A52F0F45EF001813ED /* AdyenEncryption */; };
+		CE9F42F12F0F45EF001813ED /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C32F0F45EF001813ED /* IQKeyboardManagerSwift */; };
+		CE9F42F22F0F45EF001813ED /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B02F0F45EF001813ED /* AdjustSdk */; };
+		CE9F42F32F0F45EF001813ED /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42982F0F45EF001813ED /* FirebaseCrashlytics */; };
+		CE9F42F42F0F45EF001813ED /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42972F0F45EF001813ED /* FirebaseCore */; };
+		CE9F42F52F0F45EF001813ED /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B52F0F45EF001813ED /* OptimoveNotificationServiceExtension */; };
+		CE9F42F62F0F45EF001813ED /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F429A2F0F45EF001813ED /* FirebaseMessaging */; };
+		CE9F42F72F0F45EF001813ED /* AdjustWebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42B22F0F45EF001813ED /* AdjustWebBridge */; };
+		CE9F42F82F0F45EF001813ED /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42AC2F0F45EF001813ED /* IdensicMobileSDK */; };
+		CE9F42F92F0F45EF001813ED /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42922F0F45EF001813ED /* ServicesProvider */; };
+		CE9F42FA2F0F45EF001813ED /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42BD2F0F45EF001813ED /* Kingfisher */; };
+		CE9F42FB2F0F45EF001813ED /* AdjustGoogleOdm in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42AE2F0F45EF001813ED /* AdjustGoogleOdm */; };
+		CE9F42FC2F0F45EF001813ED /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CE9F42C52F0F45EF001813ED /* FirebaseFirestore */; };
 		CE9FD9822F0EBCBD0058E311 /* AdresseFrancaise in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FD9812F0EBCBD0058E311 /* AdresseFrancaise */; };
 		CE9FD9842F0EBCBD0058E311 /* Extensions in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FD9832F0EBCBD0058E311 /* Extensions */; };
 		CE9FD9862F0EBCBD0058E311 /* RegisterFlow in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FD9852F0EBCBD0058E311 /* RegisterFlow */; };
@@ -34,10 +80,7 @@
 		CE9FE72F2F0ECD840058E311 /* AdyenWeChatPay in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE72E2F0ECD840058E311 /* AdyenWeChatPay */; };
 		CE9FE7322F0ECE450058E311 /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7312F0ECE450058E311 /* PhraseSDK */; };
 		CE9FE7352F0ECED50058E311 /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7342F0ECED50058E311 /* IdensicMobileSDK */; };
-		CE9FE7382F0ECF170058E311 /* AdjustGoogleOdm in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7372F0ECF170058E311 /* AdjustGoogleOdm */; };
 		CE9FE73A2F0ECF170058E311 /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7392F0ECF170058E311 /* AdjustSdk */; };
-		CE9FE73C2F0ECF170058E311 /* AdjustUnsigned in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE73B2F0ECF170058E311 /* AdjustUnsigned */; };
-		CE9FE73E2F0ECF170058E311 /* AdjustWebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE73D2F0ECF170058E311 /* AdjustWebBridge */; };
 		CE9FE7412F0ECF700058E311 /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7402F0ECF700058E311 /* OptimoveCore */; };
 		CE9FE7432F0ECF700058E311 /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7422F0ECF700058E311 /* OptimoveNotificationServiceExtension */; };
 		CE9FE7452F0ECF700058E311 /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE9FE7442F0ECF700058E311 /* OptimoveSDK */; };
@@ -56,21 +99,32 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE9F43012F0F45EF001813ED /* DAZN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DAZN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9FC23A2F0EB7450058E311 /* Showcase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Showcase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CE6F3A252F0F422A005150AC /* Exceptions for "Clients" folder in "Showcase" target */ = {
+		CE9F430F2F0F4682001813ED /* Exceptions for "Clients" folder in "DAZN" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"/Localized: DAZN/LaunchScreen/LaunchScreen-DAZN.storyboard",
 				DAZN/Assets/Colors.xcassets,
 				"DAZN/Assets/DAZN-Assets.xcassets",
 				DAZN/Assets/Media.xcassets,
 				DAZN/ClientVariables.swift,
-				"DAZN/Misc/DAZN-Info.plist",
 				"DAZN/Misc/GoogleService-Info.plist",
 				DAZN/TargetVariables.swift,
+			);
+			target = CE9F428E2F0F45EF001813ED /* DAZN */;
+		};
+		CE9F43122F0F4699001813ED /* Exceptions for "Clients" folder in "Showcase" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"/Localized: Showcase/LaunchScreen/LaunchScreen-Showcase.storyboard",
+				Showcase/Assets/Colors.xcassets,
+				"Showcase/Assets/Showcase-Assets.xcassets",
+				Showcase/ClientVariables.swift,
+				"Showcase/Misc/GoogleService-Info.plist",
+				Showcase/TargetVariables.swift,
 			);
 			target = CE9FC2392F0EB7450058E311 /* Showcase */;
 		};
@@ -80,7 +134,8 @@
 		CE9FD0AB2F0EB9780058E311 /* Clients */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CE6F3A252F0F422A005150AC /* Exceptions for "Clients" folder in "Showcase" target */,
+				CE9F43122F0F4699001813ED /* Exceptions for "Clients" folder in "Showcase" target */,
+				CE9F430F2F0F4682001813ED /* Exceptions for "Clients" folder in "DAZN" target */,
 			);
 			path = Clients;
 			sourceTree = "<group>";
@@ -93,6 +148,59 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CE9F42CE2F0F45EF001813ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE9F42CF2F0F45EF001813ED /* OptimoveSDK in Frameworks */,
+				CE9F42D02F0F45EF001813ED /* AdyenDelegatedAuthentication in Frameworks */,
+				CE9F42D12F0F45EF001813ED /* FirebaseDatabase in Frameworks */,
+				CE9F42D22F0F45EF001813ED /* Collections in Frameworks */,
+				CE9F42D32F0F45EF001813ED /* Adyen in Frameworks */,
+				CE9F42D42F0F45EF001813ED /* SocketIO in Frameworks */,
+				CE9F42D52F0F45EF001813ED /* Extensions in Frameworks */,
+				CE9F42D62F0F45EF001813ED /* AdyenCard in Frameworks */,
+				CE9F42D72F0F45EF001813ED /* Starscream in Frameworks */,
+				CE9F42D82F0F45EF001813ED /* SharedModels in Frameworks */,
+				CE9F42D92F0F45EF001813ED /* AdjustUnsigned in Frameworks */,
+				CE9F42DA2F0F45EF001813ED /* AdyenCardScanner in Frameworks */,
+				CE9F42DB2F0F45EF001813ED /* OptimoveCore in Frameworks */,
+				CE9F42DC2F0F45EF001813ED /* AdyenSession in Frameworks */,
+				CE9F42DD2F0F45EF001813ED /* AdyenComponents in Frameworks */,
+				CE9F42DE2F0F45EF001813ED /* AdyenDropIn in Frameworks */,
+				CE9F42DF2F0F45EF001813ED /* PhraseSDK in Frameworks */,
+				CE9F42E02F0F45EF001813ED /* Lottie in Frameworks */,
+				CE9F42E12F0F45EF001813ED /* FirebaseRemoteConfig in Frameworks */,
+				CE9F42E22F0F45EF001813ED /* FirebaseAnalytics in Frameworks */,
+				CE9F42E32F0F45EF001813ED /* AdyenSwiftUI in Frameworks */,
+				CE9F42E42F0F45EF001813ED /* AdyenActions in Frameworks */,
+				CE9F42E52F0F45EF001813ED /* SweeterSwift in Frameworks */,
+				CE9F42E62F0F45EF001813ED /* RegisterFlow in Frameworks */,
+				CE9F42E72F0F45EF001813ED /* AdyenWeChatPay in Frameworks */,
+				CE9F42E82F0F45EF001813ED /* AdresseFrancaise in Frameworks */,
+				CE9F42E92F0F45EF001813ED /* AdyenCashAppPay in Frameworks */,
+				CE9F42EA2F0F45EF001813ED /* DictionaryCoding in Frameworks */,
+				CE9F42EB2F0F45EF001813ED /* Reachability in Frameworks */,
+				CE9F42EC2F0F45EF001813ED /* AdyenTwint in Frameworks */,
+				CE9F42ED2F0F45EF001813ED /* CombineCocoa in Frameworks */,
+				CE9F42EE2F0F45EF001813ED /* FirebaseFirestoreCombine-Community in Frameworks */,
+				CE9F42EF2F0F45EF001813ED /* FirebaseAuth in Frameworks */,
+				CE9F42F02F0F45EF001813ED /* AdyenEncryption in Frameworks */,
+				CE9F42F12F0F45EF001813ED /* IQKeyboardManagerSwift in Frameworks */,
+				CE9F42F22F0F45EF001813ED /* AdjustSdk in Frameworks */,
+				CE9F42F32F0F45EF001813ED /* FirebaseCrashlytics in Frameworks */,
+				CE9F42F42F0F45EF001813ED /* FirebaseCore in Frameworks */,
+				CE9F42F52F0F45EF001813ED /* OptimoveNotificationServiceExtension in Frameworks */,
+				CE9F42F62F0F45EF001813ED /* FirebaseMessaging in Frameworks */,
+				CE9F42F72F0F45EF001813ED /* AdjustWebBridge in Frameworks */,
+				CE9F42F82F0F45EF001813ED /* IdensicMobileSDK in Frameworks */,
+				CE9F42F92F0F45EF001813ED /* ServicesProvider in Frameworks */,
+				CE9F42FA2F0F45EF001813ED /* Kingfisher in Frameworks */,
+				CE9F42FB2F0F45EF001813ED /* AdjustGoogleOdm in Frameworks */,
+				CE9F42FC2F0F45EF001813ED /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9FC2372F0EB7450058E311 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -107,7 +215,6 @@
 				CE9FE71B2F0ECD840058E311 /* AdyenCard in Frameworks */,
 				CE9FE7642F0F0E320058E311 /* Starscream in Frameworks */,
 				CE9FD98A2F0EBCBD0058E311 /* SharedModels in Frameworks */,
-				CE9FE73C2F0ECF170058E311 /* AdjustUnsigned in Frameworks */,
 				CE9FE71D2F0ECD840058E311 /* AdyenCardScanner in Frameworks */,
 				CE9FE7412F0ECF700058E311 /* OptimoveCore in Frameworks */,
 				CE9FE7292F0ECD840058E311 /* AdyenSession in Frameworks */,
@@ -137,11 +244,9 @@
 				CE9FE70C2F0ECC890058E311 /* FirebaseCore in Frameworks */,
 				CE9FE7432F0ECF700058E311 /* OptimoveNotificationServiceExtension in Frameworks */,
 				CE9FE7122F0ECC890058E311 /* FirebaseMessaging in Frameworks */,
-				CE9FE73E2F0ECF170058E311 /* AdjustWebBridge in Frameworks */,
 				CE9FE7352F0ECED50058E311 /* IdensicMobileSDK in Frameworks */,
 				CE9FD9882F0EBCBD0058E311 /* ServicesProvider in Frameworks */,
 				CE9FE7512F0EF7E70058E311 /* Kingfisher in Frameworks */,
-				CE9FE7382F0ECF170058E311 /* AdjustGoogleOdm in Frameworks */,
 				CE9FE75C2F0EF9BA0058E311 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				CE9FC23A2F0EB7450058E311 /* Showcase.app */,
+				CE9F43012F0F45EF001813ED /* DAZN.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -177,6 +283,74 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CE9F428E2F0F45EF001813ED /* DAZN */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE9F42FE2F0F45EF001813ED /* Build configuration list for PBXNativeTarget "DAZN" */;
+			buildPhases = (
+				CE9F42CD2F0F45EF001813ED /* Sources */,
+				CE9F42CE2F0F45EF001813ED /* Frameworks */,
+				CE9F42FD2F0F45EF001813ED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CE9FD5602F0EB9780058E311 /* App */,
+			);
+			name = DAZN;
+			packageProductDependencies = (
+				CE9F428F2F0F45EF001813ED /* AdresseFrancaise */,
+				CE9F42902F0F45EF001813ED /* Extensions */,
+				CE9F42912F0F45EF001813ED /* RegisterFlow */,
+				CE9F42922F0F45EF001813ED /* ServicesProvider */,
+				CE9F42932F0F45EF001813ED /* SharedModels */,
+				CE9F42942F0F45EF001813ED /* FirebaseAnalytics */,
+				CE9F42962F0F45EF001813ED /* FirebaseAuth */,
+				CE9F42972F0F45EF001813ED /* FirebaseCore */,
+				CE9F42982F0F45EF001813ED /* FirebaseCrashlytics */,
+				CE9F42992F0F45EF001813ED /* FirebaseDatabase */,
+				CE9F429A2F0F45EF001813ED /* FirebaseMessaging */,
+				CE9F429B2F0F45EF001813ED /* FirebaseRemoteConfig */,
+				CE9F429C2F0F45EF001813ED /* Adyen */,
+				CE9F429E2F0F45EF001813ED /* AdyenActions */,
+				CE9F429F2F0F45EF001813ED /* AdyenCard */,
+				CE9F42A02F0F45EF001813ED /* AdyenCardScanner */,
+				CE9F42A12F0F45EF001813ED /* AdyenCashAppPay */,
+				CE9F42A22F0F45EF001813ED /* AdyenComponents */,
+				CE9F42A32F0F45EF001813ED /* AdyenDelegatedAuthentication */,
+				CE9F42A42F0F45EF001813ED /* AdyenDropIn */,
+				CE9F42A52F0F45EF001813ED /* AdyenEncryption */,
+				CE9F42A62F0F45EF001813ED /* AdyenSession */,
+				CE9F42A72F0F45EF001813ED /* AdyenSwiftUI */,
+				CE9F42A82F0F45EF001813ED /* AdyenTwint */,
+				CE9F42A92F0F45EF001813ED /* AdyenWeChatPay */,
+				CE9F42AA2F0F45EF001813ED /* PhraseSDK */,
+				CE9F42AC2F0F45EF001813ED /* IdensicMobileSDK */,
+				CE9F42AE2F0F45EF001813ED /* AdjustGoogleOdm */,
+				CE9F42B02F0F45EF001813ED /* AdjustSdk */,
+				CE9F42B12F0F45EF001813ED /* AdjustUnsigned */,
+				CE9F42B22F0F45EF001813ED /* AdjustWebBridge */,
+				CE9F42B32F0F45EF001813ED /* OptimoveCore */,
+				CE9F42B52F0F45EF001813ED /* OptimoveNotificationServiceExtension */,
+				CE9F42B62F0F45EF001813ED /* OptimoveSDK */,
+				CE9F42B72F0F45EF001813ED /* Reachability */,
+				CE9F42B92F0F45EF001813ED /* DictionaryCoding */,
+				CE9F42BB2F0F45EF001813ED /* CombineCocoa */,
+				CE9F42BD2F0F45EF001813ED /* Kingfisher */,
+				CE9F42BF2F0F45EF001813ED /* Collections */,
+				CE9F42C12F0F45EF001813ED /* Lottie */,
+				CE9F42C32F0F45EF001813ED /* IQKeyboardManagerSwift */,
+				CE9F42C52F0F45EF001813ED /* FirebaseFirestore */,
+				CE9F42C62F0F45EF001813ED /* FirebaseFirestoreCombine-Community */,
+				CE9F42C72F0F45EF001813ED /* SocketIO */,
+				CE9F42C92F0F45EF001813ED /* Starscream */,
+				CE9F42CB2F0F45EF001813ED /* SweeterSwift */,
+			);
+			productName = Showcase;
+			productReference = CE9F43012F0F45EF001813ED /* DAZN.app */;
+			productType = "com.apple.product-type.application";
+		};
 		CE9FC2392F0EB7450058E311 /* Showcase */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE9FC2632F0EB7470058E311 /* Build configuration list for PBXNativeTarget "Showcase" */;
@@ -190,7 +364,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				CE9FD0AB2F0EB9780058E311 /* Clients */,
 				CE9FD5602F0EB9780058E311 /* App */,
 			);
 			name = Showcase;
@@ -222,10 +395,7 @@
 				CE9FE72E2F0ECD840058E311 /* AdyenWeChatPay */,
 				CE9FE7312F0ECE450058E311 /* PhraseSDK */,
 				CE9FE7342F0ECED50058E311 /* IdensicMobileSDK */,
-				CE9FE7372F0ECF170058E311 /* AdjustGoogleOdm */,
 				CE9FE7392F0ECF170058E311 /* AdjustSdk */,
-				CE9FE73B2F0ECF170058E311 /* AdjustUnsigned */,
-				CE9FE73D2F0ECF170058E311 /* AdjustWebBridge */,
 				CE9FE7402F0ECF700058E311 /* OptimoveCore */,
 				CE9FE7422F0ECF700058E311 /* OptimoveNotificationServiceExtension */,
 				CE9FE7442F0ECF700058E311 /* OptimoveSDK */,
@@ -297,11 +467,19 @@
 			projectRoot = "";
 			targets = (
 				CE9FC2392F0EB7450058E311 /* Showcase */,
+				CE9F428E2F0F45EF001813ED /* DAZN */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CE9F42FD2F0F45EF001813ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9FC2382F0EB7450058E311 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -312,6 +490,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CE9F42CD2F0F45EF001813ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE9FC2362F0EB7450058E311 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -322,17 +507,17 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		CE9FC2642F0EB7470058E311 /* Debug */ = {
+		CE9F42FF2F0F45EF001813ED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMA";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-DAZN";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Misc/Showcase.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Clients/Showcase/Misc/Showcase-Info.plist";
+				INFOPLIST_FILE = Clients/DAZN/Misc/DAZNInfo.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-Showcase";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -358,14 +543,50 @@
 			};
 			name = Debug;
 		};
-		CE9FC2652F0EB7470058E311 /* Release */ = {
+		CE9F43002F0F45EF001813ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-DAZN";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Clients/DAZN/Misc/DAZNInfo.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-Showcase";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.Showcase;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		CE9FC2642F0EB7470058E311 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMA";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Misc/Showcase.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 10150;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "Clients/Showcase/Misc/Showcase-Info.plist";
@@ -379,8 +600,44 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.Showcase;
+				MARKETING_VERSION = 1.0.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		CE9FC2652F0EB7470058E311 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-GOMA";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Misc/Showcase.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10150;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Clients/Showcase/Misc/Showcase-Info.plist";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen-Showcase";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.goma;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -518,6 +775,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CE9F42FE2F0F45EF001813ED /* Build configuration list for PBXNativeTarget "DAZN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE9F42FF2F0F45EF001813ED /* Debug */,
+				CE9F43002F0F45EF001813ED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE9FC2352F0EB7450058E311 /* Build configuration list for PBXProject "Showcase" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -539,6 +805,134 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
+		CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Adyen/adyen-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.22.1;
+			};
+		};
+		CE9F42AB2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/phrase/ios-sdk/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		CE9F42AD2F0F45EF001813ED /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SumSubstance/IdensicMobileSDK-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.40.2;
+			};
+		};
+		CE9F42AF2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		CE9F42B42F0F45EF001813ED /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/optimove-tech/Optimove-SDK-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.3.0;
+			};
+		};
+		CE9F42B82F0F45EF001813ED /* XCRemoteSwiftPackageReference "Reachability" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		CE9F42BA2F0F45EF001813ED /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.9;
+			};
+		};
+		CE9F42BC2F0F45EF001813ED /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.1;
+			};
+		};
+		CE9F42BE2F0F45EF001813ED /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+		CE9F42C02F0F45EF001813ED /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
+		CE9F42C22F0F45EF001813ED /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.6.0;
+			};
+		};
+		CE9F42C42F0F45EF001813ED /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		CE9F42C82F0F45EF001813ED /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		CE9F42CA2F0F45EF001813ED /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.8;
+			};
+		};
+		CE9F42CC2F0F45EF001813ED /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yonat/SweeterSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.6;
+			};
+		};
 		CE9FE7062F0ECC890058E311 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -670,6 +1064,231 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CE9F428F2F0F45EF001813ED /* AdresseFrancaise */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AdresseFrancaise;
+		};
+		CE9F42902F0F45EF001813ED /* Extensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Extensions;
+		};
+		CE9F42912F0F45EF001813ED /* RegisterFlow */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RegisterFlow;
+		};
+		CE9F42922F0F45EF001813ED /* ServicesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServicesProvider;
+		};
+		CE9F42932F0F45EF001813ED /* SharedModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedModels;
+		};
+		CE9F42942F0F45EF001813ED /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		CE9F42962F0F45EF001813ED /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CE9F42972F0F45EF001813ED /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		CE9F42982F0F45EF001813ED /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		CE9F42992F0F45EF001813ED /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		CE9F429A2F0F45EF001813ED /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		CE9F429B2F0F45EF001813ED /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		CE9F429C2F0F45EF001813ED /* Adyen */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = Adyen;
+		};
+		CE9F429E2F0F45EF001813ED /* AdyenActions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenActions;
+		};
+		CE9F429F2F0F45EF001813ED /* AdyenCard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCard;
+		};
+		CE9F42A02F0F45EF001813ED /* AdyenCardScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCardScanner;
+		};
+		CE9F42A12F0F45EF001813ED /* AdyenCashAppPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCashAppPay;
+		};
+		CE9F42A22F0F45EF001813ED /* AdyenComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenComponents;
+		};
+		CE9F42A32F0F45EF001813ED /* AdyenDelegatedAuthentication */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenDelegatedAuthentication;
+		};
+		CE9F42A42F0F45EF001813ED /* AdyenDropIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenDropIn;
+		};
+		CE9F42A52F0F45EF001813ED /* AdyenEncryption */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenEncryption;
+		};
+		CE9F42A62F0F45EF001813ED /* AdyenSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSession;
+		};
+		CE9F42A72F0F45EF001813ED /* AdyenSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenSwiftUI;
+		};
+		CE9F42A82F0F45EF001813ED /* AdyenTwint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenTwint;
+		};
+		CE9F42A92F0F45EF001813ED /* AdyenWeChatPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F429D2F0F45EF001813ED /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenWeChatPay;
+		};
+		CE9F42AA2F0F45EF001813ED /* PhraseSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AB2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios-sdk" */;
+			productName = PhraseSDK;
+		};
+		CE9F42AC2F0F45EF001813ED /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AD2F0F45EF001813ED /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
+		};
+		CE9F42AE2F0F45EF001813ED /* AdjustGoogleOdm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AF2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustGoogleOdm;
+		};
+		CE9F42B02F0F45EF001813ED /* AdjustSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AF2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustSdk;
+		};
+		CE9F42B12F0F45EF001813ED /* AdjustUnsigned */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AF2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustUnsigned;
+		};
+		CE9F42B22F0F45EF001813ED /* AdjustWebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42AF2F0F45EF001813ED /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustWebBridge;
+		};
+		CE9F42B32F0F45EF001813ED /* OptimoveCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42B42F0F45EF001813ED /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveCore;
+		};
+		CE9F42B52F0F45EF001813ED /* OptimoveNotificationServiceExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42B42F0F45EF001813ED /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveNotificationServiceExtension;
+		};
+		CE9F42B62F0F45EF001813ED /* OptimoveSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42B42F0F45EF001813ED /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveSDK;
+		};
+		CE9F42B72F0F45EF001813ED /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42B82F0F45EF001813ED /* XCRemoteSwiftPackageReference "Reachability" */;
+			productName = Reachability;
+		};
+		CE9F42B92F0F45EF001813ED /* DictionaryCoding */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42BA2F0F45EF001813ED /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
+			productName = DictionaryCoding;
+		};
+		CE9F42BB2F0F45EF001813ED /* CombineCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42BC2F0F45EF001813ED /* XCRemoteSwiftPackageReference "CombineCocoa" */;
+			productName = CombineCocoa;
+		};
+		CE9F42BD2F0F45EF001813ED /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42BE2F0F45EF001813ED /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		CE9F42BF2F0F45EF001813ED /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42C02F0F45EF001813ED /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		CE9F42C12F0F45EF001813ED /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42C22F0F45EF001813ED /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		CE9F42C32F0F45EF001813ED /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42C42F0F45EF001813ED /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		CE9F42C52F0F45EF001813ED /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		CE9F42C62F0F45EF001813ED /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42952F0F45EF001813ED /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
+		};
+		CE9F42C72F0F45EF001813ED /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42C82F0F45EF001813ED /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		CE9F42C92F0F45EF001813ED /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42CA2F0F45EF001813ED /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+		CE9F42CB2F0F45EF001813ED /* SweeterSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE9F42CC2F0F45EF001813ED /* XCRemoteSwiftPackageReference "SweeterSwift" */;
+			productName = SweeterSwift;
+		};
 		CE9FD9812F0EBCBD0058E311 /* AdresseFrancaise */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AdresseFrancaise;
@@ -800,25 +1419,10 @@
 			package = CE9FE7332F0ECED50058E311 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
 			productName = IdensicMobileSDK;
 		};
-		CE9FE7372F0ECF170058E311 /* AdjustGoogleOdm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE9FE7362F0ECF170058E311 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = AdjustGoogleOdm;
-		};
 		CE9FE7392F0ECF170058E311 /* AdjustSdk */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CE9FE7362F0ECF170058E311 /* XCRemoteSwiftPackageReference "ios_sdk" */;
 			productName = AdjustSdk;
-		};
-		CE9FE73B2F0ECF170058E311 /* AdjustUnsigned */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE9FE7362F0ECF170058E311 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = AdjustUnsigned;
-		};
-		CE9FE73D2F0ECF170058E311 /* AdjustWebBridge */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE9FE7362F0ECF170058E311 /* XCRemoteSwiftPackageReference "ios_sdk" */;
-			productName = AdjustWebBridge;
 		};
 		CE9FE7402F0ECF700058E311 /* OptimoveCore */ = {
 			isa = XCSwiftPackageProductDependency;

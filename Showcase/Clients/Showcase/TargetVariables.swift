@@ -24,7 +24,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var firebaseDatabaseURL: String {
-        return "https://betssonfr-74f1b-default-rtdb.europe-west1.firebasedatabase.app/"
+        return "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
     }
 
     static var supportedThemes: [Theme] {
