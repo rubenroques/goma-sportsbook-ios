@@ -1,0 +1,372 @@
+//
+//  UserSettings.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 29/07/2021.
+//
+
+import Foundation
+import RegisterFlow
+
+enum UserDefaultsKey: String {
+
+    case theme = "appThemeKey"
+    case userSession = "userSession"
+    case userSkippedLoginFlow = "userSkippedLoginFlow"
+    case userOddsFormat = "userOddsFormat"
+    case cardsStyle = "cardsStyleKey"
+    case cachedBetslipTickets = "cachedBetslipTickets"
+
+    case cachedBetBuilderState = "betBuilderState"
+
+    case bettingUserSettings = "bettingUserSettings"
+    case notificationsUserSettings = "notificationsUserSettings"
+
+    case biometricAuthentication
+    case acceptedTracking = "acceptedTrackingKey"
+
+    case oddsValueType = "oddsValueType"
+
+    case startedUserRegisterInfo = "RegistrationFormDataKey"
+    case referralCode = "referralCode"
+
+    var key: String {
+        return self.rawValue
+    }
+}
+
+extension UserDefaults {
+
+    var theme: Theme {
+        get {
+            if let themeInt = self.value(forKey: UserDefaultsKey.theme.key) as? Int {
+                return Theme(rawValue: themeInt) ?? .dark
+            }
+
+            self.setValue(Theme.dark.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.synchronize()
+            return .dark
+        }
+        set {
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.theme.key)
+            self.synchronize()
+        }
+    }
+
+    var userSession: UserSession? {
+        get {
+            return self.codable(forKey: UserDefaultsKey.userSession.key)
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.userSession.key)
+            self.synchronize()
+        }
+    }
+
+    var userSkippedLoginFlow: Bool {
+        get {
+            if let skipped = self.value(forKey: UserDefaultsKey.userSkippedLoginFlow.key) as? Bool {
+                return skipped
+            }
+            self.setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
+            return false
+        }
+        set {
+            self.setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.key)
+            self.synchronize()
+        }
+    }
+
+    var cachedBetslipTickets: [BettingTicket] {
+        get {
+            let defaultValue = [BettingTicket]()
+            let bettingTickets: [BettingTicket]? = self.codable(forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            if let bettingTicketsValue = bettingTickets {
+                return bettingTicketsValue
+            }
+
+            self.set(defaultValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
+            return defaultValue
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetslipTickets.key)
+            self.synchronize()
+        }
+
+    }
+
+    var cachedBetBuilderProcessor: BetBuilderProcessor {
+        get {
+            let defaultValue = BetBuilderProcessor()
+            let betBuilderProcessor: BetBuilderProcessor? = self.codable(forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            if let betBuilderProcessorValue = betBuilderProcessor {
+                return betBuilderProcessorValue
+            }
+
+            self.set(codable: defaultValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            self.synchronize()
+            return defaultValue
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.cachedBetBuilderState.key)
+            self.synchronize()
+        }
+
+    }
+
+    var userOddsFormat: OddsFormat {
+        get {
+            return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.key)) ?? .europe
+        }
+        set {
+            self.set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.key)
+            self.synchronize()
+        }
+    }
+
+    var bettingUserSettings: BettingUserSettings {
+        get {
+            let defaultValue = BettingUserSettings.defaultSettings
+            let bettingUserSettings: BettingUserSettings? = self.codable(forKey: UserDefaultsKey.bettingUserSettings.key)
+
+            if let bettingUserSettingsValue = bettingUserSettings {
+                return bettingUserSettingsValue
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+                self.synchronize()
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.bettingUserSettings.key)
+            self.synchronize()
+        }
+    }
+
+    var notificationsUserSettings: NotificationsUserSettings {
+        get {
+            let defaultValue = NotificationsUserSettings.defaultSettings
+            let notificationsUserSettings: NotificationsUserSettings? = self.codable(forKey: UserDefaultsKey.notificationsUserSettings.key)
+
+            if let notificationsUserSettingsValue = notificationsUserSettings {
+                return notificationsUserSettingsValue
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+                self.synchronize()
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.notificationsUserSettings.key)
+            self.synchronize()
+        }
+    }
+
+    var startedUserRegisterInfo: UserRegisterEnvelop? {
+        get {
+            let defaultValue = UserRegisterEnvelop()
+            let userRegisterEnvelop: UserRegisterEnvelop? = self.codable(forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+
+            if let userRegisterEnvelopValue = userRegisterEnvelop {
+                return userRegisterEnvelopValue
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+                self.synchronize()
+                return defaultValue
+            }
+        }
+        set {
+            if newValue == nil {
+                self.removeObject(forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+            }
+            else {
+                self.set(codable: newValue, forKey: UserDefaultsKey.startedUserRegisterInfo.key)
+            }
+            self.synchronize()
+        }
+    }
+
+    var cardsStyle: CardsStyle {
+        get {
+            let defaultValue = TargetVariables.defaultCardStyle
+            if let style: CardsStyle = self.codable(forKey: UserDefaultsKey.cardsStyle.key) {
+                return style
+            }
+            else {
+                self.set(codable: defaultValue, forKey: UserDefaultsKey.cardsStyle.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.set(codable: newValue, forKey: UserDefaultsKey.cardsStyle.key)
+            self.synchronize()
+        }
+    }
+
+    var oddsValueType: OddsValueType {
+        get {
+            let defaultValue = TargetVariables.defaultOddsValueType
+
+            if let oddsValueType = self.value(forKey: UserDefaultsKey.oddsValueType.key) as? Int {
+                return OddsValueType(rawValue: oddsValueType) ?? defaultValue
+            }
+            else {
+                self.setValue(defaultValue.rawValue, forKey: UserDefaultsKey.oddsValueType.key)
+                return defaultValue
+            }
+        }
+        set {
+            self.setValue(newValue.rawValue, forKey: UserDefaultsKey.oddsValueType.key)
+            self.synchronize()
+        }
+    }
+
+    var biometricAuthenticationEnabled: Bool {
+        get {
+            if let biometric = self.value(forKey: UserDefaultsKey.biometricAuthentication.key) as? Bool {
+                return biometric
+            }
+            self.setValue(true, forKey: UserDefaultsKey.biometricAuthentication.key)
+            self.synchronize()
+            return true
+        }
+        set {
+            self.setValue(newValue, forKey: UserDefaultsKey.biometricAuthentication.key)
+            self.synchronize()
+        }
+    }
+
+    var acceptedTracking: Bool {
+        get {
+            if let acceptedTracking = self.value(forKey: UserDefaultsKey.acceptedTracking.key) as? Bool {
+                return acceptedTracking
+            }
+            self.setValue(false, forKey: UserDefaultsKey.acceptedTracking.key)
+            self.synchronize()
+            return false
+        }
+        set {
+            self.setValue(newValue, forKey: UserDefaultsKey.acceptedTracking.key)
+            self.synchronize()
+        }
+    }
+
+    var referralCode: String? {
+        get {
+            return self.string(forKey: UserDefaultsKey.referralCode.key)
+        }
+        set {
+            if let newValue = newValue {
+                self.set(newValue, forKey: UserDefaultsKey.referralCode.key)
+            } else {
+                self.removeObject(forKey: UserDefaultsKey.referralCode.key)
+            }
+            self.synchronize()
+        }
+    }
+
+    func clear() {
+        let domain = Env.bundleId
+        self.removePersistentDomain(forName: domain)
+        self.synchronize()
+    }
+
+}
+
+extension UserDefaults {
+    func set<Element: Codable>(codable value: Element, forKey key: String) {
+        let encodedData = try? JSONEncoder().encode(value)
+        UserDefaults.standard.setValue(encodedData, forKey: key)
+        UserDefaults.standard.synchronize()
+    }
+    func codable<Element: Codable>(forKey key: String) -> Element? {
+        guard let decodedData = UserDefaults.standard.data(forKey: key) else { return nil }
+        do {
+            let decodedObject = try JSONDecoder().decode(Element.self, from: decodedData)
+            return decodedObject
+        }
+        catch {
+            return nil
+        }
+
+    }
+}
+
+enum CardsStyle: Codable, CaseIterable {
+    case small
+    case normal
+}
+
+
+enum CompetitionListStyle: Codable, CaseIterable {
+    case toggle
+    case navigateToDetails
+}
+
+public enum BetslipOddChangeSettingMode {
+    case legacy
+    case bothGameStatus
+}
+
+public enum BetslipOddChangeSetting: String, Codable, Hashable, CaseIterable {
+    case none
+    // case any // remover
+    case higher
+
+    var localizedString: String {
+        switch self {
+        case .none:
+            return localized("allow_no_odds_change")
+//        case .any:
+//            return localized("allow_any_odd")
+        case .higher:
+            return localized("allow_higher_odds")
+        }
+    }
+}
+
+enum BetslipOddValidationType: String, CaseIterable {
+
+    case acceptAny = "ACCEPT_ANY"
+    case acceptHigher = "ACCEPT_HIGHER"
+
+    static var defaultValue: BetslipOddValidationType {
+        return .acceptAny
+    }
+
+    var key: String {
+        return self.rawValue
+    }
+
+    var localizedDescription: String {
+        switch self {
+        case .acceptAny:
+            return localized("accept_any")
+        case .acceptHigher:
+            return localized("accept_higher")
+        }
+    }
+
+}
+
+enum OddsValueType: Int {
+    case allOdds = 1
+    case between2And3 = 2
+    case bigOdds = 3
+
+    var oddRange: [Double] {
+        switch self {
+        case .allOdds:
+            return [1.0, 300.0]
+        case .between2And3:
+            return [2.0, 3.0]
+        case .bigOdds:
+            return [3.0, 300.0]
+        }
+    }
+}

@@ -1,0 +1,213 @@
+//
+//  PopularDetailsViewModel.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 14/03/2022.
+//
+
+import Foundation
+import UIKit
+import Combine
+import ServicesProvider
+
+class PopularDetailsViewModel {
+
+    var refreshPublisher = PassthroughSubject<Void, Never>.init()
+
+    var isLoading: CurrentValueSubject<Bool, Never> = .init(true)
+
+    var titlePublisher: CurrentValueSubject<String, Never>
+
+    private var matchesPublisher: AnyCancellable?
+
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
+
+    private var sport: Sport
+    private var matches: [Match] = []
+    private var outrightCompetitions: [Competition]?
+
+    private var hasNextPage = true
+
+    private var cancellables: Set<AnyCancellable> = []
+    private var subscriptions: Set<ServicesProvider.Subscription> = []
+
+    init(sport: Sport) {
+        self.sport = sport
+
+        self.titlePublisher = .init(self.sport.name)
+
+        self.refresh()
+    }
+
+    func refresh() {
+        self.isLoading.send(true)
+        self.hasNextPage = true
+        self.fetchMatches()
+    }
+
+    func requestNextPage() {
+        self.fetchNextPage()
+    }
+
+    private func fetchNextPage() {
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+        Env.servicesProvider.requestPreLiveMatchesNextPage(forSportType: sportType, sortType: .popular)
+            .sink { completion in
+                print("requestPreLiveMatchesNextPage completion \(completion)")
+            } receiveValue: { [weak self] hasNextPage in
+                self?.hasNextPage = hasNextPage
+                if !hasNextPage {
+                    self?.refreshPublisher.send()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func fetchMatches() {
+
+        let sportType = ServiceProviderModelMapper.serviceProviderSportType(fromSport: self.sport)
+
+        Logger.log("subscribePreLiveMatches fetchData called")
+
+        self.matchesPublisher = Env.servicesProvider.subscribePreLiveMatches(forSportType: sportType, sortType: .popular)
+            .sink(receiveCompletion: { [weak self] completion in
+                // TODO: subscribePreLiveMatches receiveCompletion
+                switch completion {
+                case .finished:
+                    ()
+                case .failure(let error):
+                    self?.setupWithError()
+                    Logger.log("subscribePreLiveMatches error \(error)")
+                }
+            }, receiveValue: { [weak self] (subscribableContent: SubscribableContent<[EventsGroup]>) in
+                switch subscribableContent {
+                case .connected(let subscription):
+                    self?.subscriptions.insert(subscription)
+                case .contentUpdate(let eventsGroups):
+
+                    guard let self = self else { return }
+
+                    let splittedEventGroups = self.splitEventsGroups(eventsGroups)
+
+                    let outrightCompetitions = ServiceProviderModelMapper.competitions(fromEventsGroups: splittedEventGroups.competitionsEventGroups)
+                    self.outrightCompetitions = outrightCompetitions
+
+                    let allMatches = ServiceProviderModelMapper.matches(fromEventsGroups: splittedEventGroups.matchesEventGroups)
+                    self.setupWithMatches(allMatches)
+
+                case .disconnected:
+                    Logger.log("subscribePreLiveMatches subscribableContent disconnected")
+                }
+            })
+
+    }
+
+    private func splitEventsGroups(_ eventsGroups: [EventsGroup]) -> (matchesEventGroups: [EventsGroup], competitionsEventGroups: [EventsGroup]) {
+
+        var matchEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let matchEvents = eventGroup.events.filter { event in
+                event.type == .match
+            }
+            matchEventsGroups.append(EventsGroup(events: matchEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        //
+        var competitionEventsGroups: [EventsGroup] = []
+        for eventGroup in eventsGroups {
+            let competitionEvents = eventGroup.events.filter { event in
+                event.type == .competition
+            }
+            competitionEventsGroups.append(EventsGroup(events: competitionEvents, marketGroupId: eventGroup.marketGroupId))
+        }
+
+        return (matchEventsGroups, competitionEventsGroups)
+    }
+
+    private func closeOutrightCompetitionsConnection() {
+
+    }
+
+    private func fetchOutrightCompetitions() {
+
+        self.titlePublisher.send("\(self.sport.name) - Outright Competitions")
+
+        self.isLoading.send(false)
+        self.refreshPublisher.send()
+        
+    }
+
+    private func setupWithMatches(_ matches: [Match]) {
+        if matches.isNotEmpty {
+            self.matches = matches
+
+            self.titlePublisher.send("\(self.sport.name) - Popular Matches")
+            
+            self.isLoading.send(false)
+            self.refreshPublisher.send()
+        }
+        else {
+            self.fetchOutrightCompetitions()
+        }
+    }
+
+    private func setupWithError() {
+        self.isLoading.send(false)
+    }
+
+}
+
+extension PopularDetailsViewModel {
+
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
+        }
+    }
+
+}
+
+extension PopularDetailsViewModel {
+
+    func shouldShowLoadingCell() -> Bool {
+        return self.matches.isNotEmpty && hasNextPage
+    }
+
+    func numberOfSection() -> Int {
+        return 3
+    }
+
+    func numberOfItems(forSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return self.matches.count
+        case 1:
+            if self.matches.isEmpty {
+                return self.outrightCompetitions?.count ?? 0
+            }
+            return 0
+        case 2:
+            return self.shouldShowLoadingCell() ? 1 : 0
+        default:
+            return 0
+        }
+    }
+
+    func match(forRow row: Int) -> Match? {
+        return self.matches[safe: row]
+    }
+
+    func outrightCompetition(forRow row: Int) -> Competition? {
+        return self.outrightCompetitions?[safe: row]
+    }
+
+    func outrightCompetition(forIndexPath indexPath: IndexPath) -> Match? {
+        return self.matches[safe: indexPath.row]
+    }
+
+}

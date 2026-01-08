@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inconsolata-Regular.ttf">
+            <string>Inconsolata-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LogViewerViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="textView" destination="svH-Se-tJs" id="lna-fF-Uxm"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="svH-Se-tJs">
+                    <rect key="frame" x="8" y="44" width="398" height="818"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <string key="text">s:] to log a screen view event. To disable automatic screen reporting, set the flag FirebaseAutomaticScreenReportingEnabled to NO (boolean) in the Info.plist
+📗I 2021-08-09 17:43:16.085 [RootViewController.swift/51] Target config flags 1
+📗I 2021-08-09 17:43:16.085 [RootViewController.swift/58] Debug screen called</string>
+                    <color key="textColor" systemColor="labelColor"/>
+                    <fontDescription key="fontDescription" name="Inconsolata-Regular" family="Inconsolata" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="svH-Se-tJs" secondAttribute="trailing" constant="8" id="7LE-zc-bu2"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="svH-Se-tJs" secondAttribute="bottom" id="Oxh-lB-acA"/>
+                <constraint firstItem="svH-Se-tJs" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="aZk-6r-n4b"/>
+                <constraint firstItem="svH-Se-tJs" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="8" id="sk8-3S-opA"/>
+            </constraints>
+            <point key="canvasLocation" x="101" y="89"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

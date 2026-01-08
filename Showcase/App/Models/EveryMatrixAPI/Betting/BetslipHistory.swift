@@ -1,0 +1,227 @@
+//
+//  BetslipHistory.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 07/11/2021.
+//
+
+import Foundation
+
+// MARK: - BetHistoryRow
+struct BetHistoryResponse {
+    var betList: [BetHistoryEntry]?
+
+    enum CodingKeys: String, CodingKey {
+        case betList = "betList"
+    }
+}
+
+struct BetHistoryEntry {
+    let betId: String
+    let selections: [BetHistoryEntrySelection]?
+    let type: String?
+    let systemBetType: String?
+    let amount: Double?
+    let totalBetAmount: Double?
+    let freeBetAmount: Int?
+    let bonusBetAmount: Int?
+    let currency: String?
+    let maxWinning: Double?
+    let totalPriceValue: Double?
+    let overallBetReturns: Double?
+    let numberOfSelections: Int?
+    let status: String?
+    let placedDate: Date?
+    let settledDate: Date?
+    let freeBet: Bool?
+    let partialCashoutReturn: Double?
+    let partialCashoutStake: Double?
+
+    let betShareToken: String?
+    let betslipId: Int?
+
+    let cashbackReturn: Double?
+    let freebetReturn: Double?
+
+    let potentialCashbackReturn: Double?
+    let potentialFreebetReturn: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case betId = "betId"
+        case selections = "selections"
+        case type = "type"
+        case systemBetType = "systemBetType"
+        case amount = "amount"
+        case totalBetAmount = "totalBetAmount"
+        case freeBetAmount = "freeBetAmount"
+        case bonusBetAmount = "bonusBetAmount"
+        case currency = "currency"
+        case maxWinning = "maxWinning"
+        case totalPriceValue = "totalPriceValue"
+        case numberOfSelections = "numberOfSelections"
+        case overallBetReturns = "overallBetReturns"
+        case status = "status"
+        case placedDate = "placedDate"
+        case settledDate = "settledDate"
+        case freeBet = "freeBet"
+
+        case betShareToken = "betShareToken"
+        // case betslipId = "idFOBetslip"
+    }
+}
+
+extension BetHistoryEntry {
+    public var localizedBetStatus: String {
+        switch (self.status ?? "").uppercased() {
+        case "OPENED": return localized("open").uppercased()
+        case "OPEN": return localized("open").uppercased()
+        case "DRAW": return localized("draw").uppercased()
+        case "WON": return localized("won").uppercased()
+        case "HALF_WON": return localized("half_won").uppercased()
+        case "LOST": return localized("lost").uppercased()
+        case "HALF_LOST": return localized("half_lost").uppercased()
+        case "CANCELLED": return localized("cancelled").uppercased()
+        case "CASHED_OUT": return localized("cashed_out").uppercased()
+        case "CASHEDOUT": return localized("cashed_out").uppercased()
+        default: return ""
+        }
+    }
+}
+
+// MARK: - Selection
+enum BetSelectionStatus: String, Codable, CaseIterable {
+    case opened
+    case closed
+    case settled
+    case cancelled
+    case won
+    case lost
+    case cashedOut
+    case void
+    case undefined
+}
+
+enum BetSelectionResult: String, Codable, CaseIterable {
+    case won
+    case halfWon
+    case lost
+    case halfLost
+    case drawn
+    case open
+    case void
+    case undefined
+}
+
+struct BetHistoryEntrySelection: Codable {
+    var outcomeId: String
+    var status: BetSelectionStatus
+    var result: BetSelectionResult
+    var priceValue: Double?
+    var sportId: String?
+    var sportName: String?
+    var venueId: String?
+    var venueName: String?
+    var tournamentId: String?
+    var tournamentName: String?
+    var eventId: String?
+    var eventStatusId: String?
+    var eventName: String?
+    var eventResult: String?
+    var eventDate: Date?
+    var bettingTypeId: String?
+    var bettingTypeName: String?
+    var bettingTypeEventPartId: String?
+    var bettingTypeEventPartName: String?
+
+    var homeParticipantName: String?
+    var awayParticipantName: String?
+
+    var homeParticipantScore: String?
+    var awayParticipantScore: String?
+
+    var marketName: String?
+    var betName: String?
+
+    enum CodingKeys: String, CodingKey {
+        case outcomeId = "outcomeId"
+        case status = "status"
+        case result = "result"
+        case priceValue = "priceValue"
+        case sportId = "sportId"
+        case sportName = "sportName"
+        case venueId = "venueId"
+        case venueName = "venueName"
+        case tournamentId = "tournamentId"
+        case tournamentName = "tournamentName"
+        case eventId = "eventId"
+        case eventName = "eventName"
+        case eventResult = "eventResult"
+        case eventStatusId = "eventStatusId"
+        case eventDate = "eventDate"
+        case bettingTypeId = "bettingTypeId"
+        case bettingTypeName = "bettingTypeName"
+        case bettingTypeEventPartId = "bettingTypeEventPartId"
+        case bettingTypeEventPartName = "bettingTypeEventPartName"
+
+        case homeParticipantName = "homeParticipantName"
+        case awayParticipantName = "awayParticipantName"
+
+        case homeParticipantScore = "homeParticipantScore"
+        case awayParticipantScore = "awayParticipantScore"
+
+        case marketName = "marketName"
+        case betName = "betName"
+    }
+    
+    init(outcomeId: String,
+         status: BetSelectionStatus,
+         result: BetSelectionResult,
+         priceValue: Double? = nil,
+         sportId: String? = nil,
+         sportName: String? = nil,
+         venueId: String? = nil,
+         venueName: String? = nil,
+         tournamentId: String? = nil,
+         tournamentName: String? = nil,
+         eventId: String? = nil,
+         eventStatusId: String? = nil,
+         eventName: String? = nil,
+         eventResult: String? = nil,
+         eventDate: Date? = nil,
+         bettingTypeId: String? = nil,
+         bettingTypeName: String? = nil,
+         bettingTypeEventPartId: String? = nil,
+         bettingTypeEventPartName: String? = nil,
+         homeParticipantName: String? = nil,
+         awayParticipantName: String? = nil,
+         homeParticipantScore: String? = nil,
+         awayParticipantScore: String? = nil,
+         marketName: String? = nil,
+         betName: String? = nil) {
+        self.outcomeId = outcomeId
+        self.status = status
+        self.result = result
+        self.priceValue = priceValue
+        self.sportId = sportId
+        self.sportName = sportName
+        self.venueId = venueId
+        self.venueName = venueName
+        self.tournamentId = tournamentId
+        self.tournamentName = tournamentName
+        self.eventId = eventId
+        self.eventStatusId = eventStatusId
+        self.eventName = eventName
+        self.eventResult = eventResult
+        self.eventDate = eventDate
+        self.bettingTypeId = bettingTypeId
+        self.bettingTypeName = bettingTypeName
+        self.bettingTypeEventPartId = bettingTypeEventPartId
+        self.bettingTypeEventPartName = bettingTypeEventPartName
+        self.homeParticipantName = homeParticipantName
+        self.awayParticipantName = awayParticipantName
+        self.homeParticipantScore = homeParticipantScore
+        self.awayParticipantScore = awayParticipantScore
+        self.marketName = marketName
+        self.betName = betName
+    }
+}

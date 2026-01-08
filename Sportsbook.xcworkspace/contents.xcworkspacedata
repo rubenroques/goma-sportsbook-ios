@@ -5,6 +5,9 @@
       location = "group:BetssonFrance/BetssonFrance.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Showcase/Showcase.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj">
    </FileRef>
    <FileRef

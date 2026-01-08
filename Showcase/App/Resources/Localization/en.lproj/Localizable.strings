@@ -1,0 +1,2026 @@
+
+"languange_code" = "en"; // UNUSED
+"sportradar_content_languange_code" = "UK";
+"languange_code_complete" = "en-uk"; // UNUSED
+
+"about_us" = "About Us"; // UNUSED
+"accept" = "Accept";
+"accept_any" = "Accept Any";
+"accept_higher" = "Accept Higher";
+"accept_odds_variation" = "Accept odds variation on submitted bets"; // UNUSED
+"accept_tc" = "Accept Terms & Conditions";
+"access_forbidden" = "Seems like Betting is not allowed in your Country.";
+"account_security" = "Account Security";
+"account_status" = "Account Status"; // UNUSED
+"accumulated_odds_winning" = "Accumulated odd of winning";
+"activate" = "Activate";
+"activate_account" = "Activate Account";
+"activate_info" = "Your account has been activated"; // UNUSED
+"activation_error_title" = "Something went wrong..."; // UNUSED
+"activation_success_text" = "You have successfully verified your account have fun."; // UNUSED
+"activation_success_title" = "Verification Successful!"; // UNUSED
+"active" = "Active";
+"add" = "Add";
+"add_contact" = "Add Contact";
+"add_file" = "Add File";
+"add_friend" = "Add Friend";
+"add_friends" = "Add Friends";
+"add_friends_to_group" = "Add friends to group";
+"add_from_contact" = "Add from contact list";
+"add_more_friends" = "Add more friends";
+"add_promo_code" = "Add promotional code";
+"add_some_friends_start_chatting" = "Add some friends and start chatting now!";
+"add_some_friends_start_chatting_tips" = "You need to add some friends to see what kind of tips they share";
+"add_the_tournament" = "Add the tournament"; // UNUSED
+"add_to_betslip" = "Add To Betslip"; // UNUSED
+"add_to_favorites" = "Add to favorites";
+"adding_bets_to_your_betslip" = "You are adding shared bets to your Betslip."; // UNUSED
+"address" = "Address";
+"address_1" = "Address 1";
+"address_2" = "Address 2";
+"address_country" = "Address and Country"; // UNUSED
+"address_name_is_required" = "The address is a required field. Please complete this field."; // UNUSED
+"address2optional" = "Address 2 (optional)"; // UNUSED
+"advance" = "Advance"; // UNUSED
+"advanced" = "Advanced"; // UNUSED
+"affiliate_system" = "Affiliate System"; // UNUSED
+"age_country" = "Age and Country";
+"agree_terms_conditions" = "By Signing up, you agree to our \n Terms of use, Privacy Policy and EULA";
+"agree_terms_conditions_1" = "By Signing up, you agree to our"; // UNUSED
+"agree_terms_conditions_2" = "Terms of use, Privacy Policy and EULA"; // UNUSED
+"all" = "All";
+"all_events_unavailable" = "These events are no longer available."; // UNUSED
+"all_live_events" = "All Live Events";
+"all_matches" = "All Matches"; // UNUSED
+"all_sports" = "All Sports"; // UNUSED
+"allow_any_odd" = "Allow any odd change"; // UNUSED
+"allow_contact_via" = "Allow Sportsbook to contact me via"; // UNUSED
+"allow_email_usage" = "Allow my email to be used for marketing";
+"allow_higher_odds" = "Allow higher odds"; // UNUSED
+"allow_mycompetitions_notifications" = "Allow notifications about all games in My Competitions";
+"allow_mygames_notifications" = "Allow notifications about My Games";
+"allow_sportsbook_to_contact" = "Allow Sportsbook to contact you via:";
+"allow_tracking" = "Allow Tracking"; // UNUSED
+"allowed_file_types" = "Allowed file types: png, jpg, jpeg, pdf"; // UNUSED
+"amount" = "Amount...";
+"anonymous" = "Bet as anonymous user"; // UNUSED
+"anonymous_tips" = "Anonymous Tips";
+"anonymous_tips_settings_title" = "Anonymous Tips (Your bets will be shared as an anonymous user)";
+"anual" = "Anual"; // UNUSED
+"any_questions_about_payment_process" = "Any questions about payment process see"; // UNUSED
+"app_full_potential" = "In order to use this App on its full potential, you need to verify your Email.";
+"app_name_dev" = "Goma Platform DEV"; // UNUSED
+"app_name_pro" = "Goma Platform"; // UNUSED
+"app_settings" = "App Settings";
+"app_version_profile" = "App Version {version_1} ({version_2})\nSportsbook® All Rights Reserved";
+"appearance" = "Appearance";
+"apply" = "Apply";
+"approved" = "Approved";
+"auto_exclusion" = "Auto Exclusion"; // UNUSED
+"auto_exclusion_info_p_1" = "Auto-exclusion is part of our Responsible Gaming policy and can help control online gambling and betting activity. Self-exclusion can be done directly on our Website or on the SRIJ website. The player can voluntarily be assigned for self-exclusion from the practice of online gambling and betting."; // UNUSED
+"auto_exclusion_info_title" = "What is Auto Exclusion"; // UNUSED
+"auto_payout" = "Auto Payout";
+"auto_payout_limit" = "Auto Payout Limit";
+"auto_payout_tooltip" = "Information about Auto Payout"; // UNUSED
+"available" = "Available";
+"available_countries" = "Available Countries";
+"available_markets" = "Available Markets"; // UNUSED
+"avatar" = "Avatar";
+"away" = "Away";
+"away_label_default" = "Away Team";
+"back" = "Back"; // UNUSED
+"back_to_site" = "Back to Sportsbook"; // UNUSED
+"bank_id" = "Bank ID";
+"beginner" = "Beginner"; // UNUSED
+"best_number_of_consecutive_wins" = "Best number of consecutive wins";
+"bet" = "Bet";
+"bet_amount" = "Bet Amount";
+"bet_now" = "Bet Now"; // UNUSED
+"bet_now_share_dynamic" = "Follow this bet before it's too late: {name} !"; // UNUSED
+"bet_registered_success" = "Your bet was registered with success.";
+"bet_suffered_alterations" = "The bet suffered alterations because of a change in the game, check the new options.";
+"bet_the_same" = "Bet the same"; // UNUSED
+"betbuilder_enabled" = "BetBuilder Enabled";
+"bets" = "Bets";
+"bets_made" = "Bets made"; // UNUSED
+"bets2" = "Bets:"; // UNUSED
+"betslip" = "Betslip";
+"betslip_settings" = "Betslip Settings"; // UNUSED
+"betting" = "Betting";
+"betting_fail_to_load_competitions" = "Something went wrong while loading Competitions."; // UNUSED
+"betting_fail_to_load_top_competitions" = "Something went wrong while loading Top Competitions."; // UNUSED
+"betting_fail_to_update_betslip_live_details" = "Something went wrong while updating Betslip Live Details."; // UNUSED
+"betting_fail_to_update_betslip_odds" = "Something went wrong while updating Betslip Odds."; // UNUSED
+"betting_fail_to_update_event" = "Something went wrong while updating a Betting Event"; // UNUSED
+"betting_fail_to_update_event_categories" = "Something went wrong while updating Sport Event Categories."; // UNUSED
+"betting_fail_to_update_event_infos" = "Something went wrong while updating a Betting Event Infos"; // UNUSED
+"betting_fail_to_update_events" = "Something went wrong while updating a Betting Events"; // UNUSED
+"betting_fail_to_update_matches" = "Something went wrong while updating Matches."; // UNUSED
+"betting_fail_to_update_my_bets_cashouts" = "Something went wrong while updating MyBets Cashouts."; // UNUSED
+"betting_fail_to_update_search_results" = "Something went wrong while updating Betting Search Results."; // UNUSED
+"betting_fail_to_update_sport_banner_data" = "Something went wrong while fetching sport banner's information."; // UNUSED
+"betting_fail_to_update_sport_banner_matches" = "Something went wrong while fetching sport banner Matches."; // UNUSED
+"betting_fail_to_update_sports" = "Something went wrong while updating Sports."; // UNUSED
+"betting_fail_to_update_top_competitions" = "Something went wrong while updating Top Competitions."; // UNUSED
+"betting_limit" = "Betting Limit";
+"betting_limit_info_p_1" = "Limits are optional however we advise you to set your betting limits."; // UNUSED
+"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: {period}"; // UNUSED
+"betting_limit_removal_error" = "We can't remove your Betting Limit at this moment. Please try again later."; // UNUSED
+"betting_limit_removal_success" = "Your Betting Limit was removed"; // UNUSED
+"betting_limit_set" = "Betting limit set for your account."; // UNUSED
+"betting_limit_update_error" = "We can't update your Betting Limit at this moment. Please try again later."; // UNUSED
+"betting_limit_update_success" = "Your Betting Limit was updated"; // UNUSED
+"betting_notification_defaults" = "Betting Notification Defaults";
+"betting_notifications" = "Betting Notifications";
+"birth_date" = "Birth Date";
+"birth_place" = "Place of Birth";
+"block" = "Block"; // UNUSED
+"block_contact" = "Block Contact";
+"block_user" = "Block User";
+"bonus" = "Bonus";
+"bonus_added" = "The Bonus has added to your account"; // UNUSED
+"bonus_amount" = "Bonus Amount";
+"bonus_applied_success" = "Bonus applied with success!";
+"bonus_code" = "Bonus Code";
+"bonus_code_success" = "Your Bonus Code was applied!"; // UNUSED
+"bonus_error" = "We can't apply your bonus right now. Please try again later."; // UNUSED
+"bonus_success" = "Your Bonus was applied!"; // UNUSED
+"by_competition" = "By Competition"; // UNUSED
+"cancel" = "Cancel";
+"cancelled" = "Cancelled";
+"cards_style" = "Cards Style"; // UNUSED
+"cashed_out" = "Cashed Out";
+"cashout" = "Cashout";
+"cashout_available" = "Cashout available";
+"cashout_available_for_bet" = "Cashout is available for this bet"; // UNUSED
+"cashout_confirmation" = "Are you sure you want to cashout {amount} ?";
+"cashout_info" = "Get a percentage of your bet back before the game is over";
+"cashout_prompt_message" = "Your return money will be “{value} €”";
+"cashout_success_text" = "Your bet was cashed out successfully!";
+"cashout_value" = "Cashout {cashoutAmount}";
+"casino" = "Casino";
+"casino_regulation" = "Casino Regulation"; // UNUSED
+"change_password" = "Change Password"; // UNUSED
+"chat" = "Chat";
+"chat_empty_shared_ticket_others" = "{name} shared a ticket.";
+"chat_empty_shared_ticket_self" = "You shared a ticket.";
+"chat_empty_state_text" = "Add some friends and start chatting now!"; // UNUSED
+"chat_group_users_details" = "{num_online} online, {num_members} members";
+"check_email" = "Check your Email";
+"check_email_text" = "We have sent a Code to\n{email}\n"; // UNUSED
+"check_email_text1" = "We have sent a code to";
+"check_email_text2" = "with a link to Sign In.";
+"check_this_bet_made" = "Check out this bet I made!";
+"check_this_game" = "Hey! Check this game on Sportsbook.";
+"choose_avatar" = "Choose one of our standard avatars for your icon.";
+"choose_competitions" = "Choose competitions";
+"choose_competitions_dynamic" = "Choose competitions ({num})"; // UNUSED
+"choose_email" = "Choose Email";
+"choose_odds_range" = "Choose odds for market {market}"; // UNUSED
+"choose_sport" = "Choose Sport";
+"city" = "City";
+"city_is_required" = "The city is a required field. Please complete this field."; // UNUSED
+"clear_all" = "Clear all";
+"close" = "Close";
+"close_stats" = "Close Stats"; // UNUSED
+"closed_market" = "Closed";
+"code" = "Code";
+"code_sent" = "We have sent a Code to your email."; // UNUSED
+"code_verification_error" = "Code Verification Error";
+"comment" = "Comment";
+"competition" = "Competition"; // UNUSED
+"competition_details" = "Competition Details";
+"competition_markets" = "Competition Markets";
+"competition_no_longer" = "This competition is no longer available for betting.";
+"competitions" = "Competitions";
+"competitions_check_limit" = "You can select only 5 competitions"; // UNUSED
+"competitions_filter_all_categories" = "Categories A-Z"; // UNUSED
+"competitions_filter_popular_competitions" = "Popular Competitions"; // UNUSED
+"competitions_filter_search_placeholder" = "Search for Competitions..."; // UNUSED
+"complete_profile_description" = "To get the most of this app please finish setting up your profile";
+"complete_profile_message" = "To use the App on it’s full potential please finish setting up your Profile."; // UNUSED
+"complete_signup" = "Complete Sign Up";
+"complete_your_profile" = "Complete your profile";
+"complete_your_verification" = "Complete your verification";
+"confirm" = "Confirm"; // UNUSED
+"confirm_password" = "Confirm Password";
+"confirm_password_error" = "Passwords must match"; // UNUSED
+"congratulations" = "Congratulations!"; // UNUSED
+"contact_list" = "Contact list"; // UNUSED
+"contact_preferences" = "Contact Preferences"; // UNUSED
+"contact_preferences_error" = "We can't update your Contact Preferences at this moment. Please try again later."; // UNUSED
+"contact_preferences_updated" = "Your Contact Preferences were updated"; // UNUSED
+"contact_us" = "Contact Us";
+"contacts" = "Contacts";
+"continue_" = "Continue";
+"cookie_alert" = "By continuing to use this website you consent to the use of cookies. Read about our"; // UNUSED
+"cookie_policy" = "Cookie Policy"; // UNUSED
+"copied_to_clipboard" = "Copied to clipboard"; // UNUSED
+"copy_link" = "Copy link"; // UNUSED
+"countries_available" = "Countries Available"; // UNUSED
+"country" = "Country"; // UNUSED
+"country_code_format" = "({code})"; // UNUSED
+"country_plural_other" = "countries"; // UNUSED
+"create_a_new_account" = "Create a new account";
+"current_balance" = "Current Balance"; // UNUSED
+"current_password_incorrect" = "Current password incorrect.";
+"custom" = "Custom";
+"daily" = "Daily";
+"dark_mode" = "Dark Mode";
+"data_updated_successfully" = "Data updated successfully!"; // UNUSED
+"date" = "Date";
+"date_of_birth" = "Date of Birth";
+"date_range" = "Date Range"; // UNUSED
+"day" = "Day";
+"days" = "Days";
+"default_market" = "Default Market";
+"default_notification_channel_id" = "425"; // UNUSED
+"default_ticket_text_received" = "{username} shared a ticket"; // UNUSED
+"delete" = "Delete";
+"delete_all" = "Delete all";
+"delete_all_bets_confirmation" = "Are you sure you want to delete all your selections?"; // UNUSED
+"delete_contact" = "Delect Contact";
+"delete_contact_message" = "Are you sure you want to delete this contact?";
+"deposit" = "Deposit";
+"deposit_error" = "Deposit Error";
+"deposit_error_message" = "The deposit couldn't be processed at the moment. Please try again later.";
+"deposit_limit" = "Deposit Limit";
+"deposit_limit_info_p_1" = "If you increase or delete an existing limit the implementation of the new limit will take 1 day to take effect."; // UNUSED
+"deposit_limit_info_p_2" = "If you lower an existing limit the new limit will take effect immediately."; // UNUSED
+"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: {period}"; // UNUSED
+"deposit_limit_removal_error" = "We can't remove your Deposit Limit at this moment. Please try again later."; // UNUSED
+"deposit_limit_removal_success" = "Your Deposit Limit was removed"; // UNUSED
+"deposit_limit_set" = "Deposit limit set for your account."; // UNUSED
+"deposit_limit_update_error" = "We can't update your Deposit Limit at this moment. Please try again later."; // UNUSED
+"deposit_limit_update_success" = "Your Deposit Limit was updated"; // UNUSED
+"deposit_more_funds" = "Deposit more funds in order to place this bet."; // UNUSED
+"deposit_value" = "Deposit Value";
+"deposits" = "Deposits";
+"description" = "Description";
+"device_settings" = "Device Settings";
+"didnt_receive_it" = "Didn't receive it?"; // UNUSED
+"direct_message_sent" = "Direct Message sent."; // UNUSED
+"dismiss_title" = "Not Now";
+"do_you_want_to_enable_touch_id" = "Do you want to enable Touch ID?"; // UNUSED
+"document_validation_required" = "Document Validation Required";
+"document_validation_required_description" = "To access all features of our platform, we require you to submit your valid documents for verification.";
+"documents" = "Documents";
+"documents_id" = "Documents and ID";
+"done" = "Done";
+"download_app" = "Download the App"; // UNUSED
+"dpt_code" = "Dpt code"; // UNUSED
+"draw" = "Draw";
+"draws" = "Draws"; // UNUSED
+"edit" = "Edit"; // UNUSED
+"edit_contact" = "Edit Contact";
+"edit_group" = "Edit Group";
+"email" = "Email";
+"email_address" = "Email Address"; // UNUSED
+"email_already_registered" = "This email address is already registered.";
+"email_already_taken" = "Email already taken"; // UNUSED
+"email_doesnt_exist" = "Email doesn\'t exist"; // UNUSED
+"email_exists" = "Email already exists."; // UNUSED
+"email_or_username" = "Email or Username"; // UNUSED
+"email_sent_reset_password" = "We have sent an email with the instructions to Reset your Password"; // UNUSED
+"email_unavailable" = "Email unavailable"; // UNUSED
+"email_verification" = "Email Verification";
+"empty_betslip_info_subtitle" = "Here are your suggested bets!"; // UNUSED
+"empty_betslip_info_title" = "You don't have any selections yet."; // UNUSED
+"empty_betting_history_text_days" = "You haven't made a bet for the last {nDays} days. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_days_cashout" = "You haven't cashout a bet for the last {nDays} days. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_days_open" = "You don't have open bets. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_days_won" = "You haven't won a bet for the last {nDays} days. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_period" = "You didn't place any bets in the selected period. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_period_cashout" = "You didn't cashout any bets in the selected period. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_period_open" = "You don't have open bets in the selected period. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_text_period_won" = "You didn't win any bets in the selected period. It's time to bet on your favorites."; // UNUSED
+"empty_betting_history_title" = "There's no bets here!";
+"empty_chatrooms" = "There are no chatrooms available to share. Please add some friends and/or create chat groups.";
+"empty_list_with_filters" = "There are no results for this filters.";
+"empty_my_competitions" = "You don't have favorite competitions for this sport!";
+"empty_my_games" = "You don't have favorite games for this sport!";
+"empty_transactions_history_text_days" = "You haven't made a transaction for the last {nDays} days. It's time to deposit some money and start betting on your favorites."; // UNUSED
+"empty_transactions_history_text_period" = "You haven't made a transaction for the selected period. It's time to deposit some money and start betting on your favorites."; // UNUSED
+"empty_transactions_history_title" = "There's no transactions here!";
+"enable_location" = "Enable Location Services";
+"enter_a_valid_email_format" = "Please enter a valid email format"; // UNUSED
+"enter_associated_email" = "Please enter the Email associated with your Account.";
+"enter_code" = "Enter the Code";
+"enter_code_text" = "Enter the code we have sent to your Email";
+"enter_new_pwd" = "Please enter a new Password."; // UNUSED
+"error" = "Error";
+"error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
+"error_edit" = "We can’t update your information at this moment. Please try again later.";
+"error_edit_password" = "We can’t update your password at this moment. Please try again later."; // UNUSED
+"error_loading_profile" = "Error loading the user profile"; // UNUSED
+"error_loading_session" = "Error loading the user session"; // UNUSED
+"error_login" = "Login failed. Please try again!"; // UNUSED
+"error_placing_bet" = "Error placing Bet.";
+"error_profile_not_updatable" = "We\'re sorry, but your profile isn\'t updatable. You won\'t be able to edit this information."; // UNUSED
+"eula" = "EULA";
+"evens" = "Evens"; // UNUSED
+"event_unavailable" = "This event is no longer available."; // UNUSED
+"everyone" = "Everyone";
+"exclusion_date_message" = "Date must be greater or equal than today"; // UNUSED
+"exclusion_period" = "Exclusion Period"; // UNUSED
+"expand" = "Expand";
+"expire_date" = "Expire Date";
+"f_a_q_or_contact_us" = "F.A.Q or Contact Us."; // UNUSED
+"face_id_login" = "Face ID login";
+"failed" = "Failed";
+"faq" = "Any questions about payment process see F.A.Q or Contact Us.";
+"faq" = "F.A.Q";
+"faqs" = "FAQ's"; // UNUSED
+"favourite_team_question" = "What is your favourite Team?"; // UNUSED
+"favourites" = "Favourites"; // UNUSED
+"featured_tips" = "Featured Tips";
+"female" = "Female";
+"filter" = "Filter"; // UNUSED
+"filter_by_date" = "Filter by Date";
+"filter_markets" = "Filter Markets"; // UNUSED
+"filters" = "Filters"; // UNUSED
+"fingerprint_login" = "Fingerprint login";
+"finish_up_profile" = "Finish up profile";
+"first_deposit" = "First deposit!";
+"first_deposit_subtitle" = "Make your first deposit now!";
+"first_name" = "First Name";
+"first_name_is_required" = "The first name is a required field. Please complete this field."; // UNUSED
+"first_term" = "I allow my email to be used for marketing"; // UNUSED
+"five_years" = "5 Years"; // UNUSED
+"follow" = "Follow";
+"follow_user" = "Follow user"; // UNUSED
+"following" = "Following";
+"for_upcoming_matches_only" = "for Upcoming's matches only"; // UNUSED
+"forgot" = "Forgot Password?";
+"forgot_password" = "Forgot Password";
+"friend_added" = "Friend/s Added"; // UNUSED
+"friend_added_error" = "Friend Add Error";
+"friend_added_message" = "Friend request was sent to the selected users."; // UNUSED
+"friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";
+"friend_code" = "Friend Code";
+"friend_request_sent" = "Friend Request Sent!";
+"friends" = "Friends";
+"from" = "From";
+"full_sign_up_success_text" = "Your Profile is now completed and you are able to use the Website on it's full."; // UNUSED
+"full_sign_up_success_title" = "Sign Up Completed Successfuly!"; // UNUSED
+"full_time" = "Full time";
+"game_stats" = "Game statistics"; // UNUSED
+"games_notification_defaults" = "Games Notification Defaults";
+"games_notifications" = "Games Notifications";
+"gen_error_oops_scratching_our_heads_title" = "Ops! We're scratching our heads..."; // UNUSED
+"gen_error_oops_title" = "Oops..."; // UNUSED
+"gen_error_something_wrong_text" = "Something went wrong."; // UNUSED
+"gender" = "Gender";
+"get_a_new_code" = "Get a new code in {period}"; // UNUSED
+"get_bonus" = "Get Bonus";
+"get_new_code" = "Get a new code in"; // UNUSED
+"get_started" = "Get Started";
+"go_back" = "Go back";
+"go_home" = "Go Home"; // UNUSED
+"go_to_list_to_mark" = "Go to the games list and mark them as favorites.";
+"go_to_popular_games" = "Go to popular games"; // UNUSED
+"goals" = "Goals";
+"godfather" = "Godfather";
+"good_luck" = "Good Luck!";
+"group_name" = "Group Name";
+"group_name_changed" = "Group Name Changed"; // UNUSED
+"group_name_changed_message" = "Group name was changed with success!"; // UNUSED
+"guest" = "Guest"; // UNUSED
+"half_lost" = "Half Lost";
+"half_time" = "Half time";
+"half_won" = "Half Won";
+"havent_made_a_bet" = "There are no results for the period of time selected, it’s time to start betting on your favourites."; // UNUSED
+"hello_blank_fragment" = "Hello blank fragment"; // UNUSED
+"here_are_your_suggested_bets" = "Here are your Suggested Bets!"; // UNUSED
+"hide" = "Hide";
+"highest_odd" = "Highest odd";
+"highest_odds" = "Highest Odds"; // UNUSED
+"history" = "History";
+"history_transactions" = "History Transactions"; // UNUSED
+"home" = "Home";
+"home_label_default" = "Home Team";
+"how_much_deposit" = "How much do you want to deposit in your account?";
+"how_much_withdraw" = "How much do you want to withdraw from your account?";
+"id_number" = "ID Number";
+"identification" = "Identification";
+"in_progress" = "In progress"; // UNUSED
+"inactive_sport" = "The sport you selected isn\'t active right now. Please choose another for now."; // UNUSED
+"info" = "Info";
+"info_consent" = "I accept receiving information about bonuses and promotions through Sportsbook."; // UNUSED
+"info_text" = "This is some info about this item";
+"information_updated" = "The information was successfully updated."; // UNUSED
+"insert_email_code" = "Insert code"; // UNUSED
+"intermediate" = "Intermediate"; // UNUSED
+"internal_error_try_again" = "Internal error. Try again later"; // UNUSED
+"invalid_birthDate" = "Invalid birth date";
+"invalid_bonus_code" = "Invalid bonus code.";
+"invalid_code" = "Invalid Code";
+"invalid_code_message" = "The input code is invalid.";
+"invalid_date_format" = "Please insert a valid date."; // UNUSED
+"invalid_email" = "Invalid email address";
+"invalid_email" = "This email format appears to be invalid.";
+"invalid_friend_code" = "Invalid friend code"; // UNUSED
+"invalid_gender" = "Please select a gender."; // UNUSED
+"invalid_lock_period" = "Value must be between {min} and {max}."; // UNUSED
+"invalid_nationality" = "The nationality specified is invalid. Please select one of the suggested."; // UNUSED
+"invalid_period_value" = "Invalid Period Value";
+"invalid_phone_number" = "Please enter a valid phone number"; // UNUSED
+"invite" = "Invite";
+"invite_friends_contact" = "You don\'t have any users from your contact list using the Sportsbook yet.Invite them now!"; // UNUSED
+"invite_friends_via" = "Invite friends via...";
+"invite_more_friends" = "Invite more friends from your contact list to join the sportsbook";
+"join_sportsbook" = "Join {sportsbookName}!"; // UNUSED
+"keep_bet" = "Keep this bet on betslip";
+"kyc_account_status" = "KYC Account Status";
+"last_name" = "Last Name";
+"last_name_is_required" = "The last name is a required field. Please complete this field."; // UNUSED
+"last_x_matches" = "Last {totalMatches} matches"; // UNUSED
+"later" = "Later";
+"latest_tips" = "Latest Tips";
+"leave" = "Leave"; // UNUSED
+"leave_group" = "Leave Group";
+"leave_group_message" = "Are you sure you want to leave the group?";
+"legal_age" = "Your country requires that you be at least {age} years old."; // UNUSED
+"light_mode" = "Light Mode";
+"light_theme" = "Light theme"; // UNUSED
+"limited" = "Limited"; // UNUSED
+"limited_time" = "Limited Time"; // UNUSED
+"limits_info_title" = "Set Up your Limits"; // UNUSED
+"limits_management" = "Limits Management";
+"limits_management_subtitle" = "What type of player are you?"; // UNUSED
+"limits_update_fail" = "The following limits could not be updated {limits}. Please try again later."; // UNUSED
+"limits_update_success" = "Your limits were successfully updated!"; // UNUSED
+"link_copied_to_clipboard" = "Link was copied to clipboard"; // UNUSED
+"link_expired" = "The link you used is expired."; // UNUSED
+"live" = "Live";
+"live_betting" = "Live Betting"; // UNUSED
+"live_field_statistics" = "Live field statistics"; // UNUSED
+"live_matches" = "Live Matches";
+"live_number" = "Live ({num_matches})"; // UNUSED
+"loading" = "Loading";
+"lock_account_alert_text" = "You are about to lock your account. Are you sure you want to proceed?"; // UNUSED
+"lock_account_alert_title" = "Account Lock"; // UNUSED
+"lock_my_account" = "Lock my account"; // UNUSED
+"login" = "Login";
+"login_biometrics" = "Login with Biometrics";
+"login_biometrics_description" = "At any moment, you can disable this option at Settings > Betsson";
+"login_biometrics_subtitle" = "Do you want to login with Fingerprint and Face Recognization?";
+"login_error_message" = "Incorrect username or password";
+"login_error_title" = "Login error";
+"login_fail_title" = "Login Failed"; // UNUSED
+"login_needed" = "You need to be logged in"; // UNUSED
+"login_required_text" = "You need to be logged in to be able to see your bets"; // UNUSED
+"login_tc_agreement" = "By Signing Up you agree to our"; // UNUSED
+"logout" = "Logout";
+
+"loss_limit" = "Loss Limit"; // UNUSED
+"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: {period}"; // UNUSED
+"loss_limit_removal_error" = "We can't remove your Loss Limit at this moment. Please try again later."; // UNUSED
+"loss_limit_removal_success" = "Your Loss Limit was removed"; // UNUSED
+"loss_limit_set" = "Loss limit set for your account."; // UNUSED
+"loss_limit_update_error" = "We can't update your Loss Limit at this moment. Please try again later."; // UNUSED
+"loss_limit_update_success" = "Your Loss Limit was updated"; // UNUSED
+"losses" = "Losses"; // UNUSED
+"lost" = "Lost";
+"lowest_odds" = "Lowest Odds"; // UNUSED
+"maintenance_mode" = "Temporarily Down For Maintenance";
+"maintenance_mode_content_fallback" = "We are performing Scheduled maintenance. We should be back online shortly."; // UNUSED
+"make_a_deposit" = "Make a deposit"; // UNUSED
+"make_a_withdraw" = "Make a withdraw"; // UNUSED
+"make_some_bets" = "Make some bets!"; // UNUSED
+"male" = "Male";
+"mark_all_as_read" = "Mark all as read";
+"mark_as_read" = "Mark as read";
+"mark_games_favorites" = "Go to games list and mark them as favorites."; // UNUSED
+"market" = "Market";
+"markets" = "Markets"; // UNUSED
+"markets_not_available" = "Markets not available.";
+"match" = "Match";
+"match_label_default" = "Match Day";
+"match_not_available" = "The match is no longer available for betting"; // UNUSED
+"match_start_label_default" = "Match Start";
+"max" = "Max"; // UNUSED
+"max_odd_value" = "Min {maxOddValue}"; // UNUSED
+"members" = "members"; // UNUSED
+"menu" = "Menu"; // UNUSED
+"message" = "Message";
+"messages" = "Messages";
+"min_betting_value" = "Minimum Value {minBettingValue}{currencySymbol}"; // UNUSED
+"min_deposit_value" = "Minimum Value {minDepositValue}{currencySymbol}"; // UNUSED
+"min_odd_value" = "Min {minOddValue}"; // UNUSED
+"minimum_deposit_value" = "Minimum Value: {value}{currency}";
+"minimum_users_message" = "You can't remove users if the group chat has only 3 users."; // UNUSED
+"minimum_withdraw_value" = "Minimum Value: {value}{currency}";
+"transfer_additional_info" = "90% de nos joueurs reçoivent leurs retraits sur leur compte bancaire en moins de 24 heures";
+"mobile" = "Phone Number";
+"mobile_phone_number" = "Mobile Phone Number"; // UNUSED
+"mobilephone_is_required" = "The mobile phone is a required field. Please complete this field."; // UNUSED
+"month" = "Month";
+"monthly" = "Monthly";
+"months" = "Months";
+"more" = "More";
+"more_info" = "More Info";
+"multiple" = "Multiple";
+"multiple_bet" = "Multiple Bet"; // UNUSED
+"multiple_min_selection_total_error" = "Select at least 2 bets."; // UNUSED
+"must_accept_tc" = "You must accept the Terms & Conditions to continue."; // UNUSED
+"mute" = "Mute";
+"my_account" = "My Account";
+"my_bets" = "My Bets";
+"my_competitions" = "My Competitions";
+"my_favorites" = "My Favorites";
+"my_friends" = "My Friends";
+"my_games" = "My Games";
+"my_tickets" = "My Tickets"; // UNUSED
+"names" = "Names";
+"names_match_id" = "Please insert all names as registered in your ID Document.";
+"nationality" = "Nationality";
+"nationality_optional" = "Nationality (optional)"; // UNUSED
+"need_login" = "You need to be logged in to execute this action."; // UNUSED
+"need_login_favorites" = "You need to be logged in to see your favorites.";
+"need_login_tickets" = "You need to be logged in to be able to see your tickets";
+"new_create_account" = "New here? Create a new account";
+"new_group" = "New Group";
+"new_here" = "New here?"; // UNUSED
+"new_message" = "New Message";
+"new_password" = "New Password";
+"new_password_error" = "New password must be different"; // UNUSED
+"new_password_must_be_different" = "The new password must be different"; // UNUSED
+"next" = "Next";
+"nickname" = "Nickname";
+"nickname_error" = "The nickname needs to have a length minimun of 4";
+"no_bets" = "No bets here!"; // UNUSED
+"no_bets_for_this_section" = "You don\'t have any bets for this section"; // UNUSED
+"no_bets_yet" = "You don\'t have any bets here.\nCheck all available games and start betting now!"; // UNUSED
+"no_bonus" = "No bonus here";
+"no_chatrooms" = "There are no chatrooms to display."; // UNUSED
+"no_deposits_description" = "There are no transactions for the period of time selected, it’s time to deposit some money and start betting on your favourites."; // UNUSED
+"no_favorite_games" = "You don't have favorite games."; // UNUSED
+"no_favourite_games" = "You don´t have favorite games yet, it’s time to\nsave your favourites by clicking on the star."; // UNUSED
+"no_friends_to_display" = "There are no friends to display";
+"no_funds" = "You don't have enough funds."; // UNUSED
+"no_internet" = "No internet connection"; // UNUSED
+"no_login_rankings" = "You need to be logged in to be able to see rankings";
+"no_login_tips" = "You need to be logged in to be able to see tips";
+"no_markets" = "There are no markets to display at the moment"; // UNUSED
+"no_markets_short" = "No markets at the moment"; // UNUSED
+"no_messages" = "No messages"; // UNUSED
+"no_messages_yet" = "There are no messages yet."; // UNUSED
+"no_notifications" = "There are no notifications to display.";
+"no_other_users_registered" = "There are currently no other users on your contact list using the Sportsbook. Invite more friends now!";
+"no_recent_searches" = "No recent searches";
+"no_results_for" = "There are no results for {context}.";
+"no_results_for_selection" = "There are no results for this selection.";
+"no_selections" = "You don\'t have any selections yet."; // UNUSED
+"no_statistics" = "No statistics available"; // UNUSED
+"no_stats" = "No stats available"; // UNUSED
+"no_submitted_bets" = "You don\'t have any submitted bets"; // UNUSED
+"no_tickets_yet" = "You don’t have any tickets yet."; // UNUSED
+"no_user_contact_registered" = "You don't have any users from your contact list using the Sportsbook yet. Invite them now!";
+"no_value" = "-.--€";
+"normal" = "Normal"; // UNUSED
+"not_allow_tracking" = "Ask App Not to Track"; // UNUSED
+"not_allowed" = "Not Allowed"; // UNUSED
+"not_available_anymore" = "Not available anymore"; // UNUSED
+"not_bets_tickets_section" = "You don't have any bets for this section.";
+"not_bets_tickets_section_yet" = "You don’t have any selections yet.";
+"not_excluded" = "Not Excluded";
+"not_logged_in" = "You aren’t logged in!";
+"not_now" = "Not Now";
+"not_received" = "Not received"; // UNUSED
+"notifications" = "Notifications";
+"notify_bets_final_result" = "Notify me about my Bets final results";
+"notify_bets_options_results" = "Notify me about my Bets options results";
+"notify_me_about" = "Notify me about:";
+"now" = "Now";
+"number_of_market_singular" = "{num_markets} market";
+"number_of_markets" = "{num_markets} markets";
+"number_of_selections" = "Number of selections";
+"odd" = "Odd";
+"odds" = "Odds";
+"odds_filter" = "Odds Filter";
+"odds_for_market" = "Odds for market"; // UNUSED
+"odds_format" = "Odds Format";
+"odds_format_eu" = "EU (1.5)";
+"odds_format_uk" = "UK (1/2)";
+"odds_format_updated" = "Your Odds Format was updated"; // UNUSED
+"odds_format_us" = "US (-200)";
+"odds_variation" = "Odds Variation";
+"odds_variation_updated" = "Odds Variation updated"; // UNUSED
+"ok" = "OK";
+"old_password" = "Old Password";
+"old_password_error" = "Old password is incorrect"; // UNUSED
+"one_year" = "1 Year"; // UNUSED
+"online" = "online"; // UNUSED
+"only_friends" = "Only friends";
+"only_people_follow" = "Only people I follow";
+"open" = "Open";
+"open_competition_details" = "Open Competition Details";
+"open_email_app" = "Open email App"; // UNUSED
+"open_stats" = "Open Stats"; // UNUSED
+"opened" = "Opened"; // UNUSED
+"optional_hint" = "(optional)"; // UNUSED
+"or" = "or";
+"order_by" = "Order By"; // UNUSED
+"ordinary_time" = "Ordinary Time"; // UNUSED
+"outcome" = "Outcome";
+"outright_markets" = "Outright Markets"; // UNUSED
+"outrights" = "Outrights";
+"package_permission_denied" = "We need this permission in order to lead you to the best way."; // UNUSED
+"password" = "Password";
+"password_changed" = "The account password was changed successfully."; // UNUSED
+"password_description" = "Must contain minimum 8 characters 1 uppercase 1 lowercase and 1 symbol."; // UNUSED
+"password_description_2" = "At least 8 characters 1 uppercase 1 lowercase 1 number and 1 symbol ({symbols})"; // UNUSED
+"password_description_v_2" = "Passwords must contain 8 characters 1 Uppercase 1 Lowercase and 1 Symbol"; // UNUSED
+"password_does_not_match" = "Password does not match"; // UNUSED
+"password_not_match" = "Passwords don't match";
+"password_policy" = "Your password must be between 8-16 characters long, have uppercase and lowercase letters, a number and one special character."; // UNUSED
+"password_rule" = "Length must be greater than 8 characters."; // UNUSED
+"password_too_weak" = "Your password is too simple to be secure.";
+"password_update_success" = "Your password was updated"; // UNUSED
+"past_30_days" = "Past 30 days"; // UNUSED
+"past_90_days" = "Past 90 days"; // UNUSED
+"past_x_days" = "Past {days} days"; // UNUSED
+"paste_clipboard" = "Paste from Clipboard";
+"payments" = "Payments";
+"payments_available" = "Payments available using:";
+"pending" = "Pending";
+"pending_approval" = "Pending Approval";
+"percentage_of_bets_per_sport" = "Percentage of bets per sport";
+"period_exclusion" = "Period Exclusion"; // UNUSED
+"period_lock" = "Period Lock"; // UNUSED
+"period_type_value" = "Period Type and Value"; // UNUSED
+"period_unit" = "Period Unit"; // UNUSED
+"period_value" = "Period Value";
+"permanent" = "Permanent";
+"permission_location" = "Location Permission";
+"permission_location_subtitle" = "At any moment, you can disable this option at Settings > Sportsbook > Location";
+"permission_location_text" = "We need to check if betting is allowed in your location.";
+"personal_info" = "Personal Info";
+"personal_information" = "Personal Information";
+"phone" = "Phone"; // UNUSED
+"phone_number" = "Phone number";
+"phone_number_rule" = "Allowed numbers 0-9 and symbols *#()/.;-+"; // UNUSED
+"phone_placeholder" = "{prefix}  +{number}"; // UNUSED
+"phone_prefix" = "Prefix";
+"picker_available" = "{symbol} Available"; // UNUSED
+"picker_default" = "Default {symbol}"; // UNUSED
+"picker_title" = "Select your {text}"; // UNUSED
+"place_a_bet" = "Add a selection to place a bet"; // UNUSED
+"place_bet" = "Place Bet"; // UNUSED
+"place_bet_success_text" = "Your bet was succfully placed"; // UNUSED
+"place_bet_success_title" = "Bet Succesfully placed"; // UNUSED
+"place_commune" = "Place / Commune";
+"place_of_birth" = "Place of Birth";
+"please_choose_title" = "Please choose one of the titles"; // UNUSED
+"please_date_range" = "Please select a date range."; // UNUSED
+"please_login" = "Access Denied"; // UNUSED
+"please_login_text" = "You need to be logged in to access this area."; // UNUSED
+"please_select_event" = "Please select at least one event."; // UNUSED
+"popular" = "Popular";
+"popular_competitions" = "Popular Competitions";
+"popular_games" = "Popular Games";
+"popular_matches" = "Popular Matches";
+"possible_earnings" = "Possible Earnings"; // UNUSED
+"possible_winnings" = "Possible Winnings";
+"possible_winnings2" = "Possible Winnings:"; // UNUSED
+"postal_code" = "Postal Code";
+"previous" = "Previous"; // UNUSED
+"proceed" = "Proceed";
+"profile" = "Profile"; // UNUSED
+"profile_complete" = "Profile complete"; // UNUSED
+"profile_complete_2" = "The profile is complete. You may proceed."; // UNUSED
+"profile_incomplete" = "Profile Incomplete";
+"profile_incomplete_2" = "Profile incomplete. We'll need some additional info before you can make a deposit.";
+"profile_incomplete_deposit" = "Please complete your profile before you can make deposits.";
+"profile_incomplete_withdraw" = "Please complete your profile before you can make withdraws.";
+"profile_update_success" = "Your profile was updated"; // UNUSED
+"profile_updated_success" = "Profile updated succesfully!";
+"progress_will_be_lost" = "All progress will be lost"; // UNUSED
+"promo_code" = "Promo Code";
+"promo_fail_click" = "Sorry, we weren\'t able to load the promotion right now."; // UNUSED
+"promotions" = "Promotions";
+"proof_of_address" = "Proof of Address";
+"quit" = "Quit";
+"quit_register" = "Quit Register";
+"quit_register_message" = "Do you want to quit your initial register? All changes will be lost.";
+"rankings" = "Rankings";
+"reached_max_stake_allowed" = "The maximum stake allowed is {value}"; // UNUSED
+"reached_minimum_stake_allowed" = "The minimum stake allowed is {value}"; // UNUSED
+"read_about" = "Read about"; // UNUSED
+"read_about_our" = "Read about our"; // UNUSED
+"read_all" = "Read all";
+"recent_searches" = "Recent searches";
+"recover_password_sent" = "Recover Password Sent";
+"recover_password_sent_message" = "If the information provided is correct, a confirmation email will be sent to the registered email address. \nClick the link or Input the verification code in the email to complete the password reset process & create a new password.";
+"red_cards" = "Red cards";
+"refused_location" = "Unfortunately, we could not get access to your Location this time.";
+"refused_location_subtitle" = "At any moment, please enable this option at Settings > Sportsbook";
+"register" = "Register"; // UNUSED
+"register_error_title" = "Sign up error"; // UNUSED
+"reject" = "Reject";
+"remaining" = "Remaining"; // UNUSED
+"remaining_total_bonus" = "Remaining / Total Bonus";
+"remaining_total_wager" = "Remaining / Total Wager";
+"remember" = "Remember";
+"remove_from_favorites" = "Remove from favorites"; // UNUSED
+"remove_last_user" = "Remove Last User";
+"remove_last_user_message" = "Removing the last user of this group will also delete this group! Are you sure you want to remove this user?";
+"remove_user" = "Remove User";
+"remove_user_message" = "Are you sure you want to remove the selected user?";
+"report" = "Report";
+"required_field" = "Required Field";
+"resend_code" = "Resend code"; // UNUSED
+"resend_email" = "Resend Email";
+"resend_verification_email" = "Resend Verification Email"; // UNUSED
+"reset" = "Reset";
+"reset_pwd" = "Reset Password"; // UNUSED
+"reset_success" = "Your Password has been updated successfuly!"; // UNUSED
+"resolved" = "Resolved";
+"responsible_gaming_title" = "Responsible Gaming";
+"result" = "Result"; // UNUSED
+"results" = "Results"; // UNUSED
+"results_count" = "{num} Results";
+"results_count_singular" = "{num} Result";
+"return_text" = "Return";
+"return_money" = "Your return will be";
+"returnx" = "Return: {value} €"; // UNUSED
+"save" = "Save";
+"save_profile" = "Save Profile"; // UNUSED
+"search" = "Search";
+"search_by_contact" = "Search by contact name...";
+"search_by_username" = "Search by username...";
+"search_contacts" = "Search contacts"; // UNUSED
+"search_field" = "Search..";
+"search_field_competitions" = "Search competitions..";
+"search_for_teams_or_competitions" = "Search for Teams or Competitions...";
+"search_friend" = "Search a friend";
+"search_friend_code" = "Search friend with code";
+"search_results" = "Search Results"; // UNUSED
+"second_empty_my_competitions" = "Go to the competitions list and mark them as favorites.";
+"second_empty_no_bets" = "You haven’t made a bet yet, it’s time to bet on your favourites.";
+"second_empty_no_login_to_bet" = "You need to be logged in to be able to bet."; // UNUSED
+"second_empty_no_transactions" = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites.";
+"second_half_time" = "Second half time";
+"second_term" = "Accept Terms &amp; Conditions"; // UNUSED
+"security" = "Security";
+"security_answer" = "Security Answer";
+"security_question" = "Security Question";
+"security_rules" = "Security Rules"; // UNUSED
+"see_all" = "See All";
+"see_competition" = "See Competition"; // UNUSED
+"see_full_tip" = "See full tip"; // UNUSED
+"see_game_details" = "See Game Details"; // UNUSED
+"see_less" = "See Less";
+"see_outrights" = "See Outrights"; // UNUSED
+"see_promo" = "See Promo"; // UNUSED
+"see_statistics" = "See Statistics"; // UNUSED
+"select" = "Select"; // UNUSED
+"select_a_friend" = "Select a friend";
+"select_at_least_2_friends" = "Select at least 2 friends";
+"select_country" = "Please select your nationality"; // UNUSED
+"select_friends_to_add" = "Select friends to add";
+"select_profile_option" = "Select a profile option"; // UNUSED
+"select_your_country" = "Select your country"; // UNUSED
+"selections_not_combinable" = "Some of the selections are related and cannot be combined. Please remove one.";
+"self_exclusion_date_limits" = "Expiry date must be between 6 months and 5 years from today."; // UNUSED
+"self_exclusion_error" = "We can't remove your Account at this moment. Please try again later.";
+"self_exclusion_success" = "Your account was excluded";
+"send" = "Send";
+"send_to_chat" = "Send to chat";
+"send_to_friends_and_groups" = "Send to friends and groups";
+"sending_bet" = "Sending bet..."; // UNUSED
+"sent_text_message" = "We've sent a text to {phoneNumber} with the verification code."; // UNUSED
+"server_error_message" = "An unexpected error occurred while processing your request. Please try again.";
+"server_error_title" = "Unexpected Error";
+"session_expired_text" = "Please login again to access all the features."; // UNUSED
+"session_expired_title" = "Your session expired!"; // UNUSED
+"set_date" = "Set Date"; // UNUSED
+"settings" = "Settings";
+"share" = "Share"; // UNUSED
+"share_event" = "Share Event";
+"share_my_tickets" = "Share my tickets";
+"share_outside_via" = "Share outside via...";
+"share_placeholder" = "Message or URL to share..."; // UNUSED
+"share_ticket" = "Share Ticket";
+"share_to" = "Share to..."; // UNUSED
+"share_with" = "Share with:"; // UNUSED
+"share_your_bet_now" = "Share your bet now"; // UNUSED
+"shared_bet_unavailable" = "The shared bet is not available anymore, check some new bet suggestions.";
+"shared_bet_unavailable_plural" = "The shared bets are not available anymore check some new bet suggestions."; // UNUSED
+"shared_tickets_to" = "You shared tickets to"; // UNUSED
+"show" = "Show";
+"show_full_tip" = "Show full tip";
+"show_less" = "Show Less"; // UNUSED
+"signup" = "Sign Up";
+"single" = "Single";
+"single_bet" = "Single Bet"; // UNUSED
+"singup_success_text" = "Your account is registered! Only 1 step left defining your limits!"; // UNUSED
+"six_months" = "6 Months"; // UNUSED
+"skip" = "Skip";
+"small" = "Small"; // UNUSED
+"small_sign_up_success_text" = "We have sent an email to {email} with a link to activate your account."; // UNUSED
+"sms" = "SMS";
+"some_events_unavailable" = "Some of these events are no longer available."; // UNUSED
+"something_went_wrong" = "Something went wrong"; // UNUSED
+"something_went_wrong_try_again" = "Something went wrong, please try again later"; // UNUSED
+"sort_by" = "Sort by"; // UNUSED
+"sport" = "Sport";
+"sport_betting_rules" = "Sport Betting Rules"; // UNUSED
+"sports" = "Sports";
+"sportsbook" = "Sportsbook";
+"start_date" = "Start Date";
+"start_group_chat" = "Start Group Chat";
+"start_of_game" = "Start of game";
+"starting_from" = "Starting From"; // UNUSED
+"starting_soon" = "Starting Soon"; // UNUSED
+"statistics" = "Statistics"; // UNUSED
+"subject" = "Subject";
+"submit" = "Submit";
+"subtitle" = "Subtitle";
+"success" = "Success";
+"success_edit" = "Your information has been updated.";
+"success_edit_password" = "Your password has been updated.";
+"success_location" = "Location Services enabled successfuly!";
+"success_save" = "Successfully saved"; // UNUSED
+"sucess_register" = "Your account is registed! Now only left to verify your identity."; // UNUSED
+"suggested_bets" = "Suggested bets";
+"suggested_country" = "Suggested Country";
+"suggested_names" = "Suggested names"; // UNUSED
+"support" = "Support";
+"support_error" = "We can't send your message at this moment. Please try again later.";
+"support_success" = "Your message was successfully sent";
+"suspended" = "Suspended";
+"sync_with_system" = "Sync with the system";
+"system" = "System";
+"system_bet" = "System Bet";
+"system_min_selection_total_error" = "Select at least 3 bets."; // UNUSED
+"system_options" = "System Options"; // UNUSED
+"system_type_plural_one" = "system type"; // UNUSED
+"system_type_plural_other" = "system types"; // UNUSED
+"team_statistics" = "Teams statistics"; // UNUSED
+"terms" = "Terms of use";
+
+"terms_conditions" = "I read and accept the Terms and Conditions Privacy Policy and Cookies. I'm Certifying that i am 18 years old or older."; // UNUSED
+"terms_conditions" = "Terms & Conditions"; // UNUSED
+"theme" = "Theme"; // UNUSED
+"theme_color" = "Theme Color";
+"theme_color_updated" = "Your Theme Color was updated"; // UNUSED
+"there_is_no_games_here" = "There is no games here!"; // UNUSED
+"there_was_an_error_while_validating" = "There was an error while validating"; // UNUSED
+"this_selection" = "this selection"; // UNUSED
+"ticket_url_pasteboard" = "Ticket link was copied.";
+"time_filter_label" = "Events start time {start} - {end}"; // UNUSED
+"time_range" = "Time Range"; // UNUSED
+"time_to_add_friends" = "Time to add friends!";
+"time_today_only" = "Time (for Upcoming matches only)";
+"tips" = "Tips";
+"title" = "Title";
+"title_name_f" = "F"; // UNUSED
+"title_name_m" = "M"; // UNUSED
+"to" = "To";
+"today" = "Today"; // UNUSED
+"tomorrow" = "Tomorrow";
+"top_competitions" = "Top Competitions";
+"suggested_bets" = "Suggested bets";
+"top_tips" = "Top Tips";
+"top_tipsters" = "Top Tipsters";
+"total" = "Total";
+"total_amount" = "Total Amount"; // UNUSED
+"total_balance" = "Total Balance"; // UNUSED
+"total_bet_amount" = "Total Bet Amount";
+"total_bets" = "Total Bets"; // UNUSED
+"total_odd" = "Total Odd";
+"total_odds" = "Total Odds";
+"total_wager" = "Total Wager"; // UNUSED
+"totalodd" = "TotalOdd:"; // UNUSED
+"tournament" = "Tournament";
+"transactions" = "Transactions";
+"try_later" = "We cannot comply with your request right now. Please try again later."; // UNUSED
+"try_new_bet" = "Try making a new bet"; // UNUSED
+"try_something_else" = "Please try something else!";
+"try_to_full_register" = "Try to do a full register instead."; // UNUSED
+"unchangeable" = "Unchangeable"; // UNUSED
+"unfollow" = "Unfollow";
+"unfriend" = "Unfriend";
+"unit_period_exclusion" = "Unit Period Exclusion"; // UNUSED
+"unlimited_time" = "Unlimited Time"; // UNUSED
+"unmute" = "Unmute"; // UNUSED
+"unregistered_contacts_invite" = "You have contacts that don’t have Sportsbook yet, invite them"; // UNUSED
+"unsaved_changes_text" = "You have unsaved changes! Do you really want to leave without saving them?"; // UNUSED
+"unsaved_changes_title" = "Unsaved Changes"; // UNUSED
+"unsucess_register" = "Sorry there was a problem while creating your account, contact us for help!"; // UNUSED
+"unsucess_register_title" = "Oh no!"; // UNUSED
+"until" = "Until"; // UNUSED
+"upcoming" = "Upcoming";
+"update" = "Update"; // UNUSED
+"update_app" = "Update App";
+"update_available" = "Update available"; // UNUSED
+"update_available_text" = "Check out the latest Update and improve your experience in Sportsbook.";
+"update_available_title" = "New Update Available";
+"update_password" = "Update Password"; // UNUSED
+"update_required_text" = "Please get the latest update to continue enjoying Sportsbook.";
+"update_required_title" = "New Update Required";
+"upload_complete" = "Upload Complete";
+"upload_document" = "Upload Document"; // UNUSED
+"upload_documents" = "Upload Documents";
+"upload_failed" = "Upload Failed! - Your file did not pass the {reason} constraint."; // UNUSED
+"upload_id_document" = "Upload ID Document"; // UNUSED
+"upload_rejected" = "Upload Rejected! - Your file did not pass the {reason} constraint."; // UNUSED
+"use_boosted_odds" = "Use boosted odds {percentage}";
+"use_freebets" = "Use {amount} of freebet";
+"user_code" = "User code"; // UNUSED
+"user_code_dynamic" = "User code: {code_str}";
+"user_code_dynamic_copied" = "User Code {code_str} copied.";
+"user_fail_to_add_payment_method" = "We can't add your Payment Method at this moment. Please try again later."; // UNUSED
+"user_fail_to_load_full_profile" = "Something went wrong while loading your Full Profile."; // UNUSED
+"user_fail_to_load_limits" = "Something went wrong while loading your Limits."; // UNUSED
+"user_fail_to_load_pending_withdrawals" = "Something went wrong while loading your Pending Withdrawals."; // UNUSED
+"user_fail_to_load_profile_status" = "Something went wrong while loading your Profile Status."; // UNUSED
+"user_fail_to_logout" = "Something strange has happened apparently you cannot logout at the moment."; // UNUSED
+"user_fail_to_register_user" = "Something went wrong during your registration process."; // UNUSED
+"user_fail_to_set_default_account_status" = "Something went wrong while setting a default Account Status."; // UNUSED
+"user_fail_to_set_initial_password" = "Something went wrong while setting an initial Password."; // UNUSED
+"user_fail_to_update_user_profile" = "Something went wrong while updating your Profile."; // UNUSED
+"user_is_not_logged_in" = "The user is not logged in"; // UNUSED
+"user_not_logged_in" = "You have to be logged in to upload documents."; // UNUSED
+"user_success_add_payment_method" = "Payment Method added successfully."; // UNUSED
+"usercode" = "User code {usercode}"; // UNUSED
+"usercode_copied_to_clipboard" = "User code was copied to clipboard"; // UNUSED
+"username" = "Username";
+"username_already_registered" = "This username is already registered.";
+"username_available" = "Username available"; // UNUSED
+"username_invalid" = "This username is invalid.";
+"username_rule" = "Accepted characters numbers (0-9) letters (a-z A-Z) symbols (-_+.{'@'})"; // UNUSED
+"username_unavailable" = "This username is already in use."; // UNUSED
+"users_followed_you" = "Users followed you"; // UNUSED
+"validated" = "Validated"; // UNUSED
+"verification_code" = "Verification Code";
+"verification_code_error" = "This verification code is not valid."; // UNUSED
+"verification_code_success" = "You're phone number was verified with success!"; // UNUSED
+"verify_email" = "Verify your Email";
+"verify_email_description" = "Looks like you haven't checked your email yet. In order to use this App on its full potential, you need to verify your Email.";
+"verify_email_message" = "In order to use this App on it’s full potential you need to verify your Email."; // UNUSED
+"verify_my_account" = "Complete your verification";
+"verify_my_account" = "Verify My Account";
+"verify_phone_description" = "We’ve sent a text to {email} with the verification code."; // UNUSED
+"verify_phone_number" = "Verify Phone Number"; // UNUSED
+"view" = "View"; // UNUSED
+"view_competition_markets" = "View Competition Markets";
+"view_stats" = "View Stats"; // UNUSED
+"wager_amount" = "Wager Amount";
+"wallet" = "Wallet"; // UNUSED
+"wallet_error" = "Wallet Error";
+"wallet_error_message" = "There was an error trying to get your wallet settings. Try again later.";
+"weak_password" = "Must contain: minimum 8 characters, 1 Uppercase, 1 Lowercase, 1 Digit and 1 Symbol"; // UNUSED
+"weekly" = "Weekly";
+"weekly_betting_limit" = "Weekly Betting Limit";
+"weekly_betting_limit_tooltip" = "Information about Betting Limit"; // UNUSED
+"weekly_deposit_limit" = "Weekly Deposit Limit";
+"weekly_deposit_limit_tooltip" = "Information about Deposit Limit"; // UNUSED
+"weeks" = "Weeks";
+"who_add_groups" = "Who can add me to groups";
+"who_send_messages" = "Who can send messages";
+"winnings" = "Winnings";
+"wins" = "Wins"; // UNUSED
+"withdraw" = "Withdraw";
+"withdraw_value" = "Withdraw Value";
+"withdraws" = "Withdraws";
+"won" = "Won";
+"x_markets" = "No Markets | 1 Market | {count} Markets"; // UNUSED
+"x_results" = "No Results | 1 Result | {count} Results"; // UNUSED
+"xbets" = "{num} Bets"; // UNUSED
+"year" = "Year"; // UNUSED
+"yes" = "Yes";
+"you_made_a_bet" = "You made a bet!"; // UNUSED
+"you_shared_a_bet" = "You shared a bet"; // UNUSED
+"you_want_to_quit" = "Are you sure you want to quit?"; // UNUSED
+"zipcode_is_required" = "The zipcode is a required field. Please complete this field."; // UNUSED
+"cancel_withdraw" = "Cancel withdraw";
+"cancel_withdraw_description" = "Are you sure you want to cancel your withdraw? "; // UNUSED
+"protect_account" = "In order to protect your account your password must:"; // UNUSED
+"first_password_requirement" = "Have length between 8 and 16 characters"; // UNUSED
+"second_password_requirement" = "Contain an uppercase character"; // UNUSED
+"third_password_requirement" = "Contain a lowercase character"; // UNUSED
+"fourth_password_requirement" = "Contain at least one number"; // UNUSED
+"lack_requirements" = "Lack requirements"; // UNUSED
+"fifth_password_requirement" = "Be alphanumeric with at least 1 symbol from -!@^$&*+"; // UNUSED
+
+"iban_proof" = "IBAN Proof";
+"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 alphanumeric values [0 to 9 or A to Z]";
+"department_of_birth_invalid" = "This department of birth is invalid."; // UNUSED
+"department_of_birth" = "Department of Birth";
+"street_number_invalid" = "This street number is invalid."; // UNUSED
+"postcode_invalid" = "This postcode is invalid."; // UNUSED
+"withdrawal_request_sent_title" = "Your withdrawal request was sent.";
+"withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";
+
+"country_of_birth" = "Country of Birth";
+"department_of_birth" = "Department of Birth";
+"street_name" = "Street name";
+"street_number" = "Street number";
+
+"place_commune_invalid" = "Only letters allowed.";
+
+
+// NOT SENT TO GOOGLE DRIVE - NEW KEYS
+
+"payment_authorized" = "Payment Authorized";
+"payment_authorized_message" = "Your payment was authorized. Your deposit should be available in your account.";
+
+"payment_refused" = "Payment Refused";
+"payment_refused_message" = "Your payment was refused. Please try again later. If the problem persists contact our Customer Support.";
+
+"withdraw_error" = "Withdraw Error";
+"withdraw_error_message" = "There was an error trying to process your withdraw. Please try again later, if the problem persists contact customer support.";
+
+"withdrawal_error" = "Withdrawal Error";
+
+"pending_withdrawal_cancel_success" = "Pending Withdrawal Cancel Success";
+"pending_withdrawal_cancel_success_message" = "Your pending withdrawal request was cancelled with success.";
+
+"pending_withdrawal_cancel_error" = "Pending Withdrawal Cancel Error";
+"pending_withdrawal_cancel_success_message" = "Your pending withdrawal request could not be cancelled. Please try again later, if the problem persists contact our customer support.";
+
+"promotions" = "Promotions";
+"responsible_gaming" = "Responsible Gaming";
+"casual_pathologic_gambling" = "Casual vs Pathologic Gambling";
+"tips_to_keep_control" = "Tips to keep control";
+"self_exclusion" = "Self Exclusion";
+"close_account" = "Close account";
+
+"block_account_info" = "Block your account from betting and depositing for a number of days, weeks or months.";
+
+"casual_pathologic_question" = "Casual vs Pathologic Gaming what are the differences?";
+"casual_pathologic_answer" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie. Praesent felis tortor, volutpat id tincidunt vitae, euismod eu elit. Nam quis tortor tincidunt, condimentum nibh eget, posuere lorem. In sed pulvinar magna, sed volutpat lacus. Suspendisse consequat pharetra pulvinar. Phasellus consectetur est eget accumsan sagittis.\n\nNunc est sapien, pretium et quam sit amet, varius dignissim sapien. Nulla sed lorem scelerisque, efficitur lorem sed, blandit velit. Donec lacinia ex ac enim rutrum, id tincidunt mi sagittis. Mauris tempor, ligula in dapibus fringilla, augue felis convallis nulla, eget gravida mauris nisi eget justo. Nullam bibendum, est quis suscipit iaculis, libero felis sagittis eros, sit amet iaculis diam velit et erat.\n\nVestibulum ullamcorper nibh condimentum ex scelerisque convallis. Sed sit amet porttitor eros. Duis tempor mauris et mi volutpat, vitae vestibulum metus feugiat. In vitae sem finibus, pharetra neque a, imperdiet tellus. Nunc et mattis leo, vel vehicula odio. Fusce volutpat massa eros, eu vestibulum nunc efficitur maximus. Phasellus non erat ultrices, placerat felis eleifend, ultricies neque. Nulla semper, magna sed semper maximus, sapien dui facilisis nisl, nec dapibus nulla sem non massa. Nam a nunc viverra, euismod lectus vulputate, molestie mauris. Aenean ultrices dolor leo, id pellentesque enim imperdiet semper. Sed massa arcu, dictum nec posuere nec, scelerisque molestie tortor. Ut justo libero, mollis ac quam porttitor, condimentum commodo ex. Nulla dolor lorem, feugiat et eleifend sed, finibus et dolor. Nunc at imperdiet sapien. Maecenas non tellus nibh.";
+
+"tip_title" = "Tip 1";
+"tip_message" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sagittis eros a nibh fermentum viverra. Sed imperdiet justo non tellus mollis viverra. Aliquam quis varius ex. In sagittis condimentum molestie.";
+"evalujeu" = "Evalujeu";
+
+"cancel_withdraw" = "Cancel Withdraw";
+"cancel_withdraw_description" = "Are you sure you want to cancel your withdraw?";
+
+"go_back" = "Go back";
+
+"cancel_withdraw_success" = "Your withdraw was canceled.";
+"cancel_withdraw_error" = "There was an error trying to cancel your withdraw. Please contact support.";
+
+"withdrawal" = "Withdrawal";
+"bonus_credit" = "Bonus Credit";
+"bonus_expired" = "Bonus Expired";
+"deposit_cancel" = "Deposit Cancel";
+"withdrawal_cancel" = "Withdrawal Cancel";
+
+"max_file_size_exceeded" = "Max File Size Exceeded";
+"max_file_size_exceeded_message" = "The file chosen exceeds the maximum 10MB size. Please select another file.";
+
+"limit_update_error_message" = "{limitType} limit could not be updated. Please contact support.";
+
+"self_exclusion_success" = "Self Exclusion Success";
+"self_exclusion_success_message" = "Self exclusion options were added with success!";
+
+"self_exclusion_error" = "Self Exclusion Error";
+"self_exclusion_error_message" = "There was an error trying to apply the selected self exclusion options. Please try again later.";
+
+"no_promotions_yet" = "There are no promotions yet.";
+
+"description_iban_request" = "Before continuing we need to confirm your IBAN.";
+"iban" = "IBAN";
+"iban_proof" = "IBAN Proof";
+"iban_invalid" = "Invalid IBAN. Must start with 2 Letters [A to Z] followed by 14 to 29 digits [0 to 9]";
+
+"withdrawal_request_sent_title" = "Your withdrawal request was sent.";
+"withdrawal_request_sent_text" = "Your request will be pending till we confirm your IBAN proof, after approval it will take at least 72 hours to appear in your bank statement.";
+
+"used" = "Used";
+"total_wager" = "Total Wager";
+
+"confirm_close_account_button" = "Yes, close my account";
+"close_account_alert_text" = "You are about to close your account. If you continue, you won't be able to access your account anymore. This process is irreversible. Do you wish to close your account permanently?";
+
+"increasing_limit_warning_title" = "Increasing {} Limit";
+"increasing_limit_warning_text" = "You are about to increase the {} Limit of your account. These changes will take 48 hours to be applied. Do you wish to apply these changes?";
+"betting" = "Betting";
+
+"lock_account_alert_text" = "You are about to lock your account. If you continue, you won't be able to access your account nor open another account in the next {value} {period}. Are you sure you want to proceed?";
+"week" = "Week";
+
+"queued" = "Queued";
+"no_wager_info" = "No Wager Info";
+
+"live_stats" = "Live field";
+
+"bet_placed" = "Bet Placed";
+"bet_settled" = "Bet Settled";
+
+"bonus_released" = "Bonus Released";
+
+"close_account_success" = "Close Account Success";
+"close_account_success_message" = "Your account has been successfully closed.";
+"close_account_error" = "Close Account Error";
+"close_account_error_message" = "There was an error closing your account, please contact support.";
+
+"lock_account_success" = "Lock Account Success";
+"lock_account_success_message" = "Your account has been successfully locked.";
+"lock_account_error" = "Lock Account Error";
+"lock_account_error_message" = "There was an error locking your account, please contact support.";
+
+"pending_limit_info" = "There is a pending limit of: {pendingLimit} {currency}. The current limit is valid until: {pendingLimitDate}";
+
+"current_limit_info" = "This is your current {limitType} value.";
+
+"bonus_cancel_success" = "Bonus cancelled with success!";
+"bonus_cancel_error" = "Bonus could not be cancelled. Please contact support.";
+
+
+"tracking_policy_title" = "Tracking Policy";
+"accept_all_cookies" = "Accept all";
+"settings_cookies" = "Settings";
+"continue_without_accepting_cookies" = "Continue without accepting";
+"details_cookies" = "Welcome to Betsson.fr\n\n\nWe respect your data and would like to offer you an optimized experience:\n\n-Through a high-performance and secure application.\n\n-With relevant offers through adapted advertisements.\n\nOur partners and we use services and cookies to securely provide you with these commitments.\n\n\nYou can change your preferences.\n";
+
+"details_cookies_settings" = "Configure my data management.\n\n\nBetsson's tracking systems are of two types:\n\n-Essential: These are necessary for the proper functioning and security of the services offered.\n\n-Recommended: These enable an optimized experience.\n";
+
+"essential_mandatory" = "Essential (mandatory)";
+"audience_measurement" = "Audience measurement";
+"advertising_and_offers_optimization" = "Advertising and offers optimization";
+
+"cashout_reoffer_warning_title" = "Cashout Re-Offer Warning";
+"cashout_reoffer_warning_text" = "This bet cashout re-offer value has changed to {cashoutReofferValue}{currencySymbol}. Do you want to accept it?";
+
+"cashout_error" = "Cashout Error";
+"cashout_no_longer_available" = "This bet cashout is no longer available.";
+
+"bet_id" = "Bet ID";
+
+"cancel_bonus" = "Cancel Bonus";
+"cancel_bonus_confirmation" = "Are you sure you want to cancel this bonus?";
+
+"refund" = "Refund";
+"product_bonus" = "Product Bonus";
+
+"opted_in" = "Opted in";
+"expired" = "Expired";
+
+"partial_cashout_value" = "Partial Cashout {cashoutAmount}";
+"original" = "Original";
+"returned" = "Returned";
+// NOT TO ADD YET
+"freebet" = "Freebet";
+
+"read_about_terms_placeholders" = "Read about our {terms_and_conditions}.";
+"signing_agree_terms_conditions" = "By Signing up, you agree to our {terms_and_conditions}, {privacy_policy}, and {sport_betting_rules}";
+
+"terms_and_conditions" = "Terms and Conditions";
+"privacy_policy" = "Privacy Policy";
+"sport_betting_rules" = "Sport Betting Rules";
+
+"password_tips_title" = "In order to protect your account your password must:";
+"password_tips_number" = "• Contain at least one number";
+"password_tips_uppercase" = "• Contain an uppercase character";
+"password_tips_lowercase" = "• Contain a lowercase character";
+"password_tips_alphanumeric" = "• Be alphanumeric with at least 1 symbol from -!@^$&*+";
+"password_tips_length" = "• Have length between 8 and 16 characters";
+
+"app_version_profile_1" = "App Version {version_1} ({version_2})";
+"app_version_profile_2" = "Sportsbook® All Rights Reserved";
+
+"affiliate_system_footer_link" = "Affiliate System";
+"privacy_policy_footer_link" = "Privacy Policy";
+"security_rules_footer_link" = "Security Rules";
+"cookie_policy_footer_link" = "Cookie Policy";
+"sports_betting_rules_footer_link" = "Sports Betting Rules";
+"terms_and_conditions_footer_link" = "Terms and Conditions";
+"about_footer_link" = "About";
+"faqs_footer_link" = "FAQs";
+"responsible_gambling_footer_link" = "Responsible Gambling";
+
+
+"gambling_warning_footer_link" = "FAMILY, SOCIAL LIFE, FINANCIAL HEALTH. ARE YOU READY TO BET EVERYTHING? FOR HELP, CALL 09-74-75-13-13 (NON-PREMIUM CALL)";
+"minors_prohibition_footer_link" = "GAMBLING AND GAMING ARE PROHIBITED FOR MINORS";
+
+// 10 April
+"card_style_normal" = "Normal";
+"card_style_small" = "Small";
+
+"man_adjust" = "Manual Adjustment";
+
+"withdrawal_status" = "Withdrawal Status";
+"withdrawal_status_message" = "Your withdrawal request was added. In the next days the request will be processed and you'll receive an update.";
+
+"date_range_filter" = "Date range";
+
+"value_not_valid" = "This value is not valid.";
+"problem_setting_value" = "There was a problem setting this value";
+"invalid_postcode" = "This Postcode is not valid. Must be 5 digits";
+"invalid_number" = "The number is not valid. Must be up to 3 digits";
+"place_too_long" = "Place/Commune is too long";
+"street_name_too_long" = "Street name is too long";
+"invalid_place" = "Please enter a valid Place/Commune";
+"invalid_street" = "Please enter a valid Street";
+"player_not_old_enough" = "Player is not old enough to be registered";
+"country_name_too_long" = "Country name is too long";
+"invalid_birth_date" = "Please enter a valid birth date";
+"invalid_country" = "Please enter a valid Country";
+"invalid_email_format" = "Please insert a valid email format";
+"email_not_verifiable" = "Sorry we cannot verify this email";
+"email_already_in_use" = "This email is already in use";
+"mobile_number_already_in_use" = "This mobile number is already in use";
+"invalid_email" = "Please enter a valid Email";
+"invalid_phone_number" = "Please enter a valid Phone Number";
+"name_invalid_length" = "This name has an invalid length";
+"last_name_invalid_length" = "This last name has an invalid length";
+"invalid_name" = "Please enter a valid name";
+"invalid_last_name" = "Please enter a valid last name";
+"nickname_not_validated" = "Sorry we could not validate this nickname.";
+"nickname_already_in_use" = "This nickname is already in use.";
+"invalid_nickname" = "Please insert a valid nickname.";
+"nickname_too_long" = "Nickname is too long";
+"password_invalid_length" = "This password has an invalid length";
+"invalid_password" = "Please enter a valid Password";
+"promo_code_too_long" = "Promo Code is too long";
+"invalid_promo_code" = "Please enter a valid Promo Code";
+
+"tips_keep_control" = "Betsson's tips for staying in control and making gaming a fun and responsible leisure activity. By following these recommendations, you can avoid putting yourself in financial or emotional trouble.\n\nIt is important to remember that gambling should be considered a hobby, not a reliable source of income. Setting a reasonable budget is a good way to ensure that you don't spend more than you can afford.\n\nChecking your game history regularly will allow you to keep an eye on your spending and detect any possible drift. If you start feeling negative emotions like frustration or stress, take a break and do something else to relax.\n\nFinally, it's important not to let the game take over your daily responsibilities and obligations. If you feel that gambling is starting to negatively impact your life, don't hesitate to talk to your loved ones and seek help if necessary.";
+
+"requested_kyc" = "Requested";
+"pass_conditional_kyc" = "Pass Conditional";
+"pass_kyc" = "Pass";
+
+"age_and_birthplace" = "Age and Birthplace";
+
+"kyc_message_title" = "KYC is not complete!";
+"kyc_message_body" = "Update your Documents in order to complete your KYC.";
+
+"understood" = "Understood";
+
+"withdrawal_reject" = "Withdrawal Rejected";
+
+"contact_settings" = "Contact settings";
+
+"upload_iban_success" = "Upload IBAN Success";
+"upload_iban_success_message" = "Thanks for sharing your IBAN and RIB. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
+"upload_iban_error" = "Upload IBAN Error";
+"upload_iban_error_message" = "There was an error trying to process your IBAN documents. Please contact support.";
+"withdrawal_warning" = "Withdrawal Warning";
+"withdrawal_warning_text" = "Would you like to proceed with the withdrawal? If you currently have an active deposit bonus, it will be forfeited.";
+"withdrawal_iban_pending_approval_message" = "Your IBAN and RIB documents are being processed. It should take between 1 to 2 working days for the documents to be treated.\nYou will be notified by email once it is done and then you will be able to make your first withdrawal.";
+"understand_confirmation_withdraw" = "I understand";
+
+"face_id_title" = "Face ID";
+"face_id_message" = "Do you want to use Face ID?";
+"touch_id_title" = "Touch ID";
+"touch_id_message" = "Do you want to use Touch ID?";
+"no" = "No";
+"biometric_error_title" = "Biometric Error";
+"biometric_error_denied_message" = "It looks like you have denied the use of biometry for this app before.";
+"biometric_error_general_message" = "There was an error checking biometric authentication. Please make sure it is enabled in your device settings.";
+
+"contact_support" = "Contact support if you want to change your profile informations";
+
+"all_odds" = "All Odds";
+"between_2_3" = "Between 2 and 3";
+"big_odds" = "Big Odds";
+
+"filters_applied_to" = "Filters applied to:";
+
+"bonus_terms_and_conditions" = "Bonus T&C";
+
+
+"my_documents" = "My Documents";
+
+"bonus_deposit_title" = "Would you like to receive a bonus with this deposit?";
+"bonus_deposit_detail" = "See bonus details";
+"bonus_deposit_name" = "Deposit bonus: {bonusName}";
+
+"bonus_dialog_title" = "Are you sure you don't want the bonus?";
+"bonus_dialog_message" = "By accepting you will not receive the following bonus: {bonusName}.";
+
+"first_deposit_success_message" = "Your first deposit was successful!";
+
+"deposit_success_message" = "Your deposit was successful!";
+"released" = "Released";
+
+"bonus_dialog_error" = "It was not possible to activate the bonus, please contact the support";
+
+"identification_docs" = "Identification Docs.";
+"rib" = "RiB";
+"extra_docs" = "Extra Docs.";
+
+"id_card_or_residence_id" = "Identification card or Residence ID";
+"driving_licence_or_passport" = "Driving Licence or Passport";
+"add_documents" = "Add documents";
+"rib_number" = "RIB Number";
+"rib_document" = "RIB Document";
+"docs_need_validation_before_rib" = "Your identification documents need to be valid before you can add your RiB";
+"docs_need_validation_before_others" = "Your identification documents need to be valid before you can add other documents";
+"additional_documents" = "Additional documents";
+
+"choose_type_of_identification" = "Choose what type of identification";
+
+"identity_card" = "Identity Card";
+"residence_id" = "Residence ID";
+"driving_licence" = "Driving Licence";
+"passport" = "Passport";
+"utility_bill" = "Utility Bill";
+
+"upload_information" = "Upload information";
+"upload_front_and_back" = "Upload the front and back of the document";
+"upload_front_document" = "Upload the front of the document";
+"all_four_corners" = "All 4 corners should appear";
+"allowed_file_types" = "Allowed file types: {allowedFileTypes}}";
+"max_size" = "Max. size:";
+"rejected" = "Rejected";
+"incomplete" = "Incomplete";
+"upload_complete_message" = "Your document(s) were uploaded successfully!";
+"upload_error" = "Upload Error";
+
+"identity_docs_approved_title" = "Your Identity documents have been approved!";
+"identity_docs_approved_text" = "In order to continue to the next step, you must upload your Proof of Address document.";
+
+"progress_not_saved" = "Your progress will not be saved.";
+"havent_send_documents" = "You still haven’t sent your documents.";
+"stay_here" = "Stay here";
+"yes_go_back" = "Yes, go back";
+
+"oh_no" = "Oh no";
+"automated_withdrawal" = "Automated withdrawal";
+
+//
+// Replay labels
+"replay_balance" = "Balance Replay";
+"replay" = "Replay";
+"used_replay" = "Used Replay";
+"first_info_title_replay" = "What’s Replay?";
+"first_info_descrition_replay" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
+"second_info_title_replay" = "Are all bets available to Replay?";
+"second_info_descrition_replay" = "Nope! To know which ones are available, check if it has this tag:";
+"third_info_title_replay" = "Can I withdraw Replay Balance?";
+"third_info_descrition_one_replay" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
+"third_info_descrition_two_replay" = "By turning on, you can use your balance for the bet.";
+"fourth_info_title_replay" = "How do I know if I used my replay balance on one bet?";
+"fourth_info_descrition_replay" = "Check for this tag on your bets to see if you used your replay balance on it.";
+"replay_info" = "Get back some of your bet if you lose.";
+
+// Cashback labels
+"cashback_balance" = "Cashback Balance:";
+"used_cashback" = "Used Cashback";
+"first_info_title_cashback" = "What’s Cashback?";
+"first_info_descrition_cashback" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
+"second_info_title_cashback" = "Are all bets available to Cashback?";
+"second_info_descrition_cashback" = "Nope! To know which ones are available, check if it has this tag:";
+"third_info_title_cashback" = "Can I withdraw Cashback Balance?";
+"third_info_descrition_one_cashback" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
+"third_info_descrition_two_cashback" = "By turning on, you can use your balance for the bet.";
+"fourth_info_title_cashback" = "How do I know if I used my Cashback balance on one bet?";
+"fourth_info_descrition_cashback" = "Check for this tag on your bets to see if you used your replay balance on it.";
+"cashback_info" = "Get back some of your bet if you lose.";
+
+//
+//
+"learn_more" = "Learn more";
+
+"request_concerns" = "Your request concerns";
+"bonus_and_promotions" = "Bonus & Promotions";
+"betting_rules" = "Betting Rules";
+"other" = "Other";
+"automated_withdrawal_threshold" = "Automated withdrawal threshold";
+
+"top_competitions" = "Top Competitions";
+"pre_validated" = "Pre Validated";
+
+"pending_withdraws_info_message" = "Are you sure you want to withdraw?You already have a pending withdraw, which you can cancel.";
+"show_pending_withdraws" = "Show pending withdraws";
+
+"referal_friend" = "Referal a friend";
+
+"rf_first_title" = "Refer your friends and get a €20 bonus!";
+"rf_first_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+
+"rf_second_description" = "You have {referrals} left over the next {days}. After this period, your counter will return to 5 possible referrals.";
+
+"referrals_number_single" = "{number} referral";
+"referrals_number" = "{number} referrals";
+
+"days_number_single" = "{number} day";
+"days_number" = "{number} days";
+
+"rf_third_title" = "How can I sponsor my friend?";
+"rf_third_sub_title" = "Use the method of your choice to sponsor your friend";
+
+"rf_third_fs_title" = "Share a link by SMS, Whatsapp, Email...";
+"rf_third_fs_description" = "Choose the method of your choice to share the referral link with your friend (SMS, Whatsapp, messanger, email, etc...)";
+"recruit_share_link" = "Share a link";
+
+"rf_third_ss_title" = "Display a QR code";
+"rf_third_ss_description" = "All your friend has to do is scan this QR code to sign up and take advantage of the referral program.";
+"rf_third_ss_bottom" = "See the QR code";
+
+"rf_fourth_title" = "My godchildren";
+"rf_fourth_description" = "Find here the list of your godchildren registered in the last 12 months";
+"rf_fourth_second_title" = "My sponsor";
+
+"referral_bonus_won" = "You received a €20 bonus for this referral";
+"referral_account_pending" = "To receive your bonus, your friend must validate his account";
+"referral_deposit_pending" = "To receive your bonus, your friend must make a deposit";
+"referral_bonus_pending" = "To receive your bonus, your friend must validate his account and make a deposit";
+
+"account_validated" = "Account validated";
+"account_not_validated" = "Compte non validé";
+"rf_first_deposit" = "✓ 1st deposit";
+
+"rf_fifth_title" = "Affiliation Regulations";
+"rf_fifth_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ";
+
+"qr_code" = "QR code";
+"qr_code_description" = "Ask your friend to take a picture of this QR code to register on Betsson.fr";
+
+"rf_second_title_nv" = "How can I sponsor my friends?";
+"rf_second_description_nv" = "To be able to sponsor your friends, you must first validate your account and make an initial deposit.";
+
+"rf_second_first_bottom_nv" = "Validate my account";
+"rf_second_second_bottom_nv" = "Make my 1st deposit";
+
+"see" = "See";
+
+"this_week" = "This Week";
+"next_week" = "Next Week";
+
+"time" = "Time";
+"higher_odds" = "Higher Odds";
+
+"no_favorite_competitions" = "You don’t have any favourite competitions.";
+"add_some_favorites" = "Add some for quick access or check our suggestions bellow.";
+
+"support_success" = "Your message was successfully sent";
+
+"total_balance_automated_withdrawal" = "This balance includes also Automated withdrawal (ESCROW).";
+
+"hold_on" = "Hold on";
+
+"payment_processing_hold" = "Payment is being processed! Awaiting finalization of payment.";
+
+"deleted" = "Deleted";
+"void" = "Cancelled";
+"spent" = "Spent";
+
+"iban_note" = "Note: si vous souhaitez utiliser un IBAN non français, veuillez contacter le service client";
+
+/* Responsible Gaming*/
+"responsible_gaming_title" = "Savoir reconnaitre les signes avant-coureurs";
+"responsible_gaming_description" = "Le jeu responsable est un des principes fondamentaux de notre activité. Nous accordons la priorité au bien-être de nos joueurs et veillons à ce que chaque interaction avec nous reste agréable.
+
+En tant qu'opérateur qui prospère grâce à l’innovation et au divertissement, il est tout aussi crucial de veiller à ce que les expériences de jeu restent agréables, responsables et conscientes des risques.
+
+Cet engagement se traduit par la mise à disposition des joueurs des outils, des informations et des mécanismes de soutien qui leur permettent de prendre des décisions sur leurs activités de jeu. Avec ses initiatives en matière de jeu responsable, Betsson France répond aux préoccupations liées à la protection des joueurs, à la prévention du jeu des mineurs et à la maîtrise du jeu excessif.";
+
+"responsible_gaming_first_section_title" = "LE PLAISIR DOIT PRÉVALOIR DANS VOTRE EXPÉRIENCE DE JEU";
+"responsible_gaming_first_section_text" = "Betsson aborde la question du jeu responsable au sérieux et prend des mesures pour aider les joueurs à jouer de manière sûre et saine. En effet, il est crucial de reconnaître qu'il existe une différence entre le jeu récréatif et le jeu problématique.\n\nLe jeu récréatif est généralement considéré comme une activité de loisir occasionnelle qui peut être agréable et amusante, mais qui ne prend pas le dessus sur la vie de la personne. Les joueurs récréatifs sont prudents dans leurs mises et ne jouent pas de manière compulsive ou excessive.\n\nLe jeu problématique, quant à lui, peut affecter la vie quotidienne d'une personne de manière négative. Les joueurs pathologiques ont du mal à contrôler leur comportement de jeu et peuvent continuer à jouer malgré les conséquences négatives qui en résultent, telles que des problèmes financiers, des conflits familiaux ou professionnels, des problèmes de santé mentale ou physique, etc.\n\nIl est donc important de mettre en place des mesures pour aider à prévenir et à détecter le jeu excessif. Cela peut inclure des limites de dépôt et de mise, des conseils de jeu responsable, ainsi que des options pour s'auto-exclure du site pendant une période à définir.";
+
+"responsible_gaming_second_section_title" = "NOS RECOMMANDATIONS POUR GARDER LE CONTRÔLE";
+
+"responsible_gaming_second_section_text_1" = "Voici quelques conseils pour maintenir une approche récréative de votre jeu en ligne :";
+
+"responsible_gaming_second_section_list" = "\t1. Votre motivation : Jouez par plaisir et de manière récréative, ce n’est pas une source potentielle de revenus.
+    
+\t2. Établissez un budget : Définissez une limite budgétaire claire avant de commencer à parier. Assurez-vous que cet argent est quelque chose que vous pouvez vous permettre de perdre sans affecter votre vie quotidienne.
+
+\t3. Limitez le temps de jeu : Fixez-vous des limites de temps pour vos sessions de jeu. Cela peut vous aider à éviter de passer trop de temps à parier et à maintenir un équilibre sain entre le jeu et d'autres activités.
+
+\t4. Évitez de récupérer vos pertes : Ne tentez pas de récupérer l'argent que vous avez perdu en augmentant vos mises. Cela peut entraîner des pertes plus importantes et des comportements risqués.
+
+\t5. Utilisez des outils de gestion des comptes : Renseignez des limites raisonnables que vous pouvez vous permettre de perdre pour réguler vos dépenses et vos mises. Utilisez ces fonctionnalités pour rester en contrôle.
+
+\t6. Ne pariez pas sous l'influence : Évitez de parier lorsque vous êtes sous l'influence de l'alcool, de médicaments ou de toute autre substance. Cela peut altérer votre jugement et vous amener à prendre des décisions impulsives.
+
+\t7. Soyez conscient de vos émotions : Si vous commencez à ressentir des émotions négatives telles que le stress, la frustration ou l'anxiété liées au jeu, prenez une pause. Ne pariez pas lorsque vous êtes émotionnellement vulnérable.
+
+\t8. Maintenir un lien social : Ne cache pas ta pratique du jeu à tes proches. Reste conscient de ton rapport au jeu, de tes gains et pertes, et discutes-en avec ton entourage.
+
+\t9. Sécuriser votre compte : Ne partagez jamais vos identifiants avec des mineurs et assurez-vous de protéger vos accès pour éviter toute connexion non autorisée.";
+
+"responsible_gaming_second_section_text_2" = "En suivant ces conseils, vous pouvez contribuer à maintenir le plaisir dans vos paris sportifs tout en minimisant les risques associés au jeu excessif.
+
+Si vous pensez avoir des problèmes liés au jeu, n'hésitez pas à demander de l'aide. De nombreuses ressources sont à votre disposition pour aider les personnes confrontées à des problèmes de jeu compulsif tel que : SOS joueur";
+
+"responsible_gaming_third_section_title" = "AIDER UN PROCHE";
+
+"responsible_gaming_third_section_text_1" = "Si vous pensez qu'un de vos proches développe un problème de jeux, il est essentiel de l'encourager à demander de l'aide. Le jeu compulsif peut toucher des personnes de tous âges et de tous sexes. Comme toute autre dépendance, le trouble du jeu peut entraîner des difficultés considérables dans la vie d'une personne, affectant son travail, ses relations et son bien-être mental.
+
+
+Comment agir ?";
+
+"responsible_gaming_third_section_list" = "\t• leur parler
+
+\t• apportez votre soutien et non votre jugement
+
+\t• expliquer les conséquences
+
+\t• être patient avec eux
+
+\t• proposer des activités qui remplacent le jeu
+
+\t• suggérer des groupes de soutien
+
+\t• recommander une aide professionnelle";
+
+"responsible_gaming_third_section_text_2" = "Si le jeu excessif vous affecte ou affecte un de vos proches, nous vous suggérons de Consulter notre rubrique « Garder le contrôle », onglet « Besoin de soutien ». Cet onglet peut vous offrir une assistance ciblée sur le jeu responsable et fournir des conseils pour répondre aux préoccupations liées au jeu.";
+
+"responsible_gaming_fourth_section_title" = "PROTEGER LES MINEURS";
+
+"responsible_gaming_fourth_section_text" = "Les jeux en ligne sont interdits aux mineurs conformément à la législation en vigueur.
+
+Nos procédures de vérification de l'âge garantissent que les personnes n'ayant pas atteint l'âge légal ne sont pas autorisées à jouer sur notre plateforme. Nous vérifions les documents d'identité pour confirmer que le titulaire du compte est majeur. Si un mineur saisi une fausse date de naissance et serait identifié à postériori, ses avoirs seront confisqués. L’utilisateur sera exclu et son compte fermé.
+
+
+Nous investissons beaucoup de temps et de ressources pour empêcher les mineurs de jouer, et nous tenons à informer les parents et tuteurs que les mineurs, même avec leur consentement, ne sont pas autorisés à jouer sur notre site. Ne permettez pas que votre enfant joue avec votre compte en ligne.
+
+Il est conseillé d'installer un logiciel de contrôle parental pour empêcher les mineurs d'accéder aux jeux en ligne. Le lien suivant fournit des instructions d'installation : https://e-enfance.org/informer/controle-parental/";
+
+// Tips
+"tips_control_title" = "Garder le contrôle";
+"tips_control_description" = "Les paris doivent toujours être adaptés à votre situation financière et ne pas avoir d'impacts négatifs, que ce soit sur le plan financier ou social. Nous mettons à votre disposition les connaissances nécessaires pour vous guider, vous conseiller et encourager un jeu sûr. Consultez les liens ci-dessous pour accéder à nos conseils, outils et processus d'assistance.";
+
+"tips_control_first_section_title" = "RECONNAITRE UN PROBLEME DE JEU EXCESSIFS";
+
+"tips_control_first_section_text_1" = "Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_first_section_list" = "\t• Est-ce que le jeu occupe une place importante dans votre esprit ?
+
+\t• Est-ce que vous avez besoin d’augmenter le montant de vos mises pour ressentir plus d’excitation ?
+
+\t• Est-ce que vous rejouez dans l’espoir de récupérer l'argent perdu ?
+
+\t• Est-ce que vous vous sentez impatient ou nerveux lorsque vous ne pouvez pas parier ?
+
+\t• Est-ce que vous avez déjà rencontré des difficultés financières, psychologiques ou familiales suite à votre pratique de jeu ?
+\t• Est-ce que des personnes ont déjà critiqué vos habitudes de jeu ou vous ont dit que vous avez un problème dans votre rapport au jeu ?
+
+\t• Est-ce que vous avez déjà cherché à cacher vos pratiques de jeux ?";
+
+"tips_control_first_section_text_2" = "Si vous vous trouvez dans plusieurs de ces situations, il est possible que vous développiez une dépendance au jeu.
+
+Nous vous encourageons à effectuer un bilan sur Evalujeu, une plateforme d'évaluation fournissant des conseils personnalisés sur les habitudes de jeu.";
+
+"tips_control_second_section_title" = "LES MODERATEURS DE JEU";
+
+"tips_control_second_subsection_title_1" = "Les limites";
+
+"tips_control_second_section_text_1" = "Nous mettons à votre disposition des modérateurs de jeu afin de privilégier une pratique récréative en fixant des limites maximales :";
+
+"tips_control_second_section_list" = "\t• de dépôt fonctionnant sur 7 jours glissants ;
+
+\t• de mise fonctionnant sur 7 jours glissants ;";
+
+"tips_control_second_subsection_title_2" = "Auto-exclusion";
+
+"tips_control_second_section_text_2" = "Si vous craignez de développer un problème de jeu ou si vous en rencontrez actuellement un, nous vous recommandons d'envisager l'auto-exclusion. Cette fonction vous permet de restreindre vos activités de jeu de 24 heures à 1 an.
+
+Pendant la période d'auto-exclusion, votre compte sera temporairement désactivé et vous ne pourrez pas vous connecter. La réouverture d’un compte n'est pas possible pendant cette période.
+
+En plus de vous retirer de nos bases de données marketing durant cette période, nous vous recommandons de supprimer Betsson France de vos notifications, de supprimer/désinstaller toutes nos applications et téléchargements, et de bloquer/désactiver nos comptes de médias sociaux.";
+
+"tips_control_third_section_title" = "BESOIN DE SOUTIENS";
+
+"tips_control_third_section_text" = "Les conséquences négatives liées au jeu peuvent apparaitre sous diverses formes, partager cette expérience avec quelqu'un peut véritablement changer la donne.
+
+Rappelez-vous que vous n'êtes pas seul face à d'éventuels problèmes liés au jeu. Briser l'isolement en discutant de vos préoccupations avec vos proches constitue une première étape pour reprendre le contrôle.
+
+Des professionnels, des associations, des psychologues et des médecins sont également disponibles de manière gratuite pour vous écouter, vous accompagner, vous offrir un regard extérieur ainsi que des conseils personnalisés.
+
+Il peut être compliqué de reconnaître que le jeu cesse d'être un plaisir et commence à devenir un problème. Prenez conscience de votre situation en réalisant une auto-évaluation :";
+
+"tips_control_third_section_list" = "\t• https://sosjoueurs.org/
+
+\t• https://gamban.com/fr/
+
+\t• https://www.evalujeu.fr/ou-en-etes-vous-avec-les-jeux-dargent
+
+\t• https://play.google.com/store/apps/details?id=com.goozix.bettor_time&hl=fr_CA&gl=US&pli=1
+
+\t• https://www.chu-nimes.fr/actu-cht/addiction-aux-jeux--participez-a-letude-train-online.html
+
+\t• https://www.joueurs-info-service.fr/";
+
+"tips_control_fourth_section_title" = "INTERDICTION VOLONTAIRE DE JEU";
+
+"tips_control_fourth_section_text_1" = "Vous pouvez demander volontairement à être interdit de jeux, cela a pour conséquence de vous interdire :";
+
+"tips_control_fourth_section_list" = "\t• D’entrer dans un casino ou un club de jeux
+
+\t• D’accéder à un site de jeux en ligne agréé par l’ANJ (paris sportifs, paris hippiques et poker)
+
+\t• D’accéder aux jeux de la FDJ et du PMU réalisés avec un compte joueur";
+
+"tips_control_fourth_section_text_2" = "Cette inscription est valable pour une durée de trois ans minimums.
+
+Après cette durée, vous pouvez demander la levée de cette interdiction.
+
+Vous serez alors inscrit dans un fichier spécifique, qui est transmis aux différents organismes.
+
+Pour le faire, il faut s’adresser à l’Autorité Nationale des Jeux (ANJ).";
+
+"no_referrals" = "No referrals yet.";
+"no_godfather" = "No godfather.";
+"at_" = "at";
+
+"referral_no_friends" = "Still no referrals? Share your code and receive bonuses.";
+
+"share_raf_link" = "Check out this fresh sportsbook, sign up using this referral link, and receive a bonus!";
+
+"mix-match" = "Mix Match";
+"mix_match_mix_string" = "Mix";
+"mix_match_match_string" = "Match";
+"mix_match_tooltip_description" = "MixMatch - allows you to customise your bet by adding multiple markets from a match into a single bet";
+"mix_match_or_bet_with_string" = "Or bet with";
+
+"deposit_error_paypal_account_already_in_use" = "The Paypal account you just used is already associated to another user account. The transaction was rejected.";
+"deposit_refunded" = "Deposit refunded";
+
+/* Localizable.strings */
+"AF" = "Afghanistan";
+"AX" = "Aland Islands";
+"AL" = "Albania";
+"DZ" = "Algeria";
+"AS" = "American Samoa";
+"AD" = "Andorra";
+"AO" = "Angola";
+"AI" = "Anguilla";
+"AQ" = "Antarctica";
+"AG" = "Antigua and Barbuda";
+"AR" = "Argentina";
+"AM" = "Armenia";
+"AW" = "Aruba";
+"AU" = "Australia";
+"AT" = "Austria";
+"AZ" = "Azerbaijan";
+"BS" = "Bahamas";
+"BH" = "Bahrain";
+"BD" = "Bangladesh";
+"BB" = "Barbados";
+"BY" = "Belarus";
+"BE" = "Belgium";
+"BZ" = "Belize";
+"BJ" = "Benin";
+"BM" = "Bermuda";
+"BT" = "Bhutan";
+"BO" = "Bolivia";
+"BQ" = "Bonaire, Sint Eustatius and Saba";
+"BA" = "Bosnia and Herzegovina";
+"BW" = "Botswana";
+"BV" = "Bouvet Island";
+"BR" = "Brazil";
+"IO" = "British Indian Ocean Territory";
+"UM" = "United States Minor Outlying Islands";
+"VG" = "Virgin Islands";
+"VI" = "Virgin Islands";
+"BN" = "Brunei Darussalam";
+"BG" = "Bulgaria";
+"BF" = "Burkina Faso";
+"BI" = "Burundi";
+"KH" = "Cambodia";
+"CM" = "Cameroon";
+"CA" = "Canada";
+"CV" = "Cabo Verde";
+"KY" = "Cayman Islands";
+"CF" = "Central African Republic";
+"TD" = "Chad";
+"CL" = "Chile";
+"CN" = "China";
+"CX" = "Christmas Island";
+"CC" = "Cocos";
+"CO" = "Colombia";
+"KM" = "Comoros";
+"CG" = "Congo";
+"CD" = "Congo";
+"CK" = "Cook Islands";
+"CR" = "Costa Rica";
+"HR" = "Croatia";
+"CU" = "Cuba";
+"CW" = "Curaçao";
+"CY" = "Cyprus";
+"CZ" = "Czech Republic";
+"DK" = "Denmark";
+"DJ" = "Djibouti";
+"DM" = "Dominica";
+"DO" = "Dominican Republic";
+"EC" = "Ecuador";
+"EG" = "Egypt";
+"SV" = "El Salvador";
+"GQ" = "Equatorial Guinea";
+"ER" = "Eritrea";
+"EE" = "Estonia";
+"ET" = "Ethiopia";
+"FK" = "Falkland Islands";
+"FO" = "Faroe Islands";
+"FJ" = "Fiji";
+"FI" = "Finland";
+"FR" = "France";
+"GF" = "French Guiana";
+"PF" = "French Polynesia";
+"TF" = "French Southern Territories";
+"GA" = "Gabon";
+"GM" = "Gambia";
+"GE" = "Georgia";
+"DE" = "Germany";
+"GH" = "Ghana";
+"GI" = "Gibraltar";
+"GR" = "Greece";
+"GL" = "Greenland";
+"GD" = "Grenada";
+"GP" = "Guadeloupe";
+"GU" = "Guam";
+"GT" = "Guatemala";
+"GG" = "Guernsey";
+"GN" = "Guinea";
+"GW" = "Guinea-Bissau";
+"GY" = "Guyana";
+"HT" = "Haiti";
+"HM" = "Heard Island and McDonald Islands";
+"VA" = "Vatican City";
+"HN" = "Honduras";
+"HU" = "Hungary";
+"HK" = "Hong Kong";
+"IS" = "Iceland";
+"IN" = "India";
+"ID" = "Indonesia";
+"CI" = "Ivory Coast";
+"IR" = "Iran";
+"IQ" = "Iraq";
+"IE" = "Ireland";
+"IM" = "Isle of Man";
+"IL" = "Israel";
+"IT" = "Italy";
+"JM" = "Jamaica";
+"JP" = "Japan";
+"JE" = "Jersey";
+"JO" = "Jordan";
+"KZ" = "Kazakhstan";
+"KE" = "Kenya";
+"KI" = "Kiribati";
+"KW" = "Kuwait";
+"KG" = "Kyrgyzstan";
+"LA" = "Lao People's Democratic Republic";
+"LV" = "Latvia";
+"LB" = "Lebanon";
+"LS" = "Lesotho";
+"LR" = "Liberia";
+"LY" = "Libya";
+"LI" = "Liechtenstein";
+"LT" = "Lithuania";
+"LU" = "Luxembourg";
+"MO" = "Macao";
+"MK" = "North Macedonia";
+"MG" = "Madagascar";
+"MW" = "Malawi";
+"MY" = "Malaysia";
+"MV" = "Maldives";
+"ML" = "Mali";
+"MT" = "Malta";
+"MH" = "Marshall Islands";
+"MQ" = "Martinique";
+"MR" = "Mauritania";
+"MU" = "Mauritius";
+"YT" = "Mayotte";
+"MX" = "Mexico";
+"FM" = "Micronesia";
+"MD" = "Moldova";
+"MC" = "Monaco";
+"MN" = "Mongolia";
+"ME" = "Montenegro";
+"MS" = "Montserrat";
+"MA" = "Morocco";
+"MZ" = "Mozambique";
+"MM" = "Myanmar";
+"NA" = "Namibia";
+"NR" = "Nauru";
+"NP" = "Nepal";
+"NL" = "Netherlands";
+"NC" = "New Caledonia";
+"NZ" = "New Zealand";
+"NI" = "Nicaragua";
+"NE" = "Niger";
+"NG" = "Nigeria";
+"NU" = "Niue";
+"NF" = "Norfolk Island";
+"KP" = "Korea";
+"MP" = "Northern Mariana Islands";
+"NO" = "Norway";
+"OM" = "Oman";
+"PK" = "Pakistan";
+"PW" = "Palau";
+"PS" = "Palestine, State of";
+"PA" = "Panama";
+"PG" = "Papua New Guinea";
+"PY" = "Paraguay";
+"PE" = "Peru";
+"PH" = "Philippines";
+"PN" = "Pitcairn";
+"PL" = "Poland";
+"PT" = "Portugal";
+"PR" = "Puerto Rico";
+"QA" = "Qatar";
+"XK" = "Republic of Kosovo";
+"RE" = "Réunion";
+"RO" = "Romania";
+"RU" = "Russian Federation";
+"RW" = "Rwanda";
+"BL" = "Saint Barthélemy";
+"SH" = "Saint Helena, Ascension and Tristan da Cunha";
+"KN" = "Saint Kitts and Nevis";
+"LC" = "Saint Lucia";
+"MF" = "Saint Martin";
+"PM" = "Saint Pierre and Miquelon";
+"VC" = "Saint Vincent and the Grenadines";
+"WS" = "Samoa";
+"SM" = "San Marino";
+"ST" = "Sao Tome and Principe";
+"SA" = "Saudi Arabia";
+"SN" = "Senegal";
+"RS" = "Serbia";
+"SC" = "Seychelles";
+"SL" = "Sierra Leone";
+"SG" = "Singapore";
+"SX" = "Sint Maarten";
+"SK" = "Slovakia";
+"SI" = "Slovenia";
+"SB" = "Solomon Islands";
+"SO" = "Somalia";
+"ZA" = "South Africa";
+"GS" = "South Georgia and the South Sandwich Islands";
+"KR" = "Korea";
+"ES" = "Spain";
+"LK" = "Sri Lanka";
+"SD" = "Sudan";
+"SS" = "South Sudan";
+"SR" = "Suriname";
+"SJ" = "Svalbard and Jan Mayen";
+"SZ" = "Swaziland";
+"SE" = "Sweden";
+"CH" = "Switzerland";
+"SY" = "Syrian Arab Republic";
+"TW" = "Taiwan";
+"TJ" = "Tajikistan";
+"TZ" = "Tanzania, United Republic of";
+"TH" = "Thailand";
+"TL" = "Timor-Leste";
+"TG" = "Togo";
+"TK" = "Tokelau";
+"TO" = "Tonga";
+"TT" = "Trinidad and Tobago";
+"TN" = "Tunisia";
+"TR" = "Turkey";
+"TM" = "Turkmenistan";
+"TC" = "Turks and Caicos Islands";
+"TV" = "Tuvalu";
+"UG" = "Uganda";
+"UA" = "Ukraine";
+"AE" = "United Arab Emirates";
+"GB" = "United Kingdom";
+"US" = "United States of America";
+"UY" = "Uruguay";
+"UZ" = "Uzbekistan";
+"VU" = "Vanuatu";
+"VE" = "Venezuela";
+"VN" = "Vietnam";
+"WF" = "Wallis and Futuna";
+"EH" = "Western Sahara";
+"YE" = "Yemen";
+"ZM" = "Zambia";
+"ZW" = "Zimbabwe";
+
+"allowed_bet_types_doubles" = "Doubles";
+"allowed_bet_types_patent" = "Brevet";
+"allowed_bet_types_trixie" = "Trixie";
+"allowed_bet_types_treble" = "Tripler";
+"allowed_bet_types_trebles" = "Triplers";
+"allowed_bet_types_lucky15" = "Lucky15";
+"allowed_bet_types_lucky31" = "Lucky31";
+"allowed_bet_types_lucky63" = "Lucky63";
+"allowed_bet_types_s_yankee_canadian" = "S Yankee";
+"allowed_bet_types_yankee" = "Yankee";
+"allowed_bet_types_4_folds" = "4 plis";
+"allowed_bet_types_5_folds" = "5 fois";
+"allowed_bet_types_6_folds" = "6 plis";
+"allowed_bet_types_7_folds" = "7 plis";
+"allowed_bet_types_8_folds" = "8 fois";
+"allowed_bet_types_9_folds" = "9 fois";
+"allowed_bet_types_10_folds" = "10 fois";
+"allowed_bet_types_11_folds" = "11 plis";
+"allowed_bet_types_12_folds" = "12 fois";
+"allowed_bet_types_four_folds" = "Quadruple";
+"allowed_bet_types_five_folds" = "Quintuple";
+"allowed_bet_types_six_folds" = "Six fois";
+"allowed_bet_types_seven_folds" = "Septuple";
+"allowed_bet_types_eight_folds" = "Octuple";
+"allowed_bet_types_nine_folds" = "Neuf fois";
+"allowed_bet_types_ten_folds" = "Décuple";
+"allowed_bet_types_eleven_folds" = "Onze plis";
+"allowed_bet_types_twelve_folds" = "Douze fois";
+"allowed_bet_types_goliath" = "Goliath";
+"allowed_bet_types_heinz" = "Heinz";
+"allowed_bet_types_superheinz" = "Super Heinz";
+
+"market_group_all_markets" = "Tous les marchés";
+"market_group_cards" = "Cartes";
+"market_group_corners" = "Coins";
+"market_group_games" = "Jeux";
+"market_group_goals" = "But Markets";
+"market_group_half" = "La moitié";
+"market_group_handicap" = "Marchés du handicap";
+"market_group_other_markets" = "Autres marchés";
+"market_group_period" = "Période";
+"market_group_player" = "Joueur";
+"market_group_points" = "Points";
+"market_group_popular" = "Populaire";
+"market_group_quarters" = "Quartiers";
+"market_group_sets" = "Sets";
+"market_group_totals" = "Totaux";
+
+"mix_match_min_compatible_selections" = "Pick at least 2 selections compatible between each others.";
+"mix_match_compatible_selections_warning" = "Some of the selections are not compatible with each others. You can still submit the bet with the available ones.";
+"mix_match_invalid_selection" = "Invalid selection";
+
+"boosted_section_header" = "Cotes Boostées";
+
+"highlights_pro_choices_section_header" = "The Pros Choices";
+
+
+//
+//
+//
+// Replay to Cashback update
+"betslip_replay_error" = "The amount exceeded the Replay balance";
+"first_info_descrition_replay" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
+"first_info_title_replay" = "What’s Replay?";
+"fourth_info_descrition_replay" = "Check for this tag on your bets to see if you used your replay balance on it.";
+"fourth_info_title_replay" = "How do I know if I used my Replay balance on one bet?";
+"promotions_mixmatch_terms_and_conditions" = "\n• MixMatch does not contribute to bonus wagering requirements.\n• It is not possible to bet with the Replay balance or use MixMatch with the Replay offer.\n•If a selection is voided, so is the entire bet.";
+"promotions_replay_terms_and_conditions" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+"replay" = "Replay";
+"replay_balance" = "Replay Balance";
+"replay_exceed_value_error" = "Replay Balance exceeded. The Max value is {replayBalance}";
+"replay_info" = "Get back some of your bet if you lose.";
+"replay_page_section_1_description" = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec auctor mi. Proin mi nibh, commodo nec ante eu, facilisis bibendum urna. Mauris mollis dui sit amet eros mattis, vitae laoreet sapien facilisis. Integer commodo, ligula in tincidunt dignissim, sem lorem congue lacus, sit amet euismod dolor purus ut libero.";
+"replay_page_section_1_title" = "What’s Replay?";
+"replay_page_section_2_description" = "No. Only bets with the following symbol attached to it have Replay available:";
+"replay_page_section_2_title" = "Are all bets available to Replay?";
+"replay_page_section_3_description_1" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
+"replay_page_section_3_description_2" = "By toggling on the switch, you can use your balance for the bet.";
+"replay_page_section_3_title" = "Can I withdraw Replay Balance?";
+"replay_page_section_4_description" = "Check for this tag on your bets to see if you used your replay balance on it:";
+"replay_page_section_4_title" = "How do I know if I used my Replay balance on a bet?";
+"second_info_descrition_replay" = "Nope! To know which ones are available, check if it has this tag:";
+"second_info_title_replay" = "Are all bets available to Replay?";
+"third_info_descrition_one_replay" = "No, but you can use that balance in any of your bets by selecting it on the betslip. See example:";
+"third_info_descrition_two_replay" = "By turning on, you can use your balance for the bet.";
+"third_info_title_replay" = "Can I withdraw Replay Balance?";
+"used_replay" = "Used Replay";
+
+// Cashback (new)
+"betslip_cashback_error" = "The amount exceeds your Cashback balance.";
+"cashback" = "Cashback";
+"cashback_balance" = "Cashback Balance";
+"cashback_exceed_value_error" = "Cashback Balance exceeded. Max {cashbackBalance}";
+"cashback_info" = "Get back some of your bet if you lose.";
+"cashback_page_section_1_description" = "A small setback? No worries. If your accumulator doesn't go as planned, our Cashback is here to give you a second wind! Enjoy 10% of your stake back as soon as all your ticket selections are settled, directly added as game credit.";
+"cashback_page_section_1_title" = "Cashback: What is it?";
+"cashback_page_section_2_description" = "Add at least three events with the Cashback symbol to your ticket. To be eligible, all ticket selections must have minimum odds of 1.30 and display the distinctive symbol:";
+"cashback_page_section_2_title" = "Which bets are eligible for Cashback?";
+"cashback_page_section_3_description_1" = "The Cashback balance is not withdrawable, but the winnings are! Activate the button to place your bet using your Cashback balance.";
+"cashback_page_section_3_description_2" = "By activating this button, choose whether or not to use the Cashback balance for your bet.";
+"cashback_page_section_3_title" = "Can I withdraw my Cashback balance?";
+"cashback_page_section_4_description" = "Bets where the Cashback balance has been used will display the following label:";
+"cashback_page_section_4_title" = "How can I tell if I used my Cashback balance on a bet?";
+"first_info_descrition_cashback" = "A small setback? No worries. If your accumulator doesn't go as planned, our Cashback is here to give you a second wind! Enjoy 10% of your stake back as soon as all your ticket selections are settled, directly added as game credit.";
+"first_info_title_cashback" = "What is Cashback?";
+"fourth_info_descrition_cashback" = "Bets where the Cashback balance has been used will display the following label:";
+"fourth_info_title_cashback" = "How do I know if I used my Cashback balance on a bet?";
+"promotions_cashback_terms_and_conditions" = "• The Cashback promotion is available to all registered users on Betsson.fr, aged 18 and over.\n• Cashback is a promotion exclusively developed by and for Betsson.fr.\n• To be eligible for Cashback, a ticket must contain at least three selections, and all selections in the accumulator must have minimum odds per event of 1.3.\n• All selections on your ticket must display the distinctive Cashback symbol.\n• To receive the Cashback balance, all ticket selections must be settled.\n• Only bets on football, tennis, and basketball are eligible.\n• Bets can be placed pre-match, live, or combining both.\n• If one of your selections does not display the Cashback symbol, the entire ticket will not be eligible for Cashback.\n• Using CashOut+ on an eligible Cashback bet will cancel any entitlement to credits from the Cashback feature, for both the withdrawn and remaining parts.\n• Credit earned from the Cashback promotion is cumulative and is displayed in your Cashback balance.\n• Cashback credit can be used on any sporting event.\n• Only net winnings generated from the Cashback balance will be credited to the main balance, which is withdrawable. The stake will be consumed.\n• Bets placed with free bets, bonuses, or system bets are not eligible for Cashback.\n• Activate the button to place your bet using your Cashback balance.\n• By activating this button, you can choose whether or not to use the Cashback balance for your bet.\n• Bets where the Cashback balance has been used display the label 'Cashback Balance Used.'\n• Betsson reserves the right to modify or cancel the Cashback promotion at any time without prior notice.";
+"second_info_descrition_cashback" = "Add at least three events with the Cashback symbol to your ticket. To be eligible, all ticket selections must have minimum odds of 1.30 and display the distinctive symbol:";
+"second_info_title_cashback" = "Which bets are eligible for Cashback?";
+"third_info_descrition_one_cashback" = "The Cashback balance is not withdrawable, but the winnings are! Activate the button to place your bet using your Cashback balance.";
+"third_info_descrition_two_cashback" = "By activating this button, choose whether or not to use the Cashback balance for your bet.";
+"third_info_title_cashback" = "Can I withdraw my Cashback balance?";
+"used_cashback" = "Used Cashback";
+
+
+"theme_short_light" = "Light";
+"theme_short_system" = "System";
+"theme_short_dark" = "Dark";
+
+"cashback_video_url" = "/promotions/cashbackVideo.mp4";
+
+"administrative_costs" = "Frais administratifs";
+
+"betting_fail_to_place_bets" = "Something went wrong while placing your Bet(s).";
+
+"pari_bonus" = "My bet, your bonus";
+
+
+"share_bet_description" = "Join the Betsson team with my referral code: {userCode} and pocket a €10 Bonus!";
+
+"look_bet_made" = "I'll take this bet, and if you want to go for it too, here's the deal: sign up with my link and we'll each pocket a €10 bonus!";
+
+"check_bet_result" = "I took a chance! If you want to try your luck too, register with my link and we'll each pocket a €10 bonus!";
