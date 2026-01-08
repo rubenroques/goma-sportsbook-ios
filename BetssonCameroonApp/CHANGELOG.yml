@@ -4,6 +4,12 @@
 
 releases:
 
+  - version: "0.4.0"
+    build: 4001
+    date: "2026-01-XX"
+    notes:
+      - "fix(betslip): [SPOR-7078] [BC-204] BA - Learn More in betslip changes - newFeature"
+
   - version: "0.3.9"
     build: 3901
     date: "2026-01-07"
