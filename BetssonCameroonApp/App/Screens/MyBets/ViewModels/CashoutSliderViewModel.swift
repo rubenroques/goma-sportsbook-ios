@@ -59,7 +59,7 @@ final class CashoutSliderViewModel: CashoutSliderViewModelProtocol {
     func updateSliderValue(_ value: Float) {
         let currentData = dataSubject.value
         let clampedValue = max(currentData.minimumValue, min(currentData.maximumValue, value))
-        let partialCashoutReturn = (currentData.fullCashoutValue * currentData.currentValue) / currentData.maximumValue
+        let partialCashoutReturn = (currentData.fullCashoutValue * clampedValue) / currentData.maximumValue
         
         // Update button title with current amount
         let formattedAmount = CurrencyHelper.formatAmountWithCurrency(Double(partialCashoutReturn), currency: currentData.currency)
