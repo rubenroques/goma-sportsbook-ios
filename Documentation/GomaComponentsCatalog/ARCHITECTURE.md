@@ -76,9 +76,9 @@
 
 ## Data Model
 
-### Source: COMPONENT_MAP.json (iOS Repo)
+### Source 1: COMPONENT_MAP.json (iOS Repo)
 
-Current structure maintained by Ralph automation:
+Component relationships maintained by Ralph automation:
 
 ```json
 {
@@ -92,40 +92,81 @@ Current structure maintained by Ralph automation:
 }
 ```
 
-### Generated: catalog.json (Server)
+### Source 2: catalog-metadata.json (iOS Repo)
 
-Enhanced structure for web catalog:
+Rich metadata for catalog UX, enriched by LLM:
 
 ```json
 {
   "version": "1.0.0",
-  "generated": "2026-01-07T10:30:00Z",
+  "generated": "2026-01-08T17:56:49.695Z",
+  "featured": [],
+  "categories": {
+    "Betting": {
+      "description": "Components for odds, markets, betslip, and bet placement",
+      "subcategories": ["Odds", "Markets", "BetSlip", "Outcomes", "Cashout", "Tickets"]
+    }
+  },
   "components": {
     "OutcomeItemView": {
-      "name": "OutcomeItemView",
+      "status": "complete",
+      "displayName": "OutcomeItemView",
       "category": "Betting",
-      "description": "Individual betting market outcome with selection states and odds change animations",
+      "subcategory": "Outcomes",
+      "summary": "Single betting outcome with odds and selection state",
+      "description": "Displays an individual betting market outcome. Supports selection states (unselected, selected, suspended), odds change animations with up/down indicators, and configurable layouts.",
+      "complexity": "simple",
+      "maturity": "stable",
+      "tags": ["betting", "odds", "outcome", "selection", "interactive", "animation"],
+      "states": ["unselected", "selected", "suspended", "oddsUp", "oddsDown"],
+      "similarTo": ["QuickAddButtonView"],
+      "oftenUsedWith": ["MarketOutcomesLineView", "CompactOutcomesLineView"]
+    }
+  }
+}
+```
+
+**Status tracking:**
+- `pending` - Not yet analyzed by LLM
+- `partial` - Some fields filled
+- `complete` - Fully analyzed and verified
+
+### Generated: catalog.json (Server)
+
+Final merged catalog combining COMPONENT_MAP + catalog-metadata + snapshots:
+
+```json
+{
+  "version": "1.0.0",
+  "generated": "2026-01-08T10:30:00Z",
+  "featured": ["OutcomeItemView", "ButtonView", "MatchHeaderCompactView"],
+  "categories": { ... },
+  "components": {
+    "OutcomeItemView": {
+      "displayName": "OutcomeItemView",
+      "category": "Betting",
+      "subcategory": "Outcomes",
+      "summary": "Single betting outcome with odds and selection state",
+      "description": "Displays an individual betting market outcome...",
+      "complexity": "simple",
+      "maturity": "stable",
       "tags": ["betting", "odds", "selection", "animation", "interactive"],
-      "has_readme": true,
-      "readme_content": "# OutcomeItemView\n\nOutcomeItemView is a reusable component...",
+      "states": ["unselected", "selected", "suspended", "oddsUp", "oddsDown"],
+      "similarTo": ["QuickAddButtonView"],
+      "oftenUsedWith": ["MarketOutcomesLineView", "CompactOutcomesLineView"],
       "parents": ["CompactOutcomesLineView", "MarketOutcomesLineView"],
       "children": [],
+      "has_readme": true,
+      "readme_content": "# OutcomeItemView\n\n...",
       "snapshots": [
         {
           "category": "BasicStates",
-          "light": "OutcomeItemView/OutcomeItemViewSnapshotTests/testOutcomeItemView_BasicStates_Light.1.png",
-          "dark": "OutcomeItemView/OutcomeItemViewSnapshotTests/testOutcomeItemView_BasicStates_Dark.1.png"
-        },
-        {
-          "category": "OddsChange",
-          "light": "OutcomeItemView/OutcomeItemViewSnapshotTests/testOutcomeItemView_OddsChange_Light.1.png",
-          "dark": "OutcomeItemView/OutcomeItemViewSnapshotTests/testOutcomeItemView_OddsChange_Dark.1.png"
+          "light": "OutcomeItemView/.../testOutcomeItemView_BasicStates_Light.1.png",
+          "dark": "OutcomeItemView/.../testOutcomeItemView_BasicStates_Dark.1.png"
         }
       ]
     }
-  },
-  "categories": ["Betting", "Casino", "Filters", "Forms", "MatchCards", "Navigation", "Promotions", "Status", "UIElements", "Wallet"],
-  "tags": ["animation", "interactive", "readonly", "selection", "betting", "casino", "form", "navigation"]
+  }
 }
 ```
 
