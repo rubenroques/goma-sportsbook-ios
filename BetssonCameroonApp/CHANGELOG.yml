@@ -11,6 +11,7 @@ releases:
       - "fix(cashout): [SPOR-7065] BA - Cashout UI and refresh inconsistencies - added snap-to-edge zones for slider precision"
       - "fix(cashout): [SPOR-6462] [BC-153] BA - Cashout not working on Android & iOS UAT"
       - "fix(cashout): [SPOR-7000] [BC-342] BA - Update new Cashout endpoints"
+      - "fix(betslip): [SPOR-7078] [BC-204] BA - Learn More in betslip changes - newFeature"
 
   - version: "0.3.8" # released
     build: 3802
