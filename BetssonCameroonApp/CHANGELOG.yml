@@ -9,6 +9,7 @@ releases:
     date: "2026-01-XX"
     notes:
       - "fix(betslip): [SPOR-7078] [BC-204] BA - Learn More in betslip changes - newFeature"
+      - "fix(cms): [SPOR-7073] BA - BC-303 - CMS issues part4 - 4/5.Static Pages (Sportsbook)"
 
   - version: "0.3.9"
     build: 3901
