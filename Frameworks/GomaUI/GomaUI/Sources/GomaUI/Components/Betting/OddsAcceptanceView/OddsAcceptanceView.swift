@@ -26,17 +26,6 @@ public final class OddsAcceptanceView: UIView {
         return view
     }()
     
-    // Main stack view
-    private lazy var mainStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.alignment = .center
-        stackView.spacing = 12
-        return stackView
-    }()
-    
     // Checkbox button
     private lazy var checkboxButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -66,12 +55,23 @@ public final class OddsAcceptanceView: UIView {
         return imageView
     }()
     
+    // Title label
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = .clear
+        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.textColor = StyleProvider.Color.textPrimary
+        label.numberOfLines = 0
+        return label
+    }()
+    
     // Label with link
     private lazy var labelWithLinkLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.backgroundColor = .clear
-        label.font = StyleProvider.fontWith(type: .regular, size: 14)
+        label.font = StyleProvider.fontWith(type: .regular, size: 12)
         label.textColor = StyleProvider.Color.textPrimary
         label.numberOfLines = 0
         label.isUserInteractionEnabled = true
@@ -100,16 +100,16 @@ public final class OddsAcceptanceView: UIView {
     // MARK: - Setup
     private func setupSubviews() {
         addSubview(containerView)
-        containerView.addSubview(mainStackView)
         
-        // Add checkbox and label to main stack view
-        mainStackView.addArrangedSubview(checkboxButton)
-        mainStackView.addArrangedSubview(labelWithLinkLabel)
+        // Add checkbox, title label, and link label to container
+        containerView.addSubview(checkboxButton)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(labelWithLinkLabel)
         
         // Add checkmark to checkbox
         checkboxButton.addSubview(checkmarkImageView)
         
-        // Add tap gesture to text view
+        // Add tap gesture to link label
         labelWithLinkLabel.addGestureRecognizer(linkTapGesture)
     }
     
@@ -121,21 +121,28 @@ public final class OddsAcceptanceView: UIView {
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             
-            // Main stack view
-            mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
-            // Checkbox button
+            // Checkbox button - anchored at left, aligned with top
+            checkboxButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            checkboxButton.topAnchor.constraint(equalTo: containerView.topAnchor),
             checkboxButton.widthAnchor.constraint(equalToConstant: 24),
             checkboxButton.heightAnchor.constraint(equalToConstant: 24),
             
-            // Checkmark image view
+            // Checkmark image view - centered in checkbox
             checkmarkImageView.centerXAnchor.constraint(equalTo: checkboxButton.centerXAnchor),
             checkmarkImageView.centerYAnchor.constraint(equalTo: checkboxButton.centerYAnchor),
             checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
-            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12)
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
+            
+            // Title label - next to checkbox on the right
+            titleLabel.leadingAnchor.constraint(equalTo: checkboxButton.trailingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+            
+            // Label with link - below checkbox and title label
+            labelWithLinkLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            labelWithLinkLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            labelWithLinkLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            labelWithLinkLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
     
@@ -153,8 +160,11 @@ public final class OddsAcceptanceView: UIView {
         // Update checkbox state
         updateCheckboxState(data.state)
         
-        // Update label text with link
-        updateLabelWithLink(labelText: data.labelText, linkText: data.linkText)
+        // Update title label
+        titleLabel.text = data.labelText
+        
+        // Update link label
+        updateLinkLabel(linkText: data.linkText)
         
         // Update enabled state
         alpha = data.isEnabled ? 1.0 : 0.5
@@ -175,25 +185,16 @@ public final class OddsAcceptanceView: UIView {
         }
     }
     
-    private func updateLabelWithLink(labelText: String, linkText: String) {
-        let fullText = "\(labelText) \(linkText)"
-        let attributedString = NSMutableAttributedString(string: fullText)
+    private func updateLinkLabel(linkText: String) {
+        let attributedString = NSMutableAttributedString(string: linkText)
         
-        // Set base attributes
-        let baseAttributes: [NSAttributedString.Key: Any] = [
-            .font: StyleProvider.fontWith(type: .regular, size: 12),
-            .foregroundColor: StyleProvider.Color.textPrimary
-        ]
-        attributedString.addAttributes(baseAttributes, range: NSRange(location: 0, length: fullText.count))
-        
-        // Add link attributes
-        let linkRange = NSRange(location: labelText.count + 1, length: linkText.count)
+        // Set link attributes with underline
         let linkAttributes: [NSAttributedString.Key: Any] = [
             .font: StyleProvider.fontWith(type: .regular, size: 12),
             .foregroundColor: StyleProvider.Color.textPrimary,
             .underlineStyle: NSUnderlineStyle.single.rawValue
         ]
-        attributedString.addAttributes(linkAttributes, range: linkRange)
+        attributedString.addAttributes(linkAttributes, range: NSRange(location: 0, length: linkText.count))
         
         labelWithLinkLabel.attributedText = attributedString
     }
@@ -204,39 +205,8 @@ public final class OddsAcceptanceView: UIView {
     }
     
     @objc private func handleLinkTap(_ gesture: UITapGestureRecognizer) {
-        let label = labelWithLinkLabel
-        let location = gesture.location(in: label)
-        
-        // Get the attributed text
-        guard let attributedText = label.attributedText else { return }
-        
-        // Create text storage and layout manager for character index detection
-        let textStorage = NSTextStorage(attributedString: attributedText)
-        let layoutManager = NSLayoutManager()
-        let textContainer = NSTextContainer(size: label.bounds.size)
-        
-        textStorage.addLayoutManager(layoutManager)
-        layoutManager.addTextContainer(textContainer)
-        
-        textContainer.lineFragmentPadding = 0
-        textContainer.maximumNumberOfLines = label.numberOfLines
-        textContainer.lineBreakMode = label.lineBreakMode
-        
-        // Get character index at tap location
-        let characterIndex = layoutManager.characterIndex(
-            for: location,
-            in: textContainer,
-            fractionOfDistanceBetweenInsertionPoints: nil
-        )
-        
-        // Check if the tap is on the link portion
-        let labelText = viewModel.currentData.labelText
-        let linkStartIndex = labelText.count + 1
-        let linkEndIndex = linkStartIndex + viewModel.currentData.linkText.count
-        
-        if characterIndex >= linkStartIndex && characterIndex < linkEndIndex {
-            viewModel.onLinkTapped()
-        }
+        // Since the entire labelWithLinkLabel is now the link, any tap triggers the action
+        viewModel.onLinkTapped()
     }
 }
 

@@ -12,7 +12,7 @@ class OddsVariationTableViewCell: UITableViewCell {
     
     // MARK: - UI Components
     private lazy var oddsAcceptanceView: OddsAcceptanceView = {
-        let view = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.acceptedMock())
+        let view = OddsAcceptanceView(viewModel: OddsAcceptanceViewModel(state: .accepted, isEnabled: true))
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
