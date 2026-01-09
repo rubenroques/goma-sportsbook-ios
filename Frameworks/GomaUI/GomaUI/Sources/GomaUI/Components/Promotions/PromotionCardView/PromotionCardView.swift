@@ -17,9 +17,11 @@ public class PromotionCardView: UIView {
     private lazy var imageView: UIImageView = Self.createImageView()
     private lazy var tagView: UIView = Self.createTagView()
     private lazy var tagLabel: UILabel = Self.createTagLabel()
-    private lazy var contentStackView: UIStackView = Self.createContentStackView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var infoStackView: UIStackView = Self.createInfoStackView()
+    private lazy var noteLabel: UILabel = Self.createNoteLabel()
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
+    private lazy var buttonsStackView: UIStackView = Self.createButtonsStackView()
     private lazy var ctaButton: ButtonView = self.createCTAButton()
     private lazy var readMoreButton: ButtonView = self.createReadMoreButton()
     
@@ -61,6 +63,7 @@ public class PromotionCardView: UIView {
         self.tagView.backgroundColor = StyleProvider.Color.highlightPrimary
         self.tagLabel.textColor = StyleProvider.Color.allWhite
         self.titleLabel.textColor = StyleProvider.Color.textPrimary
+        self.noteLabel.textColor = StyleProvider.Color.textSecondary
         self.descriptionLabel.textColor = StyleProvider.Color.textPrimary
     }
     
@@ -87,6 +90,11 @@ public class PromotionCardView: UIView {
         
         // Configure content
         self.titleLabel.text = displayState.title
+        
+        self.noteLabel.isHidden = displayState.note == nil
+        self.noteLabel.text = displayState.note
+
+        self.descriptionLabel.isHidden = displayState.description == nil
         self.descriptionLabel.text = displayState.description
         
         // Configure CTA button visibility
@@ -132,7 +140,15 @@ extension PromotionCardView {
         return label
     }
     
-    private static func createContentStackView() -> UIStackView {
+    private static func createTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = StyleProvider.fontWith(type: .bold, size: 16)
+        label.numberOfLines = 0
+        return label
+    }
+    
+    private static func createInfoStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -141,10 +157,10 @@ extension PromotionCardView {
         return stackView
     }
     
-    private static func createTitleLabel() -> UILabel {
+    private static func createNoteLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = StyleProvider.fontWith(type: .bold, size: 16)
+        label.font = StyleProvider.fontWith(type: .regular, size: 16)
         label.numberOfLines = 0
         return label
     }
@@ -155,6 +171,15 @@ extension PromotionCardView {
         label.font = StyleProvider.fontWith(type: .regular, size: 16)
         label.numberOfLines = 0
         return label
+    }
+    
+    private static func createButtonsStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.distribution = .equalSpacing
+        return stackView
     }
     
     private func createCTAButton() -> ButtonView {
@@ -177,11 +202,16 @@ extension PromotionCardView {
         self.tagView.addSubview(self.tagLabel)
         
         self.containerView.addSubview(self.titleLabel)
-        self.containerView.addSubview(self.descriptionLabel)
-        self.containerView.addSubview(self.contentStackView)
         
-        self.contentStackView.addArrangedSubview(self.ctaButton)
-        self.contentStackView.addArrangedSubview(self.readMoreButton)
+        self.containerView.addSubview(self.infoStackView)
+        
+        self.infoStackView.addArrangedSubview(self.noteLabel)
+        self.infoStackView.addArrangedSubview(self.descriptionLabel)
+        
+        self.containerView.addSubview(self.buttonsStackView)
+        
+        self.buttonsStackView.addArrangedSubview(self.ctaButton)
+        self.buttonsStackView.addArrangedSubview(self.readMoreButton)
         
         self.setupTapGesture()
         self.initConstraints()
@@ -226,16 +256,14 @@ extension PromotionCardView {
             self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
             self.titleLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: 16),
             
-            // Description label
-            self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
-            self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
-            self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
+            self.infoStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
+            self.infoStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
+            self.infoStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8),
             
-            // Content stack view (buttons only)
-            self.contentStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
-            self.contentStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
-            self.contentStackView.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 26),
-            self.contentStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
+            self.buttonsStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 24),
+            self.buttonsStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -24),
+            self.buttonsStackView.topAnchor.constraint(equalTo: self.infoStackView.bottomAnchor, constant: 26),
+            self.buttonsStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16)
         ])
     }
 }

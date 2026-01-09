@@ -76,7 +76,8 @@ class PromotionsViewModel {
             let cardData = PromotionCardData(
                 id: String(promotion.id),
                 title: promotion.title,
-                description: promotion.listDisplayDescription ?? (promotion.listDisplayNote ?? ""),
+                note: promotion.listDisplayNote,
+                description: promotion.listDisplayDescription,
                 imageURL: promotion.listDisplayImageUrl,
                 tag: promotion.tag,
                 ctaText: promotion.ctaText,
