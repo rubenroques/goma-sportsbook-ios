@@ -9,7 +9,7 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     private let opacityLayer = UIView()
     private let messageLabel = UILabel()
     private let actionButton = UIButton(type: .system)
-    private let contentContainer = UIView()
+    private let contentStackView = UIStackView()
 
     private var cancellables = Set<AnyCancellable>()
     private var viewModel: any SingleButtonBannerViewModelProtocol
@@ -54,32 +54,41 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
         addSubview(opacityLayer)
 
         // Setup content container
-        contentContainer.backgroundColor = UIColor.clear
-        contentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(contentContainer)
+        contentStackView.backgroundColor = UIColor.clear
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
+        contentStackView.axis = .vertical
+        contentStackView.spacing = 12
+        contentStackView.alignment = .leading
+        contentStackView.distribution = .fillProportionally
+        addSubview(contentStackView)
 
         // Setup message label
-        messageLabel.font = StyleProvider.fontWith(type: .bold, size: 22)
+        messageLabel.font = StyleProvider.fontWith(type: .bold, size: 14)
         messageLabel.textColor = .white // StyleProvider.Color.textPrimary
         messageLabel.numberOfLines = 0
+        messageLabel.lineBreakMode = .byWordWrapping
+        messageLabel.baselineAdjustment = .alignCenters
         messageLabel.textAlignment = .left
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.addSubview(messageLabel)
+        contentStackView.addArrangedSubview(messageLabel)
 
         // Setup action button
-        actionButton.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 16)
+        actionButton.titleLabel?.font = StyleProvider.fontWith(type: .medium, size: 12)
         actionButton.backgroundColor = StyleProvider.Color.buttonBackgroundSecondary
         actionButton.setTitleColor(StyleProvider.Color.buttonTextSecondary, for: .normal)
         actionButton.layer.cornerRadius = 8
         actionButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        contentContainer.addSubview(actionButton)
+        contentStackView.addArrangedSubview(actionButton)
 
         setupConstraints()
     }
 
     private func setupConstraints() {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        
         NSLayoutConstraint.activate([
             // Background image view - full width and height
             backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
@@ -94,21 +103,13 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
             opacityLayer.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
 
             // Content container - with padding
-            contentContainer.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-
-            // Message label - top left area
-            messageLabel.topAnchor.constraint(equalTo: contentContainer.topAnchor),
-            messageLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            messageLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentContainer.trailingAnchor),
-
-            // Action button - bottom left
-            actionButton.topAnchor.constraint(greaterThanOrEqualTo: messageLabel.bottomAnchor, constant: 16),
-            actionButton.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            actionButton.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor),
-            actionButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+            contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            contentStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(screenWidth * 0.4)),
+            contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+            
+            // Action Button - height anchor
+            actionButton.heightAnchor.constraint(equalToConstant: 38)
         ])
     }
 

@@ -59,10 +59,10 @@ extension ServiceProviderModelMapper {
     private static func singleButtonBannerData(fromInfoBannerData bannerData: InfoBannerData) -> SingleButtonBannerData {
         // Determine message text priority: title > subtitle > fallback
         let messageText: String = {
-            if let title = bannerData.title, !title.isEmpty {
-                return title
-            } else if let subtitle = bannerData.subtitle, !subtitle.isEmpty {
+            if let subtitle = bannerData.subtitle, !subtitle.isEmpty {
                 return subtitle
+            } else if let title = bannerData.title, !title.isEmpty {
+                return title
             } else {
                 return "Promotional Banner" // Fallback message
             }
