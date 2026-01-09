@@ -64,7 +64,7 @@ extension StackViewBlockView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 0
+        stackView.spacing = 16
         return stackView
     }
     

@@ -13,7 +13,8 @@ import UIKit
 public struct PromotionCardData: Equatable, Hashable {
     public let id: String
     public let title: String
-    public let description: String
+    public let note: String?
+    public let description: String?
     public let imageURL: String
     public let tag: String?
     public let ctaText: String?
@@ -23,7 +24,8 @@ public struct PromotionCardData: Equatable, Hashable {
     public init(
         id: String,
         title: String,
-        description: String,
+        note: String?,
+        description: String?,
         imageURL: String,
         tag: String? = nil,
         ctaText: String? = nil,
@@ -32,6 +34,7 @@ public struct PromotionCardData: Equatable, Hashable {
     ) {
         self.id = id
         self.title = title
+        self.note = note
         self.description = description
         self.imageURL = imageURL
         self.tag = tag
@@ -54,7 +57,8 @@ public struct PromotionCardDisplayState: Equatable {
     // Convenience properties for easier access
     public var id: String { cardData.id }
     public var title: String { cardData.title }
-    public var description: String { cardData.description }
+    public var note: String? { cardData.note }
+    public var description: String? { cardData.description }
     public var imageURL: String { cardData.imageURL }
     public var tag: String? { cardData.tag }
     public var ctaText: String? { cardData.ctaText }

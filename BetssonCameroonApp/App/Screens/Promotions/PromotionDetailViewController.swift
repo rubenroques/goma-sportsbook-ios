@@ -15,6 +15,13 @@ class PromotionDetailViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    
+    private lazy var quickLinksTabBarView: QuickLinksTabBarView = {
+        let view = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var backLabel: UILabel = Self.createBackLabel()
@@ -844,6 +851,7 @@ extension PromotionDetailViewController {
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
+        self.view.addSubview(self.quickLinksTabBarView)
         self.view.addSubview(self.navigationView)
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.backLabel)
@@ -900,9 +908,14 @@ extension PromotionDetailViewController {
         ])
 
         NSLayoutConstraint.activate([
+            // Quick Links Tab Bar - above navigation view
+            self.quickLinksTabBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.quickLinksTabBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.quickLinksTabBarView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.quickLinksTabBarView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.heightAnchor.constraint(equalToConstant: 40),

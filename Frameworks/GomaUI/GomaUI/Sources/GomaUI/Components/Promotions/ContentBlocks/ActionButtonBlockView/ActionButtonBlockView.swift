@@ -38,7 +38,7 @@ public class ActionButtonBlockView: UIView {
     
     func setupWithTheme() {
         self.backgroundColor = .clear
-        self.actionButton.backgroundColor = StyleProvider.Color.highlightPrimary
+        self.actionButton.backgroundColor = StyleProvider.Color.buttonBackgroundPrimary
         self.actionButton.setTitleColor(StyleProvider.Color.buttonTextPrimary, for: .normal)
         self.actionButton.isEnabled = self.viewModel.isEnabled
     }

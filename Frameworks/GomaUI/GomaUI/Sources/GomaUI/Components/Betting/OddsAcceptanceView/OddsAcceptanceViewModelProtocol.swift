@@ -15,7 +15,7 @@ public struct OddsAcceptanceData: Equatable {
     public let linkText: String
     public let isEnabled: Bool
     
-    public init(state: OddsAcceptanceState, labelText: String = LocalizationProvider.string("accept_odds_change"), linkText: String = LocalizationProvider.string("learn_more"), isEnabled: Bool = true) {
+    public init(state: OddsAcceptanceState, labelText: String, linkText: String, isEnabled: Bool) {
         self.state = state
         self.labelText = labelText
         self.linkText = linkText
