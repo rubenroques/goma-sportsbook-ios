@@ -17,6 +17,7 @@ class PromotionsViewModel {
     var promotionsCacheCardViewModel: [Int: PromotionCardViewModelProtocol] = [:]
     var promotionalHeaderViewModel: PromotionalHeaderViewModelProtocol?
     var promotionSelectorBarViewModel: PromotionSelectorBarViewModelProtocol?
+    let quickLinksTabBarViewModel: QuickLinksTabBarViewModel
     
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
@@ -27,14 +28,29 @@ class PromotionsViewModel {
     var onCategorySelected: ((String?) -> Void)?
     var onPromotionDetailRequested: ((PromotionInfo) -> Void)?
     var onPromotionURLRequested: ((String) -> Void)?
+    var onCasinoQuickLinkSelected: ((QuickLinkType) -> Void)?
     
     let servicesProvider: ServicesProvider.Client
     
     init(servicesProvider: ServicesProvider.Client) {
         self.servicesProvider = servicesProvider
+        // Create QuickLinks ViewModel for casino screens (promotions are part of casino/gaming)
+        self.quickLinksTabBarViewModel = QuickLinksTabBarViewModel.forSportsScreens()
         self.setupPromotionalHeaderViewModel()
         self.setupPromotionSelectorBarViewModel()
         self.getPromotions()
+        self.setupBindings()
+    }
+    
+    private func setupBindings() {
+        // Setup QuickLinks navigation callback
+        quickLinksTabBarViewModel.onQuickLinkSelected = { [weak self] quickLinkType in
+            // Ignore promo quickLink, we are already here
+            if quickLinkType == .promos {
+                return
+            }
+            self?.onCasinoQuickLinkSelected?(quickLinkType)
+        }
     }
     
     private func getPromotions() {

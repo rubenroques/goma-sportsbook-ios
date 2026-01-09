@@ -14,6 +14,12 @@ class PromotionsViewController: UIViewController {
 
     // MARK: - Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    
+    private lazy var quickLinksTabBarView: QuickLinksTabBarView = {
+        let view = QuickLinksTabBarView(viewModel: viewModel.quickLinksTabBarViewModel)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     private lazy var navigationBarView: SimpleNavigationBarView = {
         let navViewModel = BetssonCameroonNavigationBarViewModel(
@@ -79,7 +85,6 @@ class PromotionsViewController: UIViewController {
 
         self.setupSubviews()
         self.setupWithTheme()
-
         self.bind(toViewModel: self.viewModel)
         
     }
@@ -302,6 +307,7 @@ extension PromotionsViewController {
 
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
+        self.view.addSubview(self.quickLinksTabBarView)
         self.view.addSubview(self.navigationBarView)
 
         self.view.addSubview(self.promotionSelectorBarView)
@@ -340,10 +346,15 @@ extension PromotionsViewController {
         ])
 
         NSLayoutConstraint.activate([
+            // Quick Links Tab Bar - above navigation bar
+            self.quickLinksTabBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.quickLinksTabBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.quickLinksTabBarView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            
             // Navigation Bar
             self.navigationBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationBarView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationBarView.topAnchor.constraint(equalTo: self.quickLinksTabBarView.bottomAnchor),
 
             self.promotionSelectorBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.promotionSelectorBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
