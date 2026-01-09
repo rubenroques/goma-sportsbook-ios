@@ -9,6 +9,8 @@ releases:
     date: "2026-01-XX"
     notes:
       - "fix(betslip): [SPOR-7078] [BC-204] BA - Learn More in betslip changes - newFeature"
+      - "fix(banners): [SPOR-7072] [BC-303] BA - CMS issues part4 - 2/5. Carousel Events (Casino)"
+      - "fix(promotions): [SPOR-7082] [BC-303] BA - CMS issues part4 - 3/5. Promos Page"
 
   - version: "0.3.9"
     build: 3901
