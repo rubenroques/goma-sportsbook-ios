@@ -104,9 +104,8 @@ public final class SportsBetslipViewModel: SportsBetslipViewModelProtocol {
             bettingOptionsPublisher: environment.betslipManager.bettingOptionsPublisher,
             oddsBoostStairsPublisher: environment.betslipManager.oddsBoostStairsPublisher
         )
-        self.oddsAcceptanceViewModel = MockOddsAcceptanceViewModel.acceptedMock()
+        self.oddsAcceptanceViewModel = OddsAcceptanceViewModel(state: .accepted, isEnabled: true)
         self.codeInputViewModel = MockCodeInputViewModel()
-        
         
         self.loginButtonViewModel = MockButtonViewModel(buttonData:
                                                             ButtonData(id: "login", title: localized("log_in_to_bet"), style: .solidBackground)
