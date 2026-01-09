@@ -5,8 +5,8 @@
 releases:
 
   - version: "0.4.0"
-    build: 4001
-    date: "2026-01-XX"
+    build: 4002
+    date: "2026-01-09"
     notes:
       - "fix(betslip): [SPOR-7078] [BC-204] BA - Learn More in betslip changes - newFeature"
       - "fix(cms): [SPOR-7073] BA - BC-303 - CMS issues part4 - 4/5.Static Pages (Sportsbook)"
