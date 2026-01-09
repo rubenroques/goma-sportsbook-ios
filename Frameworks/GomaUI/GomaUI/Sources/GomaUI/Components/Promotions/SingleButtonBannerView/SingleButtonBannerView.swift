@@ -6,6 +6,7 @@ import Kingfisher
 final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
     // MARK: - Private Properties
     private let backgroundImageView = UIImageView()
+    private let opacityLayer = UIView()
     private let messageLabel = UILabel()
     private let actionButton = UIButton(type: .system)
     private let contentContainer = UIView()
@@ -47,6 +48,11 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundImageView)
 
+        // Setup opacity layer
+        opacityLayer.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        opacityLayer.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(opacityLayer)
+
         // Setup content container
         contentContainer.backgroundColor = UIColor.clear
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -80,6 +86,12 @@ final public class SingleButtonBannerView: UIView, TopBannerViewProtocol {
             backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            // Opacity layer - matches background image view
+            opacityLayer.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
+            opacityLayer.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
+            opacityLayer.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
+            opacityLayer.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor),
 
             // Content container - with padding
             contentContainer.topAnchor.constraint(equalTo: topAnchor, constant: 20),
