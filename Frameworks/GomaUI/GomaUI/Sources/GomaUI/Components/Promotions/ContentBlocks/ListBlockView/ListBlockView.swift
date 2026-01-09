@@ -44,7 +44,7 @@ public class ListBlockView: UIView {
         self.backgroundColor = .clear
         self.iconImageView.backgroundColor = .clear
         self.defaultIconView.backgroundColor = .clear
-        self.defaultIconView.layer.borderColor = UIColor.white.cgColor
+        self.defaultIconView.layer.borderColor = StyleProvider.Color.highlightSecondaryContrast.cgColor
         self.counterLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
         self.stackView.backgroundColor = .clear
     }
