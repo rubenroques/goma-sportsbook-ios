@@ -2,260 +2,273 @@
 
 ## Objective
 
-Deeply understand each GomaUI component - its purpose, where it's used, its visual states, parent components, and child components - then fill in accurate, high-quality metadata in `catalog-metadata.json` for the web-based component catalog.
+**ONE component at a time.** Deeply investigate each GomaUI component to understand:
+- What it does and how it works
+- Where it's actually used in production apps
+- Its visual states and configurations
+- How it relates to other components
+
+Then fill accurate metadata in `catalog-metadata.json`.
+
+## CRITICAL: Deep Investigation Required
+
+**DO NOT RUSH.** Each component requires:
+1. Reading ALL source files in the component folder
+2. Searching for ACTUAL USAGE in BetssonCameroonApp
+3. Understanding the component's role in the app
+4. Only THEN filling metadata based on real understanding
+
+---
 
 ## Progress Tracking
-
-The metadata file tracks progress via the `status` field:
-- `"pending"` - Not yet analyzed (find these)
-- `"partial"` - Some fields filled, needs completion
-- `"complete"` - Fully analyzed and verified
 
 ```
 Frameworks/GomaUI/Documentation/catalog-metadata.json
 ```
 
-## Finding the Next Component
+Status field:
+- `"pending"` - Not yet analyzed
+- `"complete"` - Fully analyzed
+
+---
+
+## Step 1: Find Next Pending Component
 
 ```bash
-# Find first pending component
 node -e "const m=require('./Frameworks/GomaUI/Documentation/catalog-metadata.json'); const p=Object.entries(m.components).find(([_,v])=>v.status==='pending'); console.log(p?p[0]:'ALL_COMPLETE');"
 ```
 
-Or read the file and find the first entry with `"status": "pending"`.
+Pick ONE component. Do not batch.
 
-## Component Source Locations
+---
 
-Components are at:
-```
-Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/
-```
-
-For ContentBlocks components:
-```
-Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/Promotions/ContentBlocks/{ComponentName}/
-```
-
-### Files to Read (in order)
-
-1. **Main View** - `{ComponentName}.swift` - Core implementation
-2. **ViewModel Protocol** - `{ComponentName}ViewModelProtocol.swift` - Interface definition
-3. **Mock ViewModel** - `Mock{ComponentName}ViewModel.swift` - Usage examples, available states
-4. **README** - `Documentation/README.md` - Component documentation (if exists)
-5. **Supporting files** - Any other `.swift` files in the folder
-
-### Locating Components
+## Step 2: Locate Component Source
 
 ```bash
-# Find component folder
+# Find the component folder
 find Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components -type d -name "{ComponentName}"
 
-# List all files in component
-ls -la Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/
+# List ALL files in component folder
+ls -la <path_from_above>
 ```
 
-## Metadata Fields to Fill
+---
 
-For each component, analyze the source code and fill:
+## Step 3: Read ALL Component Files (MANDATORY)
+
+You MUST read every file in the component folder. Do not skip any.
+
+**Files to read in order:**
+1. `{ComponentName}.swift` - Main implementation
+2. `{ComponentName}ViewModelProtocol.swift` - Protocol definition (shows states, methods)
+3. `Mock{ComponentName}ViewModel.swift` - Mock (shows available configurations)
+4. `Documentation/README.md` - If exists
+5. **ALL other .swift files** - Helper views, enums, models
+
+**What to look for:**
+- What data does the ViewModel provide?
+- What user interactions are supported? (taps, swipes, selections)
+- What visual states exist? (look for enums, boolean flags, optional properties)
+- Does it compose other GomaUI components?
+
+---
+
+## Step 4: Search for Usage in BetssonCameroonApp (MANDATORY)
+
+This is critical. Find where this component is ACTUALLY used.
+
+```bash
+# Search for imports/usage in BetssonCameroonApp
+grep -r "{ComponentName}" BetssonCameroonApp/ --include="*.swift" -l
+
+# If found, read those files to understand context
+```
+
+**Questions to answer:**
+- Which screens use this component?
+- What ViewModel implementations exist in the app?
+- How is it configured in real usage?
+
+---
+
+## Step 5: Check COMPONENT_MAP.json Relationships
+
+```bash
+node -e "const m=require('./Frameworks/GomaUI/Documentation/COMPONENT_MAP.json'); console.log(JSON.stringify(m['{ComponentName}'], null, 2));"
+```
+
+This shows:
+- `parents` - Components that USE this component
+- `children` - Components this component USES
+
+For each parent/child, understand WHY they're related.
+
+---
+
+## Step 6: Fill Metadata Based on Investigation
+
+Only NOW fill the metadata. Every field should be based on what you learned.
+
+### Fields to Fill
 
 ```json
 {
-  "ComponentName": {
-    "status": "complete",
-
-    "displayName": "Component Name (exact class name for clarity)",
-    "category": "Already set from bootstrap",
-    "subcategory": "Specific subcategory or null",
-
-    "summary": "One-line description (max 100 chars)",
-    "description": "2-3 sentences explaining purpose, features, and key behaviors",
-
-    "complexity": "simple | composite | complex",
-    "maturity": "stable | beta | deprecated",
-
-    "tags": ["relevant", "searchable", "keywords"],
-    "states": ["default", "selected", "loading", "error"],
-
-    "similarTo": ["OtherComponentName", "AnotherSimilar"],
-    "oftenUsedWith": ["RelatedComponent", "CommonCompanion"]
-  }
+  "status": "complete",
+  "displayName": "ExactClassName",
+  "category": "Already set",
+  "subcategory": "Specific or null",
+  "summary": "One line, max 100 chars, based on actual purpose",
+  "description": "2-3 sentences from your investigation",
+  "complexity": "simple|composite|complex",
+  "maturity": "stable|beta|deprecated",
+  "tags": ["based", "on", "actual", "usage"],
+  "states": ["from", "viewmodel", "protocol"],
+  "similarTo": ["similar", "components"],
+  "oftenUsedWith": ["from", "parent", "child", "relationships"]
 }
 ```
 
 ### Field Guidelines
 
-#### displayName
-- Use the exact class name for technical accuracy
-- Designers and programmers both need the precise Swift class name
-- Example: `"OutcomeItemView"`, `"BetslipTypeSelectorView"`, `"MarketOutcomesLineView"`
+**summary** - Based on what you saw in the code and usage
+- What's the ONE thing this component does?
+- Example: "Horizontal bar of category filter pills with selection state"
 
-#### summary
-- One line, max 100 characters
-- Start with verb or noun, no "A" or "The" prefix
-- Focus on primary purpose
-- Example: `"Single betting outcome with odds and selection state"`
+**description** - From your investigation
+- What does it display?
+- What interactions does it support?
+- Where is it typically used?
 
-#### description
-- 2-3 complete sentences
-- Explain: what it displays, key features, notable behaviors
-- Mention states, animations, or special configurations if present
-- Example: `"Displays an individual betting market outcome. Supports selection states (unselected, selected, suspended), odds change animations with up/down indicators, and configurable layouts. Used within market outcome lines and match cards."`
-
-#### complexity
-| Value | Criteria |
+**complexity**
+| Value | Evidence |
 |-------|----------|
-| `simple` | Single-purpose, few states, no child components |
-| `composite` | Uses other GomaUI components, moderate state management |
-| `complex` | Multiple child components, complex state, many configurations |
+| `simple` | Few files, no child components, simple ViewModel |
+| `composite` | Uses other GomaUI components (check imports) |
+| `complex` | Many files, multiple child components, complex state |
 
-Determine by checking:
-- Number of files in the component folder
-- Whether it imports/uses other GomaUI components
-- Size of the Mock ViewModel (number of static presets)
+**maturity** - Default `stable` unless you found:
+- TODO/FIXME comments → `beta`
+- Deprecated markers → `deprecated`
+- Incomplete mocks → `beta`
 
-#### maturity
-| Value | Criteria |
-|-------|----------|
-| `stable` | Well-tested, actively used, complete documentation |
-| `beta` | Functional but may have rough edges |
-| `deprecated` | Should not be used for new development |
+**tags** - From actual usage context
+- Domain: betting, casino, wallet, match, user, transaction
+- UI type: card, button, list, input, banner, slider, tab, filter
+- Behavior: interactive, selectable, scrollable, expandable, animated
+- Purpose: display, input, navigation, filter, status
 
-Default to `"stable"` unless you find evidence otherwise (TODO comments, incomplete mocks, etc.)
+**states** - From ViewModel protocol and Mock
+- Look for enums, boolean properties, optional values
+- Common: default, selected, loading, error, disabled, expanded
 
-#### tags
-- 5-10 relevant keywords for search
-- Include: category-related terms, functionality, UI type
-- Examples: `["betting", "odds", "selection", "interactive", "animation", "toggle"]`
+**similarTo** - Components with similar purpose
+- Same category, similar function
+- Could be confused with this component
 
-Tag categories to consider:
-- **Domain**: betting, casino, wallet, profile, match
-- **UI Type**: card, button, list, input, banner, slider, tab
-- **Behavior**: interactive, animated, scrollable, expandable, selectable
-- **Purpose**: display, input, navigation, filter, status
+**oftenUsedWith** - From relationships
+- Parents (components that contain this one)
+- Children (components this one contains)
+- Siblings in same screens
 
-#### states
-- List visual states from ViewModel/Mock
-- Look for: enums, state properties, static mock presets
-- Common states: `default`, `selected`, `unselected`, `loading`, `error`, `disabled`, `highlighted`, `expanded`, `collapsed`
+---
 
-#### similarTo
-- Other GomaUI components with similar purpose or appearance
-- Components that might be confused or compared
-- Example: `OutcomeItemView` similar to `QuickAddButtonView`
+## Step 7: Update catalog-metadata.json
 
-Check COMPONENT_MAP.json for components in same category.
+Edit the file directly. Set `"status": "complete"`.
 
-#### oftenUsedWith
-- Components commonly composed together
-- Look at `parents` and `children` in COMPONENT_MAP.json
-- Example: `OutcomeItemView` often used with `MarketOutcomesLineView`, `MatchHeaderCompactView`
+---
 
-## Analysis Process
-
-### Step 1: Locate and Read
-```bash
-# Find the component
-find Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components -type d -name "{ComponentName}"
-
-# Read main files
-cat Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/{ComponentName}.swift
-cat Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/{ComponentName}ViewModelProtocol.swift
-cat Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/{Category}/{ComponentName}/Mock{ComponentName}ViewModel.swift
-```
-
-### Step 2: Analyze
-- What does this component display?
-- What user interactions does it support?
-- What states can it be in?
-- What other components does it use or get used by?
-- How complex is the implementation?
-
-### Step 3: Check Relationships
-
-Read COMPONENT_MAP.json to understand relationships:
-```bash
-node -e "const m=require('./Frameworks/GomaUI/Documentation/COMPONENT_MAP.json'); console.log(JSON.stringify(m['{ComponentName}'], null, 2));"
-```
-
-### Step 4: Update Metadata
-
-Edit `catalog-metadata.json` directly:
-1. Find the component entry
-2. Fill all null fields with accurate values
-3. Set `"status": "complete"`
-
-### Step 5: Validate JSON
+## Step 8: Validate JSON
 
 ```bash
-# Check JSON is valid
+# Validate JSON
 node -e "require('./Frameworks/GomaUI/Documentation/catalog-metadata.json'); console.log('JSON valid')"
 ```
 
-## Iteration Strategy
+Proceed to the next component.
 
-**Process 5 components per iteration:**
+---
 
-1. Find 5 pending components
-2. For each:
-   - Read all source files
-   - Analyze thoroughly
-   - Fill metadata
-   - Set status to complete
-3. Validate JSON syntax
-4. Git commit:
-   ```bash
-   git add Frameworks/GomaUI/Documentation/catalog-metadata.json && git commit -m "docs(catalog): enrich metadata for ComponentA, ComponentB, ComponentC, ComponentD, ComponentE"
-   ```
-5. Proceed to next iteration
+## Committing (Every 5 Components)
 
-## Quality Checklist
+After analyzing 5 components, commit the batch:
 
-Before marking a component complete:
-- [ ] displayName matches the exact Swift class name
-- [ ] summary is under 100 characters and descriptive
-- [ ] description has 2-3 informative sentences
-- [ ] complexity accurately reflects component structure
-- [ ] tags include 5-10 relevant keywords
-- [ ] states match what's in the ViewModel/Mock
-- [ ] similarTo references actual existing components
-- [ ] oftenUsedWith references actual existing components
-- [ ] JSON is valid (no syntax errors)
-
-## Example: Complete Entry
-
-```json
-"OutcomeItemView": {
-  "status": "complete",
-  "displayName": "OutcomeItemView",
-  "category": "Betting",
-  "subcategory": "Outcomes",
-  "summary": "Single betting outcome with odds and selection state",
-  "description": "Displays an individual betting market outcome. Supports selection states (unselected, selected, suspended), odds change animations with up/down indicators, and configurable layouts. Commonly used within market lines and match cards.",
-  "complexity": "simple",
-  "maturity": "stable",
-  "tags": ["betting", "odds", "outcome", "selection", "interactive", "animation", "toggle"],
-  "states": ["unselected", "selected", "suspended", "oddsUp", "oddsDown"],
-  "similarTo": ["QuickAddButtonView"],
-  "oftenUsedWith": ["MarketOutcomesLineView", "CompactOutcomesLineView", "MatchHeaderCompactView"]
-}
+```bash
+git add Frameworks/GomaUI/Documentation/catalog-metadata.json && git commit -m "docs(catalog): enrich metadata for ComponentA, ComponentB, ComponentC, ComponentD, ComponentE"
 ```
 
-## Progress Report
+---
 
-After each iteration, report:
+## Iteration Summary
+
+After completing ONE component, report:
+
 ```
-Iteration X complete:
-- Analyzed: ComponentA, ComponentB, ComponentC, ComponentD, ComponentE
-- Remaining pending: N components
+Component: {ComponentName}
+- Files read: X
+- Used in BetssonCameroonApp: Yes/No (list screens if yes)
+- Parents: [list]
+- Children: [list]
+- Key insight: What you learned about this component
+
+Remaining pending: N components
 ```
+
+Then proceed to the next component.
+
+---
+
+## Quality Standards
+
+Before marking complete, verify:
+- [ ] Read ALL files in component folder
+- [ ] Searched BetssonCameroonApp for usage
+- [ ] Checked COMPONENT_MAP.json relationships
+- [ ] summary reflects actual component purpose
+- [ ] description based on code investigation
+- [ ] states from actual ViewModel/Mock analysis
+- [ ] tags relevant to actual usage context
+- [ ] JSON validates without errors
+
+---
+
+## Example Investigation Output
+
+```
+Investigating: OutcomeItemView
+
+Files read:
+- OutcomeItemView.swift (main view)
+- OutcomeItemViewModelProtocol.swift (protocol)
+- MockOutcomeItemViewModel.swift (mock with 5 presets)
+
+BetssonCameroonApp usage:
+- SportsMatchDetailViewController.swift - displays in match markets
+- BetslipViewController.swift - shows selected outcomes
+
+COMPONENT_MAP relationships:
+- Parents: MarketOutcomesLineView, CompactOutcomesLineView
+- Children: none
+
+States found in protocol:
+- isSelected (Bool)
+- isSuspended (Bool)
+- oddsChangeDirection (enum: up, down, none)
+
+Filling metadata with this understanding...
+```
+
+---
 
 ## Completion
 
-When all components have `"status": "complete"`, output:
+When ALL components have `"status": "complete"`:
 
 ```
 <promise>CATALOG_METADATA_COMPLETE</promise>
 ```
+
+---
 
 ## Cancel
 

@@ -4,20 +4,14 @@ storage_mode("git")
 
 type("adhoc") # The default type, can be: appstore, adhoc, enterprise or development
 
-username("ruben@gomadevelopment.pt") # Your Apple Developer Portal username
+# Default to PROD configuration (Betsson France team)
+# UAT uses different team - override via Fastfile lanes or CLI args
+username("ruben@gomadevelopment.pt")
+team_id("QN2DYX5K4M")
 
 app_identifier([
-	"com.gomagaming.betsson",
 	"fr.betsson.ios.app",
 	"fr.betsson.ios.app.betssonNotificationsService"
-
-#	"com.gomagaming.goma",
-#	"com.gomagaming.gomasportradar",
-#	"com.gomagaming.sportradar",
-#	"com.gomagaming.sportsbook.dazn",
-#	"com.gomagaming.sportsbook.everymatrix",
-#	"com.gomagaming.sportsbook.showcase"
-
 ])
 
 
