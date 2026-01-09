@@ -10,6 +10,7 @@ import UIKit
 public class ListBlockView: UIView {
     
     // MARK: Private properties
+    private lazy var contentStackView: UIStackView = Self.createContainerStackView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var defaultIconView: UIView = Self.createDefaultIconView()
     private lazy var counterLabel: UILabel = Self.createCounterLabel()
@@ -35,14 +36,15 @@ public class ListBlockView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        self.defaultIconView.layer.cornerRadius = self.defaultIconView.frame.width / 2
+        self.defaultIconView.layer.cornerRadius = 28
+        self.defaultIconView.clipsToBounds = true
     }
     
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.iconImageView.backgroundColor = .clear
         self.defaultIconView.backgroundColor = .clear
-        self.defaultIconView.layer.borderColor = StyleProvider.Color.highlightSecondaryContrast.cgColor
+        self.defaultIconView.layer.borderColor = UIColor.white.cgColor
         self.counterLabel.textColor = StyleProvider.Color.highlightSecondaryContrast
         self.stackView.backgroundColor = .clear
     }
@@ -53,12 +55,12 @@ public class ListBlockView: UIView {
             // Note: In a real implementation, you would use an image loading library like Kingfisher
             // For now, we'll set a placeholder or system image
             self.iconImageView.image = UIImage(systemName: "star.fill")
-            self.defaultIconView.isHidden = true
-            self.counterLabel.isHidden = true
+            self.contentStackView.addArrangedSubview(self.iconImageView)
         } else {
             self.defaultIconView.isHidden = false
             self.counterLabel.text = self.viewModel.counter
             self.counterLabel.isHidden = false
+            self.contentStackView.addArrangedSubview(self.defaultIconView)
         }
         
         // Clear existing arranged subviews
@@ -74,11 +76,24 @@ public class ListBlockView: UIView {
         
         self.stackView.setNeedsLayout()
         self.stackView.layoutIfNeeded()
+        self.contentStackView.addArrangedSubview(self.stackView)
     }
 }
 
 // MARK: - Subviews Initialization and Setup
 extension ListBlockView {
+    
+    private static func createContainerStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 0
+        stackView.distribution = .fillProportionally
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.backgroundColor = .clear
+        return stackView
+    }
     
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
@@ -115,34 +130,32 @@ extension ListBlockView {
     }
     
     private func setupSubviews() {
-        self.addSubview(self.iconImageView)
-        self.addSubview(self.defaultIconView)
-        self.defaultIconView.addSubview(self.counterLabel)
-        self.addSubview(self.stackView)
-        
+        self.addSubview(self.contentStackView)
+        self.defaultIconView.addSubview(counterLabel)
+
         self.initConstraints()
     }
     
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.iconImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 56),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: 56),
-            self.iconImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            // Content Stack view - frame
+            self.contentStackView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.contentStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 16),
+            self.contentStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            self.contentStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            self.defaultIconView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            // Default Icon view - frame
             self.defaultIconView.widthAnchor.constraint(equalToConstant: 56),
             self.defaultIconView.heightAnchor.constraint(equalToConstant: 56),
-            self.defaultIconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             
+            // Icon Image view - frame
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 56),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: 56),
+            
+            // Counter label - center to `defaultIconView`
             self.counterLabel.leadingAnchor.constraint(equalTo: self.defaultIconView.leadingAnchor, constant: 5),
             self.counterLabel.trailingAnchor.constraint(equalTo: self.defaultIconView.trailingAnchor, constant: -5),
             self.counterLabel.centerYAnchor.constraint(equalTo: self.defaultIconView.centerYAnchor),
-            
-            self.stackView.leadingAnchor.constraint(equalTo: self.iconImageView.trailingAnchor, constant: 10),
-            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
-            self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
     }
 }
