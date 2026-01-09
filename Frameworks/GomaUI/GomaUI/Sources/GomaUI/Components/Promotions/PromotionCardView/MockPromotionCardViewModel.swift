@@ -13,7 +13,7 @@ import UIKit
 public class MockPromotionCardViewModel: PromotionCardViewModelProtocol {
     
     // MARK: - Properties
-    private let displayStateSubject = CurrentValueSubject<PromotionCardDisplayState, Never>(PromotionCardDisplayState(cardData: PromotionCardData(id: "", title: "", description: "", imageURL: "")))
+    private let displayStateSubject = CurrentValueSubject<PromotionCardDisplayState, Never>(PromotionCardDisplayState(cardData: PromotionCardData(id: "", title: "", note: nil, description: nil, imageURL: "")))
     
     public var displayStatePublisher: AnyPublisher<PromotionCardDisplayState, Never> {
         displayStateSubject.eraseToAnyPublisher()
@@ -122,6 +122,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "1",
             title: "Welcome Bonus",
+            note: "Bonus",
             description: "Get a 100% match bonus up to $500 on your first deposit. Perfect for new players looking to maximize their gaming experience.",
             imageURL: "https://cms.gomademo.com/storage/323/01K5RJXQY7YEZKSXNBWF7TKBFS.jpg",
             tag: "Limited",
@@ -135,6 +136,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "2",
             title: "Casino Tournament",
+            note: nil,
             description: "Join our weekly casino tournament and compete for amazing prizes. Top players win cash rewards and exclusive bonuses.",
             imageURL: "https://cms.gomademo.com/storage/325/01K5S2EKCJP8P3BF4S6VXJ6X5Y.svg",
             tag: "Casino",
@@ -148,6 +150,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "3",
             title: "Sports Betting Bonus",
+            note: nil,
             description: "Enhanced odds on major sports events. Get better returns on your favorite teams and sports.",
             imageURL: "https://cms.gomademo.com/storage/323/01K5RJXQY7YEZKSXNBWF7TKBFS.jpg",
             tag: "Sportsbook",
@@ -161,6 +164,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "4",
             title: "Information Only",
+            note: "Info",
             description: "This is an informational promotion with no call-to-action button. Users can read more to get additional details.",
             imageURL: "https://cms.gomademo.com/storage/325/01K5S2EKCJP8P3BF4S6VXJ6X5Y.svg",
             tag: "Info",
@@ -174,6 +178,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "5",
             title: "This is a Very Long Promotion Title That Should Test How the Component Handles Multiple Lines",
+            note: nil,
             description: "This promotion has an extremely long title to test the layout and text wrapping capabilities of the component. It should properly handle multiple lines and maintain good visual hierarchy.",
             imageURL: "https://cms.gomademo.com/storage/323/01K5RJXQY7YEZKSXNBWF7TKBFS.jpg",
             tag: "Long Title Test",
@@ -187,6 +192,7 @@ extension MockPromotionCardViewModel {
         return MockPromotionCardViewModel(cardData: PromotionCardData(
             id: "6",
             title: "No Tag Promotion",
+            note: nil,
             description: "This promotion has no tag to test the layout when the tag view is hidden.",
             imageURL: "https://cms.gomademo.com/storage/325/01K5S2EKCJP8P3BF4S6VXJ6X5Y.svg",
             tag: nil,

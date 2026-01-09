@@ -40,6 +40,11 @@ final class PromotionsCoordinator: Coordinator, PromotionsCoordinatorProtocol {
     /// Called when withdraw is requested from TopBar container
     var onWithdrawRequested: (() -> Void)?
     
+    // MARK: - Navigation Closures for MainCoordinator
+    
+    /// Called when a casino quick link is selected
+    var onShowCasinoTab: ((QuickLinkType) -> Void) = { _ in }
+    
     // MARK: - Initialization
     
     /// Initialize promotions coordinator
@@ -93,6 +98,11 @@ final class PromotionsCoordinator: Coordinator, PromotionsCoordinatorProtocol {
             self?.openPromotionURL(urlString: urlString)
         }
         
+        promotionsViewModel.onCasinoQuickLinkSelected = { [weak self] quickLinkType in
+            self?.handleBackNavigation()
+            self?.showCasinoTab(for: quickLinkType)
+        }
+        
         // Create TopBar ViewModel (handles all business logic)
         let topBarViewModel = TopBarContainerViewModel(
             userSessionStore: environment.userSessionStore
@@ -144,13 +154,54 @@ final class PromotionsCoordinator: Coordinator, PromotionsCoordinatorProtocol {
             self?.handleDetailBackNavigation()
         }
         
+        // Setup ViewModel callback for quick link navigation
+        promotionDetailViewModel.onCasinoQuickLinkSelected = { [weak self] quickLinkType in
+            self?.handleRootBackNavigation()
+            self?.showCasinoTab(for: quickLinkType)
+        }
+        
         let promotionDetailViewController = PromotionDetailViewController(
             viewModel: promotionDetailViewModel
         )
         
-        navigationController.pushViewController(promotionDetailViewController, animated: true)
+        // Create TopBar ViewModel (handles all business logic)
+        let topBarViewModel = TopBarContainerViewModel(
+            userSessionStore: environment.userSessionStore
+        )
+
+        // Wrap in TopBarContainerController
+        let container = TopBarContainerController(
+            contentViewController: promotionDetailViewController,
+            viewModel: topBarViewModel
+        )
+
+        // Setup navigation callbacks on container - delegate to parent coordinator
+        container.onLoginRequested = { [weak self] in
+            self?.onLoginRequested?()
+        }
+
+        container.onRegistrationRequested = { [weak self] in
+            self?.onRegistrationRequested?()
+        }
+
+        container.onProfileRequested = { [weak self] in
+            self?.onProfileRequested?()
+        }
+
+        container.onDepositRequested = { [weak self] in
+            self?.onDepositRequested?()
+        }
+
+        container.onWithdrawRequested = { [weak self] in
+            self?.onWithdrawRequested?()
+        }
         
-        print("🚀 PromotionsCoordinator: Presented promotion detail for: \(promotion.title)")
+        // Push the container using navigation stack
+        navigationController.pushViewController(container, animated: true)
+        
+//        navigationController.pushViewController(promotionDetailViewController, animated: true)
+//        
+//        print("🚀 PromotionsCoordinator: Presented promotion detail for: \(promotion.title)")
     }
     
     /// Opens a promotion URL in external browser
@@ -175,6 +226,17 @@ final class PromotionsCoordinator: Coordinator, PromotionsCoordinatorProtocol {
     func handleDetailBackNavigation() {
         navigationController.popViewController(animated: true)
         print("🚀 PromotionsCoordinator: Handled detail back navigation")
+    }
+    
+    func handleRootBackNavigation() {
+        navigationController.popToRootViewController(animated: true)
+        print("🚀 PromotionsCoordinator: Handled root back navigation")
+    }
+    
+    /// Shows casino tab based on quick link selection
+    /// - Parameter quickLinkType: The type of quick link that was selected
+    private func showCasinoTab(for quickLinkType: QuickLinkType) {
+        onShowCasinoTab(quickLinkType)
     }
     
 }

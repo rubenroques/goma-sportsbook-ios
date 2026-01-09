@@ -1117,6 +1117,10 @@ class MainTabBarCoordinator: Coordinator {
             self?.presentWithdrawFlow()
         }
         
+        promotionsCoordinator.onShowCasinoTab = { [weak self] quickLinkType in
+            self?.navigateToCasinoFromQuickLink(quickLinkType)
+        }
+        
         // Add as child coordinator for proper lifecycle management
         addChildCoordinator(promotionsCoordinator)
         
