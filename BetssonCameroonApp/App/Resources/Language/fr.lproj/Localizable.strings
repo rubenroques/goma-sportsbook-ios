@@ -4182,3 +4182,6 @@
 "bet_placement_error" = "Erreur de placement de pari";
 "booking_code_failed_message" = "Impossible de créer le code de réservation";
 "booking_code_failed" = "Échec du code de réservation";
+
+"accept_odds_change_info" = "Les cotes peuvent changer ; votre pari est automatiquement accepté ou envoyé pour confirmation selon vos paramètres.";
+

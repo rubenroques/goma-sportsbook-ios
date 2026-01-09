@@ -4180,3 +4180,5 @@
 "bet_placement_error" = "Bet Placement Error";
 "booking_code_failed_message" = "Failed to create booking code";
 "booking_code_failed" = "Booking Code Failed";
+
+"accept_odds_change_info" = "Odds may change; your bet is auto-accepted or sent for confirmation per your setting.";
