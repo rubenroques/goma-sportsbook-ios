@@ -20,7 +20,6 @@
 		CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE60146D2E2FE63A00C6A9DD /* PhraseSDK */; };
 		CE74A2272E2E8EA100DDE78D /* GomaUI in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A2262E2E8EA100DDE78D /* GomaUI */; };
 		CE74A7D82E2EB0E700DDE78D /* ServicesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A7D72E2EB0E700DDE78D /* ServicesProvider */; };
-		CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A81B2E2EB9C300DDE78D /* PresentationProvider */; };
 		CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */ = {isa = PBXBuildFile; productRef = CE74A9CE2E2EFB2A00DDE78D /* SharedModels */; };
 		CEC736C72E6839670084368A /* XPush in Frameworks */ = {isa = PBXBuildFile; productRef = CEC736C62E6839670084368A /* XPush */; };
 /* End PBXBuildFile section */
@@ -91,7 +90,6 @@
 				CE74A9CF2E2EFB2A00DDE78D /* SharedModels in Frameworks */,
 				CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */,
 				CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */,
-				CE74A81C2E2EB9C300DDE78D /* PresentationProvider in Frameworks */,
 				CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */,
 				CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */,
 				CE6014682E2FE5E400C6A9DD /* IQKeyboardManagerSwift in Frameworks */,
@@ -183,7 +181,6 @@
 			packageProductDependencies = (
 				CE74A2262E2E8EA100DDE78D /* GomaUI */,
 				CE74A7D72E2EB0E700DDE78D /* ServicesProvider */,
-				CE74A81B2E2EB9C300DDE78D /* PresentationProvider */,
 				CE74A9CE2E2EFB2A00DDE78D /* SharedModels */,
 				CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */,
 				CE60145E2E2FE56400C6A9DD /* FirebaseAuth */,
@@ -469,7 +466,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = UAT;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-UAT";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -602,7 +599,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = UAT;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-UAT";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-UAT/BetssonCM-UAT.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
@@ -744,7 +741,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Production;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-PROD";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -877,7 +874,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Production;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-PROD";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-PROD/BetssonCM-PROD.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
@@ -954,7 +951,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Staging;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-STG";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -994,7 +991,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APP_ENVIRONMENT = Staging;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-BetssonCM-STG";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "App/SupportingFiles/Misc-STG/BetssonCM-STG.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
@@ -1381,10 +1378,6 @@
 		CE74A7D72E2EB0E700DDE78D /* ServicesProvider */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServicesProvider;
-		};
-		CE74A81B2E2EB9C300DDE78D /* PresentationProvider */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PresentationProvider;
 		};
 		CE74A9CE2E2EFB2A00DDE78D /* SharedModels */ = {
 			isa = XCSwiftPackageProductDependency;

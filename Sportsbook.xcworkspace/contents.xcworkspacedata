@@ -41,9 +41,6 @@
       location = "container:Frameworks/Extensions">
    </FileRef>
    <FileRef
-      location = "container:Frameworks/PresentationProvider">
-   </FileRef>
-   <FileRef
       location = "container:Frameworks/RegisterFlow">
    </FileRef>
    <FileRef

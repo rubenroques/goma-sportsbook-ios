@@ -145,13 +145,6 @@ Centralized logging framework with structured logging API.
 ##### **GomaPerformanceKit** (`Frameworks/GomaPerformanceKit/`) *NEW*
 Centralized performance monitoring and tracking across all features and layers.
 
-##### **EveryMatrixProviderClient** (`Frameworks/EveryMatrixProviderClient/`) *NEW*
-Dedicated WAMP protocol client for EveryMatrix backend communication.
-
-- WebSocket WAMP connection management
-- RPC call support for betting operations
-- Real-time subscription handling
-
 #### Active Utility Packages
 
 ##### **Extensions** (`Frameworks/Extensions/`)
@@ -349,7 +342,7 @@ ScreenName/
 ### Internal Dependencies
 All projects use Swift Package Manager for internal dependencies, with clear separation between:
 - UI components (GomaUI - 138 components)
-- Business logic (ServicesProvider, EveryMatrixProviderClient)
+- Business logic (ServicesProvider)
 - Infrastructure (GomaLogger, GomaPerformanceKit)
 - Utilities (Extensions, specialized features)
 

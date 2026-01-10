@@ -181,24 +181,27 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 
 ### Available Schemes by Project
 
-**BetssonFranceApp**:
-- `BetssonCM DEV`, `BetssonCM STG`, `BetssonCM PROD` (Cameroon variants)
-- `Betsson UAT`, `Betsson PROD` (France variants)
-- `Demo` (Demo target with some feature no client has enabled like chat and rankings)
-- `SportRadar UAT`, `SportRadar PROD` (Alternative provider target)
+**BetssonCameroonApp** (`BetssonCameroonApp/BetssonCameroonApp.xcodeproj`):
+- `BetssonCM UAT`, `BetssonCM Staging`, `BetssonCM Prod`
 
-**BetssonCameroonApp**:
-- `BetssonCameroonApp` (Single modern target)
+**BetssonFrance** (`BetssonFrance/BetssonFrance.xcodeproj`):
+- `BetssonFrance UAT`, `BetssonFrance PRD`
 
-**GomaUICatalog**:
-- `GomaUICatalog` (Catalog app for the GomaUI Swift Package, for testing and preview in the simulator the components)
+**BetssonFranceLegacy** (`BetssonFranceLegacy/BetssonFranceLegacy.xcodeproj`):
+- `Betsson UAT`, `Betsson PROD`
+
+**Showcase** (`Showcase/Showcase.xcodeproj`):
+- `Showcase`, `DAZN`
+
+**GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`):
+- `GomaUICatalog`
 
 ### Build Context Guidelines
 
 - **GomaUICatalog**: Use for testing GomaUI components in isolation
-- **BetssonCameroonApp**: Camerron Client, use as reference for modern architecture patterns
-- **Betsson UAT**: France Client, default development scheme for legacy codebase work
-- **Demo**: Use for general development, testing on new features that no client uses, with multiple provider support
+- **BetssonCM UAT**: Cameroon Client, modern architecture (primary dev target)
+- **Betsson UAT**: France Client (legacy), default for legacy codebase work
+- **Showcase**: Demo target for features no client has enabled
 
 **Mandatory Requirements**:
 - Always use `xcbeautify --quieter` for LLM-readable output

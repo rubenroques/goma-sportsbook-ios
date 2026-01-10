@@ -248,12 +248,7 @@ class AppStateManager {
         // Start theme loading (from SplashInformativeViewController:79)
         print("AppStateManager: Starting theme loading")
         ThemeService.shared.fetchThemeFromServer()
-        
-        
-        // Start configuration loading (from SplashInformativeViewController:82)
-        print("AppStateManager: Starting configuration loading")
-        environment.presentationConfigurationStore.loadConfiguration()
-        
+
         // Wait for events connection, then perform health check before sports data
         print("AppStateManager: Monitoring events connection state")
         environment.servicesProvider.eventsConnectionStatePublisher

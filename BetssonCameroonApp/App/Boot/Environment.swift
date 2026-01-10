@@ -7,14 +7,10 @@
 
 import Foundation
 import ServicesProvider
-import PresentationProvider
 
 let Env = Environment() // swiftlint:disable:this identifier_name
 
 class Environment {
-
-    /// Centralized store for presentation configuration
-    let presentationConfigurationStore: PresentationConfigurationStore = PresentationConfigurationStore()
 
     lazy var servicesProvider: ServicesProvider.Client = {
         var serviceProviderEnvironment: ServicesProvider.Configuration.Environment
