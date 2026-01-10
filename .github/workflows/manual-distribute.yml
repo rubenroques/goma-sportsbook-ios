@@ -1,0 +1,565 @@
+name: Manual Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      client:
+        description: 'Client to distribute'
+        required: true
+        type: choice
+        options:
+          - 'BCM - Betsson Cameroon'
+          - 'BFR - Betsson France Legacy'
+
+      deploy_stg:
+        description: 'Deploy to STG (BCM only)'
+        required: false
+        type: boolean
+        default: false
+
+      deploy_uat:
+        description: 'Deploy to UAT'
+        required: false
+        type: boolean
+        default: true
+
+      deploy_prod:
+        description: 'Deploy to PROD'
+        required: false
+        type: boolean
+        default: false
+
+      auto_increment:
+        description: 'Auto-increment build number for each environment'
+        required: false
+        type: boolean
+        default: false
+
+      new_devices:
+        description: 'New devices to register (UUID,Name per line). Leave empty to skip.'
+        required: false
+        type: string
+
+      confirm_prod:
+        description: 'Type PROD to confirm production deployment'
+        required: false
+        type: string
+
+jobs:
+  distribute:
+    name: Build and Distribute
+    runs-on: macos-26
+    timeout-minutes: 90
+
+    steps:
+      - name: Parse client and validate inputs
+        id: parse
+        run: |
+          # Parse client from input
+          CLIENT_INPUT="${{ github.event.inputs.client }}"
+          if [[ "$CLIENT_INPUT" == "BCM"* ]]; then
+            CLIENT="BCM"
+            CLIENT_NAME="Betsson Cameroon"
+          elif [[ "$CLIENT_INPUT" == "BFR"* ]]; then
+            CLIENT="BFR"
+            CLIENT_NAME="Betsson France Legacy"
+          else
+            echo "::error::Invalid client selection"
+            exit 1
+          fi
+
+          echo "client=$CLIENT" >> $GITHUB_OUTPUT
+          echo "client_name=$CLIENT_NAME" >> $GITHUB_OUTPUT
+
+          # Parse environment selections
+          DEPLOY_STG="${{ github.event.inputs.deploy_stg }}"
+          DEPLOY_UAT="${{ github.event.inputs.deploy_uat }}"
+          DEPLOY_PROD="${{ github.event.inputs.deploy_prod }}"
+
+          echo "deploy_stg=$DEPLOY_STG" >> $GITHUB_OUTPUT
+          echo "deploy_uat=$DEPLOY_UAT" >> $GITHUB_OUTPUT
+          echo "deploy_prod=$DEPLOY_PROD" >> $GITHUB_OUTPUT
+
+          # Validate at least one environment selected
+          if [ "$DEPLOY_STG" != "true" ] && [ "$DEPLOY_UAT" != "true" ] && [ "$DEPLOY_PROD" != "true" ]; then
+            echo "::error::At least one environment must be selected"
+            exit 1
+          fi
+
+          # Validate BFR cannot deploy to STG
+          if [ "$CLIENT" = "BFR" ] && [ "$DEPLOY_STG" = "true" ]; then
+            echo "::error::BFR (Betsson France) does not have a STG environment. Please uncheck STG."
+            exit 1
+          fi
+
+          # Validate PROD confirmation
+          if [ "$DEPLOY_PROD" = "true" ]; then
+            CONFIRM="${{ github.event.inputs.confirm_prod }}"
+            if [ "$CONFIRM" != "PROD" ]; then
+              echo "::error::PROD deployment requires typing 'PROD' in the confirmation field"
+              exit 1
+            fi
+          fi
+
+          # Build environment list for logging
+          ENVS=""
+          [ "$DEPLOY_STG" = "true" ] && ENVS="STG"
+          [ "$DEPLOY_UAT" = "true" ] && ENVS="${ENVS:+$ENVS, }UAT"
+          [ "$DEPLOY_PROD" = "true" ] && ENVS="${ENVS:+$ENVS, }PROD"
+          echo "environments=$ENVS" >> $GITHUB_OUTPUT
+
+          echo "Client: $CLIENT ($CLIENT_NAME)"
+          echo "Environments: $ENVS"
+          echo "Auto-increment: ${{ github.event.inputs.auto_increment }}"
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git for commits
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set client-specific configuration
+        id: config
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+
+          if [ "$CLIENT" = "BCM" ]; then
+            echo "directory=BetssonCameroonApp" >> $GITHUB_OUTPUT
+            echo "project=BetssonCameroonApp.xcodeproj" >> $GITHUB_OUTPUT
+            echo "target=BetssonCameroonApp" >> $GITHUB_OUTPUT
+            echo "devices_file=fastlane/devices.csv" >> $GITHUB_OUTPUT
+            echo "devices_format=csv" >> $GITHUB_OUTPUT
+          elif [ "$CLIENT" = "BFR" ]; then
+            echo "directory=BetssonFranceLegacy" >> $GITHUB_OUTPUT
+            echo "project=Sportsbook.xcodeproj" >> $GITHUB_OUTPUT
+            echo "target=Betsson UAT" >> $GITHUB_OUTPUT
+            echo "devices_file=fastlane/devices.txt" >> $GITHUB_OUTPUT
+            echo "devices_format=txt" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add new devices to file
+        id: devices
+        if: github.event.inputs.new_devices != ''
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          DEVICES_INPUT="${{ github.event.inputs.new_devices }}"
+          DEVICES_FILE="${{ steps.config.outputs.devices_file }}"
+          DEVICES_FORMAT="${{ steps.config.outputs.devices_format }}"
+
+          echo "Processing new devices..."
+          echo "Input: $DEVICES_INPUT"
+
+          DEVICE_COUNT=0
+
+          # Process each line of device input
+          while IFS= read -r line; do
+            # Skip empty lines
+            [ -z "$line" ] && continue
+
+            # Parse UUID,Name format
+            UUID=$(echo "$line" | cut -d',' -f1 | xargs)
+            NAME=$(echo "$line" | cut -d',' -f2 | xargs)
+
+            if [ -z "$UUID" ] || [ -z "$NAME" ]; then
+              echo "::warning::Skipping invalid line: $line"
+              continue
+            fi
+
+            # Check if device already exists
+            if grep -q "$UUID" "$DEVICES_FILE" 2>/dev/null; then
+              echo "Device $UUID already registered, skipping"
+              continue
+            fi
+
+            # Append device in correct format
+            if [ "$DEVICES_FORMAT" = "csv" ]; then
+              # BCM format: UUID,Name,ios (no quotes)
+              echo "$UUID,$NAME,ios" >> "$DEVICES_FILE"
+            else
+              # BFR format: "UUID","Name","ios" (quoted)
+              echo "\"$UUID\",\"$NAME\",\"ios\"" >> "$DEVICES_FILE"
+            fi
+
+            echo "Added device: $UUID - $NAME"
+            DEVICE_COUNT=$((DEVICE_COUNT + 1))
+          done <<< "$DEVICES_INPUT"
+
+          echo "devices_added=$DEVICE_COUNT" >> $GITHUB_OUTPUT
+          echo "Total devices added: $DEVICE_COUNT"
+
+      - name: Get current version info
+        id: version
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          # Install yq for later use
+          brew install yq > /dev/null 2>&1 || true
+
+          PROJECT="${{ steps.config.outputs.project }}"
+          TARGET="${{ steps.config.outputs.target }}"
+          CLIENT="${{ steps.parse.outputs.client }}"
+
+          if [ "$CLIENT" = "BCM" ]; then
+            # BCM uses versioning plugin
+            VERSION=$(grep 'MARKETING_VERSION' "$PROJECT/project.pbxproj" | head -1 | sed 's/.*= //' | sed 's/;//' | xargs)
+            BUILD=$(grep 'CURRENT_PROJECT_VERSION' "$PROJECT/project.pbxproj" | head -1 | sed 's/.*= //' | sed 's/;//' | xargs)
+          else
+            # BFR - same approach
+            VERSION=$(grep 'MARKETING_VERSION' "$PROJECT/project.pbxproj" | head -1 | sed 's/.*= //' | sed 's/;//' | xargs)
+            BUILD=$(grep 'CURRENT_PROJECT_VERSION' "$PROJECT/project.pbxproj" | head -1 | sed 's/.*= //' | sed 's/;//' | xargs)
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "build=$BUILD" >> $GITHUB_OUTPUT
+          echo "initial_build=$BUILD" >> $GITHUB_OUTPUT
+
+          echo "Current version: $VERSION ($BUILD)"
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Cache SPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/*/SourcePackages
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ${{ steps.config.outputs.directory }}
+
+      - name: Setup App Store Connect API Keys
+        working-directory: ${{ steps.config.outputs.directory }}/fastlane
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+          BFR_PROD_API_KEY_CONTENT: ${{ secrets.BFR_PROD_API_KEY_CONTENT }}
+        run: |
+          # Goma team API Key (for BCM and BFR UAT)
+          echo "$APP_STORE_CONNECT_API_KEY_CONTENT" > AuthKey_7NC93JSN42.p8
+          chmod 600 AuthKey_7NC93JSN42.p8
+
+          # BFR PROD API Key (for Betsson France team)
+          if [ -n "$BFR_PROD_API_KEY_CONTENT" ]; then
+            echo "$BFR_PROD_API_KEY_CONTENT" > AuthKey_BFR_PROD.p8
+            chmod 600 AuthKey_BFR_PROD.p8
+          fi
+
+      - name: Setup environment variables
+        working-directory: ${{ steps.config.outputs.directory }}/fastlane
+        env:
+          # Common secrets
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
+          # BCM-specific
+          BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
+          BETSSONCM_UAT_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_UAT_FIREBASE_APP_ID }}
+          BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
+          FIREBASE_PROJECT_NUMBER: ${{ secrets.FIREBASE_PROJECT_NUMBER }}
+          # BFR-specific (same Match repo, different branch - see FastlaneAppleCertificates README)
+          BFR_PROD_TEAM_ID: ${{ secrets.BFR_PROD_TEAM_ID }}
+          BFR_PROD_API_KEY_ID: ${{ secrets.BFR_PROD_API_KEY_ID }}
+          BFR_PROD_API_ISSUER_ID: ${{ secrets.BFR_PROD_API_ISSUER_ID }}
+          BETSSON_UAT_FIREBASE_APP_ID: ${{ secrets.BFR_UAT_FIREBASE_APP_ID }}
+          BETSSON_PROD_FIREBASE_APP_ID: ${{ secrets.BFR_PROD_FIREBASE_APP_ID }}
+          FIREBASE_UAT_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+          FIREBASE_PROD_CLI_TOKEN: ${{ secrets.BFR_PROD_FIREBASE_CLI_TOKEN }}
+        run: |
+          cat > .env << EOF
+          MATCH_GIT_URL=$MATCH_GIT_URL
+          MATCH_PASSWORD=$MATCH_PASSWORD
+          APP_STORE_CONNECT_API_KEY_ID=$APP_STORE_CONNECT_API_KEY_ID
+          APP_STORE_CONNECT_API_ISSUER_ID=$APP_STORE_CONNECT_API_ISSUER_ID
+          APP_STORE_CONNECT_API_KEY_FILEPATH=./fastlane/AuthKey_7NC93JSN42.p8
+          FIREBASE_CLI_TOKEN=$FIREBASE_CLI_TOKEN
+          FIREBASE_PROJECT_NUMBER=$FIREBASE_PROJECT_NUMBER
+          GOMA_TEAM_ID=$GOMA_TEAM_ID
+          BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID
+          BETSSONCM_UAT_FIREBASE_APP_ID=$BETSSONCM_UAT_FIREBASE_APP_ID
+          BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID
+          MATCH_GIT_URL_UAT=$MATCH_GIT_URL
+          MATCH_GIT_URL_PROD=$MATCH_GIT_URL
+          BETSSON_UAT_TEAM_ID=$GOMA_TEAM_ID
+          BETSSON_PROD_TEAM_ID=$BFR_PROD_TEAM_ID
+          BFR_PROD_API_KEY_ID=$BFR_PROD_API_KEY_ID
+          BFR_PROD_API_ISSUER_ID=$BFR_PROD_API_ISSUER_ID
+          BFR_PROD_API_KEY_FILEPATH=./fastlane/AuthKey_BFR_PROD.p8
+          BETSSON_UAT_FIREBASE_APP_ID=$BETSSON_UAT_FIREBASE_APP_ID
+          BETSSON_PROD_FIREBASE_APP_ID=$BETSSON_PROD_FIREBASE_APP_ID
+          FIREBASE_UAT_CLI_TOKEN=$FIREBASE_UAT_CLI_TOKEN
+          FIREBASE_PROD_CLI_TOKEN=$FIREBASE_PROD_CLI_TOKEN
+          EOF
+
+      - name: Setup SSH for Match
+        env:
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$MATCH_GIT_PRIVATE_KEY" > ~/.ssh/match_deploy_key
+          chmod 600 ~/.ssh/match_deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          cat > ~/.ssh/config << EOF
+          Host github.com
+            HostName github.com
+            IdentityFile ~/.ssh/match_deploy_key
+            IdentitiesOnly yes
+          EOF
+
+      - name: Setup Keychain
+        run: |
+          KEYCHAIN_NAME="ci-build.keychain-db"
+          KEYCHAIN_PASSWORD="ci-temporary-password"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/$KEYCHAIN_NAME"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security default-keychain -s "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
+
+          echo "KEYCHAIN_NAME=$KEYCHAIN_NAME" >> $GITHUB_ENV
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
+
+      # ============================================================
+      # BCM DISTRIBUTION
+      # ============================================================
+
+      - name: "[BCM] Increment build and distribute to STG"
+        if: steps.parse.outputs.client == 'BCM' && steps.parse.outputs.deploy_stg == 'true'
+        working-directory: BetssonCameroonApp
+        env:
+          AUTO_INCREMENT: ${{ github.event.inputs.auto_increment }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          if [ "$AUTO_INCREMENT" = "true" ]; then
+            echo "Auto-incrementing build number..."
+            bundle exec fastlane run increment_build_number_in_xcodeproj xcodeproj:"BetssonCameroonApp.xcodeproj" target:"BetssonCameroonApp"
+            BUILD=$(bundle exec fastlane run get_build_number_from_xcodeproj xcodeproj:"BetssonCameroonApp.xcodeproj" target:"BetssonCameroonApp" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
+          else
+            BUILD="${{ steps.version.outputs.build }}"
+          fi
+
+          RELEASE_NOTES="Manual build v$VERSION ($BUILD) from main by @${{ github.actor }}"
+          echo "Building BCM STG: $RELEASE_NOTES"
+
+          bundle exec fastlane keep_version_distribute_staging release_notes:"$RELEASE_NOTES"
+
+          echo "BCM_STG_BUILD=$BUILD" >> $GITHUB_ENV
+
+      - name: "[BCM] Increment build and distribute to UAT"
+        if: steps.parse.outputs.client == 'BCM' && steps.parse.outputs.deploy_uat == 'true'
+        working-directory: BetssonCameroonApp
+        env:
+          AUTO_INCREMENT: ${{ github.event.inputs.auto_increment }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          if [ "$AUTO_INCREMENT" = "true" ]; then
+            echo "Auto-incrementing build number..."
+            bundle exec fastlane run increment_build_number_in_xcodeproj xcodeproj:"BetssonCameroonApp.xcodeproj" target:"BetssonCameroonApp"
+            BUILD=$(bundle exec fastlane run get_build_number_from_xcodeproj xcodeproj:"BetssonCameroonApp.xcodeproj" target:"BetssonCameroonApp" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
+          else
+            BUILD="${{ steps.version.outputs.build }}"
+          fi
+
+          RELEASE_NOTES="Manual build v$VERSION ($BUILD) from main by @${{ github.actor }}"
+          echo "Building BCM UAT: $RELEASE_NOTES"
+
+          bundle exec fastlane keep_version_distribute_uat release_notes:"$RELEASE_NOTES"
+
+          echo "BCM_UAT_BUILD=$BUILD" >> $GITHUB_ENV
+
+      # ============================================================
+      # BFR DISTRIBUTION
+      # ============================================================
+
+      - name: "[BFR] Increment build and distribute to UAT"
+        if: steps.parse.outputs.client == 'BFR' && steps.parse.outputs.deploy_uat == 'true'
+        working-directory: BetssonFranceLegacy
+        env:
+          AUTO_INCREMENT: ${{ github.event.inputs.auto_increment }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          if [ "$AUTO_INCREMENT" = "true" ]; then
+            echo "Auto-incrementing build number..."
+            bundle exec fastlane run increment_build_number xcodeproj:"Sportsbook.xcodeproj"
+            BUILD=$(bundle exec fastlane run get_build_number xcodeproj:"Sportsbook.xcodeproj" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
+          else
+            BUILD="${{ steps.version.outputs.build }}"
+          fi
+
+          RELEASE_NOTES="Manual build v$VERSION ($BUILD) from main by @${{ github.actor }}"
+          echo "Building BFR UAT: $RELEASE_NOTES"
+
+          bundle exec fastlane betsson_uat release_notes:"$RELEASE_NOTES"
+
+          echo "BFR_UAT_BUILD=$BUILD" >> $GITHUB_ENV
+
+      - name: "[BFR] Increment build and distribute to PROD"
+        if: steps.parse.outputs.client == 'BFR' && steps.parse.outputs.deploy_prod == 'true'
+        working-directory: BetssonFranceLegacy
+        env:
+          AUTO_INCREMENT: ${{ github.event.inputs.auto_increment }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+
+          if [ "$AUTO_INCREMENT" = "true" ]; then
+            echo "Auto-incrementing build number..."
+            bundle exec fastlane run increment_build_number xcodeproj:"Sportsbook.xcodeproj"
+            BUILD=$(bundle exec fastlane run get_build_number xcodeproj:"Sportsbook.xcodeproj" 2>&1 | grep -o "Result: [0-9]*" | awk '{print $2}')
+          else
+            BUILD="${{ steps.version.outputs.build }}"
+          fi
+
+          RELEASE_NOTES="Manual build v$VERSION ($BUILD) from main by @${{ github.actor }}"
+          echo "Building BFR PROD: $RELEASE_NOTES"
+
+          bundle exec fastlane betsson_prod release_notes:"$RELEASE_NOTES"
+
+          echo "BFR_PROD_BUILD=$BUILD" >> $GITHUB_ENV
+
+      # ============================================================
+      # COMMIT CHANGES
+      # ============================================================
+
+      - name: Get final build number
+        id: final
+        working-directory: ${{ steps.config.outputs.directory }}
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+          PROJECT="${{ steps.config.outputs.project }}"
+
+          # Get final build number from project
+          FINAL_BUILD=$(grep 'CURRENT_PROJECT_VERSION' "$PROJECT/project.pbxproj" | head -1 | sed 's/.*= //' | sed 's/;//' | xargs)
+
+          echo "final_build=$FINAL_BUILD" >> $GITHUB_OUTPUT
+          echo "Final build number: $FINAL_BUILD"
+
+      - name: Commit changes
+        run: |
+          CLIENT="${{ steps.parse.outputs.client }}"
+          INITIAL_BUILD="${{ steps.version.outputs.initial_build }}"
+          FINAL_BUILD="${{ steps.final.outputs.final_build }}"
+          DEVICES_ADDED="${{ steps.devices.outputs.devices_added }}"
+
+          # Check if there are changes to commit
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          # Build commit message
+          COMMIT_MSG="CI: Manual distribution"
+
+          if [ "$INITIAL_BUILD" != "$FINAL_BUILD" ]; then
+            COMMIT_MSG="$COMMIT_MSG - Build $INITIAL_BUILD → $FINAL_BUILD"
+          fi
+
+          if [ -n "$DEVICES_ADDED" ] && [ "$DEVICES_ADDED" != "0" ]; then
+            COMMIT_MSG="$COMMIT_MSG, +$DEVICES_ADDED device(s)"
+          fi
+
+          COMMIT_MSG="$COMMIT_MSG [skip ci]"
+
+          echo "Committing: $COMMIT_MSG"
+
+          git add -A
+          git commit -m "$COMMIT_MSG"
+          git push origin main
+
+      # ============================================================
+      # NOTIFICATIONS
+      # ============================================================
+
+      - name: Send Discord success notification
+        if: success()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_PERSONAL_RELEASE_WEBHOOK }}
+        run: |
+          [ -z "$DISCORD_WEBHOOK" ] && echo "DISCORD_PERSONAL_WEBHOOK not set, skipping notification" && exit 0
+
+          CLIENT_NAME="${{ steps.parse.outputs.client_name }}"
+          VERSION="${{ steps.version.outputs.version }}"
+          INITIAL_BUILD="${{ steps.version.outputs.initial_build }}"
+          FINAL_BUILD="${{ steps.final.outputs.final_build }}"
+          ENVS="${{ steps.parse.outputs.environments }}"
+          DEVICES_ADDED="${{ steps.devices.outputs.devices_added }}"
+
+          # Build version string
+          if [ "$INITIAL_BUILD" != "$FINAL_BUILD" ]; then
+            BUILD_STR="$INITIAL_BUILD -> $FINAL_BUILD"
+          else
+            BUILD_STR="$FINAL_BUILD"
+          fi
+
+          # Build message
+          MESSAGE="**Manual Distribution Complete**\n\n"
+          MESSAGE+="**Client:** $CLIENT_NAME\n"
+          MESSAGE+="**Environments:** $ENVS\n"
+          MESSAGE+="**Version:** $VERSION\n"
+          MESSAGE+="**Build:** $BUILD_STR\n"
+
+          if [ -n "$DEVICES_ADDED" ] && [ "$DEVICES_ADDED" != "0" ]; then
+            MESSAGE+="**Devices added:** $DEVICES_ADDED\n"
+          fi
+
+          MESSAGE+="\n**Triggered by:** ${{ github.actor }}\n"
+          MESSAGE+="**Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          curl -s -X POST "$DISCORD_WEBHOOK" -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}"
+
+      - name: Send Discord failure notification
+        if: failure()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_PERSONAL_RELEASE_WEBHOOK }}
+        run: |
+          [ -z "$DISCORD_WEBHOOK" ] && echo "DISCORD_PERSONAL_WEBHOOK not set, skipping notification" && exit 0
+
+          CLIENT_NAME="${{ steps.parse.outputs.client_name }}"
+          ENVS="${{ steps.parse.outputs.environments }}"
+
+          MESSAGE="**Manual Distribution Failed**\n\n"
+          MESSAGE+="**Client:** $CLIENT_NAME\n"
+          MESSAGE+="**Environments:** $ENVS\n"
+          MESSAGE+="**Triggered by:** ${{ github.actor }}\n\n"
+          MESSAGE+="**Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          curl -s -X POST "$DISCORD_WEBHOOK" -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}"
+
+      - name: Upload build artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fastlane-logs-manual-distribute
+          path: |
+            ${{ steps.config.outputs.directory }}/fastlane/logs/
+            ${{ steps.config.outputs.directory }}/fastlane/report.xml
+          retention-days: 7
+
+      - name: Cleanup
+        if: always()
+        run: |
+          if [ -n "$KEYCHAIN_NAME" ]; then
+            security delete-keychain "$HOME/Library/Keychains/$KEYCHAIN_NAME" 2>/dev/null || true
+          fi
+          rm -f ~/.ssh/match_deploy_key
+          rm -f ${{ steps.config.outputs.directory }}/fastlane/.env
+          rm -f ${{ steps.config.outputs.directory }}/fastlane/AuthKey_7NC93JSN42.p8
+          rm -f ${{ steps.config.outputs.directory }}/fastlane/AuthKey_BFR_PROD.p8

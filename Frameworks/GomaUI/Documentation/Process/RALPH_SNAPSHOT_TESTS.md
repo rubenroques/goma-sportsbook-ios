@@ -6,11 +6,11 @@ Create snapshot tests for ALL GomaUI components that don't have them yet, follow
 ## Documentation Reference
 Read and follow the patterns in:
 ```
-Frameworks/GomaUI/GomaUI/Documentation/SNAPSHOT_TESTING_GUIDE.md
+Frameworks/GomaUI/Documentation/Guides/SNAPSHOT_TESTING.md
 ```
 
 ## Progress Tracking
-Update `Frameworks/GomaUI/Documentation/COMPONENT_MAP.json` - add `"has_snapshot_tests": true` after creating tests for each component.
+Update `Frameworks/GomaUI/Documentation/Catalog/COMPONENT_MAP.json` - add `"has_snapshot_tests": true` after creating tests for each component.
 
 ## Example Implementation (MUST READ FIRST)
 Study these files as the reference implementation:
@@ -260,19 +260,30 @@ WRONG SCHEME:   GomaUICatalog  ← DO NOT USE THIS
 GomaUI is the Swift Package library with the test target.
 GomaUICatalog is a separate demo app - do NOT build or test with it.
 
-### Simulator ID
-Use this simulator for all commands:
+### Simulator ID (Dynamic Lookup)
+
+**IMPORTANT**: Do NOT use hardcoded simulator IDs. They become stale when simulators are recreated.
+
+At the START of the task, get a valid simulator ID:
+```bash
+xcrun simctl list devices available | grep -E "iPhone.*(18\.[0-9]|19\.)" | head -1
 ```
-4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7
-```
+
+Extract the UUID from the output and use it for all subsequent commands. Store it mentally as `SIMULATOR_ID`.
+
+Example output: `iPhone 16 Pro (ABC12345-...) (Booted)` → use `ABC12345-...`
+
+If no iOS 18+ simulator exists, the task cannot proceed - notify the user.
 
 ### Step 1: Build the GomaUI scheme (checks compilation)
 
 ALWAYS use `-scheme GomaUI` (NOT GomaUICatalog):
 
 ```bash
-xcodebuild build-for-testing -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' 2>&1 | xcbeautify --quieter
+xcodebuild build-for-testing -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=SIMULATOR_ID' 2>&1 | xcbeautify --quieter
 ```
+
+Replace `SIMULATOR_ID` with the UUID obtained from the dynamic lookup above.
 
 **If build fails:**
 1. Read the error messages carefully
@@ -285,8 +296,10 @@ xcodebuild build-for-testing -workspace Sportsbook.xcworkspace -scheme GomaUI -d
 ALWAYS use `-scheme GomaUI` (NOT GomaUICatalog):
 
 ```bash
-xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' -only-testing:GomaUITests/{ComponentName}SnapshotTests 2>&1 | xcbeautify --quieter
+xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=SIMULATOR_ID' -only-testing:GomaUITests/{ComponentName}SnapshotTests 2>&1 | xcbeautify --quieter
 ```
+
+Replace `SIMULATOR_ID` with the UUID obtained from the dynamic lookup.
 
 **Expected behavior:**
 - Tests will show as "failed" because `SnapshotTestConfig.record = true` (recording mode)
@@ -310,7 +323,7 @@ DO NOT SKIP ANY STEP. Each step MUST be executed.
    - Do NOT proceed until build succeeds
 4. **RUN** test command for each new component ← MANDATORY, DO NOT SKIP
    ```bash
-   xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=4C2C3F29-3F1E-4BEC-A397-C5A54256ADC7' -only-testing:GomaUITests/ComponentASnapshotTests 2>&1 | xcbeautify --quieter
+   xcodebuild test -workspace Sportsbook.xcworkspace -scheme GomaUI -destination 'platform=iOS Simulator,id=SIMULATOR_ID' -only-testing:GomaUITests/ComponentASnapshotTests 2>&1 | xcbeautify --quieter
    ```
 5. **VERIFY** snapshots were created ← MANDATORY, DO NOT SKIP
    ```bash
@@ -352,7 +365,7 @@ Before marking a component done:
 ## Completion
 When all components in COMPONENT_MAP.json have `has_snapshot_tests: true`, output:
 ```
-SNAPSHOTS_COMPLETE
+<promise>SNAPSHOTS_COMPLETE</promise>
 ```
 
 ## Cancel

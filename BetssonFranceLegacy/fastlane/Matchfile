@@ -5,9 +5,10 @@ storage_mode("git")
 type("adhoc") # The default type, can be: appstore, adhoc, enterprise or development
 
 # Default to PROD configuration (Betsson France team)
-# UAT uses different team - override via Fastfile lanes or CLI args
+# UAT uses different team/branch - override via Fastfile lanes or CLI args
 username("ruben@gomadevelopment.pt")
 team_id("QN2DYX5K4M")
+git_branch("betsson-france")  # Separate branch for Betsson France team
 
 app_identifier([
 	"fr.betsson.ios.app",
