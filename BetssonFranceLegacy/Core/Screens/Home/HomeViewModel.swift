@@ -172,8 +172,8 @@ extension HomeViewModel {
         return self.homeViewTemplateDataSource.favoriteMatch(forIndex: index)
     }
 
-    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
-        return self.homeViewTemplateDataSource.featuredTipLineViewModel()
+    func suggestedBetCarouselViewModel() -> SuggestedBetCarouselViewModel? {
+        return self.homeViewTemplateDataSource.suggestedBetCarouselViewModel()
     }
 
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {

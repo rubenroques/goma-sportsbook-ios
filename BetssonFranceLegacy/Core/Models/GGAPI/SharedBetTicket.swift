@@ -45,7 +45,7 @@ struct SharedBetTicketAttachment: Codable, Hashable {
             self.content = typedContent
         }
         else {
-            throw GomaGamingSocialServiceClient.SocketError.invalidContent
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Invalid content format"))
         }
 
     }

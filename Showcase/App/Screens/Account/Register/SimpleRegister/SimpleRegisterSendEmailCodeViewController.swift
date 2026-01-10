@@ -1,0 +1,103 @@
+//
+//  SimpleRegisterSendEmailCodeViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 16/09/2021.
+//
+
+import UIKit
+
+class SimpleRegisterSendEmailCodeViewController: UIViewController {
+
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var backView: UIView!
+    @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private var codeHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var doneButton: RoundButton!
+    @IBOutlet private var pasteClipboardButton: UIButton!
+
+    init() {
+        super.init(nibName: "SimpleRegisterSendEmailCodeViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        setupWithTheme()
+        commonInit()
+    }
+
+    func setupWithTheme() {
+
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+
+        backView.backgroundColor = UIColor.App.backgroundPrimary
+
+        titleLabel.textColor = UIColor.App.inputTextTitle
+
+        textLabel.textColor = UIColor.App.inputText
+
+        codeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        codeHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        codeHeaderTextFieldView.setSecureField(false)
+
+        doneButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        doneButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        doneButton.cornerRadius = CornerRadius.button
+
+        pasteClipboardButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        pasteClipboardButton.backgroundColor = UIColor.App.backgroundPrimary
+    }
+
+    func commonInit() {
+
+        titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
+        titleLabel.text = localized("enter_code")
+
+        textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 15)
+        textLabel.text = localized("enter_code_text")
+
+        codeHeaderTextFieldView.setPlaceholderText(localized("code"))
+
+        doneButton.setTitle(localized("done"), for: .normal)
+        doneButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+
+        pasteClipboardButton.setTitle(localized("paste_clipboard"), for: .normal)
+        pasteClipboardButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+
+    }
+
+    @IBAction private func backAction() {
+        self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction private func doneAction() {
+        // Finish
+    }
+
+    @IBAction private func pasteClipboardAction() {
+        let pb = UIPasteboard.general
+        codeHeaderTextFieldView.setTextFieldDefaultValue(pb.string ?? "")
+    }
+
+    @objc func didTapBackground() {
+        self.resignFirstResponder()
+
+        _ = self.codeHeaderTextFieldView.resignFirstResponder()
+
+    }
+
+}

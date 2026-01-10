@@ -1,23 +1,64 @@
 # Implementation Plan
 
-## Phase 1: Catalog Generator Script
+## Phase 0: Metadata Bootstrap (DONE)
 
-Create a Node.js script that transforms `COMPONENT_MAP.json` into an enriched `catalog.json`.
+Create the metadata infrastructure for LLM-driven enrichment.
 
 ### Tasks
 
-- [ ] Create `scripts/generate-catalog.js` in iOS repo
-- [ ] Parse `COMPONENT_MAP.json`
-- [ ] Extract descriptions from README.md files (first paragraph)
-- [ ] Infer categories from component folder paths
-- [ ] Generate tags based on content analysis
+- [x] Design `catalog-metadata.json` structure with status tracking
+- [x] Create `bootstrap-catalog-metadata.js` script
+- [x] Auto-detect categories from folder structure
+- [x] Bootstrap 138 components with `status: "pending"`
+- [x] Create `RALPH_CATALOG_METADATA.md` prompt for LLM enrichment
+
+### Files Created
+
+| File | Purpose |
+|------|---------|
+| `Frameworks/GomaUI/scripts/bootstrap-catalog-metadata.js` | Bootstraps empty metadata |
+| `Frameworks/GomaUI/Documentation/catalog-metadata.json` | Rich metadata (LLM-enriched) |
+| `Frameworks/GomaUI/Documentation/RALPH_CATALOG_METADATA.md` | Ralph loop prompt |
+
+---
+
+## Phase 1: LLM Metadata Enrichment (IN PROGRESS)
+
+Use Ralph loop to analyze each component and fill metadata.
+
+### Tasks
+
+- [ ] Run Ralph loop with `RALPH_CATALOG_METADATA.md` prompt
+- [ ] Verify all 138 components have `status: "complete"`
+- [ ] Review quality of descriptions, tags, states
+- [ ] Curate `featured` components list
+
+### Run Command
+
+```bash
+/ralph-loop "$(cat Frameworks/GomaUI/Documentation/RALPH_CATALOG_METADATA.md)" --completion-promise "CATALOG_METADATA_COMPLETE" --max-iterations 30
+```
+
+---
+
+## Phase 2: Catalog Generator Script
+
+Create a Node.js script that merges all data sources into `catalog.json`.
+
+### Tasks
+
+- [ ] Create `Frameworks/GomaUI/scripts/generate-catalog.js`
+- [ ] Merge `COMPONENT_MAP.json` (relationships)
+- [ ] Merge `catalog-metadata.json` (descriptions, tags, states)
+- [ ] Extract README.md content (first section)
 - [ ] Map snapshot file paths for each component
-- [ ] Output enhanced `catalog.json`
+- [ ] Output final `catalog.json`
 
 ### Input/Output
 
 **Input:**
 - `Frameworks/GomaUI/Documentation/COMPONENT_MAP.json`
+- `Frameworks/GomaUI/Documentation/catalog-metadata.json`
 - `Frameworks/GomaUI/GomaUI/Sources/GomaUI/Components/**/README.md`
 - `Frameworks/GomaUI/GomaUI/Tests/GomaUITests/SnapshotTests/**/__Snapshots__/*.png`
 
@@ -26,7 +67,7 @@ Create a Node.js script that transforms `COMPONENT_MAP.json` into an enriched `c
 
 ---
 
-## Phase 2: Web Catalog App
+## Phase 3: Web Catalog App
 
 Create the Node.js Express app for the Hetzner server.
 
@@ -56,7 +97,7 @@ Create the Node.js Express app for the Hetzner server.
 
 ---
 
-## Phase 3: Server Deployment
+## Phase 4: Server Deployment
 
 Deploy the catalog app to Hetzner server.
 
@@ -95,7 +136,7 @@ location /gomaui-catalog/ {
 
 ---
 
-## Phase 4: CI/CD Pipeline
+## Phase 5: CI/CD Pipeline
 
 Set up automated updates via GitHub Actions.
 
@@ -110,7 +151,7 @@ Set up automated updates via GitHub Actions.
 
 ---
 
-## Phase 5: Initial Data Sync
+## Phase 6: Initial Data Sync
 
 Perform first-time sync of all snapshots.
 
@@ -123,7 +164,7 @@ Perform first-time sync of all snapshots.
 
 ---
 
-## Phase 6: Enhancements (Future)
+## Phase 7: Enhancements (Future)
 
 Optional improvements after initial launch.
 
@@ -145,13 +186,17 @@ Optional improvements after initial launch.
 
 ```
 sportsbook-ios/
-├── scripts/
-│   ├── generate-catalog.js          # [Phase 1]
-│   └── sync-catalog-manual.sh       # [Phase 1]
 ├── .github/workflows/
-│   └── update-gomaui-catalog.yml    # [Phase 4]
-└── Frameworks/GomaUI/Documentation/
-    └── catalog.json                  # [Generated]
+│   └── update-gomaui-catalog.yml         # [Phase 5]
+└── Frameworks/GomaUI/
+    ├── Documentation/
+    │   ├── COMPONENT_MAP.json            # [Existing] Relationships
+    │   ├── catalog-metadata.json         # [Phase 0] ✓ Rich metadata
+    │   ├── catalog.json                  # [Phase 2] Generated output
+    │   └── RALPH_CATALOG_METADATA.md     # [Phase 0] ✓ LLM prompt
+    └── scripts/
+        ├── bootstrap-catalog-metadata.js # [Phase 0] ✓ Bootstraps metadata
+        └── generate-catalog.js           # [Phase 2] Merges all sources
 ```
 
 ### Tools Repo (Local)

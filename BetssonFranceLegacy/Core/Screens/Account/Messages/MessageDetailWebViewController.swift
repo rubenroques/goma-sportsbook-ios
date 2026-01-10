@@ -31,9 +31,8 @@ class MessageDetailWebViewModel {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { [weak self] _ in
-                Env.gomaSocialClient.getInAppMessagesCounter()
-
+            }, receiveValue: { _ in
+                // Message marked as read
             })
             .store(in: &cancellables)
     }

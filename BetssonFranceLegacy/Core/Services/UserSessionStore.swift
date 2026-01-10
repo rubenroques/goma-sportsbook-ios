@@ -215,7 +215,6 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
 
         Env.favoritesManager.clearCachedFavorites()
-        Env.gomaSocialClient.clearUserChatroomsData()
 
         // Remove previous registration info
         UserDefaults.standard.startedUserRegisterInfo = nil
@@ -676,11 +675,6 @@ extension UserSessionStore {
                 //
             }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
-                Env.gomaSocialClient.connectSocket()
-
-                Env.gomaSocialClient.getInAppMessagesCounter()
-
-                Env.gomaSocialClient.getFollowingUsers()
             })
             .store(in: &self.cancellables)
     }

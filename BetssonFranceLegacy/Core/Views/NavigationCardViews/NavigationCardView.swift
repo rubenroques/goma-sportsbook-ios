@@ -81,21 +81,6 @@ class NavigationCardView: UIView {
 
         self.iconImageView.image = UIImage(named: iconTitle)?.withRenderingMode(.alwaysTemplate)
 
-        if self.hasNotifications {
-
-            Env.gomaSocialClient.inAppMessagesCounter
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] notificationCounter in
-                    if notificationCounter > 0 {
-                        self?.shouldShowNotifications = true
-                        self?.notificationLabel.text = "\(notificationCounter)"
-                    }
-                    else {
-                        self?.shouldShowNotifications = false
-                    }
-                })
-                .store(in: &cancellables)
-        }
     }
 
 }

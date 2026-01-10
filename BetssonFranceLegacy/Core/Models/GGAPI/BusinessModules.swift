@@ -33,7 +33,7 @@ struct BusinessModule: Codable {
             self.id = id
         }
         else {
-            throw GomaGamingSocialServiceClient.SocketError.invalidContent
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Invalid id format"))
         }
         
         if let isEnabledInt: Int = (try? container.decode(Int.self, forKey: .enabled)) {

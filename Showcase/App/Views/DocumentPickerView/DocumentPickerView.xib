@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DocumentPickerView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="addFileButton" destination="vZ8-ep-CRI" id="NCA-Kx-pa0"/>
+                <outlet property="containerView" destination="wEQ-tv-r0E" id="pPd-lI-azu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wEQ-tv-r0E">
+                    <rect key="frame" x="16" y="8" width="382" height="64"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vZ8-ep-CRI">
+                            <rect key="frame" x="0.0" y="12" width="91" height="40"/>
+                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="uf1-Ir-Grd"/>
+                            </constraints>
+                            <state key="normal" title="Add File" image="cloud-arrow-up">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="addFileAction" destination="-1" eventType="touchUpInside" id="Bhc-un-j1A"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="vZ8-ep-CRI" firstAttribute="leading" secondItem="wEQ-tv-r0E" secondAttribute="leading" id="P58-m9-1S5"/>
+                        <constraint firstItem="vZ8-ep-CRI" firstAttribute="centerY" secondItem="wEQ-tv-r0E" secondAttribute="centerY" id="Yun-gt-zNT"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="wEQ-tv-r0E" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="LvA-DA-eTs"/>
+                <constraint firstAttribute="bottom" secondItem="wEQ-tv-r0E" secondAttribute="bottom" constant="8" id="Z59-NN-wP2"/>
+                <constraint firstItem="wEQ-tv-r0E" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="hlu-Lw-hoO"/>
+                <constraint firstAttribute="trailing" secondItem="wEQ-tv-r0E" secondAttribute="trailing" constant="16" id="pQM-Ln-0PS"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="79.710144927536234" y="-217.63392857142856"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="cloud-arrow-up" width="26" height="19"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

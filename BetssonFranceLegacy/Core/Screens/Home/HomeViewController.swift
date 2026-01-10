@@ -18,7 +18,6 @@ class HomeViewController: UIViewController {
 
     var didTapExternalLinkAction: ((URL) -> Void) = { _ in }
 
-    var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
@@ -50,7 +49,7 @@ class HomeViewController: UIViewController {
 
     private var shortcutSelectedOption: Int = -1
 
-    private var featuredTipsCenterIndex: Int = 0
+    private var suggestedBetsCenterIndex: Int = 0
 
     // MARK: - Lifetime and Cycle
     init(viewModel: HomeViewModel = HomeViewModel()) {
@@ -84,7 +83,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
-        self.tableView.register(FeaturedTipLineTableViewCell.self, forCellReuseIdentifier: FeaturedTipLineTableViewCell.identifier)
+        self.tableView.register(SuggestedBetCarouselTableViewCell.self, forCellReuseIdentifier: SuggestedBetCarouselTableViewCell.identifier)
         self.tableView.register(FooterResponsibleGamingViewCell.self, forCellReuseIdentifier: FooterResponsibleGamingViewCell.identifier)
         self.tableView.register(QuickSwipeStackTableViewCell.self, forCellReuseIdentifier: QuickSwipeStackTableViewCell.identifier)
         self.tableView.register(MakeYourBetTableViewCell.self, forCellReuseIdentifier: MakeYourBetTableViewCell.identifier)
@@ -148,10 +147,6 @@ class HomeViewController: UIViewController {
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
-        }
-
-        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
-            self?.didTapChatView()
         }
 
         self.bind(toViewModel: self.viewModel)
@@ -421,8 +416,8 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(recruitAFriendViewController, animated: true)
     }
 
-    private func openFeaturedTipSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
-        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(featuredTips: featuredTips, startIndex: index))
+    private func openSuggestedBetSlider(featuredTips: [FeaturedTip], atIndex index: Int = 0) {
+        let tipsSliderViewController = SuggestedBetSliderViewController(viewModel: SuggestedBetSliderViewModel(featuredTips: featuredTips, startIndex: index))
         tipsSliderViewController.shift.enable()
         tipsSliderViewController.shouldShowBetslip = { [weak self] in
             self?.didTapBetslipButtonAction?()
@@ -430,8 +425,8 @@ class HomeViewController: UIViewController {
         self.present(tipsSliderViewController, animated: true)
     }
 
-    private func openFeaturedTipSlider(suggestedBetslips: [SuggestedBetslip], atIndex index: Int = 0) {
-        let tipsSliderViewController = TipsSliderViewController(viewModel: TipsSliderViewModel(suggestedBetslip: suggestedBetslips, startIndex: index))
+    private func openSuggestedBetSlider(suggestedBetslips: [SuggestedBetslip], atIndex index: Int = 0) {
+        let tipsSliderViewController = SuggestedBetSliderViewController(viewModel: SuggestedBetSliderViewModel(suggestedBetslip: suggestedBetslips, startIndex: index))
         tipsSliderViewController.shift.enable()
         tipsSliderViewController.shouldShowBetslip = { [weak self] in
             self?.didTapBetslipButtonAction?()
@@ -835,27 +830,27 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .featuredTips:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: FeaturedTipLineTableViewCell.identifier) as? FeaturedTipLineTableViewCell,
-                let featuredBetLineViewModel = self.viewModel.featuredTipLineViewModel()
+                let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetCarouselTableViewCell.identifier) as? SuggestedBetCarouselTableViewCell,
+                let suggestedBetCarouselViewModel = self.viewModel.suggestedBetCarouselViewModel()
             else {
                 return UITableViewCell()
             }
 
-            cell.openFeaturedTipDetailAction = { [weak self] featuredTipCollectionViewModel in
-                let index = featuredBetLineViewModel.indexForItem(withId: featuredTipCollectionViewModel.identifier) ?? 0
+            cell.openSuggestedBetDetailAction = { [weak self] cardViewModel in
+                let index = suggestedBetCarouselViewModel.indexForItem(withId: cardViewModel.identifier) ?? 0
 
-                switch featuredBetLineViewModel.dataType {
+                switch suggestedBetCarouselViewModel.dataType {
                 case .featuredTips(let featuredTips):
-                    self?.openFeaturedTipSlider(featuredTips: featuredTips, atIndex: index)
+                    self?.openSuggestedBetSlider(featuredTips: featuredTips, atIndex: index)
                 case .suggestedBetslips(let suggestedBetslips):
-                    self?.openFeaturedTipSlider(suggestedBetslips: suggestedBetslips, atIndex: index)
+                    self?.openSuggestedBetSlider(suggestedBetslips: suggestedBetslips, atIndex: index)
                 }
             }
 
             cell.currentIndexChangedAction = { [weak self] newIndex in
-                self?.featuredTipsCenterIndex = newIndex
+                self?.suggestedBetsCenterIndex = newIndex
             }
-            cell.configure(withViewModel: featuredBetLineViewModel)
+            cell.configure(withViewModel: suggestedBetCarouselViewModel)
 
             cell.shouldShowBetslip = { [weak self] in
                 self?.didTapBetslipButtonAction?()
@@ -1417,7 +1412,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .userFavorites:
             return StyleHelper.cardsStyleHeight() + 20
         case .featuredTips:
-            return FeaturedTipLineTableViewCell.estimatedHeight
+            return SuggestedBetCarouselTableViewCell.estimatedHeight
         case .suggestedBets:
             return 336
         case .sportGroup:
@@ -1662,10 +1657,6 @@ extension HomeViewController {
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
-    }
-
-    @objc func didTapChatView() {
-        self.didTapChatButtonAction?()
     }
 
 }

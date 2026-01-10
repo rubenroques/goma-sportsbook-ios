@@ -68,7 +68,7 @@ class StaticHomeViewTemplateDataSource {
 
     //
     private var featuredTips: [FeaturedTip] = []
-    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+    private var cachedSuggestedBetCarouselViewModel: SuggestedBetCarouselViewModel? {
         didSet {
             self.refreshPublisher.send()
         }
@@ -155,7 +155,7 @@ class StaticHomeViewTemplateDataSource {
         self.cachedSuggestedBetLineViewModel = nil
        
         self.sportGroupViewModelCache = [:]
-        self.cachedFeaturedTipLineViewModel = nil
+        self.cachedSuggestedBetCarouselViewModel = nil
 
         self.requestSports()
         self.fetchBanners()
@@ -483,17 +483,17 @@ extension StaticHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return self.favoriteMatches[safe: index]
     }
 
-    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+    func suggestedBetCarouselViewModel() -> SuggestedBetCarouselViewModel? {
         if self.featuredTips.isEmpty {
             return nil
         }
 
-        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
-            return featuredTipLineViewModel
+        if let carouselViewModel = self.cachedSuggestedBetCarouselViewModel {
+            return carouselViewModel
         }
         else {
-            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(featuredTips: self.featuredTips)
-            return self.cachedFeaturedTipLineViewModel
+            self.cachedSuggestedBetCarouselViewModel = SuggestedBetCarouselViewModel(featuredTips: self.featuredTips)
+            return self.cachedSuggestedBetCarouselViewModel
         }
 
     }

@@ -41,21 +41,40 @@
 │   │  }                                                                  │    │
 │   └────────────────────────────────────────────────────────────────────┘    │
 │                                         │                                    │
-│                                         ▼                                    │
-│   4. CATALOG GENERATOR (Node.js script)                                      │
+│   4. CATALOG METADATA (LLM-enriched)                                         │
 │   ┌────────────────────────────────────────────────────────────────────┐    │
-│   │  scripts/generate-catalog.js                                        │    │
+│   │  Frameworks/GomaUI/Documentation/catalog-metadata.json             │    │
+│   │  {                                                                  │    │
+│   │    "featured": [],                                                  │    │
+│   │    "categories": { "Betting": { ... } },                           │    │
+│   │    "components": {                                                  │    │
+│   │      "OutcomeItemView": {                                          │    │
+│   │        "status": "complete",                                       │    │
+│   │        "displayName": "OutcomeItemView",                           │    │
+│   │        "summary": "Single betting outcome with odds...",           │    │
+│   │        "tags": ["betting", "odds", "selection"],                   │    │
+│   │        "states": ["selected", "unselected", "suspended"],          │    │
+│   │        "similarTo": ["QuickAddButtonView"],                        │    │
+│   │        "oftenUsedWith": ["MarketOutcomesLineView"]                 │    │
+│   │      }                                                              │    │
+│   │    }                                                                │    │
+│   │  }                                                                  │    │
+│   └────────────────────────────────────────────────────────────────────┘    │
+│                                         │                                    │
+│                                         ▼                                    │
+│   5. CATALOG GENERATOR (Node.js script)                                      │
+│   ┌────────────────────────────────────────────────────────────────────┐    │
+│   │  Frameworks/GomaUI/scripts/generate-catalog.js                      │    │
 │   │                                                                      │    │
-│   │  - Reads COMPONENT_MAP.json                                         │    │
-│   │  - Extracts descriptions from README.md files                       │    │
-│   │  - Infers categories from folder paths                              │    │
+│   │  - Merges COMPONENT_MAP.json (relationships)                        │    │
+│   │  - Merges catalog-metadata.json (descriptions, tags, states)        │    │
+│   │  - Extracts README.md content                                       │    │
 │   │  - Maps snapshot file paths                                         │    │
-│   │  - Generates tags                                                   │    │
 │   │                                                                      │    │
 │   └────────────────────────────────────────────────────────────────────┘    │
 │                                         │                                    │
 │                                         ▼                                    │
-│   5. ENHANCED CATALOG (Generated)                                            │
+│   6. FINAL CATALOG (Generated)                                               │
 │   ┌────────────────────────────────────────────────────────────────────┐    │
 │   │  Frameworks/GomaUI/Documentation/catalog.json                       │    │
 │   │  {                                                                  │    │

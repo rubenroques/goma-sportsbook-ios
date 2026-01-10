@@ -74,7 +74,7 @@ class ClientManagedHomeViewTemplateDataSource {
 
     //
     private var suggestedBetslips: [SuggestedBetslip] = []
-    private var cachedFeaturedTipLineViewModel: FeaturedTipLineViewModel? {
+    private var cachedSuggestedBetCarouselViewModel: SuggestedBetCarouselViewModel? {
         didSet {
             self.refreshPublisher.send()
         }
@@ -215,7 +215,7 @@ class ClientManagedHomeViewTemplateDataSource {
         self.suggestedBetslips = []
         self.highlightedMarkets = []
 
-        self.cachedFeaturedTipLineViewModel = nil
+        self.cachedSuggestedBetCarouselViewModel = nil
 
         self.highlightedLiveMatchLineTableCellViewModelCache = [:]
 
@@ -899,17 +899,17 @@ extension ClientManagedHomeViewTemplateDataSource: HomeViewTemplateDataSource {
         return nil
     }
 
-    func featuredTipLineViewModel() -> FeaturedTipLineViewModel? {
+    func suggestedBetCarouselViewModel() -> SuggestedBetCarouselViewModel? {
         if self.suggestedBetslips.isEmpty {
             return nil
         }
 
-        if let featuredTipLineViewModel = self.cachedFeaturedTipLineViewModel {
-            return featuredTipLineViewModel
+        if let carouselViewModel = self.cachedSuggestedBetCarouselViewModel {
+            return carouselViewModel
         }
         else {
-            self.cachedFeaturedTipLineViewModel = FeaturedTipLineViewModel(suggestedBetslip: self.suggestedBetslips)
-            return self.cachedFeaturedTipLineViewModel
+            self.cachedSuggestedBetCarouselViewModel = SuggestedBetCarouselViewModel(suggestedBetslip: self.suggestedBetslips)
+            return self.cachedSuggestedBetCarouselViewModel
         }
 
     }

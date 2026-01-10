@@ -17,12 +17,12 @@ clients:
     discord_color: 3066993  # Green
 
   BFR:
-    name: "Betsson France"
-    directory: "BetssonFranceApp"
+    name: "Betsson France Legacy"
+    directory: "BetssonFranceLegacy"
     project: "Sportsbook.xcodeproj"
     workspace: "../Sportsbook.xcworkspace"
     target: "BetssonFranceApp"
-    changelog: "BetssonFranceApp/CHANGELOG.yml"
+    changelog: "BetssonFranceLegacy/CHANGELOG.yml"
     devices_file: "fastlane/devices.txt"
     release_branch: "betsson-france-dev"
     staging_scheme: "Betsson UAT"

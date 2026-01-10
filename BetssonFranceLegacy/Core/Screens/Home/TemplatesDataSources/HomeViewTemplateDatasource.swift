@@ -30,7 +30,7 @@ protocol HomeViewTemplateDataSource {
     func storyLineViewModel() -> StoriesLineCellViewModel?
     func sportGroupViewModel(forSection section: Int) -> SportGroupViewModel?
     func favoriteMatch(forIndex index: Int) -> Match?
-    func featuredTipLineViewModel() -> FeaturedTipLineViewModel?
+    func suggestedBetCarouselViewModel() -> SuggestedBetCarouselViewModel?
     func suggestedBetLineViewModel() -> SuggestedBetLineViewModel?
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel?
 

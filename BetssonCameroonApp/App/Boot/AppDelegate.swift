@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import Firebase
 import XPush
 import SwiftUI

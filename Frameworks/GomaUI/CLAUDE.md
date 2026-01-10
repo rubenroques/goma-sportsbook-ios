@@ -14,7 +14,7 @@ GomaUI is a **reusable UI component library** for iOS sports betting application
 
 ## UIKit Code Organization Reference
 
-**📋 For comprehensive UIKit coding standards, see [UIKIT_CODE_ORGANIZATION_GUIDE.md](UIKIT_CODE_ORGANIZATION_GUIDE.md)**
+**📋 For comprehensive UIKit coding standards, see [Documentation/Guides/UIKIT_CODE_ORGANIZATION.md](Documentation/Guides/UIKIT_CODE_ORGANIZATION.md)**
 
 This guide covers essential UIKit development patterns that all GomaUI components must follow:
 - **Lazy property initialization** with static factory methods
@@ -170,7 +170,7 @@ private func setupBindings() {
 }
 ```
 
-**Full Documentation**: See [SNAPSHOT_TESTING_GUIDE.md](GomaUI/Documentation/SNAPSHOT_TESTING_GUIDE.md#synchronous-rendering-critical-for-snapshot-tests) for:
+**Full Documentation**: See [Documentation/Guides/SNAPSHOT_TESTING.md](Documentation/Guides/SNAPSHOT_TESTING.md#synchronous-rendering-critical-for-snapshot-tests) for:
 - Detailed root cause analysis
 - Point-Free's scheduler injection approach
 - Migration strategy for existing components

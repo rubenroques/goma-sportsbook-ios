@@ -226,9 +226,7 @@ class RootViewController: UIViewController {
         let liveEventsViewController = LiveEventsViewController(viewModel: liveEventsViewModel)
         return liveEventsViewController
     }()
-    lazy var tipsRootViewController = TipsRootViewController()
     lazy var cashbackViewController = CashbackRootViewController()
-    lazy var casinoViewController = CasinoWebViewController()
     lazy var featuredCompetitionViewController: FeaturedCompetitionDetailRootViewController? = {
         let sport = Sport(id: "", name: "", alphaId: "", numericId: "", showEventCategory: false, liveEventsCount: 0)
         
@@ -248,10 +246,8 @@ class RootViewController: UIViewController {
     var homeViewControllerLoaded = false
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
-    var tipsRootViewControllerLoaded = false
     var cashbackViewControllerLoaded = false
     var featuredCompetitionViewControllerLoaded = false
-    var casinoViewControllerLoaded = false
 
     var currentSport: Sport
 
@@ -537,18 +533,7 @@ class RootViewController: UIViewController {
         logoImageView.addGestureRecognizer(debugTapGesture)
         logoImageView.isUserInteractionEnabled = true
 
-        Env.gomaSocialClient.inAppMessagesCounter
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] notificationCounter in
-                if notificationCounter > 0 {
-                    self?.notificationCounterView.isHidden = false
-                    self?.notificationCounterLabel.text = "\(notificationCounter)"
-                }
-                else {
-                    self?.notificationCounterView.isHidden = true
-                }
-            })
-            .store(in: &cancellables)
+        self.notificationCounterView.isHidden = true
 
         self.isLoadingUserSessionView.isHidden = true
 
@@ -1039,30 +1024,11 @@ class RootViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
-    func openChatModal() {
-        if Env.userSessionStore.isUserLogged() {
-            let socialViewController = SocialViewController()
-            self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
-        }
-        else {
-            let loginViewController = Router.navigationController(with: LoginViewController())
-            self.present(loginViewController, animated: true, completion: nil)
-        }
-    }
-
     func openInternalWebview(onURL url: URL) {
         let internalBrowserViewController = InternalBrowserViewController(url: url, fullscreen: false)
         let navigationViewController = Router.navigationController(with: internalBrowserViewController)
         navigationViewController.modalPresentationStyle = .fullScreen
         self.present(navigationViewController, animated: true, completion: nil)
-    }
-
-    func openUserProfile(userBasicInfo: UserBasicInfo) {
-        let userProfileViewModel = UserProfileViewModel(userBasicInfo: userBasicInfo)
-
-        let userProfileViewController = UserProfileViewController(viewModel: userProfileViewModel)
-
-        self.navigationController?.pushViewController(userProfileViewController, animated: true)
     }
 
     func openMatchDetail(matchId: String) {
@@ -1468,38 +1434,32 @@ extension RootViewController {
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
             }
-            self.homeViewController.didTapChatButtonAction = { [weak self] in
-                self?.openChatModal()
-            }
             self.homeViewController.didTapExternalVideoAction = { [weak self] url in
                 self?.openExternalVideo(fromURL: url)
             }
             self.homeViewController.didTapExternalLinkAction = { [weak self] url in
                 self?.openInternalWebview(onURL: url)
             }
-            self.homeViewController.didTapUserProfileAction = { [weak self] userBasicInfo in
-                self?.openUserProfile(userBasicInfo: userBasicInfo)
-            }
             self.homeViewController.didTapSeeAllLiveButtonAction = { [weak self] in
                 self?.didTapLiveTabItem()
             }
-            
+
             self.homeViewController.requestRegisterAction = { [weak self] in
                 self?.presentRegisterScreen()
             }
-            
+
             self.homeViewController.requestLiveAction = { [weak self] in
                 self?.didTapLiveTabItem()
             }
-            
+
             self.homeViewController.requestContactSettingsAction = { [weak self] in
                 self?.openContactSettings()
             }
-            
+
             self.homeViewController.didTapJonumBannerAction = { [weak self] in
                 self?.openJonumFeature()
             }
-            
+
             homeViewControllerLoaded = true
         }
 
@@ -1509,9 +1469,6 @@ extension RootViewController {
 
             self.preLiveViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedPreLiveSport(newSport)
-            }
-            self.preLiveViewController.didTapChatButtonAction = { [weak self] in
-                self?.openChatModal()
             }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
@@ -1525,29 +1482,10 @@ extension RootViewController {
             self.liveEventsViewController.didChangeSport = { [weak self] newSport in
                 self?.didChangedLiveSport(newSport)
             }
-            self.liveEventsViewController.didTapChatButtonAction = { [weak self] in
-                self?.openChatModal()
-            }
             self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
             }
             liveEventsViewControllerLoaded = true
-        }
-
-        if case .tips = tab, !tipsRootViewControllerLoaded {
-            self.addChildViewController(self.tipsRootViewController, toView: self.tipsBaseView)
-
-            self.tipsRootViewController.didTapBetslipButtonAction = { [weak self] in
-                self?.openBetslipModal()
-            }
-            self.tipsRootViewController.didTapChatButtonAction = { [weak self] in
-                self?.openChatModal()
-            }
-            self.tipsRootViewController.shouldShowUserProfile = { [weak self] userBasicInfo in
-                self?.openUserProfile(userBasicInfo: userBasicInfo)
-            }
-
-            tipsRootViewControllerLoaded = true
         }
 
         if case .cashback = tab, !cashbackViewControllerLoaded {
@@ -1557,25 +1495,17 @@ extension RootViewController {
 
             cashbackViewControllerLoaded = true
         }
-        
+
         if case .featuredCompetition = tab, !featuredCompetitionViewControllerLoaded {
-            
+
             if let featuredCompetitionViewController = self.featuredCompetitionViewController {
                 self.addChildViewController(featuredCompetitionViewController, toView: self.featuredCompetitionBaseView)
-                
-                // Cashback Callbacks if needed
-                
+
+                // FeaturedCompetition Callbacks if needed
+
                 featuredCompetitionViewControllerLoaded = true
             }
-            
-        }
 
-        if case .casino = tab, !casinoViewControllerLoaded {
-            self.searchButton.isHidden = true
-
-            self.casinoViewController.modalPresentationStyle = .fullScreen
-            self.casinoViewController.navigationItem.hidesBackButton = true
-            self.addChildViewController(self.casinoViewController, toView: self.casinoBaseView)
         }
 
     }

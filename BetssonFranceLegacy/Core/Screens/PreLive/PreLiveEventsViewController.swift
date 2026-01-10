@@ -87,7 +87,6 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     var didChangeSport: ((Sport) -> Void)?
-    var didTapChatButtonAction: (() -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
@@ -388,9 +387,6 @@ class PreLiveEventsViewController: UIViewController {
 
         self.floatingShortcutsView.didTapBetslipButtonAction = { [weak self] in
             self?.didTapBetslipView()
-        }
-        self.floatingShortcutsView.didTapChatButtonAction = { [weak self] in
-            self?.didTapChatView()
         }
 
         //
@@ -800,10 +796,6 @@ class PreLiveEventsViewController: UIViewController {
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
-    }
-
-    @objc func didTapChatView() {
-        self.didTapChatButtonAction?()
     }
 
     func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {

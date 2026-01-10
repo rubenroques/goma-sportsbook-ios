@@ -87,8 +87,6 @@ class MessagesViewModel {
                     if cellViewModel.unreadMessagePublisher.value == true {
                         cellViewModel.changeReadStatus(isRead: true)
                     }
-                    Env.gomaSocialClient.getInAppMessagesCounter()
-
                 })
                 .store(in: &cancellables)
         }
@@ -118,8 +116,6 @@ class MessagesViewModel {
                         }
                     }
                 }
-
-                Env.gomaSocialClient.getInAppMessagesCounter()
 
                 self.dataNeedsReload.send()
             })
