@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class BetslipFloatingViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Component States
 
     func testBetslipFloatingView_States_Light() throws {
         let vc = BetslipFloatingViewSnapshotViewController(category: .states)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class BetslipFloatingViewSnapshotTests: XCTestCase {
 
     func testBetslipFloatingView_States_Dark() throws {
         let vc = BetslipFloatingViewSnapshotViewController(category: .states)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

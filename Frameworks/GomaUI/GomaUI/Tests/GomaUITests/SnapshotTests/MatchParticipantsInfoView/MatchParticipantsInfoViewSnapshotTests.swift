@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class MatchParticipantsInfoViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Horizontal Variants
 
     func testMatchParticipantsInfoView_HorizontalVariants_Light() throws {
         let vc = MatchParticipantsInfoViewSnapshotViewController(category: .horizontalVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class MatchParticipantsInfoViewSnapshotTests: XCTestCase {
 
     func testMatchParticipantsInfoView_HorizontalVariants_Dark() throws {
         let vc = MatchParticipantsInfoViewSnapshotViewController(category: .horizontalVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class MatchParticipantsInfoViewSnapshotTests: XCTestCase {
 
     func testMatchParticipantsInfoView_VerticalVariants_Light() throws {
         let vc = MatchParticipantsInfoViewSnapshotViewController(category: .verticalVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class MatchParticipantsInfoViewSnapshotTests: XCTestCase {
 
     func testMatchParticipantsInfoView_VerticalVariants_Dark() throws {
         let vc = MatchParticipantsInfoViewSnapshotViewController(category: .verticalVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

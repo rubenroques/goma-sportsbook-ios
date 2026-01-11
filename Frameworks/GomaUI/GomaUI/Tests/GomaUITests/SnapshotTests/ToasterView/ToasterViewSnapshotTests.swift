@@ -4,6 +4,9 @@ import SnapshotTesting
 
 final class ToasterViewSnapshotTests: XCTestCase {
 
+    // ToasterView uses scheduler injection - MockToasterViewModel defaults to ImmediateScheduler.
+    // No RunLoop workaround needed.
+
     // MARK: - Toaster Variants
 
     func testToasterView_ToasterVariants_Light() throws {

@@ -49,7 +49,7 @@ The **main focus of active development**, representing the target architecture f
 - Per-environment app icons (STG/UAT/PROD visual badges)
 
 **Available Schemes:**
-- `BetssonCameroonApp`
+- `BetssonCM UAT`, `BetssonCM Staging`, `BetssonCM Prod`
 
 **Release Tag Format:** `bcm-vVERSION(BUILD)` (e.g., `bcm-v0.3.2(3120)`)
 
@@ -59,7 +59,7 @@ The **main focus of active development**, representing the target architecture f
 New standalone project following the same modern architecture as BetssonCameroonApp.
 
 **Available Schemes:**
-- `BetssonFrance`
+- `BetssonFrance UAT`, `BetssonFrance PRD`
 
 #### 3. **BetssonFranceLegacy** (`BetssonFranceLegacy/Sportsbook.xcodeproj`)
 *Legacy multi-target project (formerly BetssonFranceApp)*
@@ -79,10 +79,13 @@ Contains the original monolithic codebase with multiple client targets.
 - `Demo`
 - `SportRadar UAT`, `SportRadar PROD`
 
-#### 4. **Showcase** (`Showcase/`)
+#### 4. **Showcase** (`Showcase/Showcase.xcodeproj`)
 *Independent showcase project*
 
 Demonstration project containing all client configurations for showcasing and testing purposes.
+
+**Available Schemes:**
+- `Showcase`, `DAZN`
 
 #### 5. **GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`)
 *Component testing and preview application*
@@ -192,14 +195,9 @@ Legacy theming system (superseded by GomaUI StyleProvider).
 **Important:** `xcodebuild` requires specific simulator device IDs, not simulator names.
 
 ```bash
-# 1. List available simulators to find device IDs
+# List available simulators and get device ID (iOS 17+ required)
 xcrun simctl list devices available | grep -E "iPhone"
-
-# 2. Look for iPhone 15/16 Pro with iOS 17+ and copy the device ID
-#    Example output: iPhone 16 Pro (229F70D9-99F6-411E-870A-23C4B153C01E) (Shutdown)
-
-# 3. If no suitable simulator exists, create one:
-xcrun simctl create "iPhone 16 Pro" "iPhone 16 Pro" "com.apple.CoreSimulator.SimRuntime.iOS-18-2"
+# Copy the device ID (e.g., 229F70D9-99F6-411E-870A-23C4B153C01E)
 ```
 
 ### Building Specific Projects

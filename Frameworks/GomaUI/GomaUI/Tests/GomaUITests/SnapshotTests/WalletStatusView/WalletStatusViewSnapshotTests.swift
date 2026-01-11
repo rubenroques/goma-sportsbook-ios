@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class WalletStatusViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Balance Variants
 
     func testWalletStatusView_BalanceVariants_Light() throws {
         let vc = WalletStatusViewSnapshotViewController(category: .balanceVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class WalletStatusViewSnapshotTests: XCTestCase {
 
     func testWalletStatusView_BalanceVariants_Dark() throws {
         let vc = WalletStatusViewSnapshotViewController(category: .balanceVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

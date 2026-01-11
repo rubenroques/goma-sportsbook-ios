@@ -13,4 +13,18 @@ enum SnapshotTestConfig {
 
     /// Dark mode traits
     static let darkTraits = UITraitCollection(userInterfaceStyle: .dark)
+
+    // MARK: - Async Rendering Workaround
+
+    /// Workaround for components that use `.receive(on: DispatchQueue.main)` without
+    /// synchronous initial rendering via `currentDisplayState`.
+    ///
+    /// Call this before `assertSnapshot` to allow Combine publishers to emit.
+    ///
+    /// **Proper fix**: Migrate component to use `currentDisplayState + dropFirst()` pattern
+    /// or scheduler injection (see ToasterView as reference).
+    static func waitForCombineRendering(_ viewController: UIViewController) {
+        viewController.loadViewIfNeeded()
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+    }
 }

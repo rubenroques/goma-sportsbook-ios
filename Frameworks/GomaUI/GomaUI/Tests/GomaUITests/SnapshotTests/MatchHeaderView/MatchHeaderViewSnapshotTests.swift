@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class MatchHeaderViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Header Variants
 
     func testMatchHeaderView_HeaderVariants_Light() throws {
         let vc = MatchHeaderViewSnapshotViewController(category: .headerVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class MatchHeaderViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderView_HeaderVariants_Dark() throws {
         let vc = MatchHeaderViewSnapshotViewController(category: .headerVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class MatchHeaderViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderView_VisibilityVariants_Light() throws {
         let vc = MatchHeaderViewSnapshotViewController(category: .visibilityVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class MatchHeaderViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderView_VisibilityVariants_Dark() throws {
         let vc = MatchHeaderViewSnapshotViewController(category: .visibilityVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class BetInfoSubmissionViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Component States
 
     func testBetInfoSubmissionView_States_Light() throws {
         let vc = BetInfoSubmissionViewSnapshotViewController(category: .states)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class BetInfoSubmissionViewSnapshotTests: XCTestCase {
 
     func testBetInfoSubmissionView_States_Dark() throws {
         let vc = BetInfoSubmissionViewSnapshotViewController(category: .states)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

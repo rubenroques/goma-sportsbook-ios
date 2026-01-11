@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class BonusCardViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Content Variants
 
     func testBonusCardView_ContentVariants_Light() throws {
         let vc = BonusCardViewSnapshotViewController(category: .contentVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class BonusCardViewSnapshotTests: XCTestCase {
 
     func testBonusCardView_ContentVariants_Dark() throws {
         let vc = BonusCardViewSnapshotViewController(category: .contentVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

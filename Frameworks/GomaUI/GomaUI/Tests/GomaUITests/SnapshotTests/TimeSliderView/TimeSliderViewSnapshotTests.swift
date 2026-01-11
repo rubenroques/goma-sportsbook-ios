@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class TimeSliderViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Slider States
 
     func testTimeSliderView_SliderStates_Light() throws {
         let vc = TimeSliderViewSnapshotViewController(category: .sliderStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class TimeSliderViewSnapshotTests: XCTestCase {
 
     func testTimeSliderView_SliderStates_Dark() throws {
         let vc = TimeSliderViewSnapshotViewController(category: .sliderStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class MarketOutcomesMultiLineViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Market Group Variants
 
     func testMarketOutcomesMultiLineView_MarketGroupVariants_Light() throws {
         let vc = MarketOutcomesMultiLineViewSnapshotViewController(category: .marketGroupVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class MarketOutcomesMultiLineViewSnapshotTests: XCTestCase {
 
     func testMarketOutcomesMultiLineView_MarketGroupVariants_Dark() throws {
         let vc = MarketOutcomesMultiLineViewSnapshotViewController(category: .marketGroupVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class MarketOutcomesMultiLineViewSnapshotTests: XCTestCase {
 
     func testMarketOutcomesMultiLineView_SpecialStates_Light() throws {
         let vc = MarketOutcomesMultiLineViewSnapshotViewController(category: .specialStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class MarketOutcomesMultiLineViewSnapshotTests: XCTestCase {
 
     func testMarketOutcomesMultiLineView_SpecialStates_Dark() throws {
         let vc = MarketOutcomesMultiLineViewSnapshotViewController(category: .specialStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

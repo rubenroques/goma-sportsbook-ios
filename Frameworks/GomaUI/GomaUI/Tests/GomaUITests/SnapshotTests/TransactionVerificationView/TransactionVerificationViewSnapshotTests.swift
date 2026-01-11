@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class TransactionVerificationViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Verification Variants
 
     func testTransactionVerificationView_VerificationVariants_Light() throws {
         let vc = TransactionVerificationViewSnapshotViewController(category: .verificationVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class TransactionVerificationViewSnapshotTests: XCTestCase {
 
     func testTransactionVerificationView_VerificationVariants_Dark() throws {
         let vc = TransactionVerificationViewSnapshotViewController(category: .verificationVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

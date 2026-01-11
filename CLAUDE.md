@@ -24,7 +24,7 @@ DJ(s) == Development Journal(s) / Codding session md files
 
 ## Overview
 
-This is a **sophisticated multi-project iOS workspace** for sports betting applications, featuring a modular architecture that has evolved from a single monolithic project into three distinct projects with a comprehensive Swift package ecosystem. The workspace enables rapid multi-client deployment while maintaining code consistency through shared UI components and backend abstractions.
+This is a **sophisticated multi-project iOS workspace** for sports betting applications, featuring a modular architecture that has evolved from a single monolithic project into five distinct projects with a comprehensive Swift package ecosystem (14 packages, 138 UI components). The workspace enables rapid multi-client deployment while maintaining code consistency through shared UI components and backend abstractions.
 
 ## Workspace Architecture
 
@@ -32,29 +32,40 @@ The workspace follows a **multi-project + Swift Package** architecture designed 
 
 ### Core Projects Structure
 
-#### **1. BetssonFranceApp** (`BetssonFranceApp/Sportsbook.xcodeproj`)
-*Legacy multi-target project containing 80% of the codebase*
+#### **1. BetssonCameroonApp** (`BetssonCameroonApp/BetssonCameroonApp.xcodeproj`)
+*Modern standalone project - Primary development focus*
+
+- **Architecture**: Clean iOS project with heavy GomaUI integration
+- **Pattern**: Protocol-driven MVVM-C with comprehensive mock support
+- **Complexity**: 253 directories, 646 files - streamlined and focused
+- **Key Features**: Direct Swift Package dependencies, UIScene-based lifecycle, GomaUI StyleProvider theming, per-environment app icons
+
+#### **2. BetssonFrance** (`BetssonFrance/BetssonFrance.xcodeproj`)
+*Modern standalone project for France market*
+
+- **Architecture**: Same modern architecture as BetssonCameroonApp
+- **Pattern**: Protocol-driven MVVM-C
+
+#### **3. BetssonFranceLegacy** (`BetssonFranceLegacy/Sportsbook.xcodeproj`)
+*Legacy multi-target project (formerly BetssonFranceLegacy)*
 
 - **Architecture**: Monolithic Core + Multi-Client targeting
-- **Core Framework** (`BetssonFranceApp/Core/`): Shared application logic, 40+ screens, services, and utilities
-- **Client Layer** (`BetssonFranceApp/Clients/`): Brand-specific implementations for multiple markets
+- **Core Framework** (`BetssonFranceLegacy/Core/`): Shared application logic, 40+ screens, services, and utilities
+- **Client Layer** (`BetssonFranceLegacy/Clients/`): Brand-specific implementations
 - **Pattern**: 90% MVVM with mixed legacy and modern approaches (no Coordinator)
 - **Complexity**: 977 directories, 3425 files - represents technical complexity and architectural evolution
 
-#### **2. BetssonCameroonApp** (`BetssonCameroonApp/BetssonCameroonApp.xcodeproj`)  
-Currently the main focus of development.
-*Modern standalone project representing target architecture*
+#### **4. Showcase** (`Showcase/Showcase.xcodeproj`)
+*Independent showcase project*
 
-- **Architecture**: Clean iOS project with heavy GomaUI integration
-- **Pattern**: Protocol-driven MVVM with comprehensive mock support
-- **Complexity**: 253 directories, 646 files - streamlined and focused
-- **Key Features**: Direct Swift Package dependencies, modern project organization, GomaUI StyleProvider theming
+- **Purpose**: Demonstration project with all client configurations
+- **Usage**: Showcasing and testing features across clients
 
-#### **3. GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`)
+#### **5. GomaUICatalog** (`Frameworks/GomaUI/GomaUICatalog.xcodeproj`)
 *Component testing and preview application*
 
-- **Purpose**: Live component gallery, development playground, integration testing
-- **Architecture**: Dedicated testing app with 50+ component controllers
+- **Purpose**: Live component gallery, development playground, snapshot testing
+- **Architecture**: Dedicated testing app with 138 component controllers
 - **Usage**: Essential for GomaUI component development and validation
 
 ### Swift Package Ecosystem
@@ -62,9 +73,9 @@ Currently the main focus of development.
 #### **Core Packages**
 
 ##### **GomaUI** (`Frameworks/GomaUI/`)
-*Comprehensive UI component library - 204 directories, 528 files*
+*Comprehensive UI component library - 138 components organized into feature-based category folders*
 
-**Architecture Pattern** (consistent across 50+ components):
+**Architecture Pattern** (consistent across all components):
 ```
 ComponentView/
 ├── ComponentView.swift              # UIKit implementation
@@ -76,9 +87,11 @@ ComponentView/
 **Key Features**:
 - Protocol-driven MVVM design enabling flexible implementations
 - StyleProvider system for centralized theming and customization
+- LocalizationProvider for centralized localization
 - SwiftUI preview support via PreviewUIView wrapper
 - Reactive programming with Combine publishers
-- Comprehensive component documentation
+- Comprehensive snapshot testing (138 components)
+- Component metadata catalog (`catalog-metadata.json`)
 
 **Component Categories**:
 - **Navigation**: AdaptiveTabBarView, CustomNavigationView, QuickLinksTabBar
@@ -86,19 +99,20 @@ ComponentView/
 - **Betting Interface**: OutcomeItemView, MarketOutcomesLineView, MarketInfoLineView
 - **Forms & Input**: BorderedTextFieldView, PinDigitEntryView, CustomSliderView
 - **Filters & Search**: GeneralFilterBarView, SportGamesFilterView, TimeSliderView
+- **Feedback**: ToasterView (with scheduler injection pattern)
 
 ##### **ServicesProvider** (`Frameworks/ServicesProvider/`)
 *Backend abstraction layer - 144 directories, 404 files*
 
 **Multi-Provider Architecture**:
 - **Goma Provider**: Primary provider with REST APIs and WebSocket real-time updates
-- **SportRadar Provider**: Alternative provider with Poseidon APIs and socket connections  
+- **SportRadar Provider**: Alternative provider with Poseidon APIs and socket connections
 - **EveryMatrix Provider**: WAMP protocol with sophisticated entity store architecture
 
 **Provider Protocols**:
 - `ManagedContentProvider`: Home templates, banners, promotions, news
 - `EventsProvider`: Sports events, matches, markets, live data subscriptions
-- `BettingProvider`: Bet placement, history, cashout, bonus management
+- `BettingProvider`: Bet placement, history, cashout, bonus management, betting options validation
 - `PrivilegedAccessManager`: User authentication, profile, payments, KYC
 - `AnalyticsProvider`: Event tracking and user analytics
 
@@ -106,6 +120,16 @@ ComponentView/
 ```
 API Request → Internal Models → Model Mappers → Domain Models → UI Components
 ```
+
+##### **GomaLogger** (`Frameworks/GomaLogger/`)
+*Centralized logging framework*
+
+- Static API with subsystems and categories
+- Hierarchical filtering (debug/info/error levels only - NO .warning())
+- Pluggable destinations for flexible output
+
+##### **GomaPerformanceKit** (`Frameworks/GomaPerformanceKit/`)
+*Centralized performance monitoring and tracking across all features and layers*
 
 #### **Active Utility Packages**
 
@@ -133,24 +157,11 @@ API Request → Internal Models → Model Mappers → Domain Models → UI Compo
 **IMPORTANT**: xcodebuild requires specific simulator device IDs, not simulator names.
 
 **Setup Process**:
-1. **Check existing simulators first**:
-   ```bash
-   # List all available simulators
-   xcrun simctl list devices
-   # Look for iPhone simulators with iOS 18.2+ (required for project deployment target)
-   ```
-
-2. **If suitable simulator exists**: Use its device ID in build commands
-   - Look for iPhone 15/16 Pro with iOS 18.2, 18.5, or higher
-   - Copy the device ID (e.g., `229F70D9-99F6-411E-870A-23C4B153C01E`)
-
-3. **If no suitable simulator exists**:
-   ```bash
-   # Install iOS 18.2 runtime in Xcode first (Xcode → Settings → Platforms)
-   # Then create simulator
-   xcrun simctl create "iPhone 16 Pro iOS 18.2" "iPhone 16 Pro" "com.apple.CoreSimulator.SimRuntime.iOS-18-2"
-   # Command returns the device ID to use
-   ```
+```bash
+# List available simulators and get device ID (iOS 17+ required)
+xcrun simctl list devices available | grep -E "iPhone"
+# Copy the device ID (e.g., 229F70D9-99F6-411E-870A-23C4B153C01E)
+```
 
 ### Build Commands Reference
 
@@ -168,7 +179,7 @@ cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
 xcodebuild -workspace Sportsbook.xcworkspace -scheme BetssonCameroonApp -destination 'platform=iOS Simulator,id=YOUR_DEVICE_ID' build 2>&1 | xcbeautify --quieter
 ```
 
-**BetssonFranceApp (Legacy Multi-Target)**:
+**BetssonFranceLegacy (Legacy Multi-Target)**:
 ```bash
 cd /Users/rroques/Desktop/GOMA/iOS/sportsbook-ios
 # Development schemes
@@ -207,7 +218,6 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 - Always use `xcbeautify --quieter` for LLM-readable output
 - Standard destination: `platform=iOS Simulator,id=YOUR_DEVICE_ID` (use device ID, not simulator name)
 - Working directory: `/Users/rroques/Desktop/GOMA/iOS/sportsbook-ios`
-- **Prerequisites**: iOS 18.2 runtime must be installed in Xcode
 
 ## Development Guidance
 
@@ -215,7 +225,7 @@ xcodebuild -workspace Sportsbook.xcworkspace -scheme "Betsson PROD" -destination
 
 1.  **Project Selection Strategy**:
     *   **New Development**: Use BetssonCameroonApp patterns and architecture
-    *   **Legacy Maintenance**: Work within BetssonFranceApp while migrating to modern patterns
+    *   **Legacy Maintenance**: Work within BetssonFranceLegacy while migrating to modern patterns
     *   **Component Development**: Use GomaUICatalog for testing and validation
 
 *For a detailed explanation of the MVVM architecture, refer to [Documentation/MVVM.md](Documentation/MVVM.md).*
@@ -277,9 +287,9 @@ class ModernViewController: UIViewController {
 
 #### **Project Architecture**:
 - **Multi-project workspace**: Not a single project anymore
-- **GomaUI**: Established component library with 50+ components
+- **GomaUI**: Established component library with 138 components
 - **BetssonCameroonApp**: Target architecture for new development
-- **BetssonFranceApp**: Legacy codebase requiring gradual modernization
+- **BetssonFranceLegacy**: Legacy codebase requiring gradual modernization
 
 #### **UI Development**:
 - **UIKit Only**: No SwiftUI views - use GomaUI components instead
@@ -316,7 +326,7 @@ Development session journals are located in `Documentation/DevelopmentJournal/`.
 
 - **Primary Development**: BetssonCameroonApp for new features
 - **Component Development**: GomaUICatalog for UI component work
-- **Legacy Maintenance**: BetssonFranceApp with gradual migration to modern patterns
+- **Legacy Maintenance**: BetssonFranceLegacy with gradual migration to modern patterns
 - **Testing**: Use mock implementations extensively for isolated testing
 
 ## Migration Strategy
@@ -324,20 +334,20 @@ Development session journals are located in `Documentation/DevelopmentJournal/`.
 ### Current Architectural State
 
 - **BetssonCameroonApp**: Modern architecture (target state)
-- **BetssonFranceApp**: Legacy architecture (migration source)
+- **BetssonFranceLegacy**: Legacy architecture (migration source)
 - **GomaUI**: Established component library (architectural foundation)
 - **ServicesProvider**: Mature backend abstraction (stable foundation)
 
 ### Development Approach
 
-1. **New Features**: Implement in BetssonCameroonApp first, then adapt for BetssonFranceApp if needed
+1. **New Features**: Implement in BetssonCameroonApp first, then adapt for BetssonFranceLegacy if needed
 2. **UI Updates**: Migrate custom views to GomaUI components when possible
 3. **Backend Changes**: Work through ServicesProvider protocols - never directly modify API clients
 4. **Shared Logic**: Extract common functionality to appropriate Swift packages
 
 ### Technical Debt Management
 
-- **BetssonFranceApp Complexity**: Over 970 directories indicate significant technical complexity
+- **BetssonFranceLegacy Complexity**: Over 970 directories indicate significant technical complexity
 - **Screen Proliferation**: 40+ screens suggest need for consolidation
 - **Mixed Patterns**: Gradual migration from legacy patterns to protocol-driven architecture
 - **Package Optimization**: Some packages (SharedModels, Theming) need consolidation or deprecation
@@ -352,7 +362,7 @@ This workspace has two specialized MCP (Model Context Protocol) servers configur
 
 ### When to Use Concurrent Tool Calls
 
-- Reading multiple project files simultaneously (e.g., BetssonCameroonApp + BetssonFranceApp + GomaUI)
+- Reading multiple project files simultaneously (e.g., BetssonCameroonApp + BetssonFranceLegacy + GomaUI)
 - Adding debug code across multiple packages in same investigation
 - Running parallel bash commands for different schemes/targets
 - Gathering information from multiple Swift packages concurrently
@@ -363,7 +373,7 @@ This workspace has two specialized MCP (Model Context Protocol) servers configur
 - **Always specify workspace**: Use `Sportsbook.xcworkspace` for all operations
 - **Scheme-specific work**: Choose appropriate scheme based on development context
 - **Package dependency**: Remember manual Xcode project integration for new Swift packages
-- **Multi-project impact**: Consider changes across BetssonCameroonApp and BetssonFranceApp
+- **Multi-project impact**: Consider changes across BetssonCameroonApp and BetssonFranceLegacy
 - **MCP Integration**: Use SwiftLens for precise Swift operations, built-in tools for exploration
 
 ## cWAMP - WebSocket WAMP Client Tool
@@ -407,7 +417,7 @@ This workspace has two specialized MCP (Model Context Protocol) servers configur
 1. **GomaUI Issues**: Test in GomaUICatalog, check component protocol implementations
 2. **ServicesProvider Issues**: Verify provider configurations, check protocol conformance
 3. **BetssonCameroonApp Issues**: Modern patterns - check protocol bindings, StyleProvider usage
-4. **BetssonFranceApp Issues**: Legacy patterns - check for mixed architectural approaches
+4. **BetssonFranceLegacy Issues**: Legacy patterns - check for mixed architectural approaches
 
 ### Systematic Approach
 

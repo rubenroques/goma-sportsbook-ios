@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class TermsAcceptanceViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Acceptance States
 
     func testTermsAcceptanceView_AcceptanceStates_Light() throws {
         let vc = TermsAcceptanceViewSnapshotViewController(category: .acceptanceStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class TermsAcceptanceViewSnapshotTests: XCTestCase {
 
     func testTermsAcceptanceView_AcceptanceStates_Dark() throws {
         let vc = TermsAcceptanceViewSnapshotViewController(category: .acceptanceStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

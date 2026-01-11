@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class ExtendedListFooterViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Basic States
 
     func testExtendedListFooterView_BasicStates_Light() throws {
         let vc = ExtendedListFooterViewSnapshotViewController(category: .basicStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class ExtendedListFooterViewSnapshotTests: XCTestCase {
 
     func testExtendedListFooterView_BasicStates_Dark() throws {
         let vc = ExtendedListFooterViewSnapshotViewController(category: .basicStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class ExtendedListFooterViewSnapshotTests: XCTestCase {
 
     func testExtendedListFooterView_PartnerVariants_Light() throws {
         let vc = ExtendedListFooterViewSnapshotViewController(category: .partnerVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class ExtendedListFooterViewSnapshotTests: XCTestCase {
 
     func testExtendedListFooterView_PartnerVariants_Dark() throws {
         let vc = ExtendedListFooterViewSnapshotViewController(category: .partnerVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

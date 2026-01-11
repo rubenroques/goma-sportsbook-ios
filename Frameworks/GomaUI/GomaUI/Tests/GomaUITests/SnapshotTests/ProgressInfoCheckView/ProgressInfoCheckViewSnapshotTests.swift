@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class ProgressInfoCheckViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Progress States
 
     func testProgressInfoCheckView_ProgressStates_Light() throws {
         let vc = ProgressInfoCheckViewSnapshotViewController(category: .progressStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class ProgressInfoCheckViewSnapshotTests: XCTestCase {
 
     func testProgressInfoCheckView_ProgressStates_Dark() throws {
         let vc = ProgressInfoCheckViewSnapshotViewController(category: .progressStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class ProgressInfoCheckViewSnapshotTests: XCTestCase {
 
     func testProgressInfoCheckView_EnabledStates_Light() throws {
         let vc = ProgressInfoCheckViewSnapshotViewController(category: .enabledStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class ProgressInfoCheckViewSnapshotTests: XCTestCase {
 
     func testProgressInfoCheckView_EnabledStates_Dark() throws {
         let vc = ProgressInfoCheckViewSnapshotViewController(category: .enabledStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

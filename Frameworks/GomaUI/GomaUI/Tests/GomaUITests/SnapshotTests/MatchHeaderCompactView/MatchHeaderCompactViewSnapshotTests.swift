@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class MatchHeaderCompactViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Basic Variants
 
     func testMatchHeaderCompactView_BasicVariants_Light() throws {
         let vc = MatchHeaderCompactViewSnapshotViewController(category: .basicVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class MatchHeaderCompactViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderCompactView_BasicVariants_Dark() throws {
         let vc = MatchHeaderCompactViewSnapshotViewController(category: .basicVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class MatchHeaderCompactViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderCompactView_LiveMatchVariants_Light() throws {
         let vc = MatchHeaderCompactViewSnapshotViewController(category: .liveMatchVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class MatchHeaderCompactViewSnapshotTests: XCTestCase {
 
     func testMatchHeaderCompactView_LiveMatchVariants_Dark() throws {
         let vc = MatchHeaderCompactViewSnapshotViewController(category: .liveMatchVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

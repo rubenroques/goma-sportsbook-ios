@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class DescriptionBlockViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Content Variants
 
     func testDescriptionBlockView_ContentVariants_Light() throws {
         let vc = DescriptionBlockViewSnapshotViewController(category: .contentVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class DescriptionBlockViewSnapshotTests: XCTestCase {
 
     func testDescriptionBlockView_ContentVariants_Dark() throws {
         let vc = DescriptionBlockViewSnapshotViewController(category: .contentVariants)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),

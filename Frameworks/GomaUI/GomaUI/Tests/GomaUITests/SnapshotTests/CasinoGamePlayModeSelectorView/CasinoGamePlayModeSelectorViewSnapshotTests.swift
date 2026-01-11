@@ -4,10 +4,13 @@ import SnapshotTesting
 
 final class CasinoGamePlayModeSelectorViewSnapshotTests: XCTestCase {
 
+    // TODO: Migrate component to `currentDisplayState + dropFirst()` or scheduler injection for synchronous rendering.
+
     // MARK: - Basic States
 
     func testCasinoGamePlayModeSelectorView_BasicStates_Light() throws {
         let vc = CasinoGamePlayModeSelectorViewSnapshotViewController(category: .basicStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -17,6 +20,7 @@ final class CasinoGamePlayModeSelectorViewSnapshotTests: XCTestCase {
 
     func testCasinoGamePlayModeSelectorView_BasicStates_Dark() throws {
         let vc = CasinoGamePlayModeSelectorViewSnapshotViewController(category: .basicStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
@@ -28,6 +32,7 @@ final class CasinoGamePlayModeSelectorViewSnapshotTests: XCTestCase {
 
     func testCasinoGamePlayModeSelectorView_UserStates_Light() throws {
         let vc = CasinoGamePlayModeSelectorViewSnapshotViewController(category: .userStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
@@ -37,6 +42,7 @@ final class CasinoGamePlayModeSelectorViewSnapshotTests: XCTestCase {
 
     func testCasinoGamePlayModeSelectorView_UserStates_Dark() throws {
         let vc = CasinoGamePlayModeSelectorViewSnapshotViewController(category: .userStates)
+        SnapshotTestConfig.waitForCombineRendering(vc)
         assertSnapshot(
             of: vc,
             as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.darkTraits),
