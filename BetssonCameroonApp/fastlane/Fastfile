@@ -452,14 +452,21 @@ platform :ios do
       next
     end
 
-    # Count devices in file
-    device_count = File.readlines(devices_file).reject { |line| line.strip.empty? || line.start_with?("#") }.count
-    if device_count == 0
+    # Count and list devices in file
+    device_lines = File.readlines(devices_file).reject { |line| line.strip.empty? || line.start_with?("#") }
+    if device_lines.count == 0
       UI.error "❌ No devices found in #{devices_file}"
       next
     end
 
-    UI.message "📱 Found #{device_count} device(s) in #{devices_file}"
+    UI.message "📱 Found #{device_lines.count} device(s) in #{devices_file}:"
+    device_lines.each_with_index do |line, index|
+      next if index == 0 # Skip header row
+      parts = line.strip.split("\t")
+      if parts.length >= 2
+        UI.message "   - #{parts[1]} (#{parts[0]})"
+      end
+    end
 
     # Step 2: Register devices with Apple Developer
     UI.message "📝 Step 1/2: Registering devices with Apple Developer..."

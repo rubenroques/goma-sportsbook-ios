@@ -201,6 +201,19 @@ platform :ios do
     devices_file = "./fastlane/devices.txt"
     if File.exist?(devices_file)
       require 'csv'
+
+      # Log devices being registered
+      UI.message "📱 Registering devices from #{devices_file}:"
+      File.readlines(devices_file).each_with_index do |line, index|
+        next if index == 0 # Skip header row
+        line = line.strip
+        next if line.empty?
+        parts = line.split("\t")
+        if parts.length >= 2
+          UI.message "   - #{parts[1]} (#{parts[0]})"
+        end
+      end
+
       register_params = {
         devices_file: devices_file,
         team_id: match_params[:team_id]
@@ -211,8 +224,9 @@ platform :ios do
         register_params[:username] = match_params[:username]
       end
       register_devices(register_params)
+      UI.success "Device registration completed"
     else
-      UI.message "ℹNo devices.txt file found, skipping device registration"
+      UI.message "ℹ️  No devices.txt file found, skipping device registration"
     end
 
     # Fetch certificates and profiles
