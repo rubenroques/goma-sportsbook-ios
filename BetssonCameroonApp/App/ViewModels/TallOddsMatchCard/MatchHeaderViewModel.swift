@@ -49,7 +49,7 @@ final class MatchHeaderViewModel: MatchHeaderViewModelProtocol {
     }
     
     public var isFavoriteButtonVisiblePublisher: AnyPublisher<Bool, Never> {
-        return Just(true).eraseToAnyPublisher()
+        return Just(false).eraseToAnyPublisher()
     }
     
     // MARK: - Initialization

@@ -14,12 +14,14 @@ public struct OddsAcceptanceData: Equatable {
     public let labelText: String
     public let linkText: String
     public let isEnabled: Bool
-    
-    public init(state: OddsAcceptanceState, labelText: String, linkText: String, isEnabled: Bool) {
+    public let isLinkTappable: Bool
+
+    public init(state: OddsAcceptanceState, labelText: String, linkText: String, isEnabled: Bool, isLinkTappable: Bool = false) {
         self.state = state
         self.labelText = labelText
         self.linkText = linkText
         self.isEnabled = isEnabled
+        self.isLinkTappable = isLinkTappable
     }
 }
 

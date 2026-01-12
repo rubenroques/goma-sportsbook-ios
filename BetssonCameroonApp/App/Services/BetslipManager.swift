@@ -544,14 +544,14 @@ extension BetslipManager {
                 case .forbidden:
                     return BetslipErrorType.forbiddenRequest
                 case .errorMessage(let message):
-                    
-                    if message.contains("bet_error") {
+
+                    if message.contains("bet_error") || message == "no_funds" {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
-                    
+
                     return BetslipErrorType.betPlacementDetailedError(message: message)
                 case .notPlacedBet(let message):
-                    if message.contains("bet_error") {
+                    if message.contains("bet_error") || message == "no_funds" {
                         return BetslipErrorType.betPlacementDetailedError(message: localized(message))
                     }
                     return BetslipErrorType.betPlacementDetailedError(message: message)

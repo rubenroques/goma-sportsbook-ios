@@ -31,22 +31,22 @@ class OddsAcceptanceViewModel: OddsAcceptanceViewModelProtocol {
     
     // MARK: - Protocol Methods
     func updateState(_ state: OddsAcceptanceState) {
-        let newData = OddsAcceptanceData(state: state, labelText: currentData.labelText, linkText: currentData.linkText, isEnabled: currentData.isEnabled)
+        let newData = OddsAcceptanceData(state: state, labelText: currentData.labelText, linkText: currentData.linkText, isEnabled: currentData.isEnabled, isLinkTappable: currentData.isLinkTappable)
         dataSubject.send(newData)
     }
-    
+
     func updateLabelText(_ text: String) {
-        let newData = OddsAcceptanceData(state: currentData.state, labelText: text, linkText: currentData.linkText, isEnabled: currentData.isEnabled)
+        let newData = OddsAcceptanceData(state: currentData.state, labelText: text, linkText: currentData.linkText, isEnabled: currentData.isEnabled, isLinkTappable: currentData.isLinkTappable)
         dataSubject.send(newData)
     }
-    
+
     func updateLinkText(_ text: String) {
-        let newData = OddsAcceptanceData(state: currentData.state, labelText: currentData.labelText, linkText: text, isEnabled: currentData.isEnabled)
+        let newData = OddsAcceptanceData(state: currentData.state, labelText: currentData.labelText, linkText: text, isEnabled: currentData.isEnabled, isLinkTappable: currentData.isLinkTappable)
         dataSubject.send(newData)
     }
-    
+
     func setEnabled(_ isEnabled: Bool) {
-        let newData = OddsAcceptanceData(state: currentData.state, labelText: currentData.labelText, linkText: currentData.linkText, isEnabled: isEnabled)
+        let newData = OddsAcceptanceData(state: currentData.state, labelText: currentData.labelText, linkText: currentData.linkText, isEnabled: isEnabled, isLinkTappable: currentData.isLinkTappable)
         dataSubject.send(newData)
     }
     

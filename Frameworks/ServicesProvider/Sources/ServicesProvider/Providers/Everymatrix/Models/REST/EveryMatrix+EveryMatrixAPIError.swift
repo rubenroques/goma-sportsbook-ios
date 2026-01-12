@@ -31,6 +31,8 @@ extension EveryMatrix {
             
             var message: String? {
                 switch errorCode {
+                case "106":
+                    "no_funds"
                 case "121":
                     "bet_error_wager_limit"
                 default:

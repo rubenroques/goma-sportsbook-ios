@@ -4,6 +4,16 @@
 
 releases:
 
+  - version: "0.4.1"
+    build: 4101
+    date: "2026-01-12"
+    notes:
+      - "fix(betslip): [SPOR-7113] [BC-283] BA - Stake field now validates decimal format - rejects multiple separators and limits to 2 decimal places"
+      - "fix(localization): [SPOR-7089] [BC-309] French error message for 'Bet Failed' now displays localized text - maps error code 106 to no_funds key"
+      - "fix(sports): [SPOR-7110] [BC-470] BA - Remove Favorites from quick links, filters, and match headers"
+      - "feat(GomaUI): [SPOR-7078] Add isLinkTappable property to OddsAcceptanceView - defaults to false, disables underline and tap gesture"
+      - "feat(GomaUI): [SPOR-7078] Add OddsAcceptanceView snapshot tests - acceptance states and link states categories with light/dark mode"
+
   - version: "0.4.0"
     build: 4002
     date: "2026-01-09"

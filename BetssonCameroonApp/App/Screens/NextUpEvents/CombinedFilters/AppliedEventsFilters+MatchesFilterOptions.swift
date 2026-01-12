@@ -34,8 +34,6 @@ extension AppliedEventsFilters {
             sortBy = .popular
         case .upcoming:
             sortBy = .upcoming
-        case .favorites:
-            sortBy = .favorites
         }
         
         // Convert leagueFilter to TournamentFilter and LocationFilter
@@ -97,7 +95,8 @@ extension MatchesFilterOptions {
         case .upcoming:
             sortType = .upcoming
         case .favorites:
-            sortType = .favorites
+            // Favorites not supported in BetssonCameroonApp, fallback to popular
+            sortType = .popular
         }
         
         // Convert LocationFilter + TournamentFilter to LeagueFilterIdentifier

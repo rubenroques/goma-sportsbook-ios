@@ -485,8 +485,7 @@ class NextUpEventsViewModel {
         // Replicate the same data structure from createSortFilterViewModel
         let sortOptions = [
             SortOption(id: "1", icon: "popular_icon", title: "Popular", count: 25),
-            SortOption(id: "2", icon: "timelapse_icon", title: "Upcoming", count: 15),
-            SortOption(id: "3", icon: "favourites_icon", title: "Favourites", count: 0)
+            SortOption(id: "2", icon: "timelapse_icon", title: "Upcoming", count: 15)
         ]
         let currentSortOption = sortOptions.first { $0.id == sortId }
         return FilterOptionItem(type: .sortBy, title: "\(currentSortOption?.title ?? "")", icon: "\(currentSortOption?.icon ?? "")")

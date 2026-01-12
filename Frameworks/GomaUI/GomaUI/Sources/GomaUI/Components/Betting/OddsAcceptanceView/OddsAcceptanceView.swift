@@ -162,9 +162,9 @@ public final class OddsAcceptanceView: UIView {
         
         // Update title label
         titleLabel.text = data.labelText
-        
+
         // Update link label
-        updateLinkLabel(linkText: data.linkText)
+        updateLinkLabel(linkText: data.linkText, isLinkTappable: data.isLinkTappable)
         
         // Update enabled state
         alpha = data.isEnabled ? 1.0 : 0.5
@@ -185,18 +185,22 @@ public final class OddsAcceptanceView: UIView {
         }
     }
     
-    private func updateLinkLabel(linkText: String) {
+    private func updateLinkLabel(linkText: String, isLinkTappable: Bool) {
         let attributedString = NSMutableAttributedString(string: linkText)
-        
-        // Set link attributes with underline
-        let linkAttributes: [NSAttributedString.Key: Any] = [
+
+        var linkAttributes: [NSAttributedString.Key: Any] = [
             .font: StyleProvider.fontWith(type: .regular, size: 12),
-            .foregroundColor: StyleProvider.Color.textPrimary,
-            .underlineStyle: NSUnderlineStyle.single.rawValue
+            .foregroundColor: StyleProvider.Color.textPrimary
         ]
+
+        // Only add underline if link is tappable
+        if isLinkTappable {
+            linkAttributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+        }
+
         attributedString.addAttributes(linkAttributes, range: NSRange(location: 0, length: linkText.count))
-        
         labelWithLinkLabel.attributedText = attributedString
+        labelWithLinkLabel.isUserInteractionEnabled = isLinkTappable
     }
     
     // MARK: - Actions
@@ -244,10 +248,15 @@ public final class OddsAcceptanceView: UIView {
         let disabledView = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel.disabledMock())
         disabledView.translatesAutoresizingMaskIntoConstraints = false
 
+        // Tappable link state (for future use - shows underlined link)
+        let tappableLinkView = OddsAcceptanceView(viewModel: MockOddsAcceptanceViewModel(state: .notAccepted, isLinkTappable: true))
+        tappableLinkView.translatesAutoresizingMaskIntoConstraints = false
+
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(acceptedView)
         stackView.addArrangedSubview(notAcceptedView)
         stackView.addArrangedSubview(disabledView)
+        stackView.addArrangedSubview(tappableLinkView)
 
         vc.view.addSubview(stackView)
 

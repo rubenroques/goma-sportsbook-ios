@@ -417,8 +417,7 @@ extension CombinedFiltersViewController {
                     expandedByDefault: true,
                     options: [
                         FilterOption(id: "popular", label: localized("popular"), value: "popular"),
-                        FilterOption(id: "upcoming", label: localized("upcoming"), value: "upcoming"),
-                        FilterOption(id: "favourites", label: localized("favourites"), value: "favourites")
+                        FilterOption(id: "upcoming", label: localized("upcoming"), value: "upcoming")
                     ]
                 )
             ),
@@ -763,8 +762,6 @@ extension CombinedFiltersViewModel {
                         iconName = "popular_icon"
                     case "upcoming":
                         iconName = "timelapse_icon"
-                    case "favourites":
-                        iconName = "favourites_icon"
                     default:
                         iconName = "circle.fill"
                     }

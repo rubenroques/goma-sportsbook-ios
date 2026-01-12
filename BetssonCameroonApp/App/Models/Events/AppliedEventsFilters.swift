@@ -41,8 +41,7 @@ public struct AppliedEventsFilters: Codable, Equatable {
     public enum SortType: String, Codable, CaseIterable {
         case popular = "1"
         case upcoming = "2"
-        case favorites = "3"
-        
+
         /// Display name for UI
         public var displayName: String {
             switch self {
@@ -50,8 +49,6 @@ public struct AppliedEventsFilters: Codable, Equatable {
                 return "Popular"
             case .upcoming:
                 return "Upcoming"
-            case .favorites:
-                return "Favourites"
             }
         }
     }

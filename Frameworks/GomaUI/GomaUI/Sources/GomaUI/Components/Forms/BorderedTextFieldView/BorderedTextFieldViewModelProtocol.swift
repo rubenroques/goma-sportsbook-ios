@@ -118,4 +118,20 @@ public protocol BorderedTextFieldViewModelProtocol {
     var usesCustomInput: Bool { get }
     var maxLength: Int? { get }
     var allowedCharacters: CharacterSet? { get }
+
+    /// Validates if the proposed text change should be allowed.
+    /// Use this for format validation (e.g., ensuring only one decimal separator in numeric fields).
+    /// - Parameters:
+    ///   - currentText: The current text in the field
+    ///   - proposedText: The text that would result from the change
+    /// - Returns: true if the change should be allowed, false otherwise
+    func shouldAllowTextChange(from currentText: String, to proposedText: String) -> Bool
+}
+
+// MARK: - Default Implementations
+public extension BorderedTextFieldViewModelProtocol {
+    /// Default implementation allows all text changes (backward compatible)
+    func shouldAllowTextChange(from currentText: String, to proposedText: String) -> Bool {
+        return true
+    }
 }

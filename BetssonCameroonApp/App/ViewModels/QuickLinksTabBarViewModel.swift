@@ -81,7 +81,6 @@ extension QuickLinksTabBarViewModel {
         let casinoQuickLinks = [
             QuickLinkItem(type: .sports, title: localized("sports"), icon: UIImage(named: "sports_quick_link_icon")),
             QuickLinkItem(type: .live, title: localized("live"), icon: UIImage(named: "live_quick_link_icon")),
-            QuickLinkItem(type: .favourites, title: localized("favourites"), icon: UIImage(named: "favourites_quick_link_icon")),
             QuickLinkItem(type: .lite, title: localized("lite"), icon: UIImage(named: "casino_quick_link_icon")),
             QuickLinkItem(type: .promos, title: localized("promos"), icon: UIImage(named: "promos_quick_link_icon"))
         ]

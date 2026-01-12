@@ -1563,15 +1563,7 @@ class MainTabBarCoordinator: Coordinator {
                 self.showInPlayEventsScreen(withContextChange: true)
             }
         case .favourites:
-            if let viewController = self.nextUpEventsCoordinator?.viewController {
-                mainTabBarViewController?.showNextUpEventsScreen(with: viewController, withContextChange: true)
-            }
-            else {
-                self.showNextUpEventsScreen(withContextChange: true)
-            }
-            var currentFilters = self.currentFilters
-            currentFilters.sortType = .favorites
-            self.applyFilters(currentFilters)
+            break
 
         case .lite:
             // TODO: Show lite(?) when available

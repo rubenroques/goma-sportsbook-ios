@@ -616,6 +616,11 @@ extension BorderedTextFieldView: UITextFieldDelegate {
             }
         }
 
+        // Check format validation (e.g., decimal number format)
+        if !viewModel.shouldAllowTextChange(from: currentText, to: updatedText) {
+            return false
+        }
+
         return true
     }
 

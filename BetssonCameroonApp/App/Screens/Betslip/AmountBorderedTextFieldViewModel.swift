@@ -172,6 +172,30 @@ final class AmountBorderedTextFieldViewModel: BorderedTextFieldViewModelProtocol
             setVisualState(.disabled)
         }
     }
+
+    // MARK: - Format Validation
+
+    /// Validates decimal number format for amount input.
+    /// Ensures only one decimal separator and maximum 2 decimal places.
+    func shouldAllowTextChange(from currentText: String, to proposedText: String) -> Bool {
+        // Allow empty string (clearing the field)
+        if proposedText.isEmpty { return true }
+
+        // Normalize decimal separators (treat , and . as equivalent)
+        let normalized = proposedText.replacingOccurrences(of: ",", with: ".")
+
+        // Reject if multiple decimal separators
+        let decimalCount = normalized.filter { $0 == "." }.count
+        if decimalCount > 1 { return false }
+
+        // Validate decimal places (max 2 for currency)
+        if let decimalIndex = normalized.firstIndex(of: ".") {
+            let decimalPart = normalized[normalized.index(after: decimalIndex)...]
+            if decimalPart.count > 2 { return false }
+        }
+
+        return true
+    }
 }
 
 // MARK: - Factory Methods
