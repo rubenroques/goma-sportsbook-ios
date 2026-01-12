@@ -442,14 +442,32 @@ Add the component to the TestCase app by:
 
 Before completing your component, ensure:
 
+### Architecture
 - [ ] All view model methods are implemented
-- [ ] UI renders properly in all states
-- [ ] StyleProvider is used for colors and fonts
+- [ ] Protocol has both `currentDisplayState` AND `displayStatePublisher`
+- [ ] View uses `dropFirst()` pattern to avoid double-render
+- [ ] Mock uses `CurrentValueSubject` backing both state properties
+- [ ] `ReusableView` protocol implemented with `prepareForReuse()`
+
+### Code Quality
+- [ ] StyleProvider is used for all colors and fonts
 - [ ] Auto Layout constraints are properly set
 - [ ] Component reacts correctly to state changes
-- [ ] Mock view model provides useful sample data
-- [ ] Documentation clearly explains usage
-- [ ] SwiftUI previews work correctly using PreviewUIView/PreviewUIViewController helpers
-- [ ] Component added to the test app
+- [ ] Mock view model provides realistic simulated behavior
+- [ ] No `print()` statements or debug code
+- [ ] No TODO/FIXME comments
+
+### Testing & Documentation
+- [ ] SwiftUI previews work correctly
+- [ ] **Snapshot tests created** (light + dark mode) - See [SNAPSHOT_TESTING.md](./SNAPSHOT_TESTING.md)
+- [ ] Reference images recorded and committed
+- [ ] **Component added to GomaUICatalog** - See [ADDING_CATALOG_COMPONENTS.md](./ADDING_CATALOG_COMPONENTS.md)
+- [ ] **catalog-metadata.json updated** with component entry
+- [ ] Documentation README.md explains usage
+
+### Build Verification
+- [ ] GomaUICatalog scheme builds successfully
+
+For the complete contribution workflow including all steps, see the **[CONTRIBUTING.md](../../CONTRIBUTING.md)** guide.
 
 Following these guidelines will ensure your component integrates seamlessly with the GomaUI library and provides a consistent user experience across the application.

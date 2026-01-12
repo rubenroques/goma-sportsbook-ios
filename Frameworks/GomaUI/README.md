@@ -43,11 +43,23 @@ This architecture enables client-specific features (such as specialized UI eleme
 
 ## Available Components
 
-The library currently includes the following components:
+GomaUI includes **138+ production-ready components** organized into categories:
 
-1. **AdaptiveTabBarView** - A dynamic tab bar with support for multiple configurations and nested navigation
-2. **QuickLinksTabBar** - A simple horizontal scrolling bar for quick access items
-3. **MultiWidgetToolbarView** - A highly flexible toolbar that can contain various widgets in configurable layouts
+| Category | Components | Description |
+|----------|------------|-------------|
+| **Betting** | OutcomeItemView, MarketOutcomesLineView, BetslipOddsBoostHeader | Odds, markets, betslip |
+| **Match Cards** | TallOddsMatchCardView, InlineMatchCardView, MatchHeaderCompact | Match displays |
+| **Casino** | CasinoGameCardView, CasinoCategoryBarView, RecentlyPlayedGamesView | Casino games |
+| **Navigation** | AdaptiveTabBarView, QuickLinksTabBar, CustomNavigationView | Tab bars, headers |
+| **Forms** | BorderedTextFieldView, PinDigitEntryView, CustomSliderView | Input fields |
+| **Filters** | SportGamesFilterView, TimeSliderView, PillSelectorBarView | Selection controls |
+| **Promotions** | TopBannerSliderView, PromotionCardView, BonusCardView | Banners, offers |
+| **Wallet** | WalletWidgetView, TransactionItemView, AmountPillsView | Financial displays |
+| **Profile** | ProfileMenuListView, ThemeSwitcherView, LanguageSelectorView | User settings |
+| **Status** | ToasterView, EmptyStateActionView, FloatingOverlayView | Notifications, feedback |
+| **UI Elements** | ButtonView, InfoRowView, ExpandableSectionView | Building blocks |
+
+Run the **GomaUICatalog** app to explore all components interactively.
 
 ## Architecture
 
@@ -160,9 +172,21 @@ To integrate GomaUI into your project:
    view.addSubview(tabBar)
    ```
 
-## Creating New Components
+## Contributing
 
-For detailed instructions on creating new components, see the [Component Creation Guide](ComponentCreationGuide.md).
+Want to add a new component? See the **[Contributing Guide](CONTRIBUTING.md)** for:
+
+- Complete component creation workflow
+- File structure requirements
+- Snapshot testing setup
+- Catalog integration steps
+- Pre-submission checklist
+
+For detailed technical guides, see:
+- [Component Creation Guide](Documentation/Guides/COMPONENT_CREATION.md)
+- [Snapshot Testing Guide](Documentation/Guides/SNAPSHOT_TESTING.md)
+- [UIKit Code Organization](Documentation/Guides/UIKIT_CODE_ORGANIZATION.md)
+- [Adding to Catalog](Documentation/Guides/ADDING_CATALOG_COMPONENTS.md)
 
 ## Requirements
 

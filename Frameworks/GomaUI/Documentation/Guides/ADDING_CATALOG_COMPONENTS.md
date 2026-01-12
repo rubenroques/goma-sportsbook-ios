@@ -201,6 +201,16 @@ UIComponent(
 )
 ```
 
+## Don't Forget: Catalog Metadata
+
+After adding your component to the gallery, you must also update the catalog metadata for web documentation:
+
+1. Open `Documentation/Catalog/catalog-metadata.json`
+2. Add an entry for your component with appropriate fields
+3. Validate JSON: `node -e "require('./Frameworks/GomaUI/Documentation/Catalog/catalog-metadata.json'); console.log('Valid')"`
+
+See [CONTRIBUTING.md](../../CONTRIBUTING.md#metadata-registration) for metadata field guidelines.
+
 ## Questions?
 
 If you encounter issues or have questions:
@@ -212,6 +222,6 @@ If you encounter issues or have questions:
 
 ---
 
-**Remember**: The gallery is the first impression developers get of your component. Make it count! 🎨✨
+**Remember**: The gallery is the first impression developers get of your component. Make it count!
 
 
