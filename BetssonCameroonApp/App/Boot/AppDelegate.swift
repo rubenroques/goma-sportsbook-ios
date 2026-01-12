@@ -17,6 +17,7 @@ import FirebaseCore
 import FirebaseAuth
 import GomaPerformanceKit
 import GomaLogger
+import NewRelic
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,6 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        //New relic
+        NewRelic.start(withApplicationToken:"eu01xx8e9b292d3f9fc6278350a24699d0a780f1da-NRMA")
+        
         // Configure performance tracking
         #if DEBUG
         let consoleDestination = ConsolePerformanceDestination()

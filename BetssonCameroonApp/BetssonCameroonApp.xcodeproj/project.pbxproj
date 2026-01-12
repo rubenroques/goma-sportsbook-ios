@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CE04B7CB2ED59DCA000191DF /* GomaLogger in Frameworks */ = {isa = PBXBuildFile; productRef = CE04B7CA2ED59DCA000191DF /* GomaLogger */; };
 		CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */; };
+		CE068C582F13A628004CB503 /* NewRelic in Frameworks */ = {isa = PBXBuildFile; productRef = CE068C572F13A628004CB503 /* NewRelic */; };
 		CE58B6EC2EC8B1B5001591C1 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CE58B6EB2EC8B1B5001591C1 /* Debug.xcconfig */; };
 		CE60145D2E2FE56400C6A9DD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */; };
 		CE60145F2E2FE56400C6A9DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CE60145E2E2FE56400C6A9DD /* FirebaseAuth */; };
@@ -92,6 +93,7 @@
 				CE04B7CD2ED59DCA000191DF /* GomaPerformanceKit in Frameworks */,
 				CE6014612E2FE56400C6A9DD /* FirebaseCrashlytics in Frameworks */,
 				CE60146E2E2FE63A00C6A9DD /* PhraseSDK in Frameworks */,
+				CE068C582F13A628004CB503 /* NewRelic in Frameworks */,
 				CE6014682E2FE5E400C6A9DD /* IQKeyboardManagerSwift in Frameworks */,
 				CE04B7CB2ED59DCA000191DF /* GomaLogger in Frameworks */,
 				CE74A2272E2E8EA100DDE78D /* GomaUI in Frameworks */,
@@ -169,6 +171,7 @@
 				CEFC00002FB5F00000000002 /* SwiftLint */,
 				CE74A1492E2E8D9400DDE78D /* Frameworks */,
 				CE74A14A2E2E8D9400DDE78D /* Resources */,
+				CE068C592F13A665004CB503 /* Automatically upload Release dSYM to New Relic */,
 			);
 			buildRules = (
 			);
@@ -193,6 +196,7 @@
 				CEC736C62E6839670084368A /* XPush */,
 				CE04B7CA2ED59DCA000191DF /* GomaLogger */,
 				CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */,
+				CE068C572F13A628004CB503 /* NewRelic */,
 			);
 			productName = BetssonCameroonApp;
 			productReference = CE74A14C2E2E8D9400DDE78D /* Betsson CM Stg.app */;
@@ -278,6 +282,7 @@
 				CE6014692E2FE61100C6A9DD /* XCRemoteSwiftPackageReference "Reachability" */,
 				CE60146C2E2FE63A00C6A9DD /* XCRemoteSwiftPackageReference "ios-sdk" */,
 				CEC736C52E6839670084368A /* XCRemoteSwiftPackageReference "Xtremepush-iOS-SDK" */,
+				CE068C562F13A628004CB503 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CE74A14D2E2E8D9400DDE78D /* Products */;
@@ -317,6 +322,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		CE068C592F13A665004CB503 /* Automatically upload Release dSYM to New Relic */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Automatically upload Release dSYM to New Relic";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ ${CONFIGURATION} = \"Debug\" ]; then\n  echo \"Skipping DSYM upload CONFIGURATION: ${CONFIGURATION}\"\n  exit 0\nfi\nARTIFACT_DIR=\"${BUILD_DIR%Build/*}\"\nSCRIPT=`/usr/bin/find \"${SRCROOT}\" \"${ARTIFACT_DIR}\" -type f -name run-symbol-tool | head -n 1`\n/bin/sh \"${SCRIPT}\" \"eu01xx8e9b292d3f9fc6278350a24699d0a780f1da-NRMA\"\n";
+		};
 		CEFC00002FB5F00000000001 /* Copy Firebase Config */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1280,6 +1303,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CE068C562F13A628004CB503 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/newrelic/newrelic-ios-agent-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.6.0;
+			};
+		};
 		CE60145B2E2FE56400C6A9DD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -1330,6 +1361,11 @@
 		CE04B7CC2ED59DCA000191DF /* GomaPerformanceKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = GomaPerformanceKit;
+		};
+		CE068C572F13A628004CB503 /* NewRelic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE068C562F13A628004CB503 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */;
+			productName = NewRelic;
 		};
 		CE60145C2E2FE56400C6A9DD /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
