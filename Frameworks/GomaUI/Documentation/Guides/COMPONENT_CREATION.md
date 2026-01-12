@@ -132,12 +132,21 @@ final public class YourComponentView: UIView {
 // MARK: - Preview Provider
 #if DEBUG
 
-@available(iOS 17.0, *)
 #Preview("Default") {
-    PreviewUIView {
-        YourComponentView(viewModel: MockYourComponentViewModel.defaultMock)
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let component = YourComponentView(viewModel: MockYourComponentViewModel.defaultMock)
+        component.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(component)
+
+        NSLayoutConstraint.activate([
+            component.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            component.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16),
+            component.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16)
+        ])
+
+        return vc
     }
-    .frame(height: 100)
 }
 
 #endif
@@ -282,66 +291,83 @@ Describe the various properties and methods available for customization.
 
 ## Preview Helpers
 
-GomaUI includes several helper classes to make it easier to preview your components in SwiftUI previews. These are located in the `GomaUI/Sources/GomaUI/Helpers/PreviewsHelper` directory:
+GomaUI includes several helper classes to make it easier to preview your components in SwiftUI previews. These are located in the `GomaUI/Sources/GomaUI/Helpers/PreviewsHelper` directory.
 
-### PreviewUIView
+### PreviewUIViewController (Recommended)
 
-This wrapper allows you to display UIKit views in SwiftUI previews:
+**Always prefer `PreviewUIViewController` over `PreviewUIView`** for previewing UIKit components. This wrapper provides a proper UIKit view hierarchy that more accurately represents how your component will behave in production:
+
+**Why PreviewUIViewController is better:**
+- **Proper AutoLayout behavior**: Constraints attach to a real UIViewController's view, behaving exactly as they would at runtime
+- **Safe area support**: Access to `safeAreaLayoutGuide` for proper layout under navigation bars and notches
+- **Resize detection**: Easier to spot layout issues when the container resizes
+- **Real-world testing**: The preview environment matches production more closely
 
 ```swift
-@available(iOS 17.0, *)
 #Preview("Component Preview") {
-    PreviewUIView {
-        // Return your UIView-based component here
-        YourComponentView(viewModel: MockYourComponentViewModel.defaultMock)
-    }
-    .frame(height: 100) // Set appropriate preview size
-}
-```
-
-You can also preview multiple views in a single preview:
-
-```swift
-@available(iOS 17.0, *)
-#Preview("Component States") {
-    VStack {
-        PreviewUIView {
-            YourComponentView(viewModel: MockYourComponentViewModel.stateMock1)
-        }
-        .frame(height: 80)
-
-        PreviewUIView {
-            YourComponentView(viewModel: MockYourComponentViewModel.stateMock2)
-        }
-        .frame(height: 80)
-    }
-}
-```
-
-### PreviewUIViewController
-
-Used for previewing UIViewControllers:
-
-```swift
-@available(iOS 17.0, *)
-#Preview("Component in View Controller") {
     PreviewUIViewController {
         let vc = UIViewController()
-        let componentView = YourComponentView(viewModel: MockYourComponentViewModel.defaultMock)
-        componentView.translatesAutoresizingMaskIntoConstraints = false
-        vc.view.addSubview(componentView)
+        let component = YourComponentView(viewModel: MockYourComponentViewModel.defaultMock)
+        component.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(component)
 
         NSLayoutConstraint.activate([
-            componentView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor),
-            componentView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor),
-            componentView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor),
-            componentView.heightAnchor.constraint(equalToConstant: 80)
+            component.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            component.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            component.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
         ])
 
         return vc
     }
 }
 ```
+
+For multiple component states:
+
+```swift
+#Preview("Component States") {
+    PreviewUIViewController {
+        let vc = UIViewController()
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(stackView)
+
+        // Add multiple component states
+        stackView.addArrangedSubview(YourComponentView(viewModel: MockYourComponentViewModel.stateMock1))
+        stackView.addArrangedSubview(YourComponentView(viewModel: MockYourComponentViewModel.stateMock2))
+        stackView.addArrangedSubview(YourComponentView(viewModel: MockYourComponentViewModel.stateMock3))
+
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: vc.view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -16)
+        ])
+
+        return vc
+    }
+}
+```
+
+### PreviewUIView (Simple Cases Only)
+
+Use `PreviewUIView` only for very simple components where you just need a quick visual check and AutoLayout behavior is not critical:
+
+```swift
+#Preview("Quick Check") {
+    PreviewUIView {
+        YourSimpleView(viewModel: MockViewModel.defaultMock)
+    }
+    .frame(height: 100)
+}
+```
+
+**Limitations of PreviewUIView:**
+- SwiftUI controls sizing via `.frame()` modifiers, which can mask AutoLayout issues
+- No access to `safeAreaLayoutGuide`
+- Intrinsic content size calculations may not match runtime behavior
+- Harder to detect resize/constraint issues
 
 ### PreviewTableViewController
 
@@ -359,7 +385,6 @@ struct ComponentState: PreviewStateRepresentable {
     let text: String
 }
 
-@available(iOS 17.0, *)
 #Preview("Component States in Table") {
     PreviewUIViewController {
         PreviewTableViewController(
