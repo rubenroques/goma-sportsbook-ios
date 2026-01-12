@@ -124,56 +124,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # ============================================================
-      # DEBUG: REMOVE THIS STEP AFTER VERIFYING SECRETS
-      # ============================================================
-      - name: "[DEBUG] Print all secrets - REMOVE AFTER DEBUGGING"
-        env:
-          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
-          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
-          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
-          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-          GOMA_TEAM_ID: ${{ secrets.GOMA_TEAM_ID }}
-          BFR_PROD_TEAM_ID: ${{ secrets.BFR_PROD_TEAM_ID }}
-          BFR_PROD_API_KEY_ID: ${{ secrets.BFR_PROD_API_KEY_ID }}
-          BFR_PROD_API_ISSUER_ID: ${{ secrets.BFR_PROD_API_ISSUER_ID }}
-          BFR_UAT_FIREBASE_APP_ID: ${{ secrets.BFR_UAT_FIREBASE_APP_ID }}
-          BFR_PROD_FIREBASE_APP_ID: ${{ secrets.BFR_PROD_FIREBASE_APP_ID }}
-          BFR_PROD_FIREBASE_CLI_TOKEN: ${{ secrets.BFR_PROD_FIREBASE_CLI_TOKEN }}
-          BETSSONCM_STG_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_STG_FIREBASE_APP_ID }}
-          BETSSONCM_UAT_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_UAT_FIREBASE_APP_ID }}
-          BETSSONCM_PROD_FIREBASE_APP_ID: ${{ secrets.BETSSONCM_PROD_FIREBASE_APP_ID }}
-          FIREBASE_PROJECT_NUMBER: ${{ secrets.FIREBASE_PROJECT_NUMBER }}
-          DISCORD_TEAM_RELEASE_WEBHOOK: ${{ secrets.DISCORD_TEAM_RELEASE_WEBHOOK }}
-          DISCORD_PERSONAL_RELEASE_WEBHOOK: ${{ secrets.DISCORD_PERSONAL_RELEASE_WEBHOOK }}
-        run: |
-          echo "========== DEBUG: ALL SECRETS =========="
-          echo "MATCH_PASSWORD (base64): $(echo -n "$MATCH_PASSWORD" | base64)"
-          echo "MATCH_PASSWORD length: ${#MATCH_PASSWORD}"
-          echo "MATCH_PASSWORD hex: $(echo -n "$MATCH_PASSWORD" | xxd -p)"
-          echo "---"
-          echo "MATCH_GIT_URL=$MATCH_GIT_URL"
-          echo "MATCH_GIT_PRIVATE_KEY (first 50 chars)=${MATCH_GIT_PRIVATE_KEY:0:50}"
-          echo "APP_STORE_CONNECT_API_KEY_ID=$APP_STORE_CONNECT_API_KEY_ID"
-          echo "APP_STORE_CONNECT_API_ISSUER_ID=$APP_STORE_CONNECT_API_ISSUER_ID"
-          echo "FIREBASE_CLI_TOKEN=$FIREBASE_CLI_TOKEN"
-          echo "GOMA_TEAM_ID=$GOMA_TEAM_ID"
-          echo "BFR_PROD_TEAM_ID=$BFR_PROD_TEAM_ID"
-          echo "BFR_PROD_API_KEY_ID=$BFR_PROD_API_KEY_ID"
-          echo "BFR_PROD_API_ISSUER_ID=$BFR_PROD_API_ISSUER_ID"
-          echo "BFR_UAT_FIREBASE_APP_ID=$BFR_UAT_FIREBASE_APP_ID"
-          echo "BFR_PROD_FIREBASE_APP_ID=$BFR_PROD_FIREBASE_APP_ID"
-          echo "BFR_PROD_FIREBASE_CLI_TOKEN=$BFR_PROD_FIREBASE_CLI_TOKEN"
-          echo "BETSSONCM_STG_FIREBASE_APP_ID=$BETSSONCM_STG_FIREBASE_APP_ID"
-          echo "BETSSONCM_UAT_FIREBASE_APP_ID=$BETSSONCM_UAT_FIREBASE_APP_ID"
-          echo "BETSSONCM_PROD_FIREBASE_APP_ID=$BETSSONCM_PROD_FIREBASE_APP_ID"
-          echo "FIREBASE_PROJECT_NUMBER=$FIREBASE_PROJECT_NUMBER"
-          echo "DISCORD_TEAM_RELEASE_WEBHOOK=$DISCORD_TEAM_RELEASE_WEBHOOK"
-          echo "DISCORD_PERSONAL_RELEASE_WEBHOOK=$DISCORD_PERSONAL_RELEASE_WEBHOOK"
-          echo "========================================"
-
       - name: Set client-specific configuration
         id: config
         run: |
