@@ -139,8 +139,8 @@ jobs:
             echo "target=Betsson UAT" >> $GITHUB_OUTPUT
           fi
 
-          # Both clients now use the same CSV format
-          echo "devices_file=fastlane/devices.csv" >> $GITHUB_OUTPUT
+          # Both clients use Apple's tab-separated .txt format
+          echo "devices_file=fastlane/devices.txt" >> $GITHUB_OUTPUT
 
       - name: Add new devices to file
         id: devices
@@ -169,7 +169,7 @@ jobs:
               continue
             fi
 
-            echo "$UUID,$NAME,ios" >> "$DEVICES_FILE"
+            printf '%s\t%s\n' "$UUID" "$NAME" >> "$DEVICES_FILE"
             echo "Added device: $UUID - $NAME"
             DEVICE_COUNT=$((DEVICE_COUNT + 1))
           done <<< "$DEVICES_INPUT"

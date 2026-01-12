@@ -424,7 +424,7 @@ platform :ios do
     output_file
   end
 
-  desc "Register new devices from local devices.csv and update provisioning profiles"
+  desc "Register new devices from local devices.txt and update provisioning profiles"
   lane :register_new_devices do |options|
     # Setup App Store Connect API Key for authentication
     setup_api_key
@@ -439,15 +439,15 @@ platform :ios do
 
     UI.message "🚀 Starting device registration workflow for #{app_scheme}..."
 
-    # Step 1: Check local devices.csv file
+    # Step 1: Check local devices.txt file (Apple's tab-separated format)
     # Note: Fastlane runs from BetssonCameroonApp/fastlane/ directory
-    devices_file = "./devices.csv"
+    devices_file = "./devices.txt"
 
     unless File.exist?(devices_file)
-      UI.error "No devices.csv file found at #{devices_file}"
-      UI.message "Create a devices.csv file with CSV format:"
-      UI.message "Format: Device ID,Device Name,Device Platform"
-      UI.message "Example: 00008030-001234567890001E,iPhone 15 Pro,ios"
+      UI.error "No devices.txt file found at #{devices_file}"
+      UI.message "Create a devices.txt file with Apple's tab-separated format:"
+      UI.message "Format: Device ID<TAB>Device Name"
+      UI.message "Example: 00008030-001234567890001E	iPhone 15 Pro"
       next
     end
 
@@ -456,7 +456,7 @@ platform :ios do
     # Count and list devices in file
     device_count = 0
     UI.message "Registering devices from #{devices_file}:"
-    CSV.foreach(devices_file, headers: true) do |row|
+    CSV.foreach(devices_file, headers: true, col_sep: "\t") do |row|
       UI.message "   - #{row['Device Name']} (#{row['Device ID']})"
       device_count += 1
     end
@@ -512,7 +512,7 @@ platform :ios do
 
   desc "Keep version and distribute to Staging (SAME build, registers devices, distributes)"
   lane :keep_version_distribute_staging do |options|
-    # Step 1: Register devices from devices.csv
+    # Step 1: Register devices from devices.txt
     register_new_devices(app_scheme: "BetssonCM Staging")
 
     # Step 2: Build and distribute with updated profile
@@ -535,7 +535,7 @@ platform :ios do
 
   desc "Keep version and distribute to UAT (SAME build, registers devices, distributes)"
   lane :keep_version_distribute_uat do |options|
-    # Step 1: Register devices from devices.csv
+    # Step 1: Register devices from devices.txt
     register_new_devices(app_scheme: "BetssonCM UAT")
 
     # Step 2: Build and distribute with updated profile

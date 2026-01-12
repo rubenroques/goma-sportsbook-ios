@@ -12,7 +12,7 @@ Complete guide for the **fully automated CI/CD workflow** for Betsson Cameroon.
 | **Adding devices only** | `keep_version_distribute_staging` | NO bump, registers devices, builds (SAME build #), distributes |
 | **Local testing** | `distribute_staging` | Prompts for build++, registers devices, builds, distributes |
 
-**Key principle:** ALL lanes check `devices.csv` and register devices automatically.
+**Key principle:** ALL lanes check `devices.txt` and register devices automatically.
 
 ---
 
@@ -113,8 +113,8 @@ releases:
 vim BetssonCameroonApp/CHANGELOG.yml
 # Add entry for version 2.1.3 build 21309
 
-# 3. Ensure devices.csv has latest devices
-vim BetssonCameroonApp/fastlane/devices.csv
+# 3. Ensure devices.txt has latest devices
+vim BetssonCameroonApp/fastlane/devices.txt
 
 # 4. Commit changes
 git add .
@@ -230,9 +230,9 @@ fastlane version_bump
 
 ---
 
-## devices.csv Format
+## devices.txt Format
 
-Location: `BetssonCameroonApp/fastlane/devices.csv`
+Location: `BetssonCameroonApp/fastlane/devices.txt`
 
 ```
 Device ID	Device Name
@@ -321,9 +321,9 @@ Changelog file not found, using generic notes
 
 ### Devices not registered
 ```
-WARNING: devices.csv not found
+WARNING: devices.txt not found
 ```
-→ Create `devices.csv` in `BetssonCameroonApp/fastlane/`
+→ Create `devices.txt` in `BetssonCameroonApp/fastlane/`
 
 ### Staging succeeds but production fails
 → Check production-specific secrets and Firebase App ID
@@ -380,7 +380,7 @@ fastlane lanes
 1. Check Fastlane logs: `BetssonCameroonApp/fastlane/logs/`
 2. Check GitHub Actions logs (for CI/CD runs)
 3. Verify `.env` file has all required variables
-4. Ensure `devices.csv` format is correct (tab-separated)
+4. Ensure `devices.txt` format is correct (tab-separated)
 5. Test locally before using CI/CD
 
 **Key Insight**: Tag-based dual releases are the recommended approach - they automatically deploy to both environments with a single tag push!

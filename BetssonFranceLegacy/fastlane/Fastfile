@@ -197,15 +197,15 @@ platform :ios do
       match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
     end
 
-    # Register new devices if devices.csv exists
+    # Register new devices if devices.txt exists (Apple's tab-separated format)
     # Note: Fastlane runs from BetssonFranceLegacy/fastlane/ directory
-    devices_file = "./devices.csv"
+    devices_file = "./devices.txt"
     if File.exist?(devices_file)
       require 'csv'
 
       # Log devices being registered
       UI.message "Registering devices from #{devices_file}:"
-      CSV.foreach(devices_file, headers: true) do |row|
+      CSV.foreach(devices_file, headers: true, col_sep: "\t") do |row|
         UI.message "   - #{row['Device Name']} (#{row['Device ID']})"
       end
 
@@ -227,7 +227,7 @@ platform :ios do
         UI.message "Details: #{ex.message}"
       end
     else
-      UI.message "No devices.csv file found, skipping device registration"
+      UI.message "No devices.txt file found, skipping device registration"
     end
 
     # Fetch certificates and profiles

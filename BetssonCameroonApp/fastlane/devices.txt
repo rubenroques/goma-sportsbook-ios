@@ -1,0 +1,16 @@
+Device ID	Device Name
+00008030-001925DE2238802E	iPhone 11 Pro Max @ GOMA - Ruben Roques
+00008140-000E19190A44801C	iPhone 16 Pro @ BetssonF - sluneau
+00008150-000929093EC0401C	iPhone 17 Pro Max @ BetssonF - sluneau
+00008140-000A4C501E07801C	iPhone 16 Pro @ SportRadar - juanlucamposp
+00008120-0004685C3E80C01E	iPhone 14 Pro Max @ Betsson - george.saliba
+00008120-00162D892E87C01E	iPhone 14 Pro Max @ Betsson - sabrina.rabini
+00008110-0001552C0EF0A01E	iPhone 13 @ Betsson - loic.debauche
+00008140-00080D613C86801C	iPhone 16 Pro @ EM - matei.coman
+00008140-000830200E29801C	iPhone 16 Pro @ EM - matei.tamas
+00008150-0010249C0140401C	iPhone 17 Pro @ EM - bogdan petrisor
+00008140-00112D5C3609801C	iPhone 16 Pro @ EM - cristian radu
+00008101-000C394E147A001E	iPhone 12 Pro Max @ EM-Ext - derickaleh7
+00008150-001608163E04401C	iPhone 17 Pro Max @ Betsson - sabrina.rabini
+00008110-000245323485801E	iPhone 13 @ GOMA - davidcarrajola
+00008110-001A00E10A04801E	iPhone 13 @ GOMA - daniela

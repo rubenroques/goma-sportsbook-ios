@@ -85,7 +85,7 @@ Fetch device UDIDs from Firebase App Distribution
 [bundle exec] fastlane ios register_new_devices
 ```
 
-Register new devices from local devices.csv and update provisioning profiles
+Register new devices from local devices.txt and update provisioning profiles
 
 ### ios keep_version_distribute_staging
 
