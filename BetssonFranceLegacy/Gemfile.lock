@@ -131,10 +131,10 @@ GEM
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
     fastlane-plugin-discord_notifier (0.1.7)
       discordrb (~> 3.3.0)
-    fastlane-plugin-firebase_app_distribution (0.9.1)
+    fastlane-plugin-firebase_app_distribution (0.10.1)
       google-apis-firebaseappdistribution_v1 (~> 0.3.0)
       google-apis-firebaseappdistribution_v1alpha (~> 0.2.0)
-    fastlane-plugin-versioning (0.6.0)
+    fastlane-plugin-versioning (0.7.1)
     fastlane-sirp (1.0.0)
       sysrandom (~> 1.0)
     ffi (1.17.3)
@@ -269,6 +269,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   fastlane
   fastlane-plugin-discord_notifier
   fastlane-plugin-firebase_app_distribution

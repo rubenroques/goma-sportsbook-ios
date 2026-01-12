@@ -440,32 +440,30 @@ platform :ios do
     UI.message "🚀 Starting device registration workflow for #{app_scheme}..."
 
     # Step 1: Check local devices.csv file
-    # Note: Fastlane runs from BetssonCameroonApp/ directory
+    # Note: Fastlane runs from BetssonCameroonApp/fastlane/ directory
     devices_file = "./devices.csv"
 
     unless File.exist?(devices_file)
-      UI.error "❌ No devices.csv file found at #{devices_file}"
-      UI.message "ℹ️  Create a devices.csv file with tab-separated values"
-      UI.message "ℹ️  Format: Header row REQUIRED: Device ID<tab>Device Name<tab>Device Platform"
-      UI.message "ℹ️  Then data rows: 00008030-001234567890001E<tab>iPhone 15 Pro<tab>ios"
-      UI.message "ℹ️  Or use 'fastlane fetch_firebase_devices' to download all devices from Firebase as reference"
+      UI.error "No devices.csv file found at #{devices_file}"
+      UI.message "Create a devices.csv file with CSV format:"
+      UI.message "Format: Device ID,Device Name,Device Platform"
+      UI.message "Example: 00008030-001234567890001E,iPhone 15 Pro,ios"
       next
     end
+
+    require 'csv'
 
     # Count and list devices in file
-    device_lines = File.readlines(devices_file).reject { |line| line.strip.empty? || line.start_with?("#") }
-    if device_lines.count == 0
-      UI.error "❌ No devices found in #{devices_file}"
-      next
+    device_count = 0
+    UI.message "Registering devices from #{devices_file}:"
+    CSV.foreach(devices_file, headers: true) do |row|
+      UI.message "   - #{row['Device Name']} (#{row['Device ID']})"
+      device_count += 1
     end
 
-    UI.message "📱 Found #{device_lines.count} device(s) in #{devices_file}:"
-    device_lines.each_with_index do |line, index|
-      next if index == 0 # Skip header row
-      parts = line.strip.split("\t")
-      if parts.length >= 2
-        UI.message "   - #{parts[1]} (#{parts[0]})"
-      end
+    if device_count == 0
+      UI.error "No devices found in #{devices_file}"
+      next
     end
 
     # Step 2: Register devices with Apple Developer

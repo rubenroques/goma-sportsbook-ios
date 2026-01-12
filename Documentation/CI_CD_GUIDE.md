@@ -238,7 +238,7 @@ clients:
     project: "Sportsbook.xcodeproj"
     target: "BetssonFranceApp"
     changelog: "BetssonFranceLegacy/CHANGELOG.yml"
-    devices_file: "fastlane/devices.txt"
+    devices_file: "fastlane/devices.csv"
     release_branch: "betsson-france-dev"
     staging_scheme: "Betsson UAT"
     production_scheme: "Betsson PROD"
@@ -257,14 +257,14 @@ Device ID,Device Name,Device Platform
 
 No quotes, comma-separated.
 
-### BFR Format (`BetssonFranceLegacy/fastlane/devices.txt`)
+### BFR Format (`BetssonFranceLegacy/fastlane/devices.csv`)
 
 ```csv
-"Device ID","Device Name","Device Platform"
-"00008030-001234567890","iPhone 15 Pro - John","ios"
+Device ID,Device Name,Device Platform
+00008030-001234567890,iPhone 15 Pro - John,ios
 ```
 
-Quoted, comma-separated.
+Same format as BCM — unquoted, comma-separated.
 
 ---
 

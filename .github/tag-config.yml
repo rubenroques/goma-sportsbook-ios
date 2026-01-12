@@ -23,7 +23,7 @@ clients:
     workspace: "../Sportsbook.xcworkspace"
     target: "BetssonFranceApp"
     changelog: "BetssonFranceLegacy/CHANGELOG.yml"
-    devices_file: "fastlane/devices.txt"
+    devices_file: "fastlane/devices.csv"
     release_branch: "betsson-france-dev"
     staging_scheme: "Betsson UAT"
     production_scheme: "Betsson PROD"

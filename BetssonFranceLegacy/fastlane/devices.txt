@@ -1,3 +1,0 @@
-"Device ID","Device Name","Device Platform"
-"00008030-001925DE2238802E","iPhone 11 Pro Max de Ruben Roques","ios"
-"00008120-000C20C61E2A601E","iPhone 15 Maxime","ios"
