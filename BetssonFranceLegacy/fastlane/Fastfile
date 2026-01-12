@@ -273,6 +273,7 @@ platform :ios do
 
     # Build app with detailed output
     build_ios_app(
+      workspace: "../Sportsbook.xcworkspace",
       scheme: app_scheme,
       clean: true,
       silent: !is_verbose,
