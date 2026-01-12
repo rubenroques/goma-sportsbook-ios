@@ -197,6 +197,13 @@ platform :ios do
       UI.user_error!("Please specify a valid scheme: 'Betsson UAT' or 'Betsson PROD'")
     end
 
+    # Add keychain configuration if running in CI
+    if ENV["KEYCHAIN_NAME"] && ENV["KEYCHAIN_PASSWORD"]
+      UI.message "🔐 Using CI keychain: #{ENV['KEYCHAIN_NAME']}"
+      match_params[:keychain_name] = ENV["KEYCHAIN_NAME"]
+      match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
+    end
+
     # Register new devices if devices.txt exists
     devices_file = "./fastlane/devices.txt"
     if File.exist?(devices_file)
