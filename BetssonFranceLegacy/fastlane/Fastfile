@@ -5,17 +5,10 @@ Dotenv.load('.env')
 
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 
-# --- Start: Added Variables ---
+# --- Project Configuration ---
 XCODEPROJ_PATH = "Sportsbook.xcodeproj"
-# Consider moving this sensitive URL to your .env file (e.g., ENV['DISCORD_WEBHOOK_URL'])
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1356283170596585635/_mbemzxXvNy71qlqYuzxxOuWvm0kfOfnxdv3BttrJfs1g5asnY444AfR1qPhpXIucsYa"
-# --- End: Added Variables ---
 
-# Verify Apple credentials are set
-unless ENV["FASTLANE_USER"] && ENV["FASTLANE_PASSWORD"]
-  UI.important "⚠️  Fastlane credentials not found in environment variables"
-  UI.important "Please set FASTLANE_USER and FASTLANE_PASSWORD in your .env file"
-end
+# Note: Using App Store Connect API Keys for authentication (no FASTLANE_USER/PASSWORD needed)
 
 # Fastfile
 default_platform(:ios)
@@ -311,50 +304,7 @@ platform :ios do
     UI.success "✅ Distribution completed successfully!"
   end
 
-  # --- Start: Private Helper Lane for Discord Notification ---
-  private_lane :_notify_discord do |options|
-    begin
-      env_name = options[:env_name]
-      bundle_id_key = options[:bundle_id_key]
-      emoji = options[:emoji]
-      title_prefix = options[:title_prefix]
-      target_name = options[:target_name]
-
-      UI.message("Sending Discord notification for #{env_name}...")
-
-      current_version = get_version_number(xcodeproj: XCODEPROJ_PATH)
-      current_build = get_build_number(xcodeproj: XCODEPROJ_PATH)
-      bundle_id = BUNDLE_ID_MAPPING[bundle_id_key]["main_app"]
-      today_date = Time.now.strftime('%Y-%m-%d')
-
-      # Format Release Notes
-      raw_notes = options[:release_notes]
-      if raw_notes && !raw_notes.strip.empty?
-        release_notes_text = raw_notes.split(';')
-                                      .map { |note| "- #{note.strip}" }
-                                      .join("\n")
-      else
-        release_notes_text = "No release notes provided."
-      end
-
-      discord_notifier(
-        webhook_url: DISCORD_WEBHOOK_URL,
-        success: true,
-        title: "#{emoji} Betsson #{title_prefix} Build Deployed",
-        description: release_notes_text,
-        fields: [
-          { name: "Version", value: current_version, inline: true },
-          { name: "Build", value: current_build, inline: true },
-          { name: "Date", value: today_date, inline: true },
-          { name: "Bundle ID (#{env_name})", value: bundle_id, inline: false }
-        ]
-      )
-      UI.success("Discord notification sent for #{env_name}.")
-    rescue => ex
-      UI.error("Discord notification for #{env_name} failed: #{ex}")
-    end
-  end
-  # --- End: Private Helper Lane for Discord Notification ---
+  # Discord notifications are handled by GitHub Actions workflow
 
   lane :betsson_uat do |options|
     distribute_to_firebase(
@@ -362,16 +312,6 @@ platform :ios do
       environment: "UAT",
       release_notes: options[:release_notes],
       verbose: options[:verbose]
-    )
-
-    # Call the helper lane for notification
-    _notify_discord(
-      env_name: "UAT",
-      bundle_id_key: "BETSSON_UAT",
-      emoji: "🔸",
-      title_prefix: "UAT",
-      target_name: "Betsson UAT",
-      release_notes: options[:release_notes]
     )
   end
 
@@ -381,16 +321,6 @@ platform :ios do
       environment: "PROD",
       release_notes: options[:release_notes],
       verbose: options[:verbose]
-    )
-
-    # Call the helper lane for notification
-    _notify_discord(
-      env_name: "PROD",
-      bundle_id_key: "BETSSON_PROD",
-      emoji: "🟠",
-      title_prefix: "PROD",
-      target_name: "Betsson PROD",
-      release_notes: options[:release_notes]
     )
   end
 
@@ -458,18 +388,7 @@ platform :ios do
       UI.message("  Groups: #{uat_firebase_groups}")
       UI.message("  Release Notes:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
       UI.important("Dry Run: Skipping actual call to distribute_to_firebase.")
-      UI.message("---")
-
-      UI.message("Discord Notification (Dry Run):")
-      UI.message("  Webhook: #{DISCORD_WEBHOOK_URL}")
-      UI.message("  Title: #{uat_emoji} Betsson #{uat_title} Build Deployed")
-      UI.message("  Description:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
-      UI.message("  Fields:")
-      UI.message("    Version: #{current_version}")
-      UI.message("    Build: #{current_build}")
-      UI.message("    Date: #{today_date}")
-      UI.message("    Bundle ID (#{uat_env}): #{bundle_id}")
-      UI.important("Dry Run: Skipping actual call to _notify_discord.")
+      UI.message("  (Discord notifications handled by GitHub Actions workflow)")
 
     rescue => ex
       UI.error("Dry Run Simulation Error (UAT): #{ex}")
@@ -506,18 +425,7 @@ platform :ios do
       UI.message("  Groups: #{prod_firebase_groups}")
       UI.message("  Release Notes:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
       UI.important("Dry Run: Skipping actual call to distribute_to_firebase.")
-      UI.message("---")
-
-      UI.message("Discord Notification (Dry Run):")
-      UI.message("  Webhook: #{DISCORD_WEBHOOK_URL}")
-      UI.message("  Title: #{prod_emoji} Betsson #{prod_title} Build Deployed")
-      UI.message("  Description:\n#{release_notes_text.gsub(/^/, '    ')}") # Indent notes
-      UI.message("  Fields:")
-      UI.message("    Version: #{current_version}")
-      UI.message("    Build: #{current_build}")
-      UI.message("    Date: #{today_date}")
-      UI.message("    Bundle ID (#{prod_env}): #{bundle_id}")
-      UI.important("Dry Run: Skipping actual call to _notify_discord.")
+      UI.message("  (Discord notifications handled by GitHub Actions workflow)")
 
     rescue => ex
       UI.error("Dry Run Simulation Error (PROD): #{ex}")
