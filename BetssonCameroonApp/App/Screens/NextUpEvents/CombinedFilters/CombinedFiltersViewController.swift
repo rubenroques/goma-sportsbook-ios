@@ -486,9 +486,14 @@ extension CombinedFiltersViewController {
         guard let context = configuration.filtersByContext.first(where: { $0.id == contextId }) else {
             return
         }
-        
+
         // Create filter views based on the configuration order
         for widgetId in context.widgets {
+            // Skip time filter for live mode - live events always use "all" for time range
+            if widgetId == "timeFilter" && viewModel.isLiveMode {
+                continue
+            }
+
             guard let widget = configuration.widgets.first(where: { $0.id == widgetId }) else {
                 continue
             }

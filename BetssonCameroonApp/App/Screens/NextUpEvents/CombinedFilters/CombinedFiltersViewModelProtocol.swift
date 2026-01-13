@@ -14,10 +14,11 @@ protocol CombinedFiltersViewModelProtocol {
     var popularLeagues: [SortOption] { get }
     var popularCountryLeagues: [CountryLeagueOptions] { get }
     var otherCountryLeagues: [CountryLeagueOptions] { get }
-    
+
     var appliedFilters: AppliedEventsFilters { get set }
     var filterConfiguration: FilterConfiguration { get }
     var currentContextId: String { get }
+    var isLiveMode: Bool { get }
     
     var dynamicViewModels: [String: Any] { get }
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> { get }

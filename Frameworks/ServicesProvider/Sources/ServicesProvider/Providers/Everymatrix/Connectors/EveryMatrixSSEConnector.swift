@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import LDSwiftEventSource
+import GomaLogger
 
 /// Connector for Server-Sent Events (SSE) streaming using LDSwiftEventSource
 /// Used for real-time updates (cashout values, wallet updates, user session events)
@@ -38,7 +39,7 @@ class EveryMatrixSSEConnector: Connector {
     /// - Returns: Publisher emitting SSEStreamEvent or error
     func request<T: Decodable>(_ endpoint: Endpoint, decodingType: T.Type) -> AnyPublisher<SSEStreamEvent, ServiceProviderError> {
 
-        print("[SSEDebug] 📡 EveryMatrixSSEConnector: Preparing SSE request for endpoint: \(endpoint.endpoint)")
+        GomaLogger.debug(.realtime, category: "SSE", "📡 EveryMatrixSSEConnector: Preparing SSE request for endpoint: \(endpoint.endpoint)")
 
         // Build URL components
         guard var components = URLComponents(string: endpoint.url + endpoint.endpoint) else {
@@ -64,14 +65,14 @@ class EveryMatrixSSEConnector: Connector {
                         return Fail(error: ServiceProviderError.unknown).eraseToAnyPublisher()
                     }
 
-                    print("[SSEDebug] 🔐 EveryMatrixSSEConnector: Using session token for authenticated SSE request")
+                    GomaLogger.debug(.realtime, category: "SSE", "🔐 EveryMatrixSSEConnector: Using session token for authenticated SSE request")
 
                     // Add authentication headers
                     var authenticatedHeaders = headers
                     authenticatedHeaders = self.addAuthenticationHeaders(to: authenticatedHeaders, session: session, endpoint: endpoint)
 
-                    print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
-                    print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Headers: \(authenticatedHeaders)")
+                    GomaLogger.debug(.realtime, category: "SSE", "📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
+                    GomaLogger.debug(.realtime, category: "SSE", "📡 EveryMatrixSSEConnector: SSE Headers: \(authenticatedHeaders)")
 
                     // Create EventSource with LDSwiftEventSource
                     return self.createEventSource(
@@ -89,14 +90,14 @@ class EveryMatrixSSEConnector: Connector {
                         return serviceError
                     }
                     return ServiceProviderError.errorMessage(message: error.localizedDescription)
-                }
-                .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
         } else {
             // No authentication required, make direct SSE request
-            print("[SSEDebug] 🔓 EveryMatrixSSEConnector: Making unauthenticated SSE request")
+            GomaLogger.debug(.realtime, category: "SSE", "🔓 EveryMatrixSSEConnector: Making unauthenticated SSE request")
 
-            print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
-            print("[SSEDebug] 📡 EveryMatrixSSEConnector: SSE Headers: \(headers)")
+            GomaLogger.debug(.realtime, category: "SSE", "📡 EveryMatrixSSEConnector: SSE Request URL: \(url.absoluteString)")
+            GomaLogger.debug(.realtime, category: "SSE", "📡 EveryMatrixSSEConnector: SSE Headers: \(headers)")
 
             return createEventSource(
                 url: url,
@@ -153,7 +154,7 @@ class EveryMatrixSSEConnector: Connector {
         let eventSource = EventSource(config: config)
         adapter.setEventSource(eventSource)
 
-        print("[SSEDebug] 🚀 EveryMatrixSSEConnector: Starting EventSource connection")
+        GomaLogger.debug(.realtime, category: "SSE", "🚀 EveryMatrixSSEConnector: Starting EventSource connection")
         eventSource.start()
 
         // Return publisher with cleanup on cancellation
@@ -161,7 +162,7 @@ class EveryMatrixSSEConnector: Connector {
             .mapError { $0 as Error }
             .handleEvents(
                 receiveCancel: { [weak adapter] in
-                    print("[SSEDebug] 🛑 EveryMatrixSSEConnector: Subscription cancelled, stopping EventSource")
+                    GomaLogger.debug(.realtime, category: "SSE", "🛑 EveryMatrixSSEConnector: Subscription cancelled, stopping EventSource")
                     adapter?.stop()
                 }
             )
@@ -177,24 +178,24 @@ class EveryMatrixSSEConnector: Connector {
         // Add session token header
         if let sessionIdKey = endpoint.authHeaderKey(for: .sessionId) {
             updatedHeaders[sessionIdKey] = session.sessionId
-            print("[SSEDebug] 🔑 EveryMatrixSSEConnector: Added session token with key: \(sessionIdKey)")
+            GomaLogger.debug(.realtime, category: "SSE", "🔑 EveryMatrixSSEConnector: Added session token with key: \(sessionIdKey)")
         } else {
             // Default header for session token
             updatedHeaders["X-SessionId"] = session.sessionId
-            print("[SSEDebug] 🔑 EveryMatrixSSEConnector: Added session token with default key: X-SessionId")
+            GomaLogger.debug(.realtime, category: "SSE", "🔑 EveryMatrixSSEConnector: Added session token with default key: X-SessionId")
         }
 
         // Add user ID header if needed
         if let userIdKey = endpoint.authHeaderKey(for: .userId) {
             updatedHeaders[userIdKey] = session.userId
-            print("[SSEDebug] 👤 EveryMatrixSSEConnector: Added user ID with key: \(userIdKey)")
+            GomaLogger.debug(.realtime, category: "SSE", "👤 EveryMatrixSSEConnector: Added user ID with key: \(userIdKey)")
         }
 
         // Add userId header for backward compatibility (matches Web implementation)
         // Web sends both X-user-id AND userId headers
         updatedHeaders["userId"] = session.userId
 
-        print("[SSEDebug] \(dump(updatedHeaders))")
+        GomaLogger.debug(.realtime, category: "SSE", "Headers: \(updatedHeaders)")
         return updatedHeaders
     }
 }

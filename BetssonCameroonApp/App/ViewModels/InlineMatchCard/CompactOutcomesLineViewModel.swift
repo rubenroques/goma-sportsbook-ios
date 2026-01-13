@@ -102,31 +102,26 @@ final class CompactOutcomesLineViewModel: CompactOutcomesLineViewModelProtocol {
     func updateSelectionStates(selectedOfferIds: Set<String>) {
         let currentState = displayStateSubject.value
 
-        // Update left outcome selection
+        // Always call setSelected unconditionally - the displayState's isSelected is stale
+        // (createOutcomeData always sets isSelected: false). The actual selection state
+        // lives in OutcomeItemViewModel.isSelectedSubject.
+
         if let leftOutcome = currentState.leftOutcome,
            let bettingOfferId = leftOutcome.bettingOfferId {
             let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
-            if leftOutcome.isSelected != shouldBeSelected {
-                outcomeViewModels[.left]?.setSelected(shouldBeSelected)
-            }
+            outcomeViewModels[.left]?.setSelected(shouldBeSelected)
         }
 
-        // Update middle outcome selection
         if let middleOutcome = currentState.middleOutcome,
            let bettingOfferId = middleOutcome.bettingOfferId {
             let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
-            if middleOutcome.isSelected != shouldBeSelected {
-                outcomeViewModels[.middle]?.setSelected(shouldBeSelected)
-            }
+            outcomeViewModels[.middle]?.setSelected(shouldBeSelected)
         }
 
-        // Update right outcome selection
         if let rightOutcome = currentState.rightOutcome,
            let bettingOfferId = rightOutcome.bettingOfferId {
             let shouldBeSelected = selectedOfferIds.contains(bettingOfferId)
-            if rightOutcome.isSelected != shouldBeSelected {
-                outcomeViewModels[.right]?.setSelected(shouldBeSelected)
-            }
+            outcomeViewModels[.right]?.setSelected(shouldBeSelected)
         }
     }
 

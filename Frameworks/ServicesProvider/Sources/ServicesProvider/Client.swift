@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import SharedModels
+import GomaLogger
 
 public class Client {
 
@@ -1331,30 +1332,30 @@ extension Client {
     // WALLET BALANCE
     //
     public func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError>{
-        print("[SSEDebug] 📡 Client: subscribeUserInfoUpdates() called - starting UserInfo SSE stream")
+        GomaLogger.debug(.realtime, category: "SSE", "📡 Client: subscribeUserInfoUpdates() called - starting UserInfo SSE stream")
 
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            print("[SSEDebug] ❌ Client: No privilegedAccessManager found")
+            GomaLogger.error(.realtime, category: "SSE", "❌ Client: No privilegedAccessManager found")
             return Fail(error: ServiceProviderError.notSupportedForProvider).eraseToAnyPublisher()
         }
 
-        print("[SSEDebug] ✅ Client: Delegating to privilegedAccessManager.subscribeUserInfoUpdates()")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ Client: Delegating to privilegedAccessManager.subscribeUserInfoUpdates()")
         return privilegedAccessManager.subscribeUserInfoUpdates()
     }
 
     public func stopUserInfoStream() {
-        print("[SSEDebug] 🛑 Client: stopUserInfoStream() called - stopping UserInfo SSE stream")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 Client: stopUserInfoStream() called - stopping UserInfo SSE stream")
 
         guard
             let privilegedAccessManager = self.privilegedAccessManager
         else {
-            print("[SSEDebug] ⚠️ Client: No privilegedAccessManager found")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ Client: No privilegedAccessManager found")
             return
         }
 
-        print("[SSEDebug] ✅ Client: Delegating to privilegedAccessManager.stopUserInfoStream()")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ Client: Delegating to privilegedAccessManager.stopUserInfoStream()")
         return privilegedAccessManager.stopUserInfoStream()
     }
     

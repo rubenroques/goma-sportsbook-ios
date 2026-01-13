@@ -8,7 +8,8 @@ public enum TransactionStatus: Hashable {
     case tax
     case pending
     case cancelled
-    
+    case failed
+
     public var displayName: String {
         switch self {
         case .won:
@@ -20,7 +21,9 @@ public enum TransactionStatus: Hashable {
         case .pending:
             return LocalizationProvider.string("pending")
         case .cancelled:
-            return LocalizationProvider.string("void")
+            return LocalizationProvider.string("cancelled")
+        case .failed:
+            return LocalizationProvider.string("failed")
         }
     }
 
@@ -30,6 +33,8 @@ public enum TransactionStatus: Hashable {
             return StyleProvider.Color.alertSuccess.withAlphaComponent(0.2)
         case .placed:
             return StyleProvider.Color.highlightTertiary.withAlphaComponent(0.2)
+        case .failed:
+            return StyleProvider.Color.alertError.withAlphaComponent(0.2)
         case .tax, .pending, .cancelled:
             return StyleProvider.Color.backgroundPrimary
         }
@@ -41,6 +46,8 @@ public enum TransactionStatus: Hashable {
             return StyleProvider.Color.alertSuccess
         case .placed:
             return StyleProvider.Color.highlightTertiary
+        case .failed:
+            return StyleProvider.Color.alertError
         case .tax, .pending, .cancelled:
             return StyleProvider.Color.textPrimary
         }

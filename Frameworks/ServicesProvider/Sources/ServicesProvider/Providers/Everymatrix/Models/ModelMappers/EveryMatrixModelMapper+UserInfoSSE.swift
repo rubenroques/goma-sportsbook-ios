@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaLogger
 
 extension EveryMatrixModelMapper {
 
@@ -38,14 +39,14 @@ extension EveryMatrixModelMapper {
                 updated.totalRealAmountString = String(format: "%.2f", afterAmount)
                 updated.totalRealAmount = afterAmount
 
-                print("[SSEDebug] Applied Real balance update: \(afterAmount) \(updateBody.currency)")
+                GomaLogger.debug(.realtime, category: "SSE", "Applied Real balance update: \(afterAmount) \(updateBody.currency)")
 
             } else if walletType == "Bonus" {
                 // Update bonus balance fields (String + Double pairs)
                 updated.bonusString = String(format: "%.2f", afterAmount)
                 updated.bonus = afterAmount
 
-                print("[SSEDebug] Applied Bonus balance update: \(afterAmount) \(updateBody.currency)")
+                GomaLogger.debug(.realtime, category: "SSE", "Applied Bonus balance update: \(afterAmount) \(updateBody.currency)")
             }
         }
 

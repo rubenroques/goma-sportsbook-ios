@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import GomaUI
+import GomaLogger
 
 /// A table view cell for displaying betting tickets in the betslip
 public final class BetslipTicketTableViewCell: UITableViewCell {
@@ -62,21 +63,29 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     
     // MARK: - Configuration
     public func configure(with viewModel: BetslipTicketViewModelProtocol) {
-        
+        let cellAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
+        let configureTime = CFAbsoluteTimeGetCurrent()
+        let data = viewModel.currentData
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] configure() START - homeTeam: '\(data.homeTeam)', awayTeam: '\(data.awayTeam)', odds: \(data.oddsValue)")
+
         currentViewModel = viewModel
-        
+
         currentViewModel?.onCloseTapped = { [weak self] in
             self?.onTicketRemoved?()
         }
-        
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] configure() assigning viewModel to ticketView...")
         ticketView.viewModel = viewModel
-        
+
         ticketView.setNeedsLayout()
         ticketView.layoutIfNeeded()
-        
+
         // Invalidate intrinsic content size to force recalculation
         invalidateIntrinsicContentSize()
-        
+
+        let elapsed = (CFAbsoluteTimeGetCurrent() - configureTime) * 1000
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] configure() END - elapsed: \(String(format: "%.2f", elapsed))ms")
     }
     
     // MARK: - View Model Access
@@ -86,17 +95,23 @@ public final class BetslipTicketTableViewCell: UITableViewCell {
     
     // MARK: - Reuse
     public override func prepareForReuse() {
+        let cellAddress = String(format: "%p", unsafeBitCast(self, to: Int.self))
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] prepareForReuse() START")
+
         super.prepareForReuse()
-        
+
         // Clear the stored view model reference
         currentViewModel = nil
-        
+
         // Reset to skeleton state with a fresh placeholder view model
         let skeletonViewModel = MockBetslipTicketViewModel.skeletonMock()
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] prepareForReuse() assigning skeleton VM - homeTeam: '\(skeletonViewModel.currentData.homeTeam)'")
         ticketView.viewModel = skeletonViewModel
-        
+
         // Clear any existing callbacks
         skeletonViewModel.onCloseTapped = nil
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "[\(cellAddress)] prepareForReuse() END")
     }
     
     // MARK: - Intrinsic Content Size

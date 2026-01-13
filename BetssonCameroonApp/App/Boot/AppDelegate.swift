@@ -146,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Enable debug logs for development builds
         #if DEBUG
-        XPush.setShouldShowDebugLogs(true)
+        XPush.setShouldShowDebugLogs(false)
         XPush.setSandboxModeEnabled(true)
         #endif
         
@@ -180,7 +180,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
 
         // GomaLogger options
-        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG", "ODDS_FLOW")
+        GomaLogger.disableCategories("LIVE_SCORE", "TALL_CARD", "SPORT_DEBUG", "ODDS_FLOW", "SSE", "INLINE_CARD", "CASHOUT", "INLINE_SCORE")
 
         // Orientation notification observers
         NotificationCenter.default.addObserver(

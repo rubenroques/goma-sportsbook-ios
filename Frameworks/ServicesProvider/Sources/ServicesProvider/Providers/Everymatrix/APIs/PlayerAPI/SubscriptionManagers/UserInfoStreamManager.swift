@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import LDSwiftEventSource
+import GomaLogger
 
 /// Manages hybrid REST + SSE user information stream
 /// Follows WebApp pattern: REST snapshot + SSE delta updates
@@ -79,11 +80,11 @@ final class UserInfoStreamManager {
         self.sessionCoordinator = sessionCoordinator
         self.decoder.dateDecodingStrategy = .iso8601
 
-        print("[SSEDebug] 📊 UserInfoStreamManager: Initialized")
+        GomaLogger.debug(.realtime, category: "SSE", "📊 UserInfoStreamManager: Initialized")
     }
 
     deinit {
-        print("[SSEDebug] 🗑️ UserInfoStreamManager: Deinitialized")
+        GomaLogger.debug(.realtime, category: "SSE", "🗑️ UserInfoStreamManager: Deinitialized")
 
         // Cancel any pending reconnection
         reconnectionTask?.cancel()
@@ -104,7 +105,7 @@ final class UserInfoStreamManager {
     /// - Returns: Publisher emitting SubscribableContent<UserInfo> events
     func start() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
         guard !isActive else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Already active")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Already active")
             return subject.eraseToAnyPublisher()
         }
 
@@ -112,22 +113,22 @@ final class UserInfoStreamManager {
         isReconnectionActive = true  // ✅ Enable reconnection (matches Web)
         retryCount = 0               // ✅ Reset retry count
 
-        print("[SSEDebug] 🚀 UserInfoStreamManager: Starting hybrid REST + SSE flow")
-        print("[SSEDebug] ✅ UserInfoStreamManager: Reconnection enabled (max retries: \(maxRetries))")
+        GomaLogger.debug(.realtime, category: "SSE", "🚀 UserInfoStreamManager: Starting hybrid REST + SSE flow")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Reconnection enabled (max retries: \(maxRetries))")
 
         // Step 1: Fetch initial balance snapshot via REST
         fetchInitialBalance()
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("[SSEDebug] ❌ UserInfoStreamManager: Initial balance fetch failed - \(error)")
+                        GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: Initial balance fetch failed - \(error)")
                         self?.subject.send(completion: .failure(error))
                     }
                 },
                 receiveValue: { [weak self] wallet in
                     guard let self = self else { return }
 
-                    print("[SSEDebug] ✅ UserInfoStreamManager: Initial balance fetched")
+                    GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Initial balance fetched")
                     self.currentWallet = wallet
 
                     // Emit connected event with initial balance
@@ -152,7 +153,7 @@ final class UserInfoStreamManager {
         guard isActive else { return }
 
         let reasonText = reason ?? "MANUAL"
-        print("[SSEDebug] 🛑 UserInfoStreamManager: Stopping (reason: \(reasonText))")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 UserInfoStreamManager: Stopping (reason: \(reasonText))")
 
         // CRITICAL: Disable reconnection when stopping (matches Web's isActive = false)
         isReconnectionActive = false
@@ -161,15 +162,15 @@ final class UserInfoStreamManager {
         reconnectionTask?.cancel()
         reconnectionTask = nil
 
-        print("[SSEDebug] 🛑 UserInfoStreamManager: Reconnection disabled")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 UserInfoStreamManager: Reconnection disabled")
 
         // CRITICAL: Cancel SSE subscription to stop EventSource
         // This triggers handleEvents(receiveCancel) which calls adapter.stop()
         if let subscription = sseSubscription {
-            print("[SSEDebug] 🛑 UserInfoStreamManager: Canceling SSE subscription")
+            GomaLogger.debug(.realtime, category: "SSE", "🛑 UserInfoStreamManager: Canceling SSE subscription")
             subscription.cancel()
             sseSubscription = nil
-            print("[SSEDebug] ✅ UserInfoStreamManager: SSE subscription canceled")
+            GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: SSE subscription canceled")
         }
 
         isActive = false
@@ -178,30 +179,30 @@ final class UserInfoStreamManager {
         sessionState = .terminated
 
         subject.send(.disconnected)
-        print("[SSEDebug] ✅ UserInfoStreamManager: Stream stopped and disconnected")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Stream stopped and disconnected")
     }
 
     /// Force refresh balance via REST
     /// SSE stream continues in background, REST update emitted via same publisher
     func refreshBalance() {
         guard isActive else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Cannot refresh - stream not active")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Cannot refresh - stream not active")
             return
         }
 
-        print("[SSEDebug] 🔄 UserInfoStreamManager: Force refreshing balance")
+        GomaLogger.debug(.realtime, category: "SSE", "🔄 UserInfoStreamManager: Force refreshing balance")
 
         fetchInitialBalance()
             .sink(
                 receiveCompletion: { completion in
                     if case .failure(let error) = completion {
-                        print("[SSEDebug] ❌ UserInfoStreamManager: Force refresh failed - \(error)")
+                        GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: Force refresh failed - \(error)")
                     }
                 },
                 receiveValue: { [weak self] wallet in
                     guard let self = self else { return }
 
-                    print("[SSEDebug] ✅ UserInfoStreamManager: Force refresh completed")
+                    GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Force refresh completed")
                     self.currentWallet = wallet
                     self.emitUserInfo(event: .contentUpdate)
                 }
@@ -218,7 +219,7 @@ final class UserInfoStreamManager {
                 .eraseToAnyPublisher()
         }
 
-        print("[SSEDebug] 📡 UserInfoStreamManager: Fetching initial balance for user \(userId)")
+        GomaLogger.debug(.realtime, category: "SSE", "📡 UserInfoStreamManager: Fetching initial balance for user \(userId)")
 
         let endpoint = EveryMatrixPlayerAPI.getUserBalance(userId: userId)
 
@@ -236,20 +237,20 @@ final class UserInfoStreamManager {
     /// Start SSE stream for real-time updates
     private func startSSEStream() {
         guard let userId = sessionCoordinator.currentUserId else {
-            print("[SSEDebug] ❌ UserInfoStreamManager: Cannot start SSE - no user ID")
+            GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: Cannot start SSE - no user ID")
             return
         }
 
         // CRITICAL: Cancel previous SSE subscription before creating new one
         // This prevents zombie EventSource instances from accumulating on reconnection
         if let oldSubscription = sseSubscription {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Canceling previous SSE subscription before reconnection")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Canceling previous SSE subscription before reconnection")
             oldSubscription.cancel()
             sseSubscription = nil
-            print("[SSEDebug] ✅ UserInfoStreamManager: Previous SSE subscription canceled")
+            GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Previous SSE subscription canceled")
         }
 
-        print("[SSEDebug] 📡 UserInfoStreamManager: Starting SSE stream for user \(userId)")
+        GomaLogger.debug(.realtime, category: "SSE", "📡 UserInfoStreamManager: Starting SSE stream for user \(userId)")
 
         let endpoint = EveryMatrixPlayerAPI.getUserInformationUpdatesSSE(userId: userId)
 
@@ -257,16 +258,16 @@ final class UserInfoStreamManager {
         sseSubscription = sseConnector.request(endpoint, decodingType: EveryMatrix.UserInfoSSEResponse.self)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    print("[SSEDebug] 🔌 UserInfoStreamManager: SSE stream completed")
+                    GomaLogger.debug(.realtime, category: "SSE", "🔌 UserInfoStreamManager: SSE stream completed")
                     if case .failure(let error) = completion {
-                        print("[SSEDebug] ❌ UserInfoStreamManager: SSE error - \(error)")
+                        GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: SSE error - \(error)")
                     }
 
                     // CRITICAL: Only clear subscription reference, DON'T set isActive = false
                     // Completion only fires when stop() is called (which already sets isActive = false)
                     // Normal disconnections/errors send .disconnected event, not completion
                     self?.sseSubscription = nil
-                    print("[SSEDebug] 📌 UserInfoStreamManager: SSE subscription cleared on completion")
+                    GomaLogger.debug(.realtime, category: "SSE", "📌 UserInfoStreamManager: SSE subscription cleared on completion")
                 },
                 receiveValue: { [weak self] streamEvent in
                     self?.handleSSEStreamEvent(streamEvent)
@@ -278,23 +279,23 @@ final class UserInfoStreamManager {
     private func handleSSEStreamEvent(_ streamEvent: SSEStreamEvent) {
         switch streamEvent {
         case .connected:
-            print("[SSEDebug] ✅ UserInfoStreamManager: SSE connected")
-            print("[SSEDebug]    - EventSource stream established")
+            GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: SSE connected")
+            GomaLogger.debug(.realtime, category: "SSE", "   - EventSource stream established")
 
             // CRITICAL: Reset retry count on successful connection (matches Web line 557)
             if retryCount > 0 {
-                print("[SSEDebug] ✅ UserInfoStreamManager: Connection successful - resetting retry count (was: \(retryCount))")
+                GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: Connection successful - resetting retry count (was: \(retryCount))")
                 retryCount = 0
             }
 
-            print("[SSEDebug]    - Manual reconnection enabled (max retries: \(maxRetries))")
+            GomaLogger.debug(.realtime, category: "SSE", "   - Manual reconnection enabled (max retries: \(maxRetries))")
 
         case .message(let messageEvent):
             handleSSEMessage(messageEvent)
 
         case .disconnected:
-            print("[SSEDebug] 🔌 UserInfoStreamManager: SSE disconnected")
-            print("[SSEDebug]    - Stream closed by server or network interruption")
+            GomaLogger.debug(.realtime, category: "SSE", "🔌 UserInfoStreamManager: SSE disconnected")
+            GomaLogger.debug(.realtime, category: "SSE", "   - Stream closed by server or network interruption")
 
             // Manual reconnection logic (matches Web implementation)
             handleReconnection()
@@ -304,61 +305,61 @@ final class UserInfoStreamManager {
     /// Handle SSE message event
     private func handleSSEMessage(_ messageEvent: MessageEvent) {
         guard let jsonData = messageEvent.data.data(using: .utf8) else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Failed to convert message data to UTF-8")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Failed to convert message data to UTF-8")
             return
         }
 
         guard let response = try? decoder.decode(EveryMatrix.UserInfoSSEResponse.self, from: jsonData) else {
-            print("[SSEDebug] ❌ UserInfoStreamManager: Failed to decode SSE message")
+            GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: Failed to decode SSE message")
             return
         }
 
         switch response.messageType {
         case .balanceUpdate:
             if case .balanceUpdate(let balanceBody)? = response.body {
-                print("[SSEDebug] 💰 UserInfoStreamManager: Received BALANCE_UPDATE (type: '\(response.type)')")
+                GomaLogger.debug(.realtime, category: "SSE", "💰 UserInfoStreamManager: Received BALANCE_UPDATE (type: '\(response.type)')")
                 handleBalanceUpdate(balanceBody)
             } else {
-                print("[SSEDebug] ⚠️ UserInfoStreamManager: BALANCE_UPDATE has no valid body (type: '\(response.type)')")
+                GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: BALANCE_UPDATE has no valid body (type: '\(response.type)')")
             }
 
         case .sessionExpiration:
-            print("[SSEDebug] 🚨 UserInfoStreamManager: Received SESSION_EXPIRATION (type: '\(response.type)')")
+            GomaLogger.debug(.realtime, category: "SSE", "🚨 UserInfoStreamManager: Received SESSION_EXPIRATION (type: '\(response.type)')")
             if case .sessionExpiration(let sessionBody)? = response.body {
-                print("[SSEDebug]    - Exit Reason: \(sessionBody.exitReason)")
-                print("[SSEDebug]    - Exit Code: \(sessionBody.exitReasonCode)")
-                print("[SSEDebug]    - Session ID: \(sessionBody.sessionId)")
-                print("[SSEDebug]    - Source: \(sessionBody.sourceName)")
+                GomaLogger.debug(.realtime, category: "SSE", "   - Exit Reason: \(sessionBody.exitReason)")
+                GomaLogger.debug(.realtime, category: "SSE", "   - Exit Code: \(sessionBody.exitReasonCode)")
+                GomaLogger.debug(.realtime, category: "SSE", "   - Session ID: \(sessionBody.sessionId)")
+                GomaLogger.debug(.realtime, category: "SSE", "   - Source: \(sessionBody.sourceName)")
                 handleSessionExpiration(sessionBody)
             } else {
-                print("[SSEDebug] ⚠️ UserInfoStreamManager: SESSION_EXPIRATION has no valid body (type: '\(response.type)')")
+                GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: SESSION_EXPIRATION has no valid body (type: '\(response.type)')")
             }
 
         case .unknown:
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Unknown SSE message type: '\(response.type)'")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Unknown SSE message type: '\(response.type)'")
         }
     }
 
     /// Handle BALANCE_UPDATE_V2 message
     private func handleBalanceUpdate(_ body: EveryMatrix.BalanceUpdateBody) {
         guard var wallet = currentWallet else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: No current wallet - skipping balance update")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: No current wallet - skipping balance update")
             return
         }
 
-        print("[SSEDebug] 💰 UserInfoStreamManager: Processing balance update (transType: \(body.transType ?? -1), operation: \(body.operationType))")
-        print("[SSEDebug] 📦 Balance update details:")
-        print("[SSEDebug]    - Currency: \(body.currency)")
-        print("[SSEDebug]    - PostingId: \(body.postingId)")
-        print("[SSEDebug]    - Source: \(body.source)")
-        print("[SSEDebug]    - Balance changes: \(body.balanceChange)")
-        print("[SSEDebug]    - Wallet BEFORE: total=\(wallet.total ?? 0), withdrawable=\(wallet.withdrawable ?? 0), bonus=\(wallet.bonus ?? 0)")
+        GomaLogger.debug(.realtime, category: "SSE", "💰 UserInfoStreamManager: Processing balance update (transType: \(body.transType ?? -1), operation: \(body.operationType))")
+        GomaLogger.debug(.realtime, category: "SSE", "📦 Balance update details:")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Currency: \(body.currency)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - PostingId: \(body.postingId)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Source: \(body.source)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Balance changes: \(body.balanceChange)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Wallet BEFORE: total=\(wallet.total ?? 0), withdrawable=\(wallet.withdrawable ?? 0), bonus=\(wallet.bonus ?? 0)")
 
         // Apply SSE delta to wallet snapshot (WebApp logic)
         wallet = EveryMatrixModelMapper.applyBalanceUpdate(to: wallet, from: body)
         currentWallet = wallet
 
-        print("[SSEDebug]    - Wallet AFTER:  total=\(wallet.total ?? 0), withdrawable=\(wallet.withdrawable ?? 0), bonus=\(wallet.bonus ?? 0)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Wallet AFTER:  total=\(wallet.total ?? 0), withdrawable=\(wallet.withdrawable ?? 0), bonus=\(wallet.bonus ?? 0)")
 
         // Emit updated user info
         emitUserInfo(event: .contentUpdate)
@@ -366,25 +367,25 @@ final class UserInfoStreamManager {
 
     /// Handle SESSION_EXPIRATION_V2 message
     private func handleSessionExpiration(_ body: EveryMatrix.SessionExpirationBody) {
-        print("[SSEDebug] ⚠️ UserInfoStreamManager: Session expiration received")
-        print("[SSEDebug]    - Reason: \(body.exitReason) (code: \(body.exitReasonCode))")
-        print("[SSEDebug]    - User: \(body.userId), Session: \(body.sessionId)")
-        print("[SSEDebug]    - Source: \(body.sourceName)")
+        GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Session expiration received")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Reason: \(body.exitReason) (code: \(body.exitReasonCode))")
+        GomaLogger.debug(.realtime, category: "SSE", "   - User: \(body.userId), Session: \(body.sessionId)")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Source: \(body.sourceName)")
 
         // Pass exitReason to expired state for UserSessionStore logging
         sessionState = .expired(reason: body.exitReason)
 
         // Emit session expired event via contentUpdate with expired session state
         // SubscribableContent doesn't have .sessionExpired case, use .contentUpdate
-        print("[SSEDebug] 📤 UserInfoStreamManager: About to emit SESSION_EXPIRATION to subscribers")
+        GomaLogger.debug(.realtime, category: "SSE", "📤 UserInfoStreamManager: About to emit SESSION_EXPIRATION to subscribers")
         emitUserInfo(event: .contentUpdate)
-        print("[SSEDebug] ✅ UserInfoStreamManager: SESSION_EXPIRATION event emitted successfully")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ UserInfoStreamManager: SESSION_EXPIRATION event emitted successfully")
 
         // Stop SSE stream to prevent reconnection with invalid token
         // Use async to ensure contentUpdate is fully processed before stopping
-        print("[SSEDebug] 🛑 UserInfoStreamManager: Will stop stream due to SESSION_EXPIRATION")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 UserInfoStreamManager: Will stop stream due to SESSION_EXPIRATION")
         DispatchQueue.main.async { [weak self] in
-            print("[SSEDebug] 🛑 UserInfoStreamManager: Stopping stream (reason: SESSION_EXPIRATION - \(body.exitReason))")
+            GomaLogger.debug(.realtime, category: "SSE", "🛑 UserInfoStreamManager: Stopping stream (reason: SESSION_EXPIRATION - \(body.exitReason))")
             self?.stop(reason: "SESSION_EXPIRATION(\(body.exitReason))")
         }
     }
@@ -396,13 +397,13 @@ final class UserInfoStreamManager {
     private func handleReconnection() {
         // Check if reconnection is allowed
         guard isReconnectionActive else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Reconnection disabled (stream stopped)")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Reconnection disabled (stream stopped)")
             return
         }
 
         guard retryCount < maxRetries else {
-            print("[SSEDebug] ❌ UserInfoStreamManager: Max retries (\(maxRetries)) reached - giving up")
-            print("[SSEDebug] 🔌 UserInfoStreamManager: Sending final disconnection to subscribers")
+            GomaLogger.error(.realtime, category: "SSE", "❌ UserInfoStreamManager: Max retries (\(maxRetries)) reached - giving up")
+            GomaLogger.debug(.realtime, category: "SSE", "🔌 UserInfoStreamManager: Sending final disconnection to subscribers")
             subject.send(.disconnected)
 
             // Send completion to terminate publisher
@@ -416,7 +417,7 @@ final class UserInfoStreamManager {
         // Backoff: 200ms → 400ms → 800ms → 1.6s → 3.2s → 6.4s → 12.8s → 25.6s → 30s (capped)
         let delay = min(0.2 * pow(2.0, Double(retryCount)), 30.0)
 
-        print("[SSEDebug] 🔄 UserInfoStreamManager: Reconnecting in \(String(format: "%.1f", delay))s (attempt \(retryCount + 1)/\(maxRetries))")
+        GomaLogger.debug(.realtime, category: "SSE", "🔄 UserInfoStreamManager: Reconnecting in \(String(format: "%.1f", delay))s (attempt \(retryCount + 1)/\(maxRetries))")
         retryCount += 1
 
         // Cancel any pending reconnection
@@ -425,11 +426,11 @@ final class UserInfoStreamManager {
         // Schedule reconnection with exponential backoff
         let task = DispatchWorkItem { [weak self] in
             guard let self = self, self.isReconnectionActive else {
-                print("[SSEDebug] ⚠️ UserInfoStreamManager: Reconnection cancelled (stream stopped)")
+                GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Reconnection cancelled (stream stopped)")
                 return
             }
 
-            print("[SSEDebug] 🔄 UserInfoStreamManager: Executing reconnection (attempt \(self.retryCount)/\(self.maxRetries))")
+            GomaLogger.debug(.realtime, category: "SSE", "🔄 UserInfoStreamManager: Executing reconnection (attempt \(self.retryCount)/\(self.maxRetries))")
             self.startSSEStream()
         }
 
@@ -440,7 +441,7 @@ final class UserInfoStreamManager {
     /// Emit UserInfo via subject
     private func emitUserInfo(event: SubscribableContentEvent) {
         guard let wallet = currentWallet else {
-            print("[SSEDebug] ⚠️ UserInfoStreamManager: Cannot emit - no wallet data")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoStreamManager: Cannot emit - no wallet data")
             return
         }
 

@@ -945,18 +945,18 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     // MARK: - User Info Stream (Wallet + Session SSE)
 
     func subscribeUserInfoUpdates() -> AnyPublisher<SubscribableContent<UserInfo>, ServiceProviderError> {
-        print("[SSEDebug] 📊 EveryMatrixPAMProvider: subscribeUserInfoUpdates() called")
+        GomaLogger.debug(.realtime, category: "SSE", "📊 EveryMatrixPAMProvider: subscribeUserInfoUpdates() called")
 
         // DEFENSIVE: Stop any existing manager before creating new one
         // This prevents multiple UserInfoStreamManager instances if called repeatedly
         if let existingManager = userInfoStreamManager {
-            print("[SSEDebug] ⚠️ EveryMatrixPAMProvider: Found existing UserInfoStreamManager - stopping it first")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ EveryMatrixPAMProvider: Found existing UserInfoStreamManager - stopping it first")
             existingManager.stop(reason: "REPLACING_WITH_NEW_MANAGER")
             userInfoStreamManager = nil
         }
 
         // Create fresh manager instance
-        print("[SSEDebug] 🆕 EveryMatrixPAMProvider: Creating new UserInfoStreamManager")
+        GomaLogger.debug(.realtime, category: "SSE", "🆕 EveryMatrixPAMProvider: Creating new UserInfoStreamManager")
         userInfoStreamManager = UserInfoStreamManager(
             restConnector: restConnector,
             sseConnector: sseConnector,
@@ -967,17 +967,17 @@ class EveryMatrixPAMProvider: PrivilegedAccessManagerProvider {
     }
 
     func stopUserInfoStream() {
-        print("[SSEDebug] 🛑 EveryMatrixPAMProvider: stopUserInfoStream() called")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 EveryMatrixPAMProvider: stopUserInfoStream() called")
 
         if let manager = userInfoStreamManager {
-            print("[SSEDebug] 🛑 EveryMatrixPAMProvider: Stopping existing UserInfoStreamManager")
+            GomaLogger.debug(.realtime, category: "SSE", "🛑 EveryMatrixPAMProvider: Stopping existing UserInfoStreamManager")
             manager.stop(reason: "STOP_USER_INFO_STREAM")
         } else {
-            print("[SSEDebug] ⚠️ EveryMatrixPAMProvider: No UserInfoStreamManager to stop")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ EveryMatrixPAMProvider: No UserInfoStreamManager to stop")
         }
 
         userInfoStreamManager = nil
-        print("[SSEDebug] ✅ EveryMatrixPAMProvider: UserInfoStreamManager deallocated")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ EveryMatrixPAMProvider: UserInfoStreamManager deallocated")
     }
 
     func refreshUserBalance() {

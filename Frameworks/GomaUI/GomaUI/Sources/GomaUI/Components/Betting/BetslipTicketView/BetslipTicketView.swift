@@ -11,6 +11,8 @@ public final class BetslipTicketView: UIView {
         didSet {
             // Clear old cancellables and re-setup bindings for new view model
             cancellables.removeAll()
+            // Render synchronously first to avoid race condition with async publishers
+            render(data: viewModel.currentData)
             setupBindings()
         }
     }
@@ -175,6 +177,8 @@ public final class BetslipTicketView: UIView {
         setupSubviews()
         setupConstraints()
         setupGestures()
+        // Render synchronously first (didSet doesn't fire during init)
+        render(data: viewModel.currentData)
         setupBindings()
     }
     
@@ -283,15 +287,19 @@ public final class BetslipTicketView: UIView {
     }
 
     private func setupBindings() {
+        // dropFirst() skips the initial value since we already rendered synchronously in didSet
         viewModel.dataPublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 self?.render(data: data)
             }
             .store(in: &cancellables)
-        
+
         // Subscribe separately to odds change state for animations
+        // dropFirst() skips the initial value since we handle initial state synchronously
         viewModel.oddsChangeStatePublisher
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self = self else { return }

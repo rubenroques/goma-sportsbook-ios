@@ -130,6 +130,8 @@ final class BankingCoordinator: Coordinator {
     }
 
     private func presentViewController(_ viewController: UIViewController) {
+        // Prevent swipe-down dismissal during banking flows.
+        viewController.isModalInPresentation = true
         navigationController.present(viewController, animated: true)
     }
 

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GomaLogger
 
 extension EveryMatrix {
 
@@ -30,7 +31,7 @@ extension EveryMatrix {
             case "SESSION_EXPIRATION_V2", "SESSION_EXPIRATION":
                 return .sessionExpiration
             default:
-                print("⚠️ UserInfoSSEResponse: Unknown message type: '\(type)'")
+                GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserInfoSSEResponse: Unknown message type: '\(type)'")
                 return .unknown
             }
         }
@@ -53,21 +54,21 @@ extension EveryMatrix {
 
                 // Try decoding as BalanceUpdateBody first
                 if let balanceUpdate = try? container.decode(BalanceUpdateBody.self) {
-                    print("[SSEDebug] 📦 SSEMessageBody: Successfully decoded as BalanceUpdateBody")
+                    GomaLogger.debug(.realtime, category: "SSE", "📦 SSEMessageBody: Successfully decoded as BalanceUpdateBody")
                     self = .balanceUpdate(balanceUpdate)
                     return
                 }
 
                 // Try decoding as SessionExpirationBody
                 if let sessionExpiration = try? container.decode(SessionExpirationBody.self) {
-                    print("[SSEDebug] 📦 SSEMessageBody: Successfully decoded as SessionExpirationBody")
-                    print("[SSEDebug]    - Exit Reason: \(sessionExpiration.exitReason)")
-                    print("[SSEDebug]    - User ID: \(sessionExpiration.userId)")
+                    GomaLogger.debug(.realtime, category: "SSE", "📦 SSEMessageBody: Successfully decoded as SessionExpirationBody")
+                    GomaLogger.debug(.realtime, category: "SSE", "   - Exit Reason: \(sessionExpiration.exitReason)")
+                    GomaLogger.debug(.realtime, category: "SSE", "   - User ID: \(sessionExpiration.userId)")
                     self = .sessionExpiration(sessionExpiration)
                     return
                 }
 
-                print("[SSEDebug] ❌ SSEMessageBody: Failed to decode body as BalanceUpdate or SessionExpiration")
+                GomaLogger.error(.realtime, category: "SSE", "❌ SSEMessageBody: Failed to decode body as BalanceUpdate or SessionExpiration")
                 throw DecodingError.dataCorruptedError(
                     in: container,
                     debugDescription: "Unable to decode SSE message body - not BalanceUpdate or SessionExpiration"
@@ -76,4 +77,3 @@ extension EveryMatrix {
         }
     }
 }
-

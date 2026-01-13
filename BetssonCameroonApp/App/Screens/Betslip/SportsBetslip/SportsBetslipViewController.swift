@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import GomaUI
+import GomaLogger
 
 class SportsBetslipViewController: UIViewController {
     
@@ -374,7 +375,7 @@ class SportsBetslipViewController: UIViewController {
         viewModel.ticketsStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                
+                GomaLogger.debug(.ui, category: "BETSLIP_RACE", "ticketsStatePublisher triggered reloadData()")
                 self?.ticketsTableView.reloadData()
             }
             .store(in: &cancellables)
@@ -447,13 +448,16 @@ class SportsBetslipViewController: UIViewController {
     // MARK: - Private Methods
     private func updateUI() {
         let hasTickets = !viewModel.currentTickets.isEmpty
-        
+        let ticketCount = viewModel.currentTickets.count
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "updateUI() called - hasTickets: \(hasTickets), count: \(ticketCount)")
+
         // Show/hide appropriate views
         emptyStateView.isHidden = hasTickets
         ticketsTableView.isHidden = !hasTickets
-        
+
         // Reload table if needed
         if hasTickets {
+            GomaLogger.debug(.ui, category: "BETSLIP_RACE", "updateUI() triggering reloadData()")
             ticketsTableView.reloadData()
         }
     }
@@ -539,31 +543,39 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let ticketCount = viewModel.currentTickets.count
-        
+
         // Check if this is the odds variation cell (last row when there are tickets)
         if indexPath.row == ticketCount {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "OddsVariationCell", for: indexPath) as? OddsVariationTableViewCell else {
                 return UITableViewCell()
             }
-            
+
             cell.configure(with: viewModel.oddsAcceptanceViewModel)
             return cell
         }
-        
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "cellForRowAt START - row: \(indexPath.row), totalTickets: \(ticketCount)")
+
         // Regular ticket cell
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BetslipTicketCell", for: indexPath) as? BetslipTicketTableViewCell else {
             return tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
         }
 
+        let cellAddress = String(format: "%p", unsafeBitCast(cell, to: Int.self))
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "cellForRowAt dequeued cell: \(cellAddress)")
+
         guard let ticket = viewModel.currentTickets[safe: indexPath.row] else {
+            GomaLogger.error(.ui, category: "BETSLIP_RACE", "cellForRowAt ERROR - ticket nil at row \(indexPath.row)")
             return tableView.dequeueReusableCell(withIdentifier: "DefaultCell", for: indexPath)
         }
-        
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "cellForRowAt ticket data - id: \(ticket.id), home: '\(ticket.homeParticipantName ?? "nil")', away: '\(ticket.awayParticipantName ?? "nil")', outcome: '\(ticket.outcomeDescription)'")
+
         // Determine if ticket should be enabled and disabled message
         let isEnabled: Bool
         let disabledMessage: String?
         let betBuilderData = viewModel.betBuilderData
-        
+
         if let betBuilderData = betBuilderData, !betBuilderData.bettingOfferIds.isEmpty {
             // If betBuilder data exists, only enable tickets that match
             isEnabled = betBuilderData.bettingOfferIds.contains(ticket.id)
@@ -584,7 +596,7 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
                 disabledMessage = localized("not_combinable")
             }
         }
-        
+
         // Get or create ticket view model (this will track odds changes)
         let ticketViewModel = viewModel.getTicketViewModel(
             for: ticket,
@@ -592,13 +604,17 @@ extension SportsBetslipViewController: UITableViewDataSource, UITableViewDelegat
             disabledMessage: disabledMessage,
             formattedDate: formatTicketDate(ticket.date)
         )
-        
+
+        let vmData = ticketViewModel.currentData
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "cellForRowAt ticketVM created - homeTeam: '\(vmData.homeTeam)', awayTeam: '\(vmData.awayTeam)', odds: \(vmData.oddsValue)")
+
         cell.configure(with: ticketViewModel)
-        
+
         cell.onTicketRemoved = { [weak self] in
             self?.viewModel.removeTicket(ticket)
         }
-        
+
+        GomaLogger.debug(.ui, category: "BETSLIP_RACE", "cellForRowAt END - row: \(indexPath.row)")
         return cell
     }
 }

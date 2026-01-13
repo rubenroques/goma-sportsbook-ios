@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import LDSwiftEventSource
+import GomaLogger
 
 /// SSE stream event wrapper for connection lifecycle
 enum SSEStreamEvent {
@@ -42,42 +43,42 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
     // MARK: - EventHandler Protocol
 
     func onOpened() {
-        print("[SSEDebug] ✅ SSEEventHandlerAdapter: Connection opened")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ SSEEventHandlerAdapter: Connection opened")
         subject.send(.connected)
     }
 
     func onClosed() {
-        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: Connection closed")
-        print("[SSEDebug]    - LDSwiftEventSource will auto-reconnect (NOT terminating publisher)")
+        GomaLogger.debug(.realtime, category: "SSE", "🔌 SSEEventHandlerAdapter: Connection closed")
+        GomaLogger.debug(.realtime, category: "SSE", "   - LDSwiftEventSource will auto-reconnect (NOT terminating publisher)")
         subject.send(.disconnected)
         // DO NOT send completion here - let LDSwiftEventSource handle reconnection!
         // Only send completion when stop() is explicitly called or on error
     }
 
     func onMessage(eventType: String, messageEvent: MessageEvent) {
-        print("[SSEDebug] 📨 SSEEventHandlerAdapter: Received event (type: \(eventType))")
+        GomaLogger.debug(.realtime, category: "SSE", "📨 SSEEventHandlerAdapter: Received event (type: \(eventType))")
 
         // Emit MessageEvent wrapped in SSEStreamEvent
         subject.send(.message(messageEvent))
     }
 
     func onComment(comment: String) {
-        print("[SSEDebug] 💬 SSEEventHandlerAdapter: Comment received: \(comment)")
+        GomaLogger.debug(.realtime, category: "SSE", "💬 SSEEventHandlerAdapter: Comment received: \(comment)")
         // Comments are ignored for now
     }
 
     func onError(error: Error) {
-        print("[SSEDebug] ❌ SSEEventHandlerAdapter: Error - \(error.localizedDescription)")
+        GomaLogger.error(.realtime, category: "SSE", "❌ SSEEventHandlerAdapter: Error - \(error.localizedDescription)")
 
         // Check if this is an authentication/authorization error (401/403)
         // These errors should TERMINATE the stream, not trigger reconnection
         // LDSwiftEventSource wraps HTTP errors in UnsuccessfulResponseError
         if let unsuccessfulError = error as? UnsuccessfulResponseError {
             let responseCode = unsuccessfulError.responseCode
-            print("[SSEDebug] ❌ SSEEventHandlerAdapter: HTTP error code: \(responseCode)")
+            GomaLogger.error(.realtime, category: "SSE", "❌ SSEEventHandlerAdapter: HTTP error code: \(responseCode)")
 
             if responseCode == 401 || responseCode == 403 {
-                print("[SSEDebug] 🛑 SSEEventHandlerAdapter: Auth error (\(responseCode)) - TERMINATING stream (no reconnection)")
+                GomaLogger.error(.realtime, category: "SSE", "🛑 SSEEventHandlerAdapter: Auth error (\(responseCode)) - TERMINATING stream (no reconnection)")
 
                 // Stop the EventSource to prevent LDSwiftEventSource auto-reconnection
                 eventSource?.stop()
@@ -96,7 +97,7 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
         // Send .disconnected event to let UserInfoStreamManager handle reconnection logic
         // DO NOT send completion here - only stop() should terminate the publisher
 
-        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: Error treated as disconnection - will trigger reconnection")
+        GomaLogger.debug(.realtime, category: "SSE", "🔌 SSEEventHandlerAdapter: Error treated as disconnection - will trigger reconnection")
         subject.send(.disconnected)
 
         // Note: Completion is ONLY sent when stop() is explicitly called
@@ -110,16 +111,16 @@ final class SSEEventHandlerAdapter<T: Decodable>: EventHandler {
     }
 
     func stop() {
-        print("[SSEDebug] 🛑 SSEEventHandlerAdapter: Stopping event source")
-        print("[SSEDebug]    - Explicitly stopping SSE stream (will send completion)")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 SSEEventHandlerAdapter: Stopping event source")
+        GomaLogger.debug(.realtime, category: "SSE", "   - Explicitly stopping SSE stream (will send completion)")
 
         // Stop the underlying EventSource to prevent auto-reconnection
         eventSource?.stop()
-        print("[SSEDebug] 🔌 SSEEventHandlerAdapter: EventSource stopped - auto-reconnection prevented")
+        GomaLogger.debug(.realtime, category: "SSE", "🔌 SSEEventHandlerAdapter: EventSource stopped - auto-reconnection prevented")
         eventSource = nil
 
         // Only send completion when explicitly stopped (not on auto-reconnect)
         subject.send(completion: .finished)
-        print("[SSEDebug] ✅ SSEEventHandlerAdapter: Publisher terminated - no auto-reconnection will occur")
+        GomaLogger.debug(.realtime, category: "SSE", "✅ SSEEventHandlerAdapter: Publisher terminated - no auto-reconnection will occur")
     }
 }

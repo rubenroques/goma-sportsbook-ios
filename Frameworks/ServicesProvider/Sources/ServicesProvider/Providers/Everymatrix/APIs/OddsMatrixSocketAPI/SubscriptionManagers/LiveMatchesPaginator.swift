@@ -148,7 +148,7 @@ class LiveMatchesPaginator: UnsubscriptionController {
                 sportId: sportId,
                 locationId: filters.location.serverRawValue,
                 tournamentId: filters.tournament.serverRawValue,
-                hoursInterval: filters.timeRange.serverRawValue,
+                hoursInterval: "all",                         // Live events always use "all" - time filtering not applicable
                 sortEventsBy: filters.sortBy.serverRawValue,
                 liveStatus: "LIVE",                           // Live matches only
                 eventLimit: currentEventLimit,                // Use mutable currentEventLimit

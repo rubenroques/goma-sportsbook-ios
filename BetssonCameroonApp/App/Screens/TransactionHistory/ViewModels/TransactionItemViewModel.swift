@@ -51,11 +51,13 @@ extension TransactionItemViewModel {
         case .banking(let bankingType):
             category = bankingType.displayName
 
-            // Banking: Only show badge if status is not empty (cancelled or pending)
+            // Banking: Only show badge if status is not empty (failed, cancelled or pending)
             // Matches web: bankingTransactionStatuses returns '' for success states
             if !transactionHistoryItem.displayStatus.isEmpty {
-                // Map to appropriate status badge
-                if transactionHistoryItem.displayStatus.lowercased().contains("cancel") {
+                // Map to appropriate status badge - SPOR-7118: Added failed status
+                if transactionHistoryItem.displayStatus.lowercased().contains("failed") {
+                    status = .failed
+                } else if transactionHistoryItem.displayStatus.lowercased().contains("cancel") {
                     status = .cancelled
                 } else if transactionHistoryItem.displayStatus.lowercased().contains("pending") {
                     status = .pending

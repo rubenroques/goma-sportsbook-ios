@@ -4,6 +4,19 @@
 
 releases:
 
+  - version: "0.4.2"
+    build: 4201
+    date: "2026-01-13"
+    notes:
+      - "fix(betslip): [SPOR-7133] [BC-476] BA - Odds buttons state now syncs correctly when removing selections from betslip"
+      - "fix(live): [SPOR-7129] [BC-473] BA - Live events now display correctly - API uses 'all' for time range, time filter hidden in live mode"
+      - "fix(transactions): [SPOR-7118] [BC-404] BA - Failed deposit transactions now show red 'Failed' badge in Transaction History - maps AuthFailed API status"
+      - "fix(live): [SPOR-7135] BA - Filter button in InPlayEvents no longer toggles - uses FilterPillViewModel for non-toggling action button"
+      - "fix(betslip): [SPOR-7132] [BC-475] BA - Selection details now display correctly in betslip - sync render fixes race condition with async publishers"
+      - "!rejcted: [SPOR-7124] [iOS] BA - BC-403 - Cannot withdraw via Test Vendor"
+      - "!rejcted: [SPOR-7123] [iOS] BA - BC-154 - WHT of 20%displayed upon opening the betslip"
+      - "!rejcted: [SPOR-7121] [iOS] BA - BC-238 - deposit error popup - not enough information"
+
   - version: "0.4.1"
     build: 4101
     date: "2026-01-12"

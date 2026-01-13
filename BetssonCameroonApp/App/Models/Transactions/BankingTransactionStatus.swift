@@ -8,9 +8,10 @@
 import Foundation
 
 enum BankingTransactionStatus: Hashable {
-    case cancelled
+    case failed     // System/auth failures (AuthFailed, Failed, DebitFailed, CreditFailed)
+    case cancelled  // User-initiated cancellations (Cancelled, RollBack)
     case pending
-    case success  // Represents completed/successful transactions (empty string in web)
+    case success    // Represents completed/successful transactions (empty string in web)
 
     enum BadgeType {
         case `default`
@@ -20,6 +21,8 @@ enum BankingTransactionStatus: Hashable {
 
     var badgeType: BadgeType {
         switch self {
+        case .failed:
+            return .error
         case .cancelled:
             return .default
         case .pending:
@@ -31,6 +34,8 @@ enum BankingTransactionStatus: Hashable {
 
     var displayName: String {
         switch self {
+        case .failed:
+            return localized("failed")
         case .cancelled:
             return localized("cancelled")
         case .pending:
@@ -52,8 +57,12 @@ enum BankingTransactionStatus: Hashable {
         case "Processing", "Pending", "ProcessingDebit", "ProcessingCredit", "PendingNotification", "PendingApproval":
             return .pending
 
-        // Cancelled/Failed cases
-        case "Failed", "DebitFailed", "CreditFailed", "Cancelled", "RollBack":
+        // Failed cases (system/auth failures) - SPOR-7118
+        case "AuthFailed", "Failed", "DebitFailed", "CreditFailed":
+            return .failed
+
+        // Cancelled cases (user-initiated)
+        case "Cancelled", "RollBack":
             return .cancelled
 
         default:

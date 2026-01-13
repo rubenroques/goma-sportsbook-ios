@@ -169,15 +169,8 @@ class InPlayEventsViewController: UIViewController {
         filterButtonContainer.backgroundColor = UIColor.App.navPills
         filterButtonContainer.translatesAutoresizingMaskIntoConstraints = false
 
-        // Create filter pill button
-        let filterPillData = PillData(
-            id: "filter",
-            title: localized("filter"),
-            leftIconName: "line.3.horizontal.decrease",
-            type: .expansible,
-            isSelected: false
-        )
-        let filterPillViewModel = MockPillItemViewModel(pillData: filterPillData)
+        // Create filter pill button (uses FilterPillViewModel for non-toggling action button)
+        let filterPillViewModel = FilterPillViewModel()
         let filterPillView = PillItemView(viewModel: filterPillViewModel)
         filterPillView.translatesAutoresizingMaskIntoConstraints = false
 

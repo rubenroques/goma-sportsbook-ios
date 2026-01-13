@@ -11,6 +11,7 @@ import AppTrackingTransparency
 import AdSupport
 import ServicesProvider
 import XPush
+import GomaLogger
 
 enum UserProfileStatus {
     case anonymous
@@ -154,7 +155,7 @@ class UserSessionStore {
     /// - Parameter reason: Optional reason for logout (e.g., "SESSION_EXPIRATION", "MANUAL", "INVALID_CREDENTIALS")
     func logout(reason: String? = nil) {
         let reasonText = reason ?? "MANUAL"
-        print("[SSEDebug] 🚪 UserSessionStore: Logout triggered (reason: \(reasonText))")
+        GomaLogger.debug(.realtime, category: "SSE", "🚪 UserSessionStore: Logout triggered (reason: \(reasonText))")
 
         // Stop SSE stream first to prevent reconnection attempts
         self.stopUserInfoSSEStream()
@@ -163,7 +164,7 @@ class UserSessionStore {
 
         if !self.isUserLogged() {
             // There is no user logged in
-            print("[SSEDebug] ⚠️ UserSessionStore: No user logged in, skipping logout")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: No user logged in, skipping logout")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
@@ -442,19 +443,19 @@ extension UserSessionStore {
     /// Replaces periodic REST polling with continuous SSE updates
     private func startUserInfoSSEStream() {
         guard self.isUserLogged() else {
-            print("[SSEDebug] ⚠️ UserSessionStore: Cannot start SSE stream - user not logged in")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: Cannot start SSE stream - user not logged in")
             return
         }
 
         // DEFENSIVE: Stop any existing stream before starting new one
         // This prevents duplicate subscriptions if called multiple times
         if self.isWalletSubscriptionActive || self.userInfoStreamCancellable != nil {
-            print("[SSEDebug] ⚠️ UserSessionStore: SSE stream already active - stopping old stream first")
+            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: SSE stream already active - stopping old stream first")
             self.stopUserInfoSSEStream()
         }
 
-        print("[SSEDebug] 🚀 UserSessionStore: Starting UserInfo SSE stream")
-        print("[SSEDebug]    - About to call servicesProvider.subscribeUserInfoUpdates()")
+        GomaLogger.debug(.realtime, category: "SSE", "🚀 UserSessionStore: Starting UserInfo SSE stream")
+        GomaLogger.debug(.realtime, category: "SSE", "   - About to call servicesProvider.subscribeUserInfoUpdates()")
 
         // Also refresh cashback (not part of UserInfo SSE yet)
         self.refreshCashbackBalance()
@@ -463,24 +464,24 @@ extension UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    print("[SSEDebug] 🔌 UserSessionStore: SSE stream completed")
+                    GomaLogger.debug(.realtime, category: "SSE", "🔌 UserSessionStore: SSE stream completed")
                     self?.isWalletSubscriptionActive = false
 
                     switch completion {
                     case .finished:
-                        print("[SSEDebug] ✅ UserSessionStore: SSE stream finished normally")
+                        GomaLogger.debug(.realtime, category: "SSE", "✅ UserSessionStore: SSE stream finished normally")
                     case .failure(let error):
-                        print("[SSEDebug] ❌ UserSessionStore: SSE stream error: \(error)")
+                        GomaLogger.error(.realtime, category: "SSE", "❌ UserSessionStore: SSE stream error: \(error)")
                     }
                 },
                 receiveValue: { [weak self] event in
                     guard let self = self else { return }
 
-                    print("[SSEDebug] 📨 UserSessionStore: Received SSE event: \(event)")
+                    GomaLogger.debug(.realtime, category: "SSE", "📨 UserSessionStore: Received SSE event: \(event)")
 
                     switch event {
                     case .connected(let subscription):
-                        print("[SSEDebug] ✅ UserSessionStore: SSE connected - subscription ID: \(subscription.id)")
+                        GomaLogger.debug(.realtime, category: "SSE", "✅ UserSessionStore: SSE connected - subscription ID: \(subscription.id)")
                         self.isWalletSubscriptionActive = true
 
                     case .contentUpdate(let userInfo):
@@ -488,12 +489,12 @@ extension UserSessionStore {
                         // User logout handled separately via REST token refresh failures
                         switch userInfo.sessionState {
                         case .expired(let reason):
-                            print("[SSEDebug] ⚠️ UserSessionStore: Session expiration from SSE ignored (reason: \(reason ?? "unknown"))")
+                            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: Session expiration from SSE ignored (reason: \(reason ?? "unknown"))")
                             // DO NOT logout or publish event - let REST token refresh handle session expiration
                             return  // Skip wallet update for expired sessions
 
                         case .terminated:
-                            print("[SSEDebug] ⚠️ UserSessionStore: Session termination from SSE ignored")
+                            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: Session termination from SSE ignored")
                             // DO NOT logout or publish event
                             return  // Skip wallet update for terminated sessions
 
@@ -504,7 +505,7 @@ extension UserSessionStore {
 
                         // Update wallet balance from SSE event
                         guard let currency = userInfo.wallet.currency else {
-                            print("[SSEDebug] ⚠️ UserSessionStore: SSE update missing currency, skipping")
+                            GomaLogger.debug(.realtime, category: "SSE", "⚠️ UserSessionStore: SSE update missing currency, skipping")
                             return
                         }
 
@@ -518,13 +519,13 @@ extension UserSessionStore {
                             currency: currency
                         )
 
-                        print("[SSEDebug] 💰 UserSessionStore: SSE wallet update - total: \(totalBalance) \(currency)")
+                        GomaLogger.debug(.realtime, category: "SSE", "💰 UserSessionStore: SSE wallet update - total: \(totalBalance) \(currency)")
 
                         // Publish to all subscribers (21 wallet subscribers get real-time updates!)
                         self.userWalletPublisher.send(wallet)
 
                     case .disconnected:
-                        print("[SSEDebug] 🔌 UserSessionStore: SSE disconnected")
+                        GomaLogger.debug(.realtime, category: "SSE", "🔌 UserSessionStore: SSE disconnected")
                         self.isWalletSubscriptionActive = false
                     }
                 }
@@ -537,7 +538,7 @@ extension UserSessionStore {
             return
         }
 
-        print("[SSEDebug] 🛑 UserSessionStore: Stopping UserInfo SSE stream")
+        GomaLogger.debug(.realtime, category: "SSE", "🛑 UserSessionStore: Stopping UserInfo SSE stream")
 
         Env.servicesProvider.stopUserInfoStream()
         self.userInfoStreamCancellable?.cancel()
