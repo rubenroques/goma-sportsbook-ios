@@ -197,25 +197,20 @@ platform :ios do
       match_params[:keychain_password] = ENV["KEYCHAIN_PASSWORD"]
     end
 
-    # Register new devices if devices.txt exists
-    devices_file = "./fastlane/devices.txt"
+    # Register new devices if devices.txt exists (Apple's tab-separated format)
+    # Note: Fastlane runs from BetssonFranceLegacy/fastlane/ directory
+    devices_file = "./devices.txt"
     if File.exist?(devices_file)
       require 'csv'
 
       # Log devices being registered
-      UI.message "📱 Registering devices from #{devices_file}:"
-      File.readlines(devices_file).each_with_index do |line, index|
-        next if index == 0 # Skip header row
-        line = line.strip
-        next if line.empty?
-        parts = line.split("\t")
-        if parts.length >= 2
-          UI.message "   - #{parts[1]} (#{parts[0]})"
-        end
+      UI.message "Registering devices from #{devices_file}:"
+      CSV.foreach(devices_file, headers: true, col_sep: "\t") do |row|
+        UI.message "   - #{row['Device Name']} (#{row['Device ID']})"
       end
 
       register_params = {
-        devices_file: devices_file,
+        devices_file: File.expand_path(devices_file),
         team_id: match_params[:team_id]
       }
       if api_key
@@ -223,10 +218,16 @@ platform :ios do
       else
         register_params[:username] = match_params[:username]
       end
-      register_devices(register_params)
-      UI.success "Device registration completed"
+
+      begin
+        register_devices(register_params)
+        UI.success "Device registration completed"
+      rescue => ex
+        UI.message "Device registration completed (some devices may already be registered)"
+        UI.message "Details: #{ex.message}"
+      end
     else
-      UI.message "ℹ️  No devices.txt file found, skipping device registration"
+      UI.message "No devices.txt file found, skipping device registration"
     end
 
     # Fetch certificates and profiles

@@ -1749,6 +1749,18 @@
 		CE35E2EB2F0FFEB50044E7C9 /* SuggestedBetCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE35E2E92F0FFEB50044E7C9 /* SuggestedBetCardViewModel.swift */; };
 		CE544FCB2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
 		CE544FCE2D07029900AA24CA /* first_deposit_8.json in Resources */ = {isa = PBXBuildFile; fileRef = CE544FC92D07029900AA24CA /* first_deposit_8.json */; };
+		CE782AA02F151C7A00FD588E /* AdyenCardScanner in Frameworks */ = {isa = PBXBuildFile; productRef = CE782A9F2F151C7A00FD588E /* AdyenCardScanner */; };
+		CE782AA22F151C7A00FD588E /* AdyenCashAppPay in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AA12F151C7A00FD588E /* AdyenCashAppPay */; };
+		CE782AA42F151C7A00FD588E /* AdyenDelegatedAuthentication in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AA32F151C7A00FD588E /* AdyenDelegatedAuthentication */; };
+		CE782AA62F151C7A00FD588E /* AdyenTwint in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AA52F151C7A00FD588E /* AdyenTwint */; };
+		CE782AA82F151C9500FD588E /* IdensicMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AA72F151C9500FD588E /* IdensicMobileSDK */; };
+		CE782AAA2F151CA800FD588E /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AA92F151CA800FD588E /* AdjustSdk */; };
+		CE782AAC2F151CBC00FD588E /* AdjustGoogleOdm in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AAB2F151CBC00FD588E /* AdjustGoogleOdm */; };
+		CE782AAE2F151CBC00FD588E /* AdjustWebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AAD2F151CBC00FD588E /* AdjustWebBridge */; };
+		CE782AB02F151CC300FD588E /* OptimoveCore in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AAF2F151CC300FD588E /* OptimoveCore */; };
+		CE782AB22F151CC300FD588E /* OptimoveNotificationServiceExtension in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AB12F151CC300FD588E /* OptimoveNotificationServiceExtension */; };
+		CE782AB42F151CC300FD588E /* OptimoveSDK in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AB32F151CC300FD588E /* OptimoveSDK */; };
+		CE782AB62F151CCB00FD588E /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = CE782AB52F151CCB00FD588E /* FirebaseFirestoreCombine-Community */; };
 		CE896D662D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
 		CE896D672D8C5C85009981BB /* SpinWheelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D512D8C5C85009981BB /* SpinWheelViewModel.swift */; };
 		CE896D6A2D8C5C85009981BB /* SpinWheelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE896D502D8C5C85009981BB /* SpinWheelViewController.swift */; };
@@ -2753,16 +2765,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE782AAA2F151CA800FD588E /* AdjustSdk in Frameworks */,
 				45C10EEC2C652AC500D187A1 /* AdServices.framework in Frameworks */,
 				45C10F2F2C652AC500D187A1 /* Adyen in Frameworks */,
 				45C10F2E2C652AC500D187A1 /* AdyenDropIn in Frameworks */,
 				45C10F252C652AC500D187A1 /* OrderedCollections in Frameworks */,
+				CE782AA22F151C7A00FD588E /* AdyenCashAppPay in Frameworks */,
+				CE782AB02F151CC300FD588E /* OptimoveCore in Frameworks */,
 				45C10F262C652AC500D187A1 /* SweeterSwift in Frameworks */,
 				45C10F242C652AC500D187A1 /* Collections in Frameworks */,
+				CE782AB62F151CCB00FD588E /* FirebaseFirestoreCombine-Community in Frameworks */,
 				45C10F342C652AC500D187A1 /* AdyenSession in Frameworks */,
 				45C10F352C652AC500D187A1 /* AdyenSwiftUI in Frameworks */,
 				45C10F1F2C652AC500D187A1 /* Kingfisher in Frameworks */,
 				45C10F272C652AC500D187A1 /* FirebaseMessaging in Frameworks */,
+				CE782AA82F151C9500FD588E /* IdensicMobileSDK in Frameworks */,
+				CE782AAE2F151CBC00FD588E /* AdjustWebBridge in Frameworks */,
 				45C10F312C652AC500D187A1 /* AdyenCard in Frameworks */,
 				45C10F1E2C652AC500D187A1 /* CombineCocoa in Frameworks */,
 				45C10F1B2C652AC500D187A1 /* Reachability in Frameworks */,
@@ -2770,6 +2788,9 @@
 				45C10F1D2C652AC500D187A1 /* Starscream in Frameworks */,
 				45C10F392C652AC500D187A1 /* PhraseSDK in Frameworks */,
 				45C10F222C652AC500D187A1 /* FirebaseCrashlytics in Frameworks */,
+				CE782AB22F151CC300FD588E /* OptimoveNotificationServiceExtension in Frameworks */,
+				CE782AAC2F151CBC00FD588E /* AdjustGoogleOdm in Frameworks */,
+				CE782AA02F151C7A00FD588E /* AdyenCardScanner in Frameworks */,
 				45C10F292C652AC500D187A1 /* SocketIO in Frameworks */,
 				45C10F2C2C652AC500D187A1 /* IQKeyboardManagerSwift in Frameworks */,
 				45C10F2A2C652AC500D187A1 /* ServicesProvider in Frameworks */,
@@ -2784,11 +2805,14 @@
 				45C10F3B2C652AC500D187A1 /* CountrySelectionFeature in Frameworks */,
 				45C10F432C652AC500D187A1 /* SwiftPrettyPrint in Frameworks */,
 				653A37CE2D50E0BF00B89CDF /* FirebaseFirestore in Frameworks */,
+				CE782AA62F151C7A00FD588E /* AdyenTwint in Frameworks */,
 				45C10F362C652AC500D187A1 /* AdyenWeChatPay in Frameworks */,
 				45C10F212C652AC500D187A1 /* FirebaseAuth in Frameworks */,
 				45C10F322C652AC500D187A1 /* AdyenComponents in Frameworks */,
 				45C10F232C652AC500D187A1 /* FirebaseDatabase in Frameworks */,
+				CE782AA42F151C7A00FD588E /* AdyenDelegatedAuthentication in Frameworks */,
 				45C10F202C652AC500D187A1 /* FirebaseAnalytics in Frameworks */,
+				CE782AB42F151CC300FD588E /* OptimoveSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5816,6 +5840,18 @@
 				45DB8DAF2A6A9C7C0018C591 /* CountrySelectionFeature */,
 				459F410B2AF54C86006BAEE9 /* SwiftPrettyPrint */,
 				653A37CD2D50E0BF00B89CDF /* FirebaseFirestore */,
+				CE782A9F2F151C7A00FD588E /* AdyenCardScanner */,
+				CE782AA12F151C7A00FD588E /* AdyenCashAppPay */,
+				CE782AA32F151C7A00FD588E /* AdyenDelegatedAuthentication */,
+				CE782AA52F151C7A00FD588E /* AdyenTwint */,
+				CE782AA72F151C9500FD588E /* IdensicMobileSDK */,
+				CE782AA92F151CA800FD588E /* AdjustSdk */,
+				CE782AAB2F151CBC00FD588E /* AdjustGoogleOdm */,
+				CE782AAD2F151CBC00FD588E /* AdjustWebBridge */,
+				CE782AAF2F151CC300FD588E /* OptimoveCore */,
+				CE782AB12F151CC300FD588E /* OptimoveNotificationServiceExtension */,
+				CE782AB32F151CC300FD588E /* OptimoveSDK */,
+				CE782AB52F151CCB00FD588E /* FirebaseFirestoreCombine-Community */,
 			);
 			productName = Sportsbook;
 			productReference = 45F6BE372AB3732C00C81DE1 /* Betsson UAT.app */;
@@ -8605,6 +8641,66 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		CE782A9F2F151C7A00FD588E /* AdyenCardScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD93E82EDDEFA700AED733 /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCardScanner;
+		};
+		CE782AA12F151C7A00FD588E /* AdyenCashAppPay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD93E82EDDEFA700AED733 /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenCashAppPay;
+		};
+		CE782AA32F151C7A00FD588E /* AdyenDelegatedAuthentication */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD93E82EDDEFA700AED733 /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenDelegatedAuthentication;
+		};
+		CE782AA52F151C7A00FD588E /* AdyenTwint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD93E82EDDEFA700AED733 /* XCRemoteSwiftPackageReference "adyen-ios" */;
+			productName = AdyenTwint;
+		};
+		CE782AA72F151C9500FD588E /* IdensicMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94032EDDF04000AED733 /* XCRemoteSwiftPackageReference "IdensicMobileSDK-iOS" */;
+			productName = IdensicMobileSDK;
+		};
+		CE782AA92F151CA800FD588E /* AdjustSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94092EDDF14800AED733 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustSdk;
+		};
+		CE782AAB2F151CBC00FD588E /* AdjustGoogleOdm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94092EDDF14800AED733 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustGoogleOdm;
+		};
+		CE782AAD2F151CBC00FD588E /* AdjustWebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94092EDDF14800AED733 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustWebBridge;
+		};
+		CE782AAF2F151CC300FD588E /* OptimoveCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94112EDDF64900AED733 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveCore;
+		};
+		CE782AB12F151CC300FD588E /* OptimoveNotificationServiceExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94112EDDF64900AED733 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveNotificationServiceExtension;
+		};
+		CE782AB32F151CC300FD588E /* OptimoveSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDD94112EDDF64900AED733 /* XCRemoteSwiftPackageReference "Optimove-SDK-iOS" */;
+			productName = OptimoveSDK;
+		};
+		CE782AB52F151CCB00FD588E /* FirebaseFirestoreCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreCombine-Community";
 		};
 		CEDD93E92EDDEFA700AED733 /* Adyen */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -55,13 +55,13 @@ Update marketing version
 
 Distribute to Staging (increments build, registers devices, distributes)
 
-### ios distribute_production
+### ios distribute_uat
 
 ```sh
-[bundle exec] fastlane ios distribute_production
+[bundle exec] fastlane ios distribute_uat
 ```
 
-Distribute to Production (increments build, registers devices, distributes)
+Distribute to UAT (increments build, registers devices, distributes)
 
 ### ios distribute_all
 
@@ -69,7 +69,7 @@ Distribute to Production (increments build, registers devices, distributes)
 [bundle exec] fastlane ios distribute_all
 ```
 
-Distribute to both Staging and Production (increments build once)
+Distribute to both Staging and UAT (increments build once)
 
 ### ios fetch_firebase_devices
 
@@ -85,7 +85,7 @@ Fetch device UDIDs from Firebase App Distribution
 [bundle exec] fastlane ios register_new_devices
 ```
 
-Register new devices from local devices.csv and update provisioning profiles
+Register new devices from local devices.txt and update provisioning profiles
 
 ### ios keep_version_distribute_staging
 
@@ -95,13 +95,13 @@ Register new devices from local devices.csv and update provisioning profiles
 
 Keep version and distribute to Staging (SAME build, registers devices, distributes)
 
-### ios keep_version_distribute_production
+### ios keep_version_distribute_uat
 
 ```sh
-[bundle exec] fastlane ios keep_version_distribute_production
+[bundle exec] fastlane ios keep_version_distribute_uat
 ```
 
-Keep version and distribute to Production (SAME build, registers devices, distributes)
+Keep version and distribute to UAT (SAME build, registers devices, distributes)
 
 ### ios keep_version_distribute_all
 
@@ -109,7 +109,7 @@ Keep version and distribute to Production (SAME build, registers devices, distri
 [bundle exec] fastlane ios keep_version_distribute_all
 ```
 
-Keep version and distribute to both Staging and Production (SAME build)
+Keep version and distribute to both Staging and UAT (SAME build)
 
 ----
 

@@ -133,7 +133,7 @@ When you push a tag, the workflow:
 3. **Checks out the release branch** - Based on client's `release_branch` config
 4. **Validates version** - Ensures Xcode project matches the tag (fails if mismatch)
 5. **Reads release notes** - From `CHANGELOG.yml` (version + build match)
-6. **Registers devices** - From `devices.csv` (BCM) or `devices.txt` (BFR)
+6. **Registers devices** - From `fastlane/devices.txt`
 7. **Builds Staging** - First build using staging scheme
 8. **Distributes to Firebase (Staging)** - Uploads to Firebase App Distribution
 9. **Builds Production** - Second build using production scheme
@@ -229,17 +229,18 @@ Devices are automatically registered from:
 
 | Client | File Location |
 |--------|---------------|
-| BCM | `BetssonCameroonApp/fastlane/devices.csv` |
-| BFR | `BetssonFranceApp/fastlane/devices.txt` |
+| BCM | `BetssonCameroonApp/fastlane/devices.txt` |
+| BFR | `BetssonFranceLegacy/fastlane/devices.txt` |
 
 ### Adding New Devices
 
-1. Edit the devices file (tab-separated format):
+1. Edit the devices file (Apple's tab-separated format):
    ```
    Device ID	Device Name
    00008030-001234567890001E	iPhone 15 Pro - John Doe
    00008101-001234567890002E	iPhone 14 - Jane Smith
    ```
+   **Note:** Use TAB characters between columns, not commas.
 
 2. Commit and push to the appropriate branch
 3. The next tag-based release will include the new devices

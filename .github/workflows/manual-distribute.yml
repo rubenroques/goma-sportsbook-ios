@@ -133,15 +133,14 @@ jobs:
             echo "directory=BetssonCameroonApp" >> $GITHUB_OUTPUT
             echo "project=BetssonCameroonApp.xcodeproj" >> $GITHUB_OUTPUT
             echo "target=BetssonCameroonApp" >> $GITHUB_OUTPUT
-            echo "devices_file=fastlane/devices.csv" >> $GITHUB_OUTPUT
-            echo "devices_format=csv" >> $GITHUB_OUTPUT
           elif [ "$CLIENT" = "BFR" ]; then
             echo "directory=BetssonFranceLegacy" >> $GITHUB_OUTPUT
             echo "project=Sportsbook.xcodeproj" >> $GITHUB_OUTPUT
             echo "target=Betsson UAT" >> $GITHUB_OUTPUT
-            echo "devices_file=fastlane/devices.txt" >> $GITHUB_OUTPUT
-            echo "devices_format=txt" >> $GITHUB_OUTPUT
           fi
+
+          # Both clients use Apple's tab-separated .txt format
+          echo "devices_file=fastlane/devices.txt" >> $GITHUB_OUTPUT
 
       - name: Add new devices to file
         id: devices
@@ -150,19 +149,13 @@ jobs:
         run: |
           DEVICES_INPUT="${{ github.event.inputs.new_devices }}"
           DEVICES_FILE="${{ steps.config.outputs.devices_file }}"
-          DEVICES_FORMAT="${{ steps.config.outputs.devices_format }}"
 
           echo "Processing new devices..."
-          echo "Input: $DEVICES_INPUT"
-
           DEVICE_COUNT=0
 
-          # Process each line of device input
           while IFS= read -r line; do
-            # Skip empty lines
             [ -z "$line" ] && continue
 
-            # Parse UUID,Name format
             UUID=$(echo "$line" | cut -d',' -f1 | xargs)
             NAME=$(echo "$line" | cut -d',' -f2 | xargs)
 
@@ -171,21 +164,12 @@ jobs:
               continue
             fi
 
-            # Check if device already exists
             if grep -q "$UUID" "$DEVICES_FILE" 2>/dev/null; then
               echo "Device $UUID already registered, skipping"
               continue
             fi
 
-            # Append device in correct format
-            if [ "$DEVICES_FORMAT" = "csv" ]; then
-              # BCM format: UUID,Name,ios (no quotes)
-              echo "$UUID,$NAME,ios" >> "$DEVICES_FILE"
-            else
-              # BFR format: "UUID","Name","ios" (quoted)
-              echo "\"$UUID\",\"$NAME\",\"ios\"" >> "$DEVICES_FILE"
-            fi
-
+            printf '%s\t%s\n' "$UUID" "$NAME" >> "$DEVICES_FILE"
             echo "Added device: $UUID - $NAME"
             DEVICE_COUNT=$((DEVICE_COUNT + 1))
           done <<< "$DEVICES_INPUT"

@@ -227,7 +227,7 @@ clients:
     project: "BetssonCameroonApp.xcodeproj"
     target: "BetssonCameroonApp"
     changelog: "BetssonCameroonApp/CHANGELOG.yml"
-    devices_file: "fastlane/devices.csv"
+    devices_file: "fastlane/devices.txt"
     release_branch: "main"
     staging_scheme: "BetssonCM Staging"
     production_scheme: "BetssonCM Prod"
@@ -248,23 +248,17 @@ clients:
 
 ## Device Files
 
-### BCM Format (`BetssonCameroonApp/fastlane/devices.csv`)
+Both clients use Apple's official tab-separated format for device registration.
 
-```csv
-Device ID,Device Name,Device Platform
-00008030-001234567890,iPhone 15 Pro - John,ios
+### Format (`fastlane/devices.txt`)
+
+```
+Device ID	Device Name
+00008030-001234567890	iPhone 15 Pro - John
+00008101-001234567891	iPhone 14 - Jane
 ```
 
-No quotes, comma-separated.
-
-### BFR Format (`BetssonFranceLegacy/fastlane/devices.txt`)
-
-```csv
-"Device ID","Device Name","Device Platform"
-"00008030-001234567890","iPhone 15 Pro - John","ios"
-```
-
-Quoted, comma-separated.
+**Important:** Use TAB characters between columns, not commas or spaces. This matches Apple's official UDID file format used by `register_devices`.
 
 ---
 

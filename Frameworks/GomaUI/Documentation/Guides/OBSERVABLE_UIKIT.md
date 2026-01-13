@@ -1,6 +1,8 @@
 # @Observable UIKit Components Guide
 
-This guide documents the **@Observable + layoutSubviews()** pattern for building reactive UIKit components without Combine.
+This guide documents patterns for building reactive UIKit components using Swift's Observation framework without Combine.
+
+> **Important for Production Apps:** BetssonCameroon and BetssonFranceLegacy target **iOS 17+**. Apple's native UIKit auto-tracking requires **iOS 18+**. For iOS 17 support, use [Point-Free's `observe { }` pattern](#alternative-point-frees-observe---pattern) instead.
 
 ## Table of Contents
 
@@ -8,6 +10,8 @@ This guide documents the **@Observable + layoutSubviews()** pattern for building
 - [The Solution: @Observable + layoutSubviews()](#the-solution-observable--layoutsubviews)
 - [How It Works](#how-it-works)
 - [Requirements](#requirements)
+- [Alternative: Point-Free's observe { } Pattern](#alternative-point-frees-observe---pattern)
+- [Choosing an Approach](#choosing-an-approach)
 - [Implementation Pattern](#implementation-pattern)
 - [GomaUI Protocol Architecture](#gomaui-protocol-architecture)
 - [Migration from Combine](#migration-from-combine)
@@ -71,7 +75,14 @@ func configure(with viewModel: ViewModelProtocol) {
 
 ## The Solution: @Observable + layoutSubviews()
 
-Apple introduced **automatic observation tracking** for UIKit in iOS 18 (backportable to iOS 18 with Info.plist key). This eliminates Combine entirely for UI bindings.
+Apple introduced **automatic observation tracking** for UIKit in **iOS 18** (enabled via Info.plist key). This eliminates Combine entirely for UI bindings.
+
+> **iOS Version Clarification:**
+> - **iOS 17**: `@Observable` macro available, but UIKit does NOT auto-track it
+> - **iOS 18**: UIKit auto-tracks `@Observable` in `layoutSubviews()` (requires plist key)
+> - **iOS 26**: Native auto-tracking (no plist key needed)
+>
+> If targeting iOS 17, see [Point-Free's `observe { }` Pattern](#alternative-point-frees-observe---pattern) which provides the tracking context that UIKit lacks until iOS 18.
 
 ### The Pattern
 
@@ -154,17 +165,30 @@ For iOS 18, use `layoutSubviews()` for all observation tracking.
 
 ## Requirements
 
-### Minimum iOS Versions
+### Understanding the iOS Version Gap
 
-| Feature | iOS Version |
-|---------|-------------|
-| `@Observable` macro | iOS 17+ |
-| UIKit auto-tracking (with Info.plist) | iOS 18+ |
-| Native UIKit auto-tracking | iOS 26+ |
+There are **two separate features** that work together:
 
-### Info.plist Configuration
+| Feature | iOS Version | What It Provides |
+|---------|-------------|------------------|
+| **`@Observable` macro** | iOS 17+ | Makes classes observable (Swift Observation framework) |
+| **UIKit auto-tracking** | iOS 18+ | UIKit automatically tracks `@Observable` in `layoutSubviews()` |
+| **Native UIKit auto-tracking** | iOS 26+ | Same as above, but enabled by default (no plist key) |
 
-Add this key to enable automatic observation tracking on iOS 18+:
+**The Gap:** On iOS 17, you have `@Observable` but UIKit doesn't do anything with it. The `layoutSubviews()` pattern documented above **only works on iOS 18+**.
+
+### For iOS 17+ Apps (BetssonCameroon, BetssonFranceLegacy)
+
+Since production apps target iOS 17+, you have two options:
+
+1. **Point-Free's `observe { }`** - Works on iOS 17+ with `@Observable` (recommended)
+2. **Combine with `currentDisplayState + dropFirst()`** - The workaround pattern (existing approach)
+
+See [Point-Free's `observe { }` Pattern](#alternative-point-frees-observe---pattern) for the recommended iOS 17+ solution.
+
+### Info.plist Configuration (iOS 18+ only)
+
+For apps or targets that can require iOS 18+, add this key:
 
 ```xml
 <key>UIObservationTrackingEnabled</key>
@@ -173,7 +197,175 @@ Add this key to enable automatic observation tracking on iOS 18+:
 
 **Location:** `Frameworks/GomaUI/Catalog/Assets/Info.plist`
 
-> **Note:** This key is already added to GomaUICatalog. Production apps targeting iOS 18+ should also add this key.
+> **Note:** This key is added to GomaUICatalog for testing the `layoutSubviews()` pattern. Production apps targeting iOS 17+ should use Point-Free's `observe { }` instead.
+
+---
+
+## Alternative: Point-Free's observe { } Pattern
+
+[Point-Free's swift-navigation](https://github.com/pointfreeco/swift-navigation) library provides an alternative approach that works on **iOS 13+** through their [Perception](https://github.com/pointfreeco/swift-perception) backport.
+
+### The `observe { }` Function
+
+Instead of relying on `layoutSubviews()`, Point-Free provides an explicit `observe { }` closure that automatically tracks property access:
+
+```swift
+class FeatureViewController: UIViewController {
+    @UIBindable var model: FeatureModel
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        observe { [weak self] in
+            guard let self else { return }
+
+            countLabel.text = "Count: \(model.count)"
+            factLabel.isHidden = model.fact == nil
+            if let fact = model.fact {
+                factLabel.text = fact
+            }
+            activityIndicator.isHidden = !model.isLoadingFact
+        }
+    }
+}
+```
+
+### How It Works
+
+From the [swift-navigation documentation](https://www.pointfree.co/blog/posts/149-swift-navigation-powerful-navigation-tools-for-all-swift-platforms):
+
+> "Whichever fields are accessed inside `observe` are automatically tracked, so whenever they are mutated the trailing closure of `observe` will be invoked again, allowing us to update the UI with the freshest data."
+
+**Key behavior:** Only fields accessed within the closure trigger re-execution. Unaccessed fields don't cause unnecessary updates.
+
+### Using with @Observable or @Perceptible
+
+```swift
+// iOS 17+ - Use native @Observable
+@Observable
+class FeatureModel {
+    var count = 0
+    var isLoadingFact = false
+    var fact: String?
+}
+
+// iOS 13-16 - Use @Perceptible backport
+@Perceptible
+class FeatureModel {
+    var count = 0
+    var isLoadingFact = false
+    var fact: String?
+}
+```
+
+### Platform Support via Perception
+
+[Perception 2.0](https://www.pointfree.co/blog/posts/180-perception-2-0-an-updated-back-port-of-swift-s-observation-framework) backports Swift's Observation framework:
+
+| Feature | Native | Perception Backport |
+|---------|--------|---------------------|
+| `@Observable` | iOS 17+ | N/A |
+| `@Perceptible` | N/A | **iOS 13+** |
+| `observe { }` | N/A | **iOS 13+** |
+| UIKit auto-tracking | iOS 18+ | N/A |
+
+### Package Dependencies
+
+To use this approach, add to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/pointfreeco/swift-navigation", from: "2.0.0"),
+]
+
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: [
+            .product(name: "UIKitNavigation", package: "swift-navigation"),
+        ]
+    ),
+]
+```
+
+### Additional UIKit Tools
+
+The library also provides:
+
+- **`@UIBindable`** - Property wrapper for binding models to UI
+- **`present(item:)`** - State-driven sheet presentations
+- **`navigationDestination(item:)`** - State-driven drill-down navigation
+- **`UIBinding`** - Two-way bindings for form controls
+
+---
+
+## Choosing an Approach
+
+### Comparison Table
+
+| Aspect | Apple Native (`layoutSubviews`) | Point-Free (`observe { }`) |
+|--------|--------------------------------|---------------------------|
+| **Min iOS** | **18** (with plist) / 26 (native) | **17** (with `@Observable`) / **13** (with `@Perceptible`) |
+| **Dependencies** | None | swift-navigation |
+| **Where observation happens** | `layoutSubviews()`, `updateConstraints()`, `draw(_:)` | **Explicit closure** |
+| **Granularity** | Whole view layout cycle | **Closure-level** |
+| **Re-execution trigger** | Any tracked property change | Any tracked property change |
+| **Works in UIViewController** | `viewWillLayoutSubviews()` | **`viewDidLoad()` or anywhere** |
+| **Macro** | `@Observable` | `@Observable` or `@Perceptible` |
+
+### When to Use Apple's Native Approach
+
+- ✅ Targeting **iOS 18+** only
+- ✅ Building components for internal testing (GomaUICatalog)
+- ✅ Want zero external dependencies
+- ✅ Already using `layoutSubviews()` for rendering
+
+### When to Use Point-Free's `observe { }`
+
+- ✅ **Targeting iOS 17+** (BetssonCameroon, BetssonFranceLegacy)
+- ✅ Building UIViewControllers with complex state
+- ✅ Want explicit control over what's observed
+- ✅ Need observation outside of layout methods
+- ✅ Want to use `@Observable` on iOS 17 where UIKit doesn't auto-track
+
+### Production Apps Recommendation
+
+**For BetssonCameroon and BetssonFranceLegacy (iOS 17+):**
+
+Use **Point-Free's `observe { }`** pattern:
+- Works with `@Observable` on iOS 17+ without the iOS 18 plist requirement
+- Provides explicit observation tracking in any method, not just `layoutSubviews()`
+- Battle-tested in production by Point-Free's ecosystem
+
+```swift
+// This works on iOS 17+
+@Observable
+class FeatureModel {
+    var count = 0
+}
+
+class FeatureViewController: UIViewController {
+    let model = FeatureModel()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        observe { [weak self] in
+            guard let self else { return }
+            countLabel.text = "\(model.count)"  // Auto-tracked on iOS 17!
+        }
+    }
+}
+```
+
+### GomaUICatalog (Testing)
+
+For **GomaUICatalog** (internal testing app), both approaches work since:
+- The catalog has the `UIObservationTrackingEnabled` plist key
+- It's not shipped to production
+- It can test both patterns for comparison
+
+The `ObservableScoreView` example uses `layoutSubviews()` for demonstration, but production components in the apps should use `observe { }` until iOS 18+ is the minimum deployment target.
 
 ---
 
@@ -528,6 +720,29 @@ func testViewModelMutation_TriggersLayoutUpdate() {
   - `updateProperties()` method
   - Apple's UIKit investment
 
+### Point-Free Resources
+
+- **[swift-navigation](https://github.com/pointfreeco/swift-navigation)** - GitHub repository
+  - `observe { }` function for UIKit
+  - `@UIBindable` property wrapper
+  - State-driven navigation tools
+
+- **[Perception](https://github.com/pointfreeco/swift-perception)** - @Observable backport for iOS 13+
+  - `@Perceptible` macro (backport of `@Observable`)
+  - Works with `observe { }` on older iOS versions
+
+- **[Episode #283: Modern UIKit: Observation](https://www.pointfree.co/episodes/ep283-modern-uikit-observation)** - Point-Free video
+  - Deep dive into `observe { }` implementation
+  - Comparison with traditional UIKit patterns
+
+- **[Swift Navigation Blog Post](https://www.pointfree.co/blog/posts/149-swift-navigation-powerful-navigation-tools-for-all-swift-platforms)**
+  - Overview of UIKitNavigation library
+  - Code examples and use cases
+
+- **[Perception 2.0 Announcement](https://www.pointfree.co/blog/posts/180-perception-2-0-an-updated-back-port-of-swift-s-observation-framework)**
+  - Latest backport improvements
+  - Async sequences with `Perceptions`
+
 ### Apple Documentation
 
 - [Observation Framework](https://developer.apple.com/documentation/observation)
@@ -544,7 +759,26 @@ func testViewModelMutation_TriggersLayoutUpdate() {
 
 ## Summary
 
-The **@Observable + layoutSubviews()** pattern replaces Combine for UIKit reactive bindings:
+### Two Patterns for @Observable in UIKit
+
+| Pattern | Min iOS | Best For |
+|---------|---------|----------|
+| **Point-Free `observe { }`** | **iOS 17+** | Production apps (BetssonCameroon, BetssonFranceLegacy) |
+| **Apple `layoutSubviews()`** | iOS 18+ | Internal testing, future apps |
+
+### For iOS 17+ Production Apps (Recommended)
+
+Use Point-Free's `observe { }`:
+
+| What | How |
+|------|-----|
+| ViewModel | `@Observable` class conforming to protocol |
+| Observation | `observe { }` closure in `viewDidLoad()` |
+| Dependency | `swift-navigation` package |
+
+### For iOS 18+ (Future)
+
+Use Apple's native `layoutSubviews()`:
 
 | What | How |
 |------|-----|
@@ -552,6 +786,6 @@ The **@Observable + layoutSubviews()** pattern replaces Combine for UIKit reacti
 | View property | `var viewModel: (any Protocol)?` |
 | Initial render | `setNeedsLayout()` in `configure()` |
 | Reactive updates | Read properties in `layoutSubviews()` |
-| Requirements | iOS 17+ (`@Observable`), iOS 18+ (`UIObservationTrackingEnabled`) |
+| Requirements | `UIObservationTrackingEnabled` plist key |
 
-**Result:** Simpler code, synchronous rendering, no Combine complexity, snapshot tests that just work.
+**Result:** Both patterns eliminate Combine complexity, provide synchronous rendering, and make snapshot tests work without workarounds.
