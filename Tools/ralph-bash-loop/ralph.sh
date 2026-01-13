@@ -27,9 +27,16 @@ for ((i=1; i<=$1; i++)); do
     echo "Iteration $i / $1"
     echo "────────────────────────────────────────"
 
-    result=$(claude -p "$(cat "$PROMPT_FILE")" --output-format text)
+    # Stream output AND capture it (tee writes to both stdout and file)
+    TEMP_OUTPUT="/tmp/ralph_iteration_${i}.txt"
 
-    echo "$result"
+    claude -p "$(cat "$PROMPT_FILE")" \
+        --dangerously-skip-permissions \
+        --output-format text \
+        2>&1 | tee "$TEMP_OUTPUT"
+
+    # Read the captured output to check for promise
+    result=$(cat "$TEMP_OUTPUT")
 
     if [[ "$result" == *"<promise>COMPLETE</promise>"* ]]; then
         echo ""
@@ -37,6 +44,14 @@ for ((i=1; i<=$1; i++)); do
         echo "All tasks complete after $i iterations."
         echo "════════════════════════════════════════"
         exit 0
+    fi
+
+    if [[ "$result" == *"<promise>FAILED</promise>"* ]]; then
+        echo ""
+        echo "════════════════════════════════════════"
+        echo "Task FAILED at iteration $i"
+        echo "════════════════════════════════════════"
+        exit 1
     fi
 
     echo ""

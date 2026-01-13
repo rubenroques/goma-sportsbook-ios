@@ -1,0 +1,123 @@
+import UIKit
+import SwiftUI
+
+// MARK: - Snapshot Category
+enum MatchBannerSnapshotCategory: String, CaseIterable {
+    case matchStates = "Match States"
+    case emptyState = "Empty State"
+}
+
+final class MatchBannerViewSnapshotViewController: UIViewController {
+
+    private let category: MatchBannerSnapshotCategory
+
+    init(category: MatchBannerSnapshotCategory) {
+        self.category = category
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .backgroundTestColor
+        setupUI()
+    }
+
+    private func setupUI() {
+        let titleLabel = UILabel()
+        titleLabel.text = "MatchBannerView - \(category.rawValue)"
+        titleLabel.font = StyleProvider.fontWith(type: .bold, size: 16)
+        titleLabel.textColor = StyleProvider.Color.textPrimary
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(titleLabel)
+        view.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+
+            stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+
+        addVariants(to: stackView)
+    }
+
+    private func addVariants(to stackView: UIStackView) {
+        switch category {
+        case .matchStates:
+            addMatchStatesVariants(to: stackView)
+        case .emptyState:
+            addEmptyStateVariants(to: stackView)
+        }
+    }
+
+    // MARK: - Category Variants
+
+    private func addMatchStatesVariants(to stackView: UIStackView) {
+        stackView.addArrangedSubview(createLabeledVariant(
+            label: "Prelive Match",
+            view: createMatchBannerView(viewModel: MockMatchBannerViewModel.preliveMatch)
+        ))
+        stackView.addArrangedSubview(createLabeledVariant(
+            label: "Live Match (with scores)",
+            view: createMatchBannerView(viewModel: MockMatchBannerViewModel.liveMatch)
+        ))
+        stackView.addArrangedSubview(createLabeledVariant(
+            label: "Interactive Match (El Clásico)",
+            view: createMatchBannerView(viewModel: MockMatchBannerViewModel.interactiveMatch)
+        ))
+    }
+
+    private func addEmptyStateVariants(to stackView: UIStackView) {
+        stackView.addArrangedSubview(createLabeledVariant(
+            label: "Empty State (for cell reuse)",
+            view: createMatchBannerView(viewModel: MockMatchBannerViewModel.emptyState)
+        ))
+    }
+
+    // MARK: - Helper Methods
+
+    private func createMatchBannerView(viewModel: MockMatchBannerViewModel) -> MatchBannerView {
+        let bannerView = MatchBannerView()
+        bannerView.configure(with: viewModel)
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        bannerView.heightAnchor.constraint(equalToConstant: 136).isActive = true
+        return bannerView
+    }
+
+    private func createLabeledVariant(label: String, view: UIView) -> UIStackView {
+        let labelView = UILabel()
+        labelView.text = label
+        labelView.font = StyleProvider.fontWith(type: .medium, size: 12)
+        labelView.textColor = StyleProvider.Color.textSecondary
+
+        let stack = UIStackView(arrangedSubviews: [labelView, view])
+        stack.axis = .vertical
+        stack.spacing = 6
+        stack.alignment = .fill
+        return stack
+    }
+}
+
+// MARK: - Preview
+#if DEBUG
+#Preview("Match States") {
+    MatchBannerViewSnapshotViewController(category: .matchStates)
+}
+
+#Preview("Empty State") {
+    MatchBannerViewSnapshotViewController(category: .emptyState)
+}
+#endif

@@ -102,6 +102,36 @@ Key patterns to follow:
 - Use SnapshotTestConfig consistently
 - Follow the exact structure from OutcomeItemViewSnapshotTests
 
+### 4.3 CRITICAL: Async Rendering Workaround
+
+Some components use Combine with `.receive(on: DispatchQueue.main)` which causes **async rendering**. Snapshots will capture EMPTY views because render happens on the next run loop.
+
+**How to detect:** Look in the component's View file for:
+- `.receive(on: DispatchQueue.main)` in bindings
+- No `currentDisplayState` synchronous property
+- No immediate `render()` call in `configure()`
+
+**Solution in Test File:** Use `SnapshotTestConfig.waitForCombineRendering(vc)` BEFORE `assertSnapshot`:
+
+```swift
+func testComponent_BasicStates_Light() throws {
+    let vc = ComponentSnapshotViewController(category: .basicStates)
+    SnapshotTestConfig.waitForCombineRendering(vc)  // <-- ADD THIS for async components
+    assertSnapshot(
+        of: vc,
+        as: .image(on: SnapshotTestConfig.device, size: SnapshotTestConfig.size, traits: SnapshotTestConfig.lightTraits),
+        record: SnapshotTestConfig.record
+    )
+}
+```
+
+**When to use it:**
+- If the component uses Combine publishers without `currentDisplayState`
+- If test snapshots show empty/blank views
+- When in doubt, add it - it doesn't hurt components that render synchronously
+
+Read `Frameworks/GomaUI/Documentation/Guides/SNAPSHOT_TESTING.md` section "Synchronous Rendering" for full details.
+
 ---
 
 ## Step 5: Verify
